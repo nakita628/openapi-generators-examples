@@ -1,5 +1,5 @@
 import { initTRPC, TRPCError } from '@trpc/server'
-import { Schema } from 'effect'
+import { Effect, Schema } from 'effect'
 import {
   AssignedRoleDetailsSchema,
   DeletedRoleAssignmentResourceSchema,
@@ -20,15 +20,15 @@ export const projectsRouter = t.router({
         Schema.Struct({
           project_id: Schema.String,
           group_id: Schema.String,
-          limit: Schema.optional(
+          limit: Schema.optionalKey(
             Schema.Number.check(
               Schema.isInt(),
               Schema.isGreaterThanOrEqualTo(0),
               Schema.isLessThanOrEqualTo(1000),
             ),
           ),
-          after: Schema.optional(Schema.String),
-          order: Schema.optional(Schema.Literals(['asc', 'desc'])),
+          after: Schema.optionalKey(Schema.String),
+          order: Schema.optionalKey(Schema.Literals(['asc', 'desc'])),
         }),
       ),
     )
@@ -88,7 +88,7 @@ export const projectsRouter = t.router({
             Schema.isGreaterThanOrEqualTo(0),
             Schema.isLessThanOrEqualTo(1000),
           ).pipe(Schema.withDecodingDefault(Effect.succeed(1000))),
-          after: Schema.optional(Schema.String),
+          after: Schema.optionalKey(Schema.String),
           order: Schema.Literals(['asc', 'desc']).pipe(
             Schema.withDecodingDefault(Effect.succeed('asc')),
           ),
@@ -108,8 +108,8 @@ export const projectsRouter = t.router({
           permissions: Schema.Array(Schema.String).annotate({
             description: 'Permissions to grant to the role.',
           }),
-          description: Schema.optional(
-            Schema.Union([Schema.String, Schema.NullOr(Schema.Null)]).annotate({
+          description: Schema.optionalKey(
+            Schema.Union([Schema.String, Schema.Null]).annotate({
               description: 'Optional description of the role.',
             }),
           ),
@@ -136,18 +136,18 @@ export const projectsRouter = t.router({
         Schema.Struct({
           project_id: Schema.String,
           role_id: Schema.String,
-          permissions: Schema.optional(
-            Schema.Union([Schema.Array(Schema.String), Schema.NullOr(Schema.Null)]).annotate({
+          permissions: Schema.optionalKey(
+            Schema.Union([Schema.Array(Schema.String), Schema.Null]).annotate({
               description: 'Updated set of permissions for the role.',
             }),
           ),
-          description: Schema.optional(
-            Schema.Union([Schema.String, Schema.NullOr(Schema.Null)]).annotate({
+          description: Schema.optionalKey(
+            Schema.Union([Schema.String, Schema.Null]).annotate({
               description: 'New description for the role.',
             }),
           ),
-          role_name: Schema.optional(
-            Schema.Union([Schema.String, Schema.NullOr(Schema.Null)]).annotate({
+          role_name: Schema.optionalKey(
+            Schema.Union([Schema.String, Schema.Null]).annotate({
               description: 'New name for the role.',
             }),
           ),
@@ -174,15 +174,15 @@ export const projectsRouter = t.router({
         Schema.Struct({
           project_id: Schema.String,
           user_id: Schema.String,
-          limit: Schema.optional(
+          limit: Schema.optionalKey(
             Schema.Number.check(
               Schema.isInt(),
               Schema.isGreaterThanOrEqualTo(0),
               Schema.isLessThanOrEqualTo(1000),
             ),
           ),
-          after: Schema.optional(Schema.String),
-          order: Schema.optional(Schema.Literals(['asc', 'desc'])),
+          after: Schema.optionalKey(Schema.String),
+          order: Schema.optionalKey(Schema.Literals(['asc', 'desc'])),
         }),
       ),
     )

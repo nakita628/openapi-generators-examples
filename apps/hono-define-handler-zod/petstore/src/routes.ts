@@ -281,9 +281,11 @@ export const postStoreOrderHandler = defineHandler({
       .pipe(z.int64())
       .meta({ examples: [198772] })
       .exactOptional(),
-    quantity: z.coerce
-      .number()
-      .pipe(z.int32())
+    quantity: z
+      .preprocess(
+        (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+        z.int32(),
+      )
       .meta({ examples: [7] })
       .exactOptional(),
     shipDate: z.iso.datetime({ offset: true }).exactOptional(),
@@ -337,9 +339,11 @@ export const postUserHandler = defineHandler({
       .string()
       .meta({ examples: ['12345'] })
       .exactOptional(),
-    userStatus: z.coerce
-      .number()
-      .pipe(z.int32())
+    userStatus: z
+      .preprocess(
+        (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+        z.int32(),
+      )
       .meta({ description: 'User Status', examples: [1] })
       .exactOptional(),
   }),
@@ -396,9 +400,11 @@ export const putUserUsernameHandler = defineHandler({
       .string()
       .meta({ examples: ['12345'] })
       .exactOptional(),
-    userStatus: z.coerce
-      .number()
-      .pipe(z.int32())
+    userStatus: z
+      .preprocess(
+        (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+        z.int32(),
+      )
       .meta({ description: 'User Status', examples: [1] })
       .exactOptional(),
   }),

@@ -315,7 +315,7 @@ export const postStoreOrderHandler = defineHandler({
         ),
       'quantity?': type('string')
         .pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         })
         .to('number.integer >= -2147483648 & number.integer <= 2147483647'),
@@ -379,7 +379,7 @@ export const postUserHandler = defineHandler({
       'phone?': 'string',
       'userStatus?': type('string')
         .pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         })
         .to('number.integer >= -2147483648 & number.integer <= 2147483647')
@@ -426,7 +426,7 @@ export const putUserUsernameHandler = defineHandler({
       'phone?': 'string',
       'userStatus?': type('string')
         .pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         })
         .to('number.integer >= -2147483648 & number.integer <= 2147483647')

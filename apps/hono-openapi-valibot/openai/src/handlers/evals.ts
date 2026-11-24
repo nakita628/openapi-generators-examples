@@ -36,7 +36,13 @@ export const evalsHandler = new Hono()
       v.object({
         after: v.optional(v.string()),
         limit: v.optional(
-          v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
+          v.pipe(
+            v.string(),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
+            v.number(),
+            v.safeInteger(),
+          ),
           '20',
         ),
         order: v.optional(v.picklist(['asc', 'desc']), 'asc'),
@@ -190,7 +196,13 @@ export const evalsHandler = new Hono()
       v.object({
         after: v.optional(v.string()),
         limit: v.optional(
-          v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
+          v.pipe(
+            v.string(),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
+            v.number(),
+            v.safeInteger(),
+          ),
           '20',
         ),
         order: v.optional(v.picklist(['asc', 'desc']), 'asc'),
@@ -347,7 +359,13 @@ export const evalsHandler = new Hono()
       v.object({
         after: v.optional(v.string()),
         limit: v.optional(
-          v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
+          v.pipe(
+            v.string(),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
+            v.number(),
+            v.safeInteger(),
+          ),
           '20',
         ),
         status: v.optional(v.picklist(['fail', 'pass'])),

@@ -1,6 +1,6 @@
 import { Hono } from 'hono'
 import { sValidator } from '@hono/standard-validator'
-import { Schema } from 'effect'
+import { Schema, SchemaTransformation } from 'effect'
 import { UserSchema } from '../components'
 
 export const userHandler = new Hono()
@@ -11,7 +11,7 @@ export const userHandler = new Hono()
       'form',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          id: Schema.optional(
+          id: Schema.optionalKey(
             Schema.BigIntFromString.check(
               Schema.isBetweenBigInt({
                 minimum: -9223372036854775808n,
@@ -19,19 +19,27 @@ export const userHandler = new Hono()
               }),
             ).annotate({ jsonSchemaExamples: [10] }),
           ),
-          username: Schema.optional(Schema.String.annotate({ jsonSchemaExamples: ['theUser'] })),
-          firstName: Schema.optional(Schema.String.annotate({ jsonSchemaExamples: ['John'] })),
-          lastName: Schema.optional(Schema.String.annotate({ jsonSchemaExamples: ['James'] })),
-          email: Schema.optional(
+          username: Schema.optionalKey(Schema.String.annotate({ jsonSchemaExamples: ['theUser'] })),
+          firstName: Schema.optionalKey(Schema.String.annotate({ jsonSchemaExamples: ['John'] })),
+          lastName: Schema.optionalKey(Schema.String.annotate({ jsonSchemaExamples: ['James'] })),
+          email: Schema.optionalKey(
             Schema.String.annotate({ jsonSchemaExamples: ['john@email.com'] }),
           ),
-          password: Schema.optional(Schema.String.annotate({ jsonSchemaExamples: ['12345'] })),
-          phone: Schema.optional(Schema.String.annotate({ jsonSchemaExamples: ['12345'] })),
-          userStatus: Schema.optional(
-            Schema.FiniteFromString.check(Schema.isInt32()).annotate({
-              description: 'User Status',
-              jsonSchemaExamples: [1],
-            }),
+          password: Schema.optionalKey(Schema.String.annotate({ jsonSchemaExamples: ['12345'] })),
+          phone: Schema.optionalKey(Schema.String.annotate({ jsonSchemaExamples: ['12345'] })),
+          userStatus: Schema.optionalKey(
+            Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+              .pipe(
+                Schema.decodeTo(
+                  Schema.Finite,
+                  SchemaTransformation.transform({
+                    decode: (input) => Number(input),
+                    encode: (output) => String(output),
+                  }),
+                ),
+              )
+              .check(Schema.isInt32())
+              .annotate({ description: 'User Status', jsonSchemaExamples: [1] }),
           ),
         }),
       ),
@@ -49,8 +57,8 @@ export const userHandler = new Hono()
       'query',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          username: Schema.optional(Schema.String),
-          password: Schema.optional(Schema.String),
+          username: Schema.optionalKey(Schema.String),
+          password: Schema.optionalKey(Schema.String),
         }),
       ),
     ),
@@ -70,7 +78,7 @@ export const userHandler = new Hono()
       'form',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          id: Schema.optional(
+          id: Schema.optionalKey(
             Schema.BigIntFromString.check(
               Schema.isBetweenBigInt({
                 minimum: -9223372036854775808n,
@@ -78,19 +86,27 @@ export const userHandler = new Hono()
               }),
             ).annotate({ jsonSchemaExamples: [10] }),
           ),
-          username: Schema.optional(Schema.String.annotate({ jsonSchemaExamples: ['theUser'] })),
-          firstName: Schema.optional(Schema.String.annotate({ jsonSchemaExamples: ['John'] })),
-          lastName: Schema.optional(Schema.String.annotate({ jsonSchemaExamples: ['James'] })),
-          email: Schema.optional(
+          username: Schema.optionalKey(Schema.String.annotate({ jsonSchemaExamples: ['theUser'] })),
+          firstName: Schema.optionalKey(Schema.String.annotate({ jsonSchemaExamples: ['John'] })),
+          lastName: Schema.optionalKey(Schema.String.annotate({ jsonSchemaExamples: ['James'] })),
+          email: Schema.optionalKey(
             Schema.String.annotate({ jsonSchemaExamples: ['john@email.com'] }),
           ),
-          password: Schema.optional(Schema.String.annotate({ jsonSchemaExamples: ['12345'] })),
-          phone: Schema.optional(Schema.String.annotate({ jsonSchemaExamples: ['12345'] })),
-          userStatus: Schema.optional(
-            Schema.FiniteFromString.check(Schema.isInt32()).annotate({
-              description: 'User Status',
-              jsonSchemaExamples: [1],
-            }),
+          password: Schema.optionalKey(Schema.String.annotate({ jsonSchemaExamples: ['12345'] })),
+          phone: Schema.optionalKey(Schema.String.annotate({ jsonSchemaExamples: ['12345'] })),
+          userStatus: Schema.optionalKey(
+            Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+              .pipe(
+                Schema.decodeTo(
+                  Schema.Finite,
+                  SchemaTransformation.transform({
+                    decode: (input) => Number(input),
+                    encode: (output) => String(output),
+                  }),
+                ),
+              )
+              .check(Schema.isInt32())
+              .annotate({ description: 'User Status', jsonSchemaExamples: [1] }),
           ),
         }),
       ),

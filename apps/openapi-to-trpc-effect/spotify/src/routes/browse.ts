@@ -1,5 +1,5 @@
 import { initTRPC, TRPCError } from '@trpc/server'
-import { Schema } from 'effect'
+import { Effect, Schema, SchemaGetter, SchemaIssue } from 'effect'
 import {
   CategoryObjectSchema,
   PagingFeaturedPlaylistObjectSchema,
@@ -14,7 +14,7 @@ export const browseRouter = t.router({
     .input(
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          locale: Schema.optional(
+          locale: Schema.optionalKey(
             Schema.String.annotate({
               description:
                 'The desired language, consisting of an [ISO 639-1](http://en.wikipedia.org/wiki/ISO_639-1) language code and an [ISO 3166-1 alpha-2 country code](http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2), joined by an underscore. For example: `es_MX`, meaning &quot;Spanish (Mexico)&quot;. Provide this parameter if you want the category strings returned in a particular language.<br/> _**Note**: if `locale` is not supplied, or if the specified language is not available, the category strings returned will be in the Spotify default language (American English)._\n',
@@ -50,7 +50,7 @@ export const browseRouter = t.router({
     .input(
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          locale: Schema.optional(
+          locale: Schema.optionalKey(
             Schema.String.annotate({
               description:
                 'The desired language, consisting of an [ISO 639-1](http://en.wikipedia.org/wiki/ISO_639-1) language code and an [ISO 3166-1 alpha-2 country code](http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2), joined by an underscore. For example: `es_MX`, meaning &quot;Spanish (Mexico)&quot;. Provide this parameter if you want the category strings returned in a particular language.<br/> _**Note**: if `locale` is not supplied, or if the specified language is not available, the category strings returned will be in the Spotify default language (American English)._\n',
@@ -81,13 +81,38 @@ export const browseRouter = t.router({
     .output(
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          categories: PagingObjectSchema.check(
-            Schema.makeFilter((input) =>
-              Schema.is(
-                Schema.Struct({ items: Schema.optional(Schema.Array(CategoryObjectSchema)) }),
-              )(input),
-            ),
-          ),
+          categories: (() => {
+            const M0 = PagingObjectSchema
+            const M1 = Schema.Struct({
+              items: Schema.optionalKey(Schema.Array(CategoryObjectSchema)),
+            })
+            const isAll = (input: unknown): input is typeof M0.Type & typeof M1.Type =>
+              Schema.is(M0)(input) && Schema.is(M1)(input)
+            return Schema.Unknown.pipe(
+              Schema.decodeTo(Schema.declare(isAll), {
+                decode: SchemaGetter.transformEffect((input) =>
+                  Effect.all([
+                    Schema.decodeUnknownEffect(M0)(input),
+                    Schema.decodeUnknownEffect(M1)(input),
+                  ]).pipe(
+                    Effect.mapError((error) => error.issue),
+                    Effect.flatMap((values) => {
+                      const merged = values.every(
+                        (value) =>
+                          typeof value === 'object' && value !== null && !Array.isArray(value),
+                      )
+                        ? Object.assign({}, ...values)
+                        : values[0]
+                      return isAll(merged)
+                        ? Effect.succeed(merged)
+                        : Effect.fail(new SchemaIssue.InvalidValue(undefined, merged))
+                    }),
+                  ),
+                ),
+                encode: SchemaGetter.passthrough({ strict: false }),
+              }),
+            )
+          })(),
         }),
       ),
     )
@@ -103,7 +128,7 @@ export const browseRouter = t.router({
               'The [Spotify category ID](/documentation/web-api/concepts/spotify-uris-ids) for the category.\n',
             jsonSchemaExamples: ['dinner'],
           }),
-          locale: Schema.optional(
+          locale: Schema.optionalKey(
             Schema.String.annotate({
               description:
                 'The desired language, consisting of an [ISO 639-1](http://en.wikipedia.org/wiki/ISO_639-1) language code and an [ISO 3166-1 alpha-2 country code](http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2), joined by an underscore. For example: `es_MX`, meaning &quot;Spanish (Mexico)&quot;. Provide this parameter if you want the category strings returned in a particular language.<br/> _**Note**: if `locale` is not supplied, or if the specified language is not available, the category strings returned will be in the Spotify default language (American English)._\n',

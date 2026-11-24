@@ -1,5 +1,5 @@
 import { initTRPC, TRPCError } from '@trpc/server'
-import { Schema } from 'effect'
+import { Effect, Schema } from 'effect'
 import {
   AssistantObjectSchema,
   AssistantSupportedModelsSchema,
@@ -27,8 +27,8 @@ export const assistantsRouter = t.router({
           order: Schema.Literals(['asc', 'desc']).pipe(
             Schema.withDecodingDefault(Effect.succeed('desc')),
           ),
-          after: Schema.optional(Schema.String),
-          before: Schema.optional(Schema.String),
+          after: Schema.optionalKey(Schema.String),
+          before: Schema.optionalKey(Schema.String),
         }),
       ),
     )
@@ -53,14 +53,14 @@ export const assistantsRouter = t.router({
       Schema.toStandardSchemaV1(
         Schema.Struct({
           assistant_id: Schema.String,
-          model: Schema.optional(
+          model: Schema.optionalKey(
             Schema.Union([Schema.String, AssistantSupportedModelsSchema]).annotate({
               description:
                 'ID of the model to use. You can use the [List models](https://developers.openai.com/api/reference/resources/models/methods/list) API to see all of your available models, or see our [Model overview](https://developers.openai.com/api/docs/models) for descriptions of them.\n',
             }),
           ),
-          reasoning_effort: Schema.optional(ReasoningEffortSchema),
-          name: Schema.optional(
+          reasoning_effort: Schema.optionalKey(ReasoningEffortSchema),
+          name: Schema.optionalKey(
             Schema.Union([
               Schema.String.check(
                 Schema.makeFilter((input) => [...input].length <= 256, {
@@ -69,10 +69,10 @@ export const assistantsRouter = t.router({
               ).annotate({
                 description: 'The name of the assistant. The maximum length is 256 characters.\n',
               }),
-              Schema.NullOr(Schema.Null),
+              Schema.Null,
             ]),
           ),
-          description: Schema.optional(
+          description: Schema.optionalKey(
             Schema.Union([
               Schema.String.check(
                 Schema.makeFilter((input) => [...input].length <= 512, {
@@ -82,10 +82,10 @@ export const assistantsRouter = t.router({
                 description:
                   'The description of the assistant. The maximum length is 512 characters.\n',
               }),
-              Schema.NullOr(Schema.Null),
+              Schema.Null,
             ]),
           ),
-          instructions: Schema.optional(
+          instructions: Schema.optionalKey(
             Schema.Union([
               Schema.String.check(
                 Schema.makeFilter((input) => [...input].length <= 256000, {
@@ -95,7 +95,7 @@ export const assistantsRouter = t.router({
                 description:
                   'The system instructions that the assistant uses. The maximum length is 256,000 characters.\n',
               }),
-              Schema.NullOr(Schema.Null),
+              Schema.Null,
             ]),
           ),
           tools: Schema.Array(
@@ -122,9 +122,9 @@ export const assistantsRouter = t.router({
                       'Overrides the list of [file](https://developers.openai.com/api/reference/resources/files) IDs made available to the `code_interpreter` tool. There can be a maximum of 20 files associated with the tool.\n',
                   }),
               }),
-              file_search: Schema.optional(
+              file_search: Schema.optionalKey(
                 Schema.Struct({
-                  vector_store_ids: Schema.optional(
+                  vector_store_ids: Schema.optionalKey(
                     Schema.Array(Schema.String)
                       .check(Schema.isMaxLength(1))
                       .annotate({
@@ -138,9 +138,9 @@ export const assistantsRouter = t.router({
               description:
                 "A set of resources that are used by the assistant's tools. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.\n",
             }),
-            Schema.NullOr(Schema.Null),
+            Schema.Null,
           ]),
-          metadata: Schema.optional(MetadataSchema),
+          metadata: Schema.optionalKey(MetadataSchema),
           temperature: Schema.Union([
             Schema.Number.check(Schema.isGreaterThanOrEqualTo(0), Schema.isLessThanOrEqualTo(2))
               .pipe(Schema.withDecodingDefault(Effect.succeed(1)))
@@ -149,7 +149,7 @@ export const assistantsRouter = t.router({
                   'What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic.\n',
                 jsonSchemaExamples: [1],
               }),
-            Schema.NullOr(Schema.Null),
+            Schema.Null,
           ]),
           top_p: Schema.Union([
             Schema.Number.check(Schema.isGreaterThanOrEqualTo(0), Schema.isLessThanOrEqualTo(1))
@@ -159,10 +159,10 @@ export const assistantsRouter = t.router({
                   'An alternative to sampling with temperature, called nucleus sampling, where the model considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens comprising the top 10% probability mass are considered.\n\nWe generally recommend altering this or temperature but not both.\n',
                 jsonSchemaExamples: [1],
               }),
-            Schema.NullOr(Schema.Null),
+            Schema.Null,
           ]),
-          response_format: Schema.optional(
-            Schema.Union([AssistantsApiResponseFormatOptionSchema, Schema.NullOr(Schema.Null)]),
+          response_format: Schema.optionalKey(
+            Schema.Union([AssistantsApiResponseFormatOptionSchema, Schema.Null]),
           ),
         }),
       ),

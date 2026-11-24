@@ -1,6 +1,6 @@
 import { Hono } from 'hono'
 import { describeRoute, resolver, validator } from 'hono-openapi'
-import { Effect, Schema } from 'effect'
+import { Effect, Schema, SchemaTransformation } from 'effect'
 import {
   CreateVectorStoreFileBatchRequestSchema,
   CreateVectorStoreFileRequestSchema,
@@ -53,14 +53,23 @@ export const vectorStoresHandler = new Hono()
       'query',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          limit: Schema.FiniteFromString.check(Schema.isInt()).pipe(
-            Schema.withDecodingDefaultType(Effect.succeed(20)),
-          ),
+          limit: Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+            .pipe(
+              Schema.decodeTo(
+                Schema.Finite,
+                SchemaTransformation.transform({
+                  decode: (input) => Number(input),
+                  encode: (output) => String(output),
+                }),
+              ),
+            )
+            .check(Schema.isInt())
+            .pipe(Schema.withDecodingDefaultType(Effect.succeed(20))),
           order: Schema.Literals(['asc', 'desc']).pipe(
             Schema.withDecodingDefaultType(Effect.succeed('desc')),
           ),
-          after: Schema.optional(Schema.String),
-          before: Schema.optional(Schema.String),
+          after: Schema.optionalKey(Schema.String),
+          before: Schema.optionalKey(Schema.String),
         }),
       ),
     ),
@@ -459,15 +468,24 @@ export const vectorStoresHandler = new Hono()
       'query',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          limit: Schema.FiniteFromString.check(Schema.isInt()).pipe(
-            Schema.withDecodingDefaultType(Effect.succeed(20)),
-          ),
+          limit: Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+            .pipe(
+              Schema.decodeTo(
+                Schema.Finite,
+                SchemaTransformation.transform({
+                  decode: (input) => Number(input),
+                  encode: (output) => String(output),
+                }),
+              ),
+            )
+            .check(Schema.isInt())
+            .pipe(Schema.withDecodingDefaultType(Effect.succeed(20))),
           order: Schema.Literals(['asc', 'desc']).pipe(
             Schema.withDecodingDefaultType(Effect.succeed('desc')),
           ),
-          after: Schema.optional(Schema.String),
-          before: Schema.optional(Schema.String),
-          filter: Schema.optional(
+          after: Schema.optionalKey(Schema.String),
+          before: Schema.optionalKey(Schema.String),
+          filter: Schema.optionalKey(
             Schema.Literals(['in_progress', 'completed', 'failed', 'cancelled']),
           ),
         }),
@@ -518,15 +536,24 @@ export const vectorStoresHandler = new Hono()
       'query',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          limit: Schema.FiniteFromString.check(Schema.isInt()).pipe(
-            Schema.withDecodingDefaultType(Effect.succeed(20)),
-          ),
+          limit: Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+            .pipe(
+              Schema.decodeTo(
+                Schema.Finite,
+                SchemaTransformation.transform({
+                  decode: (input) => Number(input),
+                  encode: (output) => String(output),
+                }),
+              ),
+            )
+            .check(Schema.isInt())
+            .pipe(Schema.withDecodingDefaultType(Effect.succeed(20))),
           order: Schema.Literals(['asc', 'desc']).pipe(
             Schema.withDecodingDefaultType(Effect.succeed('desc')),
           ),
-          after: Schema.optional(Schema.String),
-          before: Schema.optional(Schema.String),
-          filter: Schema.optional(
+          after: Schema.optionalKey(Schema.String),
+          before: Schema.optionalKey(Schema.String),
+          filter: Schema.optionalKey(
             Schema.Literals(['in_progress', 'completed', 'failed', 'cancelled']),
           ),
         }),

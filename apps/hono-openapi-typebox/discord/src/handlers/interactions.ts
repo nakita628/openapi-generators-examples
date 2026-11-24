@@ -1,6 +1,6 @@
 import { Hono } from 'hono'
 import { describeRoute, resolver, validator } from 'hono-openapi'
-import { Type, Codec } from 'typebox'
+import { Type, Codec, type StaticDecode, type StaticEncode, type TSchema } from 'typebox'
 import { Compile } from 'typebox/compile'
 import {
   AllowedMentionTypesSchema,
@@ -36,6 +36,31 @@ import {
   ClientRatelimitedResponseResponse,
 } from '../components'
 
+const toStandardSchemaV1 = <T extends TSchema>(schema: T) => {
+  const validator = Compile(schema)
+  return Object.assign(validator, {
+    '~standard': {
+      version: 1 as const,
+      vendor: 'typebox',
+      validate: (value: unknown) =>
+        validator.Check(value)
+          ? { value: validator.Decode(value) }
+          : {
+              issues: validator.Errors(value).map((error) => ({
+                message: error.message,
+                path: error.instancePath
+                  .split('/')
+                  .slice(1)
+                  .map((key) => key.replaceAll('~1', '/').replaceAll('~0', '~')),
+              })),
+            },
+      types: undefined as
+        | { readonly input: StaticEncode<T>; readonly output: StaticDecode<T> }
+        | undefined,
+    },
+  })
+}
+
 export const interactionsHandler = new Hono().post(
   '/interactions/:interaction_id/:interaction_token/callback',
   describeRoute({
@@ -51,7 +76,9 @@ export const interactionsHandler = new Hono().post(
           'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
         },
         content: {
-          'application/json': { schema: resolver(Compile(InteractionCallbackResponseSchema)) },
+          'application/json': {
+            schema: resolver(toStandardSchemaV1(InteractionCallbackResponseSchema)),
+          },
         },
       },
       '204': {
@@ -71,7 +98,7 @@ export const interactionsHandler = new Hono().post(
   }),
   validator(
     'param',
-    Compile(
+    toStandardSchemaV1(
       Type.Object({
         interaction_id: SnowflakeTypeSchema,
         interaction_token: Type.String({ maxLength: 152133 }),
@@ -80,11 +107,13 @@ export const interactionsHandler = new Hono().post(
   ),
   validator(
     'query',
-    Compile(
+    toStandardSchemaV1(
       Type.Object({
         with_response: Type.Optional(
-          Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-            .Decode((value) => value === 'true')
+          Codec(
+            Type.String({ pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i }),
+          )
+            .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
             .Encode((value) => (value ? 'true' : 'false')),
         ),
       }),
@@ -92,7 +121,7 @@ export const interactionsHandler = new Hono().post(
   ),
   validator(
     'json',
-    Compile(
+    toStandardSchemaV1(
       Type.Union([
         ApplicationCommandAutocompleteCallbackRequestSchema,
         CreateMessageInteractionCallbackRequestSchema,
@@ -106,7 +135,7 @@ export const interactionsHandler = new Hono().post(
   ),
   validator(
     'form',
-    Compile(
+    toStandardSchemaV1(
       Type.Union([
         Type.Object({
           type: InteractionCallbackTypesSchema,
@@ -116,7 +145,7 @@ export const interactionsHandler = new Hono().post(
                 Type.Union([
                   Type.Array(
                     Type.Union([
-                      Type.Union([Type.Null(), Type.Null()]),
+                      Type.Null(),
                       Type.Object({
                         name: Type.String({ minLength: 1, maxLength: 100 }),
                         name_localizations: Type.Optional(
@@ -129,8 +158,18 @@ export const interactionsHandler = new Hono().post(
                             Type.Null(),
                           ]),
                         ),
-                        value: Codec(Type.String())
-                          .Decode((value) => Number.parseInt(value, 10))
+                        value: Codec(
+                          Type.Refine(
+                            Type.Refine(
+                              Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                              (value) => Number(value) >= -9007199254740991,
+                              () => 'must be >= -9007199254740991',
+                            ),
+                            (value) => Number(value) <= 9007199254740991,
+                            () => 'must be <= 9007199254740991',
+                          ),
+                        )
+                          .Decode((value) => Number(value))
                           .Encode((value) => String(value)),
                       }),
                     ]),
@@ -145,7 +184,7 @@ export const interactionsHandler = new Hono().post(
                 Type.Union([
                   Type.Array(
                     Type.Union([
-                      Type.Union([Type.Null(), Type.Null()]),
+                      Type.Null(),
                       Type.Object({
                         name: Type.String({ minLength: 1, maxLength: 100 }),
                         name_localizations: Type.Optional(
@@ -158,7 +197,11 @@ export const interactionsHandler = new Hono().post(
                             Type.Null(),
                           ]),
                         ),
-                        value: Codec(Type.String())
+                        value: Codec(
+                          Type.String({
+                            pattern: '^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$',
+                          }),
+                        )
                           .Decode((value) => Number(value))
                           .Encode((value) => String(value)),
                       }),
@@ -176,7 +219,7 @@ export const interactionsHandler = new Hono().post(
           type: InteractionCallbackTypesSchema,
           data: Type.Optional(
             Type.Union([
-              Type.Union([Type.Null(), Type.Null()]),
+              Type.Null(),
               Type.Object({
                 content: Type.Optional(Type.Union([Type.String({ maxLength: 2000 }), Type.Null()])),
                 embeds: Type.Optional(
@@ -197,8 +240,18 @@ export const interactionsHandler = new Hono().post(
                         ),
                         color: Type.Optional(
                           Type.Union([
-                            Codec(Type.String())
-                              .Decode((value) => Number.parseInt(value, 10))
+                            Codec(
+                              Type.Refine(
+                                Type.Refine(
+                                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                  (value) => Number(value) >= 0,
+                                  () => 'must be >= 0',
+                                ),
+                                (value) => Number(value) <= 16777215,
+                                () => 'must be <= 16777215',
+                              ),
+                            )
+                              .Decode((value) => Number(value))
                               .Encode((value) => String(value)),
                             Type.Null(),
                           ]),
@@ -209,15 +262,10 @@ export const interactionsHandler = new Hono().post(
                         description: Type.Optional(
                           Type.Union([Type.String({ maxLength: 4096 }), Type.Null()]),
                         ),
-                        author: Type.Optional(
-                          Type.Union([
-                            Type.Union([Type.Null(), Type.Null()]),
-                            RichEmbedAuthorSchema,
-                          ]),
-                        ),
+                        author: Type.Optional(Type.Union([Type.Null(), RichEmbedAuthorSchema])),
                         image: Type.Optional(
                           Type.Union([
-                            Type.Union([Type.Null(), Type.Null()]),
+                            Type.Null(),
                             Type.Object({
                               url: Type.Optional(
                                 Type.Union([
@@ -227,16 +275,16 @@ export const interactionsHandler = new Hono().post(
                               ),
                               width: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.String())
-                                    .Decode((value) => Number.parseInt(value, 10))
+                                  Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+                                    .Decode((value) => Number(value))
                                     .Encode((value) => String(value)),
                                   Type.Null(),
                                 ]),
                               ),
                               height: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.String())
-                                    .Decode((value) => Number.parseInt(value, 10))
+                                  Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+                                    .Decode((value) => Number(value))
                                     .Encode((value) => String(value)),
                                   Type.Null(),
                                 ]),
@@ -246,16 +294,31 @@ export const interactionsHandler = new Hono().post(
                               ),
                               placeholder_version: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.String())
-                                    .Decode((value) => Number.parseInt(value, 10))
+                                  Codec(
+                                    Type.Refine(
+                                      Type.Refine(
+                                        Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                        (value) => Number(value) >= 0,
+                                        () => 'must be >= 0',
+                                      ),
+                                      (value) => Number(value) <= 2147483647,
+                                      () => 'must be <= 2147483647',
+                                    ),
+                                  )
+                                    .Decode((value) => Number(value))
                                     .Encode((value) => String(value)),
                                   Type.Null(),
                                 ]),
                               ),
                               is_animated: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                    .Decode((value) => value === 'true')
+                                  Codec(
+                                    Type.String({
+                                      pattern:
+                                        /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                    }),
+                                  )
+                                    .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                     .Encode((value) => (value ? 'true' : 'false')),
                                   Type.Null(),
                                 ]),
@@ -268,7 +331,7 @@ export const interactionsHandler = new Hono().post(
                         ),
                         thumbnail: Type.Optional(
                           Type.Union([
-                            Type.Union([Type.Null(), Type.Null()]),
+                            Type.Null(),
                             Type.Object({
                               url: Type.Optional(
                                 Type.Union([
@@ -278,16 +341,16 @@ export const interactionsHandler = new Hono().post(
                               ),
                               width: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.String())
-                                    .Decode((value) => Number.parseInt(value, 10))
+                                  Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+                                    .Decode((value) => Number(value))
                                     .Encode((value) => String(value)),
                                   Type.Null(),
                                 ]),
                               ),
                               height: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.String())
-                                    .Decode((value) => Number.parseInt(value, 10))
+                                  Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+                                    .Decode((value) => Number(value))
                                     .Encode((value) => String(value)),
                                   Type.Null(),
                                 ]),
@@ -297,16 +360,31 @@ export const interactionsHandler = new Hono().post(
                               ),
                               placeholder_version: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.String())
-                                    .Decode((value) => Number.parseInt(value, 10))
+                                  Codec(
+                                    Type.Refine(
+                                      Type.Refine(
+                                        Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                        (value) => Number(value) >= 0,
+                                        () => 'must be >= 0',
+                                      ),
+                                      (value) => Number(value) <= 2147483647,
+                                      () => 'must be <= 2147483647',
+                                    ),
+                                  )
+                                    .Decode((value) => Number(value))
                                     .Encode((value) => String(value)),
                                   Type.Null(),
                                 ]),
                               ),
                               is_animated: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                    .Decode((value) => value === 'true')
+                                  Codec(
+                                    Type.String({
+                                      pattern:
+                                        /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                    }),
+                                  )
+                                    .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                     .Encode((value) => (value ? 'true' : 'false')),
                                   Type.Null(),
                                 ]),
@@ -317,12 +395,7 @@ export const interactionsHandler = new Hono().post(
                             }),
                           ]),
                         ),
-                        footer: Type.Optional(
-                          Type.Union([
-                            Type.Union([Type.Null(), Type.Null()]),
-                            RichEmbedFooterSchema,
-                          ]),
-                        ),
+                        footer: Type.Optional(Type.Union([Type.Null(), RichEmbedFooterSchema])),
                         fields: Type.Optional(
                           Type.Union([
                             Type.Array(
@@ -331,8 +404,15 @@ export const interactionsHandler = new Hono().post(
                                 value: Type.String({ maxLength: 1024 }),
                                 inline: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                      .Decode((value) => value === 'true')
+                                    Codec(
+                                      Type.String({
+                                        pattern:
+                                          /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                      }),
+                                    )
+                                      .Decode((value) =>
+                                        /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                      )
                                       .Encode((value) => (value ? 'true' : 'false')),
                                     Type.Null(),
                                   ]),
@@ -343,15 +423,10 @@ export const interactionsHandler = new Hono().post(
                             Type.Null(),
                           ]),
                         ),
-                        provider: Type.Optional(
-                          Type.Union([
-                            Type.Union([Type.Null(), Type.Null()]),
-                            RichEmbedProviderSchema,
-                          ]),
-                        ),
+                        provider: Type.Optional(Type.Union([Type.Null(), RichEmbedProviderSchema])),
                         video: Type.Optional(
                           Type.Union([
-                            Type.Union([Type.Null(), Type.Null()]),
+                            Type.Null(),
                             Type.Object({
                               url: Type.Optional(
                                 Type.Union([
@@ -361,16 +436,16 @@ export const interactionsHandler = new Hono().post(
                               ),
                               width: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.String())
-                                    .Decode((value) => Number.parseInt(value, 10))
+                                  Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+                                    .Decode((value) => Number(value))
                                     .Encode((value) => String(value)),
                                   Type.Null(),
                                 ]),
                               ),
                               height: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.String())
-                                    .Decode((value) => Number.parseInt(value, 10))
+                                  Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+                                    .Decode((value) => Number(value))
                                     .Encode((value) => String(value)),
                                   Type.Null(),
                                 ]),
@@ -380,16 +455,31 @@ export const interactionsHandler = new Hono().post(
                               ),
                               placeholder_version: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.String())
-                                    .Decode((value) => Number.parseInt(value, 10))
+                                  Codec(
+                                    Type.Refine(
+                                      Type.Refine(
+                                        Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                        (value) => Number(value) >= 0,
+                                        () => 'must be >= 0',
+                                      ),
+                                      (value) => Number(value) <= 2147483647,
+                                      () => 'must be <= 2147483647',
+                                    ),
+                                  )
+                                    .Decode((value) => Number(value))
                                     .Encode((value) => String(value)),
                                   Type.Null(),
                                 ]),
                               ),
                               is_animated: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                    .Decode((value) => value === 'true')
+                                  Codec(
+                                    Type.String({
+                                      pattern:
+                                        /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                    }),
+                                  )
+                                    .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                     .Encode((value) => (value ? 'true' : 'false')),
                                   Type.Null(),
                                 ]),
@@ -400,12 +490,7 @@ export const interactionsHandler = new Hono().post(
                             }),
                           ]),
                         ),
-                        audio: Type.Optional(
-                          Type.Union([
-                            Type.Union([Type.Null(), Type.Null()]),
-                            RichEmbedAudioSchema,
-                          ]),
-                        ),
+                        audio: Type.Optional(Type.Union([Type.Null(), RichEmbedAudioSchema])),
                       }),
                       { maxItems: 10 },
                     ),
@@ -414,48 +499,43 @@ export const interactionsHandler = new Hono().post(
                 ),
                 allowed_mentions: Type.Optional(
                   Type.Union([
-                    Type.Union([Type.Null(), Type.Null()]),
+                    Type.Null(),
                     Type.Object({
                       parse: Type.Optional(
                         Type.Union([
-                          Type.Array(
-                            Type.Union([
-                              Type.Union([Type.Null(), Type.Null()]),
-                              AllowedMentionTypesSchema,
-                            ]),
-                            { maxItems: 1521, uniqueItems: true },
-                          ),
+                          Type.Array(Type.Union([Type.Null(), AllowedMentionTypesSchema]), {
+                            maxItems: 1521,
+                            uniqueItems: true,
+                          }),
                           Type.Null(),
                         ]),
                       ),
                       users: Type.Optional(
                         Type.Union([
-                          Type.Array(
-                            Type.Union([
-                              Type.Union([Type.Null(), Type.Null()]),
-                              SnowflakeTypeSchema,
-                            ]),
-                            { maxItems: 100, uniqueItems: true },
-                          ),
+                          Type.Array(Type.Union([Type.Null(), SnowflakeTypeSchema]), {
+                            maxItems: 100,
+                            uniqueItems: true,
+                          }),
                           Type.Null(),
                         ]),
                       ),
                       roles: Type.Optional(
                         Type.Union([
-                          Type.Array(
-                            Type.Union([
-                              Type.Union([Type.Null(), Type.Null()]),
-                              SnowflakeTypeSchema,
-                            ]),
-                            { maxItems: 100, uniqueItems: true },
-                          ),
+                          Type.Array(Type.Union([Type.Null(), SnowflakeTypeSchema]), {
+                            maxItems: 100,
+                            uniqueItems: true,
+                          }),
                           Type.Null(),
                         ]),
                       ),
                       replied_user: Type.Optional(
                         Type.Union([
-                          Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                            .Decode((value) => value === 'true')
+                          Codec(
+                            Type.String({
+                              pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                            }),
+                          )
+                            .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                             .Encode((value) => (value ? 'true' : 'false')),
                           Type.Null(),
                         ]),
@@ -471,8 +551,14 @@ export const interactionsHandler = new Hono().post(
                           type: MessageComponentTypesSchema,
                           id: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(
+                                Type.Refine(
+                                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                  (value) => Number(value) >= 0,
+                                  () => 'must be >= 0',
+                                ),
+                              )
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
@@ -483,8 +569,14 @@ export const interactionsHandler = new Hono().post(
                                 type: MessageComponentTypesSchema,
                                 id: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.String())
-                                      .Decode((value) => Number.parseInt(value, 10))
+                                    Codec(
+                                      Type.Refine(
+                                        Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                        (value) => Number(value) >= 0,
+                                        () => 'must be >= 0',
+                                      ),
+                                    )
+                                      .Decode((value) => Number(value))
                                       .Encode((value) => String(value)),
                                     Type.Null(),
                                   ]),
@@ -501,8 +593,15 @@ export const interactionsHandler = new Hono().post(
                                 ),
                                 disabled: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                      .Decode((value) => value === 'true')
+                                    Codec(
+                                      Type.String({
+                                        pattern:
+                                          /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                      }),
+                                    )
+                                      .Decode((value) =>
+                                        /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                      )
                                       .Encode((value) => (value ? 'true' : 'false')),
                                     Type.Null(),
                                   ]),
@@ -514,24 +613,24 @@ export const interactionsHandler = new Hono().post(
                                   ]),
                                 ),
                                 sku_id: Type.Optional(
-                                  Type.Union([
-                                    Type.Union([Type.Null(), Type.Null()]),
-                                    SnowflakeTypeSchema,
-                                  ]),
+                                  Type.Union([Type.Null(), SnowflakeTypeSchema]),
                                 ),
                                 emoji: Type.Optional(
-                                  Type.Union([
-                                    Type.Union([Type.Null(), Type.Null()]),
-                                    ComponentEmojiForRequestSchema,
-                                  ]),
+                                  Type.Union([Type.Null(), ComponentEmojiForRequestSchema]),
                                 ),
                               }),
                               Type.Object({
                                 type: MessageComponentTypesSchema,
                                 id: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.String())
-                                      .Decode((value) => Number.parseInt(value, 10))
+                                    Codec(
+                                      Type.Refine(
+                                        Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                        (value) => Number(value) >= 0,
+                                        () => 'must be >= 0',
+                                      ),
+                                    )
+                                      .Decode((value) => Number(value))
                                       .Encode((value) => String(value)),
                                     Type.Null(),
                                   ]),
@@ -542,32 +641,66 @@ export const interactionsHandler = new Hono().post(
                                 ),
                                 min_values: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.String())
-                                      .Decode((value) => Number.parseInt(value, 10))
+                                    Codec(
+                                      Type.Refine(
+                                        Type.Refine(
+                                          Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                          (value) => Number(value) >= 0,
+                                          () => 'must be >= 0',
+                                        ),
+                                        (value) => Number(value) <= 25,
+                                        () => 'must be <= 25',
+                                      ),
+                                    )
+                                      .Decode((value) => Number(value))
                                       .Encode((value) => String(value)),
                                     Type.Null(),
                                   ]),
                                 ),
                                 max_values: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.String())
-                                      .Decode((value) => Number.parseInt(value, 10))
+                                    Codec(
+                                      Type.Refine(
+                                        Type.Refine(
+                                          Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                          (value) => Number(value) >= 1,
+                                          () => 'must be >= 1',
+                                        ),
+                                        (value) => Number(value) <= 25,
+                                        () => 'must be <= 25',
+                                      ),
+                                    )
+                                      .Decode((value) => Number(value))
                                       .Encode((value) => String(value)),
                                     Type.Null(),
                                   ]),
                                 ),
                                 disabled: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                      .Decode((value) => value === 'true')
+                                    Codec(
+                                      Type.String({
+                                        pattern:
+                                          /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                      }),
+                                    )
+                                      .Decode((value) =>
+                                        /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                      )
                                       .Encode((value) => (value ? 'true' : 'false')),
                                     Type.Null(),
                                   ]),
                                 ),
                                 required: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                      .Decode((value) => value === 'true')
+                                    Codec(
+                                      Type.String({
+                                        pattern:
+                                          /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                      }),
+                                    )
+                                      .Decode((value) =>
+                                        /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                      )
                                       .Encode((value) => (value ? 'true' : 'false')),
                                     Type.Null(),
                                   ]),
@@ -589,8 +722,14 @@ export const interactionsHandler = new Hono().post(
                                 type: MessageComponentTypesSchema,
                                 id: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.String())
-                                      .Decode((value) => Number.parseInt(value, 10))
+                                    Codec(
+                                      Type.Refine(
+                                        Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                        (value) => Number(value) >= 0,
+                                        () => 'must be >= 0',
+                                      ),
+                                    )
+                                      .Decode((value) => Number(value))
                                       .Encode((value) => String(value)),
                                     Type.Null(),
                                   ]),
@@ -601,32 +740,66 @@ export const interactionsHandler = new Hono().post(
                                 ),
                                 min_values: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.String())
-                                      .Decode((value) => Number.parseInt(value, 10))
+                                    Codec(
+                                      Type.Refine(
+                                        Type.Refine(
+                                          Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                          (value) => Number(value) >= 0,
+                                          () => 'must be >= 0',
+                                        ),
+                                        (value) => Number(value) <= 25,
+                                        () => 'must be <= 25',
+                                      ),
+                                    )
+                                      .Decode((value) => Number(value))
                                       .Encode((value) => String(value)),
                                     Type.Null(),
                                   ]),
                                 ),
                                 max_values: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.String())
-                                      .Decode((value) => Number.parseInt(value, 10))
+                                    Codec(
+                                      Type.Refine(
+                                        Type.Refine(
+                                          Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                          (value) => Number(value) >= 1,
+                                          () => 'must be >= 1',
+                                        ),
+                                        (value) => Number(value) <= 25,
+                                        () => 'must be <= 25',
+                                      ),
+                                    )
+                                      .Decode((value) => Number(value))
                                       .Encode((value) => String(value)),
                                     Type.Null(),
                                   ]),
                                 ),
                                 disabled: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                      .Decode((value) => value === 'true')
+                                    Codec(
+                                      Type.String({
+                                        pattern:
+                                          /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                      }),
+                                    )
+                                      .Decode((value) =>
+                                        /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                      )
                                       .Encode((value) => (value ? 'true' : 'false')),
                                     Type.Null(),
                                   ]),
                                 ),
                                 required: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                      .Decode((value) => value === 'true')
+                                    Codec(
+                                      Type.String({
+                                        pattern:
+                                          /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                      }),
+                                    )
+                                      .Decode((value) =>
+                                        /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                      )
                                       .Encode((value) => (value ? 'true' : 'false')),
                                     Type.Null(),
                                   ]),
@@ -648,8 +821,14 @@ export const interactionsHandler = new Hono().post(
                                 type: MessageComponentTypesSchema,
                                 id: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.String())
-                                      .Decode((value) => Number.parseInt(value, 10))
+                                    Codec(
+                                      Type.Refine(
+                                        Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                        (value) => Number(value) >= 0,
+                                        () => 'must be >= 0',
+                                      ),
+                                    )
+                                      .Decode((value) => Number(value))
                                       .Encode((value) => String(value)),
                                     Type.Null(),
                                   ]),
@@ -660,32 +839,66 @@ export const interactionsHandler = new Hono().post(
                                 ),
                                 min_values: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.String())
-                                      .Decode((value) => Number.parseInt(value, 10))
+                                    Codec(
+                                      Type.Refine(
+                                        Type.Refine(
+                                          Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                          (value) => Number(value) >= 0,
+                                          () => 'must be >= 0',
+                                        ),
+                                        (value) => Number(value) <= 25,
+                                        () => 'must be <= 25',
+                                      ),
+                                    )
+                                      .Decode((value) => Number(value))
                                       .Encode((value) => String(value)),
                                     Type.Null(),
                                   ]),
                                 ),
                                 max_values: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.String())
-                                      .Decode((value) => Number.parseInt(value, 10))
+                                    Codec(
+                                      Type.Refine(
+                                        Type.Refine(
+                                          Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                          (value) => Number(value) >= 1,
+                                          () => 'must be >= 1',
+                                        ),
+                                        (value) => Number(value) <= 25,
+                                        () => 'must be <= 25',
+                                      ),
+                                    )
+                                      .Decode((value) => Number(value))
                                       .Encode((value) => String(value)),
                                     Type.Null(),
                                   ]),
                                 ),
                                 disabled: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                      .Decode((value) => value === 'true')
+                                    Codec(
+                                      Type.String({
+                                        pattern:
+                                          /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                      }),
+                                    )
+                                      .Decode((value) =>
+                                        /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                      )
                                       .Encode((value) => (value ? 'true' : 'false')),
                                     Type.Null(),
                                   ]),
                                 ),
                                 required: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                      .Decode((value) => value === 'true')
+                                    Codec(
+                                      Type.String({
+                                        pattern:
+                                          /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                      }),
+                                    )
+                                      .Decode((value) =>
+                                        /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                      )
                                       .Encode((value) => (value ? 'true' : 'false')),
                                     Type.Null(),
                                   ]),
@@ -701,8 +914,14 @@ export const interactionsHandler = new Hono().post(
                                 type: MessageComponentTypesSchema,
                                 id: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.String())
-                                      .Decode((value) => Number.parseInt(value, 10))
+                                    Codec(
+                                      Type.Refine(
+                                        Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                        (value) => Number(value) >= 0,
+                                        () => 'must be >= 0',
+                                      ),
+                                    )
+                                      .Decode((value) => Number(value))
                                       .Encode((value) => String(value)),
                                     Type.Null(),
                                   ]),
@@ -713,32 +932,66 @@ export const interactionsHandler = new Hono().post(
                                 ),
                                 min_values: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.String())
-                                      .Decode((value) => Number.parseInt(value, 10))
+                                    Codec(
+                                      Type.Refine(
+                                        Type.Refine(
+                                          Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                          (value) => Number(value) >= 0,
+                                          () => 'must be >= 0',
+                                        ),
+                                        (value) => Number(value) <= 25,
+                                        () => 'must be <= 25',
+                                      ),
+                                    )
+                                      .Decode((value) => Number(value))
                                       .Encode((value) => String(value)),
                                     Type.Null(),
                                   ]),
                                 ),
                                 max_values: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.String())
-                                      .Decode((value) => Number.parseInt(value, 10))
+                                    Codec(
+                                      Type.Refine(
+                                        Type.Refine(
+                                          Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                          (value) => Number(value) >= 1,
+                                          () => 'must be >= 1',
+                                        ),
+                                        (value) => Number(value) <= 25,
+                                        () => 'must be <= 25',
+                                      ),
+                                    )
+                                      .Decode((value) => Number(value))
                                       .Encode((value) => String(value)),
                                     Type.Null(),
                                   ]),
                                 ),
                                 disabled: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                      .Decode((value) => value === 'true')
+                                    Codec(
+                                      Type.String({
+                                        pattern:
+                                          /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                      }),
+                                    )
+                                      .Decode((value) =>
+                                        /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                      )
                                       .Encode((value) => (value ? 'true' : 'false')),
                                     Type.Null(),
                                   ]),
                                 ),
                                 required: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                      .Decode((value) => value === 'true')
+                                    Codec(
+                                      Type.String({
+                                        pattern:
+                                          /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                      }),
+                                    )
+                                      .Decode((value) =>
+                                        /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                      )
                                       .Encode((value) => (value ? 'true' : 'false')),
                                     Type.Null(),
                                   ]),
@@ -753,18 +1006,20 @@ export const interactionsHandler = new Hono().post(
                                     default: Type.Optional(
                                       Type.Union([
                                         Codec(
-                                          Type.Union([Type.Literal('true'), Type.Literal('false')]),
+                                          Type.String({
+                                            pattern:
+                                              /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                          }),
                                         )
-                                          .Decode((value) => value === 'true')
+                                          .Decode((value) =>
+                                            /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                          )
                                           .Encode((value) => (value ? 'true' : 'false')),
                                         Type.Null(),
                                       ]),
                                     ),
                                     emoji: Type.Optional(
-                                      Type.Union([
-                                        Type.Union([Type.Null(), Type.Null()]),
-                                        ComponentEmojiForRequestSchema,
-                                      ]),
+                                      Type.Union([Type.Null(), ComponentEmojiForRequestSchema]),
                                     ),
                                   }),
                                   { minItems: 1, maxItems: 25 },
@@ -774,8 +1029,14 @@ export const interactionsHandler = new Hono().post(
                                 type: MessageComponentTypesSchema,
                                 id: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.String())
-                                      .Decode((value) => Number.parseInt(value, 10))
+                                    Codec(
+                                      Type.Refine(
+                                        Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                        (value) => Number(value) >= 0,
+                                        () => 'must be >= 0',
+                                      ),
+                                    )
+                                      .Decode((value) => Number(value))
                                       .Encode((value) => String(value)),
                                     Type.Null(),
                                   ]),
@@ -786,32 +1047,66 @@ export const interactionsHandler = new Hono().post(
                                 ),
                                 min_values: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.String())
-                                      .Decode((value) => Number.parseInt(value, 10))
+                                    Codec(
+                                      Type.Refine(
+                                        Type.Refine(
+                                          Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                          (value) => Number(value) >= 0,
+                                          () => 'must be >= 0',
+                                        ),
+                                        (value) => Number(value) <= 25,
+                                        () => 'must be <= 25',
+                                      ),
+                                    )
+                                      .Decode((value) => Number(value))
                                       .Encode((value) => String(value)),
                                     Type.Null(),
                                   ]),
                                 ),
                                 max_values: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.String())
-                                      .Decode((value) => Number.parseInt(value, 10))
+                                    Codec(
+                                      Type.Refine(
+                                        Type.Refine(
+                                          Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                          (value) => Number(value) >= 1,
+                                          () => 'must be >= 1',
+                                        ),
+                                        (value) => Number(value) <= 25,
+                                        () => 'must be <= 25',
+                                      ),
+                                    )
+                                      .Decode((value) => Number(value))
                                       .Encode((value) => String(value)),
                                     Type.Null(),
                                   ]),
                                 ),
                                 disabled: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                      .Decode((value) => value === 'true')
+                                    Codec(
+                                      Type.String({
+                                        pattern:
+                                          /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                      }),
+                                    )
+                                      .Decode((value) =>
+                                        /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                      )
                                       .Encode((value) => (value ? 'true' : 'false')),
                                     Type.Null(),
                                   ]),
                                 ),
                                 required: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                      .Decode((value) => value === 'true')
+                                    Codec(
+                                      Type.String({
+                                        pattern:
+                                          /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                      }),
+                                    )
+                                      .Decode((value) =>
+                                        /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                      )
                                       .Encode((value) => (value ? 'true' : 'false')),
                                     Type.Null(),
                                   ]),
@@ -831,16 +1126,32 @@ export const interactionsHandler = new Hono().post(
                           type: MessageComponentTypesSchema,
                           id: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(
+                                Type.Refine(
+                                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                  (value) => Number(value) >= 0,
+                                  () => 'must be >= 0',
+                                ),
+                              )
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
                           ),
                           accent_color: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(
+                                Type.Refine(
+                                  Type.Refine(
+                                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                    (value) => Number(value) >= 0,
+                                    () => 'must be >= 0',
+                                  ),
+                                  (value) => Number(value) <= 16777215,
+                                  () => 'must be <= 16777215',
+                                ),
+                              )
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
@@ -851,8 +1162,14 @@ export const interactionsHandler = new Hono().post(
                                 type: MessageComponentTypesSchema,
                                 id: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.String())
-                                      .Decode((value) => Number.parseInt(value, 10))
+                                    Codec(
+                                      Type.Refine(
+                                        Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                        (value) => Number(value) >= 0,
+                                        () => 'must be >= 0',
+                                      ),
+                                    )
+                                      .Decode((value) => Number(value))
                                       .Encode((value) => String(value)),
                                     Type.Null(),
                                   ]),
@@ -863,8 +1180,14 @@ export const interactionsHandler = new Hono().post(
                                       type: MessageComponentTypesSchema,
                                       id: Type.Optional(
                                         Type.Union([
-                                          Codec(Type.String())
-                                            .Decode((value) => Number.parseInt(value, 10))
+                                          Codec(
+                                            Type.Refine(
+                                              Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                              (value) => Number(value) >= 0,
+                                              () => 'must be >= 0',
+                                            ),
+                                          )
+                                            .Decode((value) => Number(value))
                                             .Encode((value) => String(value)),
                                           Type.Null(),
                                         ]),
@@ -882,12 +1205,14 @@ export const interactionsHandler = new Hono().post(
                                       disabled: Type.Optional(
                                         Type.Union([
                                           Codec(
-                                            Type.Union([
-                                              Type.Literal('true'),
-                                              Type.Literal('false'),
-                                            ]),
+                                            Type.String({
+                                              pattern:
+                                                /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                            }),
                                           )
-                                            .Decode((value) => value === 'true')
+                                            .Decode((value) =>
+                                              /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                            )
                                             .Encode((value) => (value ? 'true' : 'false')),
                                           Type.Null(),
                                         ]),
@@ -899,24 +1224,24 @@ export const interactionsHandler = new Hono().post(
                                         ]),
                                       ),
                                       sku_id: Type.Optional(
-                                        Type.Union([
-                                          Type.Union([Type.Null(), Type.Null()]),
-                                          SnowflakeTypeSchema,
-                                        ]),
+                                        Type.Union([Type.Null(), SnowflakeTypeSchema]),
                                       ),
                                       emoji: Type.Optional(
-                                        Type.Union([
-                                          Type.Union([Type.Null(), Type.Null()]),
-                                          ComponentEmojiForRequestSchema,
-                                        ]),
+                                        Type.Union([Type.Null(), ComponentEmojiForRequestSchema]),
                                       ),
                                     }),
                                     Type.Object({
                                       type: MessageComponentTypesSchema,
                                       id: Type.Optional(
                                         Type.Union([
-                                          Codec(Type.String())
-                                            .Decode((value) => Number.parseInt(value, 10))
+                                          Codec(
+                                            Type.Refine(
+                                              Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                              (value) => Number(value) >= 0,
+                                              () => 'must be >= 0',
+                                            ),
+                                          )
+                                            .Decode((value) => Number(value))
                                             .Encode((value) => String(value)),
                                           Type.Null(),
                                         ]),
@@ -927,16 +1252,36 @@ export const interactionsHandler = new Hono().post(
                                       ),
                                       min_values: Type.Optional(
                                         Type.Union([
-                                          Codec(Type.String())
-                                            .Decode((value) => Number.parseInt(value, 10))
+                                          Codec(
+                                            Type.Refine(
+                                              Type.Refine(
+                                                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                                (value) => Number(value) >= 0,
+                                                () => 'must be >= 0',
+                                              ),
+                                              (value) => Number(value) <= 25,
+                                              () => 'must be <= 25',
+                                            ),
+                                          )
+                                            .Decode((value) => Number(value))
                                             .Encode((value) => String(value)),
                                           Type.Null(),
                                         ]),
                                       ),
                                       max_values: Type.Optional(
                                         Type.Union([
-                                          Codec(Type.String())
-                                            .Decode((value) => Number.parseInt(value, 10))
+                                          Codec(
+                                            Type.Refine(
+                                              Type.Refine(
+                                                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                                (value) => Number(value) >= 1,
+                                                () => 'must be >= 1',
+                                              ),
+                                              (value) => Number(value) <= 25,
+                                              () => 'must be <= 25',
+                                            ),
+                                          )
+                                            .Decode((value) => Number(value))
                                             .Encode((value) => String(value)),
                                           Type.Null(),
                                         ]),
@@ -944,12 +1289,14 @@ export const interactionsHandler = new Hono().post(
                                       disabled: Type.Optional(
                                         Type.Union([
                                           Codec(
-                                            Type.Union([
-                                              Type.Literal('true'),
-                                              Type.Literal('false'),
-                                            ]),
+                                            Type.String({
+                                              pattern:
+                                                /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                            }),
                                           )
-                                            .Decode((value) => value === 'true')
+                                            .Decode((value) =>
+                                              /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                            )
                                             .Encode((value) => (value ? 'true' : 'false')),
                                           Type.Null(),
                                         ]),
@@ -957,12 +1304,14 @@ export const interactionsHandler = new Hono().post(
                                       required: Type.Optional(
                                         Type.Union([
                                           Codec(
-                                            Type.Union([
-                                              Type.Literal('true'),
-                                              Type.Literal('false'),
-                                            ]),
+                                            Type.String({
+                                              pattern:
+                                                /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                            }),
                                           )
-                                            .Decode((value) => value === 'true')
+                                            .Decode((value) =>
+                                              /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                            )
                                             .Encode((value) => (value ? 'true' : 'false')),
                                           Type.Null(),
                                         ]),
@@ -986,8 +1335,14 @@ export const interactionsHandler = new Hono().post(
                                       type: MessageComponentTypesSchema,
                                       id: Type.Optional(
                                         Type.Union([
-                                          Codec(Type.String())
-                                            .Decode((value) => Number.parseInt(value, 10))
+                                          Codec(
+                                            Type.Refine(
+                                              Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                              (value) => Number(value) >= 0,
+                                              () => 'must be >= 0',
+                                            ),
+                                          )
+                                            .Decode((value) => Number(value))
                                             .Encode((value) => String(value)),
                                           Type.Null(),
                                         ]),
@@ -998,16 +1353,36 @@ export const interactionsHandler = new Hono().post(
                                       ),
                                       min_values: Type.Optional(
                                         Type.Union([
-                                          Codec(Type.String())
-                                            .Decode((value) => Number.parseInt(value, 10))
+                                          Codec(
+                                            Type.Refine(
+                                              Type.Refine(
+                                                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                                (value) => Number(value) >= 0,
+                                                () => 'must be >= 0',
+                                              ),
+                                              (value) => Number(value) <= 25,
+                                              () => 'must be <= 25',
+                                            ),
+                                          )
+                                            .Decode((value) => Number(value))
                                             .Encode((value) => String(value)),
                                           Type.Null(),
                                         ]),
                                       ),
                                       max_values: Type.Optional(
                                         Type.Union([
-                                          Codec(Type.String())
-                                            .Decode((value) => Number.parseInt(value, 10))
+                                          Codec(
+                                            Type.Refine(
+                                              Type.Refine(
+                                                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                                (value) => Number(value) >= 1,
+                                                () => 'must be >= 1',
+                                              ),
+                                              (value) => Number(value) <= 25,
+                                              () => 'must be <= 25',
+                                            ),
+                                          )
+                                            .Decode((value) => Number(value))
                                             .Encode((value) => String(value)),
                                           Type.Null(),
                                         ]),
@@ -1015,12 +1390,14 @@ export const interactionsHandler = new Hono().post(
                                       disabled: Type.Optional(
                                         Type.Union([
                                           Codec(
-                                            Type.Union([
-                                              Type.Literal('true'),
-                                              Type.Literal('false'),
-                                            ]),
+                                            Type.String({
+                                              pattern:
+                                                /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                            }),
                                           )
-                                            .Decode((value) => value === 'true')
+                                            .Decode((value) =>
+                                              /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                            )
                                             .Encode((value) => (value ? 'true' : 'false')),
                                           Type.Null(),
                                         ]),
@@ -1028,12 +1405,14 @@ export const interactionsHandler = new Hono().post(
                                       required: Type.Optional(
                                         Type.Union([
                                           Codec(
-                                            Type.Union([
-                                              Type.Literal('true'),
-                                              Type.Literal('false'),
-                                            ]),
+                                            Type.String({
+                                              pattern:
+                                                /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                            }),
                                           )
-                                            .Decode((value) => value === 'true')
+                                            .Decode((value) =>
+                                              /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                            )
                                             .Encode((value) => (value ? 'true' : 'false')),
                                           Type.Null(),
                                         ]),
@@ -1055,8 +1434,14 @@ export const interactionsHandler = new Hono().post(
                                       type: MessageComponentTypesSchema,
                                       id: Type.Optional(
                                         Type.Union([
-                                          Codec(Type.String())
-                                            .Decode((value) => Number.parseInt(value, 10))
+                                          Codec(
+                                            Type.Refine(
+                                              Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                              (value) => Number(value) >= 0,
+                                              () => 'must be >= 0',
+                                            ),
+                                          )
+                                            .Decode((value) => Number(value))
                                             .Encode((value) => String(value)),
                                           Type.Null(),
                                         ]),
@@ -1067,16 +1452,36 @@ export const interactionsHandler = new Hono().post(
                                       ),
                                       min_values: Type.Optional(
                                         Type.Union([
-                                          Codec(Type.String())
-                                            .Decode((value) => Number.parseInt(value, 10))
+                                          Codec(
+                                            Type.Refine(
+                                              Type.Refine(
+                                                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                                (value) => Number(value) >= 0,
+                                                () => 'must be >= 0',
+                                              ),
+                                              (value) => Number(value) <= 25,
+                                              () => 'must be <= 25',
+                                            ),
+                                          )
+                                            .Decode((value) => Number(value))
                                             .Encode((value) => String(value)),
                                           Type.Null(),
                                         ]),
                                       ),
                                       max_values: Type.Optional(
                                         Type.Union([
-                                          Codec(Type.String())
-                                            .Decode((value) => Number.parseInt(value, 10))
+                                          Codec(
+                                            Type.Refine(
+                                              Type.Refine(
+                                                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                                (value) => Number(value) >= 1,
+                                                () => 'must be >= 1',
+                                              ),
+                                              (value) => Number(value) <= 25,
+                                              () => 'must be <= 25',
+                                            ),
+                                          )
+                                            .Decode((value) => Number(value))
                                             .Encode((value) => String(value)),
                                           Type.Null(),
                                         ]),
@@ -1084,12 +1489,14 @@ export const interactionsHandler = new Hono().post(
                                       disabled: Type.Optional(
                                         Type.Union([
                                           Codec(
-                                            Type.Union([
-                                              Type.Literal('true'),
-                                              Type.Literal('false'),
-                                            ]),
+                                            Type.String({
+                                              pattern:
+                                                /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                            }),
                                           )
-                                            .Decode((value) => value === 'true')
+                                            .Decode((value) =>
+                                              /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                            )
                                             .Encode((value) => (value ? 'true' : 'false')),
                                           Type.Null(),
                                         ]),
@@ -1097,12 +1504,14 @@ export const interactionsHandler = new Hono().post(
                                       required: Type.Optional(
                                         Type.Union([
                                           Codec(
-                                            Type.Union([
-                                              Type.Literal('true'),
-                                              Type.Literal('false'),
-                                            ]),
+                                            Type.String({
+                                              pattern:
+                                                /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                            }),
                                           )
-                                            .Decode((value) => value === 'true')
+                                            .Decode((value) =>
+                                              /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                            )
                                             .Encode((value) => (value ? 'true' : 'false')),
                                           Type.Null(),
                                         ]),
@@ -1120,8 +1529,14 @@ export const interactionsHandler = new Hono().post(
                                       type: MessageComponentTypesSchema,
                                       id: Type.Optional(
                                         Type.Union([
-                                          Codec(Type.String())
-                                            .Decode((value) => Number.parseInt(value, 10))
+                                          Codec(
+                                            Type.Refine(
+                                              Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                              (value) => Number(value) >= 0,
+                                              () => 'must be >= 0',
+                                            ),
+                                          )
+                                            .Decode((value) => Number(value))
                                             .Encode((value) => String(value)),
                                           Type.Null(),
                                         ]),
@@ -1132,16 +1547,36 @@ export const interactionsHandler = new Hono().post(
                                       ),
                                       min_values: Type.Optional(
                                         Type.Union([
-                                          Codec(Type.String())
-                                            .Decode((value) => Number.parseInt(value, 10))
+                                          Codec(
+                                            Type.Refine(
+                                              Type.Refine(
+                                                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                                (value) => Number(value) >= 0,
+                                                () => 'must be >= 0',
+                                              ),
+                                              (value) => Number(value) <= 25,
+                                              () => 'must be <= 25',
+                                            ),
+                                          )
+                                            .Decode((value) => Number(value))
                                             .Encode((value) => String(value)),
                                           Type.Null(),
                                         ]),
                                       ),
                                       max_values: Type.Optional(
                                         Type.Union([
-                                          Codec(Type.String())
-                                            .Decode((value) => Number.parseInt(value, 10))
+                                          Codec(
+                                            Type.Refine(
+                                              Type.Refine(
+                                                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                                (value) => Number(value) >= 1,
+                                                () => 'must be >= 1',
+                                              ),
+                                              (value) => Number(value) <= 25,
+                                              () => 'must be <= 25',
+                                            ),
+                                          )
+                                            .Decode((value) => Number(value))
                                             .Encode((value) => String(value)),
                                           Type.Null(),
                                         ]),
@@ -1149,12 +1584,14 @@ export const interactionsHandler = new Hono().post(
                                       disabled: Type.Optional(
                                         Type.Union([
                                           Codec(
-                                            Type.Union([
-                                              Type.Literal('true'),
-                                              Type.Literal('false'),
-                                            ]),
+                                            Type.String({
+                                              pattern:
+                                                /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                            }),
                                           )
-                                            .Decode((value) => value === 'true')
+                                            .Decode((value) =>
+                                              /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                            )
                                             .Encode((value) => (value ? 'true' : 'false')),
                                           Type.Null(),
                                         ]),
@@ -1162,12 +1599,14 @@ export const interactionsHandler = new Hono().post(
                                       required: Type.Optional(
                                         Type.Union([
                                           Codec(
-                                            Type.Union([
-                                              Type.Literal('true'),
-                                              Type.Literal('false'),
-                                            ]),
+                                            Type.String({
+                                              pattern:
+                                                /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                            }),
                                           )
-                                            .Decode((value) => value === 'true')
+                                            .Decode((value) =>
+                                              /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                            )
                                             .Encode((value) => (value ? 'true' : 'false')),
                                           Type.Null(),
                                         ]),
@@ -1185,19 +1624,21 @@ export const interactionsHandler = new Hono().post(
                                           default: Type.Optional(
                                             Type.Union([
                                               Codec(
-                                                Type.Union([
-                                                  Type.Literal('true'),
-                                                  Type.Literal('false'),
-                                                ]),
+                                                Type.String({
+                                                  pattern:
+                                                    /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                                }),
                                               )
-                                                .Decode((value) => value === 'true')
+                                                .Decode((value) =>
+                                                  /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                                )
                                                 .Encode((value) => (value ? 'true' : 'false')),
                                               Type.Null(),
                                             ]),
                                           ),
                                           emoji: Type.Optional(
                                             Type.Union([
-                                              Type.Union([Type.Null(), Type.Null()]),
+                                              Type.Null(),
                                               ComponentEmojiForRequestSchema,
                                             ]),
                                           ),
@@ -1209,8 +1650,14 @@ export const interactionsHandler = new Hono().post(
                                       type: MessageComponentTypesSchema,
                                       id: Type.Optional(
                                         Type.Union([
-                                          Codec(Type.String())
-                                            .Decode((value) => Number.parseInt(value, 10))
+                                          Codec(
+                                            Type.Refine(
+                                              Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                              (value) => Number(value) >= 0,
+                                              () => 'must be >= 0',
+                                            ),
+                                          )
+                                            .Decode((value) => Number(value))
                                             .Encode((value) => String(value)),
                                           Type.Null(),
                                         ]),
@@ -1221,16 +1668,36 @@ export const interactionsHandler = new Hono().post(
                                       ),
                                       min_values: Type.Optional(
                                         Type.Union([
-                                          Codec(Type.String())
-                                            .Decode((value) => Number.parseInt(value, 10))
+                                          Codec(
+                                            Type.Refine(
+                                              Type.Refine(
+                                                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                                (value) => Number(value) >= 0,
+                                                () => 'must be >= 0',
+                                              ),
+                                              (value) => Number(value) <= 25,
+                                              () => 'must be <= 25',
+                                            ),
+                                          )
+                                            .Decode((value) => Number(value))
                                             .Encode((value) => String(value)),
                                           Type.Null(),
                                         ]),
                                       ),
                                       max_values: Type.Optional(
                                         Type.Union([
-                                          Codec(Type.String())
-                                            .Decode((value) => Number.parseInt(value, 10))
+                                          Codec(
+                                            Type.Refine(
+                                              Type.Refine(
+                                                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                                (value) => Number(value) >= 1,
+                                                () => 'must be >= 1',
+                                              ),
+                                              (value) => Number(value) <= 25,
+                                              () => 'must be <= 25',
+                                            ),
+                                          )
+                                            .Decode((value) => Number(value))
                                             .Encode((value) => String(value)),
                                           Type.Null(),
                                         ]),
@@ -1238,12 +1705,14 @@ export const interactionsHandler = new Hono().post(
                                       disabled: Type.Optional(
                                         Type.Union([
                                           Codec(
-                                            Type.Union([
-                                              Type.Literal('true'),
-                                              Type.Literal('false'),
-                                            ]),
+                                            Type.String({
+                                              pattern:
+                                                /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                            }),
                                           )
-                                            .Decode((value) => value === 'true')
+                                            .Decode((value) =>
+                                              /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                            )
                                             .Encode((value) => (value ? 'true' : 'false')),
                                           Type.Null(),
                                         ]),
@@ -1251,12 +1720,14 @@ export const interactionsHandler = new Hono().post(
                                       required: Type.Optional(
                                         Type.Union([
                                           Codec(
-                                            Type.Union([
-                                              Type.Literal('true'),
-                                              Type.Literal('false'),
-                                            ]),
+                                            Type.String({
+                                              pattern:
+                                                /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                            }),
                                           )
-                                            .Decode((value) => value === 'true')
+                                            .Decode((value) =>
+                                              /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                            )
                                             .Encode((value) => (value ? 'true' : 'false')),
                                           Type.Null(),
                                         ]),
@@ -1278,16 +1749,29 @@ export const interactionsHandler = new Hono().post(
                                 type: MessageComponentTypesSchema,
                                 id: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.String())
-                                      .Decode((value) => Number.parseInt(value, 10))
+                                    Codec(
+                                      Type.Refine(
+                                        Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                        (value) => Number(value) >= 0,
+                                        () => 'must be >= 0',
+                                      ),
+                                    )
+                                      .Decode((value) => Number(value))
                                       .Encode((value) => String(value)),
                                     Type.Null(),
                                   ]),
                                 ),
                                 spoiler: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                      .Decode((value) => value === 'true')
+                                    Codec(
+                                      Type.String({
+                                        pattern:
+                                          /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                      }),
+                                    )
+                                      .Decode((value) =>
+                                        /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                      )
                                       .Encode((value) => (value ? 'true' : 'false')),
                                     Type.Null(),
                                   ]),
@@ -1298,8 +1782,14 @@ export const interactionsHandler = new Hono().post(
                                 type: MessageComponentTypesSchema,
                                 id: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.String())
-                                      .Decode((value) => Number.parseInt(value, 10))
+                                    Codec(
+                                      Type.Refine(
+                                        Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                        (value) => Number(value) >= 0,
+                                        () => 'must be >= 0',
+                                      ),
+                                    )
+                                      .Decode((value) => Number(value))
                                       .Encode((value) => String(value)),
                                     Type.Null(),
                                   ]),
@@ -1315,9 +1805,14 @@ export const interactionsHandler = new Hono().post(
                                     spoiler: Type.Optional(
                                       Type.Union([
                                         Codec(
-                                          Type.Union([Type.Literal('true'), Type.Literal('false')]),
+                                          Type.String({
+                                            pattern:
+                                              /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                          }),
                                         )
-                                          .Decode((value) => value === 'true')
+                                          .Decode((value) =>
+                                            /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                          )
                                           .Encode((value) => (value ? 'true' : 'false')),
                                         Type.Null(),
                                       ]),
@@ -1331,8 +1826,14 @@ export const interactionsHandler = new Hono().post(
                                 type: MessageComponentTypesSchema,
                                 id: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.String())
-                                      .Decode((value) => Number.parseInt(value, 10))
+                                    Codec(
+                                      Type.Refine(
+                                        Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                        (value) => Number(value) >= 0,
+                                        () => 'must be >= 0',
+                                      ),
+                                    )
+                                      .Decode((value) => Number(value))
                                       .Encode((value) => String(value)),
                                     Type.Null(),
                                   ]),
@@ -1342,8 +1843,14 @@ export const interactionsHandler = new Hono().post(
                                     type: MessageComponentTypesSchema,
                                     id: Type.Optional(
                                       Type.Union([
-                                        Codec(Type.String())
-                                          .Decode((value) => Number.parseInt(value, 10))
+                                        Codec(
+                                          Type.Refine(
+                                            Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                            (value) => Number(value) >= 0,
+                                            () => 'must be >= 0',
+                                          ),
+                                        )
+                                          .Decode((value) => Number(value))
                                           .Encode((value) => String(value)),
                                         Type.Null(),
                                       ]),
@@ -1357,8 +1864,14 @@ export const interactionsHandler = new Hono().post(
                                     type: MessageComponentTypesSchema,
                                     id: Type.Optional(
                                       Type.Union([
-                                        Codec(Type.String())
-                                          .Decode((value) => Number.parseInt(value, 10))
+                                        Codec(
+                                          Type.Refine(
+                                            Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                            (value) => Number(value) >= 0,
+                                            () => 'must be >= 0',
+                                          ),
+                                        )
+                                          .Decode((value) => Number(value))
                                           .Encode((value) => String(value)),
                                         Type.Null(),
                                       ]),
@@ -1376,9 +1889,14 @@ export const interactionsHandler = new Hono().post(
                                     disabled: Type.Optional(
                                       Type.Union([
                                         Codec(
-                                          Type.Union([Type.Literal('true'), Type.Literal('false')]),
+                                          Type.String({
+                                            pattern:
+                                              /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                          }),
                                         )
-                                          .Decode((value) => value === 'true')
+                                          .Decode((value) =>
+                                            /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                          )
                                           .Encode((value) => (value ? 'true' : 'false')),
                                         Type.Null(),
                                       ]),
@@ -1390,24 +1908,24 @@ export const interactionsHandler = new Hono().post(
                                       ]),
                                     ),
                                     sku_id: Type.Optional(
-                                      Type.Union([
-                                        Type.Union([Type.Null(), Type.Null()]),
-                                        SnowflakeTypeSchema,
-                                      ]),
+                                      Type.Union([Type.Null(), SnowflakeTypeSchema]),
                                     ),
                                     emoji: Type.Optional(
-                                      Type.Union([
-                                        Type.Union([Type.Null(), Type.Null()]),
-                                        ComponentEmojiForRequestSchema,
-                                      ]),
+                                      Type.Union([Type.Null(), ComponentEmojiForRequestSchema]),
                                     ),
                                   }),
                                   Type.Object({
                                     type: MessageComponentTypesSchema,
                                     id: Type.Optional(
                                       Type.Union([
-                                        Codec(Type.String())
-                                          .Decode((value) => Number.parseInt(value, 10))
+                                        Codec(
+                                          Type.Refine(
+                                            Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                            (value) => Number(value) >= 0,
+                                            () => 'must be >= 0',
+                                          ),
+                                        )
+                                          .Decode((value) => Number(value))
                                           .Encode((value) => String(value)),
                                         Type.Null(),
                                       ]),
@@ -1421,9 +1939,14 @@ export const interactionsHandler = new Hono().post(
                                     spoiler: Type.Optional(
                                       Type.Union([
                                         Codec(
-                                          Type.Union([Type.Literal('true'), Type.Literal('false')]),
+                                          Type.String({
+                                            pattern:
+                                              /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                          }),
                                         )
-                                          .Decode((value) => value === 'true')
+                                          .Decode((value) =>
+                                            /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                          )
                                           .Encode((value) => (value ? 'true' : 'false')),
                                         Type.Null(),
                                       ]),
@@ -1436,22 +1959,35 @@ export const interactionsHandler = new Hono().post(
                                 type: MessageComponentTypesSchema,
                                 id: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.String())
-                                      .Decode((value) => Number.parseInt(value, 10))
+                                    Codec(
+                                      Type.Refine(
+                                        Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                        (value) => Number(value) >= 0,
+                                        () => 'must be >= 0',
+                                      ),
+                                    )
+                                      .Decode((value) => Number(value))
                                       .Encode((value) => String(value)),
                                     Type.Null(),
                                   ]),
                                 ),
                                 spacing: Type.Optional(
                                   Type.Union([
-                                    Type.Union([Type.Null(), Type.Null()]),
+                                    Type.Null(),
                                     MessageComponentSeparatorSpacingSizeSchema,
                                   ]),
                                 ),
                                 divider: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                      .Decode((value) => value === 'true')
+                                    Codec(
+                                      Type.String({
+                                        pattern:
+                                          /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                      }),
+                                    )
+                                      .Decode((value) =>
+                                        /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                      )
                                       .Encode((value) => (value ? 'true' : 'false')),
                                     Type.Null(),
                                   ]),
@@ -1461,8 +1997,14 @@ export const interactionsHandler = new Hono().post(
                                 type: MessageComponentTypesSchema,
                                 id: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.String())
-                                      .Decode((value) => Number.parseInt(value, 10))
+                                    Codec(
+                                      Type.Refine(
+                                        Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                        (value) => Number(value) >= 0,
+                                        () => 'must be >= 0',
+                                      ),
+                                    )
+                                      .Decode((value) => Number(value))
                                       .Encode((value) => String(value)),
                                     Type.Null(),
                                   ]),
@@ -1474,8 +2016,13 @@ export const interactionsHandler = new Hono().post(
                           ),
                           spoiler: Type.Optional(
                             Type.Union([
-                              Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                .Decode((value) => value === 'true')
+                              Codec(
+                                Type.String({
+                                  pattern:
+                                    /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                }),
+                              )
+                                .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                 .Encode((value) => (value ? 'true' : 'false')),
                               Type.Null(),
                             ]),
@@ -1485,16 +2032,27 @@ export const interactionsHandler = new Hono().post(
                           type: MessageComponentTypesSchema,
                           id: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(
+                                Type.Refine(
+                                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                  (value) => Number(value) >= 0,
+                                  () => 'must be >= 0',
+                                ),
+                              )
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
                           ),
                           spoiler: Type.Optional(
                             Type.Union([
-                              Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                .Decode((value) => value === 'true')
+                              Codec(
+                                Type.String({
+                                  pattern:
+                                    /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                }),
+                              )
+                                .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                 .Encode((value) => (value ? 'true' : 'false')),
                               Type.Null(),
                             ]),
@@ -1505,8 +2063,14 @@ export const interactionsHandler = new Hono().post(
                           type: MessageComponentTypesSchema,
                           id: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(
+                                Type.Refine(
+                                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                  (value) => Number(value) >= 0,
+                                  () => 'must be >= 0',
+                                ),
+                              )
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
@@ -1521,8 +2085,13 @@ export const interactionsHandler = new Hono().post(
                               ),
                               spoiler: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                    .Decode((value) => value === 'true')
+                                  Codec(
+                                    Type.String({
+                                      pattern:
+                                        /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                    }),
+                                  )
+                                    .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                     .Encode((value) => (value ? 'true' : 'false')),
                                   Type.Null(),
                                 ]),
@@ -1536,8 +2105,14 @@ export const interactionsHandler = new Hono().post(
                           type: MessageComponentTypesSchema,
                           id: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(
+                                Type.Refine(
+                                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                  (value) => Number(value) >= 0,
+                                  () => 'must be >= 0',
+                                ),
+                              )
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
@@ -1547,8 +2122,14 @@ export const interactionsHandler = new Hono().post(
                               type: MessageComponentTypesSchema,
                               id: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.String())
-                                    .Decode((value) => Number.parseInt(value, 10))
+                                  Codec(
+                                    Type.Refine(
+                                      Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                      (value) => Number(value) >= 0,
+                                      () => 'must be >= 0',
+                                    ),
+                                  )
+                                    .Decode((value) => Number(value))
                                     .Encode((value) => String(value)),
                                   Type.Null(),
                                 ]),
@@ -1562,8 +2143,14 @@ export const interactionsHandler = new Hono().post(
                               type: MessageComponentTypesSchema,
                               id: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.String())
-                                    .Decode((value) => Number.parseInt(value, 10))
+                                  Codec(
+                                    Type.Refine(
+                                      Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                      (value) => Number(value) >= 0,
+                                      () => 'must be >= 0',
+                                    ),
+                                  )
+                                    .Decode((value) => Number(value))
                                     .Encode((value) => String(value)),
                                   Type.Null(),
                                 ]),
@@ -1580,8 +2167,13 @@ export const interactionsHandler = new Hono().post(
                               ),
                               disabled: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                    .Decode((value) => value === 'true')
+                                  Codec(
+                                    Type.String({
+                                      pattern:
+                                        /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                    }),
+                                  )
+                                    .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                     .Encode((value) => (value ? 'true' : 'false')),
                                   Type.Null(),
                                 ]),
@@ -1592,25 +2184,23 @@ export const interactionsHandler = new Hono().post(
                                   Type.Null(),
                                 ]),
                               ),
-                              sku_id: Type.Optional(
-                                Type.Union([
-                                  Type.Union([Type.Null(), Type.Null()]),
-                                  SnowflakeTypeSchema,
-                                ]),
-                              ),
+                              sku_id: Type.Optional(Type.Union([Type.Null(), SnowflakeTypeSchema])),
                               emoji: Type.Optional(
-                                Type.Union([
-                                  Type.Union([Type.Null(), Type.Null()]),
-                                  ComponentEmojiForRequestSchema,
-                                ]),
+                                Type.Union([Type.Null(), ComponentEmojiForRequestSchema]),
                               ),
                             }),
                             Type.Object({
                               type: MessageComponentTypesSchema,
                               id: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.String())
-                                    .Decode((value) => Number.parseInt(value, 10))
+                                  Codec(
+                                    Type.Refine(
+                                      Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                      (value) => Number(value) >= 0,
+                                      () => 'must be >= 0',
+                                    ),
+                                  )
+                                    .Decode((value) => Number(value))
                                     .Encode((value) => String(value)),
                                   Type.Null(),
                                 ]),
@@ -1623,8 +2213,13 @@ export const interactionsHandler = new Hono().post(
                               ),
                               spoiler: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                    .Decode((value) => value === 'true')
+                                  Codec(
+                                    Type.String({
+                                      pattern:
+                                        /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                    }),
+                                  )
+                                    .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                     .Encode((value) => (value ? 'true' : 'false')),
                                   Type.Null(),
                                 ]),
@@ -1637,22 +2232,30 @@ export const interactionsHandler = new Hono().post(
                           type: MessageComponentTypesSchema,
                           id: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(
+                                Type.Refine(
+                                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                  (value) => Number(value) >= 0,
+                                  () => 'must be >= 0',
+                                ),
+                              )
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
                           ),
                           spacing: Type.Optional(
-                            Type.Union([
-                              Type.Union([Type.Null(), Type.Null()]),
-                              MessageComponentSeparatorSpacingSizeSchema,
-                            ]),
+                            Type.Union([Type.Null(), MessageComponentSeparatorSpacingSizeSchema]),
                           ),
                           divider: Type.Optional(
                             Type.Union([
-                              Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                .Decode((value) => value === 'true')
+                              Codec(
+                                Type.String({
+                                  pattern:
+                                    /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                }),
+                              )
+                                .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                 .Encode((value) => (value ? 'true' : 'false')),
                               Type.Null(),
                             ]),
@@ -1662,8 +2265,14 @@ export const interactionsHandler = new Hono().post(
                           type: MessageComponentTypesSchema,
                           id: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(
+                                Type.Refine(
+                                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                  (value) => Number(value) >= 0,
+                                  () => 'must be >= 0',
+                                ),
+                              )
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
@@ -1689,7 +2298,19 @@ export const interactionsHandler = new Hono().post(
                         ),
                         duration_secs: Type.Optional(
                           Type.Union([
-                            Codec(Type.String())
+                            Codec(
+                              Type.Refine(
+                                Type.Refine(
+                                  Type.String({
+                                    pattern: '^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$',
+                                  }),
+                                  (value) => Number(value) >= 0,
+                                  () => 'must be >= 0',
+                                ),
+                                (value) => Number(value) <= 2147483647,
+                                () => 'must be <= 2147483647',
+                              ),
+                            )
                               .Decode((value) => Number(value))
                               .Encode((value) => String(value)),
                             Type.Null(),
@@ -1703,8 +2324,12 @@ export const interactionsHandler = new Hono().post(
                         ),
                         is_spoiler: Type.Optional(
                           Type.Union([
-                            Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                              .Decode((value) => value === 'true')
+                            Codec(
+                              Type.String({
+                                pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                              }),
+                            )
+                              .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                               .Encode((value) => (value ? 'true' : 'false')),
                             Type.Null(),
                           ]),
@@ -1717,7 +2342,7 @@ export const interactionsHandler = new Hono().post(
                 ),
                 poll: Type.Optional(
                   Type.Union([
-                    Type.Union([Type.Null(), Type.Null()]),
+                    Type.Null(),
                     Type.Object({
                       question: Type.Object(
                         {
@@ -1734,13 +2359,12 @@ export const interactionsHandler = new Hono().post(
                           emoji: Type.Optional(
                             Type.Union(
                               [
-                                Type.Union([Type.Null(), Type.Null()]),
+                                Type.Null(),
                                 Type.Object({
                                   id: Type.Optional(
-                                    Type.Union(
-                                      [Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema],
-                                      { description: 'The ID of the custom emoji' },
-                                    ),
+                                    Type.Union([Type.Null(), SnowflakeTypeSchema], {
+                                      description: 'The ID of the custom emoji',
+                                    }),
                                   ),
                                   name: Type.Optional(
                                     Type.Union([
@@ -1755,9 +2379,14 @@ export const interactionsHandler = new Hono().post(
                                   animated: Type.Optional(
                                     Type.Union([
                                       Codec(
-                                        Type.Union([Type.Literal('true'), Type.Literal('false')]),
+                                        Type.String({
+                                          pattern:
+                                            /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                        }),
                                       )
-                                        .Decode((value) => value === 'true')
+                                        .Decode((value) =>
+                                          /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                        )
                                         .Encode((value) => (value ? 'true' : 'false')),
                                       Type.Null(),
                                     ]),
@@ -1787,16 +2416,12 @@ export const interactionsHandler = new Hono().post(
                               emoji: Type.Optional(
                                 Type.Union(
                                   [
-                                    Type.Union([Type.Null(), Type.Null()]),
+                                    Type.Null(),
                                     Type.Object({
                                       id: Type.Optional(
-                                        Type.Union(
-                                          [
-                                            Type.Union([Type.Null(), Type.Null()]),
-                                            SnowflakeTypeSchema,
-                                          ],
-                                          { description: 'The ID of the custom emoji' },
-                                        ),
+                                        Type.Union([Type.Null(), SnowflakeTypeSchema], {
+                                          description: 'The ID of the custom emoji',
+                                        }),
                                       ),
                                       name: Type.Optional(
                                         Type.Union([
@@ -1811,12 +2436,14 @@ export const interactionsHandler = new Hono().post(
                                       animated: Type.Optional(
                                         Type.Union([
                                           Codec(
-                                            Type.Union([
-                                              Type.Literal('true'),
-                                              Type.Literal('false'),
-                                            ]),
+                                            Type.String({
+                                              pattern:
+                                                /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                            }),
                                           )
-                                            .Decode((value) => value === 'true')
+                                            .Decode((value) =>
+                                              /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                            )
                                             .Encode((value) => (value ? 'true' : 'false')),
                                           Type.Null(),
                                         ]),
@@ -1838,22 +2465,35 @@ export const interactionsHandler = new Hono().post(
                       ),
                       allow_multiselect: Type.Optional(
                         Type.Union([
-                          Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                            .Decode((value) => value === 'true')
+                          Codec(
+                            Type.String({
+                              pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                            }),
+                          )
+                            .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                             .Encode((value) => (value ? 'true' : 'false')),
                           Type.Null(),
                         ]),
                       ),
                       layout_type: Type.Optional(
-                        Type.Union(
-                          [Type.Union([Type.Null(), Type.Null()]), PollLayoutTypesSchema],
-                          { description: 'The layout type of the poll. Defaults to... DEFAULT!' },
-                        ),
+                        Type.Union([Type.Null(), PollLayoutTypesSchema], {
+                          description: 'The layout type of the poll. Defaults to... DEFAULT!',
+                        }),
                       ),
                       duration: Type.Optional(
                         Type.Union([
-                          Codec(Type.String())
-                            .Decode((value) => Number.parseInt(value, 10))
+                          Codec(
+                            Type.Refine(
+                              Type.Refine(
+                                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                (value) => Number(value) >= 1,
+                                () => 'must be >= 1',
+                              ),
+                              (value) => Number(value) <= 768,
+                              () => 'must be <= 768',
+                            ),
+                          )
+                            .Decode((value) => Number(value))
                             .Encode((value) => String(value)),
                           Type.Null(),
                         ]),
@@ -1863,16 +2503,20 @@ export const interactionsHandler = new Hono().post(
                 ),
                 tts: Type.Optional(
                   Type.Union([
-                    Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                      .Decode((value) => value === 'true')
+                    Codec(
+                      Type.String({
+                        pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                      }),
+                    )
+                      .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                       .Encode((value) => (value ? 'true' : 'false')),
                     Type.Null(),
                   ]),
                 ),
                 flags: Type.Optional(
                   Type.Union([
-                    Codec(Type.String())
-                      .Decode((value) => Number.parseInt(value, 10))
+                    Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+                      .Decode((value) => Number(value))
                       .Encode((value) => String(value)),
                     Type.Null(),
                   ]),
@@ -1893,8 +2537,14 @@ export const interactionsHandler = new Hono().post(
                   type: MessageComponentTypesSchema,
                   id: Type.Optional(
                     Type.Union([
-                      Codec(Type.String())
-                        .Decode((value) => Number.parseInt(value, 10))
+                      Codec(
+                        Type.Refine(
+                          Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                          (value) => Number(value) >= 0,
+                          () => 'must be >= 0',
+                        ),
+                      )
+                        .Decode((value) => Number(value))
                         .Encode((value) => String(value)),
                       Type.Null(),
                     ]),
@@ -1904,8 +2554,14 @@ export const interactionsHandler = new Hono().post(
                       type: MessageComponentTypesSchema,
                       id: Type.Optional(
                         Type.Union([
-                          Codec(Type.String())
-                            .Decode((value) => Number.parseInt(value, 10))
+                          Codec(
+                            Type.Refine(
+                              Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                              (value) => Number(value) >= 0,
+                              () => 'must be >= 0',
+                            ),
+                          )
+                            .Decode((value) => Number(value))
                             .Encode((value) => String(value)),
                           Type.Null(),
                         ]),
@@ -1923,24 +2579,48 @@ export const interactionsHandler = new Hono().post(
                       ),
                       required: Type.Optional(
                         Type.Union([
-                          Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                            .Decode((value) => value === 'true')
+                          Codec(
+                            Type.String({
+                              pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                            }),
+                          )
+                            .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                             .Encode((value) => (value ? 'true' : 'false')),
                           Type.Null(),
                         ]),
                       ),
                       min_length: Type.Optional(
                         Type.Union([
-                          Codec(Type.String())
-                            .Decode((value) => Number.parseInt(value, 10))
+                          Codec(
+                            Type.Refine(
+                              Type.Refine(
+                                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                (value) => Number(value) >= 0,
+                                () => 'must be >= 0',
+                              ),
+                              (value) => Number(value) <= 4000,
+                              () => 'must be <= 4000',
+                            ),
+                          )
+                            .Decode((value) => Number(value))
                             .Encode((value) => String(value)),
                           Type.Null(),
                         ]),
                       ),
                       max_length: Type.Optional(
                         Type.Union([
-                          Codec(Type.String())
-                            .Decode((value) => Number.parseInt(value, 10))
+                          Codec(
+                            Type.Refine(
+                              Type.Refine(
+                                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                (value) => Number(value) >= 1,
+                                () => 'must be >= 1',
+                              ),
+                              (value) => Number(value) <= 4000,
+                              () => 'must be <= 4000',
+                            ),
+                          )
+                            .Decode((value) => Number(value))
                             .Encode((value) => String(value)),
                           Type.Null(),
                         ]),
@@ -1953,8 +2633,14 @@ export const interactionsHandler = new Hono().post(
                   type: MessageComponentTypesSchema,
                   id: Type.Optional(
                     Type.Union([
-                      Codec(Type.String())
-                        .Decode((value) => Number.parseInt(value, 10))
+                      Codec(
+                        Type.Refine(
+                          Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                          (value) => Number(value) >= 0,
+                          () => 'must be >= 0',
+                        ),
+                      )
+                        .Decode((value) => Number(value))
                         .Encode((value) => String(value)),
                       Type.Null(),
                     ]),
@@ -1968,8 +2654,14 @@ export const interactionsHandler = new Hono().post(
                       type: MessageComponentTypesSchema,
                       id: Type.Optional(
                         Type.Union([
-                          Codec(Type.String())
-                            .Decode((value) => Number.parseInt(value, 10))
+                          Codec(
+                            Type.Refine(
+                              Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                              (value) => Number(value) >= 0,
+                              () => 'must be >= 0',
+                            ),
+                          )
+                            .Decode((value) => Number(value))
                             .Encode((value) => String(value)),
                           Type.Null(),
                         ]),
@@ -1980,32 +2672,60 @@ export const interactionsHandler = new Hono().post(
                       ),
                       min_values: Type.Optional(
                         Type.Union([
-                          Codec(Type.String())
-                            .Decode((value) => Number.parseInt(value, 10))
+                          Codec(
+                            Type.Refine(
+                              Type.Refine(
+                                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                (value) => Number(value) >= 0,
+                                () => 'must be >= 0',
+                              ),
+                              (value) => Number(value) <= 25,
+                              () => 'must be <= 25',
+                            ),
+                          )
+                            .Decode((value) => Number(value))
                             .Encode((value) => String(value)),
                           Type.Null(),
                         ]),
                       ),
                       max_values: Type.Optional(
                         Type.Union([
-                          Codec(Type.String())
-                            .Decode((value) => Number.parseInt(value, 10))
+                          Codec(
+                            Type.Refine(
+                              Type.Refine(
+                                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                (value) => Number(value) >= 1,
+                                () => 'must be >= 1',
+                              ),
+                              (value) => Number(value) <= 25,
+                              () => 'must be <= 25',
+                            ),
+                          )
+                            .Decode((value) => Number(value))
                             .Encode((value) => String(value)),
                           Type.Null(),
                         ]),
                       ),
                       disabled: Type.Optional(
                         Type.Union([
-                          Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                            .Decode((value) => value === 'true')
+                          Codec(
+                            Type.String({
+                              pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                            }),
+                          )
+                            .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                             .Encode((value) => (value ? 'true' : 'false')),
                           Type.Null(),
                         ]),
                       ),
                       required: Type.Optional(
                         Type.Union([
-                          Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                            .Decode((value) => value === 'true')
+                          Codec(
+                            Type.String({
+                              pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                            }),
+                          )
+                            .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                             .Encode((value) => (value ? 'true' : 'false')),
                           Type.Null(),
                         ]),
@@ -2027,8 +2747,14 @@ export const interactionsHandler = new Hono().post(
                       type: MessageComponentTypesSchema,
                       id: Type.Optional(
                         Type.Union([
-                          Codec(Type.String())
-                            .Decode((value) => Number.parseInt(value, 10))
+                          Codec(
+                            Type.Refine(
+                              Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                              (value) => Number(value) >= 0,
+                              () => 'must be >= 0',
+                            ),
+                          )
+                            .Decode((value) => Number(value))
                             .Encode((value) => String(value)),
                           Type.Null(),
                         ]),
@@ -2036,8 +2762,12 @@ export const interactionsHandler = new Hono().post(
                       custom_id: Type.String({ minLength: 1, maxLength: 100 }),
                       default: Type.Optional(
                         Type.Union([
-                          Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                            .Decode((value) => value === 'true')
+                          Codec(
+                            Type.String({
+                              pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                            }),
+                          )
+                            .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                             .Encode((value) => (value ? 'true' : 'false')),
                           Type.Null(),
                         ]),
@@ -2047,8 +2777,14 @@ export const interactionsHandler = new Hono().post(
                       type: MessageComponentTypesSchema,
                       id: Type.Optional(
                         Type.Union([
-                          Codec(Type.String())
-                            .Decode((value) => Number.parseInt(value, 10))
+                          Codec(
+                            Type.Refine(
+                              Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                              (value) => Number(value) >= 0,
+                              () => 'must be >= 0',
+                            ),
+                          )
+                            .Decode((value) => Number(value))
                             .Encode((value) => String(value)),
                           Type.Null(),
                         ]),
@@ -2056,24 +2792,48 @@ export const interactionsHandler = new Hono().post(
                       custom_id: Type.String({ minLength: 1, maxLength: 100 }),
                       min_values: Type.Optional(
                         Type.Union([
-                          Codec(Type.String())
-                            .Decode((value) => Number.parseInt(value, 10))
+                          Codec(
+                            Type.Refine(
+                              Type.Refine(
+                                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                (value) => Number(value) >= 0,
+                                () => 'must be >= 0',
+                              ),
+                              (value) => Number(value) <= 10,
+                              () => 'must be <= 10',
+                            ),
+                          )
+                            .Decode((value) => Number(value))
                             .Encode((value) => String(value)),
                           Type.Null(),
                         ]),
                       ),
                       max_values: Type.Optional(
                         Type.Union([
-                          Codec(Type.String())
-                            .Decode((value) => Number.parseInt(value, 10))
+                          Codec(
+                            Type.Refine(
+                              Type.Refine(
+                                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                (value) => Number(value) >= 1,
+                                () => 'must be >= 1',
+                              ),
+                              (value) => Number(value) <= 10,
+                              () => 'must be <= 10',
+                            ),
+                          )
+                            .Decode((value) => Number(value))
                             .Encode((value) => String(value)),
                           Type.Null(),
                         ]),
                       ),
                       required: Type.Optional(
                         Type.Union([
-                          Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                            .Decode((value) => value === 'true')
+                          Codec(
+                            Type.String({
+                              pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                            }),
+                          )
+                            .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                             .Encode((value) => (value ? 'true' : 'false')),
                           Type.Null(),
                         ]),
@@ -2087,8 +2847,13 @@ export const interactionsHandler = new Hono().post(
                           ),
                           default: Type.Optional(
                             Type.Union([
-                              Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                .Decode((value) => value === 'true')
+                              Codec(
+                                Type.String({
+                                  pattern:
+                                    /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                }),
+                              )
+                                .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                 .Encode((value) => (value ? 'true' : 'false')),
                               Type.Null(),
                             ]),
@@ -2101,8 +2866,14 @@ export const interactionsHandler = new Hono().post(
                       type: MessageComponentTypesSchema,
                       id: Type.Optional(
                         Type.Union([
-                          Codec(Type.String())
-                            .Decode((value) => Number.parseInt(value, 10))
+                          Codec(
+                            Type.Refine(
+                              Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                              (value) => Number(value) >= 0,
+                              () => 'must be >= 0',
+                            ),
+                          )
+                            .Decode((value) => Number(value))
                             .Encode((value) => String(value)),
                           Type.Null(),
                         ]),
@@ -2110,24 +2881,48 @@ export const interactionsHandler = new Hono().post(
                       custom_id: Type.String({ minLength: 1, maxLength: 100 }),
                       min_values: Type.Optional(
                         Type.Union([
-                          Codec(Type.String())
-                            .Decode((value) => Number.parseInt(value, 10))
+                          Codec(
+                            Type.Refine(
+                              Type.Refine(
+                                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                (value) => Number(value) >= 0,
+                                () => 'must be >= 0',
+                              ),
+                              (value) => Number(value) <= 10,
+                              () => 'must be <= 10',
+                            ),
+                          )
+                            .Decode((value) => Number(value))
                             .Encode((value) => String(value)),
                           Type.Null(),
                         ]),
                       ),
                       max_values: Type.Optional(
                         Type.Union([
-                          Codec(Type.String())
-                            .Decode((value) => Number.parseInt(value, 10))
+                          Codec(
+                            Type.Refine(
+                              Type.Refine(
+                                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                (value) => Number(value) >= 1,
+                                () => 'must be >= 1',
+                              ),
+                              (value) => Number(value) <= 10,
+                              () => 'must be <= 10',
+                            ),
+                          )
+                            .Decode((value) => Number(value))
                             .Encode((value) => String(value)),
                           Type.Null(),
                         ]),
                       ),
                       required: Type.Optional(
                         Type.Union([
-                          Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                            .Decode((value) => value === 'true')
+                          Codec(
+                            Type.String({
+                              pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                            }),
+                          )
+                            .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                             .Encode((value) => (value ? 'true' : 'false')),
                           Type.Null(),
                         ]),
@@ -2146,8 +2941,14 @@ export const interactionsHandler = new Hono().post(
                       type: MessageComponentTypesSchema,
                       id: Type.Optional(
                         Type.Union([
-                          Codec(Type.String())
-                            .Decode((value) => Number.parseInt(value, 10))
+                          Codec(
+                            Type.Refine(
+                              Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                              (value) => Number(value) >= 0,
+                              () => 'must be >= 0',
+                            ),
+                          )
+                            .Decode((value) => Number(value))
                             .Encode((value) => String(value)),
                           Type.Null(),
                         ]),
@@ -2158,32 +2959,60 @@ export const interactionsHandler = new Hono().post(
                       ),
                       min_values: Type.Optional(
                         Type.Union([
-                          Codec(Type.String())
-                            .Decode((value) => Number.parseInt(value, 10))
+                          Codec(
+                            Type.Refine(
+                              Type.Refine(
+                                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                (value) => Number(value) >= 0,
+                                () => 'must be >= 0',
+                              ),
+                              (value) => Number(value) <= 25,
+                              () => 'must be <= 25',
+                            ),
+                          )
+                            .Decode((value) => Number(value))
                             .Encode((value) => String(value)),
                           Type.Null(),
                         ]),
                       ),
                       max_values: Type.Optional(
                         Type.Union([
-                          Codec(Type.String())
-                            .Decode((value) => Number.parseInt(value, 10))
+                          Codec(
+                            Type.Refine(
+                              Type.Refine(
+                                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                (value) => Number(value) >= 1,
+                                () => 'must be >= 1',
+                              ),
+                              (value) => Number(value) <= 25,
+                              () => 'must be <= 25',
+                            ),
+                          )
+                            .Decode((value) => Number(value))
                             .Encode((value) => String(value)),
                           Type.Null(),
                         ]),
                       ),
                       disabled: Type.Optional(
                         Type.Union([
-                          Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                            .Decode((value) => value === 'true')
+                          Codec(
+                            Type.String({
+                              pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                            }),
+                          )
+                            .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                             .Encode((value) => (value ? 'true' : 'false')),
                           Type.Null(),
                         ]),
                       ),
                       required: Type.Optional(
                         Type.Union([
-                          Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                            .Decode((value) => value === 'true')
+                          Codec(
+                            Type.String({
+                              pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                            }),
+                          )
+                            .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                             .Encode((value) => (value ? 'true' : 'false')),
                           Type.Null(),
                         ]),
@@ -2205,8 +3034,14 @@ export const interactionsHandler = new Hono().post(
                       type: MessageComponentTypesSchema,
                       id: Type.Optional(
                         Type.Union([
-                          Codec(Type.String())
-                            .Decode((value) => Number.parseInt(value, 10))
+                          Codec(
+                            Type.Refine(
+                              Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                              (value) => Number(value) >= 0,
+                              () => 'must be >= 0',
+                            ),
+                          )
+                            .Decode((value) => Number(value))
                             .Encode((value) => String(value)),
                           Type.Null(),
                         ]),
@@ -2214,8 +3049,12 @@ export const interactionsHandler = new Hono().post(
                       custom_id: Type.String({ minLength: 1, maxLength: 100 }),
                       required: Type.Optional(
                         Type.Union([
-                          Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                            .Decode((value) => value === 'true')
+                          Codec(
+                            Type.String({
+                              pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                            }),
+                          )
+                            .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                             .Encode((value) => (value ? 'true' : 'false')),
                           Type.Null(),
                         ]),
@@ -2229,8 +3068,13 @@ export const interactionsHandler = new Hono().post(
                           ),
                           default: Type.Optional(
                             Type.Union([
-                              Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                .Decode((value) => value === 'true')
+                              Codec(
+                                Type.String({
+                                  pattern:
+                                    /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                }),
+                              )
+                                .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                 .Encode((value) => (value ? 'true' : 'false')),
                               Type.Null(),
                             ]),
@@ -2243,8 +3087,14 @@ export const interactionsHandler = new Hono().post(
                       type: MessageComponentTypesSchema,
                       id: Type.Optional(
                         Type.Union([
-                          Codec(Type.String())
-                            .Decode((value) => Number.parseInt(value, 10))
+                          Codec(
+                            Type.Refine(
+                              Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                              (value) => Number(value) >= 0,
+                              () => 'must be >= 0',
+                            ),
+                          )
+                            .Decode((value) => Number(value))
                             .Encode((value) => String(value)),
                           Type.Null(),
                         ]),
@@ -2255,32 +3105,60 @@ export const interactionsHandler = new Hono().post(
                       ),
                       min_values: Type.Optional(
                         Type.Union([
-                          Codec(Type.String())
-                            .Decode((value) => Number.parseInt(value, 10))
+                          Codec(
+                            Type.Refine(
+                              Type.Refine(
+                                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                (value) => Number(value) >= 0,
+                                () => 'must be >= 0',
+                              ),
+                              (value) => Number(value) <= 25,
+                              () => 'must be <= 25',
+                            ),
+                          )
+                            .Decode((value) => Number(value))
                             .Encode((value) => String(value)),
                           Type.Null(),
                         ]),
                       ),
                       max_values: Type.Optional(
                         Type.Union([
-                          Codec(Type.String())
-                            .Decode((value) => Number.parseInt(value, 10))
+                          Codec(
+                            Type.Refine(
+                              Type.Refine(
+                                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                (value) => Number(value) >= 1,
+                                () => 'must be >= 1',
+                              ),
+                              (value) => Number(value) <= 25,
+                              () => 'must be <= 25',
+                            ),
+                          )
+                            .Decode((value) => Number(value))
                             .Encode((value) => String(value)),
                           Type.Null(),
                         ]),
                       ),
                       disabled: Type.Optional(
                         Type.Union([
-                          Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                            .Decode((value) => value === 'true')
+                          Codec(
+                            Type.String({
+                              pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                            }),
+                          )
+                            .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                             .Encode((value) => (value ? 'true' : 'false')),
                           Type.Null(),
                         ]),
                       ),
                       required: Type.Optional(
                         Type.Union([
-                          Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                            .Decode((value) => value === 'true')
+                          Codec(
+                            Type.String({
+                              pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                            }),
+                          )
+                            .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                             .Encode((value) => (value ? 'true' : 'false')),
                           Type.Null(),
                         ]),
@@ -2296,8 +3174,14 @@ export const interactionsHandler = new Hono().post(
                       type: MessageComponentTypesSchema,
                       id: Type.Optional(
                         Type.Union([
-                          Codec(Type.String())
-                            .Decode((value) => Number.parseInt(value, 10))
+                          Codec(
+                            Type.Refine(
+                              Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                              (value) => Number(value) >= 0,
+                              () => 'must be >= 0',
+                            ),
+                          )
+                            .Decode((value) => Number(value))
                             .Encode((value) => String(value)),
                           Type.Null(),
                         ]),
@@ -2308,32 +3192,60 @@ export const interactionsHandler = new Hono().post(
                       ),
                       min_values: Type.Optional(
                         Type.Union([
-                          Codec(Type.String())
-                            .Decode((value) => Number.parseInt(value, 10))
+                          Codec(
+                            Type.Refine(
+                              Type.Refine(
+                                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                (value) => Number(value) >= 0,
+                                () => 'must be >= 0',
+                              ),
+                              (value) => Number(value) <= 25,
+                              () => 'must be <= 25',
+                            ),
+                          )
+                            .Decode((value) => Number(value))
                             .Encode((value) => String(value)),
                           Type.Null(),
                         ]),
                       ),
                       max_values: Type.Optional(
                         Type.Union([
-                          Codec(Type.String())
-                            .Decode((value) => Number.parseInt(value, 10))
+                          Codec(
+                            Type.Refine(
+                              Type.Refine(
+                                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                (value) => Number(value) >= 1,
+                                () => 'must be >= 1',
+                              ),
+                              (value) => Number(value) <= 25,
+                              () => 'must be <= 25',
+                            ),
+                          )
+                            .Decode((value) => Number(value))
                             .Encode((value) => String(value)),
                           Type.Null(),
                         ]),
                       ),
                       disabled: Type.Optional(
                         Type.Union([
-                          Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                            .Decode((value) => value === 'true')
+                          Codec(
+                            Type.String({
+                              pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                            }),
+                          )
+                            .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                             .Encode((value) => (value ? 'true' : 'false')),
                           Type.Null(),
                         ]),
                       ),
                       required: Type.Optional(
                         Type.Union([
-                          Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                            .Decode((value) => value === 'true')
+                          Codec(
+                            Type.String({
+                              pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                            }),
+                          )
+                            .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                             .Encode((value) => (value ? 'true' : 'false')),
                           Type.Null(),
                         ]),
@@ -2347,17 +3259,19 @@ export const interactionsHandler = new Hono().post(
                           ),
                           default: Type.Optional(
                             Type.Union([
-                              Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                .Decode((value) => value === 'true')
+                              Codec(
+                                Type.String({
+                                  pattern:
+                                    /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                }),
+                              )
+                                .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                 .Encode((value) => (value ? 'true' : 'false')),
                               Type.Null(),
                             ]),
                           ),
                           emoji: Type.Optional(
-                            Type.Union([
-                              Type.Union([Type.Null(), Type.Null()]),
-                              ComponentEmojiForRequestSchema,
-                            ]),
+                            Type.Union([Type.Null(), ComponentEmojiForRequestSchema]),
                           ),
                         }),
                         { minItems: 1, maxItems: 25 },
@@ -2367,8 +3281,14 @@ export const interactionsHandler = new Hono().post(
                       type: MessageComponentTypesSchema,
                       id: Type.Optional(
                         Type.Union([
-                          Codec(Type.String())
-                            .Decode((value) => Number.parseInt(value, 10))
+                          Codec(
+                            Type.Refine(
+                              Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                              (value) => Number(value) >= 0,
+                              () => 'must be >= 0',
+                            ),
+                          )
+                            .Decode((value) => Number(value))
                             .Encode((value) => String(value)),
                           Type.Null(),
                         ]),
@@ -2386,24 +3306,48 @@ export const interactionsHandler = new Hono().post(
                       ),
                       required: Type.Optional(
                         Type.Union([
-                          Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                            .Decode((value) => value === 'true')
+                          Codec(
+                            Type.String({
+                              pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                            }),
+                          )
+                            .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                             .Encode((value) => (value ? 'true' : 'false')),
                           Type.Null(),
                         ]),
                       ),
                       min_length: Type.Optional(
                         Type.Union([
-                          Codec(Type.String())
-                            .Decode((value) => Number.parseInt(value, 10))
+                          Codec(
+                            Type.Refine(
+                              Type.Refine(
+                                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                (value) => Number(value) >= 0,
+                                () => 'must be >= 0',
+                              ),
+                              (value) => Number(value) <= 4000,
+                              () => 'must be <= 4000',
+                            ),
+                          )
+                            .Decode((value) => Number(value))
                             .Encode((value) => String(value)),
                           Type.Null(),
                         ]),
                       ),
                       max_length: Type.Optional(
                         Type.Union([
-                          Codec(Type.String())
-                            .Decode((value) => Number.parseInt(value, 10))
+                          Codec(
+                            Type.Refine(
+                              Type.Refine(
+                                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                (value) => Number(value) >= 1,
+                                () => 'must be >= 1',
+                              ),
+                              (value) => Number(value) <= 4000,
+                              () => 'must be <= 4000',
+                            ),
+                          )
+                            .Decode((value) => Number(value))
                             .Encode((value) => String(value)),
                           Type.Null(),
                         ]),
@@ -2413,8 +3357,14 @@ export const interactionsHandler = new Hono().post(
                       type: MessageComponentTypesSchema,
                       id: Type.Optional(
                         Type.Union([
-                          Codec(Type.String())
-                            .Decode((value) => Number.parseInt(value, 10))
+                          Codec(
+                            Type.Refine(
+                              Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                              (value) => Number(value) >= 0,
+                              () => 'must be >= 0',
+                            ),
+                          )
+                            .Decode((value) => Number(value))
                             .Encode((value) => String(value)),
                           Type.Null(),
                         ]),
@@ -2425,32 +3375,60 @@ export const interactionsHandler = new Hono().post(
                       ),
                       min_values: Type.Optional(
                         Type.Union([
-                          Codec(Type.String())
-                            .Decode((value) => Number.parseInt(value, 10))
+                          Codec(
+                            Type.Refine(
+                              Type.Refine(
+                                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                (value) => Number(value) >= 0,
+                                () => 'must be >= 0',
+                              ),
+                              (value) => Number(value) <= 25,
+                              () => 'must be <= 25',
+                            ),
+                          )
+                            .Decode((value) => Number(value))
                             .Encode((value) => String(value)),
                           Type.Null(),
                         ]),
                       ),
                       max_values: Type.Optional(
                         Type.Union([
-                          Codec(Type.String())
-                            .Decode((value) => Number.parseInt(value, 10))
+                          Codec(
+                            Type.Refine(
+                              Type.Refine(
+                                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                (value) => Number(value) >= 1,
+                                () => 'must be >= 1',
+                              ),
+                              (value) => Number(value) <= 25,
+                              () => 'must be <= 25',
+                            ),
+                          )
+                            .Decode((value) => Number(value))
                             .Encode((value) => String(value)),
                           Type.Null(),
                         ]),
                       ),
                       disabled: Type.Optional(
                         Type.Union([
-                          Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                            .Decode((value) => value === 'true')
+                          Codec(
+                            Type.String({
+                              pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                            }),
+                          )
+                            .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                             .Encode((value) => (value ? 'true' : 'false')),
                           Type.Null(),
                         ]),
                       ),
                       required: Type.Optional(
                         Type.Union([
-                          Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                            .Decode((value) => value === 'true')
+                          Codec(
+                            Type.String({
+                              pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                            }),
+                          )
+                            .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                             .Encode((value) => (value ? 'true' : 'false')),
                           Type.Null(),
                         ]),
@@ -2468,8 +3446,14 @@ export const interactionsHandler = new Hono().post(
                   type: MessageComponentTypesSchema,
                   id: Type.Optional(
                     Type.Union([
-                      Codec(Type.String())
-                        .Decode((value) => Number.parseInt(value, 10))
+                      Codec(
+                        Type.Refine(
+                          Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                          (value) => Number(value) >= 0,
+                          () => 'must be >= 0',
+                        ),
+                      )
+                        .Decode((value) => Number(value))
                         .Encode((value) => String(value)),
                       Type.Null(),
                     ]),
@@ -2485,11 +3469,13 @@ export const interactionsHandler = new Hono().post(
         Type.Object({
           type: InteractionCallbackTypesSchema,
           data: Type.Object({
-            eligible: Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-              .Decode((value) => value === 'true')
+            eligible: Codec(
+              Type.String({ pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i }),
+            )
+              .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
               .Encode((value) => (value ? 'true' : 'false')),
             ineligible_reason: Type.Optional(
-              Type.Union([Type.Union([Type.Null(), Type.Null()]), SKUIneligibilityReasonSchema]),
+              Type.Union([Type.Null(), SKUIneligibilityReasonSchema]),
             ),
             ineligible_reason_description: Type.Optional(
               Type.Union([Type.String({ maxLength: 255 }), Type.Null()]),
@@ -2500,7 +3486,7 @@ export const interactionsHandler = new Hono().post(
           type: InteractionCallbackTypesSchema,
           data: Type.Optional(
             Type.Union([
-              Type.Union([Type.Null(), Type.Null()]),
+              Type.Null(),
               Type.Object({
                 content: Type.Optional(Type.Union([Type.String({ maxLength: 2000 }), Type.Null()])),
                 embeds: Type.Optional(
@@ -2521,8 +3507,18 @@ export const interactionsHandler = new Hono().post(
                         ),
                         color: Type.Optional(
                           Type.Union([
-                            Codec(Type.String())
-                              .Decode((value) => Number.parseInt(value, 10))
+                            Codec(
+                              Type.Refine(
+                                Type.Refine(
+                                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                  (value) => Number(value) >= 0,
+                                  () => 'must be >= 0',
+                                ),
+                                (value) => Number(value) <= 16777215,
+                                () => 'must be <= 16777215',
+                              ),
+                            )
+                              .Decode((value) => Number(value))
                               .Encode((value) => String(value)),
                             Type.Null(),
                           ]),
@@ -2533,15 +3529,10 @@ export const interactionsHandler = new Hono().post(
                         description: Type.Optional(
                           Type.Union([Type.String({ maxLength: 4096 }), Type.Null()]),
                         ),
-                        author: Type.Optional(
-                          Type.Union([
-                            Type.Union([Type.Null(), Type.Null()]),
-                            RichEmbedAuthorSchema,
-                          ]),
-                        ),
+                        author: Type.Optional(Type.Union([Type.Null(), RichEmbedAuthorSchema])),
                         image: Type.Optional(
                           Type.Union([
-                            Type.Union([Type.Null(), Type.Null()]),
+                            Type.Null(),
                             Type.Object({
                               url: Type.Optional(
                                 Type.Union([
@@ -2551,16 +3542,16 @@ export const interactionsHandler = new Hono().post(
                               ),
                               width: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.String())
-                                    .Decode((value) => Number.parseInt(value, 10))
+                                  Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+                                    .Decode((value) => Number(value))
                                     .Encode((value) => String(value)),
                                   Type.Null(),
                                 ]),
                               ),
                               height: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.String())
-                                    .Decode((value) => Number.parseInt(value, 10))
+                                  Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+                                    .Decode((value) => Number(value))
                                     .Encode((value) => String(value)),
                                   Type.Null(),
                                 ]),
@@ -2570,16 +3561,31 @@ export const interactionsHandler = new Hono().post(
                               ),
                               placeholder_version: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.String())
-                                    .Decode((value) => Number.parseInt(value, 10))
+                                  Codec(
+                                    Type.Refine(
+                                      Type.Refine(
+                                        Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                        (value) => Number(value) >= 0,
+                                        () => 'must be >= 0',
+                                      ),
+                                      (value) => Number(value) <= 2147483647,
+                                      () => 'must be <= 2147483647',
+                                    ),
+                                  )
+                                    .Decode((value) => Number(value))
                                     .Encode((value) => String(value)),
                                   Type.Null(),
                                 ]),
                               ),
                               is_animated: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                    .Decode((value) => value === 'true')
+                                  Codec(
+                                    Type.String({
+                                      pattern:
+                                        /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                    }),
+                                  )
+                                    .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                     .Encode((value) => (value ? 'true' : 'false')),
                                   Type.Null(),
                                 ]),
@@ -2592,7 +3598,7 @@ export const interactionsHandler = new Hono().post(
                         ),
                         thumbnail: Type.Optional(
                           Type.Union([
-                            Type.Union([Type.Null(), Type.Null()]),
+                            Type.Null(),
                             Type.Object({
                               url: Type.Optional(
                                 Type.Union([
@@ -2602,16 +3608,16 @@ export const interactionsHandler = new Hono().post(
                               ),
                               width: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.String())
-                                    .Decode((value) => Number.parseInt(value, 10))
+                                  Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+                                    .Decode((value) => Number(value))
                                     .Encode((value) => String(value)),
                                   Type.Null(),
                                 ]),
                               ),
                               height: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.String())
-                                    .Decode((value) => Number.parseInt(value, 10))
+                                  Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+                                    .Decode((value) => Number(value))
                                     .Encode((value) => String(value)),
                                   Type.Null(),
                                 ]),
@@ -2621,16 +3627,31 @@ export const interactionsHandler = new Hono().post(
                               ),
                               placeholder_version: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.String())
-                                    .Decode((value) => Number.parseInt(value, 10))
+                                  Codec(
+                                    Type.Refine(
+                                      Type.Refine(
+                                        Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                        (value) => Number(value) >= 0,
+                                        () => 'must be >= 0',
+                                      ),
+                                      (value) => Number(value) <= 2147483647,
+                                      () => 'must be <= 2147483647',
+                                    ),
+                                  )
+                                    .Decode((value) => Number(value))
                                     .Encode((value) => String(value)),
                                   Type.Null(),
                                 ]),
                               ),
                               is_animated: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                    .Decode((value) => value === 'true')
+                                  Codec(
+                                    Type.String({
+                                      pattern:
+                                        /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                    }),
+                                  )
+                                    .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                     .Encode((value) => (value ? 'true' : 'false')),
                                   Type.Null(),
                                 ]),
@@ -2641,12 +3662,7 @@ export const interactionsHandler = new Hono().post(
                             }),
                           ]),
                         ),
-                        footer: Type.Optional(
-                          Type.Union([
-                            Type.Union([Type.Null(), Type.Null()]),
-                            RichEmbedFooterSchema,
-                          ]),
-                        ),
+                        footer: Type.Optional(Type.Union([Type.Null(), RichEmbedFooterSchema])),
                         fields: Type.Optional(
                           Type.Union([
                             Type.Array(
@@ -2655,8 +3671,15 @@ export const interactionsHandler = new Hono().post(
                                 value: Type.String({ maxLength: 1024 }),
                                 inline: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                      .Decode((value) => value === 'true')
+                                    Codec(
+                                      Type.String({
+                                        pattern:
+                                          /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                      }),
+                                    )
+                                      .Decode((value) =>
+                                        /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                      )
                                       .Encode((value) => (value ? 'true' : 'false')),
                                     Type.Null(),
                                   ]),
@@ -2667,15 +3690,10 @@ export const interactionsHandler = new Hono().post(
                             Type.Null(),
                           ]),
                         ),
-                        provider: Type.Optional(
-                          Type.Union([
-                            Type.Union([Type.Null(), Type.Null()]),
-                            RichEmbedProviderSchema,
-                          ]),
-                        ),
+                        provider: Type.Optional(Type.Union([Type.Null(), RichEmbedProviderSchema])),
                         video: Type.Optional(
                           Type.Union([
-                            Type.Union([Type.Null(), Type.Null()]),
+                            Type.Null(),
                             Type.Object({
                               url: Type.Optional(
                                 Type.Union([
@@ -2685,16 +3703,16 @@ export const interactionsHandler = new Hono().post(
                               ),
                               width: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.String())
-                                    .Decode((value) => Number.parseInt(value, 10))
+                                  Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+                                    .Decode((value) => Number(value))
                                     .Encode((value) => String(value)),
                                   Type.Null(),
                                 ]),
                               ),
                               height: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.String())
-                                    .Decode((value) => Number.parseInt(value, 10))
+                                  Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+                                    .Decode((value) => Number(value))
                                     .Encode((value) => String(value)),
                                   Type.Null(),
                                 ]),
@@ -2704,16 +3722,31 @@ export const interactionsHandler = new Hono().post(
                               ),
                               placeholder_version: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.String())
-                                    .Decode((value) => Number.parseInt(value, 10))
+                                  Codec(
+                                    Type.Refine(
+                                      Type.Refine(
+                                        Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                        (value) => Number(value) >= 0,
+                                        () => 'must be >= 0',
+                                      ),
+                                      (value) => Number(value) <= 2147483647,
+                                      () => 'must be <= 2147483647',
+                                    ),
+                                  )
+                                    .Decode((value) => Number(value))
                                     .Encode((value) => String(value)),
                                   Type.Null(),
                                 ]),
                               ),
                               is_animated: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                    .Decode((value) => value === 'true')
+                                  Codec(
+                                    Type.String({
+                                      pattern:
+                                        /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                    }),
+                                  )
+                                    .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                     .Encode((value) => (value ? 'true' : 'false')),
                                   Type.Null(),
                                 ]),
@@ -2724,12 +3757,7 @@ export const interactionsHandler = new Hono().post(
                             }),
                           ]),
                         ),
-                        audio: Type.Optional(
-                          Type.Union([
-                            Type.Union([Type.Null(), Type.Null()]),
-                            RichEmbedAudioSchema,
-                          ]),
-                        ),
+                        audio: Type.Optional(Type.Union([Type.Null(), RichEmbedAudioSchema])),
                       }),
                       { maxItems: 10 },
                     ),
@@ -2738,48 +3766,43 @@ export const interactionsHandler = new Hono().post(
                 ),
                 allowed_mentions: Type.Optional(
                   Type.Union([
-                    Type.Union([Type.Null(), Type.Null()]),
+                    Type.Null(),
                     Type.Object({
                       parse: Type.Optional(
                         Type.Union([
-                          Type.Array(
-                            Type.Union([
-                              Type.Union([Type.Null(), Type.Null()]),
-                              AllowedMentionTypesSchema,
-                            ]),
-                            { maxItems: 1521, uniqueItems: true },
-                          ),
+                          Type.Array(Type.Union([Type.Null(), AllowedMentionTypesSchema]), {
+                            maxItems: 1521,
+                            uniqueItems: true,
+                          }),
                           Type.Null(),
                         ]),
                       ),
                       users: Type.Optional(
                         Type.Union([
-                          Type.Array(
-                            Type.Union([
-                              Type.Union([Type.Null(), Type.Null()]),
-                              SnowflakeTypeSchema,
-                            ]),
-                            { maxItems: 100, uniqueItems: true },
-                          ),
+                          Type.Array(Type.Union([Type.Null(), SnowflakeTypeSchema]), {
+                            maxItems: 100,
+                            uniqueItems: true,
+                          }),
                           Type.Null(),
                         ]),
                       ),
                       roles: Type.Optional(
                         Type.Union([
-                          Type.Array(
-                            Type.Union([
-                              Type.Union([Type.Null(), Type.Null()]),
-                              SnowflakeTypeSchema,
-                            ]),
-                            { maxItems: 100, uniqueItems: true },
-                          ),
+                          Type.Array(Type.Union([Type.Null(), SnowflakeTypeSchema]), {
+                            maxItems: 100,
+                            uniqueItems: true,
+                          }),
                           Type.Null(),
                         ]),
                       ),
                       replied_user: Type.Optional(
                         Type.Union([
-                          Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                            .Decode((value) => value === 'true')
+                          Codec(
+                            Type.String({
+                              pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                            }),
+                          )
+                            .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                             .Encode((value) => (value ? 'true' : 'false')),
                           Type.Null(),
                         ]),
@@ -2795,8 +3818,14 @@ export const interactionsHandler = new Hono().post(
                           type: MessageComponentTypesSchema,
                           id: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(
+                                Type.Refine(
+                                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                  (value) => Number(value) >= 0,
+                                  () => 'must be >= 0',
+                                ),
+                              )
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
@@ -2807,8 +3836,14 @@ export const interactionsHandler = new Hono().post(
                                 type: MessageComponentTypesSchema,
                                 id: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.String())
-                                      .Decode((value) => Number.parseInt(value, 10))
+                                    Codec(
+                                      Type.Refine(
+                                        Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                        (value) => Number(value) >= 0,
+                                        () => 'must be >= 0',
+                                      ),
+                                    )
+                                      .Decode((value) => Number(value))
                                       .Encode((value) => String(value)),
                                     Type.Null(),
                                   ]),
@@ -2825,8 +3860,15 @@ export const interactionsHandler = new Hono().post(
                                 ),
                                 disabled: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                      .Decode((value) => value === 'true')
+                                    Codec(
+                                      Type.String({
+                                        pattern:
+                                          /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                      }),
+                                    )
+                                      .Decode((value) =>
+                                        /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                      )
                                       .Encode((value) => (value ? 'true' : 'false')),
                                     Type.Null(),
                                   ]),
@@ -2838,24 +3880,24 @@ export const interactionsHandler = new Hono().post(
                                   ]),
                                 ),
                                 sku_id: Type.Optional(
-                                  Type.Union([
-                                    Type.Union([Type.Null(), Type.Null()]),
-                                    SnowflakeTypeSchema,
-                                  ]),
+                                  Type.Union([Type.Null(), SnowflakeTypeSchema]),
                                 ),
                                 emoji: Type.Optional(
-                                  Type.Union([
-                                    Type.Union([Type.Null(), Type.Null()]),
-                                    ComponentEmojiForRequestSchema,
-                                  ]),
+                                  Type.Union([Type.Null(), ComponentEmojiForRequestSchema]),
                                 ),
                               }),
                               Type.Object({
                                 type: MessageComponentTypesSchema,
                                 id: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.String())
-                                      .Decode((value) => Number.parseInt(value, 10))
+                                    Codec(
+                                      Type.Refine(
+                                        Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                        (value) => Number(value) >= 0,
+                                        () => 'must be >= 0',
+                                      ),
+                                    )
+                                      .Decode((value) => Number(value))
                                       .Encode((value) => String(value)),
                                     Type.Null(),
                                   ]),
@@ -2866,32 +3908,66 @@ export const interactionsHandler = new Hono().post(
                                 ),
                                 min_values: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.String())
-                                      .Decode((value) => Number.parseInt(value, 10))
+                                    Codec(
+                                      Type.Refine(
+                                        Type.Refine(
+                                          Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                          (value) => Number(value) >= 0,
+                                          () => 'must be >= 0',
+                                        ),
+                                        (value) => Number(value) <= 25,
+                                        () => 'must be <= 25',
+                                      ),
+                                    )
+                                      .Decode((value) => Number(value))
                                       .Encode((value) => String(value)),
                                     Type.Null(),
                                   ]),
                                 ),
                                 max_values: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.String())
-                                      .Decode((value) => Number.parseInt(value, 10))
+                                    Codec(
+                                      Type.Refine(
+                                        Type.Refine(
+                                          Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                          (value) => Number(value) >= 1,
+                                          () => 'must be >= 1',
+                                        ),
+                                        (value) => Number(value) <= 25,
+                                        () => 'must be <= 25',
+                                      ),
+                                    )
+                                      .Decode((value) => Number(value))
                                       .Encode((value) => String(value)),
                                     Type.Null(),
                                   ]),
                                 ),
                                 disabled: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                      .Decode((value) => value === 'true')
+                                    Codec(
+                                      Type.String({
+                                        pattern:
+                                          /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                      }),
+                                    )
+                                      .Decode((value) =>
+                                        /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                      )
                                       .Encode((value) => (value ? 'true' : 'false')),
                                     Type.Null(),
                                   ]),
                                 ),
                                 required: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                      .Decode((value) => value === 'true')
+                                    Codec(
+                                      Type.String({
+                                        pattern:
+                                          /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                      }),
+                                    )
+                                      .Decode((value) =>
+                                        /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                      )
                                       .Encode((value) => (value ? 'true' : 'false')),
                                     Type.Null(),
                                   ]),
@@ -2913,8 +3989,14 @@ export const interactionsHandler = new Hono().post(
                                 type: MessageComponentTypesSchema,
                                 id: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.String())
-                                      .Decode((value) => Number.parseInt(value, 10))
+                                    Codec(
+                                      Type.Refine(
+                                        Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                        (value) => Number(value) >= 0,
+                                        () => 'must be >= 0',
+                                      ),
+                                    )
+                                      .Decode((value) => Number(value))
                                       .Encode((value) => String(value)),
                                     Type.Null(),
                                   ]),
@@ -2925,32 +4007,66 @@ export const interactionsHandler = new Hono().post(
                                 ),
                                 min_values: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.String())
-                                      .Decode((value) => Number.parseInt(value, 10))
+                                    Codec(
+                                      Type.Refine(
+                                        Type.Refine(
+                                          Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                          (value) => Number(value) >= 0,
+                                          () => 'must be >= 0',
+                                        ),
+                                        (value) => Number(value) <= 25,
+                                        () => 'must be <= 25',
+                                      ),
+                                    )
+                                      .Decode((value) => Number(value))
                                       .Encode((value) => String(value)),
                                     Type.Null(),
                                   ]),
                                 ),
                                 max_values: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.String())
-                                      .Decode((value) => Number.parseInt(value, 10))
+                                    Codec(
+                                      Type.Refine(
+                                        Type.Refine(
+                                          Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                          (value) => Number(value) >= 1,
+                                          () => 'must be >= 1',
+                                        ),
+                                        (value) => Number(value) <= 25,
+                                        () => 'must be <= 25',
+                                      ),
+                                    )
+                                      .Decode((value) => Number(value))
                                       .Encode((value) => String(value)),
                                     Type.Null(),
                                   ]),
                                 ),
                                 disabled: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                      .Decode((value) => value === 'true')
+                                    Codec(
+                                      Type.String({
+                                        pattern:
+                                          /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                      }),
+                                    )
+                                      .Decode((value) =>
+                                        /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                      )
                                       .Encode((value) => (value ? 'true' : 'false')),
                                     Type.Null(),
                                   ]),
                                 ),
                                 required: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                      .Decode((value) => value === 'true')
+                                    Codec(
+                                      Type.String({
+                                        pattern:
+                                          /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                      }),
+                                    )
+                                      .Decode((value) =>
+                                        /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                      )
                                       .Encode((value) => (value ? 'true' : 'false')),
                                     Type.Null(),
                                   ]),
@@ -2972,8 +4088,14 @@ export const interactionsHandler = new Hono().post(
                                 type: MessageComponentTypesSchema,
                                 id: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.String())
-                                      .Decode((value) => Number.parseInt(value, 10))
+                                    Codec(
+                                      Type.Refine(
+                                        Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                        (value) => Number(value) >= 0,
+                                        () => 'must be >= 0',
+                                      ),
+                                    )
+                                      .Decode((value) => Number(value))
                                       .Encode((value) => String(value)),
                                     Type.Null(),
                                   ]),
@@ -2984,32 +4106,66 @@ export const interactionsHandler = new Hono().post(
                                 ),
                                 min_values: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.String())
-                                      .Decode((value) => Number.parseInt(value, 10))
+                                    Codec(
+                                      Type.Refine(
+                                        Type.Refine(
+                                          Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                          (value) => Number(value) >= 0,
+                                          () => 'must be >= 0',
+                                        ),
+                                        (value) => Number(value) <= 25,
+                                        () => 'must be <= 25',
+                                      ),
+                                    )
+                                      .Decode((value) => Number(value))
                                       .Encode((value) => String(value)),
                                     Type.Null(),
                                   ]),
                                 ),
                                 max_values: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.String())
-                                      .Decode((value) => Number.parseInt(value, 10))
+                                    Codec(
+                                      Type.Refine(
+                                        Type.Refine(
+                                          Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                          (value) => Number(value) >= 1,
+                                          () => 'must be >= 1',
+                                        ),
+                                        (value) => Number(value) <= 25,
+                                        () => 'must be <= 25',
+                                      ),
+                                    )
+                                      .Decode((value) => Number(value))
                                       .Encode((value) => String(value)),
                                     Type.Null(),
                                   ]),
                                 ),
                                 disabled: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                      .Decode((value) => value === 'true')
+                                    Codec(
+                                      Type.String({
+                                        pattern:
+                                          /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                      }),
+                                    )
+                                      .Decode((value) =>
+                                        /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                      )
                                       .Encode((value) => (value ? 'true' : 'false')),
                                     Type.Null(),
                                   ]),
                                 ),
                                 required: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                      .Decode((value) => value === 'true')
+                                    Codec(
+                                      Type.String({
+                                        pattern:
+                                          /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                      }),
+                                    )
+                                      .Decode((value) =>
+                                        /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                      )
                                       .Encode((value) => (value ? 'true' : 'false')),
                                     Type.Null(),
                                   ]),
@@ -3025,8 +4181,14 @@ export const interactionsHandler = new Hono().post(
                                 type: MessageComponentTypesSchema,
                                 id: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.String())
-                                      .Decode((value) => Number.parseInt(value, 10))
+                                    Codec(
+                                      Type.Refine(
+                                        Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                        (value) => Number(value) >= 0,
+                                        () => 'must be >= 0',
+                                      ),
+                                    )
+                                      .Decode((value) => Number(value))
                                       .Encode((value) => String(value)),
                                     Type.Null(),
                                   ]),
@@ -3037,32 +4199,66 @@ export const interactionsHandler = new Hono().post(
                                 ),
                                 min_values: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.String())
-                                      .Decode((value) => Number.parseInt(value, 10))
+                                    Codec(
+                                      Type.Refine(
+                                        Type.Refine(
+                                          Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                          (value) => Number(value) >= 0,
+                                          () => 'must be >= 0',
+                                        ),
+                                        (value) => Number(value) <= 25,
+                                        () => 'must be <= 25',
+                                      ),
+                                    )
+                                      .Decode((value) => Number(value))
                                       .Encode((value) => String(value)),
                                     Type.Null(),
                                   ]),
                                 ),
                                 max_values: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.String())
-                                      .Decode((value) => Number.parseInt(value, 10))
+                                    Codec(
+                                      Type.Refine(
+                                        Type.Refine(
+                                          Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                          (value) => Number(value) >= 1,
+                                          () => 'must be >= 1',
+                                        ),
+                                        (value) => Number(value) <= 25,
+                                        () => 'must be <= 25',
+                                      ),
+                                    )
+                                      .Decode((value) => Number(value))
                                       .Encode((value) => String(value)),
                                     Type.Null(),
                                   ]),
                                 ),
                                 disabled: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                      .Decode((value) => value === 'true')
+                                    Codec(
+                                      Type.String({
+                                        pattern:
+                                          /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                      }),
+                                    )
+                                      .Decode((value) =>
+                                        /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                      )
                                       .Encode((value) => (value ? 'true' : 'false')),
                                     Type.Null(),
                                   ]),
                                 ),
                                 required: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                      .Decode((value) => value === 'true')
+                                    Codec(
+                                      Type.String({
+                                        pattern:
+                                          /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                      }),
+                                    )
+                                      .Decode((value) =>
+                                        /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                      )
                                       .Encode((value) => (value ? 'true' : 'false')),
                                     Type.Null(),
                                   ]),
@@ -3077,18 +4273,20 @@ export const interactionsHandler = new Hono().post(
                                     default: Type.Optional(
                                       Type.Union([
                                         Codec(
-                                          Type.Union([Type.Literal('true'), Type.Literal('false')]),
+                                          Type.String({
+                                            pattern:
+                                              /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                          }),
                                         )
-                                          .Decode((value) => value === 'true')
+                                          .Decode((value) =>
+                                            /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                          )
                                           .Encode((value) => (value ? 'true' : 'false')),
                                         Type.Null(),
                                       ]),
                                     ),
                                     emoji: Type.Optional(
-                                      Type.Union([
-                                        Type.Union([Type.Null(), Type.Null()]),
-                                        ComponentEmojiForRequestSchema,
-                                      ]),
+                                      Type.Union([Type.Null(), ComponentEmojiForRequestSchema]),
                                     ),
                                   }),
                                   { minItems: 1, maxItems: 25 },
@@ -3098,8 +4296,14 @@ export const interactionsHandler = new Hono().post(
                                 type: MessageComponentTypesSchema,
                                 id: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.String())
-                                      .Decode((value) => Number.parseInt(value, 10))
+                                    Codec(
+                                      Type.Refine(
+                                        Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                        (value) => Number(value) >= 0,
+                                        () => 'must be >= 0',
+                                      ),
+                                    )
+                                      .Decode((value) => Number(value))
                                       .Encode((value) => String(value)),
                                     Type.Null(),
                                   ]),
@@ -3110,32 +4314,66 @@ export const interactionsHandler = new Hono().post(
                                 ),
                                 min_values: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.String())
-                                      .Decode((value) => Number.parseInt(value, 10))
+                                    Codec(
+                                      Type.Refine(
+                                        Type.Refine(
+                                          Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                          (value) => Number(value) >= 0,
+                                          () => 'must be >= 0',
+                                        ),
+                                        (value) => Number(value) <= 25,
+                                        () => 'must be <= 25',
+                                      ),
+                                    )
+                                      .Decode((value) => Number(value))
                                       .Encode((value) => String(value)),
                                     Type.Null(),
                                   ]),
                                 ),
                                 max_values: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.String())
-                                      .Decode((value) => Number.parseInt(value, 10))
+                                    Codec(
+                                      Type.Refine(
+                                        Type.Refine(
+                                          Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                          (value) => Number(value) >= 1,
+                                          () => 'must be >= 1',
+                                        ),
+                                        (value) => Number(value) <= 25,
+                                        () => 'must be <= 25',
+                                      ),
+                                    )
+                                      .Decode((value) => Number(value))
                                       .Encode((value) => String(value)),
                                     Type.Null(),
                                   ]),
                                 ),
                                 disabled: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                      .Decode((value) => value === 'true')
+                                    Codec(
+                                      Type.String({
+                                        pattern:
+                                          /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                      }),
+                                    )
+                                      .Decode((value) =>
+                                        /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                      )
                                       .Encode((value) => (value ? 'true' : 'false')),
                                     Type.Null(),
                                   ]),
                                 ),
                                 required: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                      .Decode((value) => value === 'true')
+                                    Codec(
+                                      Type.String({
+                                        pattern:
+                                          /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                      }),
+                                    )
+                                      .Decode((value) =>
+                                        /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                      )
                                       .Encode((value) => (value ? 'true' : 'false')),
                                     Type.Null(),
                                   ]),
@@ -3155,16 +4393,32 @@ export const interactionsHandler = new Hono().post(
                           type: MessageComponentTypesSchema,
                           id: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(
+                                Type.Refine(
+                                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                  (value) => Number(value) >= 0,
+                                  () => 'must be >= 0',
+                                ),
+                              )
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
                           ),
                           accent_color: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(
+                                Type.Refine(
+                                  Type.Refine(
+                                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                    (value) => Number(value) >= 0,
+                                    () => 'must be >= 0',
+                                  ),
+                                  (value) => Number(value) <= 16777215,
+                                  () => 'must be <= 16777215',
+                                ),
+                              )
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
@@ -3175,8 +4429,14 @@ export const interactionsHandler = new Hono().post(
                                 type: MessageComponentTypesSchema,
                                 id: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.String())
-                                      .Decode((value) => Number.parseInt(value, 10))
+                                    Codec(
+                                      Type.Refine(
+                                        Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                        (value) => Number(value) >= 0,
+                                        () => 'must be >= 0',
+                                      ),
+                                    )
+                                      .Decode((value) => Number(value))
                                       .Encode((value) => String(value)),
                                     Type.Null(),
                                   ]),
@@ -3187,8 +4447,14 @@ export const interactionsHandler = new Hono().post(
                                       type: MessageComponentTypesSchema,
                                       id: Type.Optional(
                                         Type.Union([
-                                          Codec(Type.String())
-                                            .Decode((value) => Number.parseInt(value, 10))
+                                          Codec(
+                                            Type.Refine(
+                                              Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                              (value) => Number(value) >= 0,
+                                              () => 'must be >= 0',
+                                            ),
+                                          )
+                                            .Decode((value) => Number(value))
                                             .Encode((value) => String(value)),
                                           Type.Null(),
                                         ]),
@@ -3206,12 +4472,14 @@ export const interactionsHandler = new Hono().post(
                                       disabled: Type.Optional(
                                         Type.Union([
                                           Codec(
-                                            Type.Union([
-                                              Type.Literal('true'),
-                                              Type.Literal('false'),
-                                            ]),
+                                            Type.String({
+                                              pattern:
+                                                /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                            }),
                                           )
-                                            .Decode((value) => value === 'true')
+                                            .Decode((value) =>
+                                              /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                            )
                                             .Encode((value) => (value ? 'true' : 'false')),
                                           Type.Null(),
                                         ]),
@@ -3223,24 +4491,24 @@ export const interactionsHandler = new Hono().post(
                                         ]),
                                       ),
                                       sku_id: Type.Optional(
-                                        Type.Union([
-                                          Type.Union([Type.Null(), Type.Null()]),
-                                          SnowflakeTypeSchema,
-                                        ]),
+                                        Type.Union([Type.Null(), SnowflakeTypeSchema]),
                                       ),
                                       emoji: Type.Optional(
-                                        Type.Union([
-                                          Type.Union([Type.Null(), Type.Null()]),
-                                          ComponentEmojiForRequestSchema,
-                                        ]),
+                                        Type.Union([Type.Null(), ComponentEmojiForRequestSchema]),
                                       ),
                                     }),
                                     Type.Object({
                                       type: MessageComponentTypesSchema,
                                       id: Type.Optional(
                                         Type.Union([
-                                          Codec(Type.String())
-                                            .Decode((value) => Number.parseInt(value, 10))
+                                          Codec(
+                                            Type.Refine(
+                                              Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                              (value) => Number(value) >= 0,
+                                              () => 'must be >= 0',
+                                            ),
+                                          )
+                                            .Decode((value) => Number(value))
                                             .Encode((value) => String(value)),
                                           Type.Null(),
                                         ]),
@@ -3251,16 +4519,36 @@ export const interactionsHandler = new Hono().post(
                                       ),
                                       min_values: Type.Optional(
                                         Type.Union([
-                                          Codec(Type.String())
-                                            .Decode((value) => Number.parseInt(value, 10))
+                                          Codec(
+                                            Type.Refine(
+                                              Type.Refine(
+                                                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                                (value) => Number(value) >= 0,
+                                                () => 'must be >= 0',
+                                              ),
+                                              (value) => Number(value) <= 25,
+                                              () => 'must be <= 25',
+                                            ),
+                                          )
+                                            .Decode((value) => Number(value))
                                             .Encode((value) => String(value)),
                                           Type.Null(),
                                         ]),
                                       ),
                                       max_values: Type.Optional(
                                         Type.Union([
-                                          Codec(Type.String())
-                                            .Decode((value) => Number.parseInt(value, 10))
+                                          Codec(
+                                            Type.Refine(
+                                              Type.Refine(
+                                                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                                (value) => Number(value) >= 1,
+                                                () => 'must be >= 1',
+                                              ),
+                                              (value) => Number(value) <= 25,
+                                              () => 'must be <= 25',
+                                            ),
+                                          )
+                                            .Decode((value) => Number(value))
                                             .Encode((value) => String(value)),
                                           Type.Null(),
                                         ]),
@@ -3268,12 +4556,14 @@ export const interactionsHandler = new Hono().post(
                                       disabled: Type.Optional(
                                         Type.Union([
                                           Codec(
-                                            Type.Union([
-                                              Type.Literal('true'),
-                                              Type.Literal('false'),
-                                            ]),
+                                            Type.String({
+                                              pattern:
+                                                /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                            }),
                                           )
-                                            .Decode((value) => value === 'true')
+                                            .Decode((value) =>
+                                              /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                            )
                                             .Encode((value) => (value ? 'true' : 'false')),
                                           Type.Null(),
                                         ]),
@@ -3281,12 +4571,14 @@ export const interactionsHandler = new Hono().post(
                                       required: Type.Optional(
                                         Type.Union([
                                           Codec(
-                                            Type.Union([
-                                              Type.Literal('true'),
-                                              Type.Literal('false'),
-                                            ]),
+                                            Type.String({
+                                              pattern:
+                                                /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                            }),
                                           )
-                                            .Decode((value) => value === 'true')
+                                            .Decode((value) =>
+                                              /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                            )
                                             .Encode((value) => (value ? 'true' : 'false')),
                                           Type.Null(),
                                         ]),
@@ -3310,8 +4602,14 @@ export const interactionsHandler = new Hono().post(
                                       type: MessageComponentTypesSchema,
                                       id: Type.Optional(
                                         Type.Union([
-                                          Codec(Type.String())
-                                            .Decode((value) => Number.parseInt(value, 10))
+                                          Codec(
+                                            Type.Refine(
+                                              Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                              (value) => Number(value) >= 0,
+                                              () => 'must be >= 0',
+                                            ),
+                                          )
+                                            .Decode((value) => Number(value))
                                             .Encode((value) => String(value)),
                                           Type.Null(),
                                         ]),
@@ -3322,16 +4620,36 @@ export const interactionsHandler = new Hono().post(
                                       ),
                                       min_values: Type.Optional(
                                         Type.Union([
-                                          Codec(Type.String())
-                                            .Decode((value) => Number.parseInt(value, 10))
+                                          Codec(
+                                            Type.Refine(
+                                              Type.Refine(
+                                                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                                (value) => Number(value) >= 0,
+                                                () => 'must be >= 0',
+                                              ),
+                                              (value) => Number(value) <= 25,
+                                              () => 'must be <= 25',
+                                            ),
+                                          )
+                                            .Decode((value) => Number(value))
                                             .Encode((value) => String(value)),
                                           Type.Null(),
                                         ]),
                                       ),
                                       max_values: Type.Optional(
                                         Type.Union([
-                                          Codec(Type.String())
-                                            .Decode((value) => Number.parseInt(value, 10))
+                                          Codec(
+                                            Type.Refine(
+                                              Type.Refine(
+                                                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                                (value) => Number(value) >= 1,
+                                                () => 'must be >= 1',
+                                              ),
+                                              (value) => Number(value) <= 25,
+                                              () => 'must be <= 25',
+                                            ),
+                                          )
+                                            .Decode((value) => Number(value))
                                             .Encode((value) => String(value)),
                                           Type.Null(),
                                         ]),
@@ -3339,12 +4657,14 @@ export const interactionsHandler = new Hono().post(
                                       disabled: Type.Optional(
                                         Type.Union([
                                           Codec(
-                                            Type.Union([
-                                              Type.Literal('true'),
-                                              Type.Literal('false'),
-                                            ]),
+                                            Type.String({
+                                              pattern:
+                                                /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                            }),
                                           )
-                                            .Decode((value) => value === 'true')
+                                            .Decode((value) =>
+                                              /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                            )
                                             .Encode((value) => (value ? 'true' : 'false')),
                                           Type.Null(),
                                         ]),
@@ -3352,12 +4672,14 @@ export const interactionsHandler = new Hono().post(
                                       required: Type.Optional(
                                         Type.Union([
                                           Codec(
-                                            Type.Union([
-                                              Type.Literal('true'),
-                                              Type.Literal('false'),
-                                            ]),
+                                            Type.String({
+                                              pattern:
+                                                /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                            }),
                                           )
-                                            .Decode((value) => value === 'true')
+                                            .Decode((value) =>
+                                              /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                            )
                                             .Encode((value) => (value ? 'true' : 'false')),
                                           Type.Null(),
                                         ]),
@@ -3379,8 +4701,14 @@ export const interactionsHandler = new Hono().post(
                                       type: MessageComponentTypesSchema,
                                       id: Type.Optional(
                                         Type.Union([
-                                          Codec(Type.String())
-                                            .Decode((value) => Number.parseInt(value, 10))
+                                          Codec(
+                                            Type.Refine(
+                                              Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                              (value) => Number(value) >= 0,
+                                              () => 'must be >= 0',
+                                            ),
+                                          )
+                                            .Decode((value) => Number(value))
                                             .Encode((value) => String(value)),
                                           Type.Null(),
                                         ]),
@@ -3391,16 +4719,36 @@ export const interactionsHandler = new Hono().post(
                                       ),
                                       min_values: Type.Optional(
                                         Type.Union([
-                                          Codec(Type.String())
-                                            .Decode((value) => Number.parseInt(value, 10))
+                                          Codec(
+                                            Type.Refine(
+                                              Type.Refine(
+                                                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                                (value) => Number(value) >= 0,
+                                                () => 'must be >= 0',
+                                              ),
+                                              (value) => Number(value) <= 25,
+                                              () => 'must be <= 25',
+                                            ),
+                                          )
+                                            .Decode((value) => Number(value))
                                             .Encode((value) => String(value)),
                                           Type.Null(),
                                         ]),
                                       ),
                                       max_values: Type.Optional(
                                         Type.Union([
-                                          Codec(Type.String())
-                                            .Decode((value) => Number.parseInt(value, 10))
+                                          Codec(
+                                            Type.Refine(
+                                              Type.Refine(
+                                                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                                (value) => Number(value) >= 1,
+                                                () => 'must be >= 1',
+                                              ),
+                                              (value) => Number(value) <= 25,
+                                              () => 'must be <= 25',
+                                            ),
+                                          )
+                                            .Decode((value) => Number(value))
                                             .Encode((value) => String(value)),
                                           Type.Null(),
                                         ]),
@@ -3408,12 +4756,14 @@ export const interactionsHandler = new Hono().post(
                                       disabled: Type.Optional(
                                         Type.Union([
                                           Codec(
-                                            Type.Union([
-                                              Type.Literal('true'),
-                                              Type.Literal('false'),
-                                            ]),
+                                            Type.String({
+                                              pattern:
+                                                /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                            }),
                                           )
-                                            .Decode((value) => value === 'true')
+                                            .Decode((value) =>
+                                              /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                            )
                                             .Encode((value) => (value ? 'true' : 'false')),
                                           Type.Null(),
                                         ]),
@@ -3421,12 +4771,14 @@ export const interactionsHandler = new Hono().post(
                                       required: Type.Optional(
                                         Type.Union([
                                           Codec(
-                                            Type.Union([
-                                              Type.Literal('true'),
-                                              Type.Literal('false'),
-                                            ]),
+                                            Type.String({
+                                              pattern:
+                                                /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                            }),
                                           )
-                                            .Decode((value) => value === 'true')
+                                            .Decode((value) =>
+                                              /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                            )
                                             .Encode((value) => (value ? 'true' : 'false')),
                                           Type.Null(),
                                         ]),
@@ -3444,8 +4796,14 @@ export const interactionsHandler = new Hono().post(
                                       type: MessageComponentTypesSchema,
                                       id: Type.Optional(
                                         Type.Union([
-                                          Codec(Type.String())
-                                            .Decode((value) => Number.parseInt(value, 10))
+                                          Codec(
+                                            Type.Refine(
+                                              Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                              (value) => Number(value) >= 0,
+                                              () => 'must be >= 0',
+                                            ),
+                                          )
+                                            .Decode((value) => Number(value))
                                             .Encode((value) => String(value)),
                                           Type.Null(),
                                         ]),
@@ -3456,16 +4814,36 @@ export const interactionsHandler = new Hono().post(
                                       ),
                                       min_values: Type.Optional(
                                         Type.Union([
-                                          Codec(Type.String())
-                                            .Decode((value) => Number.parseInt(value, 10))
+                                          Codec(
+                                            Type.Refine(
+                                              Type.Refine(
+                                                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                                (value) => Number(value) >= 0,
+                                                () => 'must be >= 0',
+                                              ),
+                                              (value) => Number(value) <= 25,
+                                              () => 'must be <= 25',
+                                            ),
+                                          )
+                                            .Decode((value) => Number(value))
                                             .Encode((value) => String(value)),
                                           Type.Null(),
                                         ]),
                                       ),
                                       max_values: Type.Optional(
                                         Type.Union([
-                                          Codec(Type.String())
-                                            .Decode((value) => Number.parseInt(value, 10))
+                                          Codec(
+                                            Type.Refine(
+                                              Type.Refine(
+                                                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                                (value) => Number(value) >= 1,
+                                                () => 'must be >= 1',
+                                              ),
+                                              (value) => Number(value) <= 25,
+                                              () => 'must be <= 25',
+                                            ),
+                                          )
+                                            .Decode((value) => Number(value))
                                             .Encode((value) => String(value)),
                                           Type.Null(),
                                         ]),
@@ -3473,12 +4851,14 @@ export const interactionsHandler = new Hono().post(
                                       disabled: Type.Optional(
                                         Type.Union([
                                           Codec(
-                                            Type.Union([
-                                              Type.Literal('true'),
-                                              Type.Literal('false'),
-                                            ]),
+                                            Type.String({
+                                              pattern:
+                                                /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                            }),
                                           )
-                                            .Decode((value) => value === 'true')
+                                            .Decode((value) =>
+                                              /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                            )
                                             .Encode((value) => (value ? 'true' : 'false')),
                                           Type.Null(),
                                         ]),
@@ -3486,12 +4866,14 @@ export const interactionsHandler = new Hono().post(
                                       required: Type.Optional(
                                         Type.Union([
                                           Codec(
-                                            Type.Union([
-                                              Type.Literal('true'),
-                                              Type.Literal('false'),
-                                            ]),
+                                            Type.String({
+                                              pattern:
+                                                /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                            }),
                                           )
-                                            .Decode((value) => value === 'true')
+                                            .Decode((value) =>
+                                              /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                            )
                                             .Encode((value) => (value ? 'true' : 'false')),
                                           Type.Null(),
                                         ]),
@@ -3509,19 +4891,21 @@ export const interactionsHandler = new Hono().post(
                                           default: Type.Optional(
                                             Type.Union([
                                               Codec(
-                                                Type.Union([
-                                                  Type.Literal('true'),
-                                                  Type.Literal('false'),
-                                                ]),
+                                                Type.String({
+                                                  pattern:
+                                                    /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                                }),
                                               )
-                                                .Decode((value) => value === 'true')
+                                                .Decode((value) =>
+                                                  /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                                )
                                                 .Encode((value) => (value ? 'true' : 'false')),
                                               Type.Null(),
                                             ]),
                                           ),
                                           emoji: Type.Optional(
                                             Type.Union([
-                                              Type.Union([Type.Null(), Type.Null()]),
+                                              Type.Null(),
                                               ComponentEmojiForRequestSchema,
                                             ]),
                                           ),
@@ -3533,8 +4917,14 @@ export const interactionsHandler = new Hono().post(
                                       type: MessageComponentTypesSchema,
                                       id: Type.Optional(
                                         Type.Union([
-                                          Codec(Type.String())
-                                            .Decode((value) => Number.parseInt(value, 10))
+                                          Codec(
+                                            Type.Refine(
+                                              Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                              (value) => Number(value) >= 0,
+                                              () => 'must be >= 0',
+                                            ),
+                                          )
+                                            .Decode((value) => Number(value))
                                             .Encode((value) => String(value)),
                                           Type.Null(),
                                         ]),
@@ -3545,16 +4935,36 @@ export const interactionsHandler = new Hono().post(
                                       ),
                                       min_values: Type.Optional(
                                         Type.Union([
-                                          Codec(Type.String())
-                                            .Decode((value) => Number.parseInt(value, 10))
+                                          Codec(
+                                            Type.Refine(
+                                              Type.Refine(
+                                                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                                (value) => Number(value) >= 0,
+                                                () => 'must be >= 0',
+                                              ),
+                                              (value) => Number(value) <= 25,
+                                              () => 'must be <= 25',
+                                            ),
+                                          )
+                                            .Decode((value) => Number(value))
                                             .Encode((value) => String(value)),
                                           Type.Null(),
                                         ]),
                                       ),
                                       max_values: Type.Optional(
                                         Type.Union([
-                                          Codec(Type.String())
-                                            .Decode((value) => Number.parseInt(value, 10))
+                                          Codec(
+                                            Type.Refine(
+                                              Type.Refine(
+                                                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                                (value) => Number(value) >= 1,
+                                                () => 'must be >= 1',
+                                              ),
+                                              (value) => Number(value) <= 25,
+                                              () => 'must be <= 25',
+                                            ),
+                                          )
+                                            .Decode((value) => Number(value))
                                             .Encode((value) => String(value)),
                                           Type.Null(),
                                         ]),
@@ -3562,12 +4972,14 @@ export const interactionsHandler = new Hono().post(
                                       disabled: Type.Optional(
                                         Type.Union([
                                           Codec(
-                                            Type.Union([
-                                              Type.Literal('true'),
-                                              Type.Literal('false'),
-                                            ]),
+                                            Type.String({
+                                              pattern:
+                                                /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                            }),
                                           )
-                                            .Decode((value) => value === 'true')
+                                            .Decode((value) =>
+                                              /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                            )
                                             .Encode((value) => (value ? 'true' : 'false')),
                                           Type.Null(),
                                         ]),
@@ -3575,12 +4987,14 @@ export const interactionsHandler = new Hono().post(
                                       required: Type.Optional(
                                         Type.Union([
                                           Codec(
-                                            Type.Union([
-                                              Type.Literal('true'),
-                                              Type.Literal('false'),
-                                            ]),
+                                            Type.String({
+                                              pattern:
+                                                /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                            }),
                                           )
-                                            .Decode((value) => value === 'true')
+                                            .Decode((value) =>
+                                              /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                            )
                                             .Encode((value) => (value ? 'true' : 'false')),
                                           Type.Null(),
                                         ]),
@@ -3602,16 +5016,29 @@ export const interactionsHandler = new Hono().post(
                                 type: MessageComponentTypesSchema,
                                 id: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.String())
-                                      .Decode((value) => Number.parseInt(value, 10))
+                                    Codec(
+                                      Type.Refine(
+                                        Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                        (value) => Number(value) >= 0,
+                                        () => 'must be >= 0',
+                                      ),
+                                    )
+                                      .Decode((value) => Number(value))
                                       .Encode((value) => String(value)),
                                     Type.Null(),
                                   ]),
                                 ),
                                 spoiler: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                      .Decode((value) => value === 'true')
+                                    Codec(
+                                      Type.String({
+                                        pattern:
+                                          /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                      }),
+                                    )
+                                      .Decode((value) =>
+                                        /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                      )
                                       .Encode((value) => (value ? 'true' : 'false')),
                                     Type.Null(),
                                   ]),
@@ -3622,8 +5049,14 @@ export const interactionsHandler = new Hono().post(
                                 type: MessageComponentTypesSchema,
                                 id: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.String())
-                                      .Decode((value) => Number.parseInt(value, 10))
+                                    Codec(
+                                      Type.Refine(
+                                        Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                        (value) => Number(value) >= 0,
+                                        () => 'must be >= 0',
+                                      ),
+                                    )
+                                      .Decode((value) => Number(value))
                                       .Encode((value) => String(value)),
                                     Type.Null(),
                                   ]),
@@ -3639,9 +5072,14 @@ export const interactionsHandler = new Hono().post(
                                     spoiler: Type.Optional(
                                       Type.Union([
                                         Codec(
-                                          Type.Union([Type.Literal('true'), Type.Literal('false')]),
+                                          Type.String({
+                                            pattern:
+                                              /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                          }),
                                         )
-                                          .Decode((value) => value === 'true')
+                                          .Decode((value) =>
+                                            /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                          )
                                           .Encode((value) => (value ? 'true' : 'false')),
                                         Type.Null(),
                                       ]),
@@ -3655,8 +5093,14 @@ export const interactionsHandler = new Hono().post(
                                 type: MessageComponentTypesSchema,
                                 id: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.String())
-                                      .Decode((value) => Number.parseInt(value, 10))
+                                    Codec(
+                                      Type.Refine(
+                                        Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                        (value) => Number(value) >= 0,
+                                        () => 'must be >= 0',
+                                      ),
+                                    )
+                                      .Decode((value) => Number(value))
                                       .Encode((value) => String(value)),
                                     Type.Null(),
                                   ]),
@@ -3666,8 +5110,14 @@ export const interactionsHandler = new Hono().post(
                                     type: MessageComponentTypesSchema,
                                     id: Type.Optional(
                                       Type.Union([
-                                        Codec(Type.String())
-                                          .Decode((value) => Number.parseInt(value, 10))
+                                        Codec(
+                                          Type.Refine(
+                                            Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                            (value) => Number(value) >= 0,
+                                            () => 'must be >= 0',
+                                          ),
+                                        )
+                                          .Decode((value) => Number(value))
                                           .Encode((value) => String(value)),
                                         Type.Null(),
                                       ]),
@@ -3681,8 +5131,14 @@ export const interactionsHandler = new Hono().post(
                                     type: MessageComponentTypesSchema,
                                     id: Type.Optional(
                                       Type.Union([
-                                        Codec(Type.String())
-                                          .Decode((value) => Number.parseInt(value, 10))
+                                        Codec(
+                                          Type.Refine(
+                                            Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                            (value) => Number(value) >= 0,
+                                            () => 'must be >= 0',
+                                          ),
+                                        )
+                                          .Decode((value) => Number(value))
                                           .Encode((value) => String(value)),
                                         Type.Null(),
                                       ]),
@@ -3700,9 +5156,14 @@ export const interactionsHandler = new Hono().post(
                                     disabled: Type.Optional(
                                       Type.Union([
                                         Codec(
-                                          Type.Union([Type.Literal('true'), Type.Literal('false')]),
+                                          Type.String({
+                                            pattern:
+                                              /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                          }),
                                         )
-                                          .Decode((value) => value === 'true')
+                                          .Decode((value) =>
+                                            /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                          )
                                           .Encode((value) => (value ? 'true' : 'false')),
                                         Type.Null(),
                                       ]),
@@ -3714,24 +5175,24 @@ export const interactionsHandler = new Hono().post(
                                       ]),
                                     ),
                                     sku_id: Type.Optional(
-                                      Type.Union([
-                                        Type.Union([Type.Null(), Type.Null()]),
-                                        SnowflakeTypeSchema,
-                                      ]),
+                                      Type.Union([Type.Null(), SnowflakeTypeSchema]),
                                     ),
                                     emoji: Type.Optional(
-                                      Type.Union([
-                                        Type.Union([Type.Null(), Type.Null()]),
-                                        ComponentEmojiForRequestSchema,
-                                      ]),
+                                      Type.Union([Type.Null(), ComponentEmojiForRequestSchema]),
                                     ),
                                   }),
                                   Type.Object({
                                     type: MessageComponentTypesSchema,
                                     id: Type.Optional(
                                       Type.Union([
-                                        Codec(Type.String())
-                                          .Decode((value) => Number.parseInt(value, 10))
+                                        Codec(
+                                          Type.Refine(
+                                            Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                            (value) => Number(value) >= 0,
+                                            () => 'must be >= 0',
+                                          ),
+                                        )
+                                          .Decode((value) => Number(value))
                                           .Encode((value) => String(value)),
                                         Type.Null(),
                                       ]),
@@ -3745,9 +5206,14 @@ export const interactionsHandler = new Hono().post(
                                     spoiler: Type.Optional(
                                       Type.Union([
                                         Codec(
-                                          Type.Union([Type.Literal('true'), Type.Literal('false')]),
+                                          Type.String({
+                                            pattern:
+                                              /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                          }),
                                         )
-                                          .Decode((value) => value === 'true')
+                                          .Decode((value) =>
+                                            /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                          )
                                           .Encode((value) => (value ? 'true' : 'false')),
                                         Type.Null(),
                                       ]),
@@ -3760,22 +5226,35 @@ export const interactionsHandler = new Hono().post(
                                 type: MessageComponentTypesSchema,
                                 id: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.String())
-                                      .Decode((value) => Number.parseInt(value, 10))
+                                    Codec(
+                                      Type.Refine(
+                                        Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                        (value) => Number(value) >= 0,
+                                        () => 'must be >= 0',
+                                      ),
+                                    )
+                                      .Decode((value) => Number(value))
                                       .Encode((value) => String(value)),
                                     Type.Null(),
                                   ]),
                                 ),
                                 spacing: Type.Optional(
                                   Type.Union([
-                                    Type.Union([Type.Null(), Type.Null()]),
+                                    Type.Null(),
                                     MessageComponentSeparatorSpacingSizeSchema,
                                   ]),
                                 ),
                                 divider: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                      .Decode((value) => value === 'true')
+                                    Codec(
+                                      Type.String({
+                                        pattern:
+                                          /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                      }),
+                                    )
+                                      .Decode((value) =>
+                                        /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                      )
                                       .Encode((value) => (value ? 'true' : 'false')),
                                     Type.Null(),
                                   ]),
@@ -3785,8 +5264,14 @@ export const interactionsHandler = new Hono().post(
                                 type: MessageComponentTypesSchema,
                                 id: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.String())
-                                      .Decode((value) => Number.parseInt(value, 10))
+                                    Codec(
+                                      Type.Refine(
+                                        Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                        (value) => Number(value) >= 0,
+                                        () => 'must be >= 0',
+                                      ),
+                                    )
+                                      .Decode((value) => Number(value))
                                       .Encode((value) => String(value)),
                                     Type.Null(),
                                   ]),
@@ -3798,8 +5283,13 @@ export const interactionsHandler = new Hono().post(
                           ),
                           spoiler: Type.Optional(
                             Type.Union([
-                              Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                .Decode((value) => value === 'true')
+                              Codec(
+                                Type.String({
+                                  pattern:
+                                    /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                }),
+                              )
+                                .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                 .Encode((value) => (value ? 'true' : 'false')),
                               Type.Null(),
                             ]),
@@ -3809,16 +5299,27 @@ export const interactionsHandler = new Hono().post(
                           type: MessageComponentTypesSchema,
                           id: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(
+                                Type.Refine(
+                                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                  (value) => Number(value) >= 0,
+                                  () => 'must be >= 0',
+                                ),
+                              )
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
                           ),
                           spoiler: Type.Optional(
                             Type.Union([
-                              Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                .Decode((value) => value === 'true')
+                              Codec(
+                                Type.String({
+                                  pattern:
+                                    /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                }),
+                              )
+                                .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                 .Encode((value) => (value ? 'true' : 'false')),
                               Type.Null(),
                             ]),
@@ -3829,8 +5330,14 @@ export const interactionsHandler = new Hono().post(
                           type: MessageComponentTypesSchema,
                           id: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(
+                                Type.Refine(
+                                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                  (value) => Number(value) >= 0,
+                                  () => 'must be >= 0',
+                                ),
+                              )
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
@@ -3845,8 +5352,13 @@ export const interactionsHandler = new Hono().post(
                               ),
                               spoiler: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                    .Decode((value) => value === 'true')
+                                  Codec(
+                                    Type.String({
+                                      pattern:
+                                        /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                    }),
+                                  )
+                                    .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                     .Encode((value) => (value ? 'true' : 'false')),
                                   Type.Null(),
                                 ]),
@@ -3860,8 +5372,14 @@ export const interactionsHandler = new Hono().post(
                           type: MessageComponentTypesSchema,
                           id: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(
+                                Type.Refine(
+                                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                  (value) => Number(value) >= 0,
+                                  () => 'must be >= 0',
+                                ),
+                              )
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
@@ -3871,8 +5389,14 @@ export const interactionsHandler = new Hono().post(
                               type: MessageComponentTypesSchema,
                               id: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.String())
-                                    .Decode((value) => Number.parseInt(value, 10))
+                                  Codec(
+                                    Type.Refine(
+                                      Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                      (value) => Number(value) >= 0,
+                                      () => 'must be >= 0',
+                                    ),
+                                  )
+                                    .Decode((value) => Number(value))
                                     .Encode((value) => String(value)),
                                   Type.Null(),
                                 ]),
@@ -3886,8 +5410,14 @@ export const interactionsHandler = new Hono().post(
                               type: MessageComponentTypesSchema,
                               id: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.String())
-                                    .Decode((value) => Number.parseInt(value, 10))
+                                  Codec(
+                                    Type.Refine(
+                                      Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                      (value) => Number(value) >= 0,
+                                      () => 'must be >= 0',
+                                    ),
+                                  )
+                                    .Decode((value) => Number(value))
                                     .Encode((value) => String(value)),
                                   Type.Null(),
                                 ]),
@@ -3904,8 +5434,13 @@ export const interactionsHandler = new Hono().post(
                               ),
                               disabled: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                    .Decode((value) => value === 'true')
+                                  Codec(
+                                    Type.String({
+                                      pattern:
+                                        /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                    }),
+                                  )
+                                    .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                     .Encode((value) => (value ? 'true' : 'false')),
                                   Type.Null(),
                                 ]),
@@ -3916,25 +5451,23 @@ export const interactionsHandler = new Hono().post(
                                   Type.Null(),
                                 ]),
                               ),
-                              sku_id: Type.Optional(
-                                Type.Union([
-                                  Type.Union([Type.Null(), Type.Null()]),
-                                  SnowflakeTypeSchema,
-                                ]),
-                              ),
+                              sku_id: Type.Optional(Type.Union([Type.Null(), SnowflakeTypeSchema])),
                               emoji: Type.Optional(
-                                Type.Union([
-                                  Type.Union([Type.Null(), Type.Null()]),
-                                  ComponentEmojiForRequestSchema,
-                                ]),
+                                Type.Union([Type.Null(), ComponentEmojiForRequestSchema]),
                               ),
                             }),
                             Type.Object({
                               type: MessageComponentTypesSchema,
                               id: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.String())
-                                    .Decode((value) => Number.parseInt(value, 10))
+                                  Codec(
+                                    Type.Refine(
+                                      Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                      (value) => Number(value) >= 0,
+                                      () => 'must be >= 0',
+                                    ),
+                                  )
+                                    .Decode((value) => Number(value))
                                     .Encode((value) => String(value)),
                                   Type.Null(),
                                 ]),
@@ -3947,8 +5480,13 @@ export const interactionsHandler = new Hono().post(
                               ),
                               spoiler: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                    .Decode((value) => value === 'true')
+                                  Codec(
+                                    Type.String({
+                                      pattern:
+                                        /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                    }),
+                                  )
+                                    .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                     .Encode((value) => (value ? 'true' : 'false')),
                                   Type.Null(),
                                 ]),
@@ -3961,22 +5499,30 @@ export const interactionsHandler = new Hono().post(
                           type: MessageComponentTypesSchema,
                           id: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(
+                                Type.Refine(
+                                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                  (value) => Number(value) >= 0,
+                                  () => 'must be >= 0',
+                                ),
+                              )
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
                           ),
                           spacing: Type.Optional(
-                            Type.Union([
-                              Type.Union([Type.Null(), Type.Null()]),
-                              MessageComponentSeparatorSpacingSizeSchema,
-                            ]),
+                            Type.Union([Type.Null(), MessageComponentSeparatorSpacingSizeSchema]),
                           ),
                           divider: Type.Optional(
                             Type.Union([
-                              Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                .Decode((value) => value === 'true')
+                              Codec(
+                                Type.String({
+                                  pattern:
+                                    /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                }),
+                              )
+                                .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                 .Encode((value) => (value ? 'true' : 'false')),
                               Type.Null(),
                             ]),
@@ -3986,8 +5532,14 @@ export const interactionsHandler = new Hono().post(
                           type: MessageComponentTypesSchema,
                           id: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(
+                                Type.Refine(
+                                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                  (value) => Number(value) >= 0,
+                                  () => 'must be >= 0',
+                                ),
+                              )
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
@@ -4013,7 +5565,19 @@ export const interactionsHandler = new Hono().post(
                         ),
                         duration_secs: Type.Optional(
                           Type.Union([
-                            Codec(Type.String())
+                            Codec(
+                              Type.Refine(
+                                Type.Refine(
+                                  Type.String({
+                                    pattern: '^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$',
+                                  }),
+                                  (value) => Number(value) >= 0,
+                                  () => 'must be >= 0',
+                                ),
+                                (value) => Number(value) <= 2147483647,
+                                () => 'must be <= 2147483647',
+                              ),
+                            )
                               .Decode((value) => Number(value))
                               .Encode((value) => String(value)),
                             Type.Null(),
@@ -4027,8 +5591,12 @@ export const interactionsHandler = new Hono().post(
                         ),
                         is_spoiler: Type.Optional(
                           Type.Union([
-                            Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                              .Decode((value) => value === 'true')
+                            Codec(
+                              Type.String({
+                                pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                              }),
+                            )
+                              .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                               .Encode((value) => (value ? 'true' : 'false')),
                             Type.Null(),
                           ]),
@@ -4041,8 +5609,8 @@ export const interactionsHandler = new Hono().post(
                 ),
                 flags: Type.Optional(
                   Type.Union([
-                    Codec(Type.String())
-                      .Decode((value) => Number.parseInt(value, 10))
+                    Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+                      .Decode((value) => Number(value))
                       .Encode((value) => String(value)),
                     Type.Null(),
                   ]),

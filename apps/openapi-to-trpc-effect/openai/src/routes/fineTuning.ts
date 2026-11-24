@@ -1,5 +1,5 @@
 import { initTRPC, TRPCError } from '@trpc/server'
-import { Schema } from 'effect'
+import { Effect, Schema } from 'effect'
 import {
   CreateFineTuningJobRequestSchema,
   DeleteFineTuningCheckpointPermissionResponseSchema,
@@ -36,8 +36,8 @@ export const fineTuningRouter = t.router({
           fine_tuned_model_checkpoint: Schema.String.annotate({
             jsonSchemaExamples: ['ft-AF1WoRqd3aJAHsqc9NY7iL8F'],
           }),
-          project_id: Schema.optional(Schema.String),
-          after: Schema.optional(Schema.String),
+          project_id: Schema.optionalKey(Schema.String),
+          after: Schema.optionalKey(Schema.String),
           limit: Schema.Number.check(Schema.isInt()).pipe(
             Schema.withDecodingDefault(Effect.succeed(10)),
           ),
@@ -89,11 +89,11 @@ export const fineTuningRouter = t.router({
     .input(
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          after: Schema.optional(Schema.String),
+          after: Schema.optionalKey(Schema.String),
           limit: Schema.Number.check(Schema.isInt()).pipe(
             Schema.withDecodingDefault(Effect.succeed(20)),
           ),
-          metadata: Schema.optional(Schema.NullOr(Schema.Record(Schema.String, Schema.String))),
+          metadata: Schema.optionalKey(Schema.NullOr(Schema.Record(Schema.String, Schema.String))),
         }),
       ),
     )
@@ -142,7 +142,7 @@ export const fineTuningRouter = t.router({
           fine_tuning_job_id: Schema.String.annotate({
             jsonSchemaExamples: ['ft-AF1WoRqd3aJAHsqc9NY7iL8F'],
           }),
-          after: Schema.optional(Schema.String),
+          after: Schema.optionalKey(Schema.String),
           limit: Schema.Number.check(Schema.isInt()).pipe(
             Schema.withDecodingDefault(Effect.succeed(10)),
           ),
@@ -160,7 +160,7 @@ export const fineTuningRouter = t.router({
           fine_tuning_job_id: Schema.String.annotate({
             jsonSchemaExamples: ['ft-AF1WoRqd3aJAHsqc9NY7iL8F'],
           }),
-          after: Schema.optional(Schema.String),
+          after: Schema.optionalKey(Schema.String),
           limit: Schema.Number.check(Schema.isInt()).pipe(
             Schema.withDecodingDefault(Effect.succeed(20)),
           ),

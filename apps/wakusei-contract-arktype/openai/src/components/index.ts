@@ -3286,15 +3286,18 @@ export const CompoundFilterSchema = scope({
   CompoundFilterSchema: [
     {
       type: ["'and' | 'or'", '@', 'Type of operation: `and` or `or`.'],
-      filters: type([
-        ['ComparisonFilterSchema', '&', { type: "'ComparisonFilter'" }],
-        '|',
-        ['CompoundFilterSchema', '&', { type: "'CompoundFilterSchema'" }],
-      ])
-        .array()
-        .describe(
-          'Array of filters to combine. Items can be `ComparisonFilter` or `CompoundFilter`.',
-        ),
+      filters: [
+        [
+          [
+            ['ComparisonFilterSchema', '&', { type: "'ComparisonFilter'" }],
+            '|',
+            ['CompoundFilterSchema', '&', { type: "'CompoundFilterSchema'" }],
+          ],
+          '[]',
+        ],
+        '@',
+        'Array of filters to combine. Items can be `ComparisonFilter` or `CompoundFilter`.',
+      ],
       '+': 'reject',
     },
     '@',
@@ -7343,10 +7346,12 @@ export const CreateImageEditRequestSchema = type({
     'Set the background of the generated image(s). This parameter is only supported for\nthe GPT image models. Must be one of `transparent`, `opaque`, or `auto` (default\nvalue). When `auto` is used, the model will automatically determine the best\nbackground for the image.\n\n`gpt-image-2.5-sunburst` and `gpt-image-2.5-flare`, including their `2026-09-08`\nsnapshots, support `opaque` and `transparent` backgrounds. Transparent backgrounds\nare available for supported GPT Image models. For `gpt-image-2` and\n`gpt-image-2-2026-04-21`, this support is in preview. When using `transparent`,\nset the output format to `png` or `webp`.\n',
   ),
   model: type(
-    "string | 'gpt-image-1.5' | 'gpt-image-2' | 'gpt-image-2-2026-04-21' | 'gpt-image-2.5-sunburst' | 'gpt-image-2.5-sunburst-2026-09-08' | 'gpt-image-2.5-flare' | 'gpt-image-2.5-flare-2026-09-08' | 'gpt-image-2.6-sunburst' | 'gpt-image-2.6-flare' | 'gpt-image-1' | 'gpt-image-1-mini' | 'chatgpt-image-latest' | 'dall-e-2'",
-  ).describe(
-    'The GPT image model to use for image editing\n(`gpt-image-1-mini`, `gpt-image-1.5`, `gpt-image-2`,\n`gpt-image-2-2026-04-21`, `gpt-image-2.5-sunburst`,\n`gpt-image-2.5-sunburst-2026-09-08`, `gpt-image-2.5-flare`,\n`gpt-image-2.5-flare-2026-09-08`, `gpt-image-2.6-sunburst`, `gpt-image-2.6-flare`,\nor `chatgpt-image-latest`).\n\n`gpt-image-1` was shut down on October 23, 2026. Use\n`gpt-image-2.5-sunburst` or `gpt-image-2.5-flare` instead.\n',
-  ),
+    "string | 'gpt-image-1.5' | 'gpt-image-2' | 'gpt-image-2-2026-04-21' | 'gpt-image-2.5-sunburst' | 'gpt-image-2.5-sunburst-2026-09-08' | 'gpt-image-2.5-flare' | 'gpt-image-2.5-flare-2026-09-08' | 'gpt-image-2.6-sunburst' | 'gpt-image-2.6-flare' | 'gpt-image-1' | 'gpt-image-1-mini'",
+  )
+    .or("'chatgpt-image-latest' | 'dall-e-2'")
+    .describe(
+      'The GPT image model to use for image editing\n(`gpt-image-1-mini`, `gpt-image-1.5`, `gpt-image-2`,\n`gpt-image-2-2026-04-21`, `gpt-image-2.5-sunburst`,\n`gpt-image-2.5-sunburst-2026-09-08`, `gpt-image-2.5-flare`,\n`gpt-image-2.5-flare-2026-09-08`, `gpt-image-2.6-sunburst`, `gpt-image-2.6-flare`,\nor `chatgpt-image-latest`).\n\n`gpt-image-1` was shut down on October 23, 2026. Use\n`gpt-image-2.5-sunburst` or `gpt-image-2.5-flare` instead.\n',
+    ),
   'n?': type('number.integer >= 1 & number.integer <= 10 | null').describe(
     'The number of images to generate. Must be between 1 and 10.',
   ),
@@ -7433,10 +7438,12 @@ export const CreateImageRequestSchema = type({
     'A text description of the desired image(s). The maximum length is 32000 characters.',
   ),
   model: type(
-    "string | 'gpt-image-1.5' | 'gpt-image-2' | 'gpt-image-2-2026-04-21' | 'gpt-image-2.5-sunburst' | 'gpt-image-2.5-sunburst-2026-09-08' | 'gpt-image-2.5-flare' | 'gpt-image-2.5-flare-2026-09-08' | 'gpt-image-2.6-sunburst' | 'gpt-image-2.6-flare' | 'gpt-image-1' | 'gpt-image-1-mini' | 'chatgpt-image-latest' | 'dall-e-2' | 'dall-e-3'",
-  ).describe(
-    'The GPT image model to use for image generation. Specify a model explicitly.\nSupported models include `gpt-image-1-mini`, `gpt-image-1.5`, `gpt-image-2`,\n`gpt-image-2-2026-04-21`, `gpt-image-2.5-sunburst`,\n`gpt-image-2.5-sunburst-2026-09-08`, `gpt-image-2.5-flare`,\n`gpt-image-2.5-flare-2026-09-08`, `gpt-image-2.6-sunburst`, `gpt-image-2.6-flare`,\nand `chatgpt-image-latest`.\n\n`gpt-image-1` was shut down on October 23, 2026. Use\n`gpt-image-2.5-sunburst` or `gpt-image-2.5-flare` instead.\n',
-  ),
+    "string | 'gpt-image-1.5' | 'gpt-image-2' | 'gpt-image-2-2026-04-21' | 'gpt-image-2.5-sunburst' | 'gpt-image-2.5-sunburst-2026-09-08' | 'gpt-image-2.5-flare' | 'gpt-image-2.5-flare-2026-09-08' | 'gpt-image-2.6-sunburst' | 'gpt-image-2.6-flare' | 'gpt-image-1' | 'gpt-image-1-mini'",
+  )
+    .or("'chatgpt-image-latest' | 'dall-e-2' | 'dall-e-3'")
+    .describe(
+      'The GPT image model to use for image generation. Specify a model explicitly.\nSupported models include `gpt-image-1-mini`, `gpt-image-1.5`, `gpt-image-2`,\n`gpt-image-2-2026-04-21`, `gpt-image-2.5-sunburst`,\n`gpt-image-2.5-sunburst-2026-09-08`, `gpt-image-2.5-flare`,\n`gpt-image-2.5-flare-2026-09-08`, `gpt-image-2.6-sunburst`, `gpt-image-2.6-flare`,\nand `chatgpt-image-latest`.\n\n`gpt-image-1` was shut down on October 23, 2026. Use\n`gpt-image-2.5-sunburst` or `gpt-image-2.5-flare` instead.\n',
+    ),
   'n?': type('number.integer >= 1 & number.integer <= 10 | null').describe(
     'The number of images to generate. Must be between 1 and 10.',
   ),
@@ -9935,10 +9942,12 @@ export const EditImageBodyJsonParamSchema = type({
   'frame_duration_ms?': FrameDurationMsSchema,
   'complexity?': ComplexitySchema,
   'model?': type(
-    "string | 'gpt-image-1.5' | 'gpt-image-2' | 'gpt-image-2-2026-04-21' | 'gpt-image-2.5-sunburst' | 'gpt-image-2.5-sunburst-2026-09-08' | 'gpt-image-2.5-flare' | 'gpt-image-2.5-flare-2026-09-08' | 'gpt-image-2.6-sunburst' | 'gpt-image-2.6-flare' | 'gpt-image-1' | 'gpt-image-1-mini' | 'chatgpt-image-latest' | null",
-  ).describe(
-    'The GPT image model to use for image editing, including `gpt-image-2`, its dated\nsnapshot `gpt-image-2-2026-04-21`, `gpt-image-2.5-sunburst`,\n`gpt-image-2.5-sunburst-2026-09-08`, `gpt-image-2.5-flare`,\n`gpt-image-2.5-flare-2026-09-08`, `gpt-image-2.6-sunburst`, and `gpt-image-2.6-flare`.\nDefaults to `gpt-image-2.6-sunburst`.\n\n`gpt-image-1` was shut down on October 23, 2026. Use\n`gpt-image-2.5-sunburst` or `gpt-image-2.5-flare` instead.\n',
-  ),
+    "string | 'gpt-image-1.5' | 'gpt-image-2' | 'gpt-image-2-2026-04-21' | 'gpt-image-2.5-sunburst' | 'gpt-image-2.5-sunburst-2026-09-08' | 'gpt-image-2.5-flare' | 'gpt-image-2.5-flare-2026-09-08' | 'gpt-image-2.6-sunburst' | 'gpt-image-2.6-flare' | 'gpt-image-1' | 'gpt-image-1-mini'",
+  )
+    .or("'chatgpt-image-latest' | null")
+    .describe(
+      'The GPT image model to use for image editing, including `gpt-image-2`, its dated\nsnapshot `gpt-image-2-2026-04-21`, `gpt-image-2.5-sunburst`,\n`gpt-image-2.5-sunburst-2026-09-08`, `gpt-image-2.5-flare`,\n`gpt-image-2.5-flare-2026-09-08`, `gpt-image-2.6-sunburst`, and `gpt-image-2.6-flare`.\nDefaults to `gpt-image-2.6-sunburst`.\n\n`gpt-image-1` was shut down on October 23, 2026. Use\n`gpt-image-2.5-sunburst` or `gpt-image-2.5-flare` instead.\n',
+    ),
   images: type(type(ImageRefParamSchema).array())
     .and(type('1 <= unknown[] <= 16'))
     .describe(
@@ -13662,7 +13671,7 @@ export const LiveSpeechWakePolicyParamSchema = type({
 export type LiveSpeechWakePolicyParamSchema = typeof LiveSpeechWakePolicyParamSchema.infer
 
 export const IdleTimeoutSSchema = type('number.integer >= 5 & number.integer <= 60').describe(
-  'Whole seconds of inactivity after which a Live WebRTC session with a speech wake policy pauses inference. The connection and conversation history are retained. Omit to keep inference active after the first wake until the session ends.',
+  'Whole seconds of inactivity after which a Live WebRTC or SIP session with a speech wake policy pauses inference. The connection and conversation history are retained. Omit to keep inference active after the first wake until the session ends.',
 )
 
 export type IdleTimeoutSSchema = typeof IdleTimeoutSSchema.infer
@@ -17610,8 +17619,12 @@ export const RealtimeSessionSchema = type({
     'The set of modalities the model can respond with. To disable audio,\nset this to ["text"].\n',
   ),
   'model?': type(
-    "string | 'gpt-realtime' | 'gpt-realtime-1.5' | 'gpt-realtime-2025-08-28' | 'gpt-4o-realtime-preview' | 'gpt-4o-realtime-preview-2024-10-01' | 'gpt-4o-realtime-preview-2024-12-17' | 'gpt-4o-realtime-preview-2025-06-03' | 'gpt-4o-mini-realtime-preview' | 'gpt-4o-mini-realtime-preview-2024-12-17' | 'gpt-realtime-mini' | 'gpt-realtime-mini-2025-10-06' | 'gpt-realtime-mini-2025-12-15' | 'gpt-audio-1.5' | 'gpt-audio-mini' | 'gpt-audio-mini-2025-10-06' | 'gpt-audio-mini-2025-12-15'",
-  ).describe('The Realtime model used for this session.\n'),
+    "string | 'gpt-realtime' | 'gpt-realtime-1.5' | 'gpt-realtime-2025-08-28' | 'gpt-4o-realtime-preview' | 'gpt-4o-realtime-preview-2024-10-01' | 'gpt-4o-realtime-preview-2024-12-17' | 'gpt-4o-realtime-preview-2025-06-03' | 'gpt-4o-mini-realtime-preview' | 'gpt-4o-mini-realtime-preview-2024-12-17' | 'gpt-realtime-mini' | 'gpt-realtime-mini-2025-10-06'",
+  )
+    .or(
+      "'gpt-realtime-mini-2025-12-15' | 'gpt-audio-1.5' | 'gpt-audio-mini' | 'gpt-audio-mini-2025-10-06' | 'gpt-audio-mini-2025-12-15'",
+    )
+    .describe('The Realtime model used for this session.\n'),
   'instructions?': type('string').describe(
     'The default system instructions (i.e. system message) prepended to model\ncalls. This field allows the client to guide the model on desired\nresponses. The model can be instructed on response content and format,\n(e.g. "be extremely succinct", "act friendly", "here are examples of good\nresponses") and on audio behavior (e.g. "talk quickly", "inject emotion\ninto your voice", "laugh frequently"). The instructions are not\nguaranteed to be followed by the model, but they provide guidance to the\nmodel on the desired behavior.\n\n\nNote that the server sets default instructions which will be used if this\nfield is not set and are visible in the `session.created` event at the\nstart of the session.\n',
   ),
@@ -26135,6 +26148,11 @@ export const CompactResponseMethodPublicBodySchema = type({
       "A system (or developer) message inserted into the model's context.\nWhen used along with `previous_response_id`, the instructions from a previous response will not be carried over to the next response. This makes it simple to swap out system (or developer) messages in new responses.",
     ),
   ).or('null'),
+  'safety_identifier?': type(
+    type('string')
+      .narrow((data, ctx) => [...data].length <= 128 || ctx.mustBe('at most 128 characters'))
+      .describe('A stable identifier used for safety monitoring and abuse detection.'),
+  ).or('null'),
   'image?': ImageOptionsParamSchema.describe('Request level image options.'),
   'prompt_cache_key?': type(
     type('string')
@@ -26281,10 +26299,16 @@ export const CompactResourceSchema = type({
   'image?': ResolvedImageOptionsSchema,
   id: type('string').describe('The unique identifier for the compacted response.'),
   object: type("'response.compaction'").describe('The object type. Always `response.compaction`.'),
+  'safety_identifier?': type(
+    type('string').describe(
+      'A stable identifier that was used for safety monitoring and abuse detection.',
+    ),
+  ).or('null'),
   output: type(ItemFieldSchema).array().describe('The compacted list of output items.'),
   created_at: type('number.integer').describe(
     'Unix timestamp (in seconds) when the compacted conversation was created.',
   ),
+  'service_tier?': type('string').describe('The service tier used for compaction, when reported.'),
   usage: ResponseUsageSchema.describe(
     'Token accounting for the compaction pass, including cached, reasoning, and total tokens.',
   ),
@@ -36474,15 +36498,18 @@ export const BetaCompoundFilterSchema = scope({
   BetaCompoundFilterSchema: [
     {
       type: ["'and' | 'or'", '@', 'Type of operation: `and` or `or`.'],
-      filters: type([
-        ['BetaComparisonFilterSchema', '&', { type: "'BetaComparisonFilter'" }],
-        '|',
-        ['BetaCompoundFilterSchema', '&', { type: "'BetaCompoundFilterSchema'" }],
-      ])
-        .array()
-        .describe(
-          'Array of filters to combine. Items can be `ComparisonFilter` or `CompoundFilter`.',
-        ),
+      filters: [
+        [
+          [
+            ['BetaComparisonFilterSchema', '&', { type: "'BetaComparisonFilter'" }],
+            '|',
+            ['BetaCompoundFilterSchema', '&', { type: "'BetaCompoundFilterSchema'" }],
+          ],
+          '[]',
+        ],
+        '@',
+        'Array of filters to combine. Items can be `ComparisonFilter` or `CompoundFilter`.',
+      ],
       '+': 'reject',
     },
     '@',
@@ -38818,6 +38845,11 @@ export const BetaCompactResponseMethodPublicBodySchema = type({
       "A system (or developer) message inserted into the model's context.\nWhen used along with `previous_response_id`, the instructions from a previous response will not be carried over to the next response. This makes it simple to swap out system (or developer) messages in new responses.",
     ),
   ).or('null'),
+  'safety_identifier?': type(
+    type('string')
+      .narrow((data, ctx) => [...data].length <= 128 || ctx.mustBe('at most 128 characters'))
+      .describe('A stable identifier used for safety monitoring and abuse detection.'),
+  ).or('null'),
   'image?': BetaImageOptionsParamSchema.describe('Request level image options.'),
   'prompt_cache_key?': type(
     type('string')
@@ -39957,10 +39989,16 @@ export const BetaCompactResourceSchema = type({
   'image?': BetaResolvedImageOptionsSchema,
   id: type('string').describe('The unique identifier for the compacted response.'),
   object: type("'response.compaction'").describe('The object type. Always `response.compaction`.'),
+  'safety_identifier?': type(
+    type('string').describe(
+      'A stable identifier that was used for safety monitoring and abuse detection.',
+    ),
+  ).or('null'),
   output: type(BetaItemFieldSchema).array().describe('The compacted list of output items.'),
   created_at: type('number.integer').describe(
     'Unix timestamp (in seconds) when the compacted conversation was created.',
   ),
+  'service_tier?': type('string').describe('The service tier used for compaction, when reported.'),
   usage: BetaResponseUsageSchema.describe(
     'Token accounting for the compaction pass, including cached, reasoning, and total tokens.',
   ),

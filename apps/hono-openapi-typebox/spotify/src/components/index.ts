@@ -1,6 +1,38 @@
-import { resolver } from 'hono-openapi'
-import { Type, Codec, type Static } from 'typebox'
+import { resolver, validator } from 'hono-openapi'
+import {
+  Type,
+  Codec,
+  type Static,
+  type StaticDecode,
+  type StaticEncode,
+  type TSchema,
+} from 'typebox'
 import { Compile } from 'typebox/compile'
+
+const toStandardSchemaV1 = <T extends TSchema>(schema: T) => {
+  const validator = Compile(schema)
+  return Object.assign(validator, {
+    '~standard': {
+      version: 1 as const,
+      vendor: 'typebox',
+      validate: (value: unknown) =>
+        validator.Check(value)
+          ? { value: validator.Decode(value) }
+          : {
+              issues: validator.Errors(value).map((error) => ({
+                message: error.message,
+                path: error.instancePath
+                  .split('/')
+                  .slice(1)
+                  .map((key) => key.replaceAll('~1', '/').replaceAll('~0', '~')),
+              })),
+            },
+      types: undefined as
+        | { readonly input: StaticEncode<T>; readonly output: StaticDecode<T> }
+        | undefined,
+    },
+  })
+}
 
 export const ExternalUrlObjectSchema = Type.Object(
   {
@@ -675,16 +707,32 @@ export const PlaylistTrackObjectSchema = Type.Object(
       }),
     ),
     item: Type.Optional(
-      Type.Union([TrackObjectSchema, EpisodeObjectSchema], {
-        description: 'Information about the track or episode.',
-      }),
+      Type.Union(
+        [
+          Type.Intersect([TrackObjectSchema, Type.Object({ type: Type.Literal('TrackObject') })]),
+          Type.Intersect([
+            EpisodeObjectSchema,
+            Type.Object({ type: Type.Literal('EpisodeObject') }),
+          ]),
+        ],
+        { description: 'Information about the track or episode.' },
+      ),
     ),
     track: Type.Optional(
-      Type.Union([TrackObjectSchema, EpisodeObjectSchema], {
-        description:
-          '**Deprecated:** Use `item` instead. Information about the track or episode.\n',
-        deprecated: true,
-      }),
+      Type.Union(
+        [
+          Type.Intersect([TrackObjectSchema, Type.Object({ type: Type.Literal('TrackObject') })]),
+          Type.Intersect([
+            EpisodeObjectSchema,
+            Type.Object({ type: Type.Literal('EpisodeObject') }),
+          ]),
+        ],
+        {
+          description:
+            '**Deprecated:** Use `item` instead. Information about the track or episode.\n',
+          deprecated: true,
+        },
+      ),
     ),
   },
   { ref: 'PlaylistTrackObject' },
@@ -695,14 +743,28 @@ export type PlaylistTrackObject = Static<typeof PlaylistTrackObjectSchema>
 export const QueueObjectSchema = Type.Object(
   {
     currently_playing: Type.Optional(
-      Type.Union([TrackObjectSchema, EpisodeObjectSchema], {
-        description: 'The currently playing track or episode. Can be `null`.',
-      }),
+      Type.Union(
+        [
+          Type.Intersect([TrackObjectSchema, Type.Object({ type: Type.Literal('TrackObject') })]),
+          Type.Intersect([
+            EpisodeObjectSchema,
+            Type.Object({ type: Type.Literal('EpisodeObject') }),
+          ]),
+        ],
+        { description: 'The currently playing track or episode. Can be `null`.' },
+      ),
     ),
     queue: Type.Optional(
-      Type.Array(Type.Union([TrackObjectSchema, EpisodeObjectSchema]), {
-        description: 'The tracks or episodes in the queue. Can be empty.',
-      }),
+      Type.Array(
+        Type.Union([
+          Type.Intersect([TrackObjectSchema, Type.Object({ type: Type.Literal('TrackObject') })]),
+          Type.Intersect([
+            EpisodeObjectSchema,
+            Type.Object({ type: Type.Literal('EpisodeObject') }),
+          ]),
+        ]),
+        { description: 'The tracks or episodes in the queue. Can be empty.' },
+      ),
     ),
   },
   { ref: 'QueueObject' },
@@ -821,9 +883,16 @@ export const CurrentlyPlayingContextObjectSchema = Type.Object(
       Type.Boolean({ description: 'If something is currently playing, return `true`.' }),
     ),
     item: Type.Optional(
-      Type.Union([TrackObjectSchema, EpisodeObjectSchema], {
-        description: 'The currently playing track or episode. Can be `null`.',
-      }),
+      Type.Union(
+        [
+          Type.Intersect([TrackObjectSchema, Type.Object({ type: Type.Literal('TrackObject') })]),
+          Type.Intersect([
+            EpisodeObjectSchema,
+            Type.Object({ type: Type.Literal('EpisodeObject') }),
+          ]),
+        ],
+        { description: 'The currently playing track or episode. Can be `null`.' },
+      ),
     ),
     currently_playing_type: Type.Optional(
       Type.String({
@@ -1713,6 +1782,7 @@ export const PagingObjectSchema = Type.Object(
       description: 'The total number of items available to return.\n',
       examples: [4],
     }),
+    items: Type.Unknown(),
   },
   { ref: 'PagingObject' },
 )
@@ -2437,9 +2507,16 @@ export const CurrentlyPlayingObjectSchema = Type.Object(
       Type.Boolean({ description: 'If something is currently playing, return `true`.' }),
     ),
     item: Type.Optional(
-      Type.Union([TrackObjectSchema, EpisodeObjectSchema], {
-        description: 'The currently playing track or episode. Can be `null`.',
-      }),
+      Type.Union(
+        [
+          Type.Intersect([TrackObjectSchema, Type.Object({ type: Type.Literal('TrackObject') })]),
+          Type.Intersect([
+            EpisodeObjectSchema,
+            Type.Object({ type: Type.Literal('EpisodeObject') }),
+          ]),
+        ],
+        { description: 'The currently playing track or episode. Can be `null`.' },
+      ),
     ),
     currently_playing_type: Type.Optional(
       Type.String({
@@ -2481,7 +2558,7 @@ export const PagingSavedAudiobookObjectSchema = Type.Intersect(
 export type PagingSavedAudiobookObject = Static<typeof PagingSavedAudiobookObjectSchema>
 
 export const PathAlbumIdParamsSchema = resolver(
-  Compile(
+  toStandardSchemaV1(
     Type.String({
       description:
         'The [Spotify ID](/documentation/web-api/concepts/spotify-uris-ids) of the album.\n',
@@ -2490,7 +2567,7 @@ export const PathAlbumIdParamsSchema = resolver(
   ),
 )
 export const PathPlaylistIdParamsSchema = resolver(
-  Compile(
+  toStandardSchemaV1(
     Type.String({
       description:
         'The [Spotify ID](/documentation/web-api/concepts/spotify-uris-ids) of the playlist.\n',
@@ -2499,7 +2576,7 @@ export const PathPlaylistIdParamsSchema = resolver(
   ),
 )
 export const QueryMarketParamsSchema = resolver(
-  Compile(
+  toStandardSchemaV1(
     Type.String({
       description:
         'An [ISO 3166-1 alpha-2 country code](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2).\n  If a country code is specified, only content that is available in that market will be returned.<br/>\n  If a valid user access token is specified in the request header, the country associated with\n  the user account will take priority over this parameter.<br/>\n  _**Note**: If neither market or user country are provided, the content is considered unavailable for the client._<br/>\n  Users can view the country that is associated with their account in the [account settings](https://www.spotify.com/account/overview/).\n',
@@ -2508,25 +2585,35 @@ export const QueryMarketParamsSchema = resolver(
   ),
 )
 export const QueryLimitParamsSchema = resolver(
-  Compile(
+  toStandardSchemaV1(
     Type.Optional(
-      Codec(Type.String({ default: '20' }))
-        .Decode((value) => Number.parseInt(value, 10))
+      Codec(
+        Type.Refine(
+          Type.Refine(
+            Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '20' }),
+            (value) => Number(value) >= 1,
+            () => 'must be >= 1',
+          ),
+          (value) => Number(value) <= 50,
+          () => 'must be <= 50',
+        ),
+      )
+        .Decode((value) => Number(value))
         .Encode((value) => String(value)),
     ),
   ),
 )
 export const QueryOffsetParamsSchema = resolver(
-  Compile(
+  toStandardSchemaV1(
     Type.Optional(
-      Codec(Type.String({ default: '0' }))
-        .Decode((value) => Number.parseInt(value, 10))
+      Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '0' }))
+        .Decode((value) => Number(value))
         .Encode((value) => String(value)),
     ),
   ),
 )
 export const QueryAdditionalTypesParamsSchema = resolver(
-  Compile(
+  toStandardSchemaV1(
     Type.String({
       description:
         'A comma-separated list of item types that your client supports besides the default `track` type. Valid types are: `track` and `episode`.<br/>\n_**Note**: This parameter was introduced to allow existing clients to maintain their current behaviour and might be deprecated in the future._<br/>\nIn addition to providing this parameter, make sure that your client properly handles cases of new types in the future by checking against the `type` field of each object.\n',
@@ -2534,7 +2621,7 @@ export const QueryAdditionalTypesParamsSchema = resolver(
   ),
 )
 export const QueryAlbumIdsParamsSchema = resolver(
-  Compile(
+  toStandardSchemaV1(
     Type.String({
       description:
         'A comma-separated list of the [Spotify IDs](/documentation/web-api/concepts/spotify-uris-ids) for the albums. Maximum: 20 IDs.\n',
@@ -2543,7 +2630,7 @@ export const QueryAlbumIdsParamsSchema = resolver(
   ),
 )
 export const PathArtistIdParamsSchema = resolver(
-  Compile(
+  toStandardSchemaV1(
     Type.String({
       description:
         'The [Spotify ID](/documentation/web-api/concepts/spotify-uris-ids) of the artist.\n',
@@ -2552,7 +2639,7 @@ export const PathArtistIdParamsSchema = resolver(
   ),
 )
 export const PathShowIdParamsSchema = resolver(
-  Compile(
+  toStandardSchemaV1(
     Type.String({
       description:
         'The [Spotify ID](/documentation/web-api/concepts/spotify-uris-ids)\nfor the show.\n',
@@ -2561,7 +2648,7 @@ export const PathShowIdParamsSchema = resolver(
   ),
 )
 export const PathAudiobookIdParamsSchema = resolver(
-  Compile(
+  toStandardSchemaV1(
     Type.String({
       description:
         'The [Spotify ID](/documentation/web-api/concepts/spotify-uris-ids)\nfor the audiobook.\n',
@@ -2570,7 +2657,7 @@ export const PathAudiobookIdParamsSchema = resolver(
   ),
 )
 export const QueryAudiobookIdsParamsSchema = resolver(
-  Compile(
+  toStandardSchemaV1(
     Type.String({
       description:
         'A comma-separated list of the [Spotify IDs](/documentation/web-api/concepts/spotify-uris-ids). For example: `ids=18yVqkdbdRvS24c0Ilj2ci,1HGw3J3NxZO1TP1BTtVhpZ`. Maximum: 50 IDs.\n',
@@ -2579,7 +2666,7 @@ export const QueryAudiobookIdsParamsSchema = resolver(
   ),
 )
 export const PathChapterIdParamsSchema = resolver(
-  Compile(
+  toStandardSchemaV1(
     Type.String({
       description:
         'The [Spotify ID](/documentation/web-api/concepts/spotify-uris-ids)\nfor the chapter.\n',
@@ -2588,7 +2675,7 @@ export const PathChapterIdParamsSchema = resolver(
   ),
 )
 export const QueryChapterIdsParamsSchema = resolver(
-  Compile(
+  toStandardSchemaV1(
     Type.String({
       description:
         'A comma-separated list of the [Spotify IDs](/documentation/web-api/concepts/spotify-uris-ids). For example: `ids=0IsXVP0JmcB2adSE338GkK,3ZXb8FKZGU0EHALYX6uCzU`. Maximum: 50 IDs.\n',
@@ -2597,7 +2684,7 @@ export const QueryChapterIdsParamsSchema = resolver(
   ),
 )
 export const QueryTrackIdsParamsSchema = resolver(
-  Compile(
+  toStandardSchemaV1(
     Type.String({
       description:
         'A comma-separated list of the [Spotify IDs](/documentation/web-api/concepts/spotify-uris-ids). For example: `ids=4iV5W9uYEdYUVa79Axb7Rh,1301WleyT98MSxVHPZCA6M`. Maximum: 50 IDs.\n',
@@ -2606,7 +2693,7 @@ export const QueryTrackIdsParamsSchema = resolver(
   ),
 )
 export const QueryIncludeGroupsParamsSchema = resolver(
-  Compile(
+  toStandardSchemaV1(
     Type.String({
       description:
         'A comma-separated list of keywords that will be used to filter the response. If not supplied, all album types will be returned. <br/>\nValid values are:<br/>- `album`<br/>- `single`<br/>- `appears_on`<br/>- `compilation`<br/>For example: `include_groups=album,single`.\n',
@@ -2615,7 +2702,7 @@ export const QueryIncludeGroupsParamsSchema = resolver(
   ),
 )
 export const QueryShowIdsParamsSchema = resolver(
-  Compile(
+  toStandardSchemaV1(
     Type.String({
       description:
         'A comma-separated list of the [Spotify IDs](/documentation/web-api/concepts/spotify-uris-ids) for the shows. Maximum: 50 IDs.\n',
@@ -2624,7 +2711,7 @@ export const QueryShowIdsParamsSchema = resolver(
   ),
 )
 export const PathUserIdParamsSchema = resolver(
-  Compile(
+  toStandardSchemaV1(
     Type.String({
       description:
         "The user's [Spotify user ID](/documentation/web-api/concepts/spotify-uris-ids).\n",
@@ -2671,39 +2758,49 @@ export const UnauthorizedResponse = {
   description:
     'Bad or expired token. This can happen if the user revoked a token or\nthe access token has expired. You should re-authenticate the user.\n',
   content: {
-    'application/json': { schema: resolver(Compile(Type.Object({ error: ErrorObjectSchema }))) },
+    'application/json': {
+      schema: resolver(toStandardSchemaV1(Type.Object({ error: ErrorObjectSchema }))),
+    },
   },
 }
 export const ForbiddenResponse = {
   description:
     "Bad OAuth request (wrong consumer key, bad nonce, expired\ntimestamp...). Unfortunately, re-authenticating the user won't help here.\n",
   content: {
-    'application/json': { schema: resolver(Compile(Type.Object({ error: ErrorObjectSchema }))) },
+    'application/json': {
+      schema: resolver(toStandardSchemaV1(Type.Object({ error: ErrorObjectSchema }))),
+    },
   },
 }
 export const NotFoundResponse = {
   description: 'The requested resource cannot be found.\n',
   content: {
-    'application/json': { schema: resolver(Compile(Type.Object({ error: ErrorObjectSchema }))) },
+    'application/json': {
+      schema: resolver(toStandardSchemaV1(Type.Object({ error: ErrorObjectSchema }))),
+    },
   },
 }
 export const BadRequestResponse = {
   description: 'The request contains malformed data in path, query parameters, or body.\n',
   content: {
-    'application/json': { schema: resolver(Compile(Type.Object({ error: ErrorObjectSchema }))) },
+    'application/json': {
+      schema: resolver(toStandardSchemaV1(Type.Object({ error: ErrorObjectSchema }))),
+    },
   },
 }
 export const TooManyRequestsResponse = {
   description: 'The app has exceeded its rate limits.\n',
   content: {
-    'application/json': { schema: resolver(Compile(Type.Object({ error: ErrorObjectSchema }))) },
+    'application/json': {
+      schema: resolver(toStandardSchemaV1(Type.Object({ error: ErrorObjectSchema }))),
+    },
   },
 }
 export const ManyAlbumsResponse = {
   description: 'A set of albums',
   content: {
     'application/json': {
-      schema: resolver(Compile(Type.Object({ albums: Type.Array(AlbumObjectSchema) }))),
+      schema: resolver(toStandardSchemaV1(Type.Object({ albums: Type.Array(AlbumObjectSchema) }))),
     },
   },
 }
@@ -2712,7 +2809,9 @@ export const ManyAudiobooksResponse = {
     "A set of audiobooks. If one of the requested audiobooks is unavailable then you'll find a `null` item in the `audiobooks` array where the audiobook object would otherwise be.",
   content: {
     'application/json': {
-      schema: resolver(Compile(Type.Object({ audiobooks: Type.Array(AudiobookObjectSchema) }))),
+      schema: resolver(
+        toStandardSchemaV1(Type.Object({ audiobooks: Type.Array(AudiobookObjectSchema) })),
+      ),
     },
   },
 }
@@ -2720,7 +2819,9 @@ export const ManyChaptersResponse = {
   description: 'A set of chapters',
   content: {
     'application/json': {
-      schema: resolver(Compile(Type.Object({ chapters: Type.Array(ChapterObjectSchema) }))),
+      schema: resolver(
+        toStandardSchemaV1(Type.Object({ chapters: Type.Array(ChapterObjectSchema) })),
+      ),
     },
   },
 }
@@ -2728,7 +2829,9 @@ export const ManyDevicesResponse = {
   description: 'A set of devices',
   content: {
     'application/json': {
-      schema: resolver(Compile(Type.Object({ devices: Type.Array(DeviceObjectSchema) }))),
+      schema: resolver(
+        toStandardSchemaV1(Type.Object({ devices: Type.Array(DeviceObjectSchema) })),
+      ),
     },
   },
 }
@@ -2736,18 +2839,24 @@ export const PagedAlbumsResponse = {
   description: 'A paged set of albums',
   content: {
     'application/json': {
-      schema: resolver(Compile(Type.Object({ albums: PagingSimplifiedAlbumObjectSchema }))),
+      schema: resolver(
+        toStandardSchemaV1(Type.Object({ albums: PagingSimplifiedAlbumObjectSchema })),
+      ),
     },
   },
 }
 export const PagedPlaylistsResponse = {
   description: 'A paged set of playlists',
-  content: { 'application/json': { schema: resolver(Compile(PagingPlaylistObjectSchema)) } },
+  content: {
+    'application/json': { schema: resolver(toStandardSchemaV1(PagingPlaylistObjectSchema)) },
+  },
 }
 export const PagedFeaturedPlaylistsResponse = {
   description: 'A paged set of playlists',
   content: {
-    'application/json': { schema: resolver(Compile(PagingFeaturedPlaylistObjectSchema)) },
+    'application/json': {
+      schema: resolver(toStandardSchemaV1(PagingFeaturedPlaylistObjectSchema)),
+    },
   },
 }
 export const PagedCategoriesResponse = {
@@ -2755,7 +2864,7 @@ export const PagedCategoriesResponse = {
   content: {
     'application/json': {
       schema: resolver(
-        Compile(
+        toStandardSchemaV1(
           Type.Object({
             categories: Type.Intersect([
               PagingObjectSchema,
@@ -2771,21 +2880,27 @@ export const CursorPagedArtistsResponse = {
   description: 'A paged set of artists',
   content: {
     'application/json': {
-      schema: resolver(Compile(Type.Object({ artists: CursorPagingSimplifiedArtistObjectSchema }))),
+      schema: resolver(
+        toStandardSchemaV1(Type.Object({ artists: CursorPagingSimplifiedArtistObjectSchema })),
+      ),
     },
   },
 }
 export const CursorPagedPlayHistoryResponse = {
   description: 'A paged set of tracks',
   content: {
-    'application/json': { schema: resolver(Compile(CursorPagingPlayHistoryObjectSchema)) },
+    'application/json': {
+      schema: resolver(toStandardSchemaV1(CursorPagingPlayHistoryObjectSchema)),
+    },
   },
 }
 export const ManyArtistsResponse = {
   description: 'A set of artists',
   content: {
     'application/json': {
-      schema: resolver(Compile(Type.Object({ artists: Type.Array(ArtistObjectSchema) }))),
+      schema: resolver(
+        toStandardSchemaV1(Type.Object({ artists: Type.Array(ArtistObjectSchema) })),
+      ),
     },
   },
 }
@@ -2794,7 +2909,7 @@ export const ManyAudioFeaturesResponse = {
   content: {
     'application/json': {
       schema: resolver(
-        Compile(Type.Object({ audio_features: Type.Array(AudioFeaturesObjectSchema) })),
+        toStandardSchemaV1(Type.Object({ audio_features: Type.Array(AudioFeaturesObjectSchema) })),
       ),
     },
   },
@@ -2803,7 +2918,9 @@ export const ManyEpisodesResponse = {
   description: 'A set of episodes',
   content: {
     'application/json': {
-      schema: resolver(Compile(Type.Object({ episodes: Type.Array(EpisodeObjectSchema) }))),
+      schema: resolver(
+        toStandardSchemaV1(Type.Object({ episodes: Type.Array(EpisodeObjectSchema) })),
+      ),
     },
   },
 }
@@ -2812,7 +2929,7 @@ export const ManyGenresResponse = {
   content: {
     'application/json': {
       schema: resolver(
-        Compile(
+        toStandardSchemaV1(
           Type.Object({
             genres: Type.Array(Type.String(), { examples: [['alternative', 'samba']] }),
           }),
@@ -2823,65 +2940,73 @@ export const ManyGenresResponse = {
 }
 export const OneEpisodeResponse = {
   description: 'An episode',
-  content: { 'application/json': { schema: resolver(Compile(EpisodeObjectSchema)) } },
+  content: { 'application/json': { schema: resolver(toStandardSchemaV1(EpisodeObjectSchema)) } },
 }
 export const OneChapterResponse = {
   description: 'A Chapter',
-  content: { 'application/json': { schema: resolver(Compile(ChapterObjectSchema)) } },
+  content: { 'application/json': { schema: resolver(toStandardSchemaV1(ChapterObjectSchema)) } },
 }
 export const OneAudiobookResponse = {
   description: 'An Audiobook',
-  content: { 'application/json': { schema: resolver(Compile(AudiobookObjectSchema)) } },
+  content: { 'application/json': { schema: resolver(toStandardSchemaV1(AudiobookObjectSchema)) } },
 }
 export const OneAlbumResponse = {
   description: 'An album',
-  content: { 'application/json': { schema: resolver(Compile(AlbumObjectSchema)) } },
+  content: { 'application/json': { schema: resolver(toStandardSchemaV1(AlbumObjectSchema)) } },
 }
 export const ArrayOfImagesResponse = {
   description: 'A set of images',
-  content: { 'application/json': { schema: resolver(Compile(Type.Array(ImageObjectSchema))) } },
+  content: {
+    'application/json': { schema: resolver(toStandardSchemaV1(Type.Array(ImageObjectSchema))) },
+  },
 }
 export const OnePrivateUserResponse = {
   description: 'A user',
-  content: { 'application/json': { schema: resolver(Compile(PrivateUserObjectSchema)) } },
+  content: {
+    'application/json': { schema: resolver(toStandardSchemaV1(PrivateUserObjectSchema)) },
+  },
 }
 export const OnePublicUserResponse = {
   description: 'A user',
-  content: { 'application/json': { schema: resolver(Compile(PublicUserObjectSchema)) } },
+  content: { 'application/json': { schema: resolver(toStandardSchemaV1(PublicUserObjectSchema)) } },
 }
 export const OneTrackResponse = {
   description: 'A track',
-  content: { 'application/json': { schema: resolver(Compile(TrackObjectSchema)) } },
+  content: { 'application/json': { schema: resolver(toStandardSchemaV1(TrackObjectSchema)) } },
 }
 export const OneShowResponse = {
   description: 'A show',
-  content: { 'application/json': { schema: resolver(Compile(ShowObjectSchema)) } },
+  content: { 'application/json': { schema: resolver(toStandardSchemaV1(ShowObjectSchema)) } },
 }
 export const OneCategoryResponse = {
   description: 'A category',
-  content: { 'application/json': { schema: resolver(Compile(CategoryObjectSchema)) } },
+  content: { 'application/json': { schema: resolver(toStandardSchemaV1(CategoryObjectSchema)) } },
 }
 export const OnePlaylistResponse = {
   description: 'A playlist',
-  content: { 'application/json': { schema: resolver(Compile(PlaylistObjectSchema)) } },
+  content: { 'application/json': { schema: resolver(toStandardSchemaV1(PlaylistObjectSchema)) } },
 }
 export const OneAudioFeaturesResponse = {
   description: 'Audio features for one track',
-  content: { 'application/json': { schema: resolver(Compile(AudioFeaturesObjectSchema)) } },
+  content: {
+    'application/json': { schema: resolver(toStandardSchemaV1(AudioFeaturesObjectSchema)) },
+  },
 }
 export const OneAudioAnalysisResponse = {
   description: 'Audio analysis for one track',
-  content: { 'application/json': { schema: resolver(Compile(AudioAnalysisObjectSchema)) } },
+  content: {
+    'application/json': { schema: resolver(toStandardSchemaV1(AudioAnalysisObjectSchema)) },
+  },
 }
 export const OneArtistResponse = {
   description: 'An artist',
-  content: { 'application/json': { schema: resolver(Compile(ArtistObjectSchema)) } },
+  content: { 'application/json': { schema: resolver(toStandardSchemaV1(ArtistObjectSchema)) } },
 }
 export const ManyTracksResponse = {
   description: 'A set of tracks',
   content: {
     'application/json': {
-      schema: resolver(Compile(Type.Object({ tracks: Type.Array(TrackObjectSchema) }))),
+      schema: resolver(toStandardSchemaV1(Type.Object({ tracks: Type.Array(TrackObjectSchema) }))),
     },
   },
 }
@@ -2889,56 +3014,78 @@ export const ManySimplifiedShowsResponse = {
   description: 'A set of shows',
   content: {
     'application/json': {
-      schema: resolver(Compile(Type.Object({ shows: Type.Array(SimplifiedShowObjectSchema) }))),
+      schema: resolver(
+        toStandardSchemaV1(Type.Object({ shows: Type.Array(SimplifiedShowObjectSchema) })),
+      ),
     },
   },
 }
 export const PagingSimplifiedTrackObjectResponse = {
   description: 'Pages of tracks',
-  content: { 'application/json': { schema: resolver(Compile(PagingSimplifiedTrackObjectSchema)) } },
+  content: {
+    'application/json': { schema: resolver(toStandardSchemaV1(PagingSimplifiedTrackObjectSchema)) },
+  },
 }
 export const PagingSavedTrackObjectResponse = {
   description: 'Pages of tracks',
-  content: { 'application/json': { schema: resolver(Compile(PagingSavedTrackObjectSchema)) } },
+  content: {
+    'application/json': { schema: resolver(toStandardSchemaV1(PagingSavedTrackObjectSchema)) },
+  },
 }
 export const PagingPlaylistTrackObjectResponse = {
   description: 'Pages of tracks',
-  content: { 'application/json': { schema: resolver(Compile(PagingPlaylistTrackObjectSchema)) } },
+  content: {
+    'application/json': { schema: resolver(toStandardSchemaV1(PagingPlaylistTrackObjectSchema)) },
+  },
 }
 export const PagingArtistDiscographyAlbumObjectResponse = {
   description: 'Pages of albums',
   content: {
-    'application/json': { schema: resolver(Compile(PagingArtistDiscographyAlbumObjectSchema)) },
+    'application/json': {
+      schema: resolver(toStandardSchemaV1(PagingArtistDiscographyAlbumObjectSchema)),
+    },
   },
 }
 export const PagingSavedAlbumObjectResponse = {
   description: 'Pages of albums',
-  content: { 'application/json': { schema: resolver(Compile(PagingSavedAlbumObjectSchema)) } },
+  content: {
+    'application/json': { schema: resolver(toStandardSchemaV1(PagingSavedAlbumObjectSchema)) },
+  },
 }
 export const PagingSavedShowObjectResponse = {
   description: 'Pages of shows',
-  content: { 'application/json': { schema: resolver(Compile(PagingSavedShowObjectSchema)) } },
+  content: {
+    'application/json': { schema: resolver(toStandardSchemaV1(PagingSavedShowObjectSchema)) },
+  },
 }
 export const PagingSimplifiedEpisodeObjectResponse = {
   description: 'Pages of episodes',
   content: {
-    'application/json': { schema: resolver(Compile(PagingSimplifiedEpisodeObjectSchema)) },
+    'application/json': {
+      schema: resolver(toStandardSchemaV1(PagingSimplifiedEpisodeObjectSchema)),
+    },
   },
 }
 export const PagingSavedEpisodeObjectResponse = {
   description: 'Pages of episodes',
-  content: { 'application/json': { schema: resolver(Compile(PagingSavedEpisodeObjectSchema)) } },
+  content: {
+    'application/json': { schema: resolver(toStandardSchemaV1(PagingSavedEpisodeObjectSchema)) },
+  },
 }
 export const PagingSimplifiedAudiobookObjectResponse = {
   description: 'Pages of audiobooks',
   content: {
-    'application/json': { schema: resolver(Compile(PagingSimplifiedAudiobookObjectSchema)) },
+    'application/json': {
+      schema: resolver(toStandardSchemaV1(PagingSimplifiedAudiobookObjectSchema)),
+    },
   },
 }
 export const PagingSimplifiedChapterObjectResponse = {
   description: 'Pages of chapters',
   content: {
-    'application/json': { schema: resolver(Compile(PagingSimplifiedChapterObjectSchema)) },
+    'application/json': {
+      schema: resolver(toStandardSchemaV1(PagingSimplifiedChapterObjectSchema)),
+    },
   },
 }
 export const SearchItemsResponse = {
@@ -2946,7 +3093,7 @@ export const SearchItemsResponse = {
   content: {
     'application/json': {
       schema: resolver(
-        Compile(
+        toStandardSchemaV1(
           Type.Object({
             tracks: Type.Optional(PagingTrackObjectSchema),
             artists: Type.Optional(PagingArtistObjectSchema),
@@ -2963,13 +3110,17 @@ export const SearchItemsResponse = {
 }
 export const OneRecommendationsResponse = {
   description: 'A set of recommendations',
-  content: { 'application/json': { schema: resolver(Compile(RecommendationsObjectSchema)) } },
+  content: {
+    'application/json': { schema: resolver(toStandardSchemaV1(RecommendationsObjectSchema)) },
+  },
 }
 export const ArrayOfBooleansResponse = {
   description: 'Array of booleans',
   content: {
     'application/json': {
-      schema: resolver(Compile(Type.Array(Type.Boolean(), { examples: [[false, true]] }))),
+      schema: resolver(
+        toStandardSchemaV1(Type.Array(Type.Boolean(), { examples: [[false, true]] })),
+      ),
     },
   },
 }
@@ -2977,30 +3128,36 @@ export const SingletonArrayOfBooleanResponse = {
   description: 'Array of boolean, containing a single boolean',
   content: {
     'application/json': {
-      schema: resolver(Compile(Type.Array(Type.Boolean(), { examples: [[true]] }))),
+      schema: resolver(toStandardSchemaV1(Type.Array(Type.Boolean(), { examples: [[true]] }))),
     },
   },
 }
 export const QueueResponse = {
   description: 'Information about the queue',
-  content: { 'application/json': { schema: resolver(Compile(QueueObjectSchema)) } },
+  content: { 'application/json': { schema: resolver(toStandardSchemaV1(QueueObjectSchema)) } },
 }
 export const OneCurrentlyPlayingResponse = {
   description: 'Information about playback',
   content: {
-    'application/json': { schema: resolver(Compile(CurrentlyPlayingContextObjectSchema)) },
+    'application/json': {
+      schema: resolver(toStandardSchemaV1(CurrentlyPlayingContextObjectSchema)),
+    },
   },
 }
 export const OneCurrentlyPlayingTrackResponse = {
   description: 'Information about the currently playing track',
-  content: { 'application/json': { schema: resolver(Compile(CurrentlyPlayingObjectSchema)) } },
+  content: {
+    'application/json': { schema: resolver(toStandardSchemaV1(CurrentlyPlayingObjectSchema)) },
+  },
 }
 export const PlaylistSnapshotIdResponse = {
   description: 'A snapshot ID for the playlist',
   content: {
     'application/json': {
       schema: resolver(
-        Compile(Type.Object({ snapshot_id: Type.Optional(Type.String({ examples: ['abc'] })) })),
+        toStandardSchemaV1(
+          Type.Object({ snapshot_id: Type.Optional(Type.String({ examples: ['abc'] })) }),
+        ),
       ),
     },
   },
@@ -3010,7 +3167,7 @@ export const MarketsResponse = {
   content: {
     'application/json': {
       schema: resolver(
-        Compile(
+        toStandardSchemaV1(
           Type.Object({
             markets: Type.Optional(Type.Array(Type.String(), { examples: [['CA', 'BR', 'IT']] })),
           }),
@@ -3021,13 +3178,19 @@ export const MarketsResponse = {
 }
 export const PagingArtistObjectResponse = {
   description: 'Pages of artists',
-  content: { 'application/json': { schema: resolver(Compile(PagingArtistObjectSchema)) } },
+  content: {
+    'application/json': { schema: resolver(toStandardSchemaV1(PagingArtistObjectSchema)) },
+  },
 }
 export const PagingSavedAudiobookObjectResponse = {
   description: 'Pages of saved audiobooks',
-  content: { 'application/json': { schema: resolver(Compile(PagingSavedAudiobookObjectSchema)) } },
+  content: {
+    'application/json': { schema: resolver(toStandardSchemaV1(PagingSavedAudiobookObjectSchema)) },
+  },
 }
 export const PagingTrackObjectResponse = {
   description: 'Pages of tracks',
-  content: { 'application/json': { schema: resolver(Compile(PagingTrackObjectSchema)) } },
+  content: {
+    'application/json': { schema: resolver(toStandardSchemaV1(PagingTrackObjectSchema)) },
+  },
 }

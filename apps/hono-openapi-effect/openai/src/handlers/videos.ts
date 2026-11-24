@@ -1,6 +1,6 @@
 import { Hono } from 'hono'
 import { describeRoute, resolver, validator } from 'hono-openapi'
-import { Schema } from 'effect'
+import { Schema, SchemaTransformation } from 'effect'
 import {
   ErrorResponseSchema,
   OrderEnumSchema,
@@ -63,15 +63,25 @@ export const videosHandler = new Hono()
       'query',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          limit: Schema.optional(
-            Schema.FiniteFromString.check(
-              Schema.isInt(),
-              Schema.isGreaterThanOrEqualTo(0),
-              Schema.isLessThanOrEqualTo(100),
-            ),
+          limit: Schema.optionalKey(
+            Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+              .pipe(
+                Schema.decodeTo(
+                  Schema.Finite,
+                  SchemaTransformation.transform({
+                    decode: (input) => Number(input),
+                    encode: (output) => String(output),
+                  }),
+                ),
+              )
+              .check(
+                Schema.isInt(),
+                Schema.isGreaterThanOrEqualTo(0),
+                Schema.isLessThanOrEqualTo(100),
+              ),
           ),
-          order: Schema.optional(OrderEnumSchema),
-          after: Schema.optional(
+          order: Schema.optionalKey(OrderEnumSchema),
+          after: Schema.optionalKey(
             Schema.String.annotate({
               description: 'Identifier for the last item from the previous pagination request',
             }),
@@ -495,7 +505,7 @@ export const videosHandler = new Hono()
     validator(
       'query',
       Schema.toStandardSchemaV1(
-        Schema.Struct({ variant: Schema.optional(VideoContentVariantSchema) }),
+        Schema.Struct({ variant: Schema.optionalKey(VideoContentVariantSchema) }),
       ),
     ),
     (c) => { throw new Error('Not implemented') },

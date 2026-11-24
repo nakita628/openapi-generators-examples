@@ -1,6 +1,6 @@
 import { Hono } from 'hono'
 import { describeRoute, resolver, validator } from 'hono-openapi'
-import { Type, Codec } from 'typebox'
+import { Type, Codec, type StaticDecode, type StaticEncode, type TSchema } from 'typebox'
 import { Compile } from 'typebox/compile'
 import {
   AllowedMentionTypesSchema,
@@ -33,6 +33,31 @@ import {
   ClientRatelimitedResponseResponse,
 } from '../components'
 
+const toStandardSchemaV1 = <T extends TSchema>(schema: T) => {
+  const validator = Compile(schema)
+  return Object.assign(validator, {
+    '~standard': {
+      version: 1 as const,
+      vendor: 'typebox',
+      validate: (value: unknown) =>
+        validator.Check(value)
+          ? { value: validator.Decode(value) }
+          : {
+              issues: validator.Errors(value).map((error) => ({
+                message: error.message,
+                path: error.instancePath
+                  .split('/')
+                  .slice(1)
+                  .map((key) => key.replaceAll('~1', '/').replaceAll('~0', '~')),
+              })),
+            },
+      types: undefined as
+        | { readonly input: StaticEncode<T>; readonly output: StaticDecode<T> }
+        | undefined,
+    },
+  })
+}
+
 export const lobbiesHandler = new Hono()
   .put(
     '/lobbies',
@@ -48,7 +73,9 @@ export const lobbiesHandler = new Hono()
             'X-RateLimit-Reset-After': { $ref: '#/components/headers/X-RateLimit-Reset-After' },
             'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
           },
-          content: { 'application/json': { schema: resolver(Compile(LobbyResponseSchema)) } },
+          content: {
+            'application/json': { schema: resolver(toStandardSchemaV1(LobbyResponseSchema)) },
+          },
         },
         '429': ClientRatelimitedResponseResponse,
         '4XX': ClientErrorResponseResponse,
@@ -57,7 +84,7 @@ export const lobbiesHandler = new Hono()
     }),
     validator(
       'json',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           idle_timeout_seconds: Type.Optional(
             Type.Union([Type.Integer({ minimum: 5, maximum: 604800 }), Type.Null()]),
@@ -75,9 +102,7 @@ export const lobbiesHandler = new Hono()
             ]),
           ),
           secret: Type.String({ maxLength: 250 }),
-          flags: Type.Optional(
-            Type.Union([Type.Union([Type.Null(), Type.Null()]), Type.Literal(1)]),
-          ),
+          flags: Type.Optional(Type.Union([Type.Null(), Type.Literal(1)])),
           name: Type.Optional(
             Type.Union([Type.String({ minLength: 1, maxLength: 100 }), Type.Null()]),
           ),
@@ -100,7 +125,9 @@ export const lobbiesHandler = new Hono()
             'X-RateLimit-Reset-After': { $ref: '#/components/headers/X-RateLimit-Reset-After' },
             'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
           },
-          content: { 'application/json': { schema: resolver(Compile(LobbyResponseSchema)) } },
+          content: {
+            'application/json': { schema: resolver(toStandardSchemaV1(LobbyResponseSchema)) },
+          },
         },
         '429': ClientRatelimitedResponseResponse,
         '4XX': ClientErrorResponseResponse,
@@ -109,7 +136,7 @@ export const lobbiesHandler = new Hono()
     }),
     validator(
       'json',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           idle_timeout_seconds: Type.Optional(
             Type.Union([Type.Integer({ minimum: 5, maximum: 604800 }), Type.Null()]),
@@ -123,9 +150,7 @@ export const lobbiesHandler = new Hono()
               Type.Null(),
             ]),
           ),
-          flags: Type.Optional(
-            Type.Union([Type.Union([Type.Null(), Type.Null()]), Type.Literal(1)]),
-          ),
+          flags: Type.Optional(Type.Union([Type.Null(), Type.Literal(1)])),
           override_event_webhooks_url: Type.Optional(
             Type.Union([Type.String({ format: 'uri', maxLength: 512 }), Type.Null()]),
           ),
@@ -151,14 +176,16 @@ export const lobbiesHandler = new Hono()
             'X-RateLimit-Reset-After': { $ref: '#/components/headers/X-RateLimit-Reset-After' },
             'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
           },
-          content: { 'application/json': { schema: resolver(Compile(LobbyResponseSchema)) } },
+          content: {
+            'application/json': { schema: resolver(toStandardSchemaV1(LobbyResponseSchema)) },
+          },
         },
         '429': ClientRatelimitedResponseResponse,
         '4XX': ClientErrorResponseResponse,
       },
       security: [{ BotToken: [] }],
     }),
-    validator('param', Compile(Type.Object({ lobby_id: SnowflakeTypeSchema }))),
+    validator('param', toStandardSchemaV1(Type.Object({ lobby_id: SnowflakeTypeSchema }))),
     (c) => { throw new Error('Not implemented') },
   )
   .delete(
@@ -183,7 +210,7 @@ export const lobbiesHandler = new Hono()
       },
       security: [{ BotToken: [] }],
     }),
-    validator('param', Compile(Type.Object({ lobby_id: SnowflakeTypeSchema }))),
+    validator('param', toStandardSchemaV1(Type.Object({ lobby_id: SnowflakeTypeSchema }))),
     (c) => { throw new Error('Not implemented') },
   )
   .patch(
@@ -200,17 +227,19 @@ export const lobbiesHandler = new Hono()
             'X-RateLimit-Reset-After': { $ref: '#/components/headers/X-RateLimit-Reset-After' },
             'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
           },
-          content: { 'application/json': { schema: resolver(Compile(LobbyResponseSchema)) } },
+          content: {
+            'application/json': { schema: resolver(toStandardSchemaV1(LobbyResponseSchema)) },
+          },
         },
         '429': ClientRatelimitedResponseResponse,
         '4XX': ClientErrorResponseResponse,
       },
       security: [{ BotToken: [] }],
     }),
-    validator('param', Compile(Type.Object({ lobby_id: SnowflakeTypeSchema }))),
+    validator('param', toStandardSchemaV1(Type.Object({ lobby_id: SnowflakeTypeSchema }))),
     validator(
       'json',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           idle_timeout_seconds: Type.Optional(
             Type.Union([Type.Integer({ minimum: 5, maximum: 604800 }), Type.Null()]),
@@ -224,9 +253,7 @@ export const lobbiesHandler = new Hono()
           members: Type.Optional(
             Type.Union([Type.Array(LobbyMemberRequestSchema, { maxItems: 25 }), Type.Null()]),
           ),
-          flags: Type.Optional(
-            Type.Union([Type.Union([Type.Null(), Type.Null()]), Type.Literal(1)]),
-          ),
+          flags: Type.Optional(Type.Union([Type.Null(), Type.Literal(1)])),
           override_event_webhooks_url: Type.Optional(
             Type.Union([Type.String({ format: 'uri', maxLength: 512 }), Type.Null()]),
           ),
@@ -252,22 +279,20 @@ export const lobbiesHandler = new Hono()
             'X-RateLimit-Reset-After': { $ref: '#/components/headers/X-RateLimit-Reset-After' },
             'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
           },
-          content: { 'application/json': { schema: resolver(Compile(LobbyResponseSchema)) } },
+          content: {
+            'application/json': { schema: resolver(toStandardSchemaV1(LobbyResponseSchema)) },
+          },
         },
         '429': ClientRatelimitedResponseResponse,
         '4XX': ClientErrorResponseResponse,
       },
       security: [{ BotToken: [] }, { OAuth2: [] }],
     }),
-    validator('param', Compile(Type.Object({ lobby_id: SnowflakeTypeSchema }))),
+    validator('param', toStandardSchemaV1(Type.Object({ lobby_id: SnowflakeTypeSchema }))),
     validator(
       'json',
-      Compile(
-        Type.Object({
-          channel_id: Type.Optional(
-            Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
-          ),
-        }),
+      toStandardSchemaV1(
+        Type.Object({ channel_id: Type.Optional(Type.Union([Type.Null(), SnowflakeTypeSchema])) }),
       ),
     ),
     (c) => { throw new Error('Not implemented') },
@@ -292,7 +317,7 @@ export const lobbiesHandler = new Hono()
       },
       security: [{ BotToken: [] }, { OAuth2: [] }],
     }),
-    validator('param', Compile(Type.Object({ lobby_id: SnowflakeTypeSchema }))),
+    validator('param', toStandardSchemaV1(Type.Object({ lobby_id: SnowflakeTypeSchema }))),
     (c) => { throw new Error('Not implemented') },
   )
   .post(
@@ -310,7 +335,9 @@ export const lobbiesHandler = new Hono()
             'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
           },
           content: {
-            'application/json': { schema: resolver(Compile(LobbyGuildInviteResponseSchema)) },
+            'application/json': {
+              schema: resolver(toStandardSchemaV1(LobbyGuildInviteResponseSchema)),
+            },
           },
         },
         '429': ClientRatelimitedResponseResponse,
@@ -318,7 +345,7 @@ export const lobbiesHandler = new Hono()
       },
       security: [{ BotToken: [] }, { OAuth2: [] }],
     }),
-    validator('param', Compile(Type.Object({ lobby_id: SnowflakeTypeSchema }))),
+    validator('param', toStandardSchemaV1(Type.Object({ lobby_id: SnowflakeTypeSchema }))),
     (c) => { throw new Error('Not implemented') },
   )
   .post(
@@ -338,7 +365,9 @@ export const lobbiesHandler = new Hono()
           content: {
             'application/json': {
               schema: resolver(
-                Compile(Type.Union([Type.Array(LobbyMemberResponseSchema), Type.Null()])),
+                toStandardSchemaV1(
+                  Type.Union([Type.Array(LobbyMemberResponseSchema), Type.Null()]),
+                ),
               ),
             },
           },
@@ -348,10 +377,10 @@ export const lobbiesHandler = new Hono()
       },
       security: [{ BotToken: [] }],
     }),
-    validator('param', Compile(Type.Object({ lobby_id: SnowflakeTypeSchema }))),
+    validator('param', toStandardSchemaV1(Type.Object({ lobby_id: SnowflakeTypeSchema }))),
     validator(
       'json',
-      Compile(
+      toStandardSchemaV1(
         Type.Union([
           Type.Array(BulkLobbyMemberRequestSchema, { minItems: 1, maxItems: 25 }),
           Type.Null(),
@@ -374,7 +403,9 @@ export const lobbiesHandler = new Hono()
             'X-RateLimit-Reset-After': { $ref: '#/components/headers/X-RateLimit-Reset-After' },
             'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
           },
-          content: { 'application/json': { schema: resolver(Compile(LobbyMemberResponseSchema)) } },
+          content: {
+            'application/json': { schema: resolver(toStandardSchemaV1(LobbyMemberResponseSchema)) },
+          },
         },
         '429': ClientRatelimitedResponseResponse,
         '4XX': ClientErrorResponseResponse,
@@ -383,11 +414,13 @@ export const lobbiesHandler = new Hono()
     }),
     validator(
       'param',
-      Compile(Type.Object({ lobby_id: SnowflakeTypeSchema, user_id: SnowflakeTypeSchema })),
+      toStandardSchemaV1(
+        Type.Object({ lobby_id: SnowflakeTypeSchema, user_id: SnowflakeTypeSchema }),
+      ),
     ),
     validator(
       'json',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           metadata: Type.Optional(
             Type.Union([
@@ -395,9 +428,7 @@ export const lobbiesHandler = new Hono()
               Type.Null(),
             ]),
           ),
-          flags: Type.Optional(
-            Type.Union([Type.Union([Type.Null(), Type.Null()]), Type.Literal(1)]),
-          ),
+          flags: Type.Optional(Type.Union([Type.Null(), Type.Literal(1)])),
           additional_name: Type.Optional(
             Type.Union([Type.String({ minLength: 1, maxLength: 80 }), Type.Null()]),
           ),
@@ -428,7 +459,9 @@ export const lobbiesHandler = new Hono()
     }),
     validator(
       'param',
-      Compile(Type.Object({ lobby_id: SnowflakeTypeSchema, user_id: SnowflakeTypeSchema })),
+      toStandardSchemaV1(
+        Type.Object({ lobby_id: SnowflakeTypeSchema, user_id: SnowflakeTypeSchema }),
+      ),
     ),
     (c) => { throw new Error('Not implemented') },
   )
@@ -447,7 +480,9 @@ export const lobbiesHandler = new Hono()
             'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
           },
           content: {
-            'application/json': { schema: resolver(Compile(LobbyGuildInviteResponseSchema)) },
+            'application/json': {
+              schema: resolver(toStandardSchemaV1(LobbyGuildInviteResponseSchema)),
+            },
           },
         },
         '429': ClientRatelimitedResponseResponse,
@@ -457,7 +492,9 @@ export const lobbiesHandler = new Hono()
     }),
     validator(
       'param',
-      Compile(Type.Object({ lobby_id: SnowflakeTypeSchema, user_id: SnowflakeTypeSchema })),
+      toStandardSchemaV1(
+        Type.Object({ lobby_id: SnowflakeTypeSchema, user_id: SnowflakeTypeSchema }),
+      ),
     ),
     (c) => { throw new Error('Not implemented') },
   )
@@ -478,7 +515,9 @@ export const lobbiesHandler = new Hono()
           content: {
             'application/json': {
               schema: resolver(
-                Compile(Type.Union([Type.Array(LobbyMessageResponseSchema), Type.Null()])),
+                toStandardSchemaV1(
+                  Type.Union([Type.Array(LobbyMessageResponseSchema), Type.Null()]),
+                ),
               ),
             },
           },
@@ -488,14 +527,24 @@ export const lobbiesHandler = new Hono()
       },
       security: [{ BotToken: [] }, { OAuth2: [] }],
     }),
-    validator('param', Compile(Type.Object({ lobby_id: SnowflakeTypeSchema }))),
+    validator('param', toStandardSchemaV1(Type.Object({ lobby_id: SnowflakeTypeSchema }))),
     validator(
       'query',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           limit: Type.Optional(
-            Codec(Type.String())
-              .Decode((value) => Number.parseInt(value, 10))
+            Codec(
+              Type.Refine(
+                Type.Refine(
+                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                  (value) => Number(value) >= 1,
+                  () => 'must be >= 1',
+                ),
+                (value) => Number(value) <= 200,
+                () => 'must be <= 200',
+              ),
+            )
+              .Decode((value) => Number(value))
               .Encode((value) => String(value)),
           ),
         }),
@@ -518,7 +567,9 @@ export const lobbiesHandler = new Hono()
             'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
           },
           content: {
-            'application/json': { schema: resolver(Compile(LobbyMessageResponseSchema)) },
+            'application/json': {
+              schema: resolver(toStandardSchemaV1(LobbyMessageResponseSchema)),
+            },
           },
         },
         '429': ClientRatelimitedResponseResponse,
@@ -526,11 +577,11 @@ export const lobbiesHandler = new Hono()
       },
       security: [{ BotToken: [] }, { OAuth2: [] }],
     }),
-    validator('param', Compile(Type.Object({ lobby_id: SnowflakeTypeSchema }))),
-    validator('json', Compile(SDKMessageRequestSchema)),
+    validator('param', toStandardSchemaV1(Type.Object({ lobby_id: SnowflakeTypeSchema }))),
+    validator('json', toStandardSchemaV1(SDKMessageRequestSchema)),
     validator(
       'form',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           content: Type.Optional(Type.Union([Type.String({ maxLength: 4000 }), Type.Null()])),
           embeds: Type.Optional(
@@ -546,8 +597,18 @@ export const lobbiesHandler = new Hono()
                   title: Type.Optional(Type.Union([Type.String({ maxLength: 256 }), Type.Null()])),
                   color: Type.Optional(
                     Type.Union([
-                      Codec(Type.String())
-                        .Decode((value) => Number.parseInt(value, 10))
+                      Codec(
+                        Type.Refine(
+                          Type.Refine(
+                            Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                            (value) => Number(value) >= 0,
+                            () => 'must be >= 0',
+                          ),
+                          (value) => Number(value) <= 16777215,
+                          () => 'must be <= 16777215',
+                        ),
+                      )
+                        .Decode((value) => Number(value))
                         .Encode((value) => String(value)),
                       Type.Null(),
                     ]),
@@ -558,12 +619,10 @@ export const lobbiesHandler = new Hono()
                   description: Type.Optional(
                     Type.Union([Type.String({ maxLength: 4096 }), Type.Null()]),
                   ),
-                  author: Type.Optional(
-                    Type.Union([Type.Union([Type.Null(), Type.Null()]), RichEmbedAuthorSchema]),
-                  ),
+                  author: Type.Optional(Type.Union([Type.Null(), RichEmbedAuthorSchema])),
                   image: Type.Optional(
                     Type.Union([
-                      Type.Union([Type.Null(), Type.Null()]),
+                      Type.Null(),
                       Type.Object({
                         url: Type.Optional(
                           Type.Union([
@@ -573,16 +632,16 @@ export const lobbiesHandler = new Hono()
                         ),
                         width: Type.Optional(
                           Type.Union([
-                            Codec(Type.String())
-                              .Decode((value) => Number.parseInt(value, 10))
+                            Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+                              .Decode((value) => Number(value))
                               .Encode((value) => String(value)),
                             Type.Null(),
                           ]),
                         ),
                         height: Type.Optional(
                           Type.Union([
-                            Codec(Type.String())
-                              .Decode((value) => Number.parseInt(value, 10))
+                            Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+                              .Decode((value) => Number(value))
                               .Encode((value) => String(value)),
                             Type.Null(),
                           ]),
@@ -592,16 +651,30 @@ export const lobbiesHandler = new Hono()
                         ),
                         placeholder_version: Type.Optional(
                           Type.Union([
-                            Codec(Type.String())
-                              .Decode((value) => Number.parseInt(value, 10))
+                            Codec(
+                              Type.Refine(
+                                Type.Refine(
+                                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                  (value) => Number(value) >= 0,
+                                  () => 'must be >= 0',
+                                ),
+                                (value) => Number(value) <= 2147483647,
+                                () => 'must be <= 2147483647',
+                              ),
+                            )
+                              .Decode((value) => Number(value))
                               .Encode((value) => String(value)),
                             Type.Null(),
                           ]),
                         ),
                         is_animated: Type.Optional(
                           Type.Union([
-                            Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                              .Decode((value) => value === 'true')
+                            Codec(
+                              Type.String({
+                                pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                              }),
+                            )
+                              .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                               .Encode((value) => (value ? 'true' : 'false')),
                             Type.Null(),
                           ]),
@@ -614,7 +687,7 @@ export const lobbiesHandler = new Hono()
                   ),
                   thumbnail: Type.Optional(
                     Type.Union([
-                      Type.Union([Type.Null(), Type.Null()]),
+                      Type.Null(),
                       Type.Object({
                         url: Type.Optional(
                           Type.Union([
@@ -624,16 +697,16 @@ export const lobbiesHandler = new Hono()
                         ),
                         width: Type.Optional(
                           Type.Union([
-                            Codec(Type.String())
-                              .Decode((value) => Number.parseInt(value, 10))
+                            Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+                              .Decode((value) => Number(value))
                               .Encode((value) => String(value)),
                             Type.Null(),
                           ]),
                         ),
                         height: Type.Optional(
                           Type.Union([
-                            Codec(Type.String())
-                              .Decode((value) => Number.parseInt(value, 10))
+                            Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+                              .Decode((value) => Number(value))
                               .Encode((value) => String(value)),
                             Type.Null(),
                           ]),
@@ -643,16 +716,30 @@ export const lobbiesHandler = new Hono()
                         ),
                         placeholder_version: Type.Optional(
                           Type.Union([
-                            Codec(Type.String())
-                              .Decode((value) => Number.parseInt(value, 10))
+                            Codec(
+                              Type.Refine(
+                                Type.Refine(
+                                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                  (value) => Number(value) >= 0,
+                                  () => 'must be >= 0',
+                                ),
+                                (value) => Number(value) <= 2147483647,
+                                () => 'must be <= 2147483647',
+                              ),
+                            )
+                              .Decode((value) => Number(value))
                               .Encode((value) => String(value)),
                             Type.Null(),
                           ]),
                         ),
                         is_animated: Type.Optional(
                           Type.Union([
-                            Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                              .Decode((value) => value === 'true')
+                            Codec(
+                              Type.String({
+                                pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                              }),
+                            )
+                              .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                               .Encode((value) => (value ? 'true' : 'false')),
                             Type.Null(),
                           ]),
@@ -663,9 +750,7 @@ export const lobbiesHandler = new Hono()
                       }),
                     ]),
                   ),
-                  footer: Type.Optional(
-                    Type.Union([Type.Union([Type.Null(), Type.Null()]), RichEmbedFooterSchema]),
-                  ),
+                  footer: Type.Optional(Type.Union([Type.Null(), RichEmbedFooterSchema])),
                   fields: Type.Optional(
                     Type.Union([
                       Type.Array(
@@ -674,8 +759,13 @@ export const lobbiesHandler = new Hono()
                           value: Type.String({ maxLength: 1024 }),
                           inline: Type.Optional(
                             Type.Union([
-                              Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                .Decode((value) => value === 'true')
+                              Codec(
+                                Type.String({
+                                  pattern:
+                                    /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                }),
+                              )
+                                .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                 .Encode((value) => (value ? 'true' : 'false')),
                               Type.Null(),
                             ]),
@@ -686,12 +776,10 @@ export const lobbiesHandler = new Hono()
                       Type.Null(),
                     ]),
                   ),
-                  provider: Type.Optional(
-                    Type.Union([Type.Union([Type.Null(), Type.Null()]), RichEmbedProviderSchema]),
-                  ),
+                  provider: Type.Optional(Type.Union([Type.Null(), RichEmbedProviderSchema])),
                   video: Type.Optional(
                     Type.Union([
-                      Type.Union([Type.Null(), Type.Null()]),
+                      Type.Null(),
                       Type.Object({
                         url: Type.Optional(
                           Type.Union([
@@ -701,16 +789,16 @@ export const lobbiesHandler = new Hono()
                         ),
                         width: Type.Optional(
                           Type.Union([
-                            Codec(Type.String())
-                              .Decode((value) => Number.parseInt(value, 10))
+                            Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+                              .Decode((value) => Number(value))
                               .Encode((value) => String(value)),
                             Type.Null(),
                           ]),
                         ),
                         height: Type.Optional(
                           Type.Union([
-                            Codec(Type.String())
-                              .Decode((value) => Number.parseInt(value, 10))
+                            Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+                              .Decode((value) => Number(value))
                               .Encode((value) => String(value)),
                             Type.Null(),
                           ]),
@@ -720,16 +808,30 @@ export const lobbiesHandler = new Hono()
                         ),
                         placeholder_version: Type.Optional(
                           Type.Union([
-                            Codec(Type.String())
-                              .Decode((value) => Number.parseInt(value, 10))
+                            Codec(
+                              Type.Refine(
+                                Type.Refine(
+                                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                  (value) => Number(value) >= 0,
+                                  () => 'must be >= 0',
+                                ),
+                                (value) => Number(value) <= 2147483647,
+                                () => 'must be <= 2147483647',
+                              ),
+                            )
+                              .Decode((value) => Number(value))
                               .Encode((value) => String(value)),
                             Type.Null(),
                           ]),
                         ),
                         is_animated: Type.Optional(
                           Type.Union([
-                            Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                              .Decode((value) => value === 'true')
+                            Codec(
+                              Type.String({
+                                pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                              }),
+                            )
+                              .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                               .Encode((value) => (value ? 'true' : 'false')),
                             Type.Null(),
                           ]),
@@ -740,9 +842,7 @@ export const lobbiesHandler = new Hono()
                       }),
                     ]),
                   ),
-                  audio: Type.Optional(
-                    Type.Union([Type.Union([Type.Null(), Type.Null()]), RichEmbedAudioSchema]),
-                  ),
+                  audio: Type.Optional(Type.Union([Type.Null(), RichEmbedAudioSchema])),
                 }),
                 { maxItems: 10 },
               ),
@@ -751,42 +851,43 @@ export const lobbiesHandler = new Hono()
           ),
           allowed_mentions: Type.Optional(
             Type.Union([
-              Type.Union([Type.Null(), Type.Null()]),
+              Type.Null(),
               Type.Object({
                 parse: Type.Optional(
                   Type.Union([
-                    Type.Array(
-                      Type.Union([
-                        Type.Union([Type.Null(), Type.Null()]),
-                        AllowedMentionTypesSchema,
-                      ]),
-                      { maxItems: 1521, uniqueItems: true },
-                    ),
+                    Type.Array(Type.Union([Type.Null(), AllowedMentionTypesSchema]), {
+                      maxItems: 1521,
+                      uniqueItems: true,
+                    }),
                     Type.Null(),
                   ]),
                 ),
                 users: Type.Optional(
                   Type.Union([
-                    Type.Array(
-                      Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
-                      { maxItems: 100, uniqueItems: true },
-                    ),
+                    Type.Array(Type.Union([Type.Null(), SnowflakeTypeSchema]), {
+                      maxItems: 100,
+                      uniqueItems: true,
+                    }),
                     Type.Null(),
                   ]),
                 ),
                 roles: Type.Optional(
                   Type.Union([
-                    Type.Array(
-                      Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
-                      { maxItems: 100, uniqueItems: true },
-                    ),
+                    Type.Array(Type.Union([Type.Null(), SnowflakeTypeSchema]), {
+                      maxItems: 100,
+                      uniqueItems: true,
+                    }),
                     Type.Null(),
                   ]),
                 ),
                 replied_user: Type.Optional(
                   Type.Union([
-                    Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                      .Decode((value) => value === 'true')
+                    Codec(
+                      Type.String({
+                        pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                      }),
+                    )
+                      .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                       .Encode((value) => (value ? 'true' : 'false')),
                     Type.Null(),
                   ]),
@@ -805,8 +906,14 @@ export const lobbiesHandler = new Hono()
                     type: MessageComponentTypesSchema,
                     id: Type.Optional(
                       Type.Union([
-                        Codec(Type.String())
-                          .Decode((value) => Number.parseInt(value, 10))
+                        Codec(
+                          Type.Refine(
+                            Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                            (value) => Number(value) >= 0,
+                            () => 'must be >= 0',
+                          ),
+                        )
+                          .Decode((value) => Number(value))
                           .Encode((value) => String(value)),
                         Type.Null(),
                       ]),
@@ -817,8 +924,14 @@ export const lobbiesHandler = new Hono()
                           type: MessageComponentTypesSchema,
                           id: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(
+                                Type.Refine(
+                                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                  (value) => Number(value) >= 0,
+                                  () => 'must be >= 0',
+                                ),
+                              )
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
@@ -835,8 +948,13 @@ export const lobbiesHandler = new Hono()
                           ),
                           disabled: Type.Optional(
                             Type.Union([
-                              Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                .Decode((value) => value === 'true')
+                              Codec(
+                                Type.String({
+                                  pattern:
+                                    /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                }),
+                              )
+                                .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                 .Encode((value) => (value ? 'true' : 'false')),
                               Type.Null(),
                             ]),
@@ -847,25 +965,23 @@ export const lobbiesHandler = new Hono()
                               Type.Null(),
                             ]),
                           ),
-                          sku_id: Type.Optional(
-                            Type.Union([
-                              Type.Union([Type.Null(), Type.Null()]),
-                              SnowflakeTypeSchema,
-                            ]),
-                          ),
+                          sku_id: Type.Optional(Type.Union([Type.Null(), SnowflakeTypeSchema])),
                           emoji: Type.Optional(
-                            Type.Union([
-                              Type.Union([Type.Null(), Type.Null()]),
-                              ComponentEmojiForRequestSchema,
-                            ]),
+                            Type.Union([Type.Null(), ComponentEmojiForRequestSchema]),
                           ),
                         }),
                         Type.Object({
                           type: MessageComponentTypesSchema,
                           id: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(
+                                Type.Refine(
+                                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                  (value) => Number(value) >= 0,
+                                  () => 'must be >= 0',
+                                ),
+                              )
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
@@ -876,32 +992,62 @@ export const lobbiesHandler = new Hono()
                           ),
                           min_values: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(
+                                Type.Refine(
+                                  Type.Refine(
+                                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                    (value) => Number(value) >= 0,
+                                    () => 'must be >= 0',
+                                  ),
+                                  (value) => Number(value) <= 25,
+                                  () => 'must be <= 25',
+                                ),
+                              )
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
                           ),
                           max_values: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(
+                                Type.Refine(
+                                  Type.Refine(
+                                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                    (value) => Number(value) >= 1,
+                                    () => 'must be >= 1',
+                                  ),
+                                  (value) => Number(value) <= 25,
+                                  () => 'must be <= 25',
+                                ),
+                              )
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
                           ),
                           disabled: Type.Optional(
                             Type.Union([
-                              Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                .Decode((value) => value === 'true')
+                              Codec(
+                                Type.String({
+                                  pattern:
+                                    /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                }),
+                              )
+                                .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                 .Encode((value) => (value ? 'true' : 'false')),
                               Type.Null(),
                             ]),
                           ),
                           required: Type.Optional(
                             Type.Union([
-                              Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                .Decode((value) => value === 'true')
+                              Codec(
+                                Type.String({
+                                  pattern:
+                                    /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                }),
+                              )
+                                .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                 .Encode((value) => (value ? 'true' : 'false')),
                               Type.Null(),
                             ]),
@@ -923,8 +1069,14 @@ export const lobbiesHandler = new Hono()
                           type: MessageComponentTypesSchema,
                           id: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(
+                                Type.Refine(
+                                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                  (value) => Number(value) >= 0,
+                                  () => 'must be >= 0',
+                                ),
+                              )
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
@@ -935,32 +1087,62 @@ export const lobbiesHandler = new Hono()
                           ),
                           min_values: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(
+                                Type.Refine(
+                                  Type.Refine(
+                                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                    (value) => Number(value) >= 0,
+                                    () => 'must be >= 0',
+                                  ),
+                                  (value) => Number(value) <= 25,
+                                  () => 'must be <= 25',
+                                ),
+                              )
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
                           ),
                           max_values: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(
+                                Type.Refine(
+                                  Type.Refine(
+                                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                    (value) => Number(value) >= 1,
+                                    () => 'must be >= 1',
+                                  ),
+                                  (value) => Number(value) <= 25,
+                                  () => 'must be <= 25',
+                                ),
+                              )
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
                           ),
                           disabled: Type.Optional(
                             Type.Union([
-                              Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                .Decode((value) => value === 'true')
+                              Codec(
+                                Type.String({
+                                  pattern:
+                                    /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                }),
+                              )
+                                .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                 .Encode((value) => (value ? 'true' : 'false')),
                               Type.Null(),
                             ]),
                           ),
                           required: Type.Optional(
                             Type.Union([
-                              Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                .Decode((value) => value === 'true')
+                              Codec(
+                                Type.String({
+                                  pattern:
+                                    /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                }),
+                              )
+                                .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                 .Encode((value) => (value ? 'true' : 'false')),
                               Type.Null(),
                             ]),
@@ -982,8 +1164,14 @@ export const lobbiesHandler = new Hono()
                           type: MessageComponentTypesSchema,
                           id: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(
+                                Type.Refine(
+                                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                  (value) => Number(value) >= 0,
+                                  () => 'must be >= 0',
+                                ),
+                              )
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
@@ -994,32 +1182,62 @@ export const lobbiesHandler = new Hono()
                           ),
                           min_values: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(
+                                Type.Refine(
+                                  Type.Refine(
+                                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                    (value) => Number(value) >= 0,
+                                    () => 'must be >= 0',
+                                  ),
+                                  (value) => Number(value) <= 25,
+                                  () => 'must be <= 25',
+                                ),
+                              )
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
                           ),
                           max_values: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(
+                                Type.Refine(
+                                  Type.Refine(
+                                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                    (value) => Number(value) >= 1,
+                                    () => 'must be >= 1',
+                                  ),
+                                  (value) => Number(value) <= 25,
+                                  () => 'must be <= 25',
+                                ),
+                              )
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
                           ),
                           disabled: Type.Optional(
                             Type.Union([
-                              Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                .Decode((value) => value === 'true')
+                              Codec(
+                                Type.String({
+                                  pattern:
+                                    /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                }),
+                              )
+                                .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                 .Encode((value) => (value ? 'true' : 'false')),
                               Type.Null(),
                             ]),
                           ),
                           required: Type.Optional(
                             Type.Union([
-                              Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                .Decode((value) => value === 'true')
+                              Codec(
+                                Type.String({
+                                  pattern:
+                                    /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                }),
+                              )
+                                .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                 .Encode((value) => (value ? 'true' : 'false')),
                               Type.Null(),
                             ]),
@@ -1035,8 +1253,14 @@ export const lobbiesHandler = new Hono()
                           type: MessageComponentTypesSchema,
                           id: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(
+                                Type.Refine(
+                                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                  (value) => Number(value) >= 0,
+                                  () => 'must be >= 0',
+                                ),
+                              )
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
@@ -1047,32 +1271,62 @@ export const lobbiesHandler = new Hono()
                           ),
                           min_values: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(
+                                Type.Refine(
+                                  Type.Refine(
+                                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                    (value) => Number(value) >= 0,
+                                    () => 'must be >= 0',
+                                  ),
+                                  (value) => Number(value) <= 25,
+                                  () => 'must be <= 25',
+                                ),
+                              )
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
                           ),
                           max_values: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(
+                                Type.Refine(
+                                  Type.Refine(
+                                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                    (value) => Number(value) >= 1,
+                                    () => 'must be >= 1',
+                                  ),
+                                  (value) => Number(value) <= 25,
+                                  () => 'must be <= 25',
+                                ),
+                              )
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
                           ),
                           disabled: Type.Optional(
                             Type.Union([
-                              Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                .Decode((value) => value === 'true')
+                              Codec(
+                                Type.String({
+                                  pattern:
+                                    /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                }),
+                              )
+                                .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                 .Encode((value) => (value ? 'true' : 'false')),
                               Type.Null(),
                             ]),
                           ),
                           required: Type.Optional(
                             Type.Union([
-                              Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                .Decode((value) => value === 'true')
+                              Codec(
+                                Type.String({
+                                  pattern:
+                                    /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                }),
+                              )
+                                .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                 .Encode((value) => (value ? 'true' : 'false')),
                               Type.Null(),
                             ]),
@@ -1086,17 +1340,19 @@ export const lobbiesHandler = new Hono()
                               ),
                               default: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                    .Decode((value) => value === 'true')
+                                  Codec(
+                                    Type.String({
+                                      pattern:
+                                        /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                    }),
+                                  )
+                                    .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                     .Encode((value) => (value ? 'true' : 'false')),
                                   Type.Null(),
                                 ]),
                               ),
                               emoji: Type.Optional(
-                                Type.Union([
-                                  Type.Union([Type.Null(), Type.Null()]),
-                                  ComponentEmojiForRequestSchema,
-                                ]),
+                                Type.Union([Type.Null(), ComponentEmojiForRequestSchema]),
                               ),
                             }),
                             { minItems: 1, maxItems: 25 },
@@ -1106,8 +1362,14 @@ export const lobbiesHandler = new Hono()
                           type: MessageComponentTypesSchema,
                           id: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(
+                                Type.Refine(
+                                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                  (value) => Number(value) >= 0,
+                                  () => 'must be >= 0',
+                                ),
+                              )
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
@@ -1118,32 +1380,62 @@ export const lobbiesHandler = new Hono()
                           ),
                           min_values: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(
+                                Type.Refine(
+                                  Type.Refine(
+                                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                    (value) => Number(value) >= 0,
+                                    () => 'must be >= 0',
+                                  ),
+                                  (value) => Number(value) <= 25,
+                                  () => 'must be <= 25',
+                                ),
+                              )
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
                           ),
                           max_values: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(
+                                Type.Refine(
+                                  Type.Refine(
+                                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                    (value) => Number(value) >= 1,
+                                    () => 'must be >= 1',
+                                  ),
+                                  (value) => Number(value) <= 25,
+                                  () => 'must be <= 25',
+                                ),
+                              )
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
                           ),
                           disabled: Type.Optional(
                             Type.Union([
-                              Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                .Decode((value) => value === 'true')
+                              Codec(
+                                Type.String({
+                                  pattern:
+                                    /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                }),
+                              )
+                                .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                 .Encode((value) => (value ? 'true' : 'false')),
                               Type.Null(),
                             ]),
                           ),
                           required: Type.Optional(
                             Type.Union([
-                              Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                .Decode((value) => value === 'true')
+                              Codec(
+                                Type.String({
+                                  pattern:
+                                    /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                }),
+                              )
+                                .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                 .Encode((value) => (value ? 'true' : 'false')),
                               Type.Null(),
                             ]),
@@ -1163,16 +1455,32 @@ export const lobbiesHandler = new Hono()
                     type: MessageComponentTypesSchema,
                     id: Type.Optional(
                       Type.Union([
-                        Codec(Type.String())
-                          .Decode((value) => Number.parseInt(value, 10))
+                        Codec(
+                          Type.Refine(
+                            Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                            (value) => Number(value) >= 0,
+                            () => 'must be >= 0',
+                          ),
+                        )
+                          .Decode((value) => Number(value))
                           .Encode((value) => String(value)),
                         Type.Null(),
                       ]),
                     ),
                     accent_color: Type.Optional(
                       Type.Union([
-                        Codec(Type.String())
-                          .Decode((value) => Number.parseInt(value, 10))
+                        Codec(
+                          Type.Refine(
+                            Type.Refine(
+                              Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                              (value) => Number(value) >= 0,
+                              () => 'must be >= 0',
+                            ),
+                            (value) => Number(value) <= 16777215,
+                            () => 'must be <= 16777215',
+                          ),
+                        )
+                          .Decode((value) => Number(value))
                           .Encode((value) => String(value)),
                         Type.Null(),
                       ]),
@@ -1183,8 +1491,14 @@ export const lobbiesHandler = new Hono()
                           type: MessageComponentTypesSchema,
                           id: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(
+                                Type.Refine(
+                                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                  (value) => Number(value) >= 0,
+                                  () => 'must be >= 0',
+                                ),
+                              )
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
@@ -1195,8 +1509,14 @@ export const lobbiesHandler = new Hono()
                                 type: MessageComponentTypesSchema,
                                 id: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.String())
-                                      .Decode((value) => Number.parseInt(value, 10))
+                                    Codec(
+                                      Type.Refine(
+                                        Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                        (value) => Number(value) >= 0,
+                                        () => 'must be >= 0',
+                                      ),
+                                    )
+                                      .Decode((value) => Number(value))
                                       .Encode((value) => String(value)),
                                     Type.Null(),
                                   ]),
@@ -1213,8 +1533,15 @@ export const lobbiesHandler = new Hono()
                                 ),
                                 disabled: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                      .Decode((value) => value === 'true')
+                                    Codec(
+                                      Type.String({
+                                        pattern:
+                                          /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                      }),
+                                    )
+                                      .Decode((value) =>
+                                        /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                      )
                                       .Encode((value) => (value ? 'true' : 'false')),
                                     Type.Null(),
                                   ]),
@@ -1226,24 +1553,24 @@ export const lobbiesHandler = new Hono()
                                   ]),
                                 ),
                                 sku_id: Type.Optional(
-                                  Type.Union([
-                                    Type.Union([Type.Null(), Type.Null()]),
-                                    SnowflakeTypeSchema,
-                                  ]),
+                                  Type.Union([Type.Null(), SnowflakeTypeSchema]),
                                 ),
                                 emoji: Type.Optional(
-                                  Type.Union([
-                                    Type.Union([Type.Null(), Type.Null()]),
-                                    ComponentEmojiForRequestSchema,
-                                  ]),
+                                  Type.Union([Type.Null(), ComponentEmojiForRequestSchema]),
                                 ),
                               }),
                               Type.Object({
                                 type: MessageComponentTypesSchema,
                                 id: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.String())
-                                      .Decode((value) => Number.parseInt(value, 10))
+                                    Codec(
+                                      Type.Refine(
+                                        Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                        (value) => Number(value) >= 0,
+                                        () => 'must be >= 0',
+                                      ),
+                                    )
+                                      .Decode((value) => Number(value))
                                       .Encode((value) => String(value)),
                                     Type.Null(),
                                   ]),
@@ -1254,32 +1581,66 @@ export const lobbiesHandler = new Hono()
                                 ),
                                 min_values: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.String())
-                                      .Decode((value) => Number.parseInt(value, 10))
+                                    Codec(
+                                      Type.Refine(
+                                        Type.Refine(
+                                          Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                          (value) => Number(value) >= 0,
+                                          () => 'must be >= 0',
+                                        ),
+                                        (value) => Number(value) <= 25,
+                                        () => 'must be <= 25',
+                                      ),
+                                    )
+                                      .Decode((value) => Number(value))
                                       .Encode((value) => String(value)),
                                     Type.Null(),
                                   ]),
                                 ),
                                 max_values: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.String())
-                                      .Decode((value) => Number.parseInt(value, 10))
+                                    Codec(
+                                      Type.Refine(
+                                        Type.Refine(
+                                          Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                          (value) => Number(value) >= 1,
+                                          () => 'must be >= 1',
+                                        ),
+                                        (value) => Number(value) <= 25,
+                                        () => 'must be <= 25',
+                                      ),
+                                    )
+                                      .Decode((value) => Number(value))
                                       .Encode((value) => String(value)),
                                     Type.Null(),
                                   ]),
                                 ),
                                 disabled: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                      .Decode((value) => value === 'true')
+                                    Codec(
+                                      Type.String({
+                                        pattern:
+                                          /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                      }),
+                                    )
+                                      .Decode((value) =>
+                                        /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                      )
                                       .Encode((value) => (value ? 'true' : 'false')),
                                     Type.Null(),
                                   ]),
                                 ),
                                 required: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                      .Decode((value) => value === 'true')
+                                    Codec(
+                                      Type.String({
+                                        pattern:
+                                          /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                      }),
+                                    )
+                                      .Decode((value) =>
+                                        /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                      )
                                       .Encode((value) => (value ? 'true' : 'false')),
                                     Type.Null(),
                                   ]),
@@ -1301,8 +1662,14 @@ export const lobbiesHandler = new Hono()
                                 type: MessageComponentTypesSchema,
                                 id: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.String())
-                                      .Decode((value) => Number.parseInt(value, 10))
+                                    Codec(
+                                      Type.Refine(
+                                        Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                        (value) => Number(value) >= 0,
+                                        () => 'must be >= 0',
+                                      ),
+                                    )
+                                      .Decode((value) => Number(value))
                                       .Encode((value) => String(value)),
                                     Type.Null(),
                                   ]),
@@ -1313,32 +1680,66 @@ export const lobbiesHandler = new Hono()
                                 ),
                                 min_values: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.String())
-                                      .Decode((value) => Number.parseInt(value, 10))
+                                    Codec(
+                                      Type.Refine(
+                                        Type.Refine(
+                                          Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                          (value) => Number(value) >= 0,
+                                          () => 'must be >= 0',
+                                        ),
+                                        (value) => Number(value) <= 25,
+                                        () => 'must be <= 25',
+                                      ),
+                                    )
+                                      .Decode((value) => Number(value))
                                       .Encode((value) => String(value)),
                                     Type.Null(),
                                   ]),
                                 ),
                                 max_values: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.String())
-                                      .Decode((value) => Number.parseInt(value, 10))
+                                    Codec(
+                                      Type.Refine(
+                                        Type.Refine(
+                                          Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                          (value) => Number(value) >= 1,
+                                          () => 'must be >= 1',
+                                        ),
+                                        (value) => Number(value) <= 25,
+                                        () => 'must be <= 25',
+                                      ),
+                                    )
+                                      .Decode((value) => Number(value))
                                       .Encode((value) => String(value)),
                                     Type.Null(),
                                   ]),
                                 ),
                                 disabled: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                      .Decode((value) => value === 'true')
+                                    Codec(
+                                      Type.String({
+                                        pattern:
+                                          /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                      }),
+                                    )
+                                      .Decode((value) =>
+                                        /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                      )
                                       .Encode((value) => (value ? 'true' : 'false')),
                                     Type.Null(),
                                   ]),
                                 ),
                                 required: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                      .Decode((value) => value === 'true')
+                                    Codec(
+                                      Type.String({
+                                        pattern:
+                                          /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                      }),
+                                    )
+                                      .Decode((value) =>
+                                        /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                      )
                                       .Encode((value) => (value ? 'true' : 'false')),
                                     Type.Null(),
                                   ]),
@@ -1360,8 +1761,14 @@ export const lobbiesHandler = new Hono()
                                 type: MessageComponentTypesSchema,
                                 id: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.String())
-                                      .Decode((value) => Number.parseInt(value, 10))
+                                    Codec(
+                                      Type.Refine(
+                                        Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                        (value) => Number(value) >= 0,
+                                        () => 'must be >= 0',
+                                      ),
+                                    )
+                                      .Decode((value) => Number(value))
                                       .Encode((value) => String(value)),
                                     Type.Null(),
                                   ]),
@@ -1372,32 +1779,66 @@ export const lobbiesHandler = new Hono()
                                 ),
                                 min_values: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.String())
-                                      .Decode((value) => Number.parseInt(value, 10))
+                                    Codec(
+                                      Type.Refine(
+                                        Type.Refine(
+                                          Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                          (value) => Number(value) >= 0,
+                                          () => 'must be >= 0',
+                                        ),
+                                        (value) => Number(value) <= 25,
+                                        () => 'must be <= 25',
+                                      ),
+                                    )
+                                      .Decode((value) => Number(value))
                                       .Encode((value) => String(value)),
                                     Type.Null(),
                                   ]),
                                 ),
                                 max_values: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.String())
-                                      .Decode((value) => Number.parseInt(value, 10))
+                                    Codec(
+                                      Type.Refine(
+                                        Type.Refine(
+                                          Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                          (value) => Number(value) >= 1,
+                                          () => 'must be >= 1',
+                                        ),
+                                        (value) => Number(value) <= 25,
+                                        () => 'must be <= 25',
+                                      ),
+                                    )
+                                      .Decode((value) => Number(value))
                                       .Encode((value) => String(value)),
                                     Type.Null(),
                                   ]),
                                 ),
                                 disabled: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                      .Decode((value) => value === 'true')
+                                    Codec(
+                                      Type.String({
+                                        pattern:
+                                          /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                      }),
+                                    )
+                                      .Decode((value) =>
+                                        /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                      )
                                       .Encode((value) => (value ? 'true' : 'false')),
                                     Type.Null(),
                                   ]),
                                 ),
                                 required: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                      .Decode((value) => value === 'true')
+                                    Codec(
+                                      Type.String({
+                                        pattern:
+                                          /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                      }),
+                                    )
+                                      .Decode((value) =>
+                                        /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                      )
                                       .Encode((value) => (value ? 'true' : 'false')),
                                     Type.Null(),
                                   ]),
@@ -1413,8 +1854,14 @@ export const lobbiesHandler = new Hono()
                                 type: MessageComponentTypesSchema,
                                 id: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.String())
-                                      .Decode((value) => Number.parseInt(value, 10))
+                                    Codec(
+                                      Type.Refine(
+                                        Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                        (value) => Number(value) >= 0,
+                                        () => 'must be >= 0',
+                                      ),
+                                    )
+                                      .Decode((value) => Number(value))
                                       .Encode((value) => String(value)),
                                     Type.Null(),
                                   ]),
@@ -1425,32 +1872,66 @@ export const lobbiesHandler = new Hono()
                                 ),
                                 min_values: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.String())
-                                      .Decode((value) => Number.parseInt(value, 10))
+                                    Codec(
+                                      Type.Refine(
+                                        Type.Refine(
+                                          Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                          (value) => Number(value) >= 0,
+                                          () => 'must be >= 0',
+                                        ),
+                                        (value) => Number(value) <= 25,
+                                        () => 'must be <= 25',
+                                      ),
+                                    )
+                                      .Decode((value) => Number(value))
                                       .Encode((value) => String(value)),
                                     Type.Null(),
                                   ]),
                                 ),
                                 max_values: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.String())
-                                      .Decode((value) => Number.parseInt(value, 10))
+                                    Codec(
+                                      Type.Refine(
+                                        Type.Refine(
+                                          Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                          (value) => Number(value) >= 1,
+                                          () => 'must be >= 1',
+                                        ),
+                                        (value) => Number(value) <= 25,
+                                        () => 'must be <= 25',
+                                      ),
+                                    )
+                                      .Decode((value) => Number(value))
                                       .Encode((value) => String(value)),
                                     Type.Null(),
                                   ]),
                                 ),
                                 disabled: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                      .Decode((value) => value === 'true')
+                                    Codec(
+                                      Type.String({
+                                        pattern:
+                                          /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                      }),
+                                    )
+                                      .Decode((value) =>
+                                        /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                      )
                                       .Encode((value) => (value ? 'true' : 'false')),
                                     Type.Null(),
                                   ]),
                                 ),
                                 required: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                      .Decode((value) => value === 'true')
+                                    Codec(
+                                      Type.String({
+                                        pattern:
+                                          /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                      }),
+                                    )
+                                      .Decode((value) =>
+                                        /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                      )
                                       .Encode((value) => (value ? 'true' : 'false')),
                                     Type.Null(),
                                   ]),
@@ -1465,18 +1946,20 @@ export const lobbiesHandler = new Hono()
                                     default: Type.Optional(
                                       Type.Union([
                                         Codec(
-                                          Type.Union([Type.Literal('true'), Type.Literal('false')]),
+                                          Type.String({
+                                            pattern:
+                                              /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                          }),
                                         )
-                                          .Decode((value) => value === 'true')
+                                          .Decode((value) =>
+                                            /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                          )
                                           .Encode((value) => (value ? 'true' : 'false')),
                                         Type.Null(),
                                       ]),
                                     ),
                                     emoji: Type.Optional(
-                                      Type.Union([
-                                        Type.Union([Type.Null(), Type.Null()]),
-                                        ComponentEmojiForRequestSchema,
-                                      ]),
+                                      Type.Union([Type.Null(), ComponentEmojiForRequestSchema]),
                                     ),
                                   }),
                                   { minItems: 1, maxItems: 25 },
@@ -1486,8 +1969,14 @@ export const lobbiesHandler = new Hono()
                                 type: MessageComponentTypesSchema,
                                 id: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.String())
-                                      .Decode((value) => Number.parseInt(value, 10))
+                                    Codec(
+                                      Type.Refine(
+                                        Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                        (value) => Number(value) >= 0,
+                                        () => 'must be >= 0',
+                                      ),
+                                    )
+                                      .Decode((value) => Number(value))
                                       .Encode((value) => String(value)),
                                     Type.Null(),
                                   ]),
@@ -1498,32 +1987,66 @@ export const lobbiesHandler = new Hono()
                                 ),
                                 min_values: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.String())
-                                      .Decode((value) => Number.parseInt(value, 10))
+                                    Codec(
+                                      Type.Refine(
+                                        Type.Refine(
+                                          Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                          (value) => Number(value) >= 0,
+                                          () => 'must be >= 0',
+                                        ),
+                                        (value) => Number(value) <= 25,
+                                        () => 'must be <= 25',
+                                      ),
+                                    )
+                                      .Decode((value) => Number(value))
                                       .Encode((value) => String(value)),
                                     Type.Null(),
                                   ]),
                                 ),
                                 max_values: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.String())
-                                      .Decode((value) => Number.parseInt(value, 10))
+                                    Codec(
+                                      Type.Refine(
+                                        Type.Refine(
+                                          Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                          (value) => Number(value) >= 1,
+                                          () => 'must be >= 1',
+                                        ),
+                                        (value) => Number(value) <= 25,
+                                        () => 'must be <= 25',
+                                      ),
+                                    )
+                                      .Decode((value) => Number(value))
                                       .Encode((value) => String(value)),
                                     Type.Null(),
                                   ]),
                                 ),
                                 disabled: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                      .Decode((value) => value === 'true')
+                                    Codec(
+                                      Type.String({
+                                        pattern:
+                                          /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                      }),
+                                    )
+                                      .Decode((value) =>
+                                        /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                      )
                                       .Encode((value) => (value ? 'true' : 'false')),
                                     Type.Null(),
                                   ]),
                                 ),
                                 required: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                      .Decode((value) => value === 'true')
+                                    Codec(
+                                      Type.String({
+                                        pattern:
+                                          /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                      }),
+                                    )
+                                      .Decode((value) =>
+                                        /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                      )
                                       .Encode((value) => (value ? 'true' : 'false')),
                                     Type.Null(),
                                   ]),
@@ -1543,16 +2066,27 @@ export const lobbiesHandler = new Hono()
                           type: MessageComponentTypesSchema,
                           id: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(
+                                Type.Refine(
+                                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                  (value) => Number(value) >= 0,
+                                  () => 'must be >= 0',
+                                ),
+                              )
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
                           ),
                           spoiler: Type.Optional(
                             Type.Union([
-                              Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                .Decode((value) => value === 'true')
+                              Codec(
+                                Type.String({
+                                  pattern:
+                                    /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                }),
+                              )
+                                .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                 .Encode((value) => (value ? 'true' : 'false')),
                               Type.Null(),
                             ]),
@@ -1563,8 +2097,14 @@ export const lobbiesHandler = new Hono()
                           type: MessageComponentTypesSchema,
                           id: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(
+                                Type.Refine(
+                                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                  (value) => Number(value) >= 0,
+                                  () => 'must be >= 0',
+                                ),
+                              )
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
@@ -1579,8 +2119,13 @@ export const lobbiesHandler = new Hono()
                               ),
                               spoiler: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                    .Decode((value) => value === 'true')
+                                  Codec(
+                                    Type.String({
+                                      pattern:
+                                        /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                    }),
+                                  )
+                                    .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                     .Encode((value) => (value ? 'true' : 'false')),
                                   Type.Null(),
                                 ]),
@@ -1594,8 +2139,14 @@ export const lobbiesHandler = new Hono()
                           type: MessageComponentTypesSchema,
                           id: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(
+                                Type.Refine(
+                                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                  (value) => Number(value) >= 0,
+                                  () => 'must be >= 0',
+                                ),
+                              )
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
@@ -1605,8 +2156,14 @@ export const lobbiesHandler = new Hono()
                               type: MessageComponentTypesSchema,
                               id: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.String())
-                                    .Decode((value) => Number.parseInt(value, 10))
+                                  Codec(
+                                    Type.Refine(
+                                      Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                      (value) => Number(value) >= 0,
+                                      () => 'must be >= 0',
+                                    ),
+                                  )
+                                    .Decode((value) => Number(value))
                                     .Encode((value) => String(value)),
                                   Type.Null(),
                                 ]),
@@ -1620,8 +2177,14 @@ export const lobbiesHandler = new Hono()
                               type: MessageComponentTypesSchema,
                               id: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.String())
-                                    .Decode((value) => Number.parseInt(value, 10))
+                                  Codec(
+                                    Type.Refine(
+                                      Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                      (value) => Number(value) >= 0,
+                                      () => 'must be >= 0',
+                                    ),
+                                  )
+                                    .Decode((value) => Number(value))
                                     .Encode((value) => String(value)),
                                   Type.Null(),
                                 ]),
@@ -1638,8 +2201,13 @@ export const lobbiesHandler = new Hono()
                               ),
                               disabled: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                    .Decode((value) => value === 'true')
+                                  Codec(
+                                    Type.String({
+                                      pattern:
+                                        /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                    }),
+                                  )
+                                    .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                     .Encode((value) => (value ? 'true' : 'false')),
                                   Type.Null(),
                                 ]),
@@ -1650,25 +2218,23 @@ export const lobbiesHandler = new Hono()
                                   Type.Null(),
                                 ]),
                               ),
-                              sku_id: Type.Optional(
-                                Type.Union([
-                                  Type.Union([Type.Null(), Type.Null()]),
-                                  SnowflakeTypeSchema,
-                                ]),
-                              ),
+                              sku_id: Type.Optional(Type.Union([Type.Null(), SnowflakeTypeSchema])),
                               emoji: Type.Optional(
-                                Type.Union([
-                                  Type.Union([Type.Null(), Type.Null()]),
-                                  ComponentEmojiForRequestSchema,
-                                ]),
+                                Type.Union([Type.Null(), ComponentEmojiForRequestSchema]),
                               ),
                             }),
                             Type.Object({
                               type: MessageComponentTypesSchema,
                               id: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.String())
-                                    .Decode((value) => Number.parseInt(value, 10))
+                                  Codec(
+                                    Type.Refine(
+                                      Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                      (value) => Number(value) >= 0,
+                                      () => 'must be >= 0',
+                                    ),
+                                  )
+                                    .Decode((value) => Number(value))
                                     .Encode((value) => String(value)),
                                   Type.Null(),
                                 ]),
@@ -1681,8 +2247,13 @@ export const lobbiesHandler = new Hono()
                               ),
                               spoiler: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                    .Decode((value) => value === 'true')
+                                  Codec(
+                                    Type.String({
+                                      pattern:
+                                        /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                    }),
+                                  )
+                                    .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                     .Encode((value) => (value ? 'true' : 'false')),
                                   Type.Null(),
                                 ]),
@@ -1695,22 +2266,30 @@ export const lobbiesHandler = new Hono()
                           type: MessageComponentTypesSchema,
                           id: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(
+                                Type.Refine(
+                                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                  (value) => Number(value) >= 0,
+                                  () => 'must be >= 0',
+                                ),
+                              )
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
                           ),
                           spacing: Type.Optional(
-                            Type.Union([
-                              Type.Union([Type.Null(), Type.Null()]),
-                              MessageComponentSeparatorSpacingSizeSchema,
-                            ]),
+                            Type.Union([Type.Null(), MessageComponentSeparatorSpacingSizeSchema]),
                           ),
                           divider: Type.Optional(
                             Type.Union([
-                              Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                .Decode((value) => value === 'true')
+                              Codec(
+                                Type.String({
+                                  pattern:
+                                    /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                }),
+                              )
+                                .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                 .Encode((value) => (value ? 'true' : 'false')),
                               Type.Null(),
                             ]),
@@ -1720,8 +2299,14 @@ export const lobbiesHandler = new Hono()
                           type: MessageComponentTypesSchema,
                           id: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(
+                                Type.Refine(
+                                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                  (value) => Number(value) >= 0,
+                                  () => 'must be >= 0',
+                                ),
+                              )
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
@@ -1733,8 +2318,12 @@ export const lobbiesHandler = new Hono()
                     ),
                     spoiler: Type.Optional(
                       Type.Union([
-                        Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                          .Decode((value) => value === 'true')
+                        Codec(
+                          Type.String({
+                            pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                          }),
+                        )
+                          .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                           .Encode((value) => (value ? 'true' : 'false')),
                         Type.Null(),
                       ]),
@@ -1744,16 +2333,26 @@ export const lobbiesHandler = new Hono()
                     type: MessageComponentTypesSchema,
                     id: Type.Optional(
                       Type.Union([
-                        Codec(Type.String())
-                          .Decode((value) => Number.parseInt(value, 10))
+                        Codec(
+                          Type.Refine(
+                            Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                            (value) => Number(value) >= 0,
+                            () => 'must be >= 0',
+                          ),
+                        )
+                          .Decode((value) => Number(value))
                           .Encode((value) => String(value)),
                         Type.Null(),
                       ]),
                     ),
                     spoiler: Type.Optional(
                       Type.Union([
-                        Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                          .Decode((value) => value === 'true')
+                        Codec(
+                          Type.String({
+                            pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                          }),
+                        )
+                          .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                           .Encode((value) => (value ? 'true' : 'false')),
                         Type.Null(),
                       ]),
@@ -1764,8 +2363,14 @@ export const lobbiesHandler = new Hono()
                     type: MessageComponentTypesSchema,
                     id: Type.Optional(
                       Type.Union([
-                        Codec(Type.String())
-                          .Decode((value) => Number.parseInt(value, 10))
+                        Codec(
+                          Type.Refine(
+                            Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                            (value) => Number(value) >= 0,
+                            () => 'must be >= 0',
+                          ),
+                        )
+                          .Decode((value) => Number(value))
                           .Encode((value) => String(value)),
                         Type.Null(),
                       ]),
@@ -1777,8 +2382,12 @@ export const lobbiesHandler = new Hono()
                         ),
                         spoiler: Type.Optional(
                           Type.Union([
-                            Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                              .Decode((value) => value === 'true')
+                            Codec(
+                              Type.String({
+                                pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                              }),
+                            )
+                              .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                               .Encode((value) => (value ? 'true' : 'false')),
                             Type.Null(),
                           ]),
@@ -1792,8 +2401,14 @@ export const lobbiesHandler = new Hono()
                     type: MessageComponentTypesSchema,
                     id: Type.Optional(
                       Type.Union([
-                        Codec(Type.String())
-                          .Decode((value) => Number.parseInt(value, 10))
+                        Codec(
+                          Type.Refine(
+                            Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                            (value) => Number(value) >= 0,
+                            () => 'must be >= 0',
+                          ),
+                        )
+                          .Decode((value) => Number(value))
                           .Encode((value) => String(value)),
                         Type.Null(),
                       ]),
@@ -1803,8 +2418,14 @@ export const lobbiesHandler = new Hono()
                         type: MessageComponentTypesSchema,
                         id: Type.Optional(
                           Type.Union([
-                            Codec(Type.String())
-                              .Decode((value) => Number.parseInt(value, 10))
+                            Codec(
+                              Type.Refine(
+                                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                (value) => Number(value) >= 0,
+                                () => 'must be >= 0',
+                              ),
+                            )
+                              .Decode((value) => Number(value))
                               .Encode((value) => String(value)),
                             Type.Null(),
                           ]),
@@ -1818,8 +2439,14 @@ export const lobbiesHandler = new Hono()
                         type: MessageComponentTypesSchema,
                         id: Type.Optional(
                           Type.Union([
-                            Codec(Type.String())
-                              .Decode((value) => Number.parseInt(value, 10))
+                            Codec(
+                              Type.Refine(
+                                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                (value) => Number(value) >= 0,
+                                () => 'must be >= 0',
+                              ),
+                            )
+                              .Decode((value) => Number(value))
                               .Encode((value) => String(value)),
                             Type.Null(),
                           ]),
@@ -1833,8 +2460,12 @@ export const lobbiesHandler = new Hono()
                         ),
                         disabled: Type.Optional(
                           Type.Union([
-                            Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                              .Decode((value) => value === 'true')
+                            Codec(
+                              Type.String({
+                                pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                              }),
+                            )
+                              .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                               .Encode((value) => (value ? 'true' : 'false')),
                             Type.Null(),
                           ]),
@@ -1842,22 +2473,23 @@ export const lobbiesHandler = new Hono()
                         url: Type.Optional(
                           Type.Union([Type.String({ format: 'uri', maxLength: 512 }), Type.Null()]),
                         ),
-                        sku_id: Type.Optional(
-                          Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
-                        ),
+                        sku_id: Type.Optional(Type.Union([Type.Null(), SnowflakeTypeSchema])),
                         emoji: Type.Optional(
-                          Type.Union([
-                            Type.Union([Type.Null(), Type.Null()]),
-                            ComponentEmojiForRequestSchema,
-                          ]),
+                          Type.Union([Type.Null(), ComponentEmojiForRequestSchema]),
                         ),
                       }),
                       Type.Object({
                         type: MessageComponentTypesSchema,
                         id: Type.Optional(
                           Type.Union([
-                            Codec(Type.String())
-                              .Decode((value) => Number.parseInt(value, 10))
+                            Codec(
+                              Type.Refine(
+                                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                (value) => Number(value) >= 0,
+                                () => 'must be >= 0',
+                              ),
+                            )
+                              .Decode((value) => Number(value))
                               .Encode((value) => String(value)),
                             Type.Null(),
                           ]),
@@ -1867,8 +2499,12 @@ export const lobbiesHandler = new Hono()
                         ),
                         spoiler: Type.Optional(
                           Type.Union([
-                            Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                              .Decode((value) => value === 'true')
+                            Codec(
+                              Type.String({
+                                pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                              }),
+                            )
+                              .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                               .Encode((value) => (value ? 'true' : 'false')),
                             Type.Null(),
                           ]),
@@ -1881,22 +2517,29 @@ export const lobbiesHandler = new Hono()
                     type: MessageComponentTypesSchema,
                     id: Type.Optional(
                       Type.Union([
-                        Codec(Type.String())
-                          .Decode((value) => Number.parseInt(value, 10))
+                        Codec(
+                          Type.Refine(
+                            Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                            (value) => Number(value) >= 0,
+                            () => 'must be >= 0',
+                          ),
+                        )
+                          .Decode((value) => Number(value))
                           .Encode((value) => String(value)),
                         Type.Null(),
                       ]),
                     ),
                     spacing: Type.Optional(
-                      Type.Union([
-                        Type.Union([Type.Null(), Type.Null()]),
-                        MessageComponentSeparatorSpacingSizeSchema,
-                      ]),
+                      Type.Union([Type.Null(), MessageComponentSeparatorSpacingSizeSchema]),
                     ),
                     divider: Type.Optional(
                       Type.Union([
-                        Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                          .Decode((value) => value === 'true')
+                        Codec(
+                          Type.String({
+                            pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                          }),
+                        )
+                          .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                           .Encode((value) => (value ? 'true' : 'false')),
                         Type.Null(),
                       ]),
@@ -1906,8 +2549,14 @@ export const lobbiesHandler = new Hono()
                     type: MessageComponentTypesSchema,
                     id: Type.Optional(
                       Type.Union([
-                        Codec(Type.String())
-                          .Decode((value) => Number.parseInt(value, 10))
+                        Codec(
+                          Type.Refine(
+                            Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                            (value) => Number(value) >= 0,
+                            () => 'must be >= 0',
+                          ),
+                        )
+                          .Decode((value) => Number(value))
                           .Encode((value) => String(value)),
                         Type.Null(),
                       ]),
@@ -1922,8 +2571,8 @@ export const lobbiesHandler = new Hono()
           ),
           flags: Type.Optional(
             Type.Union([
-              Codec(Type.String())
-                .Decode((value) => Number.parseInt(value, 10))
+              Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+                .Decode((value) => Number(value))
                 .Encode((value) => String(value)),
               Type.Null(),
             ]),
@@ -1941,7 +2590,19 @@ export const lobbiesHandler = new Hono()
                   ),
                   duration_secs: Type.Optional(
                     Type.Union([
-                      Codec(Type.String())
+                      Codec(
+                        Type.Refine(
+                          Type.Refine(
+                            Type.String({
+                              pattern: '^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$',
+                            }),
+                            (value) => Number(value) >= 0,
+                            () => 'must be >= 0',
+                          ),
+                          (value) => Number(value) <= 2147483647,
+                          () => 'must be <= 2147483647',
+                        ),
+                      )
                         .Decode((value) => Number(value))
                         .Encode((value) => String(value)),
                       Type.Null(),
@@ -1953,8 +2614,12 @@ export const lobbiesHandler = new Hono()
                   title: Type.Optional(Type.Union([Type.String({ maxLength: 1024 }), Type.Null()])),
                   is_spoiler: Type.Optional(
                     Type.Union([
-                      Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                        .Decode((value) => value === 'true')
+                      Codec(
+                        Type.String({
+                          pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                        }),
+                      )
+                        .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                         .Encode((value) => (value ? 'true' : 'false')),
                       Type.Null(),
                     ]),
@@ -1967,7 +2632,7 @@ export const lobbiesHandler = new Hono()
           ),
           poll: Type.Optional(
             Type.Union([
-              Type.Union([Type.Null(), Type.Null()]),
+              Type.Null(),
               Type.Object({
                 question: Type.Object(
                   {
@@ -1984,13 +2649,12 @@ export const lobbiesHandler = new Hono()
                     emoji: Type.Optional(
                       Type.Union(
                         [
-                          Type.Union([Type.Null(), Type.Null()]),
+                          Type.Null(),
                           Type.Object({
                             id: Type.Optional(
-                              Type.Union(
-                                [Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema],
-                                { description: 'The ID of the custom emoji' },
-                              ),
+                              Type.Union([Type.Null(), SnowflakeTypeSchema], {
+                                description: 'The ID of the custom emoji',
+                              }),
                             ),
                             name: Type.Optional(
                               Type.Union([
@@ -2004,8 +2668,13 @@ export const lobbiesHandler = new Hono()
                             ),
                             animated: Type.Optional(
                               Type.Union([
-                                Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                  .Decode((value) => value === 'true')
+                                Codec(
+                                  Type.String({
+                                    pattern:
+                                      /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                  }),
+                                )
+                                  .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                   .Encode((value) => (value ? 'true' : 'false')),
                                 Type.Null(),
                               ]),
@@ -2035,13 +2704,12 @@ export const lobbiesHandler = new Hono()
                         emoji: Type.Optional(
                           Type.Union(
                             [
-                              Type.Union([Type.Null(), Type.Null()]),
+                              Type.Null(),
                               Type.Object({
                                 id: Type.Optional(
-                                  Type.Union(
-                                    [Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema],
-                                    { description: 'The ID of the custom emoji' },
-                                  ),
+                                  Type.Union([Type.Null(), SnowflakeTypeSchema], {
+                                    description: 'The ID of the custom emoji',
+                                  }),
                                 ),
                                 name: Type.Optional(
                                   Type.Union([
@@ -2055,8 +2723,15 @@ export const lobbiesHandler = new Hono()
                                 ),
                                 animated: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                      .Decode((value) => value === 'true')
+                                    Codec(
+                                      Type.String({
+                                        pattern:
+                                          /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                      }),
+                                    )
+                                      .Decode((value) =>
+                                        /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                      )
                                       .Encode((value) => (value ? 'true' : 'false')),
                                     Type.Null(),
                                   ]),
@@ -2078,21 +2753,35 @@ export const lobbiesHandler = new Hono()
                 ),
                 allow_multiselect: Type.Optional(
                   Type.Union([
-                    Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                      .Decode((value) => value === 'true')
+                    Codec(
+                      Type.String({
+                        pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                      }),
+                    )
+                      .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                       .Encode((value) => (value ? 'true' : 'false')),
                     Type.Null(),
                   ]),
                 ),
                 layout_type: Type.Optional(
-                  Type.Union([Type.Union([Type.Null(), Type.Null()]), PollLayoutTypesSchema], {
+                  Type.Union([Type.Null(), PollLayoutTypesSchema], {
                     description: 'The layout type of the poll. Defaults to... DEFAULT!',
                   }),
                 ),
                 duration: Type.Optional(
                   Type.Union([
-                    Codec(Type.String())
-                      .Decode((value) => Number.parseInt(value, 10))
+                    Codec(
+                      Type.Refine(
+                        Type.Refine(
+                          Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                          (value) => Number(value) >= 1,
+                          () => 'must be >= 1',
+                        ),
+                        (value) => Number(value) <= 768,
+                        () => 'must be <= 768',
+                      ),
+                    )
+                      .Decode((value) => Number(value))
                       .Encode((value) => String(value)),
                     Type.Null(),
                   ]),
@@ -2102,73 +2791,106 @@ export const lobbiesHandler = new Hono()
           ),
           shared_client_theme: Type.Optional(
             Type.Union([
-              Type.Union([Type.Null(), Type.Null()]),
+              Type.Null(),
               Type.Object({
                 colors: Type.Array(Type.String({ minLength: 6, maxLength: 6 }), {
                   minItems: 1,
                   maxItems: 5,
                 }),
-                gradient_angle: Codec(Type.String())
-                  .Decode((value) => Number.parseInt(value, 10))
+                gradient_angle: Codec(
+                  Type.Refine(
+                    Type.Refine(
+                      Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                      (value) => Number(value) >= 0,
+                      () => 'must be >= 0',
+                    ),
+                    (value) => Number(value) <= 360,
+                    () => 'must be <= 360',
+                  ),
+                )
+                  .Decode((value) => Number(value))
                   .Encode((value) => String(value)),
-                base_mix: Codec(Type.String())
-                  .Decode((value) => Number.parseInt(value, 10))
+                base_mix: Codec(
+                  Type.Refine(
+                    Type.Refine(
+                      Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                      (value) => Number(value) >= 0,
+                      () => 'must be >= 0',
+                    ),
+                    (value) => Number(value) <= 100,
+                    () => 'must be <= 100',
+                  ),
+                )
+                  .Decode((value) => Number(value))
                   .Encode((value) => String(value)),
                 base_theme: Type.Optional(
-                  Type.Union([
-                    Type.Union([Type.Null(), Type.Null()]),
-                    MessageShareCustomUserThemeBaseThemeSchema,
-                  ]),
+                  Type.Union([Type.Null(), MessageShareCustomUserThemeBaseThemeSchema]),
                 ),
               }),
             ]),
           ),
           message_reference: Type.Optional(
             Type.Union([
-              Type.Union([Type.Null(), Type.Null()]),
+              Type.Null(),
               Type.Object({
-                guild_id: Type.Optional(
-                  Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
-                ),
-                channel_id: Type.Optional(
-                  Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
-                ),
+                guild_id: Type.Optional(Type.Union([Type.Null(), SnowflakeTypeSchema])),
+                channel_id: Type.Optional(Type.Union([Type.Null(), SnowflakeTypeSchema])),
                 message_id: SnowflakeTypeSchema,
                 fail_if_not_exists: Type.Optional(
                   Type.Union([
-                    Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                      .Decode((value) => value === 'true')
+                    Codec(
+                      Type.String({
+                        pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                      }),
+                    )
+                      .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                       .Encode((value) => (value ? 'true' : 'false')),
                     Type.Null(),
                   ]),
                 ),
-                type: Type.Optional(
-                  Type.Union([Type.Union([Type.Null(), Type.Null()]), MessageReferenceTypeSchema]),
-                ),
+                type: Type.Optional(Type.Union([Type.Null(), MessageReferenceTypeSchema])),
               }),
             ]),
           ),
           nonce: Type.Optional(
             Type.Union([
-              Codec(Type.String())
-                .Decode((value) => Number.parseInt(value, 10))
+              Codec(
+                Type.Refine(
+                  Type.Refine(
+                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                    (value) => Number(value) >= -9223372036854776000,
+                    () => 'must be >= -9223372036854776000',
+                  ),
+                  (value) => Number(value) <= 9223372036854776000,
+                  () => 'must be <= 9223372036854776000',
+                ),
+              )
+                .Decode((value) => Number(value))
                 .Encode((value) => String(value)),
               Type.String({ maxLength: 25 }),
-              Type.Union([Type.Null(), Type.Null()]),
+              Type.Null(),
             ]),
           ),
           enforce_nonce: Type.Optional(
             Type.Union([
-              Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                .Decode((value) => value === 'true')
+              Codec(
+                Type.String({
+                  pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                }),
+              )
+                .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                 .Encode((value) => (value ? 'true' : 'false')),
               Type.Null(),
             ]),
           ),
           tts: Type.Optional(
             Type.Union([
-              Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                .Decode((value) => value === 'true')
+              Codec(
+                Type.String({
+                  pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                }),
+              )
+                .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                 .Encode((value) => (value ? 'true' : 'false')),
               Type.Null(),
             ]),
@@ -2201,11 +2923,13 @@ export const lobbiesHandler = new Hono()
     }),
     validator(
       'param',
-      Compile(Type.Object({ lobby_id: SnowflakeTypeSchema, message_id: SnowflakeTypeSchema })),
+      toStandardSchemaV1(
+        Type.Object({ lobby_id: SnowflakeTypeSchema, message_id: SnowflakeTypeSchema }),
+      ),
     ),
     validator(
       'json',
-      Compile(
+      toStandardSchemaV1(
         Type.Record(Type.String(), Type.String({ maxLength: 2000 }), {
           maxProperties: 5,
           description: 'The moderation metadata attached to the message',
@@ -2214,7 +2938,7 @@ export const lobbiesHandler = new Hono()
     ),
     validator(
       'form',
-      Compile(
+      toStandardSchemaV1(
         Type.Record(Type.String(), Type.String({ maxLength: 2000 }), {
           maxProperties: 5,
           description: 'The moderation metadata attached to the message',

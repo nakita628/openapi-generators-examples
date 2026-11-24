@@ -418,7 +418,8 @@ export const postStoreOrderHandler = defineHandler({
       quantity: v.pipe(
         v.pipe(
           v.string(),
-          v.transform(Number),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
           v.minValue(-2147483648),
@@ -495,7 +496,8 @@ export const postUserHandler = defineHandler({
       userStatus: v.pipe(
         v.pipe(
           v.string(),
-          v.transform(Number),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
           v.minValue(-2147483648),
@@ -550,7 +552,8 @@ export const putUserUsernameHandler = defineHandler({
       userStatus: v.pipe(
         v.pipe(
           v.string(),
-          v.transform(Number),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
           v.minValue(-2147483648),

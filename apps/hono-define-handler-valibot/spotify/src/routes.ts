@@ -778,11 +778,17 @@ export const PlaylistTrackObjectSchema = v.partial(
       ),
     ),
     item: v.pipe(
-      v.union([TrackObjectSchema, EpisodeObjectSchema]),
+      v.union([
+        v.intersect([TrackObjectSchema, v.object({ type: v.literal('TrackObject') })]),
+        v.intersect([EpisodeObjectSchema, v.object({ type: v.literal('EpisodeObject') })]),
+      ]),
       v.description('Information about the track or episode.'),
     ),
     track: v.pipe(
-      v.union([TrackObjectSchema, EpisodeObjectSchema]),
+      v.union([
+        v.intersect([TrackObjectSchema, v.object({ type: v.literal('TrackObject') })]),
+        v.intersect([EpisodeObjectSchema, v.object({ type: v.literal('EpisodeObject') })]),
+      ]),
       v.description(
         '**Deprecated:** Use `item` instead. Information about the track or episode.\n',
       ),
@@ -796,11 +802,19 @@ export type PlaylistTrackObject = v.InferOutput<typeof PlaylistTrackObjectSchema
 export const QueueObjectSchema = v.partial(
   v.object({
     currently_playing: v.pipe(
-      v.union([TrackObjectSchema, EpisodeObjectSchema]),
+      v.union([
+        v.intersect([TrackObjectSchema, v.object({ type: v.literal('TrackObject') })]),
+        v.intersect([EpisodeObjectSchema, v.object({ type: v.literal('EpisodeObject') })]),
+      ]),
       v.description('The currently playing track or episode. Can be `null`.'),
     ),
     queue: v.pipe(
-      v.array(v.union([TrackObjectSchema, EpisodeObjectSchema])),
+      v.array(
+        v.union([
+          v.intersect([TrackObjectSchema, v.object({ type: v.literal('TrackObject') })]),
+          v.intersect([EpisodeObjectSchema, v.object({ type: v.literal('EpisodeObject') })]),
+        ]),
+      ),
       v.description('The tracks or episodes in the queue. Can be empty.'),
     ),
   }),
@@ -918,7 +932,10 @@ export const CurrentlyPlayingContextObjectSchema = v.partial(
       v.description('If something is currently playing, return `true`.'),
     ),
     item: v.pipe(
-      v.union([TrackObjectSchema, EpisodeObjectSchema]),
+      v.union([
+        v.intersect([TrackObjectSchema, v.object({ type: v.literal('TrackObject') })]),
+        v.intersect([EpisodeObjectSchema, v.object({ type: v.literal('EpisodeObject') })]),
+      ]),
       v.description('The currently playing track or episode. Can be `null`.'),
     ),
     currently_playing_type: v.pipe(
@@ -1766,40 +1783,43 @@ export type CursorPagingSimplifiedArtistObject = v.InferOutput<
   typeof CursorPagingSimplifiedArtistObjectSchema
 >
 
-export const PagingObjectSchema = v.object({
-  href: v.pipe(
-    v.string(),
-    v.description('A link to the Web API endpoint returning the full result of the request\n'),
-    v.metadata({ examples: ['https://api.spotify.com/v1/me/shows?offset=0&limit=20\n'] }),
-  ),
-  limit: v.pipe(
-    v.pipe(v.number(), v.integer()),
-    v.description(
-      'The maximum number of items in the response (as set in the query or by default).\n',
+export const PagingObjectSchema = v.pipe(
+  v.looseObject({
+    href: v.pipe(
+      v.string(),
+      v.description('A link to the Web API endpoint returning the full result of the request\n'),
+      v.metadata({ examples: ['https://api.spotify.com/v1/me/shows?offset=0&limit=20\n'] }),
     ),
-    v.metadata({ examples: [20] }),
-  ),
-  next: v.pipe(
-    v.nullable(v.string()),
-    v.description('URL to the next page of items. ( `null` if none)\n'),
-    v.metadata({ examples: ['https://api.spotify.com/v1/me/shows?offset=1&limit=1'] }),
-  ),
-  offset: v.pipe(
-    v.pipe(v.number(), v.integer()),
-    v.description('The offset of the items returned (as set in the query or by default)\n'),
-    v.metadata({ examples: [0] }),
-  ),
-  previous: v.pipe(
-    v.nullable(v.string()),
-    v.description('URL to the previous page of items. ( `null` if none)\n'),
-    v.metadata({ examples: ['https://api.spotify.com/v1/me/shows?offset=1&limit=1'] }),
-  ),
-  total: v.pipe(
-    v.pipe(v.number(), v.integer()),
-    v.description('The total number of items available to return.\n'),
-    v.metadata({ examples: [4] }),
-  ),
-})
+    limit: v.pipe(
+      v.pipe(v.number(), v.integer()),
+      v.description(
+        'The maximum number of items in the response (as set in the query or by default).\n',
+      ),
+      v.metadata({ examples: [20] }),
+    ),
+    next: v.pipe(
+      v.nullable(v.string()),
+      v.description('URL to the next page of items. ( `null` if none)\n'),
+      v.metadata({ examples: ['https://api.spotify.com/v1/me/shows?offset=1&limit=1'] }),
+    ),
+    offset: v.pipe(
+      v.pipe(v.number(), v.integer()),
+      v.description('The offset of the items returned (as set in the query or by default)\n'),
+      v.metadata({ examples: [0] }),
+    ),
+    previous: v.pipe(
+      v.nullable(v.string()),
+      v.description('URL to the previous page of items. ( `null` if none)\n'),
+      v.metadata({ examples: ['https://api.spotify.com/v1/me/shows?offset=1&limit=1'] }),
+    ),
+    total: v.pipe(
+      v.pipe(v.number(), v.integer()),
+      v.description('The total number of items available to return.\n'),
+      v.metadata({ examples: [4] }),
+    ),
+  }),
+  v.check((input) => ['items'].every((key) => key in input)),
+)
 
 export type PagingObject = v.InferOutput<typeof PagingObjectSchema>
 
@@ -2616,7 +2636,10 @@ export const CurrentlyPlayingObjectSchema = v.partial(
       v.description('If something is currently playing, return `true`.'),
     ),
     item: v.pipe(
-      v.union([TrackObjectSchema, EpisodeObjectSchema]),
+      v.union([
+        v.intersect([TrackObjectSchema, v.object({ type: v.literal('TrackObject') })]),
+        v.intersect([EpisodeObjectSchema, v.object({ type: v.literal('EpisodeObject') })]),
+      ]),
       v.description('The currently playing track or episode. Can be `null`.'),
     ),
     currently_playing_type: v.pipe(
@@ -2687,7 +2710,8 @@ export const QueryLimitParamsSchema = v.pipe(
   v.optional(
     v.pipe(
       v.string(),
-      v.transform(Number),
+      v.regex(/^-?(?:0|[1-9]\d*)$/),
+      v.transform((input) => Number(input)),
       v.number(),
       v.safeInteger(),
       v.minValue(1),
@@ -2699,7 +2723,16 @@ export const QueryLimitParamsSchema = v.pipe(
   v.metadata({ examples: [10] }),
 )
 export const QueryOffsetParamsSchema = v.pipe(
-  v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '0'),
+  v.optional(
+    v.pipe(
+      v.string(),
+      v.regex(/^-?(?:0|[1-9]\d*)$/),
+      v.transform((input) => Number(input)),
+      v.number(),
+      v.safeInteger(),
+    ),
+    '0',
+  ),
   v.description(
     'The index of the first item to return. Default: 0 (the first item). Use with limit to get the next set of items.\n',
   ),
@@ -3198,7 +3231,8 @@ export const getAlbumsIdTracksHandler = defineHandler({
       v.optional(
         v.pipe(
           v.string(),
-          v.transform(Number),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
           v.minValue(1),
@@ -3212,7 +3246,16 @@ export const getAlbumsIdTracksHandler = defineHandler({
       v.metadata({ examples: [10] }),
     ),
     offset: v.pipe(
-      v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '0'),
+      v.optional(
+        v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
+        '0',
+      ),
       v.description(
         'The index of the first item to return. Default: 0 (the first item). Use with limit to get the next set of items.\n',
       ),
@@ -3283,7 +3326,8 @@ export const getArtistsIdAlbumsHandler = defineHandler({
       v.optional(
         v.pipe(
           v.string(),
-          v.transform(Number),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
           v.minValue(0),
@@ -3297,7 +3341,16 @@ export const getArtistsIdAlbumsHandler = defineHandler({
       v.metadata({ examples: [5] }),
     ),
     offset: v.pipe(
-      v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '0'),
+      v.optional(
+        v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
+        '0',
+      ),
       v.description(
         'The index of the first item to return. Default: 0 (the first item). Use with limit to get the next set of items.\n',
       ),
@@ -3414,7 +3467,8 @@ export const getShowsIdEpisodesHandler = defineHandler({
       v.optional(
         v.pipe(
           v.string(),
-          v.transform(Number),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
           v.minValue(1),
@@ -3428,7 +3482,16 @@ export const getShowsIdEpisodesHandler = defineHandler({
       v.metadata({ examples: [10] }),
     ),
     offset: v.pipe(
-      v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '0'),
+      v.optional(
+        v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
+        '0',
+      ),
       v.description(
         'The index of the first item to return. Default: 0 (the first item). Use with limit to get the next set of items.\n',
       ),
@@ -3556,7 +3619,8 @@ export const getAudiobooksIdChaptersHandler = defineHandler({
       v.optional(
         v.pipe(
           v.string(),
-          v.transform(Number),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
           v.minValue(1),
@@ -3570,7 +3634,16 @@ export const getAudiobooksIdChaptersHandler = defineHandler({
       v.metadata({ examples: [10] }),
     ),
     offset: v.pipe(
-      v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '0'),
+      v.optional(
+        v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
+        '0',
+      ),
       v.description(
         'The index of the first item to return. Default: 0 (the first item). Use with limit to get the next set of items.\n',
       ),
@@ -3586,7 +3659,8 @@ export const getMeAudiobooksHandler = defineHandler({
       v.optional(
         v.pipe(
           v.string(),
-          v.transform(Number),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
           v.minValue(1),
@@ -3600,7 +3674,16 @@ export const getMeAudiobooksHandler = defineHandler({
       v.metadata({ examples: [10] }),
     ),
     offset: v.pipe(
-      v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '0'),
+      v.optional(
+        v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
+        '0',
+      ),
       v.description(
         'The index of the first item to return. Default: 0 (the first item). Use with limit to get the next set of items.\n',
       ),
@@ -3661,7 +3744,8 @@ export const getMePlaylistsHandler = defineHandler({
       v.optional(
         v.pipe(
           v.string(),
-          v.transform(Number),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
           v.minValue(1),
@@ -3675,7 +3759,16 @@ export const getMePlaylistsHandler = defineHandler({
       v.metadata({ examples: [10] }),
     ),
     offset: v.pipe(
-      v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '0'),
+      v.optional(
+        v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
+        '0',
+      ),
       v.description(
         "'The index of the first playlist to return. Default:\n0 (the first object). Maximum offset: 100.000\\. Use with `limit` to get the\nnext set of playlists.'\n",
       ),
@@ -3777,7 +3870,8 @@ export const getMeAlbumsHandler = defineHandler({
       v.optional(
         v.pipe(
           v.string(),
-          v.transform(Number),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
           v.minValue(1),
@@ -3791,7 +3885,16 @@ export const getMeAlbumsHandler = defineHandler({
       v.metadata({ examples: [10] }),
     ),
     offset: v.pipe(
-      v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '0'),
+      v.optional(
+        v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
+        '0',
+      ),
       v.description(
         'The index of the first item to return. Default: 0 (the first item). Use with limit to get the next set of items.\n',
       ),
@@ -3888,7 +3991,8 @@ export const getMeTracksHandler = defineHandler({
       v.optional(
         v.pipe(
           v.string(),
-          v.transform(Number),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
           v.minValue(1),
@@ -3902,7 +4006,16 @@ export const getMeTracksHandler = defineHandler({
       v.metadata({ examples: [10] }),
     ),
     offset: v.pipe(
-      v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '0'),
+      v.optional(
+        v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
+        '0',
+      ),
       v.description(
         'The index of the first item to return. Default: 0 (the first item). Use with limit to get the next set of items.\n',
       ),
@@ -4005,7 +4118,8 @@ export const getMeEpisodesHandler = defineHandler({
       v.optional(
         v.pipe(
           v.string(),
-          v.transform(Number),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
           v.minValue(1),
@@ -4019,7 +4133,16 @@ export const getMeEpisodesHandler = defineHandler({
       v.metadata({ examples: [10] }),
     ),
     offset: v.pipe(
-      v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '0'),
+      v.optional(
+        v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
+        '0',
+      ),
       v.description(
         'The index of the first item to return. Default: 0 (the first item). Use with limit to get the next set of items.\n',
       ),
@@ -4092,7 +4215,8 @@ export const getMeShowsHandler = defineHandler({
       v.optional(
         v.pipe(
           v.string(),
-          v.transform(Number),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
           v.minValue(1),
@@ -4106,7 +4230,16 @@ export const getMeShowsHandler = defineHandler({
       v.metadata({ examples: [10] }),
     ),
     offset: v.pipe(
-      v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '0'),
+      v.optional(
+        v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
+        '0',
+      ),
       v.description(
         'The index of the first item to return. Default: 0 (the first item). Use with limit to get the next set of items.\n',
       ),
@@ -4200,7 +4333,8 @@ export const getMeFollowingHandler = defineHandler({
       v.optional(
         v.pipe(
           v.string(),
-          v.transform(Number),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
           v.minValue(1),
@@ -4459,7 +4593,13 @@ export const postMePlayerPreviousHandler = defineHandler({
 export const putMePlayerSeekHandler = defineHandler({
   query: v.object({
     position_ms: v.pipe(
-      v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
+      v.pipe(
+        v.string(),
+        v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.transform((input) => Number(input)),
+        v.number(),
+        v.safeInteger(),
+      ),
       v.description(
         'The position in milliseconds to seek to. Must be a\npositive number. Passing in a position that is greater than the length of\nthe track will cause the player to start playing the next song.\n',
       ),
@@ -4501,7 +4641,13 @@ export const putMePlayerRepeatHandler = defineHandler({
 export const putMePlayerVolumeHandler = defineHandler({
   query: v.object({
     volume_percent: v.pipe(
-      v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
+      v.pipe(
+        v.string(),
+        v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.transform((input) => Number(input)),
+        v.number(),
+        v.safeInteger(),
+      ),
       v.description('The volume to set. Must be a value from 0 to 100 inclusive.\n'),
       v.metadata({ examples: [50] }),
     ),
@@ -4548,7 +4694,8 @@ export const getMePlayerRecentlyPlayedHandler = defineHandler({
       v.optional(
         v.pipe(
           v.string(),
-          v.transform(Number),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
           v.minValue(1),
@@ -4563,7 +4710,13 @@ export const getMePlayerRecentlyPlayedHandler = defineHandler({
     ),
     after: v.optional(
       v.pipe(
-        v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
+        v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
         v.description(
           'A Unix timestamp in milliseconds. Returns all items\nafter (but not including) this cursor position. If `after` is specified, `before`\nmust not be specified.\n',
         ),
@@ -4572,7 +4725,13 @@ export const getMePlayerRecentlyPlayedHandler = defineHandler({
     ),
     before: v.optional(
       v.pipe(
-        v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
+        v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
         v.description(
           'A Unix timestamp in milliseconds. Returns all items\nbefore (but not including) this cursor position. If `before` is specified,\n`after` must not be specified.\n',
         ),
@@ -4618,7 +4777,8 @@ export const getMeTopArtistsHandler = defineHandler({
       v.optional(
         v.pipe(
           v.string(),
-          v.transform(Number),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
           v.minValue(1),
@@ -4632,7 +4792,16 @@ export const getMeTopArtistsHandler = defineHandler({
       v.metadata({ examples: [10] }),
     ),
     offset: v.pipe(
-      v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '0'),
+      v.optional(
+        v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
+        '0',
+      ),
       v.description(
         'The index of the first item to return. Default: 0 (the first item). Use with limit to get the next set of items.\n',
       ),
@@ -4655,7 +4824,8 @@ export const getMeTopTracksHandler = defineHandler({
       v.optional(
         v.pipe(
           v.string(),
-          v.transform(Number),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
           v.minValue(1),
@@ -4669,7 +4839,16 @@ export const getMeTopTracksHandler = defineHandler({
       v.metadata({ examples: [10] }),
     ),
     offset: v.pipe(
-      v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '0'),
+      v.optional(
+        v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
+        '0',
+      ),
       v.description(
         'The index of the first item to return. Default: 0 (the first item). Use with limit to get the next set of items.\n',
       ),
@@ -4809,7 +4988,8 @@ export const getSearchHandler = defineHandler({
       v.optional(
         v.pipe(
           v.string(),
-          v.transform(Number),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
           v.minValue(1),
@@ -4824,7 +5004,8 @@ export const getSearchHandler = defineHandler({
       v.optional(
         v.pipe(
           v.string(),
-          v.transform(Number),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
           v.minValue(0),
@@ -4978,7 +5159,8 @@ export const getPlaylistsPlaylistIdTracksHandler = defineHandler({
       v.optional(
         v.pipe(
           v.string(),
-          v.transform(Number),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
           v.minValue(1),
@@ -4992,7 +5174,16 @@ export const getPlaylistsPlaylistIdTracksHandler = defineHandler({
       v.metadata({ examples: [10] }),
     ),
     offset: v.pipe(
-      v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '0'),
+      v.optional(
+        v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
+        '0',
+      ),
       v.description(
         'The index of the first item to return. Default: 0 (the first item). Use with limit to get the next set of items.\n',
       ),
@@ -5076,7 +5267,13 @@ export const postPlaylistsPlaylistIdTracksHandler = defineHandler({
   query: v.partial(
     v.object({
       position: v.pipe(
-        v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
+        v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
         v.description(
           'The position to insert the items, a zero-based index. For example, to insert the items in the first position: `position=0`; to insert the items in the third position: `position=2`. If omitted, the items will be appended to the playlist. Items are added in the order they are listed in the query string or request body.\n',
         ),
@@ -5178,7 +5375,8 @@ export const getPlaylistsPlaylistIdItemsHandler = defineHandler({
       v.optional(
         v.pipe(
           v.string(),
-          v.transform(Number),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
           v.minValue(1),
@@ -5192,7 +5390,16 @@ export const getPlaylistsPlaylistIdItemsHandler = defineHandler({
       v.metadata({ examples: [10] }),
     ),
     offset: v.pipe(
-      v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '0'),
+      v.optional(
+        v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
+        '0',
+      ),
       v.description(
         'The index of the first item to return. Default: 0 (the first item). Use with limit to get the next set of items.\n',
       ),
@@ -5276,7 +5483,13 @@ export const postPlaylistsPlaylistIdItemsHandler = defineHandler({
   query: v.partial(
     v.object({
       position: v.pipe(
-        v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
+        v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
         v.description(
           'The position to insert the items, a zero-based index. For example, to insert the items in the first position: `position=0`; to insert the items in the third position: `position=2`. If omitted, the items will be appended to the playlist. Items are added in the order they are listed in the query string or request body.\n',
         ),
@@ -5459,7 +5672,8 @@ export const getUsersUserIdPlaylistsHandler = defineHandler({
       v.optional(
         v.pipe(
           v.string(),
-          v.transform(Number),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
           v.minValue(1),
@@ -5473,7 +5687,16 @@ export const getUsersUserIdPlaylistsHandler = defineHandler({
       v.metadata({ examples: [10] }),
     ),
     offset: v.pipe(
-      v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '0'),
+      v.optional(
+        v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
+        '0',
+      ),
       v.description(
         'The index of the first playlist to return. Default:\n0 (the first object). Maximum offset: 100.000\\. Use with `limit` to get the\nnext set of playlists.\n',
       ),
@@ -5548,7 +5771,8 @@ export const getBrowseFeaturedPlaylistsHandler = defineHandler({
       v.optional(
         v.pipe(
           v.string(),
-          v.transform(Number),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
           v.minValue(1),
@@ -5562,7 +5786,16 @@ export const getBrowseFeaturedPlaylistsHandler = defineHandler({
       v.metadata({ examples: [10] }),
     ),
     offset: v.pipe(
-      v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '0'),
+      v.optional(
+        v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
+        '0',
+      ),
       v.description(
         'The index of the first item to return. Default: 0 (the first item). Use with limit to get the next set of items.\n',
       ),
@@ -5587,7 +5820,8 @@ export const getBrowseCategoriesHandler = defineHandler({
       v.optional(
         v.pipe(
           v.string(),
-          v.transform(Number),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
           v.minValue(1),
@@ -5601,7 +5835,16 @@ export const getBrowseCategoriesHandler = defineHandler({
       v.metadata({ examples: [10] }),
     ),
     offset: v.pipe(
-      v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '0'),
+      v.optional(
+        v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
+        '0',
+      ),
       v.description(
         'The index of the first item to return. Default: 0 (the first item). Use with limit to get the next set of items.\n',
       ),
@@ -5655,7 +5898,8 @@ export const getBrowseCategoriesCategoryIdPlaylistsHandler = defineHandler({
       v.optional(
         v.pipe(
           v.string(),
-          v.transform(Number),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
           v.minValue(1),
@@ -5669,7 +5913,16 @@ export const getBrowseCategoriesCategoryIdPlaylistsHandler = defineHandler({
       v.metadata({ examples: [10] }),
     ),
     offset: v.pipe(
-      v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '0'),
+      v.optional(
+        v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
+        '0',
+      ),
       v.description(
         'The index of the first item to return. Default: 0 (the first item). Use with limit to get the next set of items.\n',
       ),
@@ -5685,7 +5938,8 @@ export const getBrowseNewReleasesHandler = defineHandler({
       v.optional(
         v.pipe(
           v.string(),
-          v.transform(Number),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
           v.minValue(1),
@@ -5699,7 +5953,16 @@ export const getBrowseNewReleasesHandler = defineHandler({
       v.metadata({ examples: [10] }),
     ),
     offset: v.pipe(
-      v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '0'),
+      v.optional(
+        v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
+        '0',
+      ),
       v.description(
         'The index of the first item to return. Default: 0 (the first item). Use with limit to get the next set of items.\n',
       ),
@@ -5756,7 +6019,8 @@ export const getRecommendationsHandler = defineHandler({
       v.optional(
         v.pipe(
           v.string(),
-          v.transform(Number),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
           v.minValue(1),
@@ -5809,7 +6073,8 @@ export const getRecommendationsHandler = defineHandler({
       v.pipe(
         v.pipe(
           v.string(),
-          v.transform(Number),
+          v.regex(/^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/),
+          v.transform((input) => Number(input)),
           v.number(),
           v.finite(),
           v.minValue(0),
@@ -5824,7 +6089,8 @@ export const getRecommendationsHandler = defineHandler({
       v.pipe(
         v.pipe(
           v.string(),
-          v.transform(Number),
+          v.regex(/^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/),
+          v.transform((input) => Number(input)),
           v.number(),
           v.finite(),
           v.minValue(0),
@@ -5839,7 +6105,8 @@ export const getRecommendationsHandler = defineHandler({
       v.pipe(
         v.pipe(
           v.string(),
-          v.transform(Number),
+          v.regex(/^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/),
+          v.transform((input) => Number(input)),
           v.number(),
           v.finite(),
           v.minValue(0),
@@ -5854,7 +6121,8 @@ export const getRecommendationsHandler = defineHandler({
       v.pipe(
         v.pipe(
           v.string(),
-          v.transform(Number),
+          v.regex(/^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/),
+          v.transform((input) => Number(input)),
           v.number(),
           v.finite(),
           v.minValue(0),
@@ -5869,7 +6137,8 @@ export const getRecommendationsHandler = defineHandler({
       v.pipe(
         v.pipe(
           v.string(),
-          v.transform(Number),
+          v.regex(/^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/),
+          v.transform((input) => Number(input)),
           v.number(),
           v.finite(),
           v.minValue(0),
@@ -5884,7 +6153,8 @@ export const getRecommendationsHandler = defineHandler({
       v.pipe(
         v.pipe(
           v.string(),
-          v.transform(Number),
+          v.regex(/^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/),
+          v.transform((input) => Number(input)),
           v.number(),
           v.finite(),
           v.minValue(0),
@@ -5897,7 +6167,13 @@ export const getRecommendationsHandler = defineHandler({
     ),
     min_duration_ms: v.optional(
       v.pipe(
-        v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
+        v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
         v.description(
           'For each tunable track attribute, a hard floor on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `min_tempo=140` would restrict results to only those tracks with a tempo of greater than 140 beats per minute.\n',
         ),
@@ -5905,7 +6181,13 @@ export const getRecommendationsHandler = defineHandler({
     ),
     max_duration_ms: v.optional(
       v.pipe(
-        v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
+        v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
         v.description(
           'For each tunable track attribute, a hard ceiling on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `max_instrumentalness=0.35` would filter out most tracks that are likely to be instrumental.\n',
         ),
@@ -5913,7 +6195,13 @@ export const getRecommendationsHandler = defineHandler({
     ),
     target_duration_ms: v.optional(
       v.pipe(
-        v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
+        v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
         v.description('Target duration of the track (ms)'),
       ),
     ),
@@ -5921,7 +6209,8 @@ export const getRecommendationsHandler = defineHandler({
       v.pipe(
         v.pipe(
           v.string(),
-          v.transform(Number),
+          v.regex(/^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/),
+          v.transform((input) => Number(input)),
           v.number(),
           v.finite(),
           v.minValue(0),
@@ -5936,7 +6225,8 @@ export const getRecommendationsHandler = defineHandler({
       v.pipe(
         v.pipe(
           v.string(),
-          v.transform(Number),
+          v.regex(/^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/),
+          v.transform((input) => Number(input)),
           v.number(),
           v.finite(),
           v.minValue(0),
@@ -5951,7 +6241,8 @@ export const getRecommendationsHandler = defineHandler({
       v.pipe(
         v.pipe(
           v.string(),
-          v.transform(Number),
+          v.regex(/^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/),
+          v.transform((input) => Number(input)),
           v.number(),
           v.finite(),
           v.minValue(0),
@@ -5966,7 +6257,8 @@ export const getRecommendationsHandler = defineHandler({
       v.pipe(
         v.pipe(
           v.string(),
-          v.transform(Number),
+          v.regex(/^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/),
+          v.transform((input) => Number(input)),
           v.number(),
           v.finite(),
           v.minValue(0),
@@ -5981,7 +6273,8 @@ export const getRecommendationsHandler = defineHandler({
       v.pipe(
         v.pipe(
           v.string(),
-          v.transform(Number),
+          v.regex(/^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/),
+          v.transform((input) => Number(input)),
           v.number(),
           v.finite(),
           v.minValue(0),
@@ -5996,7 +6289,8 @@ export const getRecommendationsHandler = defineHandler({
       v.pipe(
         v.pipe(
           v.string(),
-          v.transform(Number),
+          v.regex(/^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/),
+          v.transform((input) => Number(input)),
           v.number(),
           v.finite(),
           v.minValue(0),
@@ -6011,7 +6305,8 @@ export const getRecommendationsHandler = defineHandler({
       v.pipe(
         v.pipe(
           v.string(),
-          v.transform(Number),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
           v.minValue(0),
@@ -6026,7 +6321,8 @@ export const getRecommendationsHandler = defineHandler({
       v.pipe(
         v.pipe(
           v.string(),
-          v.transform(Number),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
           v.minValue(0),
@@ -6041,7 +6337,8 @@ export const getRecommendationsHandler = defineHandler({
       v.pipe(
         v.pipe(
           v.string(),
-          v.transform(Number),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
           v.minValue(0),
@@ -6056,7 +6353,8 @@ export const getRecommendationsHandler = defineHandler({
       v.pipe(
         v.pipe(
           v.string(),
-          v.transform(Number),
+          v.regex(/^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/),
+          v.transform((input) => Number(input)),
           v.number(),
           v.finite(),
           v.minValue(0),
@@ -6071,7 +6369,8 @@ export const getRecommendationsHandler = defineHandler({
       v.pipe(
         v.pipe(
           v.string(),
-          v.transform(Number),
+          v.regex(/^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/),
+          v.transform((input) => Number(input)),
           v.number(),
           v.finite(),
           v.minValue(0),
@@ -6086,7 +6385,8 @@ export const getRecommendationsHandler = defineHandler({
       v.pipe(
         v.pipe(
           v.string(),
-          v.transform(Number),
+          v.regex(/^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/),
+          v.transform((input) => Number(input)),
           v.number(),
           v.finite(),
           v.minValue(0),
@@ -6099,7 +6399,13 @@ export const getRecommendationsHandler = defineHandler({
     ),
     min_loudness: v.optional(
       v.pipe(
-        v.pipe(v.string(), v.transform(Number), v.number(), v.finite()),
+        v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.finite(),
+        ),
         v.description(
           'For each tunable track attribute, a hard floor on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `min_tempo=140` would restrict results to only those tracks with a tempo of greater than 140 beats per minute.\n',
         ),
@@ -6107,7 +6413,13 @@ export const getRecommendationsHandler = defineHandler({
     ),
     max_loudness: v.optional(
       v.pipe(
-        v.pipe(v.string(), v.transform(Number), v.number(), v.finite()),
+        v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.finite(),
+        ),
         v.description(
           'For each tunable track attribute, a hard ceiling on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `max_instrumentalness=0.35` would filter out most tracks that are likely to be instrumental.\n',
         ),
@@ -6115,7 +6427,13 @@ export const getRecommendationsHandler = defineHandler({
     ),
     target_loudness: v.optional(
       v.pipe(
-        v.pipe(v.string(), v.transform(Number), v.number(), v.finite()),
+        v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.finite(),
+        ),
         v.description(
           'For each of the tunable track attributes (below) a target value may be provided. Tracks with the attribute values nearest to the target values will be preferred. For example, you might request `target_energy=0.6` and `target_danceability=0.8`. All target values will be weighed equally in ranking results.\n',
         ),
@@ -6125,7 +6443,8 @@ export const getRecommendationsHandler = defineHandler({
       v.pipe(
         v.pipe(
           v.string(),
-          v.transform(Number),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
           v.minValue(0),
@@ -6140,7 +6459,8 @@ export const getRecommendationsHandler = defineHandler({
       v.pipe(
         v.pipe(
           v.string(),
-          v.transform(Number),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
           v.minValue(0),
@@ -6155,7 +6475,8 @@ export const getRecommendationsHandler = defineHandler({
       v.pipe(
         v.pipe(
           v.string(),
-          v.transform(Number),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
           v.minValue(0),
@@ -6170,7 +6491,8 @@ export const getRecommendationsHandler = defineHandler({
       v.pipe(
         v.pipe(
           v.string(),
-          v.transform(Number),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
           v.minValue(0),
@@ -6185,7 +6507,8 @@ export const getRecommendationsHandler = defineHandler({
       v.pipe(
         v.pipe(
           v.string(),
-          v.transform(Number),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
           v.minValue(0),
@@ -6200,7 +6523,8 @@ export const getRecommendationsHandler = defineHandler({
       v.pipe(
         v.pipe(
           v.string(),
-          v.transform(Number),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
           v.minValue(0),
@@ -6215,7 +6539,8 @@ export const getRecommendationsHandler = defineHandler({
       v.pipe(
         v.pipe(
           v.string(),
-          v.transform(Number),
+          v.regex(/^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/),
+          v.transform((input) => Number(input)),
           v.number(),
           v.finite(),
           v.minValue(0),
@@ -6230,7 +6555,8 @@ export const getRecommendationsHandler = defineHandler({
       v.pipe(
         v.pipe(
           v.string(),
-          v.transform(Number),
+          v.regex(/^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/),
+          v.transform((input) => Number(input)),
           v.number(),
           v.finite(),
           v.minValue(0),
@@ -6245,7 +6571,8 @@ export const getRecommendationsHandler = defineHandler({
       v.pipe(
         v.pipe(
           v.string(),
-          v.transform(Number),
+          v.regex(/^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/),
+          v.transform((input) => Number(input)),
           v.number(),
           v.finite(),
           v.minValue(0),
@@ -6258,7 +6585,13 @@ export const getRecommendationsHandler = defineHandler({
     ),
     min_tempo: v.optional(
       v.pipe(
-        v.pipe(v.string(), v.transform(Number), v.number(), v.finite()),
+        v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.finite(),
+        ),
         v.description(
           'For each tunable track attribute, a hard floor on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `min_tempo=140` would restrict results to only those tracks with a tempo of greater than 140 beats per minute.\n',
         ),
@@ -6266,7 +6599,13 @@ export const getRecommendationsHandler = defineHandler({
     ),
     max_tempo: v.optional(
       v.pipe(
-        v.pipe(v.string(), v.transform(Number), v.number(), v.finite()),
+        v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.finite(),
+        ),
         v.description(
           'For each tunable track attribute, a hard ceiling on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `max_instrumentalness=0.35` would filter out most tracks that are likely to be instrumental.\n',
         ),
@@ -6274,13 +6613,26 @@ export const getRecommendationsHandler = defineHandler({
     ),
     target_tempo: v.optional(
       v.pipe(
-        v.pipe(v.string(), v.transform(Number), v.number(), v.finite()),
+        v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.finite(),
+        ),
         v.description('Target tempo (BPM)'),
       ),
     ),
     min_time_signature: v.optional(
       v.pipe(
-        v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger(), v.maxValue(11)),
+        v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+          v.maxValue(11),
+        ),
         v.description(
           'For each tunable track attribute, a hard floor on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `min_tempo=140` would restrict results to only those tracks with a tempo of greater than 140 beats per minute.\n',
         ),
@@ -6288,7 +6640,13 @@ export const getRecommendationsHandler = defineHandler({
     ),
     max_time_signature: v.optional(
       v.pipe(
-        v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
+        v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
         v.description(
           'For each tunable track attribute, a hard ceiling on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `max_instrumentalness=0.35` would filter out most tracks that are likely to be instrumental.\n',
         ),
@@ -6296,7 +6654,13 @@ export const getRecommendationsHandler = defineHandler({
     ),
     target_time_signature: v.optional(
       v.pipe(
-        v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
+        v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
         v.description(
           'For each of the tunable track attributes (below) a target value may be provided. Tracks with the attribute values nearest to the target values will be preferred. For example, you might request `target_energy=0.6` and `target_danceability=0.8`. All target values will be weighed equally in ranking results.\n',
         ),
@@ -6306,7 +6670,8 @@ export const getRecommendationsHandler = defineHandler({
       v.pipe(
         v.pipe(
           v.string(),
-          v.transform(Number),
+          v.regex(/^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/),
+          v.transform((input) => Number(input)),
           v.number(),
           v.finite(),
           v.minValue(0),
@@ -6321,7 +6686,8 @@ export const getRecommendationsHandler = defineHandler({
       v.pipe(
         v.pipe(
           v.string(),
-          v.transform(Number),
+          v.regex(/^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/),
+          v.transform((input) => Number(input)),
           v.number(),
           v.finite(),
           v.minValue(0),
@@ -6336,7 +6702,8 @@ export const getRecommendationsHandler = defineHandler({
       v.pipe(
         v.pipe(
           v.string(),
-          v.transform(Number),
+          v.regex(/^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/),
+          v.transform((input) => Number(input)),
           v.number(),
           v.finite(),
           v.minValue(0),

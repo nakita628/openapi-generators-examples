@@ -1,6 +1,6 @@
 import { Hono } from 'hono'
 import { describeRoute, resolver, validator } from 'hono-openapi'
-import { Type, Codec } from 'typebox'
+import { Type, Codec, type StaticDecode, type StaticEncode, type TSchema } from 'typebox'
 import { Compile } from 'typebox/compile'
 import {
   ApplicationIncomingWebhookResponseSchema,
@@ -106,6 +106,31 @@ import {
   ClientRatelimitedResponseResponse,
 } from '../components'
 
+const toStandardSchemaV1 = <T extends TSchema>(schema: T) => {
+  const validator = Compile(schema)
+  return Object.assign(validator, {
+    '~standard': {
+      version: 1 as const,
+      vendor: 'typebox',
+      validate: (value: unknown) =>
+        validator.Check(value)
+          ? { value: validator.Decode(value) }
+          : {
+              issues: validator.Errors(value).map((error) => ({
+                message: error.message,
+                path: error.instancePath
+                  .split('/')
+                  .slice(1)
+                  .map((key) => key.replaceAll('~1', '/').replaceAll('~0', '~')),
+              })),
+            },
+      types: undefined as
+        | { readonly input: StaticEncode<T>; readonly output: StaticDecode<T> }
+        | undefined,
+    },
+  })
+}
+
 export const guildsHandler = new Hono()
   .get(
     '/guilds/templates/:code',
@@ -122,7 +147,9 @@ export const guildsHandler = new Hono()
             'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
           },
           content: {
-            'application/json': { schema: resolver(Compile(GuildTemplateResponseSchema)) },
+            'application/json': {
+              schema: resolver(toStandardSchemaV1(GuildTemplateResponseSchema)),
+            },
           },
         },
         '429': ClientRatelimitedResponseResponse,
@@ -130,7 +157,10 @@ export const guildsHandler = new Hono()
       },
       security: [{}, { BotToken: [] }],
     }),
-    validator('param', Compile(Type.Object({ code: Type.String({ maxLength: 152133 }) }))),
+    validator(
+      'param',
+      toStandardSchemaV1(Type.Object({ code: Type.String({ maxLength: 152133 }) })),
+    ),
     (c) => { throw new Error('Not implemented') },
   )
   .get(
@@ -148,7 +178,9 @@ export const guildsHandler = new Hono()
             'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
           },
           content: {
-            'application/json': { schema: resolver(Compile(GuildWithCountsResponseSchema)) },
+            'application/json': {
+              schema: resolver(toStandardSchemaV1(GuildWithCountsResponseSchema)),
+            },
           },
         },
         '429': ClientRatelimitedResponseResponse,
@@ -156,14 +188,16 @@ export const guildsHandler = new Hono()
       },
       security: [{ BotToken: [] }],
     }),
-    validator('param', Compile(Type.Object({ guild_id: SnowflakeTypeSchema }))),
+    validator('param', toStandardSchemaV1(Type.Object({ guild_id: SnowflakeTypeSchema }))),
     validator(
       'query',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           with_counts: Type.Optional(
-            Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-              .Decode((value) => value === 'true')
+            Codec(
+              Type.String({ pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i }),
+            )
+              .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
               .Encode((value) => (value ? 'true' : 'false')),
           ),
         }),
@@ -185,15 +219,17 @@ export const guildsHandler = new Hono()
             'X-RateLimit-Reset-After': { $ref: '#/components/headers/X-RateLimit-Reset-After' },
             'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
           },
-          content: { 'application/json': { schema: resolver(Compile(GuildResponseSchema)) } },
+          content: {
+            'application/json': { schema: resolver(toStandardSchemaV1(GuildResponseSchema)) },
+          },
         },
         '429': ClientRatelimitedResponseResponse,
         '4XX': ClientErrorResponseResponse,
       },
       security: [{ BotToken: [] }],
     }),
-    validator('param', Compile(Type.Object({ guild_id: SnowflakeTypeSchema }))),
-    validator('json', Compile(GuildPatchRequestPartialSchema)),
+    validator('param', toStandardSchemaV1(Type.Object({ guild_id: SnowflakeTypeSchema }))),
+    validator('json', toStandardSchemaV1(GuildPatchRequestPartialSchema)),
     (c) => { throw new Error('Not implemented') },
   )
   .get(
@@ -211,7 +247,9 @@ export const guildsHandler = new Hono()
             'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
           },
           content: {
-            'application/json': { schema: resolver(Compile(GuildAuditLogResponseSchema)) },
+            'application/json': {
+              schema: resolver(toStandardSchemaV1(GuildAuditLogResponseSchema)),
+            },
           },
         },
         '429': ClientRatelimitedResponseResponse,
@@ -219,10 +257,10 @@ export const guildsHandler = new Hono()
       },
       security: [{ BotToken: [] }],
     }),
-    validator('param', Compile(Type.Object({ guild_id: SnowflakeTypeSchema }))),
+    validator('param', toStandardSchemaV1(Type.Object({ guild_id: SnowflakeTypeSchema }))),
     validator(
       'query',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           user_id: Type.Optional(SnowflakeTypeSchema),
           target_id: Type.Optional(SnowflakeTypeSchema),
@@ -230,8 +268,18 @@ export const guildsHandler = new Hono()
           before: Type.Optional(SnowflakeTypeSchema),
           after: Type.Optional(SnowflakeTypeSchema),
           limit: Type.Optional(
-            Codec(Type.String())
-              .Decode((value) => Number.parseInt(value, 10))
+            Codec(
+              Type.Refine(
+                Type.Refine(
+                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                  (value) => Number(value) >= 1,
+                  () => 'must be >= 1',
+                ),
+                (value) => Number(value) <= 100,
+                () => 'must be <= 100',
+              ),
+            )
+              .Decode((value) => Number(value))
               .Encode((value) => String(value)),
           ),
         }),
@@ -256,7 +304,7 @@ export const guildsHandler = new Hono()
           content: {
             'application/json': {
               schema: resolver(
-                Compile(
+                toStandardSchemaV1(
                   Type.Union([
                     Type.Array(
                       Type.Union([
@@ -265,7 +313,7 @@ export const guildsHandler = new Hono()
                         MLSpamRuleResponseSchema,
                         MentionSpamRuleResponseSchema,
                         UserProfileRuleResponseSchema,
-                        Type.Union([Type.Null(), Type.Null()]),
+                        Type.Null(),
                       ]),
                     ),
                     Type.Null(),
@@ -280,7 +328,7 @@ export const guildsHandler = new Hono()
       },
       security: [{ BotToken: [] }],
     }),
-    validator('param', Compile(Type.Object({ guild_id: SnowflakeTypeSchema }))),
+    validator('param', toStandardSchemaV1(Type.Object({ guild_id: SnowflakeTypeSchema }))),
     (c) => { throw new Error('Not implemented') },
   )
   .post(
@@ -300,7 +348,7 @@ export const guildsHandler = new Hono()
           content: {
             'application/json': {
               schema: resolver(
-                Compile(
+                toStandardSchemaV1(
                   Type.Union([
                     DefaultKeywordRuleResponseSchema,
                     KeywordRuleResponseSchema,
@@ -318,10 +366,10 @@ export const guildsHandler = new Hono()
       },
       security: [{ BotToken: [] }],
     }),
-    validator('param', Compile(Type.Object({ guild_id: SnowflakeTypeSchema }))),
+    validator('param', toStandardSchemaV1(Type.Object({ guild_id: SnowflakeTypeSchema }))),
     validator(
       'json',
-      Compile(
+      toStandardSchemaV1(
         Type.Union([
           DefaultKeywordListUpsertRequestSchema,
           KeywordUpsertRequestSchema,
@@ -350,7 +398,7 @@ export const guildsHandler = new Hono()
           content: {
             'application/json': {
               schema: resolver(
-                Compile(
+                toStandardSchemaV1(
                   Type.Union([
                     DefaultKeywordRuleResponseSchema,
                     KeywordRuleResponseSchema,
@@ -370,7 +418,9 @@ export const guildsHandler = new Hono()
     }),
     validator(
       'param',
-      Compile(Type.Object({ guild_id: SnowflakeTypeSchema, rule_id: SnowflakeTypeSchema })),
+      toStandardSchemaV1(
+        Type.Object({ guild_id: SnowflakeTypeSchema, rule_id: SnowflakeTypeSchema }),
+      ),
     ),
     (c) => { throw new Error('Not implemented') },
   )
@@ -396,7 +446,9 @@ export const guildsHandler = new Hono()
     }),
     validator(
       'param',
-      Compile(Type.Object({ guild_id: SnowflakeTypeSchema, rule_id: SnowflakeTypeSchema })),
+      toStandardSchemaV1(
+        Type.Object({ guild_id: SnowflakeTypeSchema, rule_id: SnowflakeTypeSchema }),
+      ),
     ),
     (c) => { throw new Error('Not implemented') },
   )
@@ -417,7 +469,7 @@ export const guildsHandler = new Hono()
           content: {
             'application/json': {
               schema: resolver(
-                Compile(
+                toStandardSchemaV1(
                   Type.Union([
                     DefaultKeywordRuleResponseSchema,
                     KeywordRuleResponseSchema,
@@ -437,11 +489,13 @@ export const guildsHandler = new Hono()
     }),
     validator(
       'param',
-      Compile(Type.Object({ guild_id: SnowflakeTypeSchema, rule_id: SnowflakeTypeSchema })),
+      toStandardSchemaV1(
+        Type.Object({ guild_id: SnowflakeTypeSchema, rule_id: SnowflakeTypeSchema }),
+      ),
     ),
     validator(
       'json',
-      Compile(
+      toStandardSchemaV1(
         Type.Union([
           DefaultKeywordListUpsertRequestPartialSchema,
           KeywordUpsertRequestPartialSchema,
@@ -470,7 +524,7 @@ export const guildsHandler = new Hono()
           content: {
             'application/json': {
               schema: resolver(
-                Compile(Type.Union([Type.Array(GuildBanResponseSchema), Type.Null()])),
+                toStandardSchemaV1(Type.Union([Type.Array(GuildBanResponseSchema), Type.Null()])),
               ),
             },
           },
@@ -480,14 +534,24 @@ export const guildsHandler = new Hono()
       },
       security: [{ BotToken: [] }],
     }),
-    validator('param', Compile(Type.Object({ guild_id: SnowflakeTypeSchema }))),
+    validator('param', toStandardSchemaV1(Type.Object({ guild_id: SnowflakeTypeSchema }))),
     validator(
       'query',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           limit: Type.Optional(
-            Codec(Type.String())
-              .Decode((value) => Number.parseInt(value, 10))
+            Codec(
+              Type.Refine(
+                Type.Refine(
+                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                  (value) => Number(value) >= 1,
+                  () => 'must be >= 1',
+                ),
+                (value) => Number(value) <= 1000,
+                () => 'must be <= 1000',
+              ),
+            )
+              .Decode((value) => Number(value))
               .Encode((value) => String(value)),
           ),
           before: Type.Optional(SnowflakeTypeSchema),
@@ -511,7 +575,9 @@ export const guildsHandler = new Hono()
             'X-RateLimit-Reset-After': { $ref: '#/components/headers/X-RateLimit-Reset-After' },
             'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
           },
-          content: { 'application/json': { schema: resolver(Compile(GuildBanResponseSchema)) } },
+          content: {
+            'application/json': { schema: resolver(toStandardSchemaV1(GuildBanResponseSchema)) },
+          },
         },
         '429': ClientRatelimitedResponseResponse,
         '4XX': ClientErrorResponseResponse,
@@ -520,7 +586,9 @@ export const guildsHandler = new Hono()
     }),
     validator(
       'param',
-      Compile(Type.Object({ guild_id: SnowflakeTypeSchema, user_id: SnowflakeTypeSchema })),
+      toStandardSchemaV1(
+        Type.Object({ guild_id: SnowflakeTypeSchema, user_id: SnowflakeTypeSchema }),
+      ),
     ),
     (c) => { throw new Error('Not implemented') },
   )
@@ -546,9 +614,11 @@ export const guildsHandler = new Hono()
     }),
     validator(
       'param',
-      Compile(Type.Object({ guild_id: SnowflakeTypeSchema, user_id: SnowflakeTypeSchema })),
+      toStandardSchemaV1(
+        Type.Object({ guild_id: SnowflakeTypeSchema, user_id: SnowflakeTypeSchema }),
+      ),
     ),
-    validator('json', Compile(BanUserFromGuildRequestSchema)),
+    validator('json', toStandardSchemaV1(BanUserFromGuildRequestSchema)),
     (c) => { throw new Error('Not implemented') },
   )
   .delete(
@@ -573,9 +643,11 @@ export const guildsHandler = new Hono()
     }),
     validator(
       'param',
-      Compile(Type.Object({ guild_id: SnowflakeTypeSchema, user_id: SnowflakeTypeSchema })),
+      toStandardSchemaV1(
+        Type.Object({ guild_id: SnowflakeTypeSchema, user_id: SnowflakeTypeSchema }),
+      ),
     ),
-    validator('json', Compile(UnbanUserFromGuildRequestSchema)),
+    validator('json', toStandardSchemaV1(UnbanUserFromGuildRequestSchema)),
     (c) => { throw new Error('Not implemented') },
   )
   .post(
@@ -593,7 +665,9 @@ export const guildsHandler = new Hono()
             'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
           },
           content: {
-            'application/json': { schema: resolver(Compile(BulkBanUsersResponseSchema)) },
+            'application/json': {
+              schema: resolver(toStandardSchemaV1(BulkBanUsersResponseSchema)),
+            },
           },
         },
         '429': ClientRatelimitedResponseResponse,
@@ -601,8 +675,8 @@ export const guildsHandler = new Hono()
       },
       security: [{ BotToken: [] }],
     }),
-    validator('param', Compile(Type.Object({ guild_id: SnowflakeTypeSchema }))),
-    validator('json', Compile(BulkBanUsersRequestSchema)),
+    validator('param', toStandardSchemaV1(Type.Object({ guild_id: SnowflakeTypeSchema }))),
+    validator('json', toStandardSchemaV1(BulkBanUsersRequestSchema)),
     (c) => { throw new Error('Not implemented') },
   )
   .get(
@@ -622,7 +696,7 @@ export const guildsHandler = new Hono()
           content: {
             'application/json': {
               schema: resolver(
-                Compile(
+                toStandardSchemaV1(
                   Type.Union([
                     Type.Array(
                       Type.Union([
@@ -644,7 +718,7 @@ export const guildsHandler = new Hono()
       },
       security: [{ BotToken: [] }, { OAuth2: [] }],
     }),
-    validator('param', Compile(Type.Object({ guild_id: SnowflakeTypeSchema }))),
+    validator('param', toStandardSchemaV1(Type.Object({ guild_id: SnowflakeTypeSchema }))),
     (c) => { throw new Error('Not implemented') },
   )
   .post(
@@ -662,7 +736,9 @@ export const guildsHandler = new Hono()
             'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
           },
           content: {
-            'application/json': { schema: resolver(Compile(GuildChannelResponseSchema)) },
+            'application/json': {
+              schema: resolver(toStandardSchemaV1(GuildChannelResponseSchema)),
+            },
           },
         },
         '429': ClientRatelimitedResponseResponse,
@@ -670,8 +746,8 @@ export const guildsHandler = new Hono()
       },
       security: [{ BotToken: [] }],
     }),
-    validator('param', Compile(Type.Object({ guild_id: SnowflakeTypeSchema }))),
-    validator('json', Compile(CreateGuildChannelRequestSchema)),
+    validator('param', toStandardSchemaV1(Type.Object({ guild_id: SnowflakeTypeSchema }))),
+    validator('json', toStandardSchemaV1(CreateGuildChannelRequestSchema)),
     (c) => { throw new Error('Not implemented') },
   )
   .patch(
@@ -694,19 +770,15 @@ export const guildsHandler = new Hono()
       },
       security: [{ BotToken: [] }],
     }),
-    validator('param', Compile(Type.Object({ guild_id: SnowflakeTypeSchema }))),
+    validator('param', toStandardSchemaV1(Type.Object({ guild_id: SnowflakeTypeSchema }))),
     validator(
       'json',
-      Compile(
+      toStandardSchemaV1(
         Type.Array(
           Type.Object({
-            id: Type.Optional(
-              Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
-            ),
+            id: Type.Optional(Type.Union([Type.Null(), SnowflakeTypeSchema])),
             position: Type.Optional(Type.Union([Type.Integer({ minimum: 0 }), Type.Null()])),
-            parent_id: Type.Optional(
-              Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
-            ),
+            parent_id: Type.Optional(Type.Union([Type.Null(), SnowflakeTypeSchema])),
             lock_permissions: Type.Optional(Type.Union([Type.Boolean(), Type.Null()])),
           }),
         ),
@@ -730,7 +802,9 @@ export const guildsHandler = new Hono()
           },
           content: {
             'application/json': {
-              schema: resolver(Compile(Type.Union([Type.Array(EmojiResponseSchema), Type.Null()]))),
+              schema: resolver(
+                toStandardSchemaV1(Type.Union([Type.Array(EmojiResponseSchema), Type.Null()])),
+              ),
             },
           },
         },
@@ -739,7 +813,7 @@ export const guildsHandler = new Hono()
       },
       security: [{ BotToken: [] }],
     }),
-    validator('param', Compile(Type.Object({ guild_id: SnowflakeTypeSchema }))),
+    validator('param', toStandardSchemaV1(Type.Object({ guild_id: SnowflakeTypeSchema }))),
     (c) => { throw new Error('Not implemented') },
   )
   .post(
@@ -756,26 +830,28 @@ export const guildsHandler = new Hono()
             'X-RateLimit-Reset-After': { $ref: '#/components/headers/X-RateLimit-Reset-After' },
             'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
           },
-          content: { 'application/json': { schema: resolver(Compile(EmojiResponseSchema)) } },
+          content: {
+            'application/json': { schema: resolver(toStandardSchemaV1(EmojiResponseSchema)) },
+          },
         },
         '429': ClientRatelimitedResponseResponse,
         '4XX': ClientErrorResponseResponse,
       },
       security: [{ BotToken: [] }],
     }),
-    validator('param', Compile(Type.Object({ guild_id: SnowflakeTypeSchema }))),
+    validator('param', toStandardSchemaV1(Type.Object({ guild_id: SnowflakeTypeSchema }))),
     validator(
       'json',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           name: Type.String({ minLength: 2, maxLength: 32 }),
           image: Type.String(),
           roles: Type.Optional(
             Type.Union([
-              Type.Array(
-                Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
-                { maxItems: 1521, uniqueItems: true },
-              ),
+              Type.Array(Type.Union([Type.Null(), SnowflakeTypeSchema]), {
+                maxItems: 1521,
+                uniqueItems: true,
+              }),
               Type.Null(),
             ]),
           ),
@@ -798,7 +874,9 @@ export const guildsHandler = new Hono()
             'X-RateLimit-Reset-After': { $ref: '#/components/headers/X-RateLimit-Reset-After' },
             'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
           },
-          content: { 'application/json': { schema: resolver(Compile(EmojiResponseSchema)) } },
+          content: {
+            'application/json': { schema: resolver(toStandardSchemaV1(EmojiResponseSchema)) },
+          },
         },
         '429': ClientRatelimitedResponseResponse,
         '4XX': ClientErrorResponseResponse,
@@ -807,7 +885,9 @@ export const guildsHandler = new Hono()
     }),
     validator(
       'param',
-      Compile(Type.Object({ guild_id: SnowflakeTypeSchema, emoji_id: SnowflakeTypeSchema })),
+      toStandardSchemaV1(
+        Type.Object({ guild_id: SnowflakeTypeSchema, emoji_id: SnowflakeTypeSchema }),
+      ),
     ),
     (c) => { throw new Error('Not implemented') },
   )
@@ -833,7 +913,9 @@ export const guildsHandler = new Hono()
     }),
     validator(
       'param',
-      Compile(Type.Object({ guild_id: SnowflakeTypeSchema, emoji_id: SnowflakeTypeSchema })),
+      toStandardSchemaV1(
+        Type.Object({ guild_id: SnowflakeTypeSchema, emoji_id: SnowflakeTypeSchema }),
+      ),
     ),
     (c) => { throw new Error('Not implemented') },
   )
@@ -851,7 +933,9 @@ export const guildsHandler = new Hono()
             'X-RateLimit-Reset-After': { $ref: '#/components/headers/X-RateLimit-Reset-After' },
             'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
           },
-          content: { 'application/json': { schema: resolver(Compile(EmojiResponseSchema)) } },
+          content: {
+            'application/json': { schema: resolver(toStandardSchemaV1(EmojiResponseSchema)) },
+          },
         },
         '429': ClientRatelimitedResponseResponse,
         '4XX': ClientErrorResponseResponse,
@@ -860,19 +944,21 @@ export const guildsHandler = new Hono()
     }),
     validator(
       'param',
-      Compile(Type.Object({ guild_id: SnowflakeTypeSchema, emoji_id: SnowflakeTypeSchema })),
+      toStandardSchemaV1(
+        Type.Object({ guild_id: SnowflakeTypeSchema, emoji_id: SnowflakeTypeSchema }),
+      ),
     ),
     validator(
       'json',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           name: Type.Optional(Type.String({ minLength: 2, maxLength: 32 })),
           roles: Type.Optional(
             Type.Union([
-              Type.Array(
-                Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
-                { maxItems: 1521, uniqueItems: true },
-              ),
+              Type.Array(Type.Union([Type.Null(), SnowflakeTypeSchema]), {
+                maxItems: 1521,
+                uniqueItems: true,
+              }),
               Type.Null(),
             ]),
           ),
@@ -897,7 +983,9 @@ export const guildsHandler = new Hono()
             'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
           },
           content: {
-            'application/json': { schema: resolver(Compile(GuildIncidentsDataResponseSchema)) },
+            'application/json': {
+              schema: resolver(toStandardSchemaV1(GuildIncidentsDataResponseSchema)),
+            },
           },
         },
         '429': ClientRatelimitedResponseResponse,
@@ -905,8 +993,8 @@ export const guildsHandler = new Hono()
       },
       security: [{ BotToken: [] }],
     }),
-    validator('param', Compile(Type.Object({ guild_id: SnowflakeTypeSchema }))),
-    validator('json', Compile(GuildIncidentActionsRequestSchema)),
+    validator('param', toStandardSchemaV1(Type.Object({ guild_id: SnowflakeTypeSchema }))),
+    validator('json', toStandardSchemaV1(GuildIncidentActionsRequestSchema)),
     (c) => { throw new Error('Not implemented') },
   )
   .get(
@@ -926,7 +1014,7 @@ export const guildsHandler = new Hono()
           content: {
             'application/json': {
               schema: resolver(
-                Compile(
+                toStandardSchemaV1(
                   Type.Union([
                     Type.Array(
                       Type.Union([
@@ -947,7 +1035,7 @@ export const guildsHandler = new Hono()
       },
       security: [{ BotToken: [] }],
     }),
-    validator('param', Compile(Type.Object({ guild_id: SnowflakeTypeSchema }))),
+    validator('param', toStandardSchemaV1(Type.Object({ guild_id: SnowflakeTypeSchema }))),
     (c) => { throw new Error('Not implemented') },
   )
   .delete(
@@ -972,7 +1060,9 @@ export const guildsHandler = new Hono()
     }),
     validator(
       'param',
-      Compile(Type.Object({ guild_id: SnowflakeTypeSchema, integration_id: SnowflakeTypeSchema })),
+      toStandardSchemaV1(
+        Type.Object({ guild_id: SnowflakeTypeSchema, integration_id: SnowflakeTypeSchema }),
+      ),
     ),
     (c) => { throw new Error('Not implemented') },
   )
@@ -993,14 +1083,14 @@ export const guildsHandler = new Hono()
           content: {
             'application/json': {
               schema: resolver(
-                Compile(
+                toStandardSchemaV1(
                   Type.Union([
                     Type.Array(
                       Type.Union([
                         FriendInviteResponseSchema,
                         GroupDMInviteResponseSchema,
                         GuildInviteResponseSchema,
-                        Type.Union([Type.Null(), Type.Null()]),
+                        Type.Null(),
                       ]),
                     ),
                     Type.Null(),
@@ -1015,7 +1105,7 @@ export const guildsHandler = new Hono()
       },
       security: [{ BotToken: [] }],
     }),
-    validator('param', Compile(Type.Object({ guild_id: SnowflakeTypeSchema }))),
+    validator('param', toStandardSchemaV1(Type.Object({ guild_id: SnowflakeTypeSchema }))),
     (c) => { throw new Error('Not implemented') },
   )
   .get(
@@ -1034,7 +1124,7 @@ export const guildsHandler = new Hono()
           },
           content: {
             'application/json': {
-              schema: resolver(Compile(Type.Array(GuildMemberResponseSchema))),
+              schema: resolver(toStandardSchemaV1(Type.Array(GuildMemberResponseSchema))),
             },
           },
         },
@@ -1043,14 +1133,24 @@ export const guildsHandler = new Hono()
       },
       security: [{ BotToken: [] }],
     }),
-    validator('param', Compile(Type.Object({ guild_id: SnowflakeTypeSchema }))),
+    validator('param', toStandardSchemaV1(Type.Object({ guild_id: SnowflakeTypeSchema }))),
     validator(
       'query',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           limit: Type.Optional(
-            Codec(Type.String())
-              .Decode((value) => Number.parseInt(value, 10))
+            Codec(
+              Type.Refine(
+                Type.Refine(
+                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                  (value) => Number(value) >= 1,
+                  () => 'must be >= 1',
+                ),
+                (value) => Number(value) <= 1000,
+                () => 'must be <= 1000',
+              ),
+            )
+              .Decode((value) => Number(value))
               .Encode((value) => String(value)),
           ),
           after: Type.Optional(SnowflakeTypeSchema),
@@ -1074,7 +1174,9 @@ export const guildsHandler = new Hono()
             'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
           },
           content: {
-            'application/json': { schema: resolver(Compile(PrivateGuildMemberResponseSchema)) },
+            'application/json': {
+              schema: resolver(toStandardSchemaV1(PrivateGuildMemberResponseSchema)),
+            },
           },
         },
         '429': ClientRatelimitedResponseResponse,
@@ -1082,10 +1184,10 @@ export const guildsHandler = new Hono()
       },
       security: [{ BotToken: [] }],
     }),
-    validator('param', Compile(Type.Object({ guild_id: SnowflakeTypeSchema }))),
+    validator('param', toStandardSchemaV1(Type.Object({ guild_id: SnowflakeTypeSchema }))),
     validator(
       'json',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           nick: Type.Optional(Type.Union([Type.String({ maxLength: 32 }), Type.Null()])),
           avatar: Type.Optional(Type.Union([Type.String(), Type.Null()])),
@@ -1112,7 +1214,7 @@ export const guildsHandler = new Hono()
           },
           content: {
             'application/json': {
-              schema: resolver(Compile(Type.Array(GuildMemberResponseSchema))),
+              schema: resolver(toStandardSchemaV1(Type.Array(GuildMemberResponseSchema))),
             },
           },
         },
@@ -1121,14 +1223,24 @@ export const guildsHandler = new Hono()
       },
       security: [{ BotToken: [] }],
     }),
-    validator('param', Compile(Type.Object({ guild_id: SnowflakeTypeSchema }))),
+    validator('param', toStandardSchemaV1(Type.Object({ guild_id: SnowflakeTypeSchema }))),
     validator(
       'query',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           limit: Type.Optional(
-            Codec(Type.String())
-              .Decode((value) => Number.parseInt(value, 10))
+            Codec(
+              Type.Refine(
+                Type.Refine(
+                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                  (value) => Number(value) >= 1,
+                  () => 'must be >= 1',
+                ),
+                (value) => Number(value) <= 1000,
+                () => 'must be <= 1000',
+              ),
+            )
+              .Decode((value) => Number(value))
               .Encode((value) => String(value)),
           ),
           query: Type.String({ minLength: 1, maxLength: 100 }),
@@ -1151,7 +1263,9 @@ export const guildsHandler = new Hono()
             'X-RateLimit-Reset-After': { $ref: '#/components/headers/X-RateLimit-Reset-After' },
             'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
           },
-          content: { 'application/json': { schema: resolver(Compile(GuildMemberResponseSchema)) } },
+          content: {
+            'application/json': { schema: resolver(toStandardSchemaV1(GuildMemberResponseSchema)) },
+          },
         },
         '429': ClientRatelimitedResponseResponse,
         '4XX': ClientErrorResponseResponse,
@@ -1160,7 +1274,9 @@ export const guildsHandler = new Hono()
     }),
     validator(
       'param',
-      Compile(Type.Object({ guild_id: SnowflakeTypeSchema, user_id: SnowflakeTypeSchema })),
+      toStandardSchemaV1(
+        Type.Object({ guild_id: SnowflakeTypeSchema, user_id: SnowflakeTypeSchema }),
+      ),
     ),
     (c) => { throw new Error('Not implemented') },
   )
@@ -1178,7 +1294,9 @@ export const guildsHandler = new Hono()
             'X-RateLimit-Reset-After': { $ref: '#/components/headers/X-RateLimit-Reset-After' },
             'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
           },
-          content: { 'application/json': { schema: resolver(Compile(GuildMemberResponseSchema)) } },
+          content: {
+            'application/json': { schema: resolver(toStandardSchemaV1(GuildMemberResponseSchema)) },
+          },
         },
         '204': {
           description: '204 response for add_guild_member',
@@ -1197,9 +1315,11 @@ export const guildsHandler = new Hono()
     }),
     validator(
       'param',
-      Compile(Type.Object({ guild_id: SnowflakeTypeSchema, user_id: SnowflakeTypeSchema })),
+      toStandardSchemaV1(
+        Type.Object({ guild_id: SnowflakeTypeSchema, user_id: SnowflakeTypeSchema }),
+      ),
     ),
-    validator('json', Compile(BotAddGuildMemberRequestSchema)),
+    validator('json', toStandardSchemaV1(BotAddGuildMemberRequestSchema)),
     (c) => { throw new Error('Not implemented') },
   )
   .delete(
@@ -1224,7 +1344,9 @@ export const guildsHandler = new Hono()
     }),
     validator(
       'param',
-      Compile(Type.Object({ guild_id: SnowflakeTypeSchema, user_id: SnowflakeTypeSchema })),
+      toStandardSchemaV1(
+        Type.Object({ guild_id: SnowflakeTypeSchema, user_id: SnowflakeTypeSchema }),
+      ),
     ),
     (c) => { throw new Error('Not implemented') },
   )
@@ -1242,7 +1364,9 @@ export const guildsHandler = new Hono()
             'X-RateLimit-Reset-After': { $ref: '#/components/headers/X-RateLimit-Reset-After' },
             'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
           },
-          content: { 'application/json': { schema: resolver(Compile(GuildMemberResponseSchema)) } },
+          content: {
+            'application/json': { schema: resolver(toStandardSchemaV1(GuildMemberResponseSchema)) },
+          },
         },
         '204': {
           description: '204 response for update_guild_member',
@@ -1261,27 +1385,27 @@ export const guildsHandler = new Hono()
     }),
     validator(
       'param',
-      Compile(Type.Object({ guild_id: SnowflakeTypeSchema, user_id: SnowflakeTypeSchema })),
+      toStandardSchemaV1(
+        Type.Object({ guild_id: SnowflakeTypeSchema, user_id: SnowflakeTypeSchema }),
+      ),
     ),
     validator(
       'json',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           nick: Type.Optional(Type.Union([Type.String({ maxLength: 32 }), Type.Null()])),
           roles: Type.Optional(
             Type.Union([
-              Type.Array(
-                Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
-                { maxItems: 350, uniqueItems: true },
-              ),
+              Type.Array(Type.Union([Type.Null(), SnowflakeTypeSchema]), {
+                maxItems: 350,
+                uniqueItems: true,
+              }),
               Type.Null(),
             ]),
           ),
           mute: Type.Optional(Type.Union([Type.Boolean(), Type.Null()])),
           deaf: Type.Optional(Type.Union([Type.Boolean(), Type.Null()])),
-          channel_id: Type.Optional(
-            Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
-          ),
+          channel_id: Type.Optional(Type.Union([Type.Null(), SnowflakeTypeSchema])),
           communication_disabled_until: Type.Optional(
             Type.Union([Type.String({ format: 'date-time' }), Type.Null()]),
           ),
@@ -1313,7 +1437,7 @@ export const guildsHandler = new Hono()
     }),
     validator(
       'param',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           guild_id: SnowflakeTypeSchema,
           user_id: SnowflakeTypeSchema,
@@ -1345,7 +1469,7 @@ export const guildsHandler = new Hono()
     }),
     validator(
       'param',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           guild_id: SnowflakeTypeSchema,
           user_id: SnowflakeTypeSchema,
@@ -1369,7 +1493,9 @@ export const guildsHandler = new Hono()
             'X-RateLimit-Reset-After': { $ref: '#/components/headers/X-RateLimit-Reset-After' },
             'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
           },
-          content: { 'application/json': { schema: resolver(Compile(GuildSearchResponseSchema)) } },
+          content: {
+            'application/json': { schema: resolver(toStandardSchemaV1(GuildSearchResponseSchema)) },
+          },
         },
         '202': {
           description: '202 response for guild_search',
@@ -1381,7 +1507,9 @@ export const guildsHandler = new Hono()
             'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
           },
           content: {
-            'application/json': { schema: resolver(Compile(SearchIndexNotReadyResponseSchema)) },
+            'application/json': {
+              schema: resolver(toStandardSchemaV1(SearchIndexNotReadyResponseSchema)),
+            },
           },
         },
         '429': ClientRatelimitedResponseResponse,
@@ -1389,17 +1517,27 @@ export const guildsHandler = new Hono()
       },
       security: [{ BotToken: [] }, { OAuth2: [] }],
     }),
-    validator('param', Compile(Type.Object({ guild_id: SnowflakeTypeSchema }))),
+    validator('param', toStandardSchemaV1(Type.Object({ guild_id: SnowflakeTypeSchema }))),
     validator(
       'query',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           sort_by: Type.Optional(SortingModeSchema),
           sort_order: Type.Optional(SortingOrderSchema),
           content: Type.Optional(Type.String({ maxLength: 1024 })),
           slop: Type.Optional(
-            Codec(Type.String())
-              .Decode((value) => Number.parseInt(value, 10))
+            Codec(
+              Type.Refine(
+                Type.Refine(
+                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                  (value) => Number(value) >= 0,
+                  () => 'must be >= 0',
+                ),
+                (value) => Number(value) <= 100,
+                () => 'must be <= 100',
+              ),
+            )
+              .Decode((value) => Number(value))
               .Encode((value) => String(value)),
           ),
           author_id: Type.Optional(
@@ -1421,20 +1559,42 @@ export const guildsHandler = new Hono()
             Type.Array(SnowflakeTypeSchema, { maxItems: 100, uniqueItems: true }),
           ),
           mention_everyone: Type.Optional(
-            Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-              .Decode((value) => value === 'true')
+            Codec(
+              Type.String({ pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i }),
+            )
+              .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
               .Encode((value) => (value ? 'true' : 'false')),
           ),
           min_id: Type.Optional(SnowflakeTypeSchema),
           max_id: Type.Optional(SnowflakeTypeSchema),
           limit: Type.Optional(
-            Codec(Type.String())
-              .Decode((value) => Number.parseInt(value, 10))
+            Codec(
+              Type.Refine(
+                Type.Refine(
+                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                  (value) => Number(value) >= 1,
+                  () => 'must be >= 1',
+                ),
+                (value) => Number(value) <= 25,
+                () => 'must be <= 25',
+              ),
+            )
+              .Decode((value) => Number(value))
               .Encode((value) => String(value)),
           ),
           offset: Type.Optional(
-            Codec(Type.String())
-              .Decode((value) => Number.parseInt(value, 10))
+            Codec(
+              Type.Refine(
+                Type.Refine(
+                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                  (value) => Number(value) >= 0,
+                  () => 'must be >= 0',
+                ),
+                (value) => Number(value) <= 9975,
+                () => 'must be <= 9975',
+              ),
+            )
+              .Decode((value) => Number(value))
               .Encode((value) => String(value)),
           ),
           has: Type.Optional(Type.Array(HasOptionSchema, { maxItems: 18, uniqueItems: true })),
@@ -1454,13 +1614,17 @@ export const guildsHandler = new Hono()
             Type.Array(Type.String({ maxLength: 1024 }), { maxItems: 100, uniqueItems: true }),
           ),
           pinned: Type.Optional(
-            Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-              .Decode((value) => value === 'true')
+            Codec(
+              Type.String({ pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i }),
+            )
+              .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
               .Encode((value) => (value ? 'true' : 'false')),
           ),
           include_nsfw: Type.Optional(
-            Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-              .Decode((value) => value === 'true')
+            Codec(
+              Type.String({ pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i }),
+            )
+              .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
               .Encode((value) => (value ? 'true' : 'false')),
           ),
           channel_id: Type.Optional(
@@ -1486,7 +1650,9 @@ export const guildsHandler = new Hono()
             'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
           },
           content: {
-            'application/json': { schema: resolver(Compile(GuildHomeSettingsResponseSchema)) },
+            'application/json': {
+              schema: resolver(toStandardSchemaV1(GuildHomeSettingsResponseSchema)),
+            },
           },
         },
         '204': {
@@ -1504,7 +1670,7 @@ export const guildsHandler = new Hono()
       },
       security: [{ BotToken: [] }],
     }),
-    validator('param', Compile(Type.Object({ guild_id: SnowflakeTypeSchema }))),
+    validator('param', toStandardSchemaV1(Type.Object({ guild_id: SnowflakeTypeSchema }))),
     (c) => { throw new Error('Not implemented') },
   )
   .get(
@@ -1522,7 +1688,9 @@ export const guildsHandler = new Hono()
             'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
           },
           content: {
-            'application/json': { schema: resolver(Compile(UserGuildOnboardingResponseSchema)) },
+            'application/json': {
+              schema: resolver(toStandardSchemaV1(UserGuildOnboardingResponseSchema)),
+            },
           },
         },
         '429': ClientRatelimitedResponseResponse,
@@ -1530,7 +1698,7 @@ export const guildsHandler = new Hono()
       },
       security: [{ BotToken: [] }],
     }),
-    validator('param', Compile(Type.Object({ guild_id: SnowflakeTypeSchema }))),
+    validator('param', toStandardSchemaV1(Type.Object({ guild_id: SnowflakeTypeSchema }))),
     (c) => { throw new Error('Not implemented') },
   )
   .put(
@@ -1548,7 +1716,9 @@ export const guildsHandler = new Hono()
             'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
           },
           content: {
-            'application/json': { schema: resolver(Compile(GuildOnboardingResponseSchema)) },
+            'application/json': {
+              schema: resolver(toStandardSchemaV1(GuildOnboardingResponseSchema)),
+            },
           },
         },
         '429': ClientRatelimitedResponseResponse,
@@ -1556,8 +1726,8 @@ export const guildsHandler = new Hono()
       },
       security: [{ BotToken: [] }],
     }),
-    validator('param', Compile(Type.Object({ guild_id: SnowflakeTypeSchema }))),
-    validator('json', Compile(UpdateGuildOnboardingRequestSchema)),
+    validator('param', toStandardSchemaV1(Type.Object({ guild_id: SnowflakeTypeSchema }))),
+    validator('json', toStandardSchemaV1(UpdateGuildOnboardingRequestSchema)),
     (c) => { throw new Error('Not implemented') },
   )
   .get(
@@ -1576,7 +1746,9 @@ export const guildsHandler = new Hono()
             'X-RateLimit-Reset-After': { $ref: '#/components/headers/X-RateLimit-Reset-After' },
             'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
           },
-          content: { 'application/json': { schema: resolver(Compile(PermissionsResponseSchema)) } },
+          content: {
+            'application/json': { schema: resolver(toStandardSchemaV1(PermissionsResponseSchema)) },
+          },
         },
         '429': ClientRatelimitedResponseResponse,
         '4XX': ClientErrorResponseResponse,
@@ -1585,7 +1757,9 @@ export const guildsHandler = new Hono()
     }),
     validator(
       'param',
-      Compile(Type.Object({ guild_id: SnowflakeTypeSchema, user_id: SnowflakeTypeSchema })),
+      toStandardSchemaV1(
+        Type.Object({ guild_id: SnowflakeTypeSchema, user_id: SnowflakeTypeSchema }),
+      ),
     ),
     (c) => { throw new Error('Not implemented') },
   )
@@ -1605,7 +1779,9 @@ export const guildsHandler = new Hono()
             'X-RateLimit-Reset-After': { $ref: '#/components/headers/X-RateLimit-Reset-After' },
             'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
           },
-          content: { 'application/json': { schema: resolver(Compile(PermissionsResponseSchema)) } },
+          content: {
+            'application/json': { schema: resolver(toStandardSchemaV1(PermissionsResponseSchema)) },
+          },
         },
         '429': ClientRatelimitedResponseResponse,
         '4XX': ClientErrorResponseResponse,
@@ -1614,7 +1790,9 @@ export const guildsHandler = new Hono()
     }),
     validator(
       'param',
-      Compile(Type.Object({ guild_id: SnowflakeTypeSchema, role_id: SnowflakeTypeSchema })),
+      toStandardSchemaV1(
+        Type.Object({ guild_id: SnowflakeTypeSchema, role_id: SnowflakeTypeSchema }),
+      ),
     ),
     (c) => { throw new Error('Not implemented') },
   )
@@ -1633,7 +1811,9 @@ export const guildsHandler = new Hono()
             'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
           },
           content: {
-            'application/json': { schema: resolver(Compile(GuildPreviewResponseSchema)) },
+            'application/json': {
+              schema: resolver(toStandardSchemaV1(GuildPreviewResponseSchema)),
+            },
           },
         },
         '429': ClientRatelimitedResponseResponse,
@@ -1641,7 +1821,7 @@ export const guildsHandler = new Hono()
       },
       security: [{ BotToken: [] }],
     }),
-    validator('param', Compile(Type.Object({ guild_id: SnowflakeTypeSchema }))),
+    validator('param', toStandardSchemaV1(Type.Object({ guild_id: SnowflakeTypeSchema }))),
     (c) => { throw new Error('Not implemented') },
   )
   .get(
@@ -1658,30 +1838,42 @@ export const guildsHandler = new Hono()
             'X-RateLimit-Reset-After': { $ref: '#/components/headers/X-RateLimit-Reset-After' },
             'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
           },
-          content: { 'application/json': { schema: resolver(Compile(GuildPruneResponseSchema)) } },
+          content: {
+            'application/json': { schema: resolver(toStandardSchemaV1(GuildPruneResponseSchema)) },
+          },
         },
         '429': ClientRatelimitedResponseResponse,
         '4XX': ClientErrorResponseResponse,
       },
       security: [{ BotToken: [] }],
     }),
-    validator('param', Compile(Type.Object({ guild_id: SnowflakeTypeSchema }))),
+    validator('param', toStandardSchemaV1(Type.Object({ guild_id: SnowflakeTypeSchema }))),
     validator(
       'query',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           days: Type.Optional(
-            Codec(Type.String())
-              .Decode((value) => Number.parseInt(value, 10))
+            Codec(
+              Type.Refine(
+                Type.Refine(
+                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                  (value) => Number(value) >= 1,
+                  () => 'must be >= 1',
+                ),
+                (value) => Number(value) <= 30,
+                () => 'must be <= 30',
+              ),
+            )
+              .Decode((value) => Number(value))
               .Encode((value) => String(value)),
           ),
           include_roles: Type.Optional(
             Type.Union([
               Type.String(),
-              Type.Array(
-                Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
-                { maxItems: 100, uniqueItems: true },
-              ),
+              Type.Array(Type.Union([Type.Null(), SnowflakeTypeSchema]), {
+                maxItems: 100,
+                uniqueItems: true,
+              }),
             ]),
           ),
         }),
@@ -1703,15 +1895,17 @@ export const guildsHandler = new Hono()
             'X-RateLimit-Reset-After': { $ref: '#/components/headers/X-RateLimit-Reset-After' },
             'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
           },
-          content: { 'application/json': { schema: resolver(Compile(GuildPruneResponseSchema)) } },
+          content: {
+            'application/json': { schema: resolver(toStandardSchemaV1(GuildPruneResponseSchema)) },
+          },
         },
         '429': ClientRatelimitedResponseResponse,
         '4XX': ClientErrorResponseResponse,
       },
       security: [{ BotToken: [] }],
     }),
-    validator('param', Compile(Type.Object({ guild_id: SnowflakeTypeSchema }))),
-    validator('json', Compile(PruneGuildRequestSchema)),
+    validator('param', toStandardSchemaV1(Type.Object({ guild_id: SnowflakeTypeSchema }))),
+    validator('json', toStandardSchemaV1(PruneGuildRequestSchema)),
     (c) => { throw new Error('Not implemented') },
   )
   .get(
@@ -1731,7 +1925,9 @@ export const guildsHandler = new Hono()
           content: {
             'application/json': {
               schema: resolver(
-                Compile(Type.Union([Type.Array(VoiceRegionResponseSchema), Type.Null()])),
+                toStandardSchemaV1(
+                  Type.Union([Type.Array(VoiceRegionResponseSchema), Type.Null()]),
+                ),
               ),
             },
           },
@@ -1741,7 +1937,7 @@ export const guildsHandler = new Hono()
       },
       security: [{ BotToken: [] }],
     }),
-    validator('param', Compile(Type.Object({ guild_id: SnowflakeTypeSchema }))),
+    validator('param', toStandardSchemaV1(Type.Object({ guild_id: SnowflakeTypeSchema }))),
     (c) => { throw new Error('Not implemented') },
   )
   .get(
@@ -1760,7 +1956,9 @@ export const guildsHandler = new Hono()
             'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
           },
           content: {
-            'application/json': { schema: resolver(Compile(GuildJoinRequestsListResponseSchema)) },
+            'application/json': {
+              schema: resolver(toStandardSchemaV1(GuildJoinRequestsListResponseSchema)),
+            },
           },
         },
         '429': ClientRatelimitedResponseResponse,
@@ -1768,15 +1966,25 @@ export const guildsHandler = new Hono()
       },
       security: [{ BotToken: [] }],
     }),
-    validator('param', Compile(Type.Object({ guild_id: SnowflakeTypeSchema }))),
+    validator('param', toStandardSchemaV1(Type.Object({ guild_id: SnowflakeTypeSchema }))),
     validator(
       'query',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           status: Type.Optional(GuildJoinRequestApplicationStatusSchema),
           limit: Type.Optional(
-            Codec(Type.String())
-              .Decode((value) => Number.parseInt(value, 10))
+            Codec(
+              Type.Refine(
+                Type.Refine(
+                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                  (value) => Number(value) >= 1,
+                  () => 'must be >= 1',
+                ),
+                (value) => Number(value) <= 100,
+                () => 'must be <= 100',
+              ),
+            )
+              .Decode((value) => Number(value))
               .Encode((value) => String(value)),
           ),
           before: Type.Optional(SnowflakeTypeSchema),
@@ -1802,7 +2010,9 @@ export const guildsHandler = new Hono()
             'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
           },
           content: {
-            'application/json': { schema: resolver(Compile(GuildJoinRequestResponseSchema)) },
+            'application/json': {
+              schema: resolver(toStandardSchemaV1(GuildJoinRequestResponseSchema)),
+            },
           },
         },
         '429': ClientRatelimitedResponseResponse,
@@ -1812,11 +2022,13 @@ export const guildsHandler = new Hono()
     }),
     validator(
       'param',
-      Compile(Type.Object({ guild_id: SnowflakeTypeSchema, request_id: SnowflakeTypeSchema })),
+      toStandardSchemaV1(
+        Type.Object({ guild_id: SnowflakeTypeSchema, request_id: SnowflakeTypeSchema }),
+      ),
     ),
     validator(
       'json',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           action: Type.Optional(GuildJoinRequestApplicationStatusSchema),
           rejection_reason: Type.Optional(
@@ -1848,7 +2060,9 @@ export const guildsHandler = new Hono()
             'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
           },
           content: {
-            'application/json': { schema: resolver(Compile(Type.Array(GuildRoleResponseSchema))) },
+            'application/json': {
+              schema: resolver(toStandardSchemaV1(Type.Array(GuildRoleResponseSchema))),
+            },
           },
         },
         '429': ClientRatelimitedResponseResponse,
@@ -1856,7 +2070,7 @@ export const guildsHandler = new Hono()
       },
       security: [{ BotToken: [] }],
     }),
-    validator('param', Compile(Type.Object({ guild_id: SnowflakeTypeSchema }))),
+    validator('param', toStandardSchemaV1(Type.Object({ guild_id: SnowflakeTypeSchema }))),
     (c) => { throw new Error('Not implemented') },
   )
   .post(
@@ -1873,15 +2087,17 @@ export const guildsHandler = new Hono()
             'X-RateLimit-Reset-After': { $ref: '#/components/headers/X-RateLimit-Reset-After' },
             'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
           },
-          content: { 'application/json': { schema: resolver(Compile(GuildRoleResponseSchema)) } },
+          content: {
+            'application/json': { schema: resolver(toStandardSchemaV1(GuildRoleResponseSchema)) },
+          },
         },
         '429': ClientRatelimitedResponseResponse,
         '4XX': ClientErrorResponseResponse,
       },
       security: [{ BotToken: [] }],
     }),
-    validator('param', Compile(Type.Object({ guild_id: SnowflakeTypeSchema }))),
-    validator('json', Compile(CreateRoleRequestSchema)),
+    validator('param', toStandardSchemaV1(Type.Object({ guild_id: SnowflakeTypeSchema }))),
+    validator('json', toStandardSchemaV1(CreateRoleRequestSchema)),
     (c) => { throw new Error('Not implemented') },
   )
   .patch(
@@ -1899,7 +2115,9 @@ export const guildsHandler = new Hono()
             'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
           },
           content: {
-            'application/json': { schema: resolver(Compile(Type.Array(GuildRoleResponseSchema))) },
+            'application/json': {
+              schema: resolver(toStandardSchemaV1(Type.Array(GuildRoleResponseSchema))),
+            },
           },
         },
         '429': ClientRatelimitedResponseResponse,
@@ -1907,8 +2125,8 @@ export const guildsHandler = new Hono()
       },
       security: [{ BotToken: [] }],
     }),
-    validator('param', Compile(Type.Object({ guild_id: SnowflakeTypeSchema }))),
-    validator('json', Compile(Type.Array(UpdateRolePositionsRequestSchema))),
+    validator('param', toStandardSchemaV1(Type.Object({ guild_id: SnowflakeTypeSchema }))),
+    validator('json', toStandardSchemaV1(Type.Array(UpdateRolePositionsRequestSchema))),
     (c) => { throw new Error('Not implemented') },
   )
   .get(
@@ -1927,7 +2145,7 @@ export const guildsHandler = new Hono()
           },
           content: {
             'application/json': {
-              schema: resolver(Compile(Type.Record(Type.String(), Type.Integer()))),
+              schema: resolver(toStandardSchemaV1(Type.Record(Type.String(), Type.Integer()))),
             },
           },
         },
@@ -1936,7 +2154,7 @@ export const guildsHandler = new Hono()
       },
       security: [{ BotToken: [] }],
     }),
-    validator('param', Compile(Type.Object({ guild_id: SnowflakeTypeSchema }))),
+    validator('param', toStandardSchemaV1(Type.Object({ guild_id: SnowflakeTypeSchema }))),
     (c) => { throw new Error('Not implemented') },
   )
   .get(
@@ -1953,7 +2171,9 @@ export const guildsHandler = new Hono()
             'X-RateLimit-Reset-After': { $ref: '#/components/headers/X-RateLimit-Reset-After' },
             'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
           },
-          content: { 'application/json': { schema: resolver(Compile(GuildRoleResponseSchema)) } },
+          content: {
+            'application/json': { schema: resolver(toStandardSchemaV1(GuildRoleResponseSchema)) },
+          },
         },
         '429': ClientRatelimitedResponseResponse,
         '4XX': ClientErrorResponseResponse,
@@ -1962,7 +2182,9 @@ export const guildsHandler = new Hono()
     }),
     validator(
       'param',
-      Compile(Type.Object({ guild_id: SnowflakeTypeSchema, role_id: SnowflakeTypeSchema })),
+      toStandardSchemaV1(
+        Type.Object({ guild_id: SnowflakeTypeSchema, role_id: SnowflakeTypeSchema }),
+      ),
     ),
     (c) => { throw new Error('Not implemented') },
   )
@@ -1988,7 +2210,9 @@ export const guildsHandler = new Hono()
     }),
     validator(
       'param',
-      Compile(Type.Object({ guild_id: SnowflakeTypeSchema, role_id: SnowflakeTypeSchema })),
+      toStandardSchemaV1(
+        Type.Object({ guild_id: SnowflakeTypeSchema, role_id: SnowflakeTypeSchema }),
+      ),
     ),
     (c) => { throw new Error('Not implemented') },
   )
@@ -2006,7 +2230,9 @@ export const guildsHandler = new Hono()
             'X-RateLimit-Reset-After': { $ref: '#/components/headers/X-RateLimit-Reset-After' },
             'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
           },
-          content: { 'application/json': { schema: resolver(Compile(GuildRoleResponseSchema)) } },
+          content: {
+            'application/json': { schema: resolver(toStandardSchemaV1(GuildRoleResponseSchema)) },
+          },
         },
         '429': ClientRatelimitedResponseResponse,
         '4XX': ClientErrorResponseResponse,
@@ -2015,9 +2241,11 @@ export const guildsHandler = new Hono()
     }),
     validator(
       'param',
-      Compile(Type.Object({ guild_id: SnowflakeTypeSchema, role_id: SnowflakeTypeSchema })),
+      toStandardSchemaV1(
+        Type.Object({ guild_id: SnowflakeTypeSchema, role_id: SnowflakeTypeSchema }),
+      ),
     ),
-    validator('json', Compile(UpdateRoleRequestPartialSchema)),
+    validator('json', toStandardSchemaV1(UpdateRoleRequestPartialSchema)),
     (c) => { throw new Error('Not implemented') },
   )
   .get(
@@ -2037,7 +2265,7 @@ export const guildsHandler = new Hono()
           content: {
             'application/json': {
               schema: resolver(
-                Compile(
+                toStandardSchemaV1(
                   Type.Union([
                     Type.Array(
                       Type.Union([
@@ -2058,14 +2286,16 @@ export const guildsHandler = new Hono()
       },
       security: [{ BotToken: [] }],
     }),
-    validator('param', Compile(Type.Object({ guild_id: SnowflakeTypeSchema }))),
+    validator('param', toStandardSchemaV1(Type.Object({ guild_id: SnowflakeTypeSchema }))),
     validator(
       'query',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           with_user_count: Type.Optional(
-            Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-              .Decode((value) => value === 'true')
+            Codec(
+              Type.String({ pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i }),
+            )
+              .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
               .Encode((value) => (value ? 'true' : 'false')),
           ),
         }),
@@ -2090,7 +2320,7 @@ export const guildsHandler = new Hono()
           content: {
             'application/json': {
               schema: resolver(
-                Compile(
+                toStandardSchemaV1(
                   Type.Union([
                     ExternalScheduledEventResponseSchema,
                     StageScheduledEventResponseSchema,
@@ -2106,10 +2336,10 @@ export const guildsHandler = new Hono()
       },
       security: [{ BotToken: [] }],
     }),
-    validator('param', Compile(Type.Object({ guild_id: SnowflakeTypeSchema }))),
+    validator('param', toStandardSchemaV1(Type.Object({ guild_id: SnowflakeTypeSchema }))),
     validator(
       'json',
-      Compile(
+      toStandardSchemaV1(
         Type.Union([
           ExternalScheduledEventCreateRequestSchema,
           StageScheduledEventCreateRequestSchema,
@@ -2136,7 +2366,7 @@ export const guildsHandler = new Hono()
           content: {
             'application/json': {
               schema: resolver(
-                Compile(
+                toStandardSchemaV1(
                   Type.Union([
                     ExternalScheduledEventResponseSchema,
                     StageScheduledEventResponseSchema,
@@ -2154,7 +2384,7 @@ export const guildsHandler = new Hono()
     }),
     validator(
       'param',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           guild_id: SnowflakeTypeSchema,
           guild_scheduled_event_id: SnowflakeTypeSchema,
@@ -2163,11 +2393,13 @@ export const guildsHandler = new Hono()
     ),
     validator(
       'query',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           with_user_count: Type.Optional(
-            Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-              .Decode((value) => value === 'true')
+            Codec(
+              Type.String({ pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i }),
+            )
+              .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
               .Encode((value) => (value ? 'true' : 'false')),
           ),
         }),
@@ -2197,7 +2429,7 @@ export const guildsHandler = new Hono()
     }),
     validator(
       'param',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           guild_id: SnowflakeTypeSchema,
           guild_scheduled_event_id: SnowflakeTypeSchema,
@@ -2223,7 +2455,7 @@ export const guildsHandler = new Hono()
           content: {
             'application/json': {
               schema: resolver(
-                Compile(
+                toStandardSchemaV1(
                   Type.Union([
                     ExternalScheduledEventResponseSchema,
                     StageScheduledEventResponseSchema,
@@ -2241,7 +2473,7 @@ export const guildsHandler = new Hono()
     }),
     validator(
       'param',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           guild_id: SnowflakeTypeSchema,
           guild_scheduled_event_id: SnowflakeTypeSchema,
@@ -2250,7 +2482,7 @@ export const guildsHandler = new Hono()
     ),
     validator(
       'json',
-      Compile(
+      toStandardSchemaV1(
         Type.Union([
           ExternalScheduledEventPatchRequestPartialSchema,
           StageScheduledEventPatchRequestPartialSchema,
@@ -2277,7 +2509,7 @@ export const guildsHandler = new Hono()
           },
           content: {
             'application/json': {
-              schema: resolver(Compile(GuildScheduledEventExceptionResponseSchema)),
+              schema: resolver(toStandardSchemaV1(GuildScheduledEventExceptionResponseSchema)),
             },
           },
         },
@@ -2288,14 +2520,14 @@ export const guildsHandler = new Hono()
     }),
     validator(
       'param',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           guild_id: SnowflakeTypeSchema,
           guild_scheduled_event_id: SnowflakeTypeSchema,
         }),
       ),
     ),
-    validator('json', Compile(GuildScheduledEventExceptionCreateRequestSchema)),
+    validator('json', toStandardSchemaV1(GuildScheduledEventExceptionCreateRequestSchema)),
     (c) => { throw new Error('Not implemented') },
   )
   .delete(
@@ -2321,7 +2553,7 @@ export const guildsHandler = new Hono()
     }),
     validator(
       'param',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           guild_id: SnowflakeTypeSchema,
           guild_scheduled_event_id: SnowflakeTypeSchema,
@@ -2348,7 +2580,7 @@ export const guildsHandler = new Hono()
           },
           content: {
             'application/json': {
-              schema: resolver(Compile(GuildScheduledEventExceptionResponseSchema)),
+              schema: resolver(toStandardSchemaV1(GuildScheduledEventExceptionResponseSchema)),
             },
           },
         },
@@ -2359,7 +2591,7 @@ export const guildsHandler = new Hono()
     }),
     validator(
       'param',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           guild_id: SnowflakeTypeSchema,
           guild_scheduled_event_id: SnowflakeTypeSchema,
@@ -2367,7 +2599,7 @@ export const guildsHandler = new Hono()
         }),
       ),
     ),
-    validator('json', Compile(GuildScheduledEventExceptionPatchRequestPartialSchema)),
+    validator('json', toStandardSchemaV1(GuildScheduledEventExceptionPatchRequestPartialSchema)),
     (c) => { throw new Error('Not implemented') },
   )
   .get(
@@ -2387,7 +2619,9 @@ export const guildsHandler = new Hono()
           content: {
             'application/json': {
               schema: resolver(
-                Compile(Type.Union([Type.Array(ScheduledEventUserResponseSchema), Type.Null()])),
+                toStandardSchemaV1(
+                  Type.Union([Type.Array(ScheduledEventUserResponseSchema), Type.Null()]),
+                ),
               ),
             },
           },
@@ -2399,7 +2633,7 @@ export const guildsHandler = new Hono()
     }),
     validator(
       'param',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           guild_id: SnowflakeTypeSchema,
           guild_scheduled_event_id: SnowflakeTypeSchema,
@@ -2408,16 +2642,28 @@ export const guildsHandler = new Hono()
     ),
     validator(
       'query',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           with_member: Type.Optional(
-            Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-              .Decode((value) => value === 'true')
+            Codec(
+              Type.String({ pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i }),
+            )
+              .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
               .Encode((value) => (value ? 'true' : 'false')),
           ),
           limit: Type.Optional(
-            Codec(Type.String())
-              .Decode((value) => Number.parseInt(value, 10))
+            Codec(
+              Type.Refine(
+                Type.Refine(
+                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                  (value) => Number(value) >= 1,
+                  () => 'must be >= 1',
+                ),
+                (value) => Number(value) <= 100,
+                () => 'must be <= 100',
+              ),
+            )
+              .Decode((value) => Number(value))
               .Encode((value) => String(value)),
           ),
           before: Type.Optional(SnowflakeTypeSchema),
@@ -2444,7 +2690,7 @@ export const guildsHandler = new Hono()
           },
           content: {
             'application/json': {
-              schema: resolver(Compile(ScheduledEventUserCountResponseSchema)),
+              schema: resolver(toStandardSchemaV1(ScheduledEventUserCountResponseSchema)),
             },
           },
         },
@@ -2455,7 +2701,7 @@ export const guildsHandler = new Hono()
     }),
     validator(
       'param',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           guild_id: SnowflakeTypeSchema,
           guild_scheduled_event_id: SnowflakeTypeSchema,
@@ -2464,7 +2710,7 @@ export const guildsHandler = new Hono()
     ),
     validator(
       'query',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           guild_scheduled_event_exception_ids: Type.Optional(
             Type.Array(SnowflakeTypeSchema, { maxItems: 10 }),
@@ -2492,7 +2738,9 @@ export const guildsHandler = new Hono()
           content: {
             'application/json': {
               schema: resolver(
-                Compile(Type.Union([Type.Array(ScheduledEventUserResponseSchema), Type.Null()])),
+                toStandardSchemaV1(
+                  Type.Union([Type.Array(ScheduledEventUserResponseSchema), Type.Null()]),
+                ),
               ),
             },
           },
@@ -2504,7 +2752,7 @@ export const guildsHandler = new Hono()
     }),
     validator(
       'param',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           guild_id: SnowflakeTypeSchema,
           guild_scheduled_event_id: SnowflakeTypeSchema,
@@ -2514,16 +2762,28 @@ export const guildsHandler = new Hono()
     ),
     validator(
       'query',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           with_member: Type.Optional(
-            Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-              .Decode((value) => value === 'true')
+            Codec(
+              Type.String({ pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i }),
+            )
+              .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
               .Encode((value) => (value ? 'true' : 'false')),
           ),
           limit: Type.Optional(
-            Codec(Type.String())
-              .Decode((value) => Number.parseInt(value, 10))
+            Codec(
+              Type.Refine(
+                Type.Refine(
+                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                  (value) => Number(value) >= 1,
+                  () => 'must be >= 1',
+                ),
+                (value) => Number(value) <= 100,
+                () => 'must be <= 100',
+              ),
+            )
+              .Decode((value) => Number(value))
               .Encode((value) => String(value)),
           ),
           before: Type.Optional(SnowflakeTypeSchema),
@@ -2549,7 +2809,7 @@ export const guildsHandler = new Hono()
           },
           content: {
             'application/json': {
-              schema: resolver(Compile(ListGuildSoundboardSoundsResponseSchema)),
+              schema: resolver(toStandardSchemaV1(ListGuildSoundboardSoundsResponseSchema)),
             },
           },
         },
@@ -2558,7 +2818,7 @@ export const guildsHandler = new Hono()
       },
       security: [{ BotToken: [] }],
     }),
-    validator('param', Compile(Type.Object({ guild_id: SnowflakeTypeSchema }))),
+    validator('param', toStandardSchemaV1(Type.Object({ guild_id: SnowflakeTypeSchema }))),
     (c) => { throw new Error('Not implemented') },
   )
   .post(
@@ -2576,7 +2836,9 @@ export const guildsHandler = new Hono()
             'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
           },
           content: {
-            'application/json': { schema: resolver(Compile(SoundboardSoundResponseSchema)) },
+            'application/json': {
+              schema: resolver(toStandardSchemaV1(SoundboardSoundResponseSchema)),
+            },
           },
         },
         '429': ClientRatelimitedResponseResponse,
@@ -2584,8 +2846,8 @@ export const guildsHandler = new Hono()
       },
       security: [{ BotToken: [] }],
     }),
-    validator('param', Compile(Type.Object({ guild_id: SnowflakeTypeSchema }))),
-    validator('json', Compile(SoundboardCreateRequestSchema)),
+    validator('param', toStandardSchemaV1(Type.Object({ guild_id: SnowflakeTypeSchema }))),
+    validator('json', toStandardSchemaV1(SoundboardCreateRequestSchema)),
     (c) => { throw new Error('Not implemented') },
   )
   .get(
@@ -2603,7 +2865,9 @@ export const guildsHandler = new Hono()
             'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
           },
           content: {
-            'application/json': { schema: resolver(Compile(SoundboardSoundResponseSchema)) },
+            'application/json': {
+              schema: resolver(toStandardSchemaV1(SoundboardSoundResponseSchema)),
+            },
           },
         },
         '429': ClientRatelimitedResponseResponse,
@@ -2613,7 +2877,9 @@ export const guildsHandler = new Hono()
     }),
     validator(
       'param',
-      Compile(Type.Object({ guild_id: SnowflakeTypeSchema, sound_id: SnowflakeTypeSchema })),
+      toStandardSchemaV1(
+        Type.Object({ guild_id: SnowflakeTypeSchema, sound_id: SnowflakeTypeSchema }),
+      ),
     ),
     (c) => { throw new Error('Not implemented') },
   )
@@ -2639,7 +2905,9 @@ export const guildsHandler = new Hono()
     }),
     validator(
       'param',
-      Compile(Type.Object({ guild_id: SnowflakeTypeSchema, sound_id: SnowflakeTypeSchema })),
+      toStandardSchemaV1(
+        Type.Object({ guild_id: SnowflakeTypeSchema, sound_id: SnowflakeTypeSchema }),
+      ),
     ),
     (c) => { throw new Error('Not implemented') },
   )
@@ -2658,7 +2926,9 @@ export const guildsHandler = new Hono()
             'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
           },
           content: {
-            'application/json': { schema: resolver(Compile(SoundboardSoundResponseSchema)) },
+            'application/json': {
+              schema: resolver(toStandardSchemaV1(SoundboardSoundResponseSchema)),
+            },
           },
         },
         '429': ClientRatelimitedResponseResponse,
@@ -2668,9 +2938,11 @@ export const guildsHandler = new Hono()
     }),
     validator(
       'param',
-      Compile(Type.Object({ guild_id: SnowflakeTypeSchema, sound_id: SnowflakeTypeSchema })),
+      toStandardSchemaV1(
+        Type.Object({ guild_id: SnowflakeTypeSchema, sound_id: SnowflakeTypeSchema }),
+      ),
     ),
-    validator('json', Compile(SoundboardPatchRequestPartialSchema)),
+    validator('json', toStandardSchemaV1(SoundboardPatchRequestPartialSchema)),
     (c) => { throw new Error('Not implemented') },
   )
   .get(
@@ -2689,7 +2961,7 @@ export const guildsHandler = new Hono()
           },
           content: {
             'application/json': {
-              schema: resolver(Compile(Type.Array(GuildStickerResponseSchema))),
+              schema: resolver(toStandardSchemaV1(Type.Array(GuildStickerResponseSchema))),
             },
           },
         },
@@ -2698,7 +2970,7 @@ export const guildsHandler = new Hono()
       },
       security: [{ BotToken: [] }],
     }),
-    validator('param', Compile(Type.Object({ guild_id: SnowflakeTypeSchema }))),
+    validator('param', toStandardSchemaV1(Type.Object({ guild_id: SnowflakeTypeSchema }))),
     (c) => { throw new Error('Not implemented') },
   )
   .post(
@@ -2716,7 +2988,9 @@ export const guildsHandler = new Hono()
             'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
           },
           content: {
-            'application/json': { schema: resolver(Compile(GuildStickerResponseSchema)) },
+            'application/json': {
+              schema: resolver(toStandardSchemaV1(GuildStickerResponseSchema)),
+            },
           },
         },
         '429': ClientRatelimitedResponseResponse,
@@ -2724,10 +2998,10 @@ export const guildsHandler = new Hono()
       },
       security: [{ BotToken: [] }],
     }),
-    validator('param', Compile(Type.Object({ guild_id: SnowflakeTypeSchema }))),
+    validator('param', toStandardSchemaV1(Type.Object({ guild_id: SnowflakeTypeSchema }))),
     validator(
       'form',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           name: Type.String({ minLength: 2, maxLength: 30 }),
           tags: Type.String({ minLength: 1, maxLength: 200 }),
@@ -2753,7 +3027,9 @@ export const guildsHandler = new Hono()
             'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
           },
           content: {
-            'application/json': { schema: resolver(Compile(GuildStickerResponseSchema)) },
+            'application/json': {
+              schema: resolver(toStandardSchemaV1(GuildStickerResponseSchema)),
+            },
           },
         },
         '429': ClientRatelimitedResponseResponse,
@@ -2763,7 +3039,9 @@ export const guildsHandler = new Hono()
     }),
     validator(
       'param',
-      Compile(Type.Object({ guild_id: SnowflakeTypeSchema, sticker_id: SnowflakeTypeSchema })),
+      toStandardSchemaV1(
+        Type.Object({ guild_id: SnowflakeTypeSchema, sticker_id: SnowflakeTypeSchema }),
+      ),
     ),
     (c) => { throw new Error('Not implemented') },
   )
@@ -2789,7 +3067,9 @@ export const guildsHandler = new Hono()
     }),
     validator(
       'param',
-      Compile(Type.Object({ guild_id: SnowflakeTypeSchema, sticker_id: SnowflakeTypeSchema })),
+      toStandardSchemaV1(
+        Type.Object({ guild_id: SnowflakeTypeSchema, sticker_id: SnowflakeTypeSchema }),
+      ),
     ),
     (c) => { throw new Error('Not implemented') },
   )
@@ -2808,7 +3088,9 @@ export const guildsHandler = new Hono()
             'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
           },
           content: {
-            'application/json': { schema: resolver(Compile(GuildStickerResponseSchema)) },
+            'application/json': {
+              schema: resolver(toStandardSchemaV1(GuildStickerResponseSchema)),
+            },
           },
         },
         '429': ClientRatelimitedResponseResponse,
@@ -2818,11 +3100,13 @@ export const guildsHandler = new Hono()
     }),
     validator(
       'param',
-      Compile(Type.Object({ guild_id: SnowflakeTypeSchema, sticker_id: SnowflakeTypeSchema })),
+      toStandardSchemaV1(
+        Type.Object({ guild_id: SnowflakeTypeSchema, sticker_id: SnowflakeTypeSchema }),
+      ),
     ),
     validator(
       'json',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           name: Type.Optional(Type.String({ minLength: 2, maxLength: 30 })),
           tags: Type.Optional(Type.String({ minLength: 1, maxLength: 200 })),
@@ -2849,7 +3133,9 @@ export const guildsHandler = new Hono()
           content: {
             'application/json': {
               schema: resolver(
-                Compile(Type.Union([Type.Array(GuildTemplateResponseSchema), Type.Null()])),
+                toStandardSchemaV1(
+                  Type.Union([Type.Array(GuildTemplateResponseSchema), Type.Null()]),
+                ),
               ),
             },
           },
@@ -2859,7 +3145,7 @@ export const guildsHandler = new Hono()
       },
       security: [{ BotToken: [] }],
     }),
-    validator('param', Compile(Type.Object({ guild_id: SnowflakeTypeSchema }))),
+    validator('param', toStandardSchemaV1(Type.Object({ guild_id: SnowflakeTypeSchema }))),
     (c) => { throw new Error('Not implemented') },
   )
   .post(
@@ -2877,7 +3163,9 @@ export const guildsHandler = new Hono()
             'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
           },
           content: {
-            'application/json': { schema: resolver(Compile(GuildTemplateResponseSchema)) },
+            'application/json': {
+              schema: resolver(toStandardSchemaV1(GuildTemplateResponseSchema)),
+            },
           },
         },
         '429': ClientRatelimitedResponseResponse,
@@ -2885,10 +3173,10 @@ export const guildsHandler = new Hono()
       },
       security: [{ BotToken: [] }],
     }),
-    validator('param', Compile(Type.Object({ guild_id: SnowflakeTypeSchema }))),
+    validator('param', toStandardSchemaV1(Type.Object({ guild_id: SnowflakeTypeSchema }))),
     validator(
       'json',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           name: Type.String({ minLength: 1, maxLength: 100 }),
           description: Type.Optional(Type.Union([Type.String({ maxLength: 120 }), Type.Null()])),
@@ -2912,7 +3200,9 @@ export const guildsHandler = new Hono()
             'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
           },
           content: {
-            'application/json': { schema: resolver(Compile(GuildTemplateResponseSchema)) },
+            'application/json': {
+              schema: resolver(toStandardSchemaV1(GuildTemplateResponseSchema)),
+            },
           },
         },
         '429': ClientRatelimitedResponseResponse,
@@ -2922,7 +3212,7 @@ export const guildsHandler = new Hono()
     }),
     validator(
       'param',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({ guild_id: SnowflakeTypeSchema, code: Type.String({ maxLength: 152133 }) }),
       ),
     ),
@@ -2943,7 +3233,9 @@ export const guildsHandler = new Hono()
             'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
           },
           content: {
-            'application/json': { schema: resolver(Compile(GuildTemplateResponseSchema)) },
+            'application/json': {
+              schema: resolver(toStandardSchemaV1(GuildTemplateResponseSchema)),
+            },
           },
         },
         '429': ClientRatelimitedResponseResponse,
@@ -2953,7 +3245,7 @@ export const guildsHandler = new Hono()
     }),
     validator(
       'param',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({ guild_id: SnowflakeTypeSchema, code: Type.String({ maxLength: 152133 }) }),
       ),
     ),
@@ -2974,7 +3266,9 @@ export const guildsHandler = new Hono()
             'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
           },
           content: {
-            'application/json': { schema: resolver(Compile(GuildTemplateResponseSchema)) },
+            'application/json': {
+              schema: resolver(toStandardSchemaV1(GuildTemplateResponseSchema)),
+            },
           },
         },
         '429': ClientRatelimitedResponseResponse,
@@ -2984,13 +3278,13 @@ export const guildsHandler = new Hono()
     }),
     validator(
       'param',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({ guild_id: SnowflakeTypeSchema, code: Type.String({ maxLength: 152133 }) }),
       ),
     ),
     validator(
       'json',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           name: Type.Optional(Type.String({ minLength: 1, maxLength: 100 })),
           description: Type.Optional(Type.Union([Type.String({ maxLength: 120 }), Type.Null()])),
@@ -3013,14 +3307,16 @@ export const guildsHandler = new Hono()
             'X-RateLimit-Reset-After': { $ref: '#/components/headers/X-RateLimit-Reset-After' },
             'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
           },
-          content: { 'application/json': { schema: resolver(Compile(ThreadsResponseSchema)) } },
+          content: {
+            'application/json': { schema: resolver(toStandardSchemaV1(ThreadsResponseSchema)) },
+          },
         },
         '429': ClientRatelimitedResponseResponse,
         '4XX': ClientErrorResponseResponse,
       },
       security: [{ BotToken: [] }],
     }),
-    validator('param', Compile(Type.Object({ guild_id: SnowflakeTypeSchema }))),
+    validator('param', toStandardSchemaV1(Type.Object({ guild_id: SnowflakeTypeSchema }))),
     (c) => { throw new Error('Not implemented') },
   )
   .get(
@@ -3037,14 +3333,16 @@ export const guildsHandler = new Hono()
             'X-RateLimit-Reset-After': { $ref: '#/components/headers/X-RateLimit-Reset-After' },
             'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
           },
-          content: { 'application/json': { schema: resolver(Compile(VanityURLResponseSchema)) } },
+          content: {
+            'application/json': { schema: resolver(toStandardSchemaV1(VanityURLResponseSchema)) },
+          },
         },
         '429': ClientRatelimitedResponseResponse,
         '4XX': ClientErrorResponseResponse,
       },
       security: [{ BotToken: [] }],
     }),
-    validator('param', Compile(Type.Object({ guild_id: SnowflakeTypeSchema }))),
+    validator('param', toStandardSchemaV1(Type.Object({ guild_id: SnowflakeTypeSchema }))),
     (c) => { throw new Error('Not implemented') },
   )
   .get(
@@ -3061,14 +3359,16 @@ export const guildsHandler = new Hono()
             'X-RateLimit-Reset-After': { $ref: '#/components/headers/X-RateLimit-Reset-After' },
             'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
           },
-          content: { 'application/json': { schema: resolver(Compile(VoiceStateResponseSchema)) } },
+          content: {
+            'application/json': { schema: resolver(toStandardSchemaV1(VoiceStateResponseSchema)) },
+          },
         },
         '429': ClientRatelimitedResponseResponse,
         '4XX': ClientErrorResponseResponse,
       },
       security: [{ BotToken: [] }],
     }),
-    validator('param', Compile(Type.Object({ guild_id: SnowflakeTypeSchema }))),
+    validator('param', toStandardSchemaV1(Type.Object({ guild_id: SnowflakeTypeSchema }))),
     (c) => { throw new Error('Not implemented') },
   )
   .patch(
@@ -3091,8 +3391,8 @@ export const guildsHandler = new Hono()
       },
       security: [{ BotToken: [] }],
     }),
-    validator('param', Compile(Type.Object({ guild_id: SnowflakeTypeSchema }))),
-    validator('json', Compile(UpdateSelfVoiceStateRequestPartialSchema)),
+    validator('param', toStandardSchemaV1(Type.Object({ guild_id: SnowflakeTypeSchema }))),
+    validator('json', toStandardSchemaV1(UpdateSelfVoiceStateRequestPartialSchema)),
     (c) => { throw new Error('Not implemented') },
   )
   .get(
@@ -3109,7 +3409,9 @@ export const guildsHandler = new Hono()
             'X-RateLimit-Reset-After': { $ref: '#/components/headers/X-RateLimit-Reset-After' },
             'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
           },
-          content: { 'application/json': { schema: resolver(Compile(VoiceStateResponseSchema)) } },
+          content: {
+            'application/json': { schema: resolver(toStandardSchemaV1(VoiceStateResponseSchema)) },
+          },
         },
         '429': ClientRatelimitedResponseResponse,
         '4XX': ClientErrorResponseResponse,
@@ -3118,7 +3420,9 @@ export const guildsHandler = new Hono()
     }),
     validator(
       'param',
-      Compile(Type.Object({ guild_id: SnowflakeTypeSchema, user_id: SnowflakeTypeSchema })),
+      toStandardSchemaV1(
+        Type.Object({ guild_id: SnowflakeTypeSchema, user_id: SnowflakeTypeSchema }),
+      ),
     ),
     (c) => { throw new Error('Not implemented') },
   )
@@ -3144,9 +3448,11 @@ export const guildsHandler = new Hono()
     }),
     validator(
       'param',
-      Compile(Type.Object({ guild_id: SnowflakeTypeSchema, user_id: SnowflakeTypeSchema })),
+      toStandardSchemaV1(
+        Type.Object({ guild_id: SnowflakeTypeSchema, user_id: SnowflakeTypeSchema }),
+      ),
     ),
-    validator('json', Compile(UpdateVoiceStateRequestPartialSchema)),
+    validator('json', toStandardSchemaV1(UpdateVoiceStateRequestPartialSchema)),
     (c) => { throw new Error('Not implemented') },
   )
   .get(
@@ -3166,7 +3472,7 @@ export const guildsHandler = new Hono()
           content: {
             'application/json': {
               schema: resolver(
-                Compile(
+                toStandardSchemaV1(
                   Type.Union([
                     Type.Array(
                       Type.Union([
@@ -3187,7 +3493,7 @@ export const guildsHandler = new Hono()
       },
       security: [{ BotToken: [] }],
     }),
-    validator('param', Compile(Type.Object({ guild_id: SnowflakeTypeSchema }))),
+    validator('param', toStandardSchemaV1(Type.Object({ guild_id: SnowflakeTypeSchema }))),
     (c) => { throw new Error('Not implemented') },
   )
   .get(
@@ -3205,7 +3511,9 @@ export const guildsHandler = new Hono()
             'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
           },
           content: {
-            'application/json': { schema: resolver(Compile(GuildWelcomeScreenResponseSchema)) },
+            'application/json': {
+              schema: resolver(toStandardSchemaV1(GuildWelcomeScreenResponseSchema)),
+            },
           },
         },
         '429': ClientRatelimitedResponseResponse,
@@ -3213,7 +3521,7 @@ export const guildsHandler = new Hono()
       },
       security: [{ BotToken: [] }],
     }),
-    validator('param', Compile(Type.Object({ guild_id: SnowflakeTypeSchema }))),
+    validator('param', toStandardSchemaV1(Type.Object({ guild_id: SnowflakeTypeSchema }))),
     (c) => { throw new Error('Not implemented') },
   )
   .patch(
@@ -3231,7 +3539,9 @@ export const guildsHandler = new Hono()
             'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
           },
           content: {
-            'application/json': { schema: resolver(Compile(GuildWelcomeScreenResponseSchema)) },
+            'application/json': {
+              schema: resolver(toStandardSchemaV1(GuildWelcomeScreenResponseSchema)),
+            },
           },
         },
         '429': ClientRatelimitedResponseResponse,
@@ -3239,8 +3549,8 @@ export const guildsHandler = new Hono()
       },
       security: [{ BotToken: [] }],
     }),
-    validator('param', Compile(Type.Object({ guild_id: SnowflakeTypeSchema }))),
-    validator('json', Compile(WelcomeScreenPatchRequestPartialSchema)),
+    validator('param', toStandardSchemaV1(Type.Object({ guild_id: SnowflakeTypeSchema }))),
+    validator('json', toStandardSchemaV1(WelcomeScreenPatchRequestPartialSchema)),
     (c) => { throw new Error('Not implemented') },
   )
   .get(
@@ -3258,7 +3568,9 @@ export const guildsHandler = new Hono()
             'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
           },
           content: {
-            'application/json': { schema: resolver(Compile(WidgetSettingsResponseSchema)) },
+            'application/json': {
+              schema: resolver(toStandardSchemaV1(WidgetSettingsResponseSchema)),
+            },
           },
         },
         '429': ClientRatelimitedResponseResponse,
@@ -3266,7 +3578,7 @@ export const guildsHandler = new Hono()
       },
       security: [{ BotToken: [] }],
     }),
-    validator('param', Compile(Type.Object({ guild_id: SnowflakeTypeSchema }))),
+    validator('param', toStandardSchemaV1(Type.Object({ guild_id: SnowflakeTypeSchema }))),
     (c) => { throw new Error('Not implemented') },
   )
   .patch(
@@ -3284,7 +3596,9 @@ export const guildsHandler = new Hono()
             'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
           },
           content: {
-            'application/json': { schema: resolver(Compile(WidgetSettingsResponseSchema)) },
+            'application/json': {
+              schema: resolver(toStandardSchemaV1(WidgetSettingsResponseSchema)),
+            },
           },
         },
         '429': ClientRatelimitedResponseResponse,
@@ -3292,14 +3606,12 @@ export const guildsHandler = new Hono()
       },
       security: [{ BotToken: [] }],
     }),
-    validator('param', Compile(Type.Object({ guild_id: SnowflakeTypeSchema }))),
+    validator('param', toStandardSchemaV1(Type.Object({ guild_id: SnowflakeTypeSchema }))),
     validator(
       'json',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
-          channel_id: Type.Optional(
-            Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
-          ),
+          channel_id: Type.Optional(Type.Union([Type.Null(), SnowflakeTypeSchema])),
           enabled: Type.Optional(Type.Union([Type.Boolean(), Type.Null()])),
         }),
       ),
@@ -3320,14 +3632,16 @@ export const guildsHandler = new Hono()
             'X-RateLimit-Reset-After': { $ref: '#/components/headers/X-RateLimit-Reset-After' },
             'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
           },
-          content: { 'application/json': { schema: resolver(Compile(WidgetResponseSchema)) } },
+          content: {
+            'application/json': { schema: resolver(toStandardSchemaV1(WidgetResponseSchema)) },
+          },
         },
         '429': ClientRatelimitedResponseResponse,
         '4XX': ClientErrorResponseResponse,
       },
       security: [{}, { BotToken: [] }],
     }),
-    validator('param', Compile(Type.Object({ guild_id: SnowflakeTypeSchema }))),
+    validator('param', toStandardSchemaV1(Type.Object({ guild_id: SnowflakeTypeSchema }))),
     (c) => { throw new Error('Not implemented') },
   )
   .get(
@@ -3344,14 +3658,17 @@ export const guildsHandler = new Hono()
             'X-RateLimit-Reset-After': { $ref: '#/components/headers/X-RateLimit-Reset-After' },
             'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
           },
-          content: { 'image/png': { schema: resolver(Compile(Type.String())) } },
+          content: { 'image/png': { schema: resolver(toStandardSchemaV1(Type.String())) } },
         },
         '429': ClientRatelimitedResponseResponse,
         '4XX': ClientErrorResponseResponse,
       },
       security: [{}, { BotToken: [] }],
     }),
-    validator('param', Compile(Type.Object({ guild_id: SnowflakeTypeSchema }))),
-    validator('query', Compile(Type.Object({ style: Type.Optional(WidgetImageStylesSchema) }))),
+    validator('param', toStandardSchemaV1(Type.Object({ guild_id: SnowflakeTypeSchema }))),
+    validator(
+      'query',
+      toStandardSchemaV1(Type.Object({ style: Type.Optional(WidgetImageStylesSchema) })),
+    ),
     (c) => { throw new Error('Not implemented') },
   )

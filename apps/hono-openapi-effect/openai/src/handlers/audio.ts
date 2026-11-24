@@ -215,199 +215,134 @@ export const audioHandler = new Hono()
     validator(
       'form',
       Schema.toStandardSchemaV1(
-        Schema.Struct({
-          file: Schema.instanceOf(File).annotate({
-            description:
-              'The audio file object (not file name) to transcribe, in one of these formats: flac, mp3, mp4, mpeg, mpga, m4a, ogg, wav, or webm.\nThe request must include enough format metadata for the file to be identified. We recommend an extension-bearing filename and an appropriate content type.\n',
-          }),
-          model: Schema.Union([
-            Schema.String,
-            Schema.Literals([
-              'whisper-1',
-              'gpt-transcribe',
-              'gpt-4o-transcribe',
-              'gpt-4o-mini-transcribe',
-              'gpt-4o-mini-transcribe-2025-12-15',
-              'gpt-4o-transcribe-diarize',
-            ]),
-          ]).annotate({
-            description:
-              'ID of the model to use. The options are `gpt-transcribe`, `gpt-4o-transcribe`, `gpt-4o-mini-transcribe`, `gpt-4o-mini-transcribe-2025-12-15`, `whisper-1` (which is powered by our open source Whisper V2 model), and `gpt-4o-transcribe-diarize`.\n',
-            jsonSchemaExamples: ['gpt-transcribe'],
-          }),
-          language: Schema.optional(
-            Schema.String.annotate({
+        Schema.StructWithRest(
+          Schema.Struct({
+            file: Schema.instanceOf(File).annotate({
               description:
-                'The language of the input audio. Supplying the input language in [ISO-639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) (e.g. `en`) format will improve accuracy and latency.\n',
+                'The audio file object (not file name) to transcribe, in one of these formats: flac, mp3, mp4, mpeg, mpga, m4a, ogg, wav, or webm.\nThe request must include enough format metadata for the file to be identified. We recommend an extension-bearing filename and an appropriate content type.\n',
             }),
-          ),
-          languages: Schema.optional(
-            Schema.Unknown.pipe(
-              Schema.decodeTo(
-                Schema.Unknown,
-                SchemaTransformation.transform<unknown, unknown>({
-                  decode: (input) =>
-                    input === undefined || Array.isArray(input) ? input : [input],
-                  encode: (output) => output,
-                }),
-              ),
-              Schema.decodeTo(Schema.Array(Schema.String).check(Schema.isMinLength(1))),
-            ).annotate({
-              description:
-                'Possible languages of the input audio, in [ISO-639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) format. Supported by `gpt-transcribe`.\n',
-            }),
-          ),
-          keywords: Schema.optional(
-            Schema.Unknown.pipe(
-              Schema.decodeTo(
-                Schema.Unknown,
-                SchemaTransformation.transform<unknown, unknown>({
-                  decode: (input) =>
-                    input === undefined || Array.isArray(input) ? input : [input],
-                  encode: (output) => output,
-                }),
-              ),
-              Schema.decodeTo(Schema.Array(Schema.String)),
-            ).annotate({
-              description:
-                'Words or phrases to guide transcription of the input audio. Supported by `gpt-transcribe`.\n',
-            }),
-          ),
-          prompt: Schema.optional(
-            Schema.String.annotate({
-              description:
-                "An optional text to guide the model's style or continue a previous audio segment. The [prompt](https://developers.openai.com/api/docs/guides/speech-to-text#prompting) should match the audio language. This field is not supported when using `gpt-4o-transcribe-diarize`.\n",
-            }),
-          ),
-          response_format: Schema.Literals([
-            'json',
-            'text',
-            'srt',
-            'verbose_json',
-            'vtt',
-            'diarized_json',
-          ])
-            .pipe(Schema.withDecodingDefaultType(Effect.succeed('json')))
-            .annotate({
-              description:
-                'The format of the output, in one of these options: `json`, `text`, `srt`, `verbose_json`, `vtt`, or `diarized_json`. For `gpt-4o-transcribe` and `gpt-4o-mini-transcribe`, the only supported format is `json`. For `gpt-4o-transcribe-diarize`, the supported formats are `json`, `text`, and `diarized_json`, with `diarized_json` required to receive speaker annotations.\n',
-            }),
-          temperature: Schema.FiniteFromString.pipe(
-            Schema.withDecodingDefaultType(Effect.succeed(0)),
-          ).annotate({
-            description:
-              'The sampling temperature, between 0 and 1. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic. If set to 0, the model will use [log probability](https://en.wikipedia.org/wiki/Log_probability) to automatically increase the temperature until certain thresholds are hit.\n',
-          }),
-          include: Schema.optional(
-            Schema.Unknown.pipe(
-              Schema.decodeTo(
-                Schema.Unknown,
-                SchemaTransformation.transform<unknown, unknown>({
-                  decode: (input) =>
-                    input === undefined || Array.isArray(input) ? input : [input],
-                  encode: (output) => output,
-                }),
-              ),
-              Schema.decodeTo(Schema.Array(TranscriptionIncludeSchema)),
-            ).annotate({
-              description:
-                "Additional information to include in the transcription response.\n`logprobs` will return the log probabilities of the tokens in the\nresponse to understand the model's confidence in the transcription.\n`logprobs` only works with response_format set to `json` and only with\nthe models `gpt-4o-transcribe`, `gpt-4o-mini-transcribe`, and `gpt-4o-mini-transcribe-2025-12-15`. This field is not supported when using `gpt-4o-transcribe-diarize`.\n",
-            }),
-          ),
-          timestamp_granularities: Schema.Unknown.pipe(
-            Schema.decodeTo(
-              Schema.Unknown,
-              SchemaTransformation.transform<unknown, unknown>({
-                decode: (input) => (input === undefined || Array.isArray(input) ? input : [input]),
-                encode: (output) => output,
-              }),
-            ),
-            Schema.decodeTo(Schema.Array(Schema.Literals(['word', 'segment']))),
-          )
-            .pipe(Schema.withDecodingDefaultType(Effect.succeed(['segment'])))
-            .annotate({
-              description:
-                'The timestamp granularities to populate for this transcription. `response_format` must be set `verbose_json` to use timestamp granularities. Either or both of these options are supported: `word`, or `segment`. Note: There is no additional latency for segment timestamps, but generating word timestamps incurs additional latency.\nThis option is not available for `gpt-4o-transcribe-diarize`.\n',
-            }),
-          stream: Schema.Unknown.pipe(
-            Schema.decodeTo(
-              Schema.Unknown,
-              SchemaTransformation.transform<unknown, unknown>({
-                decode: (input) => (input === 'null' ? null : input),
-                encode: (output) => output,
-              }),
-            ),
-            Schema.decodeTo(
-              Schema.NullOr(
-                Schema.Union([
-                  Schema.String.check(
-                    Schema.isPattern(/^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i),
-                  )
-                    .pipe(
-                      Schema.decodeTo(
-                        Schema.Boolean,
-                        SchemaTransformation.transform({
-                          decode: (input) => /^(?:true|1|yes|on|y|enabled)$/i.test(input),
-                          encode: (output) => (output ? 'true' : 'false'),
-                        }),
-                      ),
-                    )
-                    .pipe(Schema.withDecodingDefaultType(Effect.succeed(false)))
-                    .annotate({
-                      description:
-                        'If set to true, the model response data will be streamed to the client\nas it is generated using [server-sent events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events#Event_stream_format).\nSee the [Streaming section of the Speech-to-Text guide](https://developers.openai.com/api/docs/guides/speech-to-text?lang=curl#streaming)\nfor more information.\n\nNote: Streaming is not supported for the `whisper-1` model and will be ignored.\n',
-                    }),
-                  Schema.Unknown.pipe(
-                    Schema.decodeTo(
-                      Schema.Unknown,
-                      SchemaTransformation.transform<unknown, unknown>({
-                        decode: (input) => (input === 'null' ? null : input),
-                        encode: (output) => output,
-                      }),
-                    ),
-                    Schema.decodeTo(Schema.NullOr(Schema.Null)),
-                  ),
-                ]),
-              ),
-            ),
-          ),
-          chunking_strategy: Schema.Union([
-            Schema.Union([
-              Schema.Literal('auto')
-                .pipe(Schema.withDecodingDefaultType(Effect.succeed('auto')))
-                .annotate({
-                  description:
-                    'Automatically set chunking parameters based on the audio. Must be set to `"auto"`.\n',
-                }),
-              Schema.Struct({
-                type: Schema.Literal('server_vad').annotate({
-                  description:
-                    'Must be set to `server_vad` to enable manual chunking using server side VAD.',
-                }),
-                prefix_padding_ms: Schema.FiniteFromString.check(Schema.isInt())
-                  .pipe(Schema.withDecodingDefaultType(Effect.succeed(300)))
-                  .annotate({
-                    description:
-                      'Amount of audio to include before the VAD detected speech (in \nmilliseconds).\n',
-                  }),
-                silence_duration_ms: Schema.FiniteFromString.check(Schema.isInt())
-                  .pipe(Schema.withDecodingDefaultType(Effect.succeed(200)))
-                  .annotate({
-                    description:
-                      'Duration of silence to detect speech stop (in milliseconds).\nWith shorter values the model will respond more quickly, \nbut may jump in on short pauses from the user.\n',
-                  }),
-                threshold: Schema.FiniteFromString.pipe(
-                  Schema.withDecodingDefaultType(Effect.succeed(0.5)),
-                ).annotate({
-                  description:
-                    'Sensitivity threshold (0.0 to 1.0) for voice activity detection. A \nhigher threshold will require louder audio to activate the model, and \nthus might perform better in noisy environments.\n',
-                }),
-              }).annotate({ parseOptions: { onExcessProperty: 'error' } }),
+            model: Schema.Union([
+              Schema.String,
+              Schema.Literals([
+                'whisper-1',
+                'gpt-transcribe',
+                'gpt-4o-transcribe',
+                'gpt-4o-mini-transcribe',
+                'gpt-4o-mini-transcribe-2025-12-15',
+                'gpt-4o-transcribe-diarize',
+              ]),
             ]).annotate({
               description:
-                'Controls how the audio is cut into chunks. When set to `"auto"`, the server first normalizes loudness and then uses voice activity detection (VAD) to choose boundaries. `server_vad` object can be provided to tweak VAD detection parameters manually. If unset, the audio is transcribed as a single block. Required when using `gpt-4o-transcribe-diarize` for inputs longer than 30 seconds. ',
+                'ID of the model to use. The options are `gpt-transcribe`, `gpt-4o-transcribe`, `gpt-4o-mini-transcribe`, `gpt-4o-mini-transcribe-2025-12-15`, `whisper-1` (which is powered by our open source Whisper V2 model), and `gpt-4o-transcribe-diarize`.\n',
+              jsonSchemaExamples: ['gpt-transcribe'],
             }),
-            Schema.Unknown.pipe(
+            language: Schema.optionalKey(
+              Schema.String.annotate({
+                description:
+                  'The language of the input audio. Supplying the input language in [ISO-639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) (e.g. `en`) format will improve accuracy and latency.\n',
+              }),
+            ),
+            languages: Schema.optionalKey(
+              Schema.Unknown.pipe(
+                Schema.decodeTo(
+                  Schema.Unknown,
+                  SchemaTransformation.transform<unknown, unknown>({
+                    decode: (input) =>
+                      input === undefined || Array.isArray(input) ? input : [input],
+                    encode: (output) => output,
+                  }),
+                ),
+                Schema.decodeTo(Schema.Array(Schema.String).check(Schema.isMinLength(1))),
+              ).annotate({
+                description:
+                  'Possible languages of the input audio, in [ISO-639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) format. Supported by `gpt-transcribe`.\n',
+              }),
+            ),
+            keywords: Schema.optionalKey(
+              Schema.Unknown.pipe(
+                Schema.decodeTo(
+                  Schema.Unknown,
+                  SchemaTransformation.transform<unknown, unknown>({
+                    decode: (input) =>
+                      input === undefined || Array.isArray(input) ? input : [input],
+                    encode: (output) => output,
+                  }),
+                ),
+                Schema.decodeTo(Schema.Array(Schema.String)),
+              ).annotate({
+                description:
+                  'Words or phrases to guide transcription of the input audio. Supported by `gpt-transcribe`.\n',
+              }),
+            ),
+            prompt: Schema.optionalKey(
+              Schema.String.annotate({
+                description:
+                  "An optional text to guide the model's style or continue a previous audio segment. The [prompt](https://developers.openai.com/api/docs/guides/speech-to-text#prompting) should match the audio language. This field is not supported when using `gpt-4o-transcribe-diarize`.\n",
+              }),
+            ),
+            response_format: Schema.Literals([
+              'json',
+              'text',
+              'srt',
+              'verbose_json',
+              'vtt',
+              'diarized_json',
+            ])
+              .pipe(Schema.withDecodingDefaultType(Effect.succeed('json')))
+              .annotate({
+                description:
+                  'The format of the output, in one of these options: `json`, `text`, `srt`, `verbose_json`, `vtt`, or `diarized_json`. For `gpt-4o-transcribe` and `gpt-4o-mini-transcribe`, the only supported format is `json`. For `gpt-4o-transcribe-diarize`, the supported formats are `json`, `text`, and `diarized_json`, with `diarized_json` required to receive speaker annotations.\n',
+              }),
+            temperature: Schema.String.check(
+              Schema.isPattern(/^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/),
+            )
+              .pipe(
+                Schema.decodeTo(
+                  Schema.Finite,
+                  SchemaTransformation.transform({
+                    decode: (input) => Number(input),
+                    encode: (output) => String(output),
+                  }),
+                ),
+              )
+              .pipe(Schema.withDecodingDefaultType(Effect.succeed(0)))
+              .annotate({
+                description:
+                  'The sampling temperature, between 0 and 1. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic. If set to 0, the model will use [log probability](https://en.wikipedia.org/wiki/Log_probability) to automatically increase the temperature until certain thresholds are hit.\n',
+              }),
+            include: Schema.optionalKey(
+              Schema.Unknown.pipe(
+                Schema.decodeTo(
+                  Schema.Unknown,
+                  SchemaTransformation.transform<unknown, unknown>({
+                    decode: (input) =>
+                      input === undefined || Array.isArray(input) ? input : [input],
+                    encode: (output) => output,
+                  }),
+                ),
+                Schema.decodeTo(Schema.Array(TranscriptionIncludeSchema)),
+              ).annotate({
+                description:
+                  "Additional information to include in the transcription response.\n`logprobs` will return the log probabilities of the tokens in the\nresponse to understand the model's confidence in the transcription.\n`logprobs` only works with response_format set to `json` and only with\nthe models `gpt-4o-transcribe`, `gpt-4o-mini-transcribe`, and `gpt-4o-mini-transcribe-2025-12-15`. This field is not supported when using `gpt-4o-transcribe-diarize`.\n",
+              }),
+            ),
+            timestamp_granularities: Schema.Unknown.pipe(
+              Schema.decodeTo(
+                Schema.Unknown,
+                SchemaTransformation.transform<unknown, unknown>({
+                  decode: (input) =>
+                    input === undefined || Array.isArray(input) ? input : [input],
+                  encode: (output) => output,
+                }),
+              ),
+              Schema.decodeTo(Schema.Array(Schema.Literals(['word', 'segment']))),
+            )
+              .pipe(Schema.withDecodingDefaultType(Effect.succeed(['segment'])))
+              .annotate({
+                description:
+                  'The timestamp granularities to populate for this transcription. `response_format` must be set `verbose_json` to use timestamp granularities. Either or both of these options are supported: `word`, or `segment`. Note: There is no additional latency for segment timestamps, but generating word timestamps incurs additional latency.\nThis option is not available for `gpt-4o-transcribe-diarize`.\n',
+              }),
+            stream: Schema.Unknown.pipe(
               Schema.decodeTo(
                 Schema.Unknown,
                 SchemaTransformation.transform<unknown, unknown>({
@@ -415,42 +350,185 @@ export const audioHandler = new Hono()
                   encode: (output) => output,
                 }),
               ),
-              Schema.decodeTo(Schema.NullOr(Schema.Null)),
+              Schema.decodeTo(
+                Schema.NullOr(
+                  Schema.Union([
+                    Schema.String.check(
+                      Schema.isPattern(/^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i),
+                    )
+                      .pipe(
+                        Schema.decodeTo(
+                          Schema.Boolean,
+                          SchemaTransformation.transform({
+                            decode: (input) => /^(?:true|1|yes|on|y|enabled)$/i.test(input),
+                            encode: (output) => (output ? 'true' : 'false'),
+                          }),
+                        ),
+                      )
+                      .pipe(Schema.withDecodingDefaultType(Effect.succeed(false)))
+                      .annotate({
+                        description:
+                          'If set to true, the model response data will be streamed to the client\nas it is generated using [server-sent events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events#Event_stream_format).\nSee the [Streaming section of the Speech-to-Text guide](https://developers.openai.com/api/docs/guides/speech-to-text?lang=curl#streaming)\nfor more information.\n\nNote: Streaming is not supported for the `whisper-1` model and will be ignored.\n',
+                      }),
+                    Schema.Unknown.pipe(
+                      Schema.decodeTo(
+                        Schema.Unknown,
+                        SchemaTransformation.transform<unknown, unknown>({
+                          decode: (input) => (input === 'null' ? null : input),
+                          encode: (output) => output,
+                        }),
+                      ),
+                      Schema.decodeTo(Schema.Null),
+                    ),
+                  ]),
+                ),
+              ),
             ),
-          ]),
-          known_speaker_names: Schema.optional(
-            Schema.Unknown.pipe(
-              Schema.decodeTo(
-                Schema.Unknown,
-                SchemaTransformation.transform<unknown, unknown>({
-                  decode: (input) =>
-                    input === undefined || Array.isArray(input) ? input : [input],
-                  encode: (output) => output,
-                }),
+            chunking_strategy: Schema.Union([
+              Schema.Union([
+                Schema.Literal('auto')
+                  .pipe(Schema.withDecodingDefaultType(Effect.succeed('auto')))
+                  .annotate({
+                    description:
+                      'Automatically set chunking parameters based on the audio. Must be set to `"auto"`.\n',
+                  }),
+                Schema.StructWithRest(
+                  Schema.Struct({
+                    type: Schema.Literal('server_vad').annotate({
+                      description:
+                        'Must be set to `server_vad` to enable manual chunking using server side VAD.',
+                    }),
+                    prefix_padding_ms: Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+                      .pipe(
+                        Schema.decodeTo(
+                          Schema.Finite,
+                          SchemaTransformation.transform({
+                            decode: (input) => Number(input),
+                            encode: (output) => String(output),
+                          }),
+                        ),
+                      )
+                      .check(Schema.isInt())
+                      .pipe(Schema.withDecodingDefaultType(Effect.succeed(300)))
+                      .annotate({
+                        description:
+                          'Amount of audio to include before the VAD detected speech (in \nmilliseconds).\n',
+                      }),
+                    silence_duration_ms: Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+                      .pipe(
+                        Schema.decodeTo(
+                          Schema.Finite,
+                          SchemaTransformation.transform({
+                            decode: (input) => Number(input),
+                            encode: (output) => String(output),
+                          }),
+                        ),
+                      )
+                      .check(Schema.isInt())
+                      .pipe(Schema.withDecodingDefaultType(Effect.succeed(200)))
+                      .annotate({
+                        description:
+                          'Duration of silence to detect speech stop (in milliseconds).\nWith shorter values the model will respond more quickly, \nbut may jump in on short pauses from the user.\n',
+                      }),
+                    threshold: Schema.String.check(
+                      Schema.isPattern(/^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/),
+                    )
+                      .pipe(
+                        Schema.decodeTo(
+                          Schema.Finite,
+                          SchemaTransformation.transform({
+                            decode: (input) => Number(input),
+                            encode: (output) => String(output),
+                          }),
+                        ),
+                      )
+                      .pipe(Schema.withDecodingDefaultType(Effect.succeed(0.5)))
+                      .annotate({
+                        description:
+                          'Sensitivity threshold (0.0 to 1.0) for voice activity detection. A \nhigher threshold will require louder audio to activate the model, and \nthus might perform better in noisy environments.\n',
+                      }),
+                  }),
+                  [Schema.Record(Schema.String, Schema.Unknown)],
+                ).check(
+                  Schema.makeFilter((input) =>
+                    Object.keys(input).every((key) =>
+                      ['type', 'prefix_padding_ms', 'silence_duration_ms', 'threshold'].includes(
+                        key,
+                      ),
+                    ),
+                  ),
+                ),
+              ]).annotate({
+                description:
+                  'Controls how the audio is cut into chunks. When set to `"auto"`, the server first normalizes loudness and then uses voice activity detection (VAD) to choose boundaries. `server_vad` object can be provided to tweak VAD detection parameters manually. If unset, the audio is transcribed as a single block. Required when using `gpt-4o-transcribe-diarize` for inputs longer than 30 seconds. ',
+              }),
+              Schema.Unknown.pipe(
+                Schema.decodeTo(
+                  Schema.Unknown,
+                  SchemaTransformation.transform<unknown, unknown>({
+                    decode: (input) => (input === 'null' ? null : input),
+                    encode: (output) => output,
+                  }),
+                ),
+                Schema.decodeTo(Schema.Null),
               ),
-              Schema.decodeTo(Schema.Array(Schema.String).check(Schema.isMaxLength(4))),
-            ).annotate({
-              description:
-                'Optional list of speaker names that correspond to the audio samples provided in `known_speaker_references[]`. Each entry should be a short identifier (for example `customer` or `agent`). Up to 4 speakers are supported.\n',
-            }),
+            ]),
+            known_speaker_names: Schema.optionalKey(
+              Schema.Unknown.pipe(
+                Schema.decodeTo(
+                  Schema.Unknown,
+                  SchemaTransformation.transform<unknown, unknown>({
+                    decode: (input) =>
+                      input === undefined || Array.isArray(input) ? input : [input],
+                    encode: (output) => output,
+                  }),
+                ),
+                Schema.decodeTo(Schema.Array(Schema.String).check(Schema.isMaxLength(4))),
+              ).annotate({
+                description:
+                  'Optional list of speaker names that correspond to the audio samples provided in `known_speaker_references[]`. Each entry should be a short identifier (for example `customer` or `agent`). Up to 4 speakers are supported.\n',
+              }),
+            ),
+            known_speaker_references: Schema.optionalKey(
+              Schema.Unknown.pipe(
+                Schema.decodeTo(
+                  Schema.Unknown,
+                  SchemaTransformation.transform<unknown, unknown>({
+                    decode: (input) =>
+                      input === undefined || Array.isArray(input) ? input : [input],
+                    encode: (output) => output,
+                  }),
+                ),
+                Schema.decodeTo(Schema.Array(Schema.String).check(Schema.isMaxLength(4))),
+              ).annotate({
+                description:
+                  'Optional list of audio samples (as [data URLs](https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Data_URLs)) that contain known speaker references matching `known_speaker_names[]`. Each sample must be between 2 and 10 seconds, and can use any of the same input audio formats supported by `file`.\n',
+              }),
+            ),
+          }),
+          [Schema.Record(Schema.String, Schema.Unknown)],
+        ).check(
+          Schema.makeFilter((input) =>
+            Object.keys(input).every((key) =>
+              [
+                'file',
+                'model',
+                'language',
+                'languages',
+                'keywords',
+                'prompt',
+                'response_format',
+                'temperature',
+                'include',
+                'timestamp_granularities',
+                'stream',
+                'chunking_strategy',
+                'known_speaker_names',
+                'known_speaker_references',
+              ].includes(key),
+            ),
           ),
-          known_speaker_references: Schema.optional(
-            Schema.Unknown.pipe(
-              Schema.decodeTo(
-                Schema.Unknown,
-                SchemaTransformation.transform<unknown, unknown>({
-                  decode: (input) =>
-                    input === undefined || Array.isArray(input) ? input : [input],
-                  encode: (output) => output,
-                }),
-              ),
-              Schema.decodeTo(Schema.Array(Schema.String).check(Schema.isMaxLength(4))),
-            ).annotate({
-              description:
-                'Optional list of audio samples (as [data URLs](https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Data_URLs)) that contain known speaker references matching `known_speaker_names[]`. Each sample must be between 2 and 10 seconds, and can use any of the same input audio formats supported by `file`.\n',
-            }),
-          ),
-        }).annotate({ parseOptions: { onExcessProperty: 'error' } }),
+        ),
       ),
     ),
     (c) => { throw new Error('Not implemented') },
@@ -555,35 +633,55 @@ export const audioHandler = new Hono()
     validator(
       'form',
       Schema.toStandardSchemaV1(
-        Schema.Struct({
-          file: Schema.instanceOf(File).annotate({
-            description:
-              'The audio file object (not file name) translate, in one of these formats: flac, mp3, mp4, mpeg, mpga, m4a, ogg, wav, or webm. The request must include enough format metadata for the file to be identified. We recommend an extension-bearing filename and an appropriate content type.\n',
-          }),
-          model: Schema.Union([Schema.String, Schema.Literal('whisper-1')]).annotate({
-            description:
-              'ID of the model to use. Only `whisper-1` (which is powered by our open source Whisper V2 model) is currently available.\n',
-            jsonSchemaExamples: ['whisper-1'],
-          }),
-          prompt: Schema.optional(
-            Schema.String.annotate({
+        Schema.StructWithRest(
+          Schema.Struct({
+            file: Schema.instanceOf(File).annotate({
               description:
-                "An optional text to guide the model's style or continue a previous audio segment. The [prompt](https://developers.openai.com/api/docs/guides/speech-to-text#prompting) should be in English.\n",
+                'The audio file object (not file name) translate, in one of these formats: flac, mp3, mp4, mpeg, mpga, m4a, ogg, wav, or webm. The request must include enough format metadata for the file to be identified. We recommend an extension-bearing filename and an appropriate content type.\n',
             }),
+            model: Schema.Union([Schema.String, Schema.Literal('whisper-1')]).annotate({
+              description:
+                'ID of the model to use. Only `whisper-1` (which is powered by our open source Whisper V2 model) is currently available.\n',
+              jsonSchemaExamples: ['whisper-1'],
+            }),
+            prompt: Schema.optionalKey(
+              Schema.String.annotate({
+                description:
+                  "An optional text to guide the model's style or continue a previous audio segment. The [prompt](https://developers.openai.com/api/docs/guides/speech-to-text#prompting) should be in English.\n",
+              }),
+            ),
+            response_format: Schema.Literals(['json', 'text', 'srt', 'verbose_json', 'vtt'])
+              .pipe(Schema.withDecodingDefaultType(Effect.succeed('json')))
+              .annotate({
+                description:
+                  'The format of the output, in one of these options: `json`, `text`, `srt`, `verbose_json`, or `vtt`.\n',
+              }),
+            temperature: Schema.String.check(
+              Schema.isPattern(/^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/),
+            )
+              .pipe(
+                Schema.decodeTo(
+                  Schema.Finite,
+                  SchemaTransformation.transform({
+                    decode: (input) => Number(input),
+                    encode: (output) => String(output),
+                  }),
+                ),
+              )
+              .pipe(Schema.withDecodingDefaultType(Effect.succeed(0)))
+              .annotate({
+                description:
+                  'The sampling temperature, between 0 and 1. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic. If set to 0, the model will use [log probability](https://en.wikipedia.org/wiki/Log_probability) to automatically increase the temperature until certain thresholds are hit.\n',
+              }),
+          }),
+          [Schema.Record(Schema.String, Schema.Unknown)],
+        ).check(
+          Schema.makeFilter((input) =>
+            Object.keys(input).every((key) =>
+              ['file', 'model', 'prompt', 'response_format', 'temperature'].includes(key),
+            ),
           ),
-          response_format: Schema.Literals(['json', 'text', 'srt', 'verbose_json', 'vtt'])
-            .pipe(Schema.withDecodingDefaultType(Effect.succeed('json')))
-            .annotate({
-              description:
-                'The format of the output, in one of these options: `json`, `text`, `srt`, `verbose_json`, or `vtt`.\n',
-            }),
-          temperature: Schema.FiniteFromString.pipe(
-            Schema.withDecodingDefaultType(Effect.succeed(0)),
-          ).annotate({
-            description:
-              'The sampling temperature, between 0 and 1. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic. If set to 0, the model will use [log probability](https://en.wikipedia.org/wiki/Log_probability) to automatically increase the temperature until certain thresholds are hit.\n',
-          }),
-        }).annotate({ parseOptions: { onExcessProperty: 'error' } }),
+        ),
       ),
     ),
     (c) => { throw new Error('Not implemented') },
@@ -626,10 +724,19 @@ export const audioHandler = new Hono()
       'query',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          after: Schema.optional(Schema.String),
-          limit: Schema.FiniteFromString.check(Schema.isInt()).pipe(
-            Schema.withDecodingDefaultType(Effect.succeed(20)),
-          ),
+          after: Schema.optionalKey(Schema.String),
+          limit: Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+            .pipe(
+              Schema.decodeTo(
+                Schema.Finite,
+                SchemaTransformation.transform({
+                  decode: (input) => Number(input),
+                  encode: (output) => String(output),
+                }),
+              ),
+            )
+            .check(Schema.isInt())
+            .pipe(Schema.withDecodingDefaultType(Effect.succeed(20))),
         }),
       ),
     ),
@@ -833,57 +940,57 @@ export const audioHandler = new Hono()
       'form',
       Schema.toStandardSchemaV1(
         Schema.Union([
-          Schema.Struct({
-            type: Schema.Literal('audio_sample')
-              .pipe(Schema.withDecodingDefaultType(Effect.succeed('audio_sample')))
-              .annotate({
-                description: 'The voice creation method. Defaults to `audio_sample` when omitted.',
+          Schema.StructWithRest(
+            Schema.Struct({
+              type: Schema.Literal('audio_sample')
+                .pipe(Schema.withDecodingDefaultType(Effect.succeed('audio_sample')))
+                .annotate({
+                  description:
+                    'The voice creation method. Defaults to `audio_sample` when omitted.',
+                }),
+              name: Schema.String.check(
+                Schema.makeFilter((input) => [...input].length >= 1, {
+                  expected: 'a string of at least 1 character',
+                }),
+                Schema.makeFilter((input) => [...input].length <= 256, {
+                  expected: 'a string of at most 256 characters',
+                }),
+              ).annotate({ description: 'The name of the new voice.' }),
+              audio_sample: Schema.instanceOf(File).annotate({
+                description:
+                  'The sample audio recording file. Maximum size is 10 MiB.\n\nSupported MIME types:\n`audio/mpeg`, `audio/wav`, `audio/x-wav`, `audio/ogg`, `audio/aac`, `audio/flac`, `audio/webm`, `audio/mp4`.\n',
               }),
-            name: Schema.String.check(
-              Schema.makeFilter((input) => [...input].length >= 1, {
-                expected: 'a string of at least 1 character',
+              consent: Schema.String.annotate({
+                description: 'The consent recording ID (for example, `cons_1234`).',
               }),
-              Schema.makeFilter((input) => [...input].length <= 256, {
-                expected: 'a string of at most 256 characters',
-              }),
-            ).annotate({ description: 'The name of the new voice.' }),
-            audio_sample: Schema.instanceOf(File).annotate({
-              description:
-                'The sample audio recording file. Maximum size is 10 MiB.\n\nSupported MIME types:\n`audio/mpeg`, `audio/wav`, `audio/x-wav`, `audio/ogg`, `audio/aac`, `audio/flac`, `audio/webm`, `audio/mp4`.\n',
             }),
-            consent: Schema.String.annotate({
-              description: 'The consent recording ID (for example, `cons_1234`).',
-            }),
-          })
-            .annotate({ parseOptions: { onExcessProperty: 'error' } })
+            [Schema.Record(Schema.String, Schema.Unknown)],
+          )
+            .check(
+              Schema.makeFilter((input) =>
+                Object.keys(input).every((key) =>
+                  ['type', 'name', 'audio_sample', 'consent'].includes(key),
+                ),
+              ),
+            )
             .annotate({
               description:
                 'Creates a voice from a consent recording and an audio sample. Requires multipart/form-data.',
             }),
-          Schema.Struct({
-            type: Schema.Literal('prompt').annotate({
-              description: 'Set to `prompt` to create a voice from a text description.',
-            }),
-            name: Schema.String.check(
-              Schema.makeFilter((input) => [...input].length >= 1, {
-                expected: 'a string of at least 1 character',
+          Schema.StructWithRest(
+            Schema.Struct({
+              type: Schema.Literal('prompt').annotate({
+                description: 'Set to `prompt` to create a voice from a text description.',
               }),
-              Schema.makeFilter((input) => [...input].length <= 256, {
-                expected: 'a string of at most 256 characters',
-              }),
-            ).annotate({ description: 'The name of the new voice.' }),
-            prompt: Schema.String.check(
-              Schema.makeFilter((input) => [...input].length >= 1, {
-                expected: 'a string of at least 1 character',
-              }),
-              Schema.makeFilter((input) => [...input].length <= 2000, {
-                expected: 'a string of at most 2000 characters',
-              }),
-            ).annotate({
-              description: 'A description of the desired voice. Must not contain only whitespace.',
-            }),
-            script_hint: Schema.optional(
-              Schema.String.check(
+              name: Schema.String.check(
+                Schema.makeFilter((input) => [...input].length >= 1, {
+                  expected: 'a string of at least 1 character',
+                }),
+                Schema.makeFilter((input) => [...input].length <= 256, {
+                  expected: 'a string of at most 256 characters',
+                }),
+              ).annotate({ description: 'The name of the new voice.' }),
+              prompt: Schema.String.check(
                 Schema.makeFilter((input) => [...input].length >= 1, {
                   expected: 'a string of at least 1 character',
                 }),
@@ -892,14 +999,34 @@ export const audioHandler = new Hono()
                 }),
               ).annotate({
                 description:
-                  'Optional text for the voice to speak during creation. If omitted, a script is generated from the prompt. Must not be blank after trimming whitespace; scripts that are too short are rejected.',
+                  'A description of the desired voice. Must not contain only whitespace.',
               }),
-            ),
-            model: Schema.Union([Schema.String, Schema.Literals(['auto', '2026-10-08'])])
-              .pipe(Schema.withDecodingDefaultType(Effect.succeed('auto')))
-              .annotate({ description: 'The voice creation model to use. Defaults to `auto`.' }),
-          })
-            .annotate({ parseOptions: { onExcessProperty: 'error' } })
+              script_hint: Schema.optionalKey(
+                Schema.String.check(
+                  Schema.makeFilter((input) => [...input].length >= 1, {
+                    expected: 'a string of at least 1 character',
+                  }),
+                  Schema.makeFilter((input) => [...input].length <= 2000, {
+                    expected: 'a string of at most 2000 characters',
+                  }),
+                ).annotate({
+                  description:
+                    'Optional text for the voice to speak during creation. If omitted, a script is generated from the prompt. Must not be blank after trimming whitespace; scripts that are too short are rejected.',
+                }),
+              ),
+              model: Schema.Union([Schema.String, Schema.Literals(['auto', '2026-10-08'])])
+                .pipe(Schema.withDecodingDefaultType(Effect.succeed('auto')))
+                .annotate({ description: 'The voice creation model to use. Defaults to `auto`.' }),
+            }),
+            [Schema.Record(Schema.String, Schema.Unknown)],
+          )
+            .check(
+              Schema.makeFilter((input) =>
+                Object.keys(input).every((key) =>
+                  ['type', 'name', 'prompt', 'script_hint', 'model'].includes(key),
+                ),
+              ),
+            )
             .annotate({
               description:
                 'Creates a synthetic voice from a text description. Supports application/json or multipart/form-data.',

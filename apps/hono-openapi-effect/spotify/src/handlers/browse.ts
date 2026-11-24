@@ -1,6 +1,6 @@
 import { Hono } from 'hono'
 import { describeRoute, validator } from 'hono-openapi'
-import { Effect, Schema } from 'effect'
+import { Effect, Schema, SchemaTransformation } from 'effect'
 import {
   UnauthorizedResponse,
   ForbiddenResponse,
@@ -33,25 +33,41 @@ export const browseHandler = new Hono()
       'query',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          locale: Schema.optional(
+          locale: Schema.optionalKey(
             Schema.String.annotate({
               description:
                 'The desired language, consisting of an [ISO 639-1](http://en.wikipedia.org/wiki/ISO_639-1) language code and an [ISO 3166-1 alpha-2 country code](http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2), joined by an underscore. For example: `es_MX`, meaning &quot;Spanish (Mexico)&quot;. Provide this parameter if you want the category strings returned in a particular language.<br/> _**Note**: if `locale` is not supplied, or if the specified language is not available, the category strings returned will be in the Spotify default language (American English)._\n',
               jsonSchemaExamples: ['sv_SE'],
             }),
           ),
-          limit: Schema.FiniteFromString.check(
-            Schema.isInt(),
-            Schema.isGreaterThanOrEqualTo(1),
-            Schema.isLessThanOrEqualTo(50),
-          )
+          limit: Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+            .pipe(
+              Schema.decodeTo(
+                Schema.Finite,
+                SchemaTransformation.transform({
+                  decode: (input) => Number(input),
+                  encode: (output) => String(output),
+                }),
+              ),
+            )
+            .check(Schema.isInt(), Schema.isGreaterThanOrEqualTo(1), Schema.isLessThanOrEqualTo(50))
             .pipe(Schema.withDecodingDefaultType(Effect.succeed(20)))
             .annotate({
               description:
                 'The maximum number of items to return. Default: 20. Minimum: 1. Maximum: 50.\n',
               jsonSchemaExamples: [10],
             }),
-          offset: Schema.FiniteFromString.check(Schema.isInt())
+          offset: Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+            .pipe(
+              Schema.decodeTo(
+                Schema.Finite,
+                SchemaTransformation.transform({
+                  decode: (input) => Number(input),
+                  encode: (output) => String(output),
+                }),
+              ),
+            )
+            .check(Schema.isInt())
             .pipe(Schema.withDecodingDefaultType(Effect.succeed(0)))
             .annotate({
               description:
@@ -84,25 +100,41 @@ export const browseHandler = new Hono()
       'query',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          locale: Schema.optional(
+          locale: Schema.optionalKey(
             Schema.String.annotate({
               description:
                 'The desired language, consisting of an [ISO 639-1](http://en.wikipedia.org/wiki/ISO_639-1) language code and an [ISO 3166-1 alpha-2 country code](http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2), joined by an underscore. For example: `es_MX`, meaning &quot;Spanish (Mexico)&quot;. Provide this parameter if you want the category strings returned in a particular language.<br/> _**Note**: if `locale` is not supplied, or if the specified language is not available, the category strings returned will be in the Spotify default language (American English)._\n',
               jsonSchemaExamples: ['sv_SE'],
             }),
           ),
-          limit: Schema.FiniteFromString.check(
-            Schema.isInt(),
-            Schema.isGreaterThanOrEqualTo(1),
-            Schema.isLessThanOrEqualTo(50),
-          )
+          limit: Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+            .pipe(
+              Schema.decodeTo(
+                Schema.Finite,
+                SchemaTransformation.transform({
+                  decode: (input) => Number(input),
+                  encode: (output) => String(output),
+                }),
+              ),
+            )
+            .check(Schema.isInt(), Schema.isGreaterThanOrEqualTo(1), Schema.isLessThanOrEqualTo(50))
             .pipe(Schema.withDecodingDefaultType(Effect.succeed(20)))
             .annotate({
               description:
                 'The maximum number of items to return. Default: 20. Minimum: 1. Maximum: 50.\n',
               jsonSchemaExamples: [10],
             }),
-          offset: Schema.FiniteFromString.check(Schema.isInt())
+          offset: Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+            .pipe(
+              Schema.decodeTo(
+                Schema.Finite,
+                SchemaTransformation.transform({
+                  decode: (input) => Number(input),
+                  encode: (output) => String(output),
+                }),
+              ),
+            )
+            .check(Schema.isInt())
             .pipe(Schema.withDecodingDefaultType(Effect.succeed(0)))
             .annotate({
               description:
@@ -147,7 +179,7 @@ export const browseHandler = new Hono()
       'query',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          locale: Schema.optional(
+          locale: Schema.optionalKey(
             Schema.String.annotate({
               description:
                 'The desired language, consisting of an [ISO 639-1](http://en.wikipedia.org/wiki/ISO_639-1) language code and an [ISO 3166-1 alpha-2 country code](http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2), joined by an underscore. For example: `es_MX`, meaning &quot;Spanish (Mexico)&quot;. Provide this parameter if you want the category strings returned in a particular language.<br/> _**Note**: if `locale` is not supplied, or if the specified language is not available, the category strings returned will be in the Spotify default language (American English)._\n',
@@ -191,18 +223,34 @@ export const browseHandler = new Hono()
       'query',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          limit: Schema.FiniteFromString.check(
-            Schema.isInt(),
-            Schema.isGreaterThanOrEqualTo(1),
-            Schema.isLessThanOrEqualTo(50),
-          )
+          limit: Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+            .pipe(
+              Schema.decodeTo(
+                Schema.Finite,
+                SchemaTransformation.transform({
+                  decode: (input) => Number(input),
+                  encode: (output) => String(output),
+                }),
+              ),
+            )
+            .check(Schema.isInt(), Schema.isGreaterThanOrEqualTo(1), Schema.isLessThanOrEqualTo(50))
             .pipe(Schema.withDecodingDefaultType(Effect.succeed(20)))
             .annotate({
               description:
                 'The maximum number of items to return. Default: 20. Minimum: 1. Maximum: 50.\n',
               jsonSchemaExamples: [10],
             }),
-          offset: Schema.FiniteFromString.check(Schema.isInt())
+          offset: Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+            .pipe(
+              Schema.decodeTo(
+                Schema.Finite,
+                SchemaTransformation.transform({
+                  decode: (input) => Number(input),
+                  encode: (output) => String(output),
+                }),
+              ),
+            )
+            .check(Schema.isInt())
             .pipe(Schema.withDecodingDefaultType(Effect.succeed(0)))
             .annotate({
               description:
@@ -235,18 +283,34 @@ export const browseHandler = new Hono()
       'query',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          limit: Schema.FiniteFromString.check(
-            Schema.isInt(),
-            Schema.isGreaterThanOrEqualTo(1),
-            Schema.isLessThanOrEqualTo(50),
-          )
+          limit: Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+            .pipe(
+              Schema.decodeTo(
+                Schema.Finite,
+                SchemaTransformation.transform({
+                  decode: (input) => Number(input),
+                  encode: (output) => String(output),
+                }),
+              ),
+            )
+            .check(Schema.isInt(), Schema.isGreaterThanOrEqualTo(1), Schema.isLessThanOrEqualTo(50))
             .pipe(Schema.withDecodingDefaultType(Effect.succeed(20)))
             .annotate({
               description:
                 'The maximum number of items to return. Default: 20. Minimum: 1. Maximum: 50.\n',
               jsonSchemaExamples: [10],
             }),
-          offset: Schema.FiniteFromString.check(Schema.isInt())
+          offset: Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+            .pipe(
+              Schema.decodeTo(
+                Schema.Finite,
+                SchemaTransformation.transform({
+                  decode: (input) => Number(input),
+                  encode: (output) => String(output),
+                }),
+              ),
+            )
+            .check(Schema.isInt())
             .pipe(Schema.withDecodingDefaultType(Effect.succeed(0)))
             .annotate({
               description:

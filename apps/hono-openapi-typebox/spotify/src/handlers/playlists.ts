@@ -1,6 +1,6 @@
 import { Hono } from 'hono'
 import { describeRoute, validator } from 'hono-openapi'
-import { Type, Codec } from 'typebox'
+import { Type, Codec, type StaticDecode, type StaticEncode, type TSchema } from 'typebox'
 import { Compile } from 'typebox/compile'
 import {
   UnauthorizedResponse,
@@ -12,6 +12,31 @@ import {
   SingletonArrayOfBooleanResponse,
   PlaylistSnapshotIdResponse,
 } from '../components'
+
+const toStandardSchemaV1 = <T extends TSchema>(schema: T) => {
+  const validator = Compile(schema)
+  return Object.assign(validator, {
+    '~standard': {
+      version: 1 as const,
+      vendor: 'typebox',
+      validate: (value: unknown) =>
+        validator.Check(value)
+          ? { value: validator.Decode(value) }
+          : {
+              issues: validator.Errors(value).map((error) => ({
+                message: error.message,
+                path: error.instancePath
+                  .split('/')
+                  .slice(1)
+                  .map((key) => key.replaceAll('~1', '/').replaceAll('~0', '~')),
+              })),
+            },
+      types: undefined as
+        | { readonly input: StaticEncode<T>; readonly output: StaticDecode<T> }
+        | undefined,
+    },
+  })
+}
 
 export const playlistsHandler = new Hono()
   .get(
@@ -31,7 +56,7 @@ export const playlistsHandler = new Hono()
     }),
     validator(
       'param',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           playlist_id: Type.String({
             description:
@@ -43,7 +68,7 @@ export const playlistsHandler = new Hono()
     ),
     validator(
       'query',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           market: Type.Optional(
             Type.String({
@@ -88,7 +113,7 @@ export const playlistsHandler = new Hono()
     }),
     validator(
       'param',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           playlist_id: Type.String({
             description:
@@ -100,7 +125,7 @@ export const playlistsHandler = new Hono()
     ),
     validator(
       'json',
-      Compile(
+      toStandardSchemaV1(
         Type.Object(
           {
             name: Type.Optional(
@@ -161,7 +186,7 @@ export const playlistsHandler = new Hono()
     }),
     validator(
       'param',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           playlist_id: Type.String({
             description:
@@ -173,7 +198,7 @@ export const playlistsHandler = new Hono()
     ),
     validator(
       'query',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           market: Type.Optional(
             Type.String({
@@ -190,13 +215,23 @@ export const playlistsHandler = new Hono()
             }),
           ),
           limit: Type.Optional(
-            Codec(Type.String({ default: '20' }))
-              .Decode((value) => Number.parseInt(value, 10))
+            Codec(
+              Type.Refine(
+                Type.Refine(
+                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '20' }),
+                  (value) => Number(value) >= 1,
+                  () => 'must be >= 1',
+                ),
+                (value) => Number(value) <= 100,
+                () => 'must be <= 100',
+              ),
+            )
+              .Decode((value) => Number(value))
               .Encode((value) => String(value)),
           ),
           offset: Type.Optional(
-            Codec(Type.String({ default: '0' }))
-              .Decode((value) => Number.parseInt(value, 10))
+            Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '0' }))
+              .Decode((value) => Number(value))
               .Encode((value) => String(value)),
           ),
           additional_types: Type.Optional(
@@ -229,7 +264,7 @@ export const playlistsHandler = new Hono()
     }),
     validator(
       'param',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           playlist_id: Type.String({
             description:
@@ -241,7 +276,7 @@ export const playlistsHandler = new Hono()
     ),
     validator(
       'query',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           uris: Type.Optional(
             Type.String({
@@ -254,7 +289,7 @@ export const playlistsHandler = new Hono()
     ),
     validator(
       'json',
-      Compile(
+      toStandardSchemaV1(
         Type.Object(
           {
             uris: Type.Optional(Type.Array(Type.String())),
@@ -305,7 +340,7 @@ export const playlistsHandler = new Hono()
     }),
     validator(
       'param',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           playlist_id: Type.String({
             description:
@@ -317,11 +352,11 @@ export const playlistsHandler = new Hono()
     ),
     validator(
       'query',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           position: Type.Optional(
-            Codec(Type.String())
-              .Decode((value) => Number.parseInt(value, 10))
+            Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+              .Decode((value) => Number(value))
               .Encode((value) => String(value)),
           ),
           uris: Type.Optional(
@@ -338,7 +373,7 @@ export const playlistsHandler = new Hono()
     ),
     validator(
       'json',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           uris: Type.Optional(
             Type.Array(Type.String(), {
@@ -376,7 +411,7 @@ export const playlistsHandler = new Hono()
     }),
     validator(
       'param',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           playlist_id: Type.String({
             description:
@@ -388,7 +423,7 @@ export const playlistsHandler = new Hono()
     ),
     validator(
       'json',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           tracks: Type.Array(
             Type.Object({ uri: Type.Optional(Type.String({ description: 'Spotify URI' })) }),
@@ -426,7 +461,7 @@ export const playlistsHandler = new Hono()
     }),
     validator(
       'param',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           playlist_id: Type.String({
             description:
@@ -438,7 +473,7 @@ export const playlistsHandler = new Hono()
     ),
     validator(
       'query',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           market: Type.Optional(
             Type.String({
@@ -455,13 +490,23 @@ export const playlistsHandler = new Hono()
             }),
           ),
           limit: Type.Optional(
-            Codec(Type.String({ default: '20' }))
-              .Decode((value) => Number.parseInt(value, 10))
+            Codec(
+              Type.Refine(
+                Type.Refine(
+                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '20' }),
+                  (value) => Number(value) >= 1,
+                  () => 'must be >= 1',
+                ),
+                (value) => Number(value) <= 50,
+                () => 'must be <= 50',
+              ),
+            )
+              .Decode((value) => Number(value))
               .Encode((value) => String(value)),
           ),
           offset: Type.Optional(
-            Codec(Type.String({ default: '0' }))
-              .Decode((value) => Number.parseInt(value, 10))
+            Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '0' }))
+              .Decode((value) => Number(value))
               .Encode((value) => String(value)),
           ),
           additional_types: Type.Optional(
@@ -493,7 +538,7 @@ export const playlistsHandler = new Hono()
     }),
     validator(
       'param',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           playlist_id: Type.String({
             description:
@@ -505,7 +550,7 @@ export const playlistsHandler = new Hono()
     ),
     validator(
       'query',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           uris: Type.Optional(
             Type.String({
@@ -518,7 +563,7 @@ export const playlistsHandler = new Hono()
     ),
     validator(
       'json',
-      Compile(
+      toStandardSchemaV1(
         Type.Object(
           {
             uris: Type.Optional(Type.Array(Type.String())),
@@ -567,7 +612,7 @@ export const playlistsHandler = new Hono()
     }),
     validator(
       'param',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           playlist_id: Type.String({
             description:
@@ -579,11 +624,11 @@ export const playlistsHandler = new Hono()
     ),
     validator(
       'query',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           position: Type.Optional(
-            Codec(Type.String())
-              .Decode((value) => Number.parseInt(value, 10))
+            Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+              .Decode((value) => Number(value))
               .Encode((value) => String(value)),
           ),
           uris: Type.Optional(
@@ -600,7 +645,7 @@ export const playlistsHandler = new Hono()
     ),
     validator(
       'json',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           uris: Type.Optional(
             Type.Array(Type.String(), {
@@ -636,7 +681,7 @@ export const playlistsHandler = new Hono()
     }),
     validator(
       'param',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           playlist_id: Type.String({
             description:
@@ -648,7 +693,7 @@ export const playlistsHandler = new Hono()
     ),
     validator(
       'json',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           items: Type.Array(
             Type.Object({ uri: Type.Optional(Type.String({ description: 'Spotify URI' })) }),
@@ -687,7 +732,7 @@ export const playlistsHandler = new Hono()
     }),
     validator(
       'param',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           playlist_id: Type.String({
             description:
@@ -699,7 +744,7 @@ export const playlistsHandler = new Hono()
     ),
     validator(
       'json',
-      Compile(
+      toStandardSchemaV1(
         Type.Object(
           {
             public: Type.Optional(
@@ -734,7 +779,7 @@ export const playlistsHandler = new Hono()
     }),
     validator(
       'param',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           playlist_id: Type.String({
             description:
@@ -763,7 +808,7 @@ export const playlistsHandler = new Hono()
     }),
     validator(
       'param',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           playlist_id: Type.String({
             description:
@@ -794,7 +839,7 @@ export const playlistsHandler = new Hono()
     }),
     validator(
       'param',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           playlist_id: Type.String({
             description:
@@ -825,7 +870,7 @@ export const playlistsHandler = new Hono()
     }),
     validator(
       'param',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           playlist_id: Type.String({
             description:
@@ -837,7 +882,7 @@ export const playlistsHandler = new Hono()
     ),
     validator(
       'query',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           ids: Type.Optional(
             Type.String({

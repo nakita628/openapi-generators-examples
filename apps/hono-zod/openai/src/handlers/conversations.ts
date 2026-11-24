@@ -15,7 +15,14 @@ export const conversationsHandler = new Hono()
     sValidator(
       'query',
       z.object({
-        limit: z.coerce.number().int().default(20).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
+          .default(20)
+          .exactOptional(),
         order: z.enum(['asc', 'desc']).exactOptional(),
         after: z.string().exactOptional(),
         include: z

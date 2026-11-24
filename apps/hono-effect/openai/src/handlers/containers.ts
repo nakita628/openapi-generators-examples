@@ -1,6 +1,6 @@
 import { Hono } from 'hono'
 import { sValidator } from '@hono/standard-validator'
-import { Effect, Schema } from 'effect'
+import { Effect, Schema, SchemaTransformation } from 'effect'
 import { CreateContainerBodySchema, CreateContainerFileBodySchema } from '../components'
 
 export const containersHandler = new Hono()
@@ -10,14 +10,23 @@ export const containersHandler = new Hono()
       'query',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          limit: Schema.FiniteFromString.check(Schema.isInt()).pipe(
-            Schema.withDecodingDefaultType(Effect.succeed(20)),
-          ),
+          limit: Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+            .pipe(
+              Schema.decodeTo(
+                Schema.Finite,
+                SchemaTransformation.transform({
+                  decode: (input) => Number(input),
+                  encode: (output) => String(output),
+                }),
+              ),
+            )
+            .check(Schema.isInt())
+            .pipe(Schema.withDecodingDefaultType(Effect.succeed(20))),
           order: Schema.Literals(['asc', 'desc']).pipe(
             Schema.withDecodingDefaultType(Effect.succeed('desc')),
           ),
-          after: Schema.optional(Schema.String),
-          name: Schema.optional(Schema.String),
+          after: Schema.optionalKey(Schema.String),
+          name: Schema.optionalKey(Schema.String),
         }),
       ),
     ),
@@ -45,13 +54,22 @@ export const containersHandler = new Hono()
       'query',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          limit: Schema.FiniteFromString.check(Schema.isInt()).pipe(
-            Schema.withDecodingDefaultType(Effect.succeed(20)),
-          ),
+          limit: Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+            .pipe(
+              Schema.decodeTo(
+                Schema.Finite,
+                SchemaTransformation.transform({
+                  decode: (input) => Number(input),
+                  encode: (output) => String(output),
+                }),
+              ),
+            )
+            .check(Schema.isInt())
+            .pipe(Schema.withDecodingDefaultType(Effect.succeed(20))),
           order: Schema.Literals(['asc', 'desc']).pipe(
             Schema.withDecodingDefaultType(Effect.succeed('desc')),
           ),
-          after: Schema.optional(Schema.String),
+          after: Schema.optionalKey(Schema.String),
         }),
       ),
     ),

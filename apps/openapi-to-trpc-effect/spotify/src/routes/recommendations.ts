@@ -1,5 +1,5 @@
 import { initTRPC, TRPCError } from '@trpc/server'
-import { Schema } from 'effect'
+import { Effect, Schema } from 'effect'
 import { RecommendationsObjectSchema } from '../components'
 
 const t = initTRPC.create()
@@ -20,35 +20,35 @@ export const recommendationsRouter = t.router({
                 'The target size of the list of recommended tracks. For seeds with unusually small pools or when highly restrictive filtering is applied, it may be impossible to generate the requested number of recommended tracks. Debugging information for such cases is available in the response. Default: 20\\. Minimum: 1\\. Maximum: 100.\n',
               jsonSchemaExamples: [10],
             }),
-          market: Schema.optional(
+          market: Schema.optionalKey(
             Schema.String.annotate({
               description:
                 'An [ISO 3166-1 alpha-2 country code](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2).\n  If a country code is specified, only content that is available in that market will be returned.<br/>\n  If a valid user access token is specified in the request header, the country associated with\n  the user account will take priority over this parameter.<br/>\n  _**Note**: If neither market or user country are provided, the content is considered unavailable for the client._<br/>\n  Users can view the country that is associated with their account in the [account settings](https://www.spotify.com/account/overview/).\n',
               jsonSchemaExamples: ['ES'],
             }),
           ),
-          seed_artists: Schema.optional(
+          seed_artists: Schema.optionalKey(
             Schema.String.annotate({
               description:
                 'A comma separated list of [Spotify IDs](/documentation/web-api/concepts/spotify-uris-ids) for seed artists.  Up to 5 seed values may be provided in any combination of `seed_artists`, `seed_tracks` and `seed_genres`.<br/> _**Note**: only required if `seed_genres` and `seed_tracks` are not set_.\n',
               jsonSchemaExamples: ['4NHQUGzhtTLFvgF5SZesLK'],
             }),
           ),
-          seed_genres: Schema.optional(
+          seed_genres: Schema.optionalKey(
             Schema.String.annotate({
               description:
                 'A comma separated list of any genres in the set of [available genre seeds](/documentation/web-api/reference/get-recommendation-genres). Up to 5 seed values may be provided in any combination of `seed_artists`, `seed_tracks` and `seed_genres`.<br/> _**Note**: only required if `seed_artists` and `seed_tracks` are not set_.\n',
               jsonSchemaExamples: ['classical,country'],
             }),
           ),
-          seed_tracks: Schema.optional(
+          seed_tracks: Schema.optionalKey(
             Schema.String.annotate({
               description:
                 'A comma separated list of [Spotify IDs](/documentation/web-api/concepts/spotify-uris-ids) for a seed track.  Up to 5 seed values may be provided in any combination of `seed_artists`, `seed_tracks` and `seed_genres`.<br/> _**Note**: only required if `seed_artists` and `seed_genres` are not set_.\n',
               jsonSchemaExamples: ['0c6xIDDpzE81m2q797ordA'],
             }),
           ),
-          min_acousticness: Schema.optional(
+          min_acousticness: Schema.optionalKey(
             Schema.Number.check(
               Schema.isGreaterThanOrEqualTo(0),
               Schema.isLessThanOrEqualTo(1),
@@ -57,7 +57,7 @@ export const recommendationsRouter = t.router({
                 'For each tunable track attribute, a hard floor on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `min_tempo=140` would restrict results to only those tracks with a tempo of greater than 140 beats per minute.\n',
             }),
           ),
-          max_acousticness: Schema.optional(
+          max_acousticness: Schema.optionalKey(
             Schema.Number.check(
               Schema.isGreaterThanOrEqualTo(0),
               Schema.isLessThanOrEqualTo(1),
@@ -66,7 +66,7 @@ export const recommendationsRouter = t.router({
                 'For each tunable track attribute, a hard ceiling on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `max_instrumentalness=0.35` would filter out most tracks that are likely to be instrumental.\n',
             }),
           ),
-          target_acousticness: Schema.optional(
+          target_acousticness: Schema.optionalKey(
             Schema.Number.check(
               Schema.isGreaterThanOrEqualTo(0),
               Schema.isLessThanOrEqualTo(1),
@@ -75,7 +75,7 @@ export const recommendationsRouter = t.router({
                 'For each of the tunable track attributes (below) a target value may be provided. Tracks with the attribute values nearest to the target values will be preferred. For example, you might request `target_energy=0.6` and `target_danceability=0.8`. All target values will be weighed equally in ranking results.\n',
             }),
           ),
-          min_danceability: Schema.optional(
+          min_danceability: Schema.optionalKey(
             Schema.Number.check(
               Schema.isGreaterThanOrEqualTo(0),
               Schema.isLessThanOrEqualTo(1),
@@ -84,7 +84,7 @@ export const recommendationsRouter = t.router({
                 'For each tunable track attribute, a hard floor on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `min_tempo=140` would restrict results to only those tracks with a tempo of greater than 140 beats per minute.\n',
             }),
           ),
-          max_danceability: Schema.optional(
+          max_danceability: Schema.optionalKey(
             Schema.Number.check(
               Schema.isGreaterThanOrEqualTo(0),
               Schema.isLessThanOrEqualTo(1),
@@ -93,7 +93,7 @@ export const recommendationsRouter = t.router({
                 'For each tunable track attribute, a hard ceiling on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `max_instrumentalness=0.35` would filter out most tracks that are likely to be instrumental.\n',
             }),
           ),
-          target_danceability: Schema.optional(
+          target_danceability: Schema.optionalKey(
             Schema.Number.check(
               Schema.isGreaterThanOrEqualTo(0),
               Schema.isLessThanOrEqualTo(1),
@@ -102,24 +102,24 @@ export const recommendationsRouter = t.router({
                 'For each of the tunable track attributes (below) a target value may be provided. Tracks with the attribute values nearest to the target values will be preferred. For example, you might request `target_energy=0.6` and `target_danceability=0.8`. All target values will be weighed equally in ranking results.\n',
             }),
           ),
-          min_duration_ms: Schema.optional(
+          min_duration_ms: Schema.optionalKey(
             Schema.Number.check(Schema.isInt()).annotate({
               description:
                 'For each tunable track attribute, a hard floor on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `min_tempo=140` would restrict results to only those tracks with a tempo of greater than 140 beats per minute.\n',
             }),
           ),
-          max_duration_ms: Schema.optional(
+          max_duration_ms: Schema.optionalKey(
             Schema.Number.check(Schema.isInt()).annotate({
               description:
                 'For each tunable track attribute, a hard ceiling on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `max_instrumentalness=0.35` would filter out most tracks that are likely to be instrumental.\n',
             }),
           ),
-          target_duration_ms: Schema.optional(
+          target_duration_ms: Schema.optionalKey(
             Schema.Number.check(Schema.isInt()).annotate({
               description: 'Target duration of the track (ms)',
             }),
           ),
-          min_energy: Schema.optional(
+          min_energy: Schema.optionalKey(
             Schema.Number.check(
               Schema.isGreaterThanOrEqualTo(0),
               Schema.isLessThanOrEqualTo(1),
@@ -128,7 +128,7 @@ export const recommendationsRouter = t.router({
                 'For each tunable track attribute, a hard floor on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `min_tempo=140` would restrict results to only those tracks with a tempo of greater than 140 beats per minute.\n',
             }),
           ),
-          max_energy: Schema.optional(
+          max_energy: Schema.optionalKey(
             Schema.Number.check(
               Schema.isGreaterThanOrEqualTo(0),
               Schema.isLessThanOrEqualTo(1),
@@ -137,7 +137,7 @@ export const recommendationsRouter = t.router({
                 'For each tunable track attribute, a hard ceiling on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `max_instrumentalness=0.35` would filter out most tracks that are likely to be instrumental.\n',
             }),
           ),
-          target_energy: Schema.optional(
+          target_energy: Schema.optionalKey(
             Schema.Number.check(
               Schema.isGreaterThanOrEqualTo(0),
               Schema.isLessThanOrEqualTo(1),
@@ -146,7 +146,7 @@ export const recommendationsRouter = t.router({
                 'For each of the tunable track attributes (below) a target value may be provided. Tracks with the attribute values nearest to the target values will be preferred. For example, you might request `target_energy=0.6` and `target_danceability=0.8`. All target values will be weighed equally in ranking results.\n',
             }),
           ),
-          min_instrumentalness: Schema.optional(
+          min_instrumentalness: Schema.optionalKey(
             Schema.Number.check(
               Schema.isGreaterThanOrEqualTo(0),
               Schema.isLessThanOrEqualTo(1),
@@ -155,7 +155,7 @@ export const recommendationsRouter = t.router({
                 'For each tunable track attribute, a hard floor on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `min_tempo=140` would restrict results to only those tracks with a tempo of greater than 140 beats per minute.\n',
             }),
           ),
-          max_instrumentalness: Schema.optional(
+          max_instrumentalness: Schema.optionalKey(
             Schema.Number.check(
               Schema.isGreaterThanOrEqualTo(0),
               Schema.isLessThanOrEqualTo(1),
@@ -164,7 +164,7 @@ export const recommendationsRouter = t.router({
                 'For each tunable track attribute, a hard ceiling on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `max_instrumentalness=0.35` would filter out most tracks that are likely to be instrumental.\n',
             }),
           ),
-          target_instrumentalness: Schema.optional(
+          target_instrumentalness: Schema.optionalKey(
             Schema.Number.check(
               Schema.isGreaterThanOrEqualTo(0),
               Schema.isLessThanOrEqualTo(1),
@@ -173,7 +173,7 @@ export const recommendationsRouter = t.router({
                 'For each of the tunable track attributes (below) a target value may be provided. Tracks with the attribute values nearest to the target values will be preferred. For example, you might request `target_energy=0.6` and `target_danceability=0.8`. All target values will be weighed equally in ranking results.\n',
             }),
           ),
-          min_key: Schema.optional(
+          min_key: Schema.optionalKey(
             Schema.Number.check(
               Schema.isInt(),
               Schema.isGreaterThanOrEqualTo(0),
@@ -183,7 +183,7 @@ export const recommendationsRouter = t.router({
                 'For each tunable track attribute, a hard floor on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `min_tempo=140` would restrict results to only those tracks with a tempo of greater than 140 beats per minute.\n',
             }),
           ),
-          max_key: Schema.optional(
+          max_key: Schema.optionalKey(
             Schema.Number.check(
               Schema.isInt(),
               Schema.isGreaterThanOrEqualTo(0),
@@ -193,7 +193,7 @@ export const recommendationsRouter = t.router({
                 'For each tunable track attribute, a hard ceiling on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `max_instrumentalness=0.35` would filter out most tracks that are likely to be instrumental.\n',
             }),
           ),
-          target_key: Schema.optional(
+          target_key: Schema.optionalKey(
             Schema.Number.check(
               Schema.isInt(),
               Schema.isGreaterThanOrEqualTo(0),
@@ -203,7 +203,7 @@ export const recommendationsRouter = t.router({
                 'For each of the tunable track attributes (below) a target value may be provided. Tracks with the attribute values nearest to the target values will be preferred. For example, you might request `target_energy=0.6` and `target_danceability=0.8`. All target values will be weighed equally in ranking results.\n',
             }),
           ),
-          min_liveness: Schema.optional(
+          min_liveness: Schema.optionalKey(
             Schema.Number.check(
               Schema.isGreaterThanOrEqualTo(0),
               Schema.isLessThanOrEqualTo(1),
@@ -212,7 +212,7 @@ export const recommendationsRouter = t.router({
                 'For each tunable track attribute, a hard floor on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `min_tempo=140` would restrict results to only those tracks with a tempo of greater than 140 beats per minute.\n',
             }),
           ),
-          max_liveness: Schema.optional(
+          max_liveness: Schema.optionalKey(
             Schema.Number.check(
               Schema.isGreaterThanOrEqualTo(0),
               Schema.isLessThanOrEqualTo(1),
@@ -221,7 +221,7 @@ export const recommendationsRouter = t.router({
                 'For each tunable track attribute, a hard ceiling on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `max_instrumentalness=0.35` would filter out most tracks that are likely to be instrumental.\n',
             }),
           ),
-          target_liveness: Schema.optional(
+          target_liveness: Schema.optionalKey(
             Schema.Number.check(
               Schema.isGreaterThanOrEqualTo(0),
               Schema.isLessThanOrEqualTo(1),
@@ -230,25 +230,25 @@ export const recommendationsRouter = t.router({
                 'For each of the tunable track attributes (below) a target value may be provided. Tracks with the attribute values nearest to the target values will be preferred. For example, you might request `target_energy=0.6` and `target_danceability=0.8`. All target values will be weighed equally in ranking results.\n',
             }),
           ),
-          min_loudness: Schema.optional(
+          min_loudness: Schema.optionalKey(
             Schema.Number.annotate({
               description:
                 'For each tunable track attribute, a hard floor on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `min_tempo=140` would restrict results to only those tracks with a tempo of greater than 140 beats per minute.\n',
             }),
           ),
-          max_loudness: Schema.optional(
+          max_loudness: Schema.optionalKey(
             Schema.Number.annotate({
               description:
                 'For each tunable track attribute, a hard ceiling on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `max_instrumentalness=0.35` would filter out most tracks that are likely to be instrumental.\n',
             }),
           ),
-          target_loudness: Schema.optional(
+          target_loudness: Schema.optionalKey(
             Schema.Number.annotate({
               description:
                 'For each of the tunable track attributes (below) a target value may be provided. Tracks with the attribute values nearest to the target values will be preferred. For example, you might request `target_energy=0.6` and `target_danceability=0.8`. All target values will be weighed equally in ranking results.\n',
             }),
           ),
-          min_mode: Schema.optional(
+          min_mode: Schema.optionalKey(
             Schema.Number.check(
               Schema.isInt(),
               Schema.isGreaterThanOrEqualTo(0),
@@ -258,7 +258,7 @@ export const recommendationsRouter = t.router({
                 'For each tunable track attribute, a hard floor on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `min_tempo=140` would restrict results to only those tracks with a tempo of greater than 140 beats per minute.\n',
             }),
           ),
-          max_mode: Schema.optional(
+          max_mode: Schema.optionalKey(
             Schema.Number.check(
               Schema.isInt(),
               Schema.isGreaterThanOrEqualTo(0),
@@ -268,7 +268,7 @@ export const recommendationsRouter = t.router({
                 'For each tunable track attribute, a hard ceiling on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `max_instrumentalness=0.35` would filter out most tracks that are likely to be instrumental.\n',
             }),
           ),
-          target_mode: Schema.optional(
+          target_mode: Schema.optionalKey(
             Schema.Number.check(
               Schema.isInt(),
               Schema.isGreaterThanOrEqualTo(0),
@@ -278,7 +278,7 @@ export const recommendationsRouter = t.router({
                 'For each of the tunable track attributes (below) a target value may be provided. Tracks with the attribute values nearest to the target values will be preferred. For example, you might request `target_energy=0.6` and `target_danceability=0.8`. All target values will be weighed equally in ranking results.\n',
             }),
           ),
-          min_popularity: Schema.optional(
+          min_popularity: Schema.optionalKey(
             Schema.Number.check(
               Schema.isInt(),
               Schema.isGreaterThanOrEqualTo(0),
@@ -288,7 +288,7 @@ export const recommendationsRouter = t.router({
                 'For each tunable track attribute, a hard floor on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `min_tempo=140` would restrict results to only those tracks with a tempo of greater than 140 beats per minute.\n',
             }),
           ),
-          max_popularity: Schema.optional(
+          max_popularity: Schema.optionalKey(
             Schema.Number.check(
               Schema.isInt(),
               Schema.isGreaterThanOrEqualTo(0),
@@ -298,7 +298,7 @@ export const recommendationsRouter = t.router({
                 'For each tunable track attribute, a hard ceiling on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `max_instrumentalness=0.35` would filter out most tracks that are likely to be instrumental.\n',
             }),
           ),
-          target_popularity: Schema.optional(
+          target_popularity: Schema.optionalKey(
             Schema.Number.check(
               Schema.isInt(),
               Schema.isGreaterThanOrEqualTo(0),
@@ -308,7 +308,7 @@ export const recommendationsRouter = t.router({
                 'For each of the tunable track attributes (below) a target value may be provided. Tracks with the attribute values nearest to the target values will be preferred. For example, you might request `target_energy=0.6` and `target_danceability=0.8`. All target values will be weighed equally in ranking results.\n',
             }),
           ),
-          min_speechiness: Schema.optional(
+          min_speechiness: Schema.optionalKey(
             Schema.Number.check(
               Schema.isGreaterThanOrEqualTo(0),
               Schema.isLessThanOrEqualTo(1),
@@ -317,7 +317,7 @@ export const recommendationsRouter = t.router({
                 'For each tunable track attribute, a hard floor on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `min_tempo=140` would restrict results to only those tracks with a tempo of greater than 140 beats per minute.\n',
             }),
           ),
-          max_speechiness: Schema.optional(
+          max_speechiness: Schema.optionalKey(
             Schema.Number.check(
               Schema.isGreaterThanOrEqualTo(0),
               Schema.isLessThanOrEqualTo(1),
@@ -326,7 +326,7 @@ export const recommendationsRouter = t.router({
                 'For each tunable track attribute, a hard ceiling on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `max_instrumentalness=0.35` would filter out most tracks that are likely to be instrumental.\n',
             }),
           ),
-          target_speechiness: Schema.optional(
+          target_speechiness: Schema.optionalKey(
             Schema.Number.check(
               Schema.isGreaterThanOrEqualTo(0),
               Schema.isLessThanOrEqualTo(1),
@@ -335,40 +335,40 @@ export const recommendationsRouter = t.router({
                 'For each of the tunable track attributes (below) a target value may be provided. Tracks with the attribute values nearest to the target values will be preferred. For example, you might request `target_energy=0.6` and `target_danceability=0.8`. All target values will be weighed equally in ranking results.\n',
             }),
           ),
-          min_tempo: Schema.optional(
+          min_tempo: Schema.optionalKey(
             Schema.Number.annotate({
               description:
                 'For each tunable track attribute, a hard floor on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `min_tempo=140` would restrict results to only those tracks with a tempo of greater than 140 beats per minute.\n',
             }),
           ),
-          max_tempo: Schema.optional(
+          max_tempo: Schema.optionalKey(
             Schema.Number.annotate({
               description:
                 'For each tunable track attribute, a hard ceiling on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `max_instrumentalness=0.35` would filter out most tracks that are likely to be instrumental.\n',
             }),
           ),
-          target_tempo: Schema.optional(
+          target_tempo: Schema.optionalKey(
             Schema.Number.annotate({ description: 'Target tempo (BPM)' }),
           ),
-          min_time_signature: Schema.optional(
+          min_time_signature: Schema.optionalKey(
             Schema.Number.check(Schema.isInt(), Schema.isLessThanOrEqualTo(11)).annotate({
               description:
                 'For each tunable track attribute, a hard floor on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `min_tempo=140` would restrict results to only those tracks with a tempo of greater than 140 beats per minute.\n',
             }),
           ),
-          max_time_signature: Schema.optional(
+          max_time_signature: Schema.optionalKey(
             Schema.Number.check(Schema.isInt()).annotate({
               description:
                 'For each tunable track attribute, a hard ceiling on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `max_instrumentalness=0.35` would filter out most tracks that are likely to be instrumental.\n',
             }),
           ),
-          target_time_signature: Schema.optional(
+          target_time_signature: Schema.optionalKey(
             Schema.Number.check(Schema.isInt()).annotate({
               description:
                 'For each of the tunable track attributes (below) a target value may be provided. Tracks with the attribute values nearest to the target values will be preferred. For example, you might request `target_energy=0.6` and `target_danceability=0.8`. All target values will be weighed equally in ranking results.\n',
             }),
           ),
-          min_valence: Schema.optional(
+          min_valence: Schema.optionalKey(
             Schema.Number.check(
               Schema.isGreaterThanOrEqualTo(0),
               Schema.isLessThanOrEqualTo(1),
@@ -377,7 +377,7 @@ export const recommendationsRouter = t.router({
                 'For each tunable track attribute, a hard floor on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `min_tempo=140` would restrict results to only those tracks with a tempo of greater than 140 beats per minute.\n',
             }),
           ),
-          max_valence: Schema.optional(
+          max_valence: Schema.optionalKey(
             Schema.Number.check(
               Schema.isGreaterThanOrEqualTo(0),
               Schema.isLessThanOrEqualTo(1),
@@ -386,7 +386,7 @@ export const recommendationsRouter = t.router({
                 'For each tunable track attribute, a hard ceiling on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `max_instrumentalness=0.35` would filter out most tracks that are likely to be instrumental.\n',
             }),
           ),
-          target_valence: Schema.optional(
+          target_valence: Schema.optionalKey(
             Schema.Number.check(
               Schema.isGreaterThanOrEqualTo(0),
               Schema.isLessThanOrEqualTo(1),

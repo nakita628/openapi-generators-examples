@@ -62,11 +62,12 @@ export const imagesHandler = new Hono()
         frame_count: z
           .preprocess(
             (val) => (val === 'null' ? null : val),
-            z.coerce
-              .number()
-              .int()
-              .min(2)
-              .max(16)
+            z
+              .preprocess(
+                (val) =>
+                  typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+                z.number().int().min(2).max(16),
+              )
               .nullable()
               .meta({
                 description:
@@ -77,10 +78,12 @@ export const imagesHandler = new Hono()
         frame_duration_ms: z
           .preprocess(
             (val) => (val === 'null' ? null : val),
-            z.coerce
-              .number()
-              .int()
-              .min(20)
+            z
+              .preprocess(
+                (val) =>
+                  typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+                z.number().int().min(20),
+              )
               .nullable()
               .meta({
                 description:
@@ -122,7 +125,7 @@ export const imagesHandler = new Hono()
         background: z
           .union([
             z.enum(['transparent', 'opaque', 'auto']),
-            z.preprocess((val) => (val === 'null' ? null : val), z.null().nullable()),
+            z.preprocess((val) => (val === 'null' ? null : val), z.null()),
           ])
           .default('auto')
           .meta({
@@ -158,11 +161,12 @@ export const imagesHandler = new Hono()
         n: z
           .preprocess(
             (val) => (val === 'null' ? null : val),
-            z.coerce
-              .number()
-              .int()
-              .min(1)
-              .max(10)
+            z
+              .preprocess(
+                (val) =>
+                  typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+                z.number().int().min(1).max(10),
+              )
               .nullable()
               .default(1)
               .meta({
@@ -175,7 +179,7 @@ export const imagesHandler = new Hono()
           .union([
             z.string(),
             z.enum(['1024x1024', '1536x1024', '1024x1536', 'auto', '256x256', '512x512']),
-            z.preprocess((val) => (val === 'null' ? null : val), z.null().nullable()),
+            z.preprocess((val) => (val === 'null' ? null : val), z.null()),
           ])
           .default('auto')
           .meta({
@@ -185,7 +189,7 @@ export const imagesHandler = new Hono()
           })
           .exactOptional(),
         response_format: z
-          .union([z.literal('url'), z.literal('b64_json'), z.literal(null)])
+          .enum(['url', 'b64_json'])
           .nullable()
           .meta({
             description:
@@ -199,7 +203,7 @@ export const imagesHandler = new Hono()
             z
               .union([
                 ImagesApiOutputFormatSchema,
-                z.preprocess((val) => (val === 'null' ? null : val), z.null().nullable()),
+                z.preprocess((val) => (val === 'null' ? null : val), z.null()),
               ])
               .default('png')
               .meta({
@@ -237,13 +241,13 @@ export const imagesHandler = new Hono()
                               description:
                                 "Reasoning effort for SVG authoring. When omitted, uses the author model's default in both Images and Responses.",
                             }),
-                          z.preprocess((val) => (val === 'null' ? null : val), z.null().nullable()),
+                          z.preprocess((val) => (val === 'null' ? null : val), z.null()),
                         ])
                         .nullable(),
                     )
                     .exactOptional(),
                 }),
-                z.preprocess((val) => (val === 'null' ? null : val), z.null().nullable()),
+                z.preprocess((val) => (val === 'null' ? null : val), z.null()),
               ])
               .meta({
                 description:
@@ -255,9 +259,12 @@ export const imagesHandler = new Hono()
         output_compression: z
           .preprocess(
             (val) => (val === 'null' ? null : val),
-            z.coerce
-              .number()
-              .int()
+            z
+              .preprocess(
+                (val) =>
+                  typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+                z.number().int(),
+              )
               .nullable()
               .default(100)
               .meta({
@@ -292,7 +299,7 @@ export const imagesHandler = new Hono()
             z
               .union([
                 InputFidelitySchema,
-                z.preprocess((val) => (val === 'null' ? null : val), z.null().nullable()),
+                z.preprocess((val) => (val === 'null' ? null : val), z.null()),
               ])
               .nullable(),
           )
@@ -316,18 +323,19 @@ export const imagesHandler = new Hono()
             (val) => (val === 'null' ? null : val),
             z
               .union([
-                z.coerce
-                  .number()
-                  .int()
-                  .min(0)
-                  .max(3)
+                z
+                  .preprocess(
+                    (val) =>
+                      typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+                    z.number().int().min(0).max(3),
+                  )
                   .default(0)
                   .meta({
                     description:
                       'The number of partial images to generate. This parameter is used for\nstreaming responses that return partial images. Value must be between 0 and 3.\nWhen set to 0, the response will be a single image sent in one streaming event.\n\nNote that the final image may be sent before the full number of partial images\nare generated if the full image is generated more quickly.\n',
                     examples: [1],
                   }),
-                z.preprocess((val) => (val === 'null' ? null : val), z.null().nullable()),
+                z.preprocess((val) => (val === 'null' ? null : val), z.null()),
               ])
               .nullable(),
           )
@@ -335,7 +343,7 @@ export const imagesHandler = new Hono()
         quality: z
           .union([
             z.enum(['low', 'medium', 'high', 'xhigh', 'max', 'auto', 'standard']),
-            z.preprocess((val) => (val === 'null' ? null : val), z.null().nullable()),
+            z.preprocess((val) => (val === 'null' ? null : val), z.null()),
           ])
           .default('auto')
           .meta({
@@ -453,7 +461,7 @@ export const imagesHandler = new Hono()
             .union([
               z.string(),
               z.literal('dall-e-2'),
-              z.preprocess((val) => (val === 'null' ? null : val), z.null().nullable()),
+              z.preprocess((val) => (val === 'null' ? null : val), z.null()),
             ])
             .default('dall-e-2')
             .meta({
@@ -465,11 +473,12 @@ export const imagesHandler = new Hono()
           n: z
             .preprocess(
               (val) => (val === 'null' ? null : val),
-              z.coerce
-                .number()
-                .int()
-                .min(1)
-                .max(10)
+              z
+                .preprocess(
+                  (val) =>
+                    typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+                  z.number().int().min(1).max(10),
+                )
                 .nullable()
                 .default(1)
                 .meta({
@@ -479,7 +488,7 @@ export const imagesHandler = new Hono()
             )
             .exactOptional(),
           response_format: z
-            .union([z.literal('url'), z.literal('b64_json'), z.literal(null)])
+            .enum(['url', 'b64_json'])
             .nullable()
             .default('url')
             .meta({
@@ -489,12 +498,7 @@ export const imagesHandler = new Hono()
             })
             .exactOptional(),
           size: z
-            .union([
-              z.literal('256x256'),
-              z.literal('512x512'),
-              z.literal('1024x1024'),
-              z.literal(null),
-            ])
+            .enum(['256x256', '512x512', '1024x1024'])
             .nullable()
             .default('1024x1024')
             .meta({

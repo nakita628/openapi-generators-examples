@@ -46,10 +46,13 @@ The first five came from hono-takibi-examples, and the daily routine takes the n
 | Spec | Document | Source | Added |
 | --- | --- | --- | --- |
 | [discord](./openapi/discord.json) | Discord HTTP API (Preview) 10 | <https://raw.githubusercontent.com/discord/discord-api-spec/main/specs/openapi.json> ([pinned](https://github.com/discord/discord-api-spec/blob/3a21a01249a763cd47f1dfec3da91c5ba71bb974/specs/openapi.json)) | 2026-11-21 |
-| [openai](./openapi/openai.yaml) | OpenAI API 2.3.0 | <https://raw.githubusercontent.com/openai/openai-openapi/main/openapi.yaml> ([pinned](https://github.com/openai/openai-openapi/blob/2a24deae6f89f84d0e88ce3c9d96c00304dca0b8/openapi.yaml)) | 2026-11-21 |
+| [line-channel-access-token](./openapi/line-channel-access-token.yaml) | Channel Access Token API 0.0.1 | <https://raw.githubusercontent.com/line/line-openapi/main/channel-access-token.yml> ([pinned](https://github.com/line/line-openapi/blob/967498a4e192914679ad0571d5845b29aa9755de/channel-access-token.yml)) | 2026-11-24 |
+| [line-insight](./openapi/line-insight.yaml) | LINE Messaging API(Insight) 0.0.1 | <https://raw.githubusercontent.com/line/line-openapi/main/insight.yml> ([pinned](https://github.com/line/line-openapi/blob/967498a4e192914679ad0571d5845b29aa9755de/insight.yml)) | 2026-11-24 |
+| [openai](./openapi/openai.yaml) | OpenAI API 2.3.0 | <https://raw.githubusercontent.com/openai/openai-openapi/main/openapi.yaml> ([pinned](https://github.com/openai/openai-openapi/blob/373f26a9aec3608e3158f2a0d4b8ae49d13162a4/openapi.yaml)) | 2026-11-21 |
 | [petstore](./openapi/petstore.json) | Swagger Petstore - OpenAPI 3.0 1.0.27 | <https://petstore3.swagger.io/api/v3/openapi.json> | 2026-11-21 |
 | [spotify](./openapi/spotify.yaml) | Spotify Web API with fixes and improvements from sonallux 2026.5.31 | <https://raw.githubusercontent.com/sonallux/spotify-web-api/main/fixed-spotify-open-api.yml> ([pinned](https://github.com/sonallux/spotify-web-api/blob/f02c40936c591459617491c62fef0b555b8fd63e/fixed-spotify-open-api.yml)) | 2026-11-21 |
 | [train-travel](./openapi/train-travel.json) | Train Travel API 1.0.0 | <https://raw.githubusercontent.com/readmeio/oas-examples/main/3.1/json/train-travel.json> ([pinned](https://github.com/readmeio/oas-examples/blob/060d4ffbbe63003f923c8cd7268ee39a495cf21f/3.1/json/train-travel.json)) | 2026-11-21 |
+| [twilio](./openapi/twilio.json) | Twilio - Api 1.0.0 | <https://raw.githubusercontent.com/twilio/twilio-oai/main/spec/json/twilio_api_v2010.json> ([pinned](https://github.com/twilio/twilio-oai/blob/090e1654f5ca1f6a01b6a117fbec5f75c44f44d7/spec/json/twilio_api_v2010.json)) | 2026-11-24 |
 <!-- specs:end -->
 
 ## Commands
@@ -76,13 +79,5 @@ Problems found while generating are reported where the code lives: schema genera
 
 | Issue | Effect here |
 | --- | --- |
-| [openapi-to-trpc#54](https://github.com/nakita628/openapi-to-trpc/issues/54) 0.3.0 resolves oas-truth 0.5.1 and schema-truth 0.7.0, without the truth fixes since 2026-11-21 | 9 of the 20 openapi-to-trpc outputs fail: Effect on every document, ArkType on Discord and OpenAI, Zod and Valibot on OpenAI |
-| [truth#58](https://github.com/nakita628/truth/issues/58) arktype nullable enum of 12 to 16 members is one string-DSL union and hits TS2589 | ArkType apps fail on OpenAI |
-| [truth#59](https://github.com/nakita628/truth/issues/59) arktype array of a union inside a recursive scope uses the global `type()` | ArkType apps fail on OpenAI |
-| [truth#60](https://github.com/nakita628/truth/issues/60) effect empty closed object emits `[].includes(key)` | the Effect app on OpenAI, once openapi-to-trpc#54 is fixed |
-| [asphodelos#38](https://github.com/nakita628/asphodelos/issues/38) the hooks of a fetch-fallback operation import a component type that is not exported | `elysia-typebox` fails on Discord and OpenAI |
+| [takibi-hono#96](https://github.com/nakita628/takibi-hono/issues/96) effect `allOf` code uses `SchemaGetter` and `SchemaIssue` without importing them | the takibi-hono Effect apps fail on Discord, OpenAI, Spotify and Train Travel |
 | [asphodelos#39](https://github.com/nakita628/asphodelos/issues/39) a path key with a query string after a parameter becomes an optional Elysia parameter | `elysia-typebox` fails on OpenAI |
-| [asphodelos#40](https://github.com/nakita628/asphodelos/issues/40) the fetch fallback requests a relative URL | wrong at run time, not a type error |
-| [asphodelos#41](https://github.com/nakita628/asphodelos/issues/41) angular-query imports the deprecated `@tanstack/angular-query-experimental` | a deprecation warning on install |
-
-Until the daily routine regenerates them with the latest takibi-hono ([docs/daily-routine.md](./docs/daily-routine.md), 1c), the takibi-hono apps show what takibi-hono 0.8.0 produced on 2026-11-21: [truth#14](https://github.com/nakita628/truth/issues/14) to [truth#22](https://github.com/nakita628/truth/issues/22) (fixed in truth since) and [takibi-hono#73](https://github.com/nakita628/takibi-hono/issues/73) (`hono-openapi-typebox` fails on every spec).

@@ -12,17 +12,42 @@
     "sha256": "ef338088f4c6a73fdb9840acd1ce2bf8f16c1870f4437bfc563418c7e0de7278",
     "canonical": "22c72cba9ed7461521d386f3a32f4fa400af39edc85e0b8dc9aacf0587384adf"
   },
+  "line-channel-access-token": {
+    "url": "https://raw.githubusercontent.com/line/line-openapi/main/channel-access-token.yml",
+    "pinned": "https://github.com/line/line-openapi/blob/967498a4e192914679ad0571d5845b29aa9755de/channel-access-token.yml",
+    "file": "line-channel-access-token.yaml",
+    "title": "Channel Access Token API",
+    "version": "0.0.1",
+    "openapi": "3.0.0",
+    "operations": 8,
+    "added": "2026-11-24",
+    "etag": "W/\"efec6e6f4e167a2ac68f8e4ebf0e2022e16f2f32f543cbeee5e4581bc375e73e\"",
+    "sha256": "17749c86ea7504946f229eb80c49a0f4f39113642b0169b082cf3b591baf65fb"
+  },
+  "line-insight": {
+    "url": "https://raw.githubusercontent.com/line/line-openapi/main/insight.yml",
+    "pinned": "https://github.com/line/line-openapi/blob/967498a4e192914679ad0571d5845b29aa9755de/insight.yml",
+    "file": "line-insight.yaml",
+    "title": "LINE Messaging API(Insight)",
+    "version": "0.0.1",
+    "openapi": "3.0.0",
+    "operations": 7,
+    "added": "2026-11-24",
+    "etag": "W/\"3bdfab125c17ac8409669aa38282936a09aeaf1f81c9da4ebb06bb0ed0408dd4\"",
+    "sha256": "e4e3a1bbf6c5bf670f11f07c3c92659b236536355286748f3b27252d335723cd"
+  },
   "openai": {
     "url": "https://raw.githubusercontent.com/openai/openai-openapi/main/openapi.yaml",
-    "pinned": "https://github.com/openai/openai-openapi/blob/2a24deae6f89f84d0e88ce3c9d96c00304dca0b8/openapi.yaml",
     "file": "openai.yaml",
     "title": "OpenAI API",
     "version": "2.3.0",
     "openapi": "3.1.0",
     "operations": 388,
     "added": "2026-11-21",
-    "etag": "W/\"cfd5a566d6c6692619149f60ecd4b40f25d9363b28029578b5c6e1bd8caae55b\"",
-    "sha256": "fb196a60eef4125b6e4c6874488eed9022a6be8014aff5e874f74930daf5b559"
+    "sha256": "7c8d7421248daafc14d6dc749f34da30e97f0c91c7d1f19f6fd011a302c84bcc",
+    "pinned": "https://github.com/openai/openai-openapi/blob/373f26a9aec3608e3158f2a0d4b8ae49d13162a4/openapi.yaml",
+    "updated": "2026-11-24",
+    "etag": "W/\"4b91830a582a4ae3a3acafb1132665b472a831cb8a1036d4db4ef2b7c80e3d92\""
   },
   "petstore": {
     "url": "https://petstore3.swagger.io/api/v3/openapi.json",
@@ -59,5 +84,18 @@
     "etag": "W/\"7240ad91b84dc31001356e0e110de6c7edc5fa8c3a62b396e2a986599cfb6a4d\"",
     "sha256": "213e8f751c0d41cb3770374c8199ba6c897ac146389e94d688001285d43b92d7",
     "canonical": "e9710ed1bec9ea4692676bbbff8b0375a9e629962374bbc837f4c5058303588d"
+  },
+  "twilio": {
+    "url": "https://raw.githubusercontent.com/twilio/twilio-oai/main/spec/json/twilio_api_v2010.json",
+    "pinned": "https://github.com/twilio/twilio-oai/blob/090e1654f5ca1f6a01b6a117fbec5f75c44f44d7/spec/json/twilio_api_v2010.json",
+    "file": "twilio.json",
+    "title": "Twilio - Api",
+    "version": "1.0.0",
+    "openapi": "3.0.1",
+    "operations": 197,
+    "added": "2026-11-24",
+    "etag": "W/\"2fab8ea94f5d2646d6a273d27804566bed81a0c1f4dcc4b2ac21ddf65bbb8149\"",
+    "sha256": "f5efc0ed7078b035f675e04aa2774eaea43a0606c1d699b1fd35759258e5ddc6",
+    "canonical": "85a7d782bafbe1d367214cdebd6b9cb93d39162c22af0051edfb37a628fed617"
   }
 }

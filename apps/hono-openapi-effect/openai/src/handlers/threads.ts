@@ -154,15 +154,24 @@ export const threadsHandler = new Hono()
       'query',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          limit: Schema.FiniteFromString.check(Schema.isInt()).pipe(
-            Schema.withDecodingDefaultType(Effect.succeed(20)),
-          ),
+          limit: Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+            .pipe(
+              Schema.decodeTo(
+                Schema.Finite,
+                SchemaTransformation.transform({
+                  decode: (input) => Number(input),
+                  encode: (output) => String(output),
+                }),
+              ),
+            )
+            .check(Schema.isInt())
+            .pipe(Schema.withDecodingDefaultType(Effect.succeed(20))),
           order: Schema.Literals(['asc', 'desc']).pipe(
             Schema.withDecodingDefaultType(Effect.succeed('desc')),
           ),
-          after: Schema.optional(Schema.String),
-          before: Schema.optional(Schema.String),
-          run_id: Schema.optional(Schema.String),
+          after: Schema.optionalKey(Schema.String),
+          before: Schema.optionalKey(Schema.String),
+          run_id: Schema.optionalKey(Schema.String),
         }),
       ),
     ),
@@ -297,14 +306,23 @@ export const threadsHandler = new Hono()
       'query',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          limit: Schema.FiniteFromString.check(Schema.isInt()).pipe(
-            Schema.withDecodingDefaultType(Effect.succeed(20)),
-          ),
+          limit: Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+            .pipe(
+              Schema.decodeTo(
+                Schema.Finite,
+                SchemaTransformation.transform({
+                  decode: (input) => Number(input),
+                  encode: (output) => String(output),
+                }),
+              ),
+            )
+            .check(Schema.isInt())
+            .pipe(Schema.withDecodingDefaultType(Effect.succeed(20))),
           order: Schema.Literals(['asc', 'desc']).pipe(
             Schema.withDecodingDefaultType(Effect.succeed('desc')),
           ),
-          after: Schema.optional(Schema.String),
-          before: Schema.optional(Schema.String),
+          after: Schema.optionalKey(Schema.String),
+          before: Schema.optionalKey(Schema.String),
         }),
       ),
     ),
@@ -335,7 +353,7 @@ export const threadsHandler = new Hono()
       'query',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          'include[]': Schema.optional(
+          'include[]': Schema.optionalKey(
             Schema.Unknown.pipe(
               Schema.decodeTo(
                 Schema.Unknown,
@@ -455,15 +473,24 @@ export const threadsHandler = new Hono()
       'query',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          limit: Schema.FiniteFromString.check(Schema.isInt()).pipe(
-            Schema.withDecodingDefaultType(Effect.succeed(20)),
-          ),
+          limit: Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+            .pipe(
+              Schema.decodeTo(
+                Schema.Finite,
+                SchemaTransformation.transform({
+                  decode: (input) => Number(input),
+                  encode: (output) => String(output),
+                }),
+              ),
+            )
+            .check(Schema.isInt())
+            .pipe(Schema.withDecodingDefaultType(Effect.succeed(20))),
           order: Schema.Literals(['asc', 'desc']).pipe(
             Schema.withDecodingDefaultType(Effect.succeed('desc')),
           ),
-          after: Schema.optional(Schema.String),
-          before: Schema.optional(Schema.String),
-          'include[]': Schema.optional(
+          after: Schema.optionalKey(Schema.String),
+          before: Schema.optionalKey(Schema.String),
+          'include[]': Schema.optionalKey(
             Schema.Unknown.pipe(
               Schema.decodeTo(
                 Schema.Unknown,
@@ -514,7 +541,7 @@ export const threadsHandler = new Hono()
       'query',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          'include[]': Schema.optional(
+          'include[]': Schema.optionalKey(
             Schema.Unknown.pipe(
               Schema.decodeTo(
                 Schema.Unknown,

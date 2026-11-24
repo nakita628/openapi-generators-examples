@@ -125,7 +125,7 @@ export const guildsRouter = t.router({
       Schema.toStandardSchemaV1(
         Schema.Struct({
           guild_id: SnowflakeTypeSchema,
-          with_counts: Schema.optional(Schema.Boolean),
+          with_counts: Schema.optionalKey(Schema.Boolean),
         }),
       ),
     )
@@ -138,7 +138,7 @@ export const guildsRouter = t.router({
       Schema.toStandardSchemaV1(
         Schema.Struct({
           guild_id: SnowflakeTypeSchema,
-          name: Schema.optional(
+          name: Schema.optionalKey(
             Schema.String.check(
               Schema.makeFilter((input) => [...input].length >= 2, {
                 expected: 'a string of at least 2 characters',
@@ -148,7 +148,7 @@ export const guildsRouter = t.router({
               }),
             ),
           ),
-          description: Schema.optional(
+          description: Schema.optionalKey(
             Schema.NullOr(
               Schema.String.check(
                 Schema.makeFilter((input) => [...input].length >= 0, {
@@ -160,33 +160,29 @@ export const guildsRouter = t.router({
               ),
             ),
           ),
-          region: Schema.optional(Schema.NullOr(Schema.String)),
-          icon: Schema.optional(Schema.NullOr(Schema.String)),
-          verification_level: Schema.optional(
-            Schema.Union([Schema.NullOr(Schema.Null), VerificationLevelsSchema]),
+          region: Schema.optionalKey(Schema.NullOr(Schema.String)),
+          icon: Schema.optionalKey(Schema.NullOr(Schema.String)),
+          verification_level: Schema.optionalKey(
+            Schema.Union([Schema.Null, VerificationLevelsSchema]),
           ),
-          default_message_notifications: Schema.optional(
-            Schema.Union([Schema.NullOr(Schema.Null), UserNotificationSettingsSchema]),
+          default_message_notifications: Schema.optionalKey(
+            Schema.Union([Schema.Null, UserNotificationSettingsSchema]),
           ),
-          explicit_content_filter: Schema.optional(
-            Schema.Union([Schema.NullOr(Schema.Null), GuildExplicitContentFilterTypesSchema]),
+          explicit_content_filter: Schema.optionalKey(
+            Schema.Union([Schema.Null, GuildExplicitContentFilterTypesSchema]),
           ),
-          preferred_locale: Schema.optional(
-            Schema.Union([Schema.NullOr(Schema.Null), AvailableLocalesEnumSchema]),
+          preferred_locale: Schema.optionalKey(
+            Schema.Union([Schema.Null, AvailableLocalesEnumSchema]),
           ),
-          afk_timeout: Schema.optional(
-            Schema.Union([Schema.NullOr(Schema.Null), AfkTimeoutsSchema]),
+          afk_timeout: Schema.optionalKey(Schema.Union([Schema.Null, AfkTimeoutsSchema])),
+          afk_channel_id: Schema.optionalKey(Schema.Union([Schema.Null, SnowflakeTypeSchema])),
+          system_channel_id: Schema.optionalKey(Schema.Union([Schema.Null, SnowflakeTypeSchema])),
+          splash: Schema.optionalKey(Schema.NullOr(Schema.String)),
+          banner: Schema.optionalKey(Schema.NullOr(Schema.String)),
+          system_channel_flags: Schema.optionalKey(
+            Schema.NullOr(Schema.Number.check(Schema.isInt())),
           ),
-          afk_channel_id: Schema.optional(
-            Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema]),
-          ),
-          system_channel_id: Schema.optional(
-            Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema]),
-          ),
-          splash: Schema.optional(Schema.NullOr(Schema.String)),
-          banner: Schema.optional(Schema.NullOr(Schema.String)),
-          system_channel_flags: Schema.optional(Schema.NullOr(Schema.Number.check(Schema.isInt()))),
-          features: Schema.optional(
+          features: Schema.optionalKey(
             Schema.NullOr(
               Schema.Array(
                 Schema.NullOr(
@@ -199,18 +195,16 @@ export const guildsRouter = t.router({
               ).check(Schema.isMaxLength(1521), Schema.isUnique()),
             ),
           ),
-          discovery_splash: Schema.optional(Schema.NullOr(Schema.String)),
-          home_header: Schema.optional(Schema.NullOr(Schema.String)),
-          rules_channel_id: Schema.optional(
-            Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema]),
+          discovery_splash: Schema.optionalKey(Schema.NullOr(Schema.String)),
+          home_header: Schema.optionalKey(Schema.NullOr(Schema.String)),
+          rules_channel_id: Schema.optionalKey(Schema.Union([Schema.Null, SnowflakeTypeSchema])),
+          safety_alerts_channel_id: Schema.optionalKey(
+            Schema.Union([Schema.Null, SnowflakeTypeSchema]),
           ),
-          safety_alerts_channel_id: Schema.optional(
-            Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema]),
+          public_updates_channel_id: Schema.optionalKey(
+            Schema.Union([Schema.Null, SnowflakeTypeSchema]),
           ),
-          public_updates_channel_id: Schema.optional(
-            Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema]),
-          ),
-          premium_progress_bar_enabled: Schema.optional(Schema.NullOr(Schema.Boolean)),
+          premium_progress_bar_enabled: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
         }),
       ),
     )
@@ -223,12 +217,12 @@ export const guildsRouter = t.router({
       Schema.toStandardSchemaV1(
         Schema.Struct({
           guild_id: SnowflakeTypeSchema,
-          user_id: Schema.optional(SnowflakeTypeSchema),
-          target_id: Schema.optional(SnowflakeTypeSchema),
-          action_type: Schema.optional(AuditLogActionTypesSchema),
-          before: Schema.optional(SnowflakeTypeSchema),
-          after: Schema.optional(SnowflakeTypeSchema),
-          limit: Schema.optional(
+          user_id: Schema.optionalKey(SnowflakeTypeSchema),
+          target_id: Schema.optionalKey(SnowflakeTypeSchema),
+          action_type: Schema.optionalKey(AuditLogActionTypesSchema),
+          before: Schema.optionalKey(SnowflakeTypeSchema),
+          after: Schema.optionalKey(SnowflakeTypeSchema),
+          limit: Schema.optionalKey(
             Schema.Number.check(
               Schema.isInt(),
               Schema.isGreaterThanOrEqualTo(1),
@@ -254,7 +248,7 @@ export const guildsRouter = t.router({
               MLSpamRuleResponseSchema,
               MentionSpamRuleResponseSchema,
               UserProfileRuleResponseSchema,
-              Schema.NullOr(Schema.Null),
+              Schema.Null,
             ]),
           ),
         ),
@@ -356,15 +350,15 @@ export const guildsRouter = t.router({
       Schema.toStandardSchemaV1(
         Schema.Struct({
           guild_id: SnowflakeTypeSchema,
-          limit: Schema.optional(
+          limit: Schema.optionalKey(
             Schema.Number.check(
               Schema.isInt(),
               Schema.isGreaterThanOrEqualTo(1),
               Schema.isLessThanOrEqualTo(1000),
             ),
           ),
-          before: Schema.optional(SnowflakeTypeSchema),
-          after: Schema.optional(SnowflakeTypeSchema),
+          before: Schema.optionalKey(SnowflakeTypeSchema),
+          after: Schema.optionalKey(SnowflakeTypeSchema),
         }),
       ),
     )
@@ -388,7 +382,7 @@ export const guildsRouter = t.router({
         Schema.Struct({
           guild_id: SnowflakeTypeSchema,
           user_id: SnowflakeTypeSchema,
-          delete_message_seconds: Schema.optional(
+          delete_message_seconds: Schema.optionalKey(
             Schema.NullOr(
               Schema.Number.check(
                 Schema.isInt(),
@@ -397,7 +391,7 @@ export const guildsRouter = t.router({
               ),
             ),
           ),
-          delete_message_days: Schema.optional(
+          delete_message_days: Schema.optionalKey(
             Schema.NullOr(
               Schema.Number.check(
                 Schema.isInt(),
@@ -430,7 +424,7 @@ export const guildsRouter = t.router({
             Schema.isMaxLength(200),
             Schema.isUnique(),
           ),
-          delete_message_seconds: Schema.optional(
+          delete_message_seconds: Schema.optionalKey(
             Schema.NullOr(
               Schema.Number.check(
                 Schema.isInt(),
@@ -470,7 +464,7 @@ export const guildsRouter = t.router({
       Schema.toStandardSchemaV1(
         Schema.Struct({
           guild_id: SnowflakeTypeSchema,
-          type: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), ChannelTypesSchema])),
+          type: Schema.optionalKey(Schema.Union([Schema.Null, ChannelTypesSchema])),
           name: Schema.String.check(
             Schema.makeFilter((input) => [...input].length >= 1, {
               expected: 'a string of at least 1 character',
@@ -479,10 +473,10 @@ export const guildsRouter = t.router({
               expected: 'a string of at most 100 characters',
             }),
           ),
-          position: Schema.optional(
+          position: Schema.optionalKey(
             Schema.NullOr(Schema.Number.check(Schema.isInt32(), Schema.isGreaterThanOrEqualTo(0))),
           ),
-          topic: Schema.optional(
+          topic: Schema.optionalKey(
             Schema.NullOr(
               Schema.String.check(
                 Schema.makeFilter((input) => [...input].length >= 0, {
@@ -494,16 +488,16 @@ export const guildsRouter = t.router({
               ),
             ),
           ),
-          bitrate: Schema.optional(
+          bitrate: Schema.optionalKey(
             Schema.NullOr(
               Schema.Number.check(Schema.isInt32(), Schema.isGreaterThanOrEqualTo(8000)),
             ),
           ),
-          user_limit: Schema.optional(
+          user_limit: Schema.optionalKey(
             Schema.NullOr(Schema.Number.check(Schema.isInt32(), Schema.isGreaterThanOrEqualTo(0))),
           ),
-          nsfw: Schema.optional(Schema.NullOr(Schema.Boolean)),
-          rate_limit_per_user: Schema.optional(
+          nsfw: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
+          rate_limit_per_user: Schema.optionalKey(
             Schema.NullOr(
               Schema.Number.check(
                 Schema.isInt(),
@@ -512,25 +506,23 @@ export const guildsRouter = t.router({
               ),
             ),
           ),
-          parent_id: Schema.optional(
-            Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema]),
-          ),
-          permission_overwrites: Schema.optional(
+          parent_id: Schema.optionalKey(Schema.Union([Schema.Null, SnowflakeTypeSchema])),
+          permission_overwrites: Schema.optionalKey(
             Schema.NullOr(
               Schema.Array(ChannelPermissionOverwriteRequestSchema).check(Schema.isMaxLength(100)),
             ),
           ),
-          rtc_region: Schema.optional(Schema.NullOr(Schema.String)),
-          video_quality_mode: Schema.optional(
-            Schema.Union([Schema.NullOr(Schema.Null), VideoQualityModesSchema]),
+          rtc_region: Schema.optionalKey(Schema.NullOr(Schema.String)),
+          video_quality_mode: Schema.optionalKey(
+            Schema.Union([Schema.Null, VideoQualityModesSchema]),
           ),
-          default_auto_archive_duration: Schema.optional(
-            Schema.Union([Schema.NullOr(Schema.Null), ThreadAutoArchiveDurationSchema]),
+          default_auto_archive_duration: Schema.optionalKey(
+            Schema.Union([Schema.Null, ThreadAutoArchiveDurationSchema]),
           ),
-          default_reaction_emoji: Schema.optional(
-            Schema.Union([Schema.NullOr(Schema.Null), UpdateDefaultReactionEmojiRequestSchema]),
+          default_reaction_emoji: Schema.optionalKey(
+            Schema.Union([Schema.Null, UpdateDefaultReactionEmojiRequestSchema]),
           ),
-          default_thread_rate_limit_per_user: Schema.optional(
+          default_thread_rate_limit_per_user: Schema.optionalKey(
             Schema.NullOr(
               Schema.Number.check(
                 Schema.isInt(),
@@ -539,20 +531,18 @@ export const guildsRouter = t.router({
               ),
             ),
           ),
-          default_sort_order: Schema.optional(
-            Schema.Union([Schema.NullOr(Schema.Null), ThreadSortOrderSchema]),
+          default_sort_order: Schema.optionalKey(
+            Schema.Union([Schema.Null, ThreadSortOrderSchema]),
           ),
-          default_forum_layout: Schema.optional(
-            Schema.Union([Schema.NullOr(Schema.Null), ForumLayoutSchema]),
+          default_forum_layout: Schema.optionalKey(Schema.Union([Schema.Null, ForumLayoutSchema])),
+          default_tag_setting: Schema.optionalKey(
+            Schema.Union([Schema.Null, ThreadSearchTagSettingSchema]),
           ),
-          default_tag_setting: Schema.optional(
-            Schema.Union([Schema.NullOr(Schema.Null), ThreadSearchTagSettingSchema]),
-          ),
-          available_tags: Schema.optional(
+          available_tags: Schema.optionalKey(
             Schema.NullOr(
-              Schema.Array(
-                Schema.Union([Schema.NullOr(Schema.Null), CreateOrUpdateThreadTagRequestSchema]),
-              ).check(Schema.isMaxLength(20)),
+              Schema.Array(Schema.Union([Schema.Null, CreateOrUpdateThreadTagRequestSchema])).check(
+                Schema.isMaxLength(20),
+              ),
             ),
           ),
         }),
@@ -569,16 +559,14 @@ export const guildsRouter = t.router({
           guild_id: SnowflakeTypeSchema,
           body: Schema.Array(
             Schema.Struct({
-              id: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema])),
-              position: Schema.optional(
+              id: Schema.optionalKey(Schema.Union([Schema.Null, SnowflakeTypeSchema])),
+              position: Schema.optionalKey(
                 Schema.NullOr(
                   Schema.Number.check(Schema.isInt32(), Schema.isGreaterThanOrEqualTo(0)),
                 ),
               ),
-              parent_id: Schema.optional(
-                Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema]),
-              ),
-              lock_permissions: Schema.optional(Schema.NullOr(Schema.Boolean)),
+              parent_id: Schema.optionalKey(Schema.Union([Schema.Null, SnowflakeTypeSchema])),
+              lock_permissions: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
             }),
           ),
         }),
@@ -607,9 +595,9 @@ export const guildsRouter = t.router({
             }),
           ),
           image: Schema.String,
-          roles: Schema.optional(
+          roles: Schema.optionalKey(
             Schema.NullOr(
-              Schema.Array(Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema])).check(
+              Schema.Array(Schema.Union([Schema.Null, SnowflakeTypeSchema])).check(
                 Schema.isMaxLength(1521),
                 Schema.isUnique(),
               ),
@@ -647,7 +635,7 @@ export const guildsRouter = t.router({
         Schema.Struct({
           guild_id: SnowflakeTypeSchema,
           emoji_id: SnowflakeTypeSchema,
-          name: Schema.optional(
+          name: Schema.optionalKey(
             Schema.String.check(
               Schema.makeFilter((input) => [...input].length >= 2, {
                 expected: 'a string of at least 2 characters',
@@ -657,9 +645,9 @@ export const guildsRouter = t.router({
               }),
             ),
           ),
-          roles: Schema.optional(
+          roles: Schema.optionalKey(
             Schema.NullOr(
-              Schema.Array(Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema])).check(
+              Schema.Array(Schema.Union([Schema.Null, SnowflakeTypeSchema])).check(
                 Schema.isMaxLength(1521),
                 Schema.isUnique(),
               ),
@@ -677,7 +665,7 @@ export const guildsRouter = t.router({
       Schema.toStandardSchemaV1(
         Schema.Struct({
           guild_id: SnowflakeTypeSchema,
-          invites_disabled_until: Schema.optional(
+          invites_disabled_until: Schema.optionalKey(
             Schema.NullOr(
               Schema.String.check(
                 Schema.isPattern(
@@ -686,7 +674,7 @@ export const guildsRouter = t.router({
               ),
             ).annotate({ description: 'When invites will be enabled again' }),
           ),
-          dms_disabled_until: Schema.optional(
+          dms_disabled_until: Schema.optionalKey(
             Schema.NullOr(
               Schema.String.check(
                 Schema.isPattern(
@@ -739,7 +727,7 @@ export const guildsRouter = t.router({
               FriendInviteResponseSchema,
               GroupDMInviteResponseSchema,
               GuildInviteResponseSchema,
-              Schema.NullOr(Schema.Null),
+              Schema.Null,
             ]),
           ),
         ),
@@ -753,14 +741,14 @@ export const guildsRouter = t.router({
       Schema.toStandardSchemaV1(
         Schema.Struct({
           guild_id: SnowflakeTypeSchema,
-          limit: Schema.optional(
+          limit: Schema.optionalKey(
             Schema.Number.check(
               Schema.isInt(),
               Schema.isGreaterThanOrEqualTo(1),
               Schema.isLessThanOrEqualTo(1000),
             ),
           ),
-          after: Schema.optional(SnowflakeTypeSchema),
+          after: Schema.optionalKey(SnowflakeTypeSchema),
         }),
       ),
     )
@@ -773,7 +761,7 @@ export const guildsRouter = t.router({
       Schema.toStandardSchemaV1(
         Schema.Struct({
           guild_id: SnowflakeTypeSchema,
-          nick: Schema.optional(
+          nick: Schema.optionalKey(
             Schema.NullOr(
               Schema.String.check(
                 Schema.makeFilter((input) => [...input].length <= 32, {
@@ -782,8 +770,8 @@ export const guildsRouter = t.router({
               ),
             ),
           ),
-          avatar: Schema.optional(Schema.NullOr(Schema.String)),
-          bio: Schema.optional(
+          avatar: Schema.optionalKey(Schema.NullOr(Schema.String)),
+          bio: Schema.optionalKey(
             Schema.NullOr(
               Schema.String.check(
                 Schema.makeFilter((input) => [...input].length <= 300, {
@@ -792,7 +780,7 @@ export const guildsRouter = t.router({
               ),
             ),
           ),
-          banner: Schema.optional(Schema.NullOr(Schema.String)),
+          banner: Schema.optionalKey(Schema.NullOr(Schema.String)),
         }),
       ),
     )
@@ -805,7 +793,7 @@ export const guildsRouter = t.router({
       Schema.toStandardSchemaV1(
         Schema.Struct({
           guild_id: SnowflakeTypeSchema,
-          limit: Schema.optional(
+          limit: Schema.optionalKey(
             Schema.Number.check(
               Schema.isInt(),
               Schema.isGreaterThanOrEqualTo(1),
@@ -843,7 +831,7 @@ export const guildsRouter = t.router({
         Schema.Struct({
           guild_id: SnowflakeTypeSchema,
           user_id: SnowflakeTypeSchema,
-          nick: Schema.optional(
+          nick: Schema.optionalKey(
             Schema.NullOr(
               Schema.String.check(
                 Schema.makeFilter((input) => [...input].length <= 32, {
@@ -852,19 +840,19 @@ export const guildsRouter = t.router({
               ),
             ),
           ),
-          roles: Schema.optional(
+          roles: Schema.optionalKey(
             Schema.NullOr(
               Schema.Array(SnowflakeTypeSchema).check(Schema.isMaxLength(250), Schema.isUnique()),
             ),
           ),
-          mute: Schema.optional(Schema.NullOr(Schema.Boolean)),
-          deaf: Schema.optional(Schema.NullOr(Schema.Boolean)),
+          mute: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
+          deaf: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
           access_token: Schema.String.check(
             Schema.makeFilter((input) => [...input].length <= 10240, {
               expected: 'a string of at most 10240 characters',
             }),
           ),
-          flags: Schema.optional(Schema.NullOr(Schema.Number.check(Schema.isInt()))),
+          flags: Schema.optionalKey(Schema.NullOr(Schema.Number.check(Schema.isInt()))),
         }),
       ),
     )
@@ -887,7 +875,7 @@ export const guildsRouter = t.router({
         Schema.Struct({
           guild_id: SnowflakeTypeSchema,
           user_id: SnowflakeTypeSchema,
-          nick: Schema.optional(
+          nick: Schema.optionalKey(
             Schema.NullOr(
               Schema.String.check(
                 Schema.makeFilter((input) => [...input].length <= 32, {
@@ -896,20 +884,18 @@ export const guildsRouter = t.router({
               ),
             ),
           ),
-          roles: Schema.optional(
+          roles: Schema.optionalKey(
             Schema.NullOr(
-              Schema.Array(Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema])).check(
+              Schema.Array(Schema.Union([Schema.Null, SnowflakeTypeSchema])).check(
                 Schema.isMaxLength(350),
                 Schema.isUnique(),
               ),
             ),
           ),
-          mute: Schema.optional(Schema.NullOr(Schema.Boolean)),
-          deaf: Schema.optional(Schema.NullOr(Schema.Boolean)),
-          channel_id: Schema.optional(
-            Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema]),
-          ),
-          communication_disabled_until: Schema.optional(
+          mute: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
+          deaf: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
+          channel_id: Schema.optionalKey(Schema.Union([Schema.Null, SnowflakeTypeSchema])),
+          communication_disabled_until: Schema.optionalKey(
             Schema.NullOr(
               Schema.String.check(
                 Schema.isPattern(
@@ -918,7 +904,7 @@ export const guildsRouter = t.router({
               ),
             ),
           ),
-          flags: Schema.optional(Schema.NullOr(Schema.Number.check(Schema.isInt()))),
+          flags: Schema.optionalKey(Schema.NullOr(Schema.Number.check(Schema.isInt()))),
         }),
       ),
     )
@@ -957,61 +943,61 @@ export const guildsRouter = t.router({
       Schema.toStandardSchemaV1(
         Schema.Struct({
           guild_id: SnowflakeTypeSchema,
-          sort_by: Schema.optional(SortingModeSchema),
-          sort_order: Schema.optional(SortingOrderSchema),
-          content: Schema.optional(
+          sort_by: Schema.optionalKey(SortingModeSchema),
+          sort_order: Schema.optionalKey(SortingOrderSchema),
+          content: Schema.optionalKey(
             Schema.String.check(
               Schema.makeFilter((input) => [...input].length <= 1024, {
                 expected: 'a string of at most 1024 characters',
               }),
             ),
           ),
-          slop: Schema.optional(
+          slop: Schema.optionalKey(
             Schema.Number.check(
               Schema.isInt(),
               Schema.isGreaterThanOrEqualTo(0),
               Schema.isLessThanOrEqualTo(100),
             ),
           ),
-          author_id: Schema.optional(
+          author_id: Schema.optionalKey(
             Schema.Array(SnowflakeTypeSchema).check(Schema.isMaxLength(100), Schema.isUnique()),
           ),
-          author_type: Schema.optional(
+          author_type: Schema.optionalKey(
             Schema.Array(AuthorTypeSchema).check(Schema.isMaxLength(6), Schema.isUnique()),
           ),
-          mentions: Schema.optional(
+          mentions: Schema.optionalKey(
             Schema.Array(SnowflakeTypeSchema).check(Schema.isMaxLength(100), Schema.isUnique()),
           ),
-          mentions_role_id: Schema.optional(
+          mentions_role_id: Schema.optionalKey(
             Schema.Array(SnowflakeTypeSchema).check(Schema.isMaxLength(100), Schema.isUnique()),
           ),
-          replied_to_user_id: Schema.optional(
+          replied_to_user_id: Schema.optionalKey(
             Schema.Array(SnowflakeTypeSchema).check(Schema.isMaxLength(100), Schema.isUnique()),
           ),
-          replied_to_message_id: Schema.optional(
+          replied_to_message_id: Schema.optionalKey(
             Schema.Array(SnowflakeTypeSchema).check(Schema.isMaxLength(100), Schema.isUnique()),
           ),
-          mention_everyone: Schema.optional(Schema.Boolean),
-          min_id: Schema.optional(SnowflakeTypeSchema),
-          max_id: Schema.optional(SnowflakeTypeSchema),
-          limit: Schema.optional(
+          mention_everyone: Schema.optionalKey(Schema.Boolean),
+          min_id: Schema.optionalKey(SnowflakeTypeSchema),
+          max_id: Schema.optionalKey(SnowflakeTypeSchema),
+          limit: Schema.optionalKey(
             Schema.Number.check(
               Schema.isInt(),
               Schema.isGreaterThanOrEqualTo(1),
               Schema.isLessThanOrEqualTo(25),
             ),
           ),
-          offset: Schema.optional(
+          offset: Schema.optionalKey(
             Schema.Number.check(
               Schema.isInt(),
               Schema.isGreaterThanOrEqualTo(0),
               Schema.isLessThanOrEqualTo(9975),
             ),
           ),
-          has: Schema.optional(
+          has: Schema.optionalKey(
             Schema.Array(HasOptionSchema).check(Schema.isMaxLength(18), Schema.isUnique()),
           ),
-          link_hostname: Schema.optional(
+          link_hostname: Schema.optionalKey(
             Schema.Array(
               Schema.String.check(
                 Schema.makeFilter((input) => [...input].length <= 256, {
@@ -1020,7 +1006,7 @@ export const guildsRouter = t.router({
               ),
             ).check(Schema.isMaxLength(100), Schema.isUnique()),
           ),
-          embed_provider: Schema.optional(
+          embed_provider: Schema.optionalKey(
             Schema.Array(
               Schema.String.check(
                 Schema.makeFilter((input) => [...input].length <= 256, {
@@ -1029,10 +1015,10 @@ export const guildsRouter = t.router({
               ),
             ).check(Schema.isMaxLength(100), Schema.isUnique()),
           ),
-          embed_type: Schema.optional(
+          embed_type: Schema.optionalKey(
             Schema.Array(SearchableEmbedTypeSchema).check(Schema.isMaxLength(5), Schema.isUnique()),
           ),
-          attachment_extension: Schema.optional(
+          attachment_extension: Schema.optionalKey(
             Schema.Array(
               Schema.String.check(
                 Schema.makeFilter((input) => [...input].length <= 256, {
@@ -1041,7 +1027,7 @@ export const guildsRouter = t.router({
               ),
             ).check(Schema.isMaxLength(100), Schema.isUnique()),
           ),
-          attachment_filename: Schema.optional(
+          attachment_filename: Schema.optionalKey(
             Schema.Array(
               Schema.String.check(
                 Schema.makeFilter((input) => [...input].length <= 1024, {
@@ -1050,9 +1036,9 @@ export const guildsRouter = t.router({
               ),
             ).check(Schema.isMaxLength(100), Schema.isUnique()),
           ),
-          pinned: Schema.optional(Schema.Boolean),
-          include_nsfw: Schema.optional(Schema.Boolean),
-          channel_id: Schema.optional(
+          pinned: Schema.optionalKey(Schema.Boolean),
+          include_nsfw: Schema.optionalKey(Schema.Boolean),
+          channel_id: Schema.optionalKey(
             Schema.Array(SnowflakeTypeSchema).check(Schema.isMaxLength(500), Schema.isUnique()),
           ),
         }),
@@ -1079,20 +1065,18 @@ export const guildsRouter = t.router({
       Schema.toStandardSchemaV1(
         Schema.Struct({
           guild_id: SnowflakeTypeSchema,
-          prompts: Schema.optional(
+          prompts: Schema.optionalKey(
             Schema.NullOr(
               Schema.Array(UpdateOnboardingPromptRequestSchema).check(Schema.isMaxLength(15)),
             ),
           ),
-          enabled: Schema.optional(Schema.NullOr(Schema.Boolean)),
-          default_channel_ids: Schema.optional(
+          enabled: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
+          default_channel_ids: Schema.optionalKey(
             Schema.NullOr(
               Schema.Array(SnowflakeTypeSchema).check(Schema.isMaxLength(500), Schema.isUnique()),
             ),
           ),
-          mode: Schema.optional(
-            Schema.Union([Schema.NullOr(Schema.Null), GuildOnboardingModeSchema]),
-          ),
+          mode: Schema.optionalKey(Schema.Union([Schema.Null, GuildOnboardingModeSchema])),
         }),
       ),
     )
@@ -1131,17 +1115,17 @@ export const guildsRouter = t.router({
       Schema.toStandardSchemaV1(
         Schema.Struct({
           guild_id: SnowflakeTypeSchema,
-          days: Schema.optional(
+          days: Schema.optionalKey(
             Schema.Number.check(
               Schema.isInt(),
               Schema.isGreaterThanOrEqualTo(1),
               Schema.isLessThanOrEqualTo(30),
             ),
           ),
-          include_roles: Schema.optional(
+          include_roles: Schema.optionalKey(
             Schema.Union([
               Schema.String,
-              Schema.Array(Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema])).check(
+              Schema.Array(Schema.Union([Schema.Null, SnowflakeTypeSchema])).check(
                 Schema.isMaxLength(100),
                 Schema.isUnique(),
               ),
@@ -1159,7 +1143,7 @@ export const guildsRouter = t.router({
       Schema.toStandardSchemaV1(
         Schema.Struct({
           guild_id: SnowflakeTypeSchema,
-          days: Schema.optional(
+          days: Schema.optionalKey(
             Schema.NullOr(
               Schema.Number.check(
                 Schema.isInt(),
@@ -1168,12 +1152,12 @@ export const guildsRouter = t.router({
               ),
             ),
           ),
-          compute_prune_count: Schema.optional(Schema.NullOr(Schema.Boolean)),
-          include_roles: Schema.optional(
+          compute_prune_count: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
+          include_roles: Schema.optionalKey(
             Schema.Union([
               Schema.String,
               Schema.Array(SnowflakeTypeSchema).check(Schema.isMaxLength(100), Schema.isUnique()),
-              Schema.NullOr(Schema.Null),
+              Schema.Null,
             ]),
           ),
         }),
@@ -1194,16 +1178,16 @@ export const guildsRouter = t.router({
       Schema.toStandardSchemaV1(
         Schema.Struct({
           guild_id: SnowflakeTypeSchema,
-          status: Schema.optional(GuildJoinRequestApplicationStatusSchema),
-          limit: Schema.optional(
+          status: Schema.optionalKey(GuildJoinRequestApplicationStatusSchema),
+          limit: Schema.optionalKey(
             Schema.Number.check(
               Schema.isInt(),
               Schema.isGreaterThanOrEqualTo(1),
               Schema.isLessThanOrEqualTo(100),
             ),
           ),
-          before: Schema.optional(SnowflakeTypeSchema),
-          after: Schema.optional(SnowflakeTypeSchema),
+          before: Schema.optionalKey(SnowflakeTypeSchema),
+          after: Schema.optionalKey(SnowflakeTypeSchema),
         }),
       ),
     )
@@ -1217,12 +1201,12 @@ export const guildsRouter = t.router({
         Schema.Struct({
           guild_id: SnowflakeTypeSchema,
           request_id: SnowflakeTypeSchema,
-          action: Schema.optional(
+          action: Schema.optionalKey(
             GuildJoinRequestApplicationStatusSchema.annotate({
               description: 'Whether to approve or reject the join request',
             }),
           ),
-          rejection_reason: Schema.optional(
+          rejection_reason: Schema.optionalKey(
             Schema.NullOr(
               Schema.String.check(
                 Schema.makeFilter((input) => [...input].length <= 160, {
@@ -1249,7 +1233,7 @@ export const guildsRouter = t.router({
       Schema.toStandardSchemaV1(
         Schema.Struct({
           guild_id: SnowflakeTypeSchema,
-          name: Schema.optional(
+          name: Schema.optionalKey(
             Schema.NullOr(
               Schema.String.check(
                 Schema.makeFilter((input) => [...input].length >= 1, {
@@ -1261,8 +1245,8 @@ export const guildsRouter = t.router({
               ),
             ),
           ),
-          permissions: Schema.optional(Schema.NullOr(Schema.Number.check(Schema.isInt()))),
-          color: Schema.optional(
+          permissions: Schema.optionalKey(Schema.NullOr(Schema.Number.check(Schema.isInt()))),
+          color: Schema.optionalKey(
             Schema.NullOr(
               Schema.Number.check(
                 Schema.isInt(),
@@ -1271,11 +1255,11 @@ export const guildsRouter = t.router({
               ),
             ),
           ),
-          colors: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), RoleColorsSchema])),
-          hoist: Schema.optional(Schema.NullOr(Schema.Boolean)),
-          mentionable: Schema.optional(Schema.NullOr(Schema.Boolean)),
-          icon: Schema.optional(Schema.NullOr(Schema.String)),
-          unicode_emoji: Schema.optional(
+          colors: Schema.optionalKey(Schema.Union([Schema.Null, RoleColorsSchema])),
+          hoist: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
+          mentionable: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
+          icon: Schema.optionalKey(Schema.NullOr(Schema.String)),
+          unicode_emoji: Schema.optionalKey(
             Schema.NullOr(
               Schema.String.check(
                 Schema.makeFilter((input) => [...input].length <= 100, {
@@ -1339,7 +1323,7 @@ export const guildsRouter = t.router({
         Schema.Struct({
           guild_id: SnowflakeTypeSchema,
           role_id: SnowflakeTypeSchema,
-          name: Schema.optional(
+          name: Schema.optionalKey(
             Schema.NullOr(
               Schema.String.check(
                 Schema.makeFilter((input) => [...input].length >= 1, {
@@ -1351,8 +1335,8 @@ export const guildsRouter = t.router({
               ),
             ),
           ),
-          permissions: Schema.optional(Schema.NullOr(Schema.Number.check(Schema.isInt()))),
-          color: Schema.optional(
+          permissions: Schema.optionalKey(Schema.NullOr(Schema.Number.check(Schema.isInt()))),
+          color: Schema.optionalKey(
             Schema.NullOr(
               Schema.Number.check(
                 Schema.isInt(),
@@ -1361,11 +1345,11 @@ export const guildsRouter = t.router({
               ),
             ),
           ),
-          colors: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), RoleColorsSchema])),
-          hoist: Schema.optional(Schema.NullOr(Schema.Boolean)),
-          mentionable: Schema.optional(Schema.NullOr(Schema.Boolean)),
-          icon: Schema.optional(Schema.NullOr(Schema.String)),
-          unicode_emoji: Schema.optional(
+          colors: Schema.optionalKey(Schema.Union([Schema.Null, RoleColorsSchema])),
+          hoist: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
+          mentionable: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
+          icon: Schema.optionalKey(Schema.NullOr(Schema.String)),
+          unicode_emoji: Schema.optionalKey(
             Schema.NullOr(
               Schema.String.check(
                 Schema.makeFilter((input) => [...input].length <= 100, {
@@ -1386,7 +1370,7 @@ export const guildsRouter = t.router({
       Schema.toStandardSchemaV1(
         Schema.Struct({
           guild_id: SnowflakeTypeSchema,
-          with_user_count: Schema.optional(Schema.Boolean),
+          with_user_count: Schema.optionalKey(Schema.Boolean),
         }),
       ),
     )
@@ -1437,7 +1421,7 @@ export const guildsRouter = t.router({
         Schema.Struct({
           guild_id: SnowflakeTypeSchema,
           guild_scheduled_event_id: SnowflakeTypeSchema,
-          with_user_count: Schema.optional(Schema.Boolean),
+          with_user_count: Schema.optionalKey(Schema.Boolean),
         }),
       ),
     )
@@ -1497,7 +1481,7 @@ export const guildsRouter = t.router({
         Schema.Struct({
           guild_id: SnowflakeTypeSchema,
           guild_scheduled_event_id: SnowflakeTypeSchema,
-          scheduled_start_time: Schema.optional(
+          scheduled_start_time: Schema.optionalKey(
             Schema.NullOr(
               Schema.String.check(
                 Schema.isPattern(
@@ -1506,7 +1490,7 @@ export const guildsRouter = t.router({
               ),
             ).annotate({ description: 'Overridden start time of this occurrence' }),
           ),
-          scheduled_end_time: Schema.optional(
+          scheduled_end_time: Schema.optionalKey(
             Schema.NullOr(
               Schema.String.check(
                 Schema.isPattern(
@@ -1522,7 +1506,7 @@ export const guildsRouter = t.router({
           ).annotate({
             description: 'The original start time of the occurrence to create an exception for',
           }),
-          is_canceled: Schema.optional(
+          is_canceled: Schema.optionalKey(
             Schema.NullOr(Schema.Boolean).annotate({
               description: 'Whether this occurrence is canceled',
             }),
@@ -1554,7 +1538,7 @@ export const guildsRouter = t.router({
           guild_id: SnowflakeTypeSchema,
           guild_scheduled_event_id: SnowflakeTypeSchema,
           exception_id: SnowflakeTypeSchema,
-          scheduled_start_time: Schema.optional(
+          scheduled_start_time: Schema.optionalKey(
             Schema.NullOr(
               Schema.String.check(
                 Schema.isPattern(
@@ -1563,7 +1547,7 @@ export const guildsRouter = t.router({
               ),
             ).annotate({ description: 'Overridden start time of this occurrence' }),
           ),
-          scheduled_end_time: Schema.optional(
+          scheduled_end_time: Schema.optionalKey(
             Schema.NullOr(
               Schema.String.check(
                 Schema.isPattern(
@@ -1572,7 +1556,7 @@ export const guildsRouter = t.router({
               ),
             ).annotate({ description: 'Overridden end time of this occurrence' }),
           ),
-          is_canceled: Schema.optional(
+          is_canceled: Schema.optionalKey(
             Schema.NullOr(Schema.Boolean).annotate({
               description: 'Whether this occurrence is canceled',
             }),
@@ -1590,16 +1574,16 @@ export const guildsRouter = t.router({
         Schema.Struct({
           guild_id: SnowflakeTypeSchema,
           guild_scheduled_event_id: SnowflakeTypeSchema,
-          with_member: Schema.optional(Schema.Boolean),
-          limit: Schema.optional(
+          with_member: Schema.optionalKey(Schema.Boolean),
+          limit: Schema.optionalKey(
             Schema.Number.check(
               Schema.isInt(),
               Schema.isGreaterThanOrEqualTo(1),
               Schema.isLessThanOrEqualTo(100),
             ),
           ),
-          before: Schema.optional(SnowflakeTypeSchema),
-          after: Schema.optional(SnowflakeTypeSchema),
+          before: Schema.optionalKey(SnowflakeTypeSchema),
+          after: Schema.optionalKey(SnowflakeTypeSchema),
         }),
       ),
     )
@@ -1615,7 +1599,7 @@ export const guildsRouter = t.router({
         Schema.Struct({
           guild_id: SnowflakeTypeSchema,
           guild_scheduled_event_id: SnowflakeTypeSchema,
-          guild_scheduled_event_exception_ids: Schema.optional(
+          guild_scheduled_event_exception_ids: Schema.optionalKey(
             Schema.Array(SnowflakeTypeSchema).check(Schema.isMaxLength(10)),
           ),
         }),
@@ -1633,16 +1617,16 @@ export const guildsRouter = t.router({
             guild_id: SnowflakeTypeSchema,
             guild_scheduled_event_id: SnowflakeTypeSchema,
             guild_scheduled_event_exception_id: SnowflakeTypeSchema,
-            with_member: Schema.optional(Schema.Boolean),
-            limit: Schema.optional(
+            with_member: Schema.optionalKey(Schema.Boolean),
+            limit: Schema.optionalKey(
               Schema.Number.check(
                 Schema.isInt(),
                 Schema.isGreaterThanOrEqualTo(1),
                 Schema.isLessThanOrEqualTo(100),
               ),
             ),
-            before: Schema.optional(SnowflakeTypeSchema),
-            after: Schema.optional(SnowflakeTypeSchema),
+            before: Schema.optionalKey(SnowflakeTypeSchema),
+            after: Schema.optionalKey(SnowflakeTypeSchema),
           }),
         ),
       )
@@ -1671,15 +1655,13 @@ export const guildsRouter = t.router({
               expected: 'a string of at most 32 characters',
             }),
           ),
-          volume: Schema.optional(
+          volume: Schema.optionalKey(
             Schema.NullOr(
               Schema.Number.check(Schema.isGreaterThanOrEqualTo(0), Schema.isLessThanOrEqualTo(1)),
             ),
           ),
-          emoji_id: Schema.optional(
-            Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema]),
-          ),
-          emoji_name: Schema.optional(
+          emoji_id: Schema.optionalKey(Schema.Union([Schema.Null, SnowflakeTypeSchema])),
+          emoji_name: Schema.optionalKey(
             Schema.NullOr(
               Schema.String.check(
                 Schema.makeFilter((input) => [...input].length >= 1, {
@@ -1724,7 +1706,7 @@ export const guildsRouter = t.router({
         Schema.Struct({
           guild_id: SnowflakeTypeSchema,
           sound_id: SnowflakeTypeSchema,
-          name: Schema.optional(
+          name: Schema.optionalKey(
             Schema.String.check(
               Schema.makeFilter((input) => [...input].length >= 2, {
                 expected: 'a string of at least 2 characters',
@@ -1734,15 +1716,13 @@ export const guildsRouter = t.router({
               }),
             ),
           ),
-          volume: Schema.optional(
+          volume: Schema.optionalKey(
             Schema.NullOr(
               Schema.Number.check(Schema.isGreaterThanOrEqualTo(0), Schema.isLessThanOrEqualTo(1)),
             ),
           ),
-          emoji_id: Schema.optional(
-            Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema]),
-          ),
-          emoji_name: Schema.optional(
+          emoji_id: Schema.optionalKey(Schema.Union([Schema.Null, SnowflakeTypeSchema])),
+          emoji_name: Schema.optionalKey(
             Schema.NullOr(
               Schema.String.check(
                 Schema.makeFilter((input) => [...input].length >= 1, {
@@ -1798,7 +1778,7 @@ export const guildsRouter = t.router({
         Schema.Struct({
           guild_id: SnowflakeTypeSchema,
           sticker_id: SnowflakeTypeSchema,
-          name: Schema.optional(
+          name: Schema.optionalKey(
             Schema.String.check(
               Schema.makeFilter((input) => [...input].length >= 2, {
                 expected: 'a string of at least 2 characters',
@@ -1808,7 +1788,7 @@ export const guildsRouter = t.router({
               }),
             ),
           ),
-          tags: Schema.optional(
+          tags: Schema.optionalKey(
             Schema.String.check(
               Schema.makeFilter((input) => [...input].length >= 1, {
                 expected: 'a string of at least 1 character',
@@ -1818,7 +1798,7 @@ export const guildsRouter = t.router({
               }),
             ),
           ),
-          description: Schema.optional(
+          description: Schema.optionalKey(
             Schema.NullOr(
               Schema.String.check(
                 Schema.makeFilter((input) => [...input].length <= 100, {
@@ -1853,7 +1833,7 @@ export const guildsRouter = t.router({
               expected: 'a string of at most 100 characters',
             }),
           ),
-          description: Schema.optional(
+          description: Schema.optionalKey(
             Schema.NullOr(
               Schema.String.check(
                 Schema.makeFilter((input) => [...input].length <= 120, {
@@ -1913,7 +1893,7 @@ export const guildsRouter = t.router({
               expected: 'a string of at most 152133 characters',
             }),
           ),
-          name: Schema.optional(
+          name: Schema.optionalKey(
             Schema.String.check(
               Schema.makeFilter((input) => [...input].length >= 1, {
                 expected: 'a string of at least 1 character',
@@ -1923,7 +1903,7 @@ export const guildsRouter = t.router({
               }),
             ),
           ),
-          description: Schema.optional(
+          description: Schema.optionalKey(
             Schema.NullOr(
               Schema.String.check(
                 Schema.makeFilter((input) => [...input].length <= 120, {
@@ -1962,7 +1942,7 @@ export const guildsRouter = t.router({
       Schema.toStandardSchemaV1(
         Schema.Struct({
           guild_id: SnowflakeTypeSchema,
-          request_to_speak_timestamp: Schema.optional(
+          request_to_speak_timestamp: Schema.optionalKey(
             Schema.NullOr(
               Schema.String.check(
                 Schema.isPattern(
@@ -1971,10 +1951,8 @@ export const guildsRouter = t.router({
               ),
             ),
           ),
-          suppress: Schema.optional(Schema.NullOr(Schema.Boolean)),
-          channel_id: Schema.optional(
-            Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema]),
-          ),
+          suppress: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
+          channel_id: Schema.optionalKey(Schema.Union([Schema.Null, SnowflakeTypeSchema])),
         }),
       ),
     )
@@ -1997,10 +1975,8 @@ export const guildsRouter = t.router({
         Schema.Struct({
           guild_id: SnowflakeTypeSchema,
           user_id: SnowflakeTypeSchema,
-          suppress: Schema.optional(Schema.NullOr(Schema.Boolean)),
-          channel_id: Schema.optional(
-            Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema]),
-          ),
+          suppress: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
+          channel_id: Schema.optionalKey(Schema.Union([Schema.Null, SnowflakeTypeSchema])),
         }),
       ),
     )
@@ -2036,7 +2012,7 @@ export const guildsRouter = t.router({
       Schema.toStandardSchemaV1(
         Schema.Struct({
           guild_id: SnowflakeTypeSchema,
-          description: Schema.optional(
+          description: Schema.optionalKey(
             Schema.NullOr(
               Schema.String.check(
                 Schema.makeFilter((input) => [...input].length <= 140, {
@@ -2045,10 +2021,10 @@ export const guildsRouter = t.router({
               ),
             ),
           ),
-          welcome_channels: Schema.optional(
+          welcome_channels: Schema.optionalKey(
             Schema.NullOr(Schema.Array(GuildWelcomeChannelSchema).check(Schema.isMaxLength(5))),
           ),
-          enabled: Schema.optional(Schema.NullOr(Schema.Boolean)),
+          enabled: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
         }),
       ),
     )
@@ -2067,10 +2043,8 @@ export const guildsRouter = t.router({
       Schema.toStandardSchemaV1(
         Schema.Struct({
           guild_id: SnowflakeTypeSchema,
-          channel_id: Schema.optional(
-            Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema]),
-          ),
-          enabled: Schema.optional(Schema.NullOr(Schema.Boolean)),
+          channel_id: Schema.optionalKey(Schema.Union([Schema.Null, SnowflakeTypeSchema])),
+          enabled: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
         }),
       ),
     )
@@ -2089,7 +2063,7 @@ export const guildsRouter = t.router({
       Schema.toStandardSchemaV1(
         Schema.Struct({
           guild_id: SnowflakeTypeSchema,
-          style: Schema.optional(WidgetImageStylesSchema),
+          style: Schema.optionalKey(WidgetImageStylesSchema),
         }),
       ),
     )

@@ -73,13 +73,23 @@ export const albumsHandler = new Hono()
           }),
         ),
         limit: Type.Optional(
-          Codec(Type.String({ default: '20' }))
-            .Decode((value) => Number.parseInt(value, 10))
+          Codec(
+            Type.Refine(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '20' }),
+                (value) => Number(value) >= 1,
+                () => 'must be >= 1',
+              ),
+              (value) => Number(value) <= 50,
+              () => 'must be <= 50',
+            ),
+          )
+            .Decode((value) => Number(value))
             .Encode((value) => String(value)),
         ),
         offset: Type.Optional(
-          Codec(Type.String({ default: '0' }))
-            .Decode((value) => Number.parseInt(value, 10))
+          Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '0' }))
+            .Decode((value) => Number(value))
             .Encode((value) => String(value)),
         ),
       }),

@@ -18,3 +18,4 @@ Taken before the README rows. One line per document: `- name | URL | note`.
 Do not try these again. One line per document: `- name | URL | reason`.
 
 - cloudflare | https://raw.githubusercontent.com/cloudflare/api-schemas/main/openapi.json | 28.3 MB, over the 25 MB limit of scripts/sources.ts (probe exit 5, 2026-11-23)
+- github | https://raw.githubusercontent.com/github/rest-api-description/main/descriptions/api.github.com/api.github.com.json | examples hold token-like strings (`ghp_…`, `gho_…`, `ghs_…`, `github_pat_…`, an RSA private key header) that push protection may block; probe exit 0, 13.61 MB (2026-11-24)

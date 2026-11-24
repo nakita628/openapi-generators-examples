@@ -9,7 +9,14 @@ export const filesHandler = new Hono()
       'query',
       z.object({
         purpose: z.string().exactOptional(),
-        limit: z.coerce.number().int().default(10000).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
+          .default(10000)
+          .exactOptional(),
         order: z.enum(['asc', 'desc']).default('desc').exactOptional(),
         after: z.string().exactOptional(),
       }),

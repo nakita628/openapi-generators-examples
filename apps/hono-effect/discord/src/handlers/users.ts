@@ -25,7 +25,7 @@ export const usersHandler = new Hono()
       'query',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          sku_ids: Schema.optional(
+          sku_ids: Schema.optionalKey(
             Schema.Union([
               Schema.String,
               Schema.Unknown.pipe(
@@ -58,7 +58,7 @@ export const usersHandler = new Hono()
                                   encode: (output) => output,
                                 }),
                               ),
-                              Schema.decodeTo(Schema.NullOr(Schema.Null)),
+                              Schema.decodeTo(Schema.Null),
                             ),
                             SnowflakeTypeSchema,
                           ]),
@@ -70,7 +70,7 @@ export const usersHandler = new Hono()
               ),
             ]),
           ),
-          exclude_consumed: Schema.optional(
+          exclude_consumed: Schema.optionalKey(
             Schema.String.check(
               Schema.isPattern(/^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i),
             ).pipe(
@@ -125,19 +125,39 @@ export const usersHandler = new Hono()
       'query',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          before: Schema.optional(SnowflakeTypeSchema),
-          after: Schema.optional(SnowflakeTypeSchema),
-          limit: Schema.optional(
-            Schema.FiniteFromString.check(
-              Schema.isInt(),
-              Schema.isGreaterThanOrEqualTo(1),
-              Schema.isLessThanOrEqualTo(200),
-            ),
+          before: Schema.optionalKey(SnowflakeTypeSchema),
+          after: Schema.optionalKey(SnowflakeTypeSchema),
+          limit: Schema.optionalKey(
+            Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+              .pipe(
+                Schema.decodeTo(
+                  Schema.Finite,
+                  SchemaTransformation.transform({
+                    decode: (input) => Number(input),
+                    encode: (output) => String(output),
+                  }),
+                ),
+              )
+              .check(
+                Schema.isInt(),
+                Schema.isGreaterThanOrEqualTo(1),
+                Schema.isLessThanOrEqualTo(200),
+              ),
           ),
-          shard: Schema.optional(
-            Schema.FiniteFromString.check(Schema.isInt(), Schema.isGreaterThanOrEqualTo(0)),
+          shard: Schema.optionalKey(
+            Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+              .pipe(
+                Schema.decodeTo(
+                  Schema.Finite,
+                  SchemaTransformation.transform({
+                    decode: (input) => Number(input),
+                    encode: (output) => String(output),
+                  }),
+                ),
+              )
+              .check(Schema.isInt(), Schema.isGreaterThanOrEqualTo(0)),
           ),
-          with_counts: Schema.optional(
+          with_counts: Schema.optionalKey(
             Schema.String.check(
               Schema.isPattern(/^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i),
             ).pipe(

@@ -36,7 +36,7 @@ export const evalsHandler = new Hono()
       type({
         'after?': 'string',
         'limit?': type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'order?': "'asc' | 'desc'",
@@ -182,7 +182,7 @@ export const evalsHandler = new Hono()
       type({
         'after?': 'string',
         'limit?': type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'order?': "'asc' | 'desc'",
@@ -328,7 +328,7 @@ export const evalsHandler = new Hono()
       type({
         'after?': 'string',
         'limit?': type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'status?': "'fail' | 'pass'",

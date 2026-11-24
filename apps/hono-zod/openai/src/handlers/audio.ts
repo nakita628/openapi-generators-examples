@@ -76,8 +76,14 @@ export const audioHandler = new Hono()
           })
           .exactOptional(),
         response_format: AudioResponseFormatSchema.exactOptional(),
-        temperature: z.coerce
-          .number()
+        temperature: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(val)
+                ? Number(val)
+                : val,
+            z.number(),
+          )
           .default(0)
           .meta({
             description:
@@ -117,7 +123,7 @@ export const audioHandler = new Hono()
                     description:
                       'If set to true, the model response data will be streamed to the client\nas it is generated using [server-sent events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events#Event_stream_format).\nSee the [Streaming section of the Speech-to-Text guide](https://developers.openai.com/api/docs/guides/speech-to-text?lang=curl#streaming)\nfor more information.\n\nNote: Streaming is not supported for the `whisper-1` model and will be ignored.\n',
                   }),
-                z.preprocess((val) => (val === 'null' ? null : val), z.null().nullable()),
+                z.preprocess((val) => (val === 'null' ? null : val), z.null()),
               ])
               .nullable(),
           )
@@ -140,26 +146,43 @@ export const audioHandler = new Hono()
                       description:
                         'Must be set to `server_vad` to enable manual chunking using server side VAD.',
                     }),
-                  prefix_padding_ms: z.coerce
-                    .number()
-                    .int()
+                  prefix_padding_ms: z
+                    .preprocess(
+                      (val) =>
+                        typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                          ? Number(val)
+                          : val,
+                      z.number().int(),
+                    )
                     .default(300)
                     .meta({
                       description:
                         'Amount of audio to include before the VAD detected speech (in \nmilliseconds).\n',
                     })
                     .exactOptional(),
-                  silence_duration_ms: z.coerce
-                    .number()
-                    .int()
+                  silence_duration_ms: z
+                    .preprocess(
+                      (val) =>
+                        typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                          ? Number(val)
+                          : val,
+                      z.number().int(),
+                    )
                     .default(200)
                     .meta({
                       description:
                         'Duration of silence to detect speech stop (in milliseconds).\nWith shorter values the model will respond more quickly, \nbut may jump in on short pauses from the user.\n',
                     })
                     .exactOptional(),
-                  threshold: z.coerce
-                    .number()
+                  threshold: z
+                    .preprocess(
+                      (val) =>
+                        typeof val === 'string' &&
+                        /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(val)
+                          ? Number(val)
+                          : val,
+                      z.number(),
+                    )
                     .default(0.5)
                     .meta({
                       description:
@@ -172,7 +195,7 @@ export const audioHandler = new Hono()
                 description:
                   'Controls how the audio is cut into chunks. When set to `"auto"`, the server first normalizes loudness and then uses voice activity detection (VAD) to choose boundaries. `server_vad` object can be provided to tweak VAD detection parameters manually. If unset, the audio is transcribed as a single block. Required when using `gpt-4o-transcribe-diarize` for inputs longer than 30 seconds. ',
               }),
-            z.preprocess((val) => (val === 'null' ? null : val), z.null().nullable()),
+            z.preprocess((val) => (val === 'null' ? null : val), z.null()),
           ])
           .exactOptional(),
         known_speaker_names: z
@@ -232,8 +255,14 @@ export const audioHandler = new Hono()
               'The format of the output, in one of these options: `json`, `text`, `srt`, `verbose_json`, or `vtt`.\n',
           })
           .exactOptional(),
-        temperature: z.coerce
-          .number()
+        temperature: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(val)
+                ? Number(val)
+                : val,
+            z.number(),
+          )
           .default(0)
           .meta({
             description:
@@ -250,7 +279,14 @@ export const audioHandler = new Hono()
       'query',
       z.object({
         after: z.string().exactOptional(),
-        limit: z.coerce.number().int().default(20).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
+          .default(20)
+          .exactOptional(),
       }),
     ),
     (c) => { throw new Error('Not implemented') },
@@ -277,7 +313,13 @@ export const audioHandler = new Hono()
     sValidator('json', CreateVoicePromptRequestSchema),
     sValidator(
       'form',
-      z.union([CreateVoiceFromConsentRequestSchema, CreateVoicePromptRequestSchema]),
+      z.union([
+        z.intersection(
+          CreateVoiceFromConsentRequestSchema,
+          z.object({ type: z.literal('audio_sample') }),
+        ),
+        z.intersection(CreateVoicePromptRequestSchema, z.object({ type: z.literal('prompt') })),
+      ]),
     ),
     (c) => { throw new Error('Not implemented') },
   )

@@ -91,475 +91,475 @@ export const guildsHandler = new Hono()
           for (const branch of [
             type('string')
               .pipe((data, ctx) => {
-                const value = Number(data)
-                return Number.isFinite(value) ? value : ctx.error('a number')
+                const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
+                return Number.isSafeInteger(value) ? value : ctx.error('an integer')
               })
               .to('1'),
             type('string')
               .pipe((data, ctx) => {
-                const value = Number(data)
-                return Number.isFinite(value) ? value : ctx.error('a number')
+                const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
+                return Number.isSafeInteger(value) ? value : ctx.error('an integer')
               })
               .to('10'),
             type('string')
               .pipe((data, ctx) => {
-                const value = Number(data)
-                return Number.isFinite(value) ? value : ctx.error('a number')
+                const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
+                return Number.isSafeInteger(value) ? value : ctx.error('an integer')
               })
               .to('11'),
             type('string')
               .pipe((data, ctx) => {
-                const value = Number(data)
-                return Number.isFinite(value) ? value : ctx.error('a number')
+                const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
+                return Number.isSafeInteger(value) ? value : ctx.error('an integer')
               })
               .to('12'),
             type('string')
               .pipe((data, ctx) => {
-                const value = Number(data)
-                return Number.isFinite(value) ? value : ctx.error('a number')
+                const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
+                return Number.isSafeInteger(value) ? value : ctx.error('an integer')
               })
               .to('13'),
             type('string')
               .pipe((data, ctx) => {
-                const value = Number(data)
-                return Number.isFinite(value) ? value : ctx.error('a number')
+                const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
+                return Number.isSafeInteger(value) ? value : ctx.error('an integer')
               })
               .to('14'),
             type('string')
               .pipe((data, ctx) => {
-                const value = Number(data)
-                return Number.isFinite(value) ? value : ctx.error('a number')
+                const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
+                return Number.isSafeInteger(value) ? value : ctx.error('an integer')
               })
               .to('15'),
             type('string')
               .pipe((data, ctx) => {
-                const value = Number(data)
-                return Number.isFinite(value) ? value : ctx.error('a number')
+                const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
+                return Number.isSafeInteger(value) ? value : ctx.error('an integer')
               })
               .to('16')
               .describe('Channels were reordered'),
             type('string')
               .pipe((data, ctx) => {
-                const value = Number(data)
-                return Number.isFinite(value) ? value : ctx.error('a number')
+                const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
+                return Number.isSafeInteger(value) ? value : ctx.error('an integer')
               })
               .to('20'),
             type('string')
               .pipe((data, ctx) => {
-                const value = Number(data)
-                return Number.isFinite(value) ? value : ctx.error('a number')
+                const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
+                return Number.isSafeInteger(value) ? value : ctx.error('an integer')
               })
               .to('21'),
             type('string')
               .pipe((data, ctx) => {
-                const value = Number(data)
-                return Number.isFinite(value) ? value : ctx.error('a number')
+                const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
+                return Number.isSafeInteger(value) ? value : ctx.error('an integer')
               })
               .to('22'),
             type('string')
               .pipe((data, ctx) => {
-                const value = Number(data)
-                return Number.isFinite(value) ? value : ctx.error('a number')
+                const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
+                return Number.isSafeInteger(value) ? value : ctx.error('an integer')
               })
               .to('23'),
             type('string')
               .pipe((data, ctx) => {
-                const value = Number(data)
-                return Number.isFinite(value) ? value : ctx.error('a number')
+                const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
+                return Number.isSafeInteger(value) ? value : ctx.error('an integer')
               })
               .to('24'),
             type('string')
               .pipe((data, ctx) => {
-                const value = Number(data)
-                return Number.isFinite(value) ? value : ctx.error('a number')
+                const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
+                return Number.isSafeInteger(value) ? value : ctx.error('an integer')
               })
               .to('25'),
             type('string')
               .pipe((data, ctx) => {
-                const value = Number(data)
-                return Number.isFinite(value) ? value : ctx.error('a number')
+                const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
+                return Number.isSafeInteger(value) ? value : ctx.error('an integer')
               })
               .to('26'),
             type('string')
               .pipe((data, ctx) => {
-                const value = Number(data)
-                return Number.isFinite(value) ? value : ctx.error('a number')
+                const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
+                return Number.isSafeInteger(value) ? value : ctx.error('an integer')
               })
               .to('27'),
             type('string')
               .pipe((data, ctx) => {
-                const value = Number(data)
-                return Number.isFinite(value) ? value : ctx.error('a number')
+                const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
+                return Number.isSafeInteger(value) ? value : ctx.error('an integer')
               })
               .to('28'),
             type('string')
               .pipe((data, ctx) => {
-                const value = Number(data)
-                return Number.isFinite(value) ? value : ctx.error('a number')
+                const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
+                return Number.isSafeInteger(value) ? value : ctx.error('an integer')
               })
               .to('30'),
             type('string')
               .pipe((data, ctx) => {
-                const value = Number(data)
-                return Number.isFinite(value) ? value : ctx.error('a number')
+                const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
+                return Number.isSafeInteger(value) ? value : ctx.error('an integer')
               })
               .to('31'),
             type('string')
               .pipe((data, ctx) => {
-                const value = Number(data)
-                return Number.isFinite(value) ? value : ctx.error('a number')
+                const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
+                return Number.isSafeInteger(value) ? value : ctx.error('an integer')
               })
               .to('32'),
             type('string')
               .pipe((data, ctx) => {
-                const value = Number(data)
-                return Number.isFinite(value) ? value : ctx.error('a number')
+                const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
+                return Number.isSafeInteger(value) ? value : ctx.error('an integer')
               })
               .to('33')
               .describe('Roles were reordered'),
             type('string')
               .pipe((data, ctx) => {
-                const value = Number(data)
-                return Number.isFinite(value) ? value : ctx.error('a number')
+                const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
+                return Number.isSafeInteger(value) ? value : ctx.error('an integer')
               })
               .to('40'),
             type('string')
               .pipe((data, ctx) => {
-                const value = Number(data)
-                return Number.isFinite(value) ? value : ctx.error('a number')
+                const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
+                return Number.isSafeInteger(value) ? value : ctx.error('an integer')
               })
               .to('41'),
             type('string')
               .pipe((data, ctx) => {
-                const value = Number(data)
-                return Number.isFinite(value) ? value : ctx.error('a number')
+                const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
+                return Number.isSafeInteger(value) ? value : ctx.error('an integer')
               })
               .to('42'),
             type('string')
               .pipe((data, ctx) => {
-                const value = Number(data)
-                return Number.isFinite(value) ? value : ctx.error('a number')
+                const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
+                return Number.isSafeInteger(value) ? value : ctx.error('an integer')
               })
               .to('50'),
             type('string')
               .pipe((data, ctx) => {
-                const value = Number(data)
-                return Number.isFinite(value) ? value : ctx.error('a number')
+                const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
+                return Number.isSafeInteger(value) ? value : ctx.error('an integer')
               })
               .to('51'),
             type('string')
               .pipe((data, ctx) => {
-                const value = Number(data)
-                return Number.isFinite(value) ? value : ctx.error('a number')
+                const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
+                return Number.isSafeInteger(value) ? value : ctx.error('an integer')
               })
               .to('52'),
             type('string')
               .pipe((data, ctx) => {
-                const value = Number(data)
-                return Number.isFinite(value) ? value : ctx.error('a number')
+                const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
+                return Number.isSafeInteger(value) ? value : ctx.error('an integer')
               })
               .to('60'),
             type('string')
               .pipe((data, ctx) => {
-                const value = Number(data)
-                return Number.isFinite(value) ? value : ctx.error('a number')
+                const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
+                return Number.isSafeInteger(value) ? value : ctx.error('an integer')
               })
               .to('61'),
             type('string')
               .pipe((data, ctx) => {
-                const value = Number(data)
-                return Number.isFinite(value) ? value : ctx.error('a number')
+                const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
+                return Number.isSafeInteger(value) ? value : ctx.error('an integer')
               })
               .to('62'),
             type('string')
               .pipe((data, ctx) => {
-                const value = Number(data)
-                return Number.isFinite(value) ? value : ctx.error('a number')
+                const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
+                return Number.isSafeInteger(value) ? value : ctx.error('an integer')
               })
               .to('72'),
             type('string')
               .pipe((data, ctx) => {
-                const value = Number(data)
-                return Number.isFinite(value) ? value : ctx.error('a number')
+                const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
+                return Number.isSafeInteger(value) ? value : ctx.error('an integer')
               })
               .to('73'),
             type('string')
               .pipe((data, ctx) => {
-                const value = Number(data)
-                return Number.isFinite(value) ? value : ctx.error('a number')
+                const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
+                return Number.isSafeInteger(value) ? value : ctx.error('an integer')
               })
               .to('74'),
             type('string')
               .pipe((data, ctx) => {
-                const value = Number(data)
-                return Number.isFinite(value) ? value : ctx.error('a number')
+                const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
+                return Number.isSafeInteger(value) ? value : ctx.error('an integer')
               })
               .to('75'),
             type('string')
               .pipe((data, ctx) => {
-                const value = Number(data)
-                return Number.isFinite(value) ? value : ctx.error('a number')
+                const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
+                return Number.isSafeInteger(value) ? value : ctx.error('an integer')
               })
               .to('80'),
             type('string')
               .pipe((data, ctx) => {
-                const value = Number(data)
-                return Number.isFinite(value) ? value : ctx.error('a number')
+                const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
+                return Number.isSafeInteger(value) ? value : ctx.error('an integer')
               })
               .to('81'),
             type('string')
               .pipe((data, ctx) => {
-                const value = Number(data)
-                return Number.isFinite(value) ? value : ctx.error('a number')
+                const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
+                return Number.isSafeInteger(value) ? value : ctx.error('an integer')
               })
               .to('82'),
             type('string')
               .pipe((data, ctx) => {
-                const value = Number(data)
-                return Number.isFinite(value) ? value : ctx.error('a number')
+                const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
+                return Number.isSafeInteger(value) ? value : ctx.error('an integer')
               })
               .to('83'),
             type('string')
               .pipe((data, ctx) => {
-                const value = Number(data)
-                return Number.isFinite(value) ? value : ctx.error('a number')
+                const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
+                return Number.isSafeInteger(value) ? value : ctx.error('an integer')
               })
               .to('84'),
             type('string')
               .pipe((data, ctx) => {
-                const value = Number(data)
-                return Number.isFinite(value) ? value : ctx.error('a number')
+                const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
+                return Number.isSafeInteger(value) ? value : ctx.error('an integer')
               })
               .to('85'),
             type('string')
               .pipe((data, ctx) => {
-                const value = Number(data)
-                return Number.isFinite(value) ? value : ctx.error('a number')
+                const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
+                return Number.isSafeInteger(value) ? value : ctx.error('an integer')
               })
               .to('90'),
             type('string')
               .pipe((data, ctx) => {
-                const value = Number(data)
-                return Number.isFinite(value) ? value : ctx.error('a number')
+                const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
+                return Number.isSafeInteger(value) ? value : ctx.error('an integer')
               })
               .to('91'),
             type('string')
               .pipe((data, ctx) => {
-                const value = Number(data)
-                return Number.isFinite(value) ? value : ctx.error('a number')
+                const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
+                return Number.isSafeInteger(value) ? value : ctx.error('an integer')
               })
               .to('92'),
             type('string')
               .pipe((data, ctx) => {
-                const value = Number(data)
-                return Number.isFinite(value) ? value : ctx.error('a number')
+                const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
+                return Number.isSafeInteger(value) ? value : ctx.error('an integer')
               })
               .to('100'),
             type('string')
               .pipe((data, ctx) => {
-                const value = Number(data)
-                return Number.isFinite(value) ? value : ctx.error('a number')
+                const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
+                return Number.isSafeInteger(value) ? value : ctx.error('an integer')
               })
               .to('101'),
             type('string')
               .pipe((data, ctx) => {
-                const value = Number(data)
-                return Number.isFinite(value) ? value : ctx.error('a number')
+                const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
+                return Number.isSafeInteger(value) ? value : ctx.error('an integer')
               })
               .to('102'),
             type('string')
               .pipe((data, ctx) => {
-                const value = Number(data)
-                return Number.isFinite(value) ? value : ctx.error('a number')
+                const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
+                return Number.isSafeInteger(value) ? value : ctx.error('an integer')
               })
               .to('110'),
             type('string')
               .pipe((data, ctx) => {
-                const value = Number(data)
-                return Number.isFinite(value) ? value : ctx.error('a number')
+                const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
+                return Number.isSafeInteger(value) ? value : ctx.error('an integer')
               })
               .to('111'),
             type('string')
               .pipe((data, ctx) => {
-                const value = Number(data)
-                return Number.isFinite(value) ? value : ctx.error('a number')
+                const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
+                return Number.isSafeInteger(value) ? value : ctx.error('an integer')
               })
               .to('112'),
             type('string')
               .pipe((data, ctx) => {
-                const value = Number(data)
-                return Number.isFinite(value) ? value : ctx.error('a number')
+                const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
+                return Number.isSafeInteger(value) ? value : ctx.error('an integer')
               })
               .to('121'),
             type('string')
               .pipe((data, ctx) => {
-                const value = Number(data)
-                return Number.isFinite(value) ? value : ctx.error('a number')
+                const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
+                return Number.isSafeInteger(value) ? value : ctx.error('an integer')
               })
               .to('130'),
             type('string')
               .pipe((data, ctx) => {
-                const value = Number(data)
-                return Number.isFinite(value) ? value : ctx.error('a number')
+                const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
+                return Number.isSafeInteger(value) ? value : ctx.error('an integer')
               })
               .to('131'),
             type('string')
               .pipe((data, ctx) => {
-                const value = Number(data)
-                return Number.isFinite(value) ? value : ctx.error('a number')
+                const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
+                return Number.isSafeInteger(value) ? value : ctx.error('an integer')
               })
               .to('132'),
             type('string')
               .pipe((data, ctx) => {
-                const value = Number(data)
-                return Number.isFinite(value) ? value : ctx.error('a number')
+                const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
+                return Number.isSafeInteger(value) ? value : ctx.error('an integer')
               })
               .to('140'),
             type('string')
               .pipe((data, ctx) => {
-                const value = Number(data)
-                return Number.isFinite(value) ? value : ctx.error('a number')
+                const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
+                return Number.isSafeInteger(value) ? value : ctx.error('an integer')
               })
               .to('141'),
             type('string')
               .pipe((data, ctx) => {
-                const value = Number(data)
-                return Number.isFinite(value) ? value : ctx.error('a number')
+                const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
+                return Number.isSafeInteger(value) ? value : ctx.error('an integer')
               })
               .to('142'),
             type('string')
               .pipe((data, ctx) => {
-                const value = Number(data)
-                return Number.isFinite(value) ? value : ctx.error('a number')
+                const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
+                return Number.isSafeInteger(value) ? value : ctx.error('an integer')
               })
               .to('143'),
             type('string')
               .pipe((data, ctx) => {
-                const value = Number(data)
-                return Number.isFinite(value) ? value : ctx.error('a number')
+                const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
+                return Number.isSafeInteger(value) ? value : ctx.error('an integer')
               })
               .to('144'),
             type('string')
               .pipe((data, ctx) => {
-                const value = Number(data)
-                return Number.isFinite(value) ? value : ctx.error('a number')
+                const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
+                return Number.isSafeInteger(value) ? value : ctx.error('an integer')
               })
               .to('145'),
             type('string')
               .pipe((data, ctx) => {
-                const value = Number(data)
-                return Number.isFinite(value) ? value : ctx.error('a number')
+                const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
+                return Number.isSafeInteger(value) ? value : ctx.error('an integer')
               })
               .to('146'),
             type('string')
               .pipe((data, ctx) => {
-                const value = Number(data)
-                return Number.isFinite(value) ? value : ctx.error('a number')
+                const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
+                return Number.isSafeInteger(value) ? value : ctx.error('an integer')
               })
               .to('150'),
             type('string')
               .pipe((data, ctx) => {
-                const value = Number(data)
-                return Number.isFinite(value) ? value : ctx.error('a number')
+                const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
+                return Number.isSafeInteger(value) ? value : ctx.error('an integer')
               })
               .to('151'),
             type('string')
               .pipe((data, ctx) => {
-                const value = Number(data)
-                return Number.isFinite(value) ? value : ctx.error('a number')
+                const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
+                return Number.isSafeInteger(value) ? value : ctx.error('an integer')
               })
               .to('163'),
             type('string')
               .pipe((data, ctx) => {
-                const value = Number(data)
-                return Number.isFinite(value) ? value : ctx.error('a number')
+                const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
+                return Number.isSafeInteger(value) ? value : ctx.error('an integer')
               })
               .to('164'),
             type('string')
               .pipe((data, ctx) => {
-                const value = Number(data)
-                return Number.isFinite(value) ? value : ctx.error('a number')
+                const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
+                return Number.isSafeInteger(value) ? value : ctx.error('an integer')
               })
               .to('165'),
             type('string')
               .pipe((data, ctx) => {
-                const value = Number(data)
-                return Number.isFinite(value) ? value : ctx.error('a number')
+                const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
+                return Number.isSafeInteger(value) ? value : ctx.error('an integer')
               })
               .to('166'),
             type('string')
               .pipe((data, ctx) => {
-                const value = Number(data)
-                return Number.isFinite(value) ? value : ctx.error('a number')
+                const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
+                return Number.isSafeInteger(value) ? value : ctx.error('an integer')
               })
               .to('167'),
             type('string')
               .pipe((data, ctx) => {
-                const value = Number(data)
-                return Number.isFinite(value) ? value : ctx.error('a number')
+                const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
+                return Number.isSafeInteger(value) ? value : ctx.error('an integer')
               })
               .to('171'),
             type('string')
               .pipe((data, ctx) => {
-                const value = Number(data)
-                return Number.isFinite(value) ? value : ctx.error('a number')
+                const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
+                return Number.isSafeInteger(value) ? value : ctx.error('an integer')
               })
               .to('172'),
             type('string')
               .pipe((data, ctx) => {
-                const value = Number(data)
-                return Number.isFinite(value) ? value : ctx.error('a number')
+                const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
+                return Number.isSafeInteger(value) ? value : ctx.error('an integer')
               })
               .to('180'),
             type('string')
               .pipe((data, ctx) => {
-                const value = Number(data)
-                return Number.isFinite(value) ? value : ctx.error('a number')
+                const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
+                return Number.isSafeInteger(value) ? value : ctx.error('an integer')
               })
               .to('190'),
             type('string')
               .pipe((data, ctx) => {
-                const value = Number(data)
-                return Number.isFinite(value) ? value : ctx.error('a number')
+                const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
+                return Number.isSafeInteger(value) ? value : ctx.error('an integer')
               })
               .to('191'),
             type('string')
               .pipe((data, ctx) => {
-                const value = Number(data)
-                return Number.isFinite(value) ? value : ctx.error('a number')
+                const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
+                return Number.isSafeInteger(value) ? value : ctx.error('an integer')
               })
               .to('192'),
             type('string')
               .pipe((data, ctx) => {
-                const value = Number(data)
-                return Number.isFinite(value) ? value : ctx.error('a number')
+                const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
+                return Number.isSafeInteger(value) ? value : ctx.error('an integer')
               })
               .to('193'),
             type('string')
               .pipe((data, ctx) => {
-                const value = Number(data)
-                return Number.isFinite(value) ? value : ctx.error('a number')
+                const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
+                return Number.isSafeInteger(value) ? value : ctx.error('an integer')
               })
               .to('200')
               .describe('Scheduled event exception was created'),
             type('string')
               .pipe((data, ctx) => {
-                const value = Number(data)
-                return Number.isFinite(value) ? value : ctx.error('a number')
+                const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
+                return Number.isSafeInteger(value) ? value : ctx.error('an integer')
               })
               .to('201')
               .describe('Scheduled event exception was updated'),
             type('string')
               .pipe((data, ctx) => {
-                const value = Number(data)
-                return Number.isFinite(value) ? value : ctx.error('a number')
+                const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
+                return Number.isSafeInteger(value) ? value : ctx.error('an integer')
               })
               .to('202')
               .describe('Scheduled event exception was deleted'),
             type('string')
               .pipe((data, ctx) => {
-                const value = Number(data)
-                return Number.isFinite(value) ? value : ctx.error('a number')
+                const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
+                return Number.isSafeInteger(value) ? value : ctx.error('an integer')
               })
               .to('211'),
           ]) {
@@ -572,7 +572,7 @@ export const guildsHandler = new Hono()
         'after?': SnowflakeTypeSchema,
         'limit?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .to('number.integer >= 1 & number.integer <= 100'),
@@ -635,7 +635,7 @@ export const guildsHandler = new Hono()
       type({
         'limit?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .to('number.integer >= 1 & number.integer <= 1000'),
@@ -686,10 +686,10 @@ export const guildsHandler = new Hono()
       'json',
       type(
         type({
-          'id?': type('null | null').or(SnowflakeTypeSchema),
+          'id?': type('null').or(SnowflakeTypeSchema),
           'position?':
             'number.integer >= -2147483648 & number.integer <= 2147483647 & number.integer >= 0 | null',
-          'parent_id?': type('null | null').or(SnowflakeTypeSchema),
+          'parent_id?': type('null').or(SnowflakeTypeSchema),
           'lock_permissions?': 'boolean | null',
         }),
       ).array(),
@@ -712,7 +712,7 @@ export const guildsHandler = new Hono()
           .narrow((data, ctx) => [...data].length <= 32 || ctx.mustBe('at most 32 characters')),
         image: 'string',
         'roles?': type(
-          type(type(type('null | null').or(SnowflakeTypeSchema)).array())
+          type(type(type('null').or(SnowflakeTypeSchema)).array())
             .and(type('unknown[] <= 1521'))
             .narrow((data: unknown[], ctx) => new Set(data).size === data.length),
         ).or('null'),
@@ -740,7 +740,7 @@ export const guildsHandler = new Hono()
           .narrow((data, ctx) => [...data].length >= 2 || ctx.mustBe('at least 2 characters'))
           .narrow((data, ctx) => [...data].length <= 32 || ctx.mustBe('at most 32 characters')),
         'roles?': type(
-          type(type(type('null | null').or(SnowflakeTypeSchema)).array())
+          type(type(type('null').or(SnowflakeTypeSchema)).array())
             .and(type('unknown[] <= 1521'))
             .narrow((data: unknown[], ctx) => new Set(data).size === data.length),
         ).or('null'),
@@ -780,7 +780,7 @@ export const guildsHandler = new Hono()
       type({
         'limit?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .to('number.integer >= 1 & number.integer <= 1000'),
@@ -819,7 +819,7 @@ export const guildsHandler = new Hono()
       type({
         'limit?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .to('number.integer >= 1 & number.integer <= 1000'),
@@ -858,13 +858,13 @@ export const guildsHandler = new Hono()
           ),
         ).or('null'),
         'roles?': type(
-          type(type(type('null | null').or(SnowflakeTypeSchema)).array())
+          type(type(type('null').or(SnowflakeTypeSchema)).array())
             .and(type('unknown[] <= 350'))
             .narrow((data: unknown[], ctx) => new Set(data).size === data.length),
         ).or('null'),
         'mute?': 'boolean | null',
         'deaf?': 'boolean | null',
-        'channel_id?': type('null | null').or(SnowflakeTypeSchema),
+        'channel_id?': type('null').or(SnowflakeTypeSchema),
         'communication_disabled_until?': type(
           type(
             /^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z|([+-](?:[01]\d|2[0-3]):[0-5]\d)))$/,
@@ -912,7 +912,7 @@ export const guildsHandler = new Hono()
         ),
         'slop?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .to('number.integer >= 0 & number.integer <= 100'),
@@ -959,13 +959,13 @@ export const guildsHandler = new Hono()
         'max_id?': SnowflakeTypeSchema,
         'limit?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .to('number.integer >= 1 & number.integer <= 25'),
         'offset?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .to('number.integer >= 0 & number.integer <= 9975'),
@@ -1084,7 +1084,7 @@ export const guildsHandler = new Hono()
       type({
         'days?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .to('number.integer >= 1 & number.integer <= 30'),
@@ -1102,7 +1102,7 @@ export const guildsHandler = new Hono()
                         for (const branch of [
                           type('unknown')
                             .pipe((data) => (data === 'null' ? null : data))
-                            .to('null | null'),
+                            .to('null'),
                           SnowflakeTypeSchema,
                         ]) {
                           const out = branch(data)
@@ -1147,7 +1147,7 @@ export const guildsHandler = new Hono()
         'status?': GuildJoinRequestApplicationStatusSchema,
         'limit?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .to('number.integer >= 1 & number.integer <= 100'),
@@ -1327,7 +1327,7 @@ export const guildsHandler = new Hono()
         ),
         'limit?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .to('number.integer >= 1 & number.integer <= 100'),
@@ -1372,7 +1372,7 @@ export const guildsHandler = new Hono()
         ),
         'limit?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .to('number.integer >= 1 & number.integer <= 100'),
@@ -1600,10 +1600,7 @@ export const guildsHandler = new Hono()
     sValidator('param', type({ guild_id: SnowflakeTypeSchema })),
     sValidator(
       'json',
-      type({
-        'channel_id?': type('null | null').or(SnowflakeTypeSchema),
-        'enabled?': 'boolean | null',
-      }),
+      type({ 'channel_id?': type('null').or(SnowflakeTypeSchema), 'enabled?': 'boolean | null' }),
     ),
     (c) => { throw new Error('Not implemented') },
   )

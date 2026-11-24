@@ -34,7 +34,14 @@ export const containersHandler = new Hono()
     validator(
       'query',
       z.object({
-        limit: z.coerce.number().int().default(20).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
+          .default(20)
+          .exactOptional(),
         order: z.enum(['asc', 'desc']).default('desc').exactOptional(),
         after: z.string().exactOptional(),
         name: z.string().exactOptional(),
@@ -138,7 +145,14 @@ export const containersHandler = new Hono()
     validator(
       'query',
       z.object({
-        limit: z.coerce.number().int().default(20).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
+          .default(20)
+          .exactOptional(),
         order: z.enum(['asc', 'desc']).default('desc').exactOptional(),
         after: z.string().exactOptional(),
       }),

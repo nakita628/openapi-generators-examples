@@ -91,7 +91,7 @@ export const partnerSdkHandler = new Hono()
     sValidator(
       'json',
       type({
-        'provisional_user_id?': type('null | null').or(SnowflakeTypeSchema),
+        'provisional_user_id?': type('null').or(SnowflakeTypeSchema),
         external_user_id: type('string')
           .narrow((data, ctx) => [...data].length >= 1 || ctx.mustBe('at least 1 character'))
           .narrow((data, ctx) => [...data].length <= 1024 || ctx.mustBe('at most 1024 characters')),

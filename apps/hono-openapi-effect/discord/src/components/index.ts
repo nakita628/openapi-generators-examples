@@ -1,5 +1,5 @@
 import { resolver } from 'hono-openapi'
-import { Schema, SchemaTransformation } from 'effect'
+import { Effect, Schema, SchemaTransformation } from 'effect'
 
 export const AccountResponseSchema = Schema.Struct({
   id: Schema.String,
@@ -51,7 +51,7 @@ export const SnowflakeTypeSchema = Schema.String.check(
 export type SnowflakeType = Schema.Schema.Type<typeof SnowflakeTypeSchema>
 
 export const ComponentEmojiForRequestSchema = Schema.Struct({
-  id: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema])),
+  id: Schema.optionalKey(Schema.Union([Schema.Null, SnowflakeTypeSchema])),
   name: Schema.String.check(
     Schema.makeFilter((input) => [...input].length <= 32, {
       expected: 'a string of at most 32 characters',
@@ -63,10 +63,10 @@ export type ComponentEmojiForRequest = Schema.Schema.Type<typeof ComponentEmojiF
 
 export const ButtonComponentForMessageRequestSchema = Schema.Struct({
   type: MessageComponentTypesSchema,
-  id: Schema.optional(
+  id: Schema.optionalKey(
     Schema.NullOr(Schema.Number.check(Schema.isInt32(), Schema.isGreaterThanOrEqualTo(0))),
   ),
-  custom_id: Schema.optional(
+  custom_id: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length >= 1, {
@@ -79,7 +79,7 @@ export const ButtonComponentForMessageRequestSchema = Schema.Struct({
     ),
   ),
   style: ButtonStyleTypesSchema,
-  label: Schema.optional(
+  label: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length <= 80, {
@@ -88,8 +88,8 @@ export const ButtonComponentForMessageRequestSchema = Schema.Struct({
       ),
     ),
   ),
-  disabled: Schema.optional(Schema.NullOr(Schema.Boolean)),
-  url: Schema.optional(
+  disabled: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
+  url: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => URL.canParse(input)),
@@ -99,10 +99,8 @@ export const ButtonComponentForMessageRequestSchema = Schema.Struct({
       ),
     ),
   ),
-  sku_id: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema])),
-  emoji: Schema.optional(
-    Schema.Union([Schema.NullOr(Schema.Null), ComponentEmojiForRequestSchema]),
-  ),
+  sku_id: Schema.optionalKey(Schema.Union([Schema.Null, SnowflakeTypeSchema])),
+  emoji: Schema.optionalKey(Schema.Union([Schema.Null, ComponentEmojiForRequestSchema])),
 }).annotate({ identifier: 'ButtonComponentForMessageRequest' })
 
 export type ButtonComponentForMessageRequest = Schema.Schema.Type<
@@ -162,7 +160,7 @@ export type ChannelTypes = Schema.Schema.Type<typeof ChannelTypesSchema>
 
 export const ChannelSelectComponentForMessageRequestSchema = Schema.Struct({
   type: MessageComponentTypesSchema,
-  id: Schema.optional(
+  id: Schema.optionalKey(
     Schema.NullOr(Schema.Number.check(Schema.isInt32(), Schema.isGreaterThanOrEqualTo(0))),
   ),
   custom_id: Schema.String.check(
@@ -173,7 +171,7 @@ export const ChannelSelectComponentForMessageRequestSchema = Schema.Struct({
       expected: 'a string of at most 100 characters',
     }),
   ),
-  placeholder: Schema.optional(
+  placeholder: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length <= 150, {
@@ -182,7 +180,7 @@ export const ChannelSelectComponentForMessageRequestSchema = Schema.Struct({
       ),
     ),
   ),
-  min_values: Schema.optional(
+  min_values: Schema.optionalKey(
     Schema.NullOr(
       Schema.Number.check(
         Schema.isInt(),
@@ -191,7 +189,7 @@ export const ChannelSelectComponentForMessageRequestSchema = Schema.Struct({
       ),
     ),
   ),
-  max_values: Schema.optional(
+  max_values: Schema.optionalKey(
     Schema.NullOr(
       Schema.Number.check(
         Schema.isInt(),
@@ -200,12 +198,12 @@ export const ChannelSelectComponentForMessageRequestSchema = Schema.Struct({
       ),
     ),
   ),
-  disabled: Schema.optional(Schema.NullOr(Schema.Boolean)),
-  required: Schema.optional(Schema.NullOr(Schema.Boolean)),
-  default_values: Schema.optional(
+  disabled: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
+  required: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
+  default_values: Schema.optionalKey(
     Schema.NullOr(Schema.Array(ChannelSelectDefaultValueSchema).check(Schema.isMaxLength(25))),
   ),
-  channel_types: Schema.optional(
+  channel_types: Schema.optionalKey(
     Schema.NullOr(Schema.Array(ChannelTypesSchema).check(Schema.isUnique())),
   ),
 }).annotate({ identifier: 'ChannelSelectComponentForMessageRequest' })
@@ -230,7 +228,7 @@ export type UserSelectDefaultValue = Schema.Schema.Type<typeof UserSelectDefault
 
 export const MentionableSelectComponentForMessageRequestSchema = Schema.Struct({
   type: MessageComponentTypesSchema,
-  id: Schema.optional(
+  id: Schema.optionalKey(
     Schema.NullOr(Schema.Number.check(Schema.isInt32(), Schema.isGreaterThanOrEqualTo(0))),
   ),
   custom_id: Schema.String.check(
@@ -241,7 +239,7 @@ export const MentionableSelectComponentForMessageRequestSchema = Schema.Struct({
       expected: 'a string of at most 100 characters',
     }),
   ),
-  placeholder: Schema.optional(
+  placeholder: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length <= 150, {
@@ -250,7 +248,7 @@ export const MentionableSelectComponentForMessageRequestSchema = Schema.Struct({
       ),
     ),
   ),
-  min_values: Schema.optional(
+  min_values: Schema.optionalKey(
     Schema.NullOr(
       Schema.Number.check(
         Schema.isInt(),
@@ -259,7 +257,7 @@ export const MentionableSelectComponentForMessageRequestSchema = Schema.Struct({
       ),
     ),
   ),
-  max_values: Schema.optional(
+  max_values: Schema.optionalKey(
     Schema.NullOr(
       Schema.Number.check(
         Schema.isInt(),
@@ -268,9 +266,9 @@ export const MentionableSelectComponentForMessageRequestSchema = Schema.Struct({
       ),
     ),
   ),
-  disabled: Schema.optional(Schema.NullOr(Schema.Boolean)),
-  required: Schema.optional(Schema.NullOr(Schema.Boolean)),
-  default_values: Schema.optional(
+  disabled: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
+  required: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
+  default_values: Schema.optionalKey(
     Schema.NullOr(
       Schema.Array(
         Schema.Union([RoleSelectDefaultValueSchema, UserSelectDefaultValueSchema]),
@@ -285,7 +283,7 @@ export type MentionableSelectComponentForMessageRequest = Schema.Schema.Type<
 
 export const RoleSelectComponentForMessageRequestSchema = Schema.Struct({
   type: MessageComponentTypesSchema,
-  id: Schema.optional(
+  id: Schema.optionalKey(
     Schema.NullOr(Schema.Number.check(Schema.isInt32(), Schema.isGreaterThanOrEqualTo(0))),
   ),
   custom_id: Schema.String.check(
@@ -296,7 +294,7 @@ export const RoleSelectComponentForMessageRequestSchema = Schema.Struct({
       expected: 'a string of at most 100 characters',
     }),
   ),
-  placeholder: Schema.optional(
+  placeholder: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length <= 150, {
@@ -305,7 +303,7 @@ export const RoleSelectComponentForMessageRequestSchema = Schema.Struct({
       ),
     ),
   ),
-  min_values: Schema.optional(
+  min_values: Schema.optionalKey(
     Schema.NullOr(
       Schema.Number.check(
         Schema.isInt(),
@@ -314,7 +312,7 @@ export const RoleSelectComponentForMessageRequestSchema = Schema.Struct({
       ),
     ),
   ),
-  max_values: Schema.optional(
+  max_values: Schema.optionalKey(
     Schema.NullOr(
       Schema.Number.check(
         Schema.isInt(),
@@ -323,9 +321,9 @@ export const RoleSelectComponentForMessageRequestSchema = Schema.Struct({
       ),
     ),
   ),
-  disabled: Schema.optional(Schema.NullOr(Schema.Boolean)),
-  required: Schema.optional(Schema.NullOr(Schema.Boolean)),
-  default_values: Schema.optional(
+  disabled: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
+  required: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
+  default_values: Schema.optionalKey(
     Schema.NullOr(Schema.Array(RoleSelectDefaultValueSchema).check(Schema.isMaxLength(25))),
   ),
 }).annotate({ identifier: 'RoleSelectComponentForMessageRequest' })
@@ -351,7 +349,7 @@ export const StringSelectOptionForRequestSchema = Schema.Struct({
       expected: 'a string of at most 100 characters',
     }),
   ),
-  description: Schema.optional(
+  description: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length <= 100, {
@@ -360,10 +358,8 @@ export const StringSelectOptionForRequestSchema = Schema.Struct({
       ),
     ),
   ),
-  default: Schema.optional(Schema.NullOr(Schema.Boolean)),
-  emoji: Schema.optional(
-    Schema.Union([Schema.NullOr(Schema.Null), ComponentEmojiForRequestSchema]),
-  ),
+  default: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
+  emoji: Schema.optionalKey(Schema.Union([Schema.Null, ComponentEmojiForRequestSchema])),
 }).annotate({ identifier: 'StringSelectOptionForRequest' })
 
 export type StringSelectOptionForRequest = Schema.Schema.Type<
@@ -372,7 +368,7 @@ export type StringSelectOptionForRequest = Schema.Schema.Type<
 
 export const StringSelectComponentForMessageRequestSchema = Schema.Struct({
   type: MessageComponentTypesSchema,
-  id: Schema.optional(
+  id: Schema.optionalKey(
     Schema.NullOr(Schema.Number.check(Schema.isInt32(), Schema.isGreaterThanOrEqualTo(0))),
   ),
   custom_id: Schema.String.check(
@@ -383,7 +379,7 @@ export const StringSelectComponentForMessageRequestSchema = Schema.Struct({
       expected: 'a string of at most 100 characters',
     }),
   ),
-  placeholder: Schema.optional(
+  placeholder: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length <= 150, {
@@ -392,7 +388,7 @@ export const StringSelectComponentForMessageRequestSchema = Schema.Struct({
       ),
     ),
   ),
-  min_values: Schema.optional(
+  min_values: Schema.optionalKey(
     Schema.NullOr(
       Schema.Number.check(
         Schema.isInt(),
@@ -401,7 +397,7 @@ export const StringSelectComponentForMessageRequestSchema = Schema.Struct({
       ),
     ),
   ),
-  max_values: Schema.optional(
+  max_values: Schema.optionalKey(
     Schema.NullOr(
       Schema.Number.check(
         Schema.isInt(),
@@ -410,8 +406,8 @@ export const StringSelectComponentForMessageRequestSchema = Schema.Struct({
       ),
     ),
   ),
-  disabled: Schema.optional(Schema.NullOr(Schema.Boolean)),
-  required: Schema.optional(Schema.NullOr(Schema.Boolean)),
+  disabled: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
+  required: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
   options: Schema.Array(StringSelectOptionForRequestSchema).check(
     Schema.isMinLength(1),
     Schema.isMaxLength(25),
@@ -424,7 +420,7 @@ export type StringSelectComponentForMessageRequest = Schema.Schema.Type<
 
 export const UserSelectComponentForMessageRequestSchema = Schema.Struct({
   type: MessageComponentTypesSchema,
-  id: Schema.optional(
+  id: Schema.optionalKey(
     Schema.NullOr(Schema.Number.check(Schema.isInt32(), Schema.isGreaterThanOrEqualTo(0))),
   ),
   custom_id: Schema.String.check(
@@ -435,7 +431,7 @@ export const UserSelectComponentForMessageRequestSchema = Schema.Struct({
       expected: 'a string of at most 100 characters',
     }),
   ),
-  placeholder: Schema.optional(
+  placeholder: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length <= 150, {
@@ -444,7 +440,7 @@ export const UserSelectComponentForMessageRequestSchema = Schema.Struct({
       ),
     ),
   ),
-  min_values: Schema.optional(
+  min_values: Schema.optionalKey(
     Schema.NullOr(
       Schema.Number.check(
         Schema.isInt(),
@@ -453,7 +449,7 @@ export const UserSelectComponentForMessageRequestSchema = Schema.Struct({
       ),
     ),
   ),
-  max_values: Schema.optional(
+  max_values: Schema.optionalKey(
     Schema.NullOr(
       Schema.Number.check(
         Schema.isInt(),
@@ -462,9 +458,9 @@ export const UserSelectComponentForMessageRequestSchema = Schema.Struct({
       ),
     ),
   ),
-  disabled: Schema.optional(Schema.NullOr(Schema.Boolean)),
-  required: Schema.optional(Schema.NullOr(Schema.Boolean)),
-  default_values: Schema.optional(
+  disabled: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
+  required: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
+  default_values: Schema.optionalKey(
     Schema.NullOr(Schema.Array(UserSelectDefaultValueSchema).check(Schema.isMaxLength(25))),
   ),
 }).annotate({ identifier: 'UserSelectComponentForMessageRequest' })
@@ -475,7 +471,7 @@ export type UserSelectComponentForMessageRequest = Schema.Schema.Type<
 
 export const ActionRowComponentForMessageRequestSchema = Schema.Struct({
   type: MessageComponentTypesSchema,
-  id: Schema.optional(
+  id: Schema.optionalKey(
     Schema.NullOr(Schema.Number.check(Schema.isInt32(), Schema.isGreaterThanOrEqualTo(0))),
   ),
   components: Schema.Array(
@@ -503,7 +499,7 @@ export type TextInputStyleTypes = Schema.Schema.Type<typeof TextInputStyleTypesS
 
 export const TextInputComponentForModalRequestSchema = Schema.Struct({
   type: MessageComponentTypesSchema,
-  id: Schema.optional(
+  id: Schema.optionalKey(
     Schema.NullOr(Schema.Number.check(Schema.isInt32(), Schema.isGreaterThanOrEqualTo(0))),
   ),
   custom_id: Schema.String.check(
@@ -515,7 +511,7 @@ export const TextInputComponentForModalRequestSchema = Schema.Struct({
     }),
   ),
   style: TextInputStyleTypesSchema,
-  label: Schema.optional(
+  label: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length >= 1, {
@@ -527,7 +523,7 @@ export const TextInputComponentForModalRequestSchema = Schema.Struct({
       ),
     ),
   ),
-  value: Schema.optional(
+  value: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length <= 4000, {
@@ -536,7 +532,7 @@ export const TextInputComponentForModalRequestSchema = Schema.Struct({
       ),
     ),
   ),
-  placeholder: Schema.optional(
+  placeholder: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length <= 100, {
@@ -545,8 +541,8 @@ export const TextInputComponentForModalRequestSchema = Schema.Struct({
       ),
     ),
   ),
-  required: Schema.optional(Schema.NullOr(Schema.Boolean)),
-  min_length: Schema.optional(
+  required: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
+  min_length: Schema.optionalKey(
     Schema.NullOr(
       Schema.Number.check(
         Schema.isInt(),
@@ -555,7 +551,7 @@ export const TextInputComponentForModalRequestSchema = Schema.Struct({
       ),
     ),
   ),
-  max_length: Schema.optional(
+  max_length: Schema.optionalKey(
     Schema.NullOr(
       Schema.Number.check(
         Schema.isInt(),
@@ -572,7 +568,7 @@ export type TextInputComponentForModalRequest = Schema.Schema.Type<
 
 export const ActionRowComponentForModalRequestSchema = Schema.Struct({
   type: MessageComponentTypesSchema,
-  id: Schema.optional(
+  id: Schema.optionalKey(
     Schema.NullOr(Schema.Number.check(Schema.isInt32(), Schema.isGreaterThanOrEqualTo(0))),
   ),
   components: Schema.Array(TextInputComponentForModalRequestSchema).check(
@@ -586,9 +582,9 @@ export type ActionRowComponentForModalRequest = Schema.Schema.Type<
 >
 
 export const ComponentEmojiResponseSchema = Schema.Struct({
-  id: Schema.optional(SnowflakeTypeSchema),
+  id: Schema.optionalKey(SnowflakeTypeSchema),
   name: Schema.String,
-  animated: Schema.optional(Schema.Boolean),
+  animated: Schema.optionalKey(Schema.Boolean),
 }).annotate({ identifier: 'ComponentEmojiResponse' })
 
 export type ComponentEmojiResponse = Schema.Schema.Type<typeof ComponentEmojiResponseSchema>
@@ -596,12 +592,12 @@ export type ComponentEmojiResponse = Schema.Schema.Type<typeof ComponentEmojiRes
 export const ButtonComponentResponseSchema = Schema.Struct({
   type: MessageComponentTypesSchema,
   id: Schema.Number.check(Schema.isInt32()),
-  custom_id: Schema.optional(Schema.String),
+  custom_id: Schema.optionalKey(Schema.String),
   style: ButtonStyleTypesSchema,
-  label: Schema.optional(Schema.String),
-  disabled: Schema.optional(Schema.Boolean),
-  emoji: Schema.optional(ComponentEmojiResponseSchema),
-  url: Schema.optional(
+  label: Schema.optionalKey(Schema.String),
+  disabled: Schema.optionalKey(Schema.Boolean),
+  emoji: Schema.optionalKey(ComponentEmojiResponseSchema),
+  url: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => URL.canParse(input)),
@@ -611,7 +607,7 @@ export const ButtonComponentResponseSchema = Schema.Struct({
       ),
     ),
   ),
-  sku_id: Schema.optional(SnowflakeTypeSchema),
+  sku_id: Schema.optionalKey(SnowflakeTypeSchema),
 }).annotate({ identifier: 'ButtonComponentResponse' })
 
 export type ButtonComponentResponse = Schema.Schema.Type<typeof ButtonComponentResponseSchema>
@@ -629,12 +625,12 @@ export const ChannelSelectComponentResponseSchema = Schema.Struct({
   type: MessageComponentTypesSchema,
   id: Schema.Number.check(Schema.isInt32()),
   custom_id: Schema.String,
-  placeholder: Schema.optional(Schema.String),
+  placeholder: Schema.optionalKey(Schema.String),
   min_values: Schema.Number.check(Schema.isInt32()),
   max_values: Schema.Number.check(Schema.isInt32()),
-  disabled: Schema.optional(Schema.Boolean),
-  channel_types: Schema.optional(Schema.Array(ChannelTypesSchema).check(Schema.isUnique())),
-  default_values: Schema.optional(Schema.Array(ChannelSelectDefaultValueResponseSchema)),
+  disabled: Schema.optionalKey(Schema.Boolean),
+  channel_types: Schema.optionalKey(Schema.Array(ChannelTypesSchema).check(Schema.isUnique())),
+  default_values: Schema.optionalKey(Schema.Array(ChannelSelectDefaultValueResponseSchema)),
 }).annotate({ identifier: 'ChannelSelectComponentResponse' })
 
 export type ChannelSelectComponentResponse = Schema.Schema.Type<
@@ -663,11 +659,11 @@ export const MentionableSelectComponentResponseSchema = Schema.Struct({
   type: MessageComponentTypesSchema,
   id: Schema.Number.check(Schema.isInt32()),
   custom_id: Schema.String,
-  placeholder: Schema.optional(Schema.String),
+  placeholder: Schema.optionalKey(Schema.String),
   min_values: Schema.Number.check(Schema.isInt32()),
   max_values: Schema.Number.check(Schema.isInt32()),
-  disabled: Schema.optional(Schema.Boolean),
-  default_values: Schema.optional(
+  disabled: Schema.optionalKey(Schema.Boolean),
+  default_values: Schema.optionalKey(
     Schema.Array(
       Schema.Union([RoleSelectDefaultValueResponseSchema, UserSelectDefaultValueResponseSchema]),
     ),
@@ -682,11 +678,11 @@ export const RoleSelectComponentResponseSchema = Schema.Struct({
   type: MessageComponentTypesSchema,
   id: Schema.Number.check(Schema.isInt32()),
   custom_id: Schema.String,
-  placeholder: Schema.optional(Schema.String),
+  placeholder: Schema.optionalKey(Schema.String),
   min_values: Schema.Number.check(Schema.isInt32()),
   max_values: Schema.Number.check(Schema.isInt32()),
-  disabled: Schema.optional(Schema.Boolean),
-  default_values: Schema.optional(Schema.Array(RoleSelectDefaultValueResponseSchema)),
+  disabled: Schema.optionalKey(Schema.Boolean),
+  default_values: Schema.optionalKey(Schema.Array(RoleSelectDefaultValueResponseSchema)),
 }).annotate({ identifier: 'RoleSelectComponentResponse' })
 
 export type RoleSelectComponentResponse = Schema.Schema.Type<
@@ -696,9 +692,9 @@ export type RoleSelectComponentResponse = Schema.Schema.Type<
 export const StringSelectOptionResponseSchema = Schema.Struct({
   label: Schema.String,
   value: Schema.String,
-  description: Schema.optional(Schema.String),
-  emoji: Schema.optional(ComponentEmojiResponseSchema),
-  default: Schema.optional(Schema.Boolean),
+  description: Schema.optionalKey(Schema.String),
+  emoji: Schema.optionalKey(ComponentEmojiResponseSchema),
+  default: Schema.optionalKey(Schema.Boolean),
 }).annotate({ identifier: 'StringSelectOptionResponse' })
 
 export type StringSelectOptionResponse = Schema.Schema.Type<typeof StringSelectOptionResponseSchema>
@@ -707,10 +703,10 @@ export const StringSelectComponentResponseSchema = Schema.Struct({
   type: MessageComponentTypesSchema,
   id: Schema.Number.check(Schema.isInt32()),
   custom_id: Schema.String,
-  placeholder: Schema.optional(Schema.String),
+  placeholder: Schema.optionalKey(Schema.String),
   min_values: Schema.Number.check(Schema.isInt32()),
   max_values: Schema.Number.check(Schema.isInt32()),
-  disabled: Schema.optional(Schema.Boolean),
+  disabled: Schema.optionalKey(Schema.Boolean),
   options: Schema.Array(StringSelectOptionResponseSchema),
 }).annotate({ identifier: 'StringSelectComponentResponse' })
 
@@ -724,9 +720,9 @@ export const TextInputComponentResponseSchema = Schema.Struct({
   custom_id: Schema.String,
   style: TextInputStyleTypesSchema,
   label: Schema.NullOr(Schema.String),
-  value: Schema.optional(Schema.String),
-  placeholder: Schema.optional(Schema.String),
-  required: Schema.optional(Schema.Boolean),
+  value: Schema.optionalKey(Schema.String),
+  placeholder: Schema.optionalKey(Schema.String),
+  required: Schema.optionalKey(Schema.Boolean),
   min_length: Schema.NullOr(Schema.Number.check(Schema.isInt32())),
   max_length: Schema.NullOr(Schema.Number.check(Schema.isInt32())),
 }).annotate({ identifier: 'TextInputComponentResponse' })
@@ -737,11 +733,11 @@ export const UserSelectComponentResponseSchema = Schema.Struct({
   type: MessageComponentTypesSchema,
   id: Schema.Number.check(Schema.isInt32()),
   custom_id: Schema.String,
-  placeholder: Schema.optional(Schema.String),
+  placeholder: Schema.optionalKey(Schema.String),
   min_values: Schema.Number.check(Schema.isInt32()),
   max_values: Schema.Number.check(Schema.isInt32()),
-  disabled: Schema.optional(Schema.Boolean),
-  default_values: Schema.optional(Schema.Array(UserSelectDefaultValueResponseSchema)),
+  disabled: Schema.optionalKey(Schema.Boolean),
+  default_values: Schema.optionalKey(Schema.Array(UserSelectDefaultValueResponseSchema)),
 }).annotate({ identifier: 'UserSelectComponentResponse' })
 
 export type UserSelectComponentResponse = Schema.Schema.Type<
@@ -960,7 +956,7 @@ export type Int53Type = Schema.Schema.Type<typeof Int53TypeSchema>
 
 export const UserAvatarDecorationResponseSchema = Schema.Struct({
   asset: Schema.String.annotate({ description: 'the avatar decoration hash' }),
-  sku_id: Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema]).annotate({
+  sku_id: Schema.Union([Schema.Null, SnowflakeTypeSchema]).annotate({
     description: "id of the avatar decoration's SKU",
   }),
 }).annotate({ identifier: 'UserAvatarDecorationResponse' })
@@ -987,7 +983,7 @@ export const NameplatePaletteSchema = Schema.Union([
 export type NameplatePalette = Schema.Schema.Type<typeof NameplatePaletteSchema>
 
 export const UserNameplateResponseSchema = Schema.Struct({
-  sku_id: Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema]).annotate({
+  sku_id: Schema.Union([Schema.Null, SnowflakeTypeSchema]).annotate({
     description: 'ID of the nameplate SKU',
   }),
   asset: Schema.String.annotate({ description: 'Path to the nameplate asset' }),
@@ -998,7 +994,7 @@ export const UserNameplateResponseSchema = Schema.Struct({
 export type UserNameplateResponse = Schema.Schema.Type<typeof UserNameplateResponseSchema>
 
 export const UserCollectiblesResponseSchema = Schema.Struct({
-  nameplate: Schema.Union([Schema.NullOr(Schema.Null), UserNameplateResponseSchema]).annotate({
+  nameplate: Schema.Union([Schema.Null, UserNameplateResponseSchema]).annotate({
     description: 'Object mapping of nameplate data',
   }),
 }).annotate({ identifier: 'UserCollectiblesResponse' })
@@ -1006,7 +1002,7 @@ export const UserCollectiblesResponseSchema = Schema.Struct({
 export type UserCollectiblesResponse = Schema.Schema.Type<typeof UserCollectiblesResponseSchema>
 
 export const UserPrimaryGuildResponseSchema = Schema.Struct({
-  identity_guild_id: Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema]).annotate({
+  identity_guild_id: Schema.Union([Schema.Null, SnowflakeTypeSchema]).annotate({
     description: "the id of the user's primary guild",
   }),
   identity_enabled: Schema.NullOr(Schema.Boolean).annotate({
@@ -1031,19 +1027,19 @@ export const UserResponseSchema = Schema.Struct({
     description: "the public flags on a user's account",
   }),
   flags: Int53TypeSchema.annotate({ description: "the flags on a user's account" }),
-  bot: Schema.optional(
+  bot: Schema.optionalKey(
     Schema.Boolean.annotate({ description: 'whether the user belongs to an OAuth2 application' }),
   ),
-  system: Schema.optional(
+  system: Schema.optionalKey(
     Schema.Boolean.annotate({
       description:
         'whether the user is an Official Discord System user (part of the urgent message system)',
     }),
   ),
-  banner: Schema.optional(
+  banner: Schema.optionalKey(
     Schema.NullOr(Schema.String).annotate({ description: "the user's banner hash" }),
   ),
-  accent_color: Schema.optional(
+  accent_color: Schema.optionalKey(
     Schema.NullOr(Schema.Number.check(Schema.isInt32())).annotate({
       description:
         "the user's banner color encoded as an integer representation of hexadecimal color code",
@@ -1052,20 +1048,19 @@ export const UserResponseSchema = Schema.Struct({
   global_name: Schema.NullOr(Schema.String).annotate({
     description: "the user's display name, if it is set",
   }),
-  avatar_decoration_data: Schema.optional(
-    Schema.Union([Schema.NullOr(Schema.Null), UserAvatarDecorationResponseSchema]).annotate({
+  avatar_decoration_data: Schema.optionalKey(
+    Schema.Union([Schema.Null, UserAvatarDecorationResponseSchema]).annotate({
       description: "data for the user's avatar decoration",
     }),
   ),
-  collectibles: Schema.optional(
-    Schema.Union([Schema.NullOr(Schema.Null), UserCollectiblesResponseSchema]).annotate({
+  collectibles: Schema.optionalKey(
+    Schema.Union([Schema.Null, UserCollectiblesResponseSchema]).annotate({
       description: "data for the user's collectibles",
     }),
   ),
-  primary_guild: Schema.Union([
-    Schema.NullOr(Schema.Null),
-    UserPrimaryGuildResponseSchema,
-  ]).annotate({ description: "the user's primary guild" }),
+  primary_guild: Schema.Union([Schema.Null, UserPrimaryGuildResponseSchema]).annotate({
+    description: "the user's primary guild",
+  }),
 }).annotate({ identifier: 'UserResponse' })
 
 export type UserResponse = Schema.Schema.Type<typeof UserResponseSchema>
@@ -1208,7 +1203,7 @@ export type ApplicationOAuth2InstallParamsResponse = Schema.Schema.Type<
 >
 
 export const ApplicationIntegrationTypeConfigurationResponseSchema = Schema.Struct({
-  oauth2_install_params: Schema.optional(ApplicationOAuth2InstallParamsResponseSchema),
+  oauth2_install_params: Schema.optionalKey(ApplicationOAuth2InstallParamsResponseSchema),
 }).annotate({ identifier: 'ApplicationIntegrationTypeConfigurationResponse' })
 
 export type ApplicationIntegrationTypeConfigurationResponse = Schema.Schema.Type<
@@ -1220,35 +1215,35 @@ export const ApplicationResponseSchema = Schema.Struct({
   name: Schema.String,
   icon: Schema.NullOr(Schema.String),
   description: Schema.String,
-  type: Schema.Union([Schema.NullOr(Schema.Null), ApplicationTypesSchema]),
-  cover_image: Schema.optional(Schema.String),
-  primary_sku_id: Schema.optional(SnowflakeTypeSchema),
+  type: Schema.Union([Schema.Null, ApplicationTypesSchema]),
+  cover_image: Schema.optionalKey(Schema.String),
+  primary_sku_id: Schema.optionalKey(SnowflakeTypeSchema),
   flags: Schema.Number.check(Schema.isInt32()),
   flags_new: Schema.String,
-  bot: Schema.optional(UserResponseSchema),
-  slug: Schema.optional(Schema.String),
-  conjure_project_id: Schema.optional(SnowflakeTypeSchema),
-  vibegrations_project_id: Schema.optional(SnowflakeTypeSchema),
-  guild_id: Schema.optional(SnowflakeTypeSchema),
-  rpc_origins: Schema.optional(Schema.Array(Schema.String)),
-  bot_public: Schema.optional(Schema.Boolean),
-  bot_require_code_grant: Schema.optional(Schema.Boolean),
-  terms_of_service_url: Schema.optional(
+  bot: Schema.optionalKey(UserResponseSchema),
+  slug: Schema.optionalKey(Schema.String),
+  conjure_project_id: Schema.optionalKey(SnowflakeTypeSchema),
+  vibegrations_project_id: Schema.optionalKey(SnowflakeTypeSchema),
+  guild_id: Schema.optionalKey(SnowflakeTypeSchema),
+  rpc_origins: Schema.optionalKey(Schema.Array(Schema.String)),
+  bot_public: Schema.optionalKey(Schema.Boolean),
+  bot_require_code_grant: Schema.optionalKey(Schema.Boolean),
+  terms_of_service_url: Schema.optionalKey(
     Schema.String.check(Schema.makeFilter((input) => URL.canParse(input))),
   ),
-  privacy_policy_url: Schema.optional(
+  privacy_policy_url: Schema.optionalKey(
     Schema.String.check(Schema.makeFilter((input) => URL.canParse(input))),
   ),
-  custom_install_url: Schema.optional(
+  custom_install_url: Schema.optionalKey(
     Schema.String.check(Schema.makeFilter((input) => URL.canParse(input))),
   ),
-  install_params: Schema.optional(ApplicationOAuth2InstallParamsResponseSchema),
-  integration_types_config: Schema.optional(
+  install_params: Schema.optionalKey(ApplicationOAuth2InstallParamsResponseSchema),
+  integration_types_config: Schema.optionalKey(
     Schema.Record(Schema.String, ApplicationIntegrationTypeConfigurationResponseSchema),
   ),
   verify_key: Schema.String,
-  max_participants: Schema.optional(Schema.NullOr(Schema.Number.check(Schema.isInt32()))),
-  tags: Schema.optional(Schema.Array(Schema.String).check(Schema.isUnique())),
+  max_participants: Schema.optionalKey(Schema.NullOr(Schema.Number.check(Schema.isInt32()))),
+  tags: Schema.optionalKey(Schema.Array(Schema.String).check(Schema.isUnique())),
 }).annotate({ identifier: 'ApplicationResponse' })
 
 export type ApplicationResponse = Schema.Schema.Type<typeof ApplicationResponseSchema>
@@ -1259,26 +1254,26 @@ export const AttachmentResponseSchema = Schema.Struct({
   size: Schema.Number.check(Schema.isInt32()),
   url: Schema.String.check(Schema.makeFilter((input) => URL.canParse(input))),
   proxy_url: Schema.String.check(Schema.makeFilter((input) => URL.canParse(input))),
-  width: Schema.optional(Schema.Number.check(Schema.isInt32())),
-  height: Schema.optional(Schema.Number.check(Schema.isInt32())),
-  duration_secs: Schema.optional(Schema.Number),
-  waveform: Schema.optional(Schema.String),
-  description: Schema.optional(Schema.String),
-  content_type: Schema.optional(Schema.String),
-  ephemeral: Schema.optional(Schema.Boolean),
-  flags: Schema.optional(Schema.Number.check(Schema.isInt32())),
-  placeholder: Schema.optional(Schema.String),
-  placeholder_version: Schema.optional(Schema.Number.check(Schema.isInt32())),
-  title: Schema.optional(Schema.NullOr(Schema.String)),
-  application: Schema.optional(ApplicationResponseSchema),
-  clip_created_at: Schema.optional(
+  width: Schema.optionalKey(Schema.Number.check(Schema.isInt32())),
+  height: Schema.optionalKey(Schema.Number.check(Schema.isInt32())),
+  duration_secs: Schema.optionalKey(Schema.Number),
+  waveform: Schema.optionalKey(Schema.String),
+  description: Schema.optionalKey(Schema.String),
+  content_type: Schema.optionalKey(Schema.String),
+  ephemeral: Schema.optionalKey(Schema.Boolean),
+  flags: Schema.optionalKey(Schema.Number.check(Schema.isInt32())),
+  placeholder: Schema.optionalKey(Schema.String),
+  placeholder_version: Schema.optionalKey(Schema.Number.check(Schema.isInt32())),
+  title: Schema.optionalKey(Schema.NullOr(Schema.String)),
+  application: Schema.optionalKey(ApplicationResponseSchema),
+  clip_created_at: Schema.optionalKey(
     Schema.String.check(
       Schema.isPattern(
         /^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z|([+-](?:[01]\d|2[0-3]):[0-5]\d)))$/,
       ),
     ),
   ),
-  clip_participants: Schema.optional(Schema.Array(UserResponseSchema)),
+  clip_participants: Schema.optionalKey(Schema.Array(UserResponseSchema)),
 }).annotate({ identifier: 'AttachmentResponse' })
 
 export type AttachmentResponse = Schema.Schema.Type<typeof AttachmentResponseSchema>
@@ -1364,7 +1359,7 @@ export const ApplicationCommandAttachmentOptionSchema = Schema.Struct({
       expected: 'a string of at most 32 characters',
     }),
   ),
-  name_localizations: Schema.optional(
+  name_localizations: Schema.optionalKey(
     Schema.NullOr(
       Schema.Record(
         Schema.String,
@@ -1387,7 +1382,7 @@ export const ApplicationCommandAttachmentOptionSchema = Schema.Struct({
       expected: 'a string of at most 100 characters',
     }),
   ),
-  description_localizations: Schema.optional(
+  description_localizations: Schema.optionalKey(
     Schema.NullOr(
       Schema.Record(
         Schema.String,
@@ -1402,8 +1397,8 @@ export const ApplicationCommandAttachmentOptionSchema = Schema.Struct({
       ),
     ),
   ),
-  required: Schema.optional(Schema.NullOr(Schema.Boolean)),
-  file_types: Schema.optional(
+  required: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
+  file_types: Schema.optionalKey(
     Schema.NullOr(
       Schema.Array(
         Schema.String.check(
@@ -1426,15 +1421,17 @@ export type ApplicationCommandAttachmentOption = Schema.Schema.Type<
 export const ApplicationCommandAttachmentOptionResponseSchema = Schema.Struct({
   type: ApplicationCommandOptionTypeSchema,
   name: Schema.String,
-  name_localized: Schema.optional(Schema.String),
-  name_localizations: Schema.optional(Schema.NullOr(Schema.Record(Schema.String, Schema.String))),
-  description: Schema.String,
-  description_localized: Schema.optional(Schema.String),
-  description_localizations: Schema.optional(
+  name_localized: Schema.optionalKey(Schema.String),
+  name_localizations: Schema.optionalKey(
     Schema.NullOr(Schema.Record(Schema.String, Schema.String)),
   ),
-  required: Schema.optional(Schema.Boolean),
-  file_types: Schema.optional(
+  description: Schema.String,
+  description_localized: Schema.optionalKey(Schema.String),
+  description_localizations: Schema.optionalKey(
+    Schema.NullOr(Schema.Record(Schema.String, Schema.String)),
+  ),
+  required: Schema.optionalKey(Schema.Boolean),
+  file_types: Schema.optionalKey(
     Schema.Array(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length <= 16, {
@@ -1472,7 +1469,7 @@ export const ApplicationCommandOptionIntegerChoiceSchema = Schema.Struct({
       expected: 'a string of at most 100 characters',
     }),
   ),
-  name_localizations: Schema.optional(
+  name_localizations: Schema.optionalKey(
     Schema.NullOr(
       Schema.Record(
         Schema.String,
@@ -1495,11 +1492,11 @@ export type ApplicationCommandOptionIntegerChoice = Schema.Schema.Type<
 >
 
 export const InteractionApplicationCommandAutocompleteCallbackIntegerDataSchema = Schema.Struct({
-  choices: Schema.optional(
+  choices: Schema.optionalKey(
     Schema.NullOr(
-      Schema.Array(
-        Schema.Union([Schema.NullOr(Schema.Null), ApplicationCommandOptionIntegerChoiceSchema]),
-      ).check(Schema.isMaxLength(25)),
+      Schema.Array(Schema.Union([Schema.Null, ApplicationCommandOptionIntegerChoiceSchema])).check(
+        Schema.isMaxLength(25),
+      ),
     ),
   ),
 }).annotate({ identifier: 'InteractionApplicationCommandAutocompleteCallbackIntegerData' })
@@ -1517,7 +1514,7 @@ export const ApplicationCommandOptionNumberChoiceSchema = Schema.Struct({
       expected: 'a string of at most 100 characters',
     }),
   ),
-  name_localizations: Schema.optional(
+  name_localizations: Schema.optionalKey(
     Schema.NullOr(
       Schema.Record(
         Schema.String,
@@ -1540,11 +1537,11 @@ export type ApplicationCommandOptionNumberChoice = Schema.Schema.Type<
 >
 
 export const InteractionApplicationCommandAutocompleteCallbackNumberDataSchema = Schema.Struct({
-  choices: Schema.optional(
+  choices: Schema.optionalKey(
     Schema.NullOr(
-      Schema.Array(
-        Schema.Union([Schema.NullOr(Schema.Null), ApplicationCommandOptionNumberChoiceSchema]),
-      ).check(Schema.isMaxLength(25)),
+      Schema.Array(Schema.Union([Schema.Null, ApplicationCommandOptionNumberChoiceSchema])).check(
+        Schema.isMaxLength(25),
+      ),
     ),
   ),
 }).annotate({ identifier: 'InteractionApplicationCommandAutocompleteCallbackNumberData' })
@@ -1562,7 +1559,7 @@ export const ApplicationCommandOptionStringChoiceSchema = Schema.Struct({
       expected: 'a string of at most 100 characters',
     }),
   ),
-  name_localizations: Schema.optional(
+  name_localizations: Schema.optionalKey(
     Schema.NullOr(
       Schema.Record(
         Schema.String,
@@ -1589,11 +1586,11 @@ export type ApplicationCommandOptionStringChoice = Schema.Schema.Type<
 >
 
 export const InteractionApplicationCommandAutocompleteCallbackStringDataSchema = Schema.Struct({
-  choices: Schema.optional(
+  choices: Schema.optionalKey(
     Schema.NullOr(
-      Schema.Array(
-        Schema.Union([Schema.NullOr(Schema.Null), ApplicationCommandOptionStringChoiceSchema]),
-      ).check(Schema.isMaxLength(25)),
+      Schema.Array(Schema.Union([Schema.Null, ApplicationCommandOptionStringChoiceSchema])).check(
+        Schema.isMaxLength(25),
+      ),
     ),
   ),
 }).annotate({ identifier: 'InteractionApplicationCommandAutocompleteCallbackStringData' })
@@ -1625,7 +1622,7 @@ export const ApplicationCommandBooleanOptionSchema = Schema.Struct({
       expected: 'a string of at most 32 characters',
     }),
   ),
-  name_localizations: Schema.optional(
+  name_localizations: Schema.optionalKey(
     Schema.NullOr(
       Schema.Record(
         Schema.String,
@@ -1648,7 +1645,7 @@ export const ApplicationCommandBooleanOptionSchema = Schema.Struct({
       expected: 'a string of at most 100 characters',
     }),
   ),
-  description_localizations: Schema.optional(
+  description_localizations: Schema.optionalKey(
     Schema.NullOr(
       Schema.Record(
         Schema.String,
@@ -1663,7 +1660,7 @@ export const ApplicationCommandBooleanOptionSchema = Schema.Struct({
       ),
     ),
   ),
-  required: Schema.optional(Schema.NullOr(Schema.Boolean)),
+  required: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
 }).annotate({ identifier: 'ApplicationCommandBooleanOption' })
 
 export type ApplicationCommandBooleanOption = Schema.Schema.Type<
@@ -1673,14 +1670,16 @@ export type ApplicationCommandBooleanOption = Schema.Schema.Type<
 export const ApplicationCommandBooleanOptionResponseSchema = Schema.Struct({
   type: ApplicationCommandOptionTypeSchema,
   name: Schema.String,
-  name_localized: Schema.optional(Schema.String),
-  name_localizations: Schema.optional(Schema.NullOr(Schema.Record(Schema.String, Schema.String))),
-  description: Schema.String,
-  description_localized: Schema.optional(Schema.String),
-  description_localizations: Schema.optional(
+  name_localized: Schema.optionalKey(Schema.String),
+  name_localizations: Schema.optionalKey(
     Schema.NullOr(Schema.Record(Schema.String, Schema.String)),
   ),
-  required: Schema.optional(Schema.Boolean),
+  description: Schema.String,
+  description_localized: Schema.optionalKey(Schema.String),
+  description_localizations: Schema.optionalKey(
+    Schema.NullOr(Schema.Record(Schema.String, Schema.String)),
+  ),
+  required: Schema.optionalKey(Schema.Boolean),
 }).annotate({ identifier: 'ApplicationCommandBooleanOptionResponse' })
 
 export type ApplicationCommandBooleanOptionResponse = Schema.Schema.Type<
@@ -1697,7 +1696,7 @@ export const ApplicationCommandChannelOptionSchema = Schema.Struct({
       expected: 'a string of at most 32 characters',
     }),
   ),
-  name_localizations: Schema.optional(
+  name_localizations: Schema.optionalKey(
     Schema.NullOr(
       Schema.Record(
         Schema.String,
@@ -1720,7 +1719,7 @@ export const ApplicationCommandChannelOptionSchema = Schema.Struct({
       expected: 'a string of at most 100 characters',
     }),
   ),
-  description_localizations: Schema.optional(
+  description_localizations: Schema.optionalKey(
     Schema.NullOr(
       Schema.Record(
         Schema.String,
@@ -1735,8 +1734,8 @@ export const ApplicationCommandChannelOptionSchema = Schema.Struct({
       ),
     ),
   ),
-  required: Schema.optional(Schema.NullOr(Schema.Boolean)),
-  channel_types: Schema.optional(
+  required: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
+  channel_types: Schema.optionalKey(
     Schema.NullOr(Schema.Array(ChannelTypesSchema).check(Schema.isUnique())),
   ),
 }).annotate({ identifier: 'ApplicationCommandChannelOption' })
@@ -1748,15 +1747,17 @@ export type ApplicationCommandChannelOption = Schema.Schema.Type<
 export const ApplicationCommandChannelOptionResponseSchema = Schema.Struct({
   type: ApplicationCommandOptionTypeSchema,
   name: Schema.String,
-  name_localized: Schema.optional(Schema.String),
-  name_localizations: Schema.optional(Schema.NullOr(Schema.Record(Schema.String, Schema.String))),
-  description: Schema.String,
-  description_localized: Schema.optional(Schema.String),
-  description_localizations: Schema.optional(
+  name_localized: Schema.optionalKey(Schema.String),
+  name_localizations: Schema.optionalKey(
     Schema.NullOr(Schema.Record(Schema.String, Schema.String)),
   ),
-  required: Schema.optional(Schema.Boolean),
-  channel_types: Schema.optional(Schema.Array(ChannelTypesSchema).check(Schema.isUnique())),
+  description: Schema.String,
+  description_localized: Schema.optionalKey(Schema.String),
+  description_localizations: Schema.optionalKey(
+    Schema.NullOr(Schema.Record(Schema.String, Schema.String)),
+  ),
+  required: Schema.optionalKey(Schema.Boolean),
+  channel_types: Schema.optionalKey(Schema.Array(ChannelTypesSchema).check(Schema.isUnique())),
 }).annotate({ identifier: 'ApplicationCommandChannelOptionResponse' })
 
 export type ApplicationCommandChannelOptionResponse = Schema.Schema.Type<
@@ -1773,7 +1774,7 @@ export const ApplicationCommandIntegerOptionSchema = Schema.Struct({
       expected: 'a string of at most 32 characters',
     }),
   ),
-  name_localizations: Schema.optional(
+  name_localizations: Schema.optionalKey(
     Schema.NullOr(
       Schema.Record(
         Schema.String,
@@ -1796,7 +1797,7 @@ export const ApplicationCommandIntegerOptionSchema = Schema.Struct({
       expected: 'a string of at most 100 characters',
     }),
   ),
-  description_localizations: Schema.optional(
+  description_localizations: Schema.optionalKey(
     Schema.NullOr(
       Schema.Record(
         Schema.String,
@@ -1811,15 +1812,15 @@ export const ApplicationCommandIntegerOptionSchema = Schema.Struct({
       ),
     ),
   ),
-  required: Schema.optional(Schema.NullOr(Schema.Boolean)),
-  autocomplete: Schema.optional(Schema.NullOr(Schema.Boolean)),
-  choices: Schema.optional(
+  required: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
+  autocomplete: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
+  choices: Schema.optionalKey(
     Schema.NullOr(
       Schema.Array(ApplicationCommandOptionIntegerChoiceSchema).check(Schema.isMaxLength(25)),
     ),
   ),
-  min_value: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), Int53TypeSchema])),
-  max_value: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), Int53TypeSchema])),
+  min_value: Schema.optionalKey(Schema.Union([Schema.Null, Int53TypeSchema])),
+  max_value: Schema.optionalKey(Schema.Union([Schema.Null, Int53TypeSchema])),
 }).annotate({ identifier: 'ApplicationCommandIntegerOption' })
 
 export type ApplicationCommandIntegerOption = Schema.Schema.Type<
@@ -1836,7 +1837,7 @@ export const ApplicationCommandMentionableOptionSchema = Schema.Struct({
       expected: 'a string of at most 32 characters',
     }),
   ),
-  name_localizations: Schema.optional(
+  name_localizations: Schema.optionalKey(
     Schema.NullOr(
       Schema.Record(
         Schema.String,
@@ -1859,7 +1860,7 @@ export const ApplicationCommandMentionableOptionSchema = Schema.Struct({
       expected: 'a string of at most 100 characters',
     }),
   ),
-  description_localizations: Schema.optional(
+  description_localizations: Schema.optionalKey(
     Schema.NullOr(
       Schema.Record(
         Schema.String,
@@ -1874,7 +1875,7 @@ export const ApplicationCommandMentionableOptionSchema = Schema.Struct({
       ),
     ),
   ),
-  required: Schema.optional(Schema.NullOr(Schema.Boolean)),
+  required: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
 }).annotate({ identifier: 'ApplicationCommandMentionableOption' })
 
 export type ApplicationCommandMentionableOption = Schema.Schema.Type<
@@ -1891,7 +1892,7 @@ export const ApplicationCommandNumberOptionSchema = Schema.Struct({
       expected: 'a string of at most 32 characters',
     }),
   ),
-  name_localizations: Schema.optional(
+  name_localizations: Schema.optionalKey(
     Schema.NullOr(
       Schema.Record(
         Schema.String,
@@ -1914,7 +1915,7 @@ export const ApplicationCommandNumberOptionSchema = Schema.Struct({
       expected: 'a string of at most 100 characters',
     }),
   ),
-  description_localizations: Schema.optional(
+  description_localizations: Schema.optionalKey(
     Schema.NullOr(
       Schema.Record(
         Schema.String,
@@ -1929,15 +1930,15 @@ export const ApplicationCommandNumberOptionSchema = Schema.Struct({
       ),
     ),
   ),
-  required: Schema.optional(Schema.NullOr(Schema.Boolean)),
-  autocomplete: Schema.optional(Schema.NullOr(Schema.Boolean)),
-  choices: Schema.optional(
+  required: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
+  autocomplete: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
+  choices: Schema.optionalKey(
     Schema.NullOr(
       Schema.Array(ApplicationCommandOptionNumberChoiceSchema).check(Schema.isMaxLength(25)),
     ),
   ),
-  min_value: Schema.optional(Schema.NullOr(Schema.Number)),
-  max_value: Schema.optional(Schema.NullOr(Schema.Number)),
+  min_value: Schema.optionalKey(Schema.NullOr(Schema.Number)),
+  max_value: Schema.optionalKey(Schema.NullOr(Schema.Number)),
 }).annotate({ identifier: 'ApplicationCommandNumberOption' })
 
 export type ApplicationCommandNumberOption = Schema.Schema.Type<
@@ -1954,7 +1955,7 @@ export const ApplicationCommandRoleOptionSchema = Schema.Struct({
       expected: 'a string of at most 32 characters',
     }),
   ),
-  name_localizations: Schema.optional(
+  name_localizations: Schema.optionalKey(
     Schema.NullOr(
       Schema.Record(
         Schema.String,
@@ -1977,7 +1978,7 @@ export const ApplicationCommandRoleOptionSchema = Schema.Struct({
       expected: 'a string of at most 100 characters',
     }),
   ),
-  description_localizations: Schema.optional(
+  description_localizations: Schema.optionalKey(
     Schema.NullOr(
       Schema.Record(
         Schema.String,
@@ -1992,7 +1993,7 @@ export const ApplicationCommandRoleOptionSchema = Schema.Struct({
       ),
     ),
   ),
-  required: Schema.optional(Schema.NullOr(Schema.Boolean)),
+  required: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
 }).annotate({ identifier: 'ApplicationCommandRoleOption' })
 
 export type ApplicationCommandRoleOption = Schema.Schema.Type<
@@ -2009,7 +2010,7 @@ export const ApplicationCommandStringOptionSchema = Schema.Struct({
       expected: 'a string of at most 32 characters',
     }),
   ),
-  name_localizations: Schema.optional(
+  name_localizations: Schema.optionalKey(
     Schema.NullOr(
       Schema.Record(
         Schema.String,
@@ -2032,7 +2033,7 @@ export const ApplicationCommandStringOptionSchema = Schema.Struct({
       expected: 'a string of at most 100 characters',
     }),
   ),
-  description_localizations: Schema.optional(
+  description_localizations: Schema.optionalKey(
     Schema.NullOr(
       Schema.Record(
         Schema.String,
@@ -2047,9 +2048,9 @@ export const ApplicationCommandStringOptionSchema = Schema.Struct({
       ),
     ),
   ),
-  required: Schema.optional(Schema.NullOr(Schema.Boolean)),
-  autocomplete: Schema.optional(Schema.NullOr(Schema.Boolean)),
-  min_length: Schema.optional(
+  required: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
+  autocomplete: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
+  min_length: Schema.optionalKey(
     Schema.NullOr(
       Schema.Number.check(
         Schema.isInt(),
@@ -2058,7 +2059,7 @@ export const ApplicationCommandStringOptionSchema = Schema.Struct({
       ),
     ),
   ),
-  max_length: Schema.optional(
+  max_length: Schema.optionalKey(
     Schema.NullOr(
       Schema.Number.check(
         Schema.isInt(),
@@ -2067,7 +2068,7 @@ export const ApplicationCommandStringOptionSchema = Schema.Struct({
       ),
     ),
   ),
-  choices: Schema.optional(
+  choices: Schema.optionalKey(
     Schema.NullOr(
       Schema.Array(ApplicationCommandOptionStringChoiceSchema).check(Schema.isMaxLength(25)),
     ),
@@ -2088,7 +2089,7 @@ export const ApplicationCommandUserOptionSchema = Schema.Struct({
       expected: 'a string of at most 32 characters',
     }),
   ),
-  name_localizations: Schema.optional(
+  name_localizations: Schema.optionalKey(
     Schema.NullOr(
       Schema.Record(
         Schema.String,
@@ -2111,7 +2112,7 @@ export const ApplicationCommandUserOptionSchema = Schema.Struct({
       expected: 'a string of at most 100 characters',
     }),
   ),
-  description_localizations: Schema.optional(
+  description_localizations: Schema.optionalKey(
     Schema.NullOr(
       Schema.Record(
         Schema.String,
@@ -2126,7 +2127,7 @@ export const ApplicationCommandUserOptionSchema = Schema.Struct({
       ),
     ),
   ),
-  required: Schema.optional(Schema.NullOr(Schema.Boolean)),
+  required: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
 }).annotate({ identifier: 'ApplicationCommandUserOption' })
 
 export type ApplicationCommandUserOption = Schema.Schema.Type<
@@ -2143,7 +2144,7 @@ export const ApplicationCommandSubcommandOptionSchema = Schema.Struct({
       expected: 'a string of at most 32 characters',
     }),
   ),
-  name_localizations: Schema.optional(
+  name_localizations: Schema.optionalKey(
     Schema.NullOr(
       Schema.Record(
         Schema.String,
@@ -2166,7 +2167,7 @@ export const ApplicationCommandSubcommandOptionSchema = Schema.Struct({
       expected: 'a string of at most 100 characters',
     }),
   ),
-  description_localizations: Schema.optional(
+  description_localizations: Schema.optionalKey(
     Schema.NullOr(
       Schema.Record(
         Schema.String,
@@ -2181,8 +2182,8 @@ export const ApplicationCommandSubcommandOptionSchema = Schema.Struct({
       ),
     ),
   ),
-  required: Schema.optional(Schema.NullOr(Schema.Boolean)),
-  options: Schema.optional(
+  required: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
+  options: Schema.optionalKey(
     Schema.NullOr(
       Schema.Array(
         Schema.Union([
@@ -2215,7 +2216,7 @@ export const ApplicationCommandSubcommandGroupOptionSchema = Schema.Struct({
       expected: 'a string of at most 32 characters',
     }),
   ),
-  name_localizations: Schema.optional(
+  name_localizations: Schema.optionalKey(
     Schema.NullOr(
       Schema.Record(
         Schema.String,
@@ -2238,7 +2239,7 @@ export const ApplicationCommandSubcommandGroupOptionSchema = Schema.Struct({
       expected: 'a string of at most 100 characters',
     }),
   ),
-  description_localizations: Schema.optional(
+  description_localizations: Schema.optionalKey(
     Schema.NullOr(
       Schema.Record(
         Schema.String,
@@ -2253,8 +2254,8 @@ export const ApplicationCommandSubcommandGroupOptionSchema = Schema.Struct({
       ),
     ),
   ),
-  required: Schema.optional(Schema.NullOr(Schema.Boolean)),
-  options: Schema.optional(
+  required: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
+  options: Schema.optionalKey(
     Schema.NullOr(
       Schema.Array(ApplicationCommandSubcommandOptionSchema).check(Schema.isMaxLength(25)),
     ),
@@ -2323,7 +2324,7 @@ export const ApplicationCommandCreateRequestSchema = Schema.Struct({
       expected: 'a string of at most 32 characters',
     }),
   ),
-  name_localizations: Schema.optional(
+  name_localizations: Schema.optionalKey(
     Schema.NullOr(
       Schema.Record(
         Schema.String,
@@ -2338,7 +2339,7 @@ export const ApplicationCommandCreateRequestSchema = Schema.Struct({
       ),
     ),
   ),
-  description: Schema.optional(
+  description: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length <= 100, {
@@ -2347,7 +2348,7 @@ export const ApplicationCommandCreateRequestSchema = Schema.Struct({
       ),
     ),
   ),
-  description_localizations: Schema.optional(
+  description_localizations: Schema.optionalKey(
     Schema.NullOr(
       Schema.Record(
         Schema.String,
@@ -2362,7 +2363,7 @@ export const ApplicationCommandCreateRequestSchema = Schema.Struct({
       ),
     ),
   ),
-  options: Schema.optional(
+  options: Schema.optionalKey(
     Schema.NullOr(
       Schema.Array(
         Schema.Union([
@@ -2381,7 +2382,7 @@ export const ApplicationCommandCreateRequestSchema = Schema.Struct({
       ).check(Schema.isMaxLength(25)),
     ),
   ),
-  default_member_permissions: Schema.optional(
+  default_member_permissions: Schema.optionalKey(
     Schema.NullOr(
       Schema.Number.check(
         Schema.isInt(),
@@ -2390,13 +2391,13 @@ export const ApplicationCommandCreateRequestSchema = Schema.Struct({
       ),
     ),
   ),
-  dm_permission: Schema.optional(Schema.NullOr(Schema.Boolean)),
-  contexts: Schema.optional(
+  dm_permission: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
+  contexts: Schema.optionalKey(
     Schema.NullOr(
       Schema.Array(InteractionContextTypeSchema).check(Schema.isMinLength(1), Schema.isUnique()),
     ),
   ),
-  integration_types: Schema.optional(
+  integration_types: Schema.optionalKey(
     Schema.NullOr(
       Schema.Array(ApplicationIntegrationTypeSchema).check(
         Schema.isMinLength(1),
@@ -2404,13 +2405,13 @@ export const ApplicationCommandCreateRequestSchema = Schema.Struct({
       ),
     ),
   ),
-  handler: Schema.optional(
-    Schema.Union([Schema.NullOr(Schema.Null), ApplicationCommandHandlerSchema]).annotate({
+  handler: Schema.optionalKey(
+    Schema.Union([Schema.Null, ApplicationCommandHandlerSchema]).annotate({
       description:
         "Determines whether the interaction is handled by the app's interactions handler or by Discord",
     }),
   ),
-  type: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), ApplicationCommandTypeSchema])),
+  type: Schema.optionalKey(Schema.Union([Schema.Null, ApplicationCommandTypeSchema])),
 }).annotate({ identifier: 'ApplicationCommandCreateRequest' })
 
 export type ApplicationCommandCreateRequest = Schema.Schema.Type<
@@ -2419,8 +2420,10 @@ export type ApplicationCommandCreateRequest = Schema.Schema.Type<
 
 export const ApplicationCommandOptionIntegerChoiceResponseSchema = Schema.Struct({
   name: Schema.String,
-  name_localized: Schema.optional(Schema.String),
-  name_localizations: Schema.optional(Schema.NullOr(Schema.Record(Schema.String, Schema.String))),
+  name_localized: Schema.optionalKey(Schema.String),
+  name_localizations: Schema.optionalKey(
+    Schema.NullOr(Schema.Record(Schema.String, Schema.String)),
+  ),
   value: Int53TypeSchema,
 }).annotate({ identifier: 'ApplicationCommandOptionIntegerChoiceResponse' })
 
@@ -2431,18 +2434,20 @@ export type ApplicationCommandOptionIntegerChoiceResponse = Schema.Schema.Type<
 export const ApplicationCommandIntegerOptionResponseSchema = Schema.Struct({
   type: ApplicationCommandOptionTypeSchema,
   name: Schema.String,
-  name_localized: Schema.optional(Schema.String),
-  name_localizations: Schema.optional(Schema.NullOr(Schema.Record(Schema.String, Schema.String))),
-  description: Schema.String,
-  description_localized: Schema.optional(Schema.String),
-  description_localizations: Schema.optional(
+  name_localized: Schema.optionalKey(Schema.String),
+  name_localizations: Schema.optionalKey(
     Schema.NullOr(Schema.Record(Schema.String, Schema.String)),
   ),
-  required: Schema.optional(Schema.Boolean),
-  autocomplete: Schema.optional(Schema.Boolean),
-  choices: Schema.optional(Schema.Array(ApplicationCommandOptionIntegerChoiceResponseSchema)),
-  min_value: Schema.optional(Int53TypeSchema),
-  max_value: Schema.optional(Int53TypeSchema),
+  description: Schema.String,
+  description_localized: Schema.optionalKey(Schema.String),
+  description_localizations: Schema.optionalKey(
+    Schema.NullOr(Schema.Record(Schema.String, Schema.String)),
+  ),
+  required: Schema.optionalKey(Schema.Boolean),
+  autocomplete: Schema.optionalKey(Schema.Boolean),
+  choices: Schema.optionalKey(Schema.Array(ApplicationCommandOptionIntegerChoiceResponseSchema)),
+  min_value: Schema.optionalKey(Int53TypeSchema),
+  max_value: Schema.optionalKey(Int53TypeSchema),
 }).annotate({ identifier: 'ApplicationCommandIntegerOptionResponse' })
 
 export type ApplicationCommandIntegerOptionResponse = Schema.Schema.Type<
@@ -2474,11 +2479,11 @@ export type InteractionTypes = Schema.Schema.Type<typeof InteractionTypesSchema>
 export const ApplicationCommandInteractionMetadataResponseSchema = Schema.Struct({
   id: SnowflakeTypeSchema,
   type: InteractionTypesSchema,
-  user: Schema.optional(UserResponseSchema),
+  user: Schema.optionalKey(UserResponseSchema),
   authorizing_integration_owners: Schema.Record(Schema.String, SnowflakeTypeSchema),
-  original_response_message_id: Schema.optional(SnowflakeTypeSchema),
-  target_user: Schema.optional(UserResponseSchema),
-  target_message_id: Schema.optional(SnowflakeTypeSchema),
+  original_response_message_id: Schema.optionalKey(SnowflakeTypeSchema),
+  target_user: Schema.optionalKey(UserResponseSchema),
+  target_message_id: Schema.optionalKey(SnowflakeTypeSchema),
 }).annotate({ identifier: 'ApplicationCommandInteractionMetadataResponse' })
 
 export type ApplicationCommandInteractionMetadataResponse = Schema.Schema.Type<
@@ -2488,14 +2493,16 @@ export type ApplicationCommandInteractionMetadataResponse = Schema.Schema.Type<
 export const ApplicationCommandMentionableOptionResponseSchema = Schema.Struct({
   type: ApplicationCommandOptionTypeSchema,
   name: Schema.String,
-  name_localized: Schema.optional(Schema.String),
-  name_localizations: Schema.optional(Schema.NullOr(Schema.Record(Schema.String, Schema.String))),
-  description: Schema.String,
-  description_localized: Schema.optional(Schema.String),
-  description_localizations: Schema.optional(
+  name_localized: Schema.optionalKey(Schema.String),
+  name_localizations: Schema.optionalKey(
     Schema.NullOr(Schema.Record(Schema.String, Schema.String)),
   ),
-  required: Schema.optional(Schema.Boolean),
+  description: Schema.String,
+  description_localized: Schema.optionalKey(Schema.String),
+  description_localizations: Schema.optionalKey(
+    Schema.NullOr(Schema.Record(Schema.String, Schema.String)),
+  ),
+  required: Schema.optionalKey(Schema.Boolean),
 }).annotate({ identifier: 'ApplicationCommandMentionableOptionResponse' })
 
 export type ApplicationCommandMentionableOptionResponse = Schema.Schema.Type<
@@ -2504,8 +2511,10 @@ export type ApplicationCommandMentionableOptionResponse = Schema.Schema.Type<
 
 export const ApplicationCommandOptionNumberChoiceResponseSchema = Schema.Struct({
   name: Schema.String,
-  name_localized: Schema.optional(Schema.String),
-  name_localizations: Schema.optional(Schema.NullOr(Schema.Record(Schema.String, Schema.String))),
+  name_localized: Schema.optionalKey(Schema.String),
+  name_localizations: Schema.optionalKey(
+    Schema.NullOr(Schema.Record(Schema.String, Schema.String)),
+  ),
   value: Schema.Number,
 }).annotate({ identifier: 'ApplicationCommandOptionNumberChoiceResponse' })
 
@@ -2516,18 +2525,20 @@ export type ApplicationCommandOptionNumberChoiceResponse = Schema.Schema.Type<
 export const ApplicationCommandNumberOptionResponseSchema = Schema.Struct({
   type: ApplicationCommandOptionTypeSchema,
   name: Schema.String,
-  name_localized: Schema.optional(Schema.String),
-  name_localizations: Schema.optional(Schema.NullOr(Schema.Record(Schema.String, Schema.String))),
-  description: Schema.String,
-  description_localized: Schema.optional(Schema.String),
-  description_localizations: Schema.optional(
+  name_localized: Schema.optionalKey(Schema.String),
+  name_localizations: Schema.optionalKey(
     Schema.NullOr(Schema.Record(Schema.String, Schema.String)),
   ),
-  required: Schema.optional(Schema.Boolean),
-  autocomplete: Schema.optional(Schema.Boolean),
-  choices: Schema.optional(Schema.Array(ApplicationCommandOptionNumberChoiceResponseSchema)),
-  min_value: Schema.optional(Schema.Number),
-  max_value: Schema.optional(Schema.Number),
+  description: Schema.String,
+  description_localized: Schema.optionalKey(Schema.String),
+  description_localizations: Schema.optionalKey(
+    Schema.NullOr(Schema.Record(Schema.String, Schema.String)),
+  ),
+  required: Schema.optionalKey(Schema.Boolean),
+  autocomplete: Schema.optionalKey(Schema.Boolean),
+  choices: Schema.optionalKey(Schema.Array(ApplicationCommandOptionNumberChoiceResponseSchema)),
+  min_value: Schema.optionalKey(Schema.Number),
+  max_value: Schema.optionalKey(Schema.Number),
 }).annotate({ identifier: 'ApplicationCommandNumberOptionResponse' })
 
 export type ApplicationCommandNumberOptionResponse = Schema.Schema.Type<
@@ -2536,8 +2547,10 @@ export type ApplicationCommandNumberOptionResponse = Schema.Schema.Type<
 
 export const ApplicationCommandOptionStringChoiceResponseSchema = Schema.Struct({
   name: Schema.String,
-  name_localized: Schema.optional(Schema.String),
-  name_localizations: Schema.optional(Schema.NullOr(Schema.Record(Schema.String, Schema.String))),
+  name_localized: Schema.optionalKey(Schema.String),
+  name_localizations: Schema.optionalKey(
+    Schema.NullOr(Schema.Record(Schema.String, Schema.String)),
+  ),
   value: Schema.String,
 }).annotate({ identifier: 'ApplicationCommandOptionStringChoiceResponse' })
 
@@ -2546,7 +2559,7 @@ export type ApplicationCommandOptionStringChoiceResponse = Schema.Schema.Type<
 >
 
 export const ApplicationCommandPatchRequestPartialSchema = Schema.Struct({
-  name: Schema.optional(
+  name: Schema.optionalKey(
     Schema.String.check(
       Schema.makeFilter((input) => [...input].length >= 1, {
         expected: 'a string of at least 1 character',
@@ -2556,7 +2569,7 @@ export const ApplicationCommandPatchRequestPartialSchema = Schema.Struct({
       }),
     ),
   ),
-  name_localizations: Schema.optional(
+  name_localizations: Schema.optionalKey(
     Schema.NullOr(
       Schema.Record(
         Schema.String,
@@ -2571,7 +2584,7 @@ export const ApplicationCommandPatchRequestPartialSchema = Schema.Struct({
       ),
     ),
   ),
-  description: Schema.optional(
+  description: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length <= 100, {
@@ -2580,7 +2593,7 @@ export const ApplicationCommandPatchRequestPartialSchema = Schema.Struct({
       ),
     ),
   ),
-  description_localizations: Schema.optional(
+  description_localizations: Schema.optionalKey(
     Schema.NullOr(
       Schema.Record(
         Schema.String,
@@ -2595,7 +2608,7 @@ export const ApplicationCommandPatchRequestPartialSchema = Schema.Struct({
       ),
     ),
   ),
-  options: Schema.optional(
+  options: Schema.optionalKey(
     Schema.NullOr(
       Schema.Array(
         Schema.Union([
@@ -2614,7 +2627,7 @@ export const ApplicationCommandPatchRequestPartialSchema = Schema.Struct({
       ).check(Schema.isMaxLength(25)),
     ),
   ),
-  default_member_permissions: Schema.optional(
+  default_member_permissions: Schema.optionalKey(
     Schema.NullOr(
       Schema.Number.check(
         Schema.isInt(),
@@ -2623,13 +2636,13 @@ export const ApplicationCommandPatchRequestPartialSchema = Schema.Struct({
       ),
     ),
   ),
-  dm_permission: Schema.optional(Schema.NullOr(Schema.Boolean)),
-  contexts: Schema.optional(
+  dm_permission: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
+  contexts: Schema.optionalKey(
     Schema.NullOr(
       Schema.Array(InteractionContextTypeSchema).check(Schema.isMinLength(1), Schema.isUnique()),
     ),
   ),
-  integration_types: Schema.optional(
+  integration_types: Schema.optionalKey(
     Schema.NullOr(
       Schema.Array(ApplicationIntegrationTypeSchema).check(
         Schema.isMinLength(1),
@@ -2637,8 +2650,8 @@ export const ApplicationCommandPatchRequestPartialSchema = Schema.Struct({
       ),
     ),
   ),
-  handler: Schema.optional(
-    Schema.Union([Schema.NullOr(Schema.Null), ApplicationCommandHandlerSchema]).annotate({
+  handler: Schema.optionalKey(
+    Schema.Union([Schema.Null, ApplicationCommandHandlerSchema]).annotate({
       description:
         "Determines whether the interaction is handled by the app's interactions handler or by Discord",
     }),
@@ -2672,14 +2685,16 @@ export type ApplicationCommandPermission = Schema.Schema.Type<
 export const ApplicationCommandRoleOptionResponseSchema = Schema.Struct({
   type: ApplicationCommandOptionTypeSchema,
   name: Schema.String,
-  name_localized: Schema.optional(Schema.String),
-  name_localizations: Schema.optional(Schema.NullOr(Schema.Record(Schema.String, Schema.String))),
-  description: Schema.String,
-  description_localized: Schema.optional(Schema.String),
-  description_localizations: Schema.optional(
+  name_localized: Schema.optionalKey(Schema.String),
+  name_localizations: Schema.optionalKey(
     Schema.NullOr(Schema.Record(Schema.String, Schema.String)),
   ),
-  required: Schema.optional(Schema.Boolean),
+  description: Schema.String,
+  description_localized: Schema.optionalKey(Schema.String),
+  description_localizations: Schema.optionalKey(
+    Schema.NullOr(Schema.Record(Schema.String, Schema.String)),
+  ),
+  required: Schema.optionalKey(Schema.Boolean),
 }).annotate({ identifier: 'ApplicationCommandRoleOptionResponse' })
 
 export type ApplicationCommandRoleOptionResponse = Schema.Schema.Type<
@@ -2689,18 +2704,20 @@ export type ApplicationCommandRoleOptionResponse = Schema.Schema.Type<
 export const ApplicationCommandStringOptionResponseSchema = Schema.Struct({
   type: ApplicationCommandOptionTypeSchema,
   name: Schema.String,
-  name_localized: Schema.optional(Schema.String),
-  name_localizations: Schema.optional(Schema.NullOr(Schema.Record(Schema.String, Schema.String))),
-  description: Schema.String,
-  description_localized: Schema.optional(Schema.String),
-  description_localizations: Schema.optional(
+  name_localized: Schema.optionalKey(Schema.String),
+  name_localizations: Schema.optionalKey(
     Schema.NullOr(Schema.Record(Schema.String, Schema.String)),
   ),
-  required: Schema.optional(Schema.Boolean),
-  autocomplete: Schema.optional(Schema.Boolean),
-  choices: Schema.optional(Schema.Array(ApplicationCommandOptionStringChoiceResponseSchema)),
-  min_length: Schema.optional(Schema.Number.check(Schema.isInt32())),
-  max_length: Schema.optional(Schema.Number.check(Schema.isInt32())),
+  description: Schema.String,
+  description_localized: Schema.optionalKey(Schema.String),
+  description_localizations: Schema.optionalKey(
+    Schema.NullOr(Schema.Record(Schema.String, Schema.String)),
+  ),
+  required: Schema.optionalKey(Schema.Boolean),
+  autocomplete: Schema.optionalKey(Schema.Boolean),
+  choices: Schema.optionalKey(Schema.Array(ApplicationCommandOptionStringChoiceResponseSchema)),
+  min_length: Schema.optionalKey(Schema.Number.check(Schema.isInt32())),
+  max_length: Schema.optionalKey(Schema.Number.check(Schema.isInt32())),
 }).annotate({ identifier: 'ApplicationCommandStringOptionResponse' })
 
 export type ApplicationCommandStringOptionResponse = Schema.Schema.Type<
@@ -2710,14 +2727,16 @@ export type ApplicationCommandStringOptionResponse = Schema.Schema.Type<
 export const ApplicationCommandUserOptionResponseSchema = Schema.Struct({
   type: ApplicationCommandOptionTypeSchema,
   name: Schema.String,
-  name_localized: Schema.optional(Schema.String),
-  name_localizations: Schema.optional(Schema.NullOr(Schema.Record(Schema.String, Schema.String))),
-  description: Schema.String,
-  description_localized: Schema.optional(Schema.String),
-  description_localizations: Schema.optional(
+  name_localized: Schema.optionalKey(Schema.String),
+  name_localizations: Schema.optionalKey(
     Schema.NullOr(Schema.Record(Schema.String, Schema.String)),
   ),
-  required: Schema.optional(Schema.Boolean),
+  description: Schema.String,
+  description_localized: Schema.optionalKey(Schema.String),
+  description_localizations: Schema.optionalKey(
+    Schema.NullOr(Schema.Record(Schema.String, Schema.String)),
+  ),
+  required: Schema.optionalKey(Schema.Boolean),
 }).annotate({ identifier: 'ApplicationCommandUserOptionResponse' })
 
 export type ApplicationCommandUserOptionResponse = Schema.Schema.Type<
@@ -2727,15 +2746,17 @@ export type ApplicationCommandUserOptionResponse = Schema.Schema.Type<
 export const ApplicationCommandSubcommandOptionResponseSchema = Schema.Struct({
   type: ApplicationCommandOptionTypeSchema,
   name: Schema.String,
-  name_localized: Schema.optional(Schema.String),
-  name_localizations: Schema.optional(Schema.NullOr(Schema.Record(Schema.String, Schema.String))),
-  description: Schema.String,
-  description_localized: Schema.optional(Schema.String),
-  description_localizations: Schema.optional(
+  name_localized: Schema.optionalKey(Schema.String),
+  name_localizations: Schema.optionalKey(
     Schema.NullOr(Schema.Record(Schema.String, Schema.String)),
   ),
-  required: Schema.optional(Schema.Boolean),
-  options: Schema.optional(
+  description: Schema.String,
+  description_localized: Schema.optionalKey(Schema.String),
+  description_localizations: Schema.optionalKey(
+    Schema.NullOr(Schema.Record(Schema.String, Schema.String)),
+  ),
+  required: Schema.optionalKey(Schema.Boolean),
+  options: Schema.optionalKey(
     Schema.Array(
       Schema.Union([
         ApplicationCommandAttachmentOptionResponseSchema,
@@ -2759,15 +2780,17 @@ export type ApplicationCommandSubcommandOptionResponse = Schema.Schema.Type<
 export const ApplicationCommandSubcommandGroupOptionResponseSchema = Schema.Struct({
   type: ApplicationCommandOptionTypeSchema,
   name: Schema.String,
-  name_localized: Schema.optional(Schema.String),
-  name_localizations: Schema.optional(Schema.NullOr(Schema.Record(Schema.String, Schema.String))),
-  description: Schema.String,
-  description_localized: Schema.optional(Schema.String),
-  description_localizations: Schema.optional(
+  name_localized: Schema.optionalKey(Schema.String),
+  name_localizations: Schema.optionalKey(
     Schema.NullOr(Schema.Record(Schema.String, Schema.String)),
   ),
-  required: Schema.optional(Schema.Boolean),
-  options: Schema.optional(Schema.Array(ApplicationCommandSubcommandOptionResponseSchema)),
+  description: Schema.String,
+  description_localized: Schema.optionalKey(Schema.String),
+  description_localizations: Schema.optionalKey(
+    Schema.NullOr(Schema.Record(Schema.String, Schema.String)),
+  ),
+  required: Schema.optionalKey(Schema.Boolean),
+  options: Schema.optionalKey(Schema.Array(ApplicationCommandSubcommandOptionResponseSchema)),
 }).annotate({ identifier: 'ApplicationCommandSubcommandGroupOptionResponse' })
 
 export type ApplicationCommandSubcommandGroupOptionResponse = Schema.Schema.Type<
@@ -2781,22 +2804,24 @@ export const ApplicationCommandResponseSchema = Schema.Struct({
   default_member_permissions: Schema.NullOr(Schema.String),
   type: ApplicationCommandTypeSchema,
   name: Schema.String,
-  name_localized: Schema.optional(Schema.String),
-  name_localizations: Schema.optional(Schema.NullOr(Schema.Record(Schema.String, Schema.String))),
-  description: Schema.String,
-  description_localized: Schema.optional(Schema.String),
-  description_localizations: Schema.optional(
+  name_localized: Schema.optionalKey(Schema.String),
+  name_localizations: Schema.optionalKey(
     Schema.NullOr(Schema.Record(Schema.String, Schema.String)),
   ),
-  guild_id: Schema.optional(SnowflakeTypeSchema),
-  dm_permission: Schema.optional(Schema.Boolean),
-  contexts: Schema.optional(
+  description: Schema.String,
+  description_localized: Schema.optionalKey(Schema.String),
+  description_localizations: Schema.optionalKey(
+    Schema.NullOr(Schema.Record(Schema.String, Schema.String)),
+  ),
+  guild_id: Schema.optionalKey(SnowflakeTypeSchema),
+  dm_permission: Schema.optionalKey(Schema.Boolean),
+  contexts: Schema.optionalKey(
     Schema.NullOr(Schema.Array(InteractionContextTypeSchema).check(Schema.isUnique())),
   ),
-  integration_types: Schema.optional(
+  integration_types: Schema.optionalKey(
     Schema.Array(ApplicationIntegrationTypeSchema).check(Schema.isUnique()),
   ),
-  options: Schema.optional(
+  options: Schema.optionalKey(
     Schema.Array(
       Schema.Union([
         ApplicationCommandAttachmentOptionResponseSchema,
@@ -2813,8 +2838,8 @@ export const ApplicationCommandResponseSchema = Schema.Struct({
       ]),
     ),
   ),
-  nsfw: Schema.optional(Schema.Boolean),
-  handler: Schema.optional(
+  nsfw: Schema.optionalKey(Schema.Boolean),
+  handler: Schema.optionalKey(
     ApplicationCommandHandlerSchema.annotate({
       description:
         "Determines whether the interaction is handled by the app's interactions handler or by Discord",
@@ -2833,7 +2858,7 @@ export const ApplicationCommandUpdateRequestSchema = Schema.Struct({
       expected: 'a string of at most 32 characters',
     }),
   ),
-  name_localizations: Schema.optional(
+  name_localizations: Schema.optionalKey(
     Schema.NullOr(
       Schema.Record(
         Schema.String,
@@ -2848,7 +2873,7 @@ export const ApplicationCommandUpdateRequestSchema = Schema.Struct({
       ),
     ),
   ),
-  description: Schema.optional(
+  description: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length <= 100, {
@@ -2857,7 +2882,7 @@ export const ApplicationCommandUpdateRequestSchema = Schema.Struct({
       ),
     ),
   ),
-  description_localizations: Schema.optional(
+  description_localizations: Schema.optionalKey(
     Schema.NullOr(
       Schema.Record(
         Schema.String,
@@ -2872,7 +2897,7 @@ export const ApplicationCommandUpdateRequestSchema = Schema.Struct({
       ),
     ),
   ),
-  options: Schema.optional(
+  options: Schema.optionalKey(
     Schema.NullOr(
       Schema.Array(
         Schema.Union([
@@ -2891,7 +2916,7 @@ export const ApplicationCommandUpdateRequestSchema = Schema.Struct({
       ).check(Schema.isMaxLength(25)),
     ),
   ),
-  default_member_permissions: Schema.optional(
+  default_member_permissions: Schema.optionalKey(
     Schema.NullOr(
       Schema.Number.check(
         Schema.isInt(),
@@ -2900,13 +2925,13 @@ export const ApplicationCommandUpdateRequestSchema = Schema.Struct({
       ),
     ),
   ),
-  dm_permission: Schema.optional(Schema.NullOr(Schema.Boolean)),
-  contexts: Schema.optional(
+  dm_permission: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
+  contexts: Schema.optionalKey(
     Schema.NullOr(
       Schema.Array(InteractionContextTypeSchema).check(Schema.isMinLength(1), Schema.isUnique()),
     ),
   ),
-  integration_types: Schema.optional(
+  integration_types: Schema.optionalKey(
     Schema.NullOr(
       Schema.Array(ApplicationIntegrationTypeSchema).check(
         Schema.isMinLength(1),
@@ -2914,14 +2939,14 @@ export const ApplicationCommandUpdateRequestSchema = Schema.Struct({
       ),
     ),
   ),
-  handler: Schema.optional(
-    Schema.Union([Schema.NullOr(Schema.Null), ApplicationCommandHandlerSchema]).annotate({
+  handler: Schema.optionalKey(
+    Schema.Union([Schema.Null, ApplicationCommandHandlerSchema]).annotate({
       description:
         "Determines whether the interaction is handled by the app's interactions handler or by Discord",
     }),
   ),
-  type: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), ApplicationCommandTypeSchema])),
-  id: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema])),
+  type: Schema.optionalKey(Schema.Union([Schema.Null, ApplicationCommandTypeSchema])),
+  id: Schema.optionalKey(Schema.Union([Schema.Null, SnowflakeTypeSchema])),
 }).annotate({ identifier: 'ApplicationCommandUpdateRequest' })
 
 export type ApplicationCommandUpdateRequest = Schema.Schema.Type<
@@ -2950,10 +2975,10 @@ export type ApplicationExplicitContentFilterTypes = Schema.Schema.Type<
 >
 
 export const ApplicationOAuth2InstallParamsSchema = Schema.Struct({
-  scopes: Schema.optional(
+  scopes: Schema.optionalKey(
     Schema.NullOr(Schema.Array(OAuth2ScopesSchema).check(Schema.isMinLength(1), Schema.isUnique())),
   ),
-  permissions: Schema.optional(
+  permissions: Schema.optionalKey(
     Schema.NullOr(
       Schema.Number.check(
         Schema.isInt(),
@@ -2969,8 +2994,8 @@ export type ApplicationOAuth2InstallParams = Schema.Schema.Type<
 >
 
 export const ApplicationIntegrationTypeConfigurationSchema = Schema.Struct({
-  oauth2_install_params: Schema.optional(
-    Schema.Union([Schema.NullOr(Schema.Null), ApplicationOAuth2InstallParamsSchema]),
+  oauth2_install_params: Schema.optionalKey(
+    Schema.Union([Schema.Null, ApplicationOAuth2InstallParamsSchema]),
   ),
 }).annotate({ identifier: 'ApplicationIntegrationTypeConfiguration' })
 
@@ -2979,7 +3004,7 @@ export type ApplicationIntegrationTypeConfiguration = Schema.Schema.Type<
 >
 
 export const ApplicationFormPartialSchema = Schema.Struct({
-  description: Schema.optional(
+  description: Schema.optionalKey(
     Schema.NullOr(
       Schema.Struct({
         default: Schema.String.check(
@@ -2987,7 +3012,7 @@ export const ApplicationFormPartialSchema = Schema.Struct({
             expected: 'a string of at most 400 characters',
           }),
         ),
-        localizations: Schema.optional(
+        localizations: Schema.optionalKey(
           Schema.NullOr(
             Schema.Record(
               Schema.String,
@@ -3002,11 +3027,11 @@ export const ApplicationFormPartialSchema = Schema.Struct({
       }),
     ),
   ),
-  icon: Schema.optional(Schema.NullOr(Schema.String)),
-  cover_image: Schema.optional(Schema.NullOr(Schema.String)),
-  team_id: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema])),
-  flags: Schema.optional(Schema.NullOr(Schema.Number.check(Schema.isInt()))),
-  interactions_endpoint_url: Schema.optional(
+  icon: Schema.optionalKey(Schema.NullOr(Schema.String)),
+  cover_image: Schema.optionalKey(Schema.NullOr(Schema.String)),
+  team_id: Schema.optionalKey(Schema.Union([Schema.Null, SnowflakeTypeSchema])),
+  flags: Schema.optionalKey(Schema.NullOr(Schema.Number.check(Schema.isInt()))),
+  interactions_endpoint_url: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => URL.canParse(input)),
@@ -3016,14 +3041,14 @@ export const ApplicationFormPartialSchema = Schema.Struct({
       ),
     ),
   ),
-  explicit_content_filter: Schema.optional(
-    Schema.Union([Schema.NullOr(Schema.Null), ApplicationExplicitContentFilterTypesSchema]),
+  explicit_content_filter: Schema.optionalKey(
+    Schema.Union([Schema.Null, ApplicationExplicitContentFilterTypesSchema]),
   ),
-  max_participants: Schema.optional(
+  max_participants: Schema.optionalKey(
     Schema.NullOr(Schema.Number.check(Schema.isInt32(), Schema.isGreaterThanOrEqualTo(-1))),
   ),
-  type: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), ApplicationTypesSchema])),
-  tags: Schema.optional(
+  type: Schema.optionalKey(Schema.Union([Schema.Null, ApplicationTypesSchema])),
+  tags: Schema.optionalKey(
     Schema.NullOr(
       Schema.Array(
         Schema.String.check(
@@ -3034,7 +3059,7 @@ export const ApplicationFormPartialSchema = Schema.Struct({
       ).check(Schema.isMaxLength(5), Schema.isUnique()),
     ),
   ),
-  custom_install_url: Schema.optional(
+  custom_install_url: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => URL.canParse(input)),
@@ -3044,10 +3069,10 @@ export const ApplicationFormPartialSchema = Schema.Struct({
       ),
     ),
   ),
-  install_params: Schema.optional(
-    Schema.Union([Schema.NullOr(Schema.Null), ApplicationOAuth2InstallParamsSchema]),
+  install_params: Schema.optionalKey(
+    Schema.Union([Schema.Null, ApplicationOAuth2InstallParamsSchema]),
   ),
-  role_connections_verification_url: Schema.optional(
+  role_connections_verification_url: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => URL.canParse(input)),
@@ -3057,18 +3082,18 @@ export const ApplicationFormPartialSchema = Schema.Struct({
       ),
     ),
   ),
-  integration_types_config: Schema.optional(
+  integration_types_config: Schema.optionalKey(
     Schema.NullOr(
       Schema.Record(
         Schema.String,
-        Schema.Union([Schema.NullOr(Schema.Null), ApplicationIntegrationTypeConfigurationSchema]),
+        Schema.Union([Schema.Null, ApplicationIntegrationTypeConfigurationSchema]),
       ),
     ),
   ),
-  event_webhooks_status: Schema.optional(
-    Schema.Union([Schema.NullOr(Schema.Null), ApplicationEventWebhooksStatusSchema]),
+  event_webhooks_status: Schema.optionalKey(
+    Schema.Union([Schema.Null, ApplicationEventWebhooksStatusSchema]),
   ),
-  event_webhooks_url: Schema.optional(
+  event_webhooks_url: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => URL.canParse(input)),
@@ -3078,7 +3103,7 @@ export const ApplicationFormPartialSchema = Schema.Struct({
       ),
     ).annotate({ description: 'Event webhooks URL for the app to receive webhook events' }),
   ),
-  event_webhooks_types: Schema.optional(
+  event_webhooks_types: Schema.optionalKey(
     Schema.NullOr(Schema.Array(ActionTypesSchema).check(Schema.isUnique())),
   ),
 }).annotate({ identifier: 'ApplicationFormPartial' })
@@ -3116,14 +3141,14 @@ export const WebhookTypesSchema = Schema.Union([
 export type WebhookTypes = Schema.Schema.Type<typeof WebhookTypesSchema>
 
 export const ApplicationIncomingWebhookResponseSchema = Schema.Struct({
-  application_id: Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema]),
+  application_id: Schema.Union([Schema.Null, SnowflakeTypeSchema]),
   avatar: Schema.NullOr(Schema.String),
-  channel_id: Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema]),
-  guild_id: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema])),
+  channel_id: Schema.Union([Schema.Null, SnowflakeTypeSchema]),
+  guild_id: Schema.optionalKey(Schema.Union([Schema.Null, SnowflakeTypeSchema])),
   id: SnowflakeTypeSchema,
   name: Schema.String,
   type: WebhookTypesSchema,
-  user: Schema.optional(UserResponseSchema),
+  user: Schema.optionalKey(UserResponseSchema),
 }).annotate({ identifier: 'ApplicationIncomingWebhookResponse' })
 
 export type ApplicationIncomingWebhookResponse = Schema.Schema.Type<
@@ -3184,7 +3209,7 @@ export const ApplicationRoleConnectionsMetadataItemRequestSchema = Schema.Struct
       expected: 'a string of at most 100 characters',
     }),
   ),
-  name_localizations: Schema.optional(
+  name_localizations: Schema.optionalKey(
     Schema.NullOr(
       Schema.Record(
         Schema.String,
@@ -3209,7 +3234,7 @@ export const ApplicationRoleConnectionsMetadataItemRequestSchema = Schema.Struct
       expected: 'a string of at most 200 characters',
     }),
   ),
-  description_localizations: Schema.optional(
+  description_localizations: Schema.optionalKey(
     Schema.NullOr(
       Schema.Record(
         Schema.String,
@@ -3236,9 +3261,11 @@ export const ApplicationRoleConnectionsMetadataItemResponseSchema = Schema.Struc
   type: MetadataItemTypesSchema,
   key: Schema.String,
   name: Schema.String,
-  name_localizations: Schema.optional(Schema.NullOr(Schema.Record(Schema.String, Schema.String))),
+  name_localizations: Schema.optionalKey(
+    Schema.NullOr(Schema.Record(Schema.String, Schema.String)),
+  ),
   description: Schema.String,
-  description_localizations: Schema.optional(
+  description_localizations: Schema.optionalKey(
     Schema.NullOr(Schema.Record(Schema.String, Schema.String)),
   ),
 }).annotate({ identifier: 'ApplicationRoleConnectionsMetadataItemResponse' })
@@ -3248,9 +3275,9 @@ export type ApplicationRoleConnectionsMetadataItemResponse = Schema.Schema.Type<
 >
 
 export const ApplicationUserRoleConnectionResponseSchema = Schema.Struct({
-  platform_name: Schema.optional(Schema.String),
-  platform_username: Schema.optional(Schema.NullOr(Schema.String)),
-  metadata: Schema.optional(Schema.Record(Schema.String, Schema.String)),
+  platform_name: Schema.optionalKey(Schema.String),
+  platform_username: Schema.optionalKey(Schema.NullOr(Schema.String)),
+  metadata: Schema.optionalKey(Schema.Record(Schema.String, Schema.String)),
 }).annotate({ identifier: 'ApplicationUserRoleConnectionResponse' })
 
 export type ApplicationUserRoleConnectionResponse = Schema.Schema.Type<
@@ -3342,8 +3369,8 @@ export type AuditLogActionTypes = Schema.Schema.Type<typeof AuditLogActionTypesS
 
 export const AuditLogObjectChangeResponseSchema = Schema.Struct({
   key: Schema.NullOr(Schema.String),
-  new_value: Schema.optional(Schema.Unknown),
-  old_value: Schema.optional(Schema.Unknown),
+  new_value: Schema.optionalKey(Schema.Unknown),
+  old_value: Schema.optionalKey(Schema.Unknown),
 }).annotate({ identifier: 'AuditLogObjectChangeResponse' })
 
 export type AuditLogObjectChangeResponse = Schema.Schema.Type<
@@ -3353,11 +3380,11 @@ export type AuditLogObjectChangeResponse = Schema.Schema.Type<
 export const AuditLogEntryResponseSchema = Schema.Struct({
   id: SnowflakeTypeSchema,
   action_type: AuditLogActionTypesSchema,
-  user_id: Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema]),
-  target_id: Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema]),
-  changes: Schema.optional(Schema.Array(AuditLogObjectChangeResponseSchema)),
-  options: Schema.optional(Schema.Record(Schema.String, Schema.String)),
-  reason: Schema.optional(Schema.String),
+  user_id: Schema.Union([Schema.Null, SnowflakeTypeSchema]),
+  target_id: Schema.Union([Schema.Null, SnowflakeTypeSchema]),
+  changes: Schema.optionalKey(Schema.Array(AuditLogObjectChangeResponseSchema)),
+  options: Schema.optionalKey(Schema.Record(Schema.String, Schema.String)),
+  reason: Schema.optionalKey(Schema.String),
 }).annotate({ identifier: 'AuditLogEntryResponse' })
 
 export type AuditLogEntryResponse = Schema.Schema.Type<typeof AuditLogEntryResponseSchema>
@@ -3470,7 +3497,7 @@ export const AvailableLocalesEnumSchema = Schema.Union([
 export type AvailableLocalesEnum = Schema.Schema.Type<typeof AvailableLocalesEnumSchema>
 
 export const BanUserFromGuildRequestSchema = Schema.Struct({
-  delete_message_seconds: Schema.optional(
+  delete_message_seconds: Schema.optionalKey(
     Schema.NullOr(
       Schema.Number.check(
         Schema.isInt(),
@@ -3479,7 +3506,7 @@ export const BanUserFromGuildRequestSchema = Schema.Struct({
       ),
     ),
   ),
-  delete_message_days: Schema.optional(
+  delete_message_days: Schema.optionalKey(
     Schema.NullOr(
       Schema.Number.check(
         Schema.isInt(),
@@ -3493,7 +3520,7 @@ export const BanUserFromGuildRequestSchema = Schema.Struct({
 export type BanUserFromGuildRequest = Schema.Schema.Type<typeof BanUserFromGuildRequestSchema>
 
 export const RichEmbedAuthorSchema = Schema.Struct({
-  name: Schema.optional(
+  name: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length <= 256, {
@@ -3502,7 +3529,7 @@ export const RichEmbedAuthorSchema = Schema.Struct({
       ),
     ),
   ),
-  url: Schema.optional(
+  url: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => URL.canParse(input)),
@@ -3512,7 +3539,7 @@ export const RichEmbedAuthorSchema = Schema.Struct({
       ),
     ),
   ),
-  icon_url: Schema.optional(
+  icon_url: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => URL.canParse(input)),
@@ -3527,7 +3554,7 @@ export const RichEmbedAuthorSchema = Schema.Struct({
 export type RichEmbedAuthor = Schema.Schema.Type<typeof RichEmbedAuthorSchema>
 
 export const RichEmbedImageSchema = Schema.Struct({
-  url: Schema.optional(
+  url: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => URL.canParse(input)),
@@ -3537,9 +3564,9 @@ export const RichEmbedImageSchema = Schema.Struct({
       ),
     ),
   ),
-  width: Schema.optional(Schema.NullOr(Schema.Number.check(Schema.isInt()))),
-  height: Schema.optional(Schema.NullOr(Schema.Number.check(Schema.isInt()))),
-  placeholder: Schema.optional(
+  width: Schema.optionalKey(Schema.NullOr(Schema.Number.check(Schema.isInt()))),
+  height: Schema.optionalKey(Schema.NullOr(Schema.Number.check(Schema.isInt()))),
+  placeholder: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length <= 64, {
@@ -3548,7 +3575,7 @@ export const RichEmbedImageSchema = Schema.Struct({
       ),
     ),
   ),
-  placeholder_version: Schema.optional(
+  placeholder_version: Schema.optionalKey(
     Schema.NullOr(
       Schema.Number.check(
         Schema.isInt(),
@@ -3557,8 +3584,8 @@ export const RichEmbedImageSchema = Schema.Struct({
       ),
     ),
   ),
-  is_animated: Schema.optional(Schema.NullOr(Schema.Boolean)),
-  description: Schema.optional(
+  is_animated: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
+  description: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length <= 4096, {
@@ -3572,7 +3599,7 @@ export const RichEmbedImageSchema = Schema.Struct({
 export type RichEmbedImage = Schema.Schema.Type<typeof RichEmbedImageSchema>
 
 export const RichEmbedThumbnailSchema = Schema.Struct({
-  url: Schema.optional(
+  url: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => URL.canParse(input)),
@@ -3582,9 +3609,9 @@ export const RichEmbedThumbnailSchema = Schema.Struct({
       ),
     ),
   ),
-  width: Schema.optional(Schema.NullOr(Schema.Number.check(Schema.isInt()))),
-  height: Schema.optional(Schema.NullOr(Schema.Number.check(Schema.isInt()))),
-  placeholder: Schema.optional(
+  width: Schema.optionalKey(Schema.NullOr(Schema.Number.check(Schema.isInt()))),
+  height: Schema.optionalKey(Schema.NullOr(Schema.Number.check(Schema.isInt()))),
+  placeholder: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length <= 64, {
@@ -3593,7 +3620,7 @@ export const RichEmbedThumbnailSchema = Schema.Struct({
       ),
     ),
   ),
-  placeholder_version: Schema.optional(
+  placeholder_version: Schema.optionalKey(
     Schema.NullOr(
       Schema.Number.check(
         Schema.isInt(),
@@ -3602,8 +3629,8 @@ export const RichEmbedThumbnailSchema = Schema.Struct({
       ),
     ),
   ),
-  is_animated: Schema.optional(Schema.NullOr(Schema.Boolean)),
-  description: Schema.optional(
+  is_animated: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
+  description: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length <= 4096, {
@@ -3617,7 +3644,7 @@ export const RichEmbedThumbnailSchema = Schema.Struct({
 export type RichEmbedThumbnail = Schema.Schema.Type<typeof RichEmbedThumbnailSchema>
 
 export const RichEmbedFooterSchema = Schema.Struct({
-  text: Schema.optional(
+  text: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length <= 2048, {
@@ -3626,7 +3653,7 @@ export const RichEmbedFooterSchema = Schema.Struct({
       ),
     ),
   ),
-  icon_url: Schema.optional(
+  icon_url: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => URL.canParse(input)),
@@ -3651,13 +3678,13 @@ export const RichEmbedFieldSchema = Schema.Struct({
       expected: 'a string of at most 1024 characters',
     }),
   ),
-  inline: Schema.optional(Schema.NullOr(Schema.Boolean)),
+  inline: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
 }).annotate({ identifier: 'RichEmbedField' })
 
 export type RichEmbedField = Schema.Schema.Type<typeof RichEmbedFieldSchema>
 
 export const RichEmbedProviderSchema = Schema.Struct({
-  name: Schema.optional(
+  name: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length <= 256, {
@@ -3666,7 +3693,7 @@ export const RichEmbedProviderSchema = Schema.Struct({
       ),
     ),
   ),
-  url: Schema.optional(
+  url: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => URL.canParse(input)),
@@ -3681,7 +3708,7 @@ export const RichEmbedProviderSchema = Schema.Struct({
 export type RichEmbedProvider = Schema.Schema.Type<typeof RichEmbedProviderSchema>
 
 export const RichEmbedVideoSchema = Schema.Struct({
-  url: Schema.optional(
+  url: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => URL.canParse(input)),
@@ -3691,9 +3718,9 @@ export const RichEmbedVideoSchema = Schema.Struct({
       ),
     ),
   ),
-  width: Schema.optional(Schema.NullOr(Schema.Number.check(Schema.isInt()))),
-  height: Schema.optional(Schema.NullOr(Schema.Number.check(Schema.isInt()))),
-  placeholder: Schema.optional(
+  width: Schema.optionalKey(Schema.NullOr(Schema.Number.check(Schema.isInt()))),
+  height: Schema.optionalKey(Schema.NullOr(Schema.Number.check(Schema.isInt()))),
+  placeholder: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length <= 64, {
@@ -3702,7 +3729,7 @@ export const RichEmbedVideoSchema = Schema.Struct({
       ),
     ),
   ),
-  placeholder_version: Schema.optional(
+  placeholder_version: Schema.optionalKey(
     Schema.NullOr(
       Schema.Number.check(
         Schema.isInt(),
@@ -3711,8 +3738,8 @@ export const RichEmbedVideoSchema = Schema.Struct({
       ),
     ),
   ),
-  is_animated: Schema.optional(Schema.NullOr(Schema.Boolean)),
-  description: Schema.optional(
+  is_animated: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
+  description: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length <= 4096, {
@@ -3726,7 +3753,7 @@ export const RichEmbedVideoSchema = Schema.Struct({
 export type RichEmbedVideo = Schema.Schema.Type<typeof RichEmbedVideoSchema>
 
 export const RichEmbedAudioSchema = Schema.Struct({
-  url: Schema.optional(
+  url: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => URL.canParse(input)),
@@ -3736,7 +3763,7 @@ export const RichEmbedAudioSchema = Schema.Struct({
       ),
     ),
   ),
-  description: Schema.optional(
+  description: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length <= 4096, {
@@ -3750,7 +3777,7 @@ export const RichEmbedAudioSchema = Schema.Struct({
 export type RichEmbedAudio = Schema.Schema.Type<typeof RichEmbedAudioSchema>
 
 export const RichEmbedSchema = Schema.Struct({
-  type: Schema.optional(
+  type: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length <= 152133, {
@@ -3759,7 +3786,7 @@ export const RichEmbedSchema = Schema.Struct({
       ),
     ),
   ),
-  url: Schema.optional(
+  url: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => URL.canParse(input)),
@@ -3769,7 +3796,7 @@ export const RichEmbedSchema = Schema.Struct({
       ),
     ),
   ),
-  title: Schema.optional(
+  title: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length <= 256, {
@@ -3778,7 +3805,7 @@ export const RichEmbedSchema = Schema.Struct({
       ),
     ),
   ),
-  color: Schema.optional(
+  color: Schema.optionalKey(
     Schema.NullOr(
       Schema.Number.check(
         Schema.isInt(),
@@ -3787,7 +3814,7 @@ export const RichEmbedSchema = Schema.Struct({
       ),
     ),
   ),
-  timestamp: Schema.optional(
+  timestamp: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.isPattern(
@@ -3796,7 +3823,7 @@ export const RichEmbedSchema = Schema.Struct({
       ),
     ),
   ),
-  description: Schema.optional(
+  description: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length <= 4096, {
@@ -3805,46 +3832,46 @@ export const RichEmbedSchema = Schema.Struct({
       ),
     ),
   ),
-  author: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), RichEmbedAuthorSchema])),
-  image: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), RichEmbedImageSchema])),
-  thumbnail: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), RichEmbedThumbnailSchema])),
-  footer: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), RichEmbedFooterSchema])),
-  fields: Schema.optional(
+  author: Schema.optionalKey(Schema.Union([Schema.Null, RichEmbedAuthorSchema])),
+  image: Schema.optionalKey(Schema.Union([Schema.Null, RichEmbedImageSchema])),
+  thumbnail: Schema.optionalKey(Schema.Union([Schema.Null, RichEmbedThumbnailSchema])),
+  footer: Schema.optionalKey(Schema.Union([Schema.Null, RichEmbedFooterSchema])),
+  fields: Schema.optionalKey(
     Schema.NullOr(Schema.Array(RichEmbedFieldSchema).check(Schema.isMaxLength(25))),
   ),
-  provider: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), RichEmbedProviderSchema])),
-  video: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), RichEmbedVideoSchema])),
-  audio: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), RichEmbedAudioSchema])),
+  provider: Schema.optionalKey(Schema.Union([Schema.Null, RichEmbedProviderSchema])),
+  video: Schema.optionalKey(Schema.Union([Schema.Null, RichEmbedVideoSchema])),
+  audio: Schema.optionalKey(Schema.Union([Schema.Null, RichEmbedAudioSchema])),
 }).annotate({ identifier: 'RichEmbed' })
 
 export type RichEmbed = Schema.Schema.Type<typeof RichEmbedSchema>
 
 export const MessageAllowedMentionsRequestSchema = Schema.Struct({
-  parse: Schema.optional(
+  parse: Schema.optionalKey(
     Schema.NullOr(
-      Schema.Array(Schema.Union([Schema.NullOr(Schema.Null), AllowedMentionTypesSchema])).check(
+      Schema.Array(Schema.Union([Schema.Null, AllowedMentionTypesSchema])).check(
         Schema.isMaxLength(1521),
         Schema.isUnique(),
       ),
     ),
   ),
-  users: Schema.optional(
+  users: Schema.optionalKey(
     Schema.NullOr(
-      Schema.Array(Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema])).check(
+      Schema.Array(Schema.Union([Schema.Null, SnowflakeTypeSchema])).check(
         Schema.isMaxLength(100),
         Schema.isUnique(),
       ),
     ),
   ),
-  roles: Schema.optional(
+  roles: Schema.optionalKey(
     Schema.NullOr(
-      Schema.Array(Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema])).check(
+      Schema.Array(Schema.Union([Schema.Null, SnowflakeTypeSchema])).check(
         Schema.isMaxLength(100),
         Schema.isUnique(),
       ),
     ),
   ),
-  replied_user: Schema.optional(Schema.NullOr(Schema.Boolean)),
+  replied_user: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
 }).annotate({ identifier: 'MessageAllowedMentionsRequest' })
 
 export type MessageAllowedMentionsRequest = Schema.Schema.Type<
@@ -3866,10 +3893,10 @@ export type UnfurledMediaRequestWithAttachmentReferenceRequired = Schema.Schema.
 
 export const FileComponentForMessageRequestSchema = Schema.Struct({
   type: MessageComponentTypesSchema,
-  id: Schema.optional(
+  id: Schema.optionalKey(
     Schema.NullOr(Schema.Number.check(Schema.isInt32(), Schema.isGreaterThanOrEqualTo(0))),
   ),
-  spoiler: Schema.optional(Schema.NullOr(Schema.Boolean)),
+  spoiler: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
   file: UnfurledMediaRequestWithAttachmentReferenceRequiredSchema,
 }).annotate({ identifier: 'FileComponentForMessageRequest' })
 
@@ -3889,7 +3916,7 @@ export const UnfurledMediaRequestSchema = Schema.Struct({
 export type UnfurledMediaRequest = Schema.Schema.Type<typeof UnfurledMediaRequestSchema>
 
 export const MediaGalleryItemForMessageRequestSchema = Schema.Struct({
-  description: Schema.optional(
+  description: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length >= 1, {
@@ -3901,7 +3928,7 @@ export const MediaGalleryItemForMessageRequestSchema = Schema.Struct({
       ),
     ),
   ),
-  spoiler: Schema.optional(Schema.NullOr(Schema.Boolean)),
+  spoiler: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
   media: UnfurledMediaRequestSchema,
 }).annotate({ identifier: 'MediaGalleryItemForMessageRequest' })
 
@@ -3911,7 +3938,7 @@ export type MediaGalleryItemForMessageRequest = Schema.Schema.Type<
 
 export const MediaGalleryComponentForMessageRequestSchema = Schema.Struct({
   type: MessageComponentTypesSchema,
-  id: Schema.optional(
+  id: Schema.optionalKey(
     Schema.NullOr(Schema.Number.check(Schema.isInt32(), Schema.isGreaterThanOrEqualTo(0))),
   ),
   items: Schema.Array(MediaGalleryItemForMessageRequestSchema).check(
@@ -3926,7 +3953,7 @@ export type MediaGalleryComponentForMessageRequest = Schema.Schema.Type<
 
 export const TextDisplayComponentForMessageRequestSchema = Schema.Struct({
   type: MessageComponentTypesSchema,
-  id: Schema.optional(
+  id: Schema.optionalKey(
     Schema.NullOr(Schema.Number.check(Schema.isInt32(), Schema.isGreaterThanOrEqualTo(0))),
   ),
   content: Schema.String.check(
@@ -3945,10 +3972,10 @@ export type TextDisplayComponentForMessageRequest = Schema.Schema.Type<
 
 export const ThumbnailComponentForMessageRequestSchema = Schema.Struct({
   type: MessageComponentTypesSchema,
-  id: Schema.optional(
+  id: Schema.optionalKey(
     Schema.NullOr(Schema.Number.check(Schema.isInt32(), Schema.isGreaterThanOrEqualTo(0))),
   ),
-  description: Schema.optional(
+  description: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length >= 1, {
@@ -3960,7 +3987,7 @@ export const ThumbnailComponentForMessageRequestSchema = Schema.Struct({
       ),
     ),
   ),
-  spoiler: Schema.optional(Schema.NullOr(Schema.Boolean)),
+  spoiler: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
   media: UnfurledMediaRequestSchema,
 }).annotate({ identifier: 'ThumbnailComponentForMessageRequest' })
 
@@ -3970,7 +3997,7 @@ export type ThumbnailComponentForMessageRequest = Schema.Schema.Type<
 
 export const SectionComponentForMessageRequestSchema = Schema.Struct({
   type: MessageComponentTypesSchema,
-  id: Schema.optional(
+  id: Schema.optionalKey(
     Schema.NullOr(Schema.Number.check(Schema.isInt32(), Schema.isGreaterThanOrEqualTo(0))),
   ),
   components: Schema.Array(TextDisplayComponentForMessageRequestSchema).check(
@@ -3998,13 +4025,13 @@ export type MessageComponentSeparatorSpacingSize = Schema.Schema.Type<
 
 export const SeparatorComponentForMessageRequestSchema = Schema.Struct({
   type: MessageComponentTypesSchema,
-  id: Schema.optional(
+  id: Schema.optionalKey(
     Schema.NullOr(Schema.Number.check(Schema.isInt32(), Schema.isGreaterThanOrEqualTo(0))),
   ),
-  spacing: Schema.optional(
-    Schema.Union([Schema.NullOr(Schema.Null), MessageComponentSeparatorSpacingSizeSchema]),
+  spacing: Schema.optionalKey(
+    Schema.Union([Schema.Null, MessageComponentSeparatorSpacingSizeSchema]),
   ),
-  divider: Schema.optional(Schema.NullOr(Schema.Boolean)),
+  divider: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
 }).annotate({ identifier: 'SeparatorComponentForMessageRequest' })
 
 export type SeparatorComponentForMessageRequest = Schema.Schema.Type<
@@ -4013,10 +4040,10 @@ export type SeparatorComponentForMessageRequest = Schema.Schema.Type<
 
 export const ContainerComponentForMessageRequestSchema = Schema.Struct({
   type: MessageComponentTypesSchema,
-  id: Schema.optional(
+  id: Schema.optionalKey(
     Schema.NullOr(Schema.Number.check(Schema.isInt32(), Schema.isGreaterThanOrEqualTo(0))),
   ),
-  accent_color: Schema.optional(
+  accent_color: Schema.optionalKey(
     Schema.NullOr(
       Schema.Number.check(
         Schema.isInt(),
@@ -4035,7 +4062,7 @@ export const ContainerComponentForMessageRequestSchema = Schema.Struct({
       TextDisplayComponentForMessageRequestSchema,
     ]),
   ).check(Schema.isMinLength(1), Schema.isMaxLength(40)),
-  spoiler: Schema.optional(Schema.NullOr(Schema.Boolean)),
+  spoiler: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
 }).annotate({ identifier: 'ContainerComponentForMessageRequest' })
 
 export type ContainerComponentForMessageRequest = Schema.Schema.Type<
@@ -4044,7 +4071,7 @@ export type ContainerComponentForMessageRequest = Schema.Schema.Type<
 
 export const MessageAttachmentRequestSchema = Schema.Struct({
   id: SnowflakeTypeSchema,
-  filename: Schema.optional(
+  filename: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length >= 1, {
@@ -4056,7 +4083,7 @@ export const MessageAttachmentRequestSchema = Schema.Struct({
       ),
     ),
   ),
-  description: Schema.optional(
+  description: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length <= 1024, {
@@ -4065,12 +4092,12 @@ export const MessageAttachmentRequestSchema = Schema.Struct({
       ),
     ),
   ),
-  duration_secs: Schema.optional(
+  duration_secs: Schema.optionalKey(
     Schema.NullOr(
       Schema.Number.check(Schema.isGreaterThanOrEqualTo(0), Schema.isLessThanOrEqualTo(2147483647)),
     ),
   ),
-  waveform: Schema.optional(
+  waveform: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length <= 400, {
@@ -4079,7 +4106,7 @@ export const MessageAttachmentRequestSchema = Schema.Struct({
       ),
     ),
   ),
-  title: Schema.optional(
+  title: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length <= 1024, {
@@ -4088,18 +4115,18 @@ export const MessageAttachmentRequestSchema = Schema.Struct({
       ),
     ),
   ),
-  is_spoiler: Schema.optional(Schema.NullOr(Schema.Boolean)),
+  is_spoiler: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
 }).annotate({ identifier: 'MessageAttachmentRequest' })
 
 export type MessageAttachmentRequest = Schema.Schema.Type<typeof MessageAttachmentRequestSchema>
 
 export const PollEmojiSchema = Schema.Struct({
-  id: Schema.optional(
-    Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema]).annotate({
+  id: Schema.optionalKey(
+    Schema.Union([Schema.Null, SnowflakeTypeSchema]).annotate({
       description: 'The ID of the custom emoji',
     }),
   ),
-  name: Schema.optional(
+  name: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length <= 32, {
@@ -4108,7 +4135,7 @@ export const PollEmojiSchema = Schema.Struct({
       ),
     ).annotate({ description: 'The name of the emoji, or the unicode emoji character' }),
   ),
-  animated: Schema.optional(
+  animated: Schema.optionalKey(
     Schema.NullOr(Schema.Boolean).annotate({ description: 'Whether the emoji is animated' }),
   ),
 }).annotate({ identifier: 'PollEmoji' })
@@ -4116,7 +4143,7 @@ export const PollEmojiSchema = Schema.Struct({
 export type PollEmoji = Schema.Schema.Type<typeof PollEmojiSchema>
 
 export const PollMediaSchema = Schema.Struct({
-  text: Schema.optional(
+  text: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length >= 1, {
@@ -4128,8 +4155,8 @@ export const PollMediaSchema = Schema.Struct({
       ),
     ).annotate({ description: 'The text of the field' }),
   ),
-  emoji: Schema.optional(
-    Schema.Union([Schema.NullOr(Schema.Null), PollEmojiSchema]).annotate({
+  emoji: Schema.optionalKey(
+    Schema.Union([Schema.Null, PollEmojiSchema]).annotate({
       description: 'The emoji of the field',
     }),
   ),
@@ -4138,12 +4165,12 @@ export const PollMediaSchema = Schema.Struct({
 export type PollMedia = Schema.Schema.Type<typeof PollMediaSchema>
 
 export const PollEmojiCreateRequestSchema = Schema.Struct({
-  id: Schema.optional(
-    Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema]).annotate({
+  id: Schema.optionalKey(
+    Schema.Union([Schema.Null, SnowflakeTypeSchema]).annotate({
       description: 'The ID of the custom emoji',
     }),
   ),
-  name: Schema.optional(
+  name: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length <= 32, {
@@ -4152,7 +4179,7 @@ export const PollEmojiCreateRequestSchema = Schema.Struct({
       ),
     ).annotate({ description: 'The name of the emoji, or the unicode emoji character' }),
   ),
-  animated: Schema.optional(
+  animated: Schema.optionalKey(
     Schema.NullOr(Schema.Boolean).annotate({ description: 'Whether the emoji is animated' }),
   ),
 }).annotate({ identifier: 'PollEmojiCreateRequest' })
@@ -4160,7 +4187,7 @@ export const PollEmojiCreateRequestSchema = Schema.Struct({
 export type PollEmojiCreateRequest = Schema.Schema.Type<typeof PollEmojiCreateRequestSchema>
 
 export const PollMediaCreateRequestSchema = Schema.Struct({
-  text: Schema.optional(
+  text: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length >= 1, {
@@ -4172,8 +4199,8 @@ export const PollMediaCreateRequestSchema = Schema.Struct({
       ),
     ).annotate({ description: 'The text of the field' }),
   ),
-  emoji: Schema.optional(
-    Schema.Union([Schema.NullOr(Schema.Null), PollEmojiCreateRequestSchema]).annotate({
+  emoji: Schema.optionalKey(
+    Schema.Union([Schema.Null, PollEmojiCreateRequestSchema]).annotate({
       description: 'The emoji of the field',
     }),
   ),
@@ -4200,17 +4227,17 @@ export const PollCreateRequestSchema = Schema.Struct({
   answers: Schema.Array(PollAnswerCreateRequestSchema)
     .check(Schema.isMinLength(1), Schema.isMaxLength(10))
     .annotate({ description: 'Each of the answers available in the poll, up to 10' }),
-  allow_multiselect: Schema.optional(
+  allow_multiselect: Schema.optionalKey(
     Schema.NullOr(Schema.Boolean).annotate({
       description: 'Whether a user can select multiple answers',
     }),
   ),
-  layout_type: Schema.optional(
-    Schema.Union([Schema.NullOr(Schema.Null), PollLayoutTypesSchema]).annotate({
+  layout_type: Schema.optionalKey(
+    Schema.Union([Schema.Null, PollLayoutTypesSchema]).annotate({
       description: 'The layout type of the poll. Defaults to... DEFAULT!',
     }),
   ),
-  duration: Schema.optional(
+  duration: Schema.optionalKey(
     Schema.NullOr(
       Schema.Number.check(
         Schema.isInt32(),
@@ -4255,8 +4282,8 @@ export const CustomClientThemeShareRequestSchema = Schema.Struct({
     Schema.isGreaterThanOrEqualTo(0),
     Schema.isLessThanOrEqualTo(100),
   ),
-  base_theme: Schema.optional(
-    Schema.Union([Schema.NullOr(Schema.Null), MessageShareCustomUserThemeBaseThemeSchema]),
+  base_theme: Schema.optionalKey(
+    Schema.Union([Schema.Null, MessageShareCustomUserThemeBaseThemeSchema]),
   ),
 }).annotate({ identifier: 'CustomClientThemeShareRequest' })
 
@@ -4265,7 +4292,7 @@ export type CustomClientThemeShareRequest = Schema.Schema.Type<
 >
 
 export const BaseCreateMessageCreateRequestSchema = Schema.Struct({
-  content: Schema.optional(
+  content: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length <= 4000, {
@@ -4274,16 +4301,16 @@ export const BaseCreateMessageCreateRequestSchema = Schema.Struct({
       ),
     ),
   ),
-  embeds: Schema.optional(
+  embeds: Schema.optionalKey(
     Schema.NullOr(Schema.Array(RichEmbedSchema).check(Schema.isMaxLength(10))),
   ),
-  allowed_mentions: Schema.optional(
-    Schema.Union([Schema.NullOr(Schema.Null), MessageAllowedMentionsRequestSchema]),
+  allowed_mentions: Schema.optionalKey(
+    Schema.Union([Schema.Null, MessageAllowedMentionsRequestSchema]),
   ),
-  sticker_ids: Schema.optional(
+  sticker_ids: Schema.optionalKey(
     Schema.NullOr(Schema.Array(SnowflakeTypeSchema).check(Schema.isMaxLength(3))),
   ),
-  components: Schema.optional(
+  components: Schema.optionalKey(
     Schema.NullOr(
       Schema.Array(
         Schema.Union([
@@ -4298,13 +4325,13 @@ export const BaseCreateMessageCreateRequestSchema = Schema.Struct({
       ).check(Schema.isMaxLength(40)),
     ),
   ),
-  flags: Schema.optional(Schema.NullOr(Schema.Number.check(Schema.isInt()))),
-  attachments: Schema.optional(
+  flags: Schema.optionalKey(Schema.NullOr(Schema.Number.check(Schema.isInt()))),
+  attachments: Schema.optionalKey(
     Schema.NullOr(Schema.Array(MessageAttachmentRequestSchema).check(Schema.isMaxLength(10))),
   ),
-  poll: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), PollCreateRequestSchema])),
-  shared_client_theme: Schema.optional(
-    Schema.Union([Schema.NullOr(Schema.Null), CustomClientThemeShareRequestSchema]),
+  poll: Schema.optionalKey(Schema.Union([Schema.Null, PollCreateRequestSchema])),
+  shared_client_theme: Schema.optionalKey(
+    Schema.Union([Schema.Null, CustomClientThemeShareRequestSchema]),
   ),
 }).annotate({ identifier: 'BaseCreateMessageCreateRequest' })
 
@@ -4317,12 +4344,12 @@ export const BasicApplicationResponseWithBotSchema = Schema.Struct({
   name: Schema.String,
   icon: Schema.NullOr(Schema.String),
   description: Schema.String,
-  type: Schema.Union([Schema.NullOr(Schema.Null), ApplicationTypesSchema]),
-  cover_image: Schema.optional(Schema.String),
-  primary_sku_id: Schema.optional(SnowflakeTypeSchema),
+  type: Schema.Union([Schema.Null, ApplicationTypesSchema]),
+  cover_image: Schema.optionalKey(Schema.String),
+  primary_sku_id: Schema.optionalKey(SnowflakeTypeSchema),
   flags: Schema.Number.check(Schema.isInt32()),
   flags_new: Schema.String,
-  bot: Schema.optional(UserResponseSchema),
+  bot: Schema.optionalKey(UserResponseSchema),
 }).annotate({ identifier: 'BasicApplicationResponseWithBot' })
 
 export type BasicApplicationResponseWithBot = Schema.Schema.Type<
@@ -4331,8 +4358,8 @@ export type BasicApplicationResponseWithBot = Schema.Schema.Type<
 
 export const BasicGuildMemberResponseSchema = Schema.Struct({
   avatar: Schema.NullOr(Schema.String).annotate({ description: "the member's guild avatar hash" }),
-  avatar_decoration_data: Schema.optional(
-    Schema.Union([Schema.NullOr(Schema.Null), UserAvatarDecorationResponseSchema]).annotate({
+  avatar_decoration_data: Schema.optionalKey(
+    Schema.Union([Schema.Null, UserAvatarDecorationResponseSchema]).annotate({
       description: "data for the member's guild avatar decoration",
     }),
   ),
@@ -4370,8 +4397,8 @@ export const BasicGuildMemberResponseSchema = Schema.Struct({
   roles: Schema.Array(SnowflakeTypeSchema)
     .check(Schema.isUnique())
     .annotate({ description: 'array of role object ids' }),
-  collectibles: Schema.optional(
-    Schema.Union([Schema.NullOr(Schema.Null), UserCollectiblesResponseSchema]).annotate({
+  collectibles: Schema.optionalKey(
+    Schema.Union([Schema.Null, UserCollectiblesResponseSchema]).annotate({
       description: "data for the member's collectibles",
     }),
   ),
@@ -4427,26 +4454,26 @@ export const MessageAttachmentResponseSchema = Schema.Struct({
   size: Schema.Number.check(Schema.isInt32()),
   url: Schema.String.check(Schema.makeFilter((input) => URL.canParse(input))),
   proxy_url: Schema.String.check(Schema.makeFilter((input) => URL.canParse(input))),
-  width: Schema.optional(Schema.Number.check(Schema.isInt32())),
-  height: Schema.optional(Schema.Number.check(Schema.isInt32())),
-  duration_secs: Schema.optional(Schema.Number),
-  waveform: Schema.optional(Schema.String),
-  description: Schema.optional(Schema.String),
-  content_type: Schema.optional(Schema.String),
-  ephemeral: Schema.optional(Schema.Boolean),
-  flags: Schema.optional(Schema.Number.check(Schema.isInt32())),
-  placeholder: Schema.optional(Schema.String),
-  placeholder_version: Schema.optional(Schema.Number.check(Schema.isInt32())),
-  title: Schema.optional(Schema.NullOr(Schema.String)),
-  application: Schema.optional(ApplicationResponseSchema),
-  clip_created_at: Schema.optional(
+  width: Schema.optionalKey(Schema.Number.check(Schema.isInt32())),
+  height: Schema.optionalKey(Schema.Number.check(Schema.isInt32())),
+  duration_secs: Schema.optionalKey(Schema.Number),
+  waveform: Schema.optionalKey(Schema.String),
+  description: Schema.optionalKey(Schema.String),
+  content_type: Schema.optionalKey(Schema.String),
+  ephemeral: Schema.optionalKey(Schema.Boolean),
+  flags: Schema.optionalKey(Schema.Number.check(Schema.isInt32())),
+  placeholder: Schema.optionalKey(Schema.String),
+  placeholder_version: Schema.optionalKey(Schema.Number.check(Schema.isInt32())),
+  title: Schema.optionalKey(Schema.NullOr(Schema.String)),
+  application: Schema.optionalKey(ApplicationResponseSchema),
+  clip_created_at: Schema.optionalKey(
     Schema.String.check(
       Schema.isPattern(
         /^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z|([+-](?:[01]\d|2[0-3]):[0-5]\d)))$/,
       ),
     ),
   ),
-  clip_participants: Schema.optional(Schema.Array(UserResponseSchema)),
+  clip_participants: Schema.optionalKey(Schema.Array(UserResponseSchema)),
 }).annotate({ identifier: 'MessageAttachmentResponse' })
 
 export type MessageAttachmentResponse = Schema.Schema.Type<typeof MessageAttachmentResponseSchema>
@@ -4461,9 +4488,9 @@ export type MessageEmbedFieldResponse = Schema.Schema.Type<typeof MessageEmbedFi
 
 export const MessageEmbedAuthorResponseSchema = Schema.Struct({
   name: Schema.String,
-  url: Schema.optional(Schema.String),
-  icon_url: Schema.optional(Schema.String),
-  proxy_icon_url: Schema.optional(
+  url: Schema.optionalKey(Schema.String),
+  icon_url: Schema.optionalKey(Schema.String),
+  proxy_icon_url: Schema.optionalKey(
     Schema.String.check(Schema.makeFilter((input) => URL.canParse(input))),
   ),
 }).annotate({ identifier: 'MessageEmbedAuthorResponse' })
@@ -4472,7 +4499,7 @@ export type MessageEmbedAuthorResponse = Schema.Schema.Type<typeof MessageEmbedA
 
 export const MessageEmbedProviderResponseSchema = Schema.Struct({
   name: Schema.String,
-  url: Schema.optional(Schema.String.check(Schema.makeFilter((input) => URL.canParse(input)))),
+  url: Schema.optionalKey(Schema.String.check(Schema.makeFilter((input) => URL.canParse(input)))),
 }).annotate({ identifier: 'MessageEmbedProviderResponse' })
 
 export type MessageEmbedProviderResponse = Schema.Schema.Type<
@@ -4503,52 +4530,52 @@ export const UInt32TypeSchema = Schema.Union([
 export type UInt32Type = Schema.Schema.Type<typeof UInt32TypeSchema>
 
 export const MessageEmbedImageResponseSchema = Schema.Struct({
-  url: Schema.optional(Schema.String),
-  proxy_url: Schema.optional(
+  url: Schema.optionalKey(Schema.String),
+  proxy_url: Schema.optionalKey(
     Schema.String.check(Schema.makeFilter((input) => URL.canParse(input))),
   ),
-  width: Schema.optional(UInt32TypeSchema),
-  height: Schema.optional(UInt32TypeSchema),
-  content_type: Schema.optional(Schema.String),
-  placeholder: Schema.optional(Schema.String),
-  placeholder_version: Schema.optional(UInt32TypeSchema),
-  description: Schema.optional(Schema.String),
-  flags: Schema.optional(UInt32TypeSchema),
+  width: Schema.optionalKey(UInt32TypeSchema),
+  height: Schema.optionalKey(UInt32TypeSchema),
+  content_type: Schema.optionalKey(Schema.String),
+  placeholder: Schema.optionalKey(Schema.String),
+  placeholder_version: Schema.optionalKey(UInt32TypeSchema),
+  description: Schema.optionalKey(Schema.String),
+  flags: Schema.optionalKey(UInt32TypeSchema),
 }).annotate({ identifier: 'MessageEmbedImageResponse' })
 
 export type MessageEmbedImageResponse = Schema.Schema.Type<typeof MessageEmbedImageResponseSchema>
 
 export const MessageEmbedVideoResponseSchema = Schema.Struct({
-  url: Schema.optional(Schema.String),
-  proxy_url: Schema.optional(
+  url: Schema.optionalKey(Schema.String),
+  proxy_url: Schema.optionalKey(
     Schema.String.check(Schema.makeFilter((input) => URL.canParse(input))),
   ),
-  width: Schema.optional(UInt32TypeSchema),
-  height: Schema.optional(UInt32TypeSchema),
-  content_type: Schema.optional(Schema.String),
-  placeholder: Schema.optional(Schema.String),
-  placeholder_version: Schema.optional(UInt32TypeSchema),
-  description: Schema.optional(Schema.String),
-  flags: Schema.optional(UInt32TypeSchema),
+  width: Schema.optionalKey(UInt32TypeSchema),
+  height: Schema.optionalKey(UInt32TypeSchema),
+  content_type: Schema.optionalKey(Schema.String),
+  placeholder: Schema.optionalKey(Schema.String),
+  placeholder_version: Schema.optionalKey(UInt32TypeSchema),
+  description: Schema.optionalKey(Schema.String),
+  flags: Schema.optionalKey(UInt32TypeSchema),
 }).annotate({ identifier: 'MessageEmbedVideoResponse' })
 
 export type MessageEmbedVideoResponse = Schema.Schema.Type<typeof MessageEmbedVideoResponseSchema>
 
 export const MessageEmbedAudioResponseSchema = Schema.Struct({
-  url: Schema.optional(Schema.String),
-  proxy_url: Schema.optional(
+  url: Schema.optionalKey(Schema.String),
+  proxy_url: Schema.optionalKey(
     Schema.String.check(Schema.makeFilter((input) => URL.canParse(input))),
   ),
-  content_type: Schema.optional(Schema.String),
-  description: Schema.optional(Schema.String),
+  content_type: Schema.optionalKey(Schema.String),
+  description: Schema.optionalKey(Schema.String),
 }).annotate({ identifier: 'MessageEmbedAudioResponse' })
 
 export type MessageEmbedAudioResponse = Schema.Schema.Type<typeof MessageEmbedAudioResponseSchema>
 
 export const MessageEmbedFooterResponseSchema = Schema.Struct({
   text: Schema.String,
-  icon_url: Schema.optional(Schema.String),
-  proxy_icon_url: Schema.optional(
+  icon_url: Schema.optionalKey(Schema.String),
+  proxy_icon_url: Schema.optionalKey(
     Schema.String.check(Schema.makeFilter((input) => URL.canParse(input))),
   ),
 }).annotate({ identifier: 'MessageEmbedFooterResponse' })
@@ -4566,15 +4593,15 @@ export type ContentScanMetadataResponse = Schema.Schema.Type<
 export const UnfurledMediaResponseSchema = Schema.Struct({
   id: SnowflakeTypeSchema,
   url: Schema.String,
-  proxy_url: Schema.optional(Schema.String),
-  width: Schema.optional(Schema.NullOr(Schema.Number.check(Schema.isInt32()))),
-  height: Schema.optional(Schema.NullOr(Schema.Number.check(Schema.isInt32()))),
-  placeholder: Schema.optional(Schema.NullOr(Schema.String)),
-  placeholder_version: Schema.optional(Schema.NullOr(Schema.Number.check(Schema.isInt32()))),
-  content_scan_metadata: Schema.optional(ContentScanMetadataResponseSchema),
-  content_type: Schema.optional(Schema.NullOr(Schema.String)),
-  flags: Schema.optional(Schema.Number.check(Schema.isInt32())),
-  attachment_id: Schema.optional(SnowflakeTypeSchema),
+  proxy_url: Schema.optionalKey(Schema.String),
+  width: Schema.optionalKey(Schema.NullOr(Schema.Number.check(Schema.isInt32()))),
+  height: Schema.optionalKey(Schema.NullOr(Schema.Number.check(Schema.isInt32()))),
+  placeholder: Schema.optionalKey(Schema.NullOr(Schema.String)),
+  placeholder_version: Schema.optionalKey(Schema.NullOr(Schema.Number.check(Schema.isInt32()))),
+  content_scan_metadata: Schema.optionalKey(ContentScanMetadataResponseSchema),
+  content_type: Schema.optionalKey(Schema.NullOr(Schema.String)),
+  flags: Schema.optionalKey(Schema.Number.check(Schema.isInt32())),
+  attachment_id: Schema.optionalKey(SnowflakeTypeSchema),
 }).annotate({ identifier: 'UnfurledMediaResponse' })
 
 export type UnfurledMediaResponse = Schema.Schema.Type<typeof UnfurledMediaResponseSchema>
@@ -4667,27 +4694,27 @@ export type ContainerComponentResponse = Schema.Schema.Type<typeof ContainerComp
 
 export const MessageEmbedResponseSchema = Schema.Struct({
   type: Schema.String,
-  url: Schema.optional(Schema.String.check(Schema.makeFilter((input) => URL.canParse(input)))),
-  title: Schema.optional(Schema.String),
-  description: Schema.optional(Schema.String),
-  color: Schema.optional(Schema.Number.check(Schema.isInt32())),
-  timestamp: Schema.optional(
+  url: Schema.optionalKey(Schema.String.check(Schema.makeFilter((input) => URL.canParse(input)))),
+  title: Schema.optionalKey(Schema.String),
+  description: Schema.optionalKey(Schema.String),
+  color: Schema.optionalKey(Schema.Number.check(Schema.isInt32())),
+  timestamp: Schema.optionalKey(
     Schema.String.check(
       Schema.isPattern(
         /^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z|([+-](?:[01]\d|2[0-3]):[0-5]\d)))$/,
       ),
     ),
   ),
-  fields: Schema.optional(Schema.Array(MessageEmbedFieldResponseSchema)),
-  author: Schema.optional(MessageEmbedAuthorResponseSchema),
-  provider: Schema.optional(MessageEmbedProviderResponseSchema),
-  image: Schema.optional(MessageEmbedImageResponseSchema),
-  thumbnail: Schema.optional(MessageEmbedImageResponseSchema),
-  video: Schema.optional(MessageEmbedVideoResponseSchema),
-  audio: Schema.optional(MessageEmbedAudioResponseSchema),
-  footer: Schema.optional(MessageEmbedFooterResponseSchema),
-  flags: Schema.optional(Schema.NullOr(Schema.Number.check(Schema.isInt32()))),
-  components: Schema.optional(Schema.Array(ContainerComponentResponseSchema)),
+  fields: Schema.optionalKey(Schema.Array(MessageEmbedFieldResponseSchema)),
+  author: Schema.optionalKey(MessageEmbedAuthorResponseSchema),
+  provider: Schema.optionalKey(MessageEmbedProviderResponseSchema),
+  image: Schema.optionalKey(MessageEmbedImageResponseSchema),
+  thumbnail: Schema.optionalKey(MessageEmbedImageResponseSchema),
+  video: Schema.optionalKey(MessageEmbedVideoResponseSchema),
+  audio: Schema.optionalKey(MessageEmbedAudioResponseSchema),
+  footer: Schema.optionalKey(MessageEmbedFooterResponseSchema),
+  flags: Schema.optionalKey(Schema.NullOr(Schema.Number.check(Schema.isInt32()))),
+  components: Schema.optionalKey(Schema.Array(ContainerComponentResponseSchema)),
 }).annotate({ identifier: 'MessageEmbedResponse' })
 
 export type MessageEmbedResponse = Schema.Schema.Type<typeof MessageEmbedResponseSchema>
@@ -4717,11 +4744,11 @@ export const GuildStickerResponseSchema = Schema.Struct({
   name: Schema.String,
   tags: Schema.String,
   type: StickerTypesSchema,
-  format_type: Schema.Union([Schema.NullOr(Schema.Null), StickerFormatTypesSchema]),
+  format_type: Schema.Union([Schema.Null, StickerFormatTypesSchema]),
   description: Schema.NullOr(Schema.String),
   available: Schema.Boolean,
   guild_id: SnowflakeTypeSchema,
-  user: Schema.optional(UserResponseSchema),
+  user: Schema.optionalKey(UserResponseSchema),
 }).annotate({ identifier: 'GuildStickerResponse' })
 
 export type GuildStickerResponse = Schema.Schema.Type<typeof GuildStickerResponseSchema>
@@ -4731,7 +4758,7 @@ export const StandardStickerResponseSchema = Schema.Struct({
   name: Schema.String,
   tags: Schema.String,
   type: StickerTypesSchema,
-  format_type: Schema.Union([Schema.NullOr(Schema.Null), StickerFormatTypesSchema]),
+  format_type: Schema.Union([Schema.Null, StickerFormatTypesSchema]),
   description: Schema.NullOr(Schema.String),
   pack_id: SnowflakeTypeSchema,
   sort_value: Schema.Number.check(Schema.isInt32()),
@@ -4748,7 +4775,7 @@ export const MessageStickerItemResponseSchema = Schema.Struct({
 export type MessageStickerItemResponse = Schema.Schema.Type<typeof MessageStickerItemResponseSchema>
 
 export const MessageCallResponseSchema = Schema.Struct({
-  ended_timestamp: Schema.optional(
+  ended_timestamp: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.isPattern(
@@ -4764,7 +4791,7 @@ export type MessageCallResponse = Schema.Schema.Type<typeof MessageCallResponseS
 
 export const MessageActivityResponseSchema = Schema.Struct({
   type: ActivityActionTypesSchema,
-  party_id: Schema.optional(Schema.String),
+  party_id: Schema.optionalKey(Schema.String),
 }).annotate({ identifier: 'MessageActivityResponse' })
 
 export type MessageActivityResponse = Schema.Schema.Type<typeof MessageActivityResponseSchema>
@@ -4773,8 +4800,8 @@ export const MessageInteractionResponseSchema = Schema.Struct({
   id: SnowflakeTypeSchema,
   type: InteractionTypesSchema,
   name: Schema.String,
-  user: Schema.optional(UserResponseSchema),
-  name_localized: Schema.optional(Schema.String),
+  user: Schema.optionalKey(UserResponseSchema),
+  name_localized: Schema.optionalKey(Schema.String),
 }).annotate({ identifier: 'MessageInteractionResponse' })
 
 export type MessageInteractionResponse = Schema.Schema.Type<typeof MessageInteractionResponseSchema>
@@ -4788,8 +4815,8 @@ export type MessageReferenceType = Schema.Schema.Type<typeof MessageReferenceTyp
 export const MessageReferenceResponseSchema = Schema.Struct({
   type: MessageReferenceTypeSchema,
   channel_id: SnowflakeTypeSchema,
-  message_id: Schema.optional(SnowflakeTypeSchema),
-  guild_id: Schema.optional(SnowflakeTypeSchema),
+  message_id: Schema.optionalKey(SnowflakeTypeSchema),
+  guild_id: Schema.optionalKey(SnowflakeTypeSchema),
 }).annotate({ identifier: 'MessageReferenceResponse' })
 
 export type MessageReferenceResponse = Schema.Schema.Type<typeof MessageReferenceResponseSchema>
@@ -4823,22 +4850,22 @@ export const ThreadMetadataResponseSchema = Schema.Struct({
   ),
   auto_archive_duration: ThreadAutoArchiveDurationSchema,
   locked: Schema.Boolean,
-  create_timestamp: Schema.optional(
+  create_timestamp: Schema.optionalKey(
     Schema.String.check(
       Schema.isPattern(
         /^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z|([+-](?:[01]\d|2[0-3]):[0-5]\d)))$/,
       ),
     ),
   ),
-  invitable: Schema.optional(Schema.Boolean),
+  invitable: Schema.optionalKey(Schema.Boolean),
 }).annotate({ identifier: 'ThreadMetadataResponse' })
 
 export type ThreadMetadataResponse = Schema.Schema.Type<typeof ThreadMetadataResponseSchema>
 
 export const GuildMemberResponseSchema = Schema.Struct({
   avatar: Schema.NullOr(Schema.String).annotate({ description: "the member's guild avatar hash" }),
-  avatar_decoration_data: Schema.optional(
-    Schema.Union([Schema.NullOr(Schema.Null), UserAvatarDecorationResponseSchema]).annotate({
+  avatar_decoration_data: Schema.optionalKey(
+    Schema.Union([Schema.Null, UserAvatarDecorationResponseSchema]).annotate({
       description: "data for the member's guild avatar decoration",
     }),
   ),
@@ -4876,8 +4903,8 @@ export const GuildMemberResponseSchema = Schema.Struct({
   roles: Schema.Array(SnowflakeTypeSchema)
     .check(Schema.isUnique())
     .annotate({ description: 'array of role object ids' }),
-  collectibles: Schema.optional(
-    Schema.Union([Schema.NullOr(Schema.Null), UserCollectiblesResponseSchema]).annotate({
+  collectibles: Schema.optionalKey(
+    Schema.Union([Schema.Null, UserCollectiblesResponseSchema]).annotate({
       description: "data for the member's collectibles",
     }),
   ),
@@ -4897,7 +4924,7 @@ export const ThreadMemberResponseSchema = Schema.Struct({
     ),
   ),
   flags: Schema.Number.check(Schema.isInt32()),
-  member: Schema.optional(GuildMemberResponseSchema),
+  member: Schema.optionalKey(GuildMemberResponseSchema),
 }).annotate({ identifier: 'ThreadMemberResponse' })
 
 export type ThreadMemberResponse = Schema.Schema.Type<typeof ThreadMemberResponseSchema>
@@ -4905,9 +4932,9 @@ export type ThreadMemberResponse = Schema.Schema.Type<typeof ThreadMemberRespons
 export const ThreadResponseSchema = Schema.Struct({
   id: SnowflakeTypeSchema,
   type: ChannelTypesSchema,
-  last_message_id: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema])),
+  last_message_id: Schema.optionalKey(Schema.Union([Schema.Null, SnowflakeTypeSchema])),
   flags: Schema.Number.check(Schema.isInt32()),
-  last_pin_timestamp: Schema.optional(
+  last_pin_timestamp: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.isPattern(
@@ -4918,20 +4945,20 @@ export const ThreadResponseSchema = Schema.Struct({
   ),
   guild_id: SnowflakeTypeSchema,
   name: Schema.String,
-  parent_id: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema])),
-  rate_limit_per_user: Schema.optional(Schema.Number.check(Schema.isInt32())),
-  bitrate: Schema.optional(Schema.Number.check(Schema.isInt32())),
-  user_limit: Schema.optional(Schema.Number.check(Schema.isInt32())),
-  rtc_region: Schema.optional(Schema.NullOr(Schema.String)),
-  video_quality_mode: Schema.optional(VideoQualityModesSchema),
-  permissions: Schema.optional(Schema.String),
+  parent_id: Schema.optionalKey(Schema.Union([Schema.Null, SnowflakeTypeSchema])),
+  rate_limit_per_user: Schema.optionalKey(Schema.Number.check(Schema.isInt32())),
+  bitrate: Schema.optionalKey(Schema.Number.check(Schema.isInt32())),
+  user_limit: Schema.optionalKey(Schema.Number.check(Schema.isInt32())),
+  rtc_region: Schema.optionalKey(Schema.NullOr(Schema.String)),
+  video_quality_mode: Schema.optionalKey(VideoQualityModesSchema),
+  permissions: Schema.optionalKey(Schema.String),
   owner_id: SnowflakeTypeSchema,
   thread_metadata: ThreadMetadataResponseSchema,
   message_count: Schema.Number.check(Schema.isInt32()),
   member_count: Schema.Number.check(Schema.isInt32()),
   total_message_sent: Schema.Number.check(Schema.isInt32()),
-  applied_tags: Schema.optional(Schema.Array(SnowflakeTypeSchema)),
-  member: Schema.optional(ThreadMemberResponseSchema),
+  applied_tags: Schema.optionalKey(Schema.Array(SnowflakeTypeSchema)),
+  member: Schema.optionalKey(ThreadMemberResponseSchema),
 }).annotate({ identifier: 'ThreadResponse' })
 
 export type ThreadResponse = Schema.Schema.Type<typeof ThreadResponseSchema>
@@ -4975,7 +5002,7 @@ export type GuildProductPurchaseResponse = Schema.Schema.Type<
 
 export const PurchaseNotificationResponseSchema = Schema.Struct({
   type: PurchaseTypeSchema,
-  guild_product_purchase: Schema.optional(GuildProductPurchaseResponseSchema),
+  guild_product_purchase: Schema.optionalKey(GuildProductPurchaseResponseSchema),
 }).annotate({ identifier: 'PurchaseNotificationResponse' })
 
 export type PurchaseNotificationResponse = Schema.Schema.Type<
@@ -5006,14 +5033,14 @@ export const ForumTagResponseSchema = Schema.Struct({
   id: SnowflakeTypeSchema,
   name: Schema.String,
   moderated: Schema.Boolean,
-  emoji_id: Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema]),
+  emoji_id: Schema.Union([Schema.Null, SnowflakeTypeSchema]),
   emoji_name: Schema.NullOr(Schema.String),
 }).annotate({ identifier: 'ForumTagResponse' })
 
 export type ForumTagResponse = Schema.Schema.Type<typeof ForumTagResponseSchema>
 
 export const DefaultReactionEmojiResponseSchema = Schema.Struct({
-  emoji_id: Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema]),
+  emoji_id: Schema.Union([Schema.Null, SnowflakeTypeSchema]),
   emoji_name: Schema.NullOr(Schema.String),
 }).annotate({ identifier: 'DefaultReactionEmojiResponse' })
 
@@ -5052,9 +5079,9 @@ export type ThreadSearchTagSetting = Schema.Schema.Type<typeof ThreadSearchTagSe
 export const GuildChannelResponseSchema = Schema.Struct({
   id: SnowflakeTypeSchema,
   type: ChannelTypesSchema,
-  last_message_id: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema])),
+  last_message_id: Schema.optionalKey(Schema.Union([Schema.Null, SnowflakeTypeSchema])),
   flags: Schema.Number.check(Schema.isInt32()),
-  last_pin_timestamp: Schema.optional(
+  last_pin_timestamp: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.isPattern(
@@ -5065,29 +5092,27 @@ export const GuildChannelResponseSchema = Schema.Struct({
   ),
   guild_id: SnowflakeTypeSchema,
   name: Schema.String,
-  parent_id: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema])),
-  rate_limit_per_user: Schema.optional(Schema.Number.check(Schema.isInt32())),
-  bitrate: Schema.optional(Schema.Number.check(Schema.isInt32())),
-  user_limit: Schema.optional(Schema.Number.check(Schema.isInt32())),
-  rtc_region: Schema.optional(Schema.NullOr(Schema.String)),
-  video_quality_mode: Schema.optional(VideoQualityModesSchema),
-  permissions: Schema.optional(Schema.String),
-  topic: Schema.optional(Schema.NullOr(Schema.String)),
-  default_auto_archive_duration: Schema.optional(ThreadAutoArchiveDurationSchema),
-  default_thread_rate_limit_per_user: Schema.optional(Schema.Number.check(Schema.isInt32())),
+  parent_id: Schema.optionalKey(Schema.Union([Schema.Null, SnowflakeTypeSchema])),
+  rate_limit_per_user: Schema.optionalKey(Schema.Number.check(Schema.isInt32())),
+  bitrate: Schema.optionalKey(Schema.Number.check(Schema.isInt32())),
+  user_limit: Schema.optionalKey(Schema.Number.check(Schema.isInt32())),
+  rtc_region: Schema.optionalKey(Schema.NullOr(Schema.String)),
+  video_quality_mode: Schema.optionalKey(VideoQualityModesSchema),
+  permissions: Schema.optionalKey(Schema.String),
+  topic: Schema.optionalKey(Schema.NullOr(Schema.String)),
+  default_auto_archive_duration: Schema.optionalKey(ThreadAutoArchiveDurationSchema),
+  default_thread_rate_limit_per_user: Schema.optionalKey(Schema.Number.check(Schema.isInt32())),
   position: Schema.Number.check(Schema.isInt32()),
-  permission_overwrites: Schema.optional(Schema.Array(ChannelPermissionOverwriteResponseSchema)),
-  nsfw: Schema.optional(Schema.Boolean),
-  available_tags: Schema.optional(Schema.Array(ForumTagResponseSchema)),
-  default_reaction_emoji: Schema.optional(
-    Schema.Union([Schema.NullOr(Schema.Null), DefaultReactionEmojiResponseSchema]),
+  permission_overwrites: Schema.optionalKey(Schema.Array(ChannelPermissionOverwriteResponseSchema)),
+  nsfw: Schema.optionalKey(Schema.Boolean),
+  available_tags: Schema.optionalKey(Schema.Array(ForumTagResponseSchema)),
+  default_reaction_emoji: Schema.optionalKey(
+    Schema.Union([Schema.Null, DefaultReactionEmojiResponseSchema]),
   ),
-  default_sort_order: Schema.optional(
-    Schema.Union([Schema.NullOr(Schema.Null), ThreadSortOrderSchema]),
-  ),
-  default_forum_layout: Schema.optional(ForumLayoutSchema),
-  default_tag_setting: Schema.optional(
-    Schema.Union([Schema.NullOr(Schema.Null), ThreadSearchTagSettingSchema]),
+  default_sort_order: Schema.optionalKey(Schema.Union([Schema.Null, ThreadSortOrderSchema])),
+  default_forum_layout: Schema.optionalKey(ForumLayoutSchema),
+  default_tag_setting: Schema.optionalKey(
+    Schema.Union([Schema.Null, ThreadSearchTagSettingSchema]),
   ),
 }).annotate({ identifier: 'GuildChannelResponse' })
 
@@ -5096,9 +5121,9 @@ export type GuildChannelResponse = Schema.Schema.Type<typeof GuildChannelRespons
 export const PrivateChannelResponseSchema = Schema.Struct({
   id: SnowflakeTypeSchema,
   type: ChannelTypesSchema,
-  last_message_id: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema])),
+  last_message_id: Schema.optionalKey(Schema.Union([Schema.Null, SnowflakeTypeSchema])),
   flags: Schema.Number.check(Schema.isInt32()),
-  last_pin_timestamp: Schema.optional(
+  last_pin_timestamp: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.isPattern(
@@ -5115,9 +5140,9 @@ export type PrivateChannelResponse = Schema.Schema.Type<typeof PrivateChannelRes
 export const PrivateGroupChannelResponseSchema = Schema.Struct({
   id: SnowflakeTypeSchema,
   type: ChannelTypesSchema,
-  last_message_id: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema])),
+  last_message_id: Schema.optionalKey(Schema.Union([Schema.Null, SnowflakeTypeSchema])),
   flags: Schema.Number.check(Schema.isInt32()),
-  last_pin_timestamp: Schema.optional(
+  last_pin_timestamp: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.isPattern(
@@ -5130,8 +5155,8 @@ export const PrivateGroupChannelResponseSchema = Schema.Struct({
   name: Schema.NullOr(Schema.String),
   icon: Schema.NullOr(Schema.String),
   owner_id: SnowflakeTypeSchema,
-  managed: Schema.optional(Schema.Boolean),
-  application_id: Schema.optional(SnowflakeTypeSchema),
+  managed: Schema.optionalKey(Schema.Boolean),
+  application_id: Schema.optionalKey(SnowflakeTypeSchema),
 }).annotate({ identifier: 'PrivateGroupChannelResponse' })
 
 export type PrivateGroupChannelResponse = Schema.Schema.Type<
@@ -5147,12 +5172,12 @@ export const GuildRoleColorsResponseSchema = Schema.Struct({
 export type GuildRoleColorsResponse = Schema.Schema.Type<typeof GuildRoleColorsResponseSchema>
 
 export const GuildRoleTagsResponseSchema = Schema.Struct({
-  premium_subscriber: Schema.optional(Schema.NullOr(Schema.Null)),
-  bot_id: Schema.optional(SnowflakeTypeSchema),
-  integration_id: Schema.optional(SnowflakeTypeSchema),
-  subscription_listing_id: Schema.optional(SnowflakeTypeSchema),
-  available_for_purchase: Schema.optional(Schema.NullOr(Schema.Null)),
-  guild_connections: Schema.optional(Schema.NullOr(Schema.Null)),
+  premium_subscriber: Schema.optionalKey(Schema.Null),
+  bot_id: Schema.optionalKey(SnowflakeTypeSchema),
+  integration_id: Schema.optionalKey(SnowflakeTypeSchema),
+  subscription_listing_id: Schema.optionalKey(SnowflakeTypeSchema),
+  available_for_purchase: Schema.optionalKey(Schema.Null),
+  guild_connections: Schema.optionalKey(Schema.Null),
 }).annotate({ identifier: 'GuildRoleTagsResponse' })
 
 export type GuildRoleTagsResponse = Schema.Schema.Type<typeof GuildRoleTagsResponseSchema>
@@ -5169,18 +5194,18 @@ export const GuildRoleResponseSchema = Schema.Struct({
   mentionable: Schema.Boolean,
   icon: Schema.NullOr(Schema.String),
   unicode_emoji: Schema.NullOr(Schema.String),
-  tags: Schema.optional(GuildRoleTagsResponseSchema),
+  tags: Schema.optionalKey(GuildRoleTagsResponseSchema),
   flags: Schema.Number.check(Schema.isInt32()),
 }).annotate({ identifier: 'GuildRoleResponse' })
 
 export type GuildRoleResponse = Schema.Schema.Type<typeof GuildRoleResponseSchema>
 
 export const ResolvedObjectsResponseSchema = Schema.Struct({
-  users: Schema.optional(Schema.NullOr(Schema.Record(Schema.String, UserResponseSchema))),
-  members: Schema.optional(
+  users: Schema.optionalKey(Schema.NullOr(Schema.Record(Schema.String, UserResponseSchema))),
+  members: Schema.optionalKey(
     Schema.NullOr(Schema.Record(Schema.String, BasicGuildMemberResponseSchema)),
   ),
-  channels: Schema.optional(
+  channels: Schema.optionalKey(
     Schema.NullOr(
       Schema.Record(
         Schema.String,
@@ -5193,15 +5218,15 @@ export const ResolvedObjectsResponseSchema = Schema.Struct({
       ),
     ),
   ),
-  roles: Schema.optional(Schema.NullOr(Schema.Record(Schema.String, GuildRoleResponseSchema))),
+  roles: Schema.optionalKey(Schema.NullOr(Schema.Record(Schema.String, GuildRoleResponseSchema))),
 }).annotate({ identifier: 'ResolvedObjectsResponse' })
 
 export type ResolvedObjectsResponse = Schema.Schema.Type<typeof ResolvedObjectsResponseSchema>
 
 export const MessageReactionEmojiResponseSchema = Schema.Struct({
-  id: Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema]),
+  id: Schema.Union([Schema.Null, SnowflakeTypeSchema]),
   name: Schema.NullOr(Schema.String),
-  animated: Schema.optional(Schema.Boolean),
+  animated: Schema.optionalKey(Schema.Boolean),
 }).annotate({ identifier: 'MessageReactionEmojiResponse' })
 
 export type MessageReactionEmojiResponse = Schema.Schema.Type<
@@ -5209,8 +5234,8 @@ export type MessageReactionEmojiResponse = Schema.Schema.Type<
 >
 
 export const PollMediaResponseSchema = Schema.Struct({
-  text: Schema.optional(Schema.String.annotate({ description: 'The text of the field' })),
-  emoji: Schema.optional(
+  text: Schema.optionalKey(Schema.String.annotate({ description: 'The text of the field' })),
+  emoji: Schema.optionalKey(
     MessageReactionEmojiResponseSchema.annotate({ description: 'The emoji of the field' }),
   ),
 }).annotate({ identifier: 'PollMediaResponse' })
@@ -5282,9 +5307,9 @@ export type CustomClientThemeResponse = Schema.Schema.Type<typeof CustomClientTh
 export const MessageComponentInteractionMetadataResponseSchema = Schema.Struct({
   id: SnowflakeTypeSchema,
   type: InteractionTypesSchema,
-  user: Schema.optional(UserResponseSchema),
+  user: Schema.optionalKey(UserResponseSchema),
   authorizing_integration_owners: Schema.Record(Schema.String, SnowflakeTypeSchema),
-  original_response_message_id: Schema.optional(SnowflakeTypeSchema),
+  original_response_message_id: Schema.optionalKey(SnowflakeTypeSchema),
   interacted_message_id: SnowflakeTypeSchema,
 }).annotate({ identifier: 'MessageComponentInteractionMetadataResponse' })
 
@@ -5295,9 +5320,9 @@ export type MessageComponentInteractionMetadataResponse = Schema.Schema.Type<
 export const ModalSubmitInteractionMetadataResponseSchema = Schema.Struct({
   id: SnowflakeTypeSchema,
   type: InteractionTypesSchema,
-  user: Schema.optional(UserResponseSchema),
+  user: Schema.optionalKey(UserResponseSchema),
   authorizing_integration_owners: Schema.Record(Schema.String, SnowflakeTypeSchema),
-  original_response_message_id: Schema.optional(SnowflakeTypeSchema),
+  original_response_message_id: Schema.optionalKey(SnowflakeTypeSchema),
   triggering_interaction_metadata: Schema.Union([
     ApplicationCommandInteractionMetadataResponseSchema,
     MessageComponentInteractionMetadataResponseSchema,
@@ -5339,10 +5364,10 @@ export const MinimalContentMessageResponseSchema = Schema.Struct({
       TextDisplayComponentResponseSchema,
     ]),
   ),
-  stickers: Schema.optional(
+  stickers: Schema.optionalKey(
     Schema.Array(Schema.Union([GuildStickerResponseSchema, StandardStickerResponseSchema])),
   ),
-  sticker_items: Schema.optional(Schema.Array(MessageStickerItemResponseSchema)),
+  sticker_items: Schema.optionalKey(Schema.Array(MessageStickerItemResponseSchema)),
 }).annotate({ identifier: 'MinimalContentMessageResponse' })
 
 export type MinimalContentMessageResponse = Schema.Schema.Type<
@@ -5392,22 +5417,22 @@ export const BasicMessageResponseSchema = Schema.Struct({
       TextDisplayComponentResponseSchema,
     ]),
   ),
-  stickers: Schema.optional(
+  stickers: Schema.optionalKey(
     Schema.Array(Schema.Union([GuildStickerResponseSchema, StandardStickerResponseSchema])),
   ),
-  sticker_items: Schema.optional(Schema.Array(MessageStickerItemResponseSchema)),
+  sticker_items: Schema.optionalKey(Schema.Array(MessageStickerItemResponseSchema)),
   id: SnowflakeTypeSchema,
   channel_id: SnowflakeTypeSchema,
   author: UserResponseSchema,
   pinned: Schema.Boolean,
   mention_everyone: Schema.Boolean,
   tts: Schema.Boolean,
-  call: Schema.optional(MessageCallResponseSchema),
-  activity: Schema.optional(MessageActivityResponseSchema),
-  application: Schema.optional(BasicApplicationResponseWithBotSchema),
-  application_id: Schema.optional(SnowflakeTypeSchema),
-  interaction: Schema.optional(MessageInteractionResponseSchema),
-  nonce: Schema.optional(
+  call: Schema.optionalKey(MessageCallResponseSchema),
+  activity: Schema.optionalKey(MessageActivityResponseSchema),
+  application: Schema.optionalKey(BasicApplicationResponseWithBotSchema),
+  application_id: Schema.optionalKey(SnowflakeTypeSchema),
+  interaction: Schema.optionalKey(MessageInteractionResponseSchema),
+  nonce: Schema.optionalKey(
     Schema.Union([
       Schema.Union([
         Schema.BigInt,
@@ -5425,8 +5450,8 @@ export const BasicMessageResponseSchema = Schema.Struct({
         )
         .check(
           Schema.isBetweenBigInt({ minimum: -9223372036854775808n, maximum: 9223372036854775807n }),
-          Schema.isGreaterThanOrEqualToBigInt(-9223372036854776000n),
-          Schema.isLessThanOrEqualToBigInt(9223372036854776000n),
+          Schema.isGreaterThanOrEqualToBigInt(-9223372036854775808n),
+          Schema.isLessThanOrEqualToBigInt(9223372036854775808n),
         ),
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length <= 25, {
@@ -5435,32 +5460,32 @@ export const BasicMessageResponseSchema = Schema.Struct({
       ),
     ]),
   ),
-  webhook_id: Schema.optional(SnowflakeTypeSchema),
-  message_reference: Schema.optional(MessageReferenceResponseSchema),
-  thread: Schema.optional(ThreadResponseSchema),
-  mention_channels: Schema.optional(Schema.Array(MessageMentionChannelResponseSchema)),
-  role_subscription_data: Schema.optional(MessageRoleSubscriptionDataResponseSchema),
-  purchase_notification: Schema.optional(PurchaseNotificationResponseSchema),
-  position: Schema.optional(Schema.Number.check(Schema.isInt32())),
-  resolved: Schema.optional(ResolvedObjectsResponseSchema),
-  poll: Schema.optional(PollResponseSchema),
-  shared_client_theme: Schema.optional(CustomClientThemeResponseSchema),
-  interaction_metadata: Schema.optional(
+  webhook_id: Schema.optionalKey(SnowflakeTypeSchema),
+  message_reference: Schema.optionalKey(MessageReferenceResponseSchema),
+  thread: Schema.optionalKey(ThreadResponseSchema),
+  mention_channels: Schema.optionalKey(Schema.Array(MessageMentionChannelResponseSchema)),
+  role_subscription_data: Schema.optionalKey(MessageRoleSubscriptionDataResponseSchema),
+  purchase_notification: Schema.optionalKey(PurchaseNotificationResponseSchema),
+  position: Schema.optionalKey(Schema.Number.check(Schema.isInt32())),
+  resolved: Schema.optionalKey(ResolvedObjectsResponseSchema),
+  poll: Schema.optionalKey(PollResponseSchema),
+  shared_client_theme: Schema.optionalKey(CustomClientThemeResponseSchema),
+  interaction_metadata: Schema.optionalKey(
     Schema.Union([
       ApplicationCommandInteractionMetadataResponseSchema,
       MessageComponentInteractionMetadataResponseSchema,
       ModalSubmitInteractionMetadataResponseSchema,
     ]),
   ),
-  message_snapshots: Schema.optional(Schema.Array(MessageSnapshotResponseSchema)),
-  lobby_member: Schema.optional(MessageLobbyMemberResponseSchema),
-  actor: Schema.optional(UserResponseSchema),
+  message_snapshots: Schema.optionalKey(Schema.Array(MessageSnapshotResponseSchema)),
+  lobby_member: Schema.optionalKey(MessageLobbyMemberResponseSchema),
+  actor: Schema.optionalKey(UserResponseSchema),
 }).annotate({ identifier: 'BasicMessageResponse' })
 
 export type BasicMessageResponse = Schema.Schema.Type<typeof BasicMessageResponseSchema>
 
 export const BlockMessageActionMetadataSchema = Schema.Struct({
-  custom_message: Schema.optional(
+  custom_message: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length <= 300, {
@@ -5475,15 +5500,13 @@ export type BlockMessageActionMetadata = Schema.Schema.Type<typeof BlockMessageA
 
 export const BlockMessageActionSchema = Schema.Struct({
   type: AutomodActionTypeSchema,
-  metadata: Schema.optional(
-    Schema.Union([Schema.NullOr(Schema.Null), BlockMessageActionMetadataSchema]),
-  ),
+  metadata: Schema.optionalKey(Schema.Union([Schema.Null, BlockMessageActionMetadataSchema])),
 }).annotate({ identifier: 'BlockMessageAction' })
 
 export type BlockMessageAction = Schema.Schema.Type<typeof BlockMessageActionSchema>
 
 export const BlockMessageActionMetadataResponseSchema = Schema.Struct({
-  custom_message: Schema.optional(Schema.String),
+  custom_message: Schema.optionalKey(Schema.String),
 }).annotate({ identifier: 'BlockMessageActionMetadataResponse' })
 
 export type BlockMessageActionMetadataResponse = Schema.Schema.Type<
@@ -5506,14 +5529,14 @@ export const BotAccountPatchRequestSchema = Schema.Struct({
       expected: 'a string of at most 32 characters',
     }),
   ),
-  avatar: Schema.optional(Schema.NullOr(Schema.String)),
-  banner: Schema.optional(Schema.NullOr(Schema.String)),
+  avatar: Schema.optionalKey(Schema.NullOr(Schema.String)),
+  banner: Schema.optionalKey(Schema.NullOr(Schema.String)),
 }).annotate({ identifier: 'BotAccountPatchRequest' })
 
 export type BotAccountPatchRequest = Schema.Schema.Type<typeof BotAccountPatchRequestSchema>
 
 export const BotAddGuildMemberRequestSchema = Schema.Struct({
-  nick: Schema.optional(
+  nick: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length <= 32, {
@@ -5522,26 +5545,26 @@ export const BotAddGuildMemberRequestSchema = Schema.Struct({
       ),
     ),
   ),
-  roles: Schema.optional(
+  roles: Schema.optionalKey(
     Schema.NullOr(
       Schema.Array(SnowflakeTypeSchema).check(Schema.isMaxLength(250), Schema.isUnique()),
     ),
   ),
-  mute: Schema.optional(Schema.NullOr(Schema.Boolean)),
-  deaf: Schema.optional(Schema.NullOr(Schema.Boolean)),
+  mute: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
+  deaf: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
   access_token: Schema.String.check(
     Schema.makeFilter((input) => [...input].length <= 10240, {
       expected: 'a string of at most 10240 characters',
     }),
   ),
-  flags: Schema.optional(Schema.NullOr(Schema.Number.check(Schema.isInt()))),
+  flags: Schema.optionalKey(Schema.NullOr(Schema.Number.check(Schema.isInt()))),
 }).annotate({ identifier: 'BotAddGuildMemberRequest' })
 
 export type BotAddGuildMemberRequest = Schema.Schema.Type<typeof BotAddGuildMemberRequestSchema>
 
 export const BulkBanUsersRequestSchema = Schema.Struct({
   user_ids: Schema.Array(SnowflakeTypeSchema).check(Schema.isMaxLength(200), Schema.isUnique()),
-  delete_message_seconds: Schema.optional(
+  delete_message_seconds: Schema.optionalKey(
     Schema.NullOr(
       Schema.Number.check(
         Schema.isInt(),
@@ -5563,7 +5586,7 @@ export type BulkBanUsersResponse = Schema.Schema.Type<typeof BulkBanUsersRespons
 
 export const BulkLobbyMemberRequestSchema = Schema.Struct({
   id: SnowflakeTypeSchema,
-  metadata: Schema.optional(
+  metadata: Schema.optionalKey(
     Schema.NullOr(
       Schema.Record(
         Schema.String,
@@ -5575,8 +5598,8 @@ export const BulkLobbyMemberRequestSchema = Schema.Struct({
       ),
     ),
   ),
-  flags: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), Schema.Literal(1)])),
-  additional_name: Schema.optional(
+  flags: Schema.optionalKey(Schema.Union([Schema.Null, Schema.Literal(1)])),
+  additional_name: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length >= 1, {
@@ -5588,7 +5611,7 @@ export const BulkLobbyMemberRequestSchema = Schema.Struct({
       ),
     ),
   ),
-  remove_member: Schema.optional(Schema.NullOr(Schema.Boolean)),
+  remove_member: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
 }).annotate({ identifier: 'BulkLobbyMemberRequest' })
 
 export type BulkLobbyMemberRequest = Schema.Schema.Type<typeof BulkLobbyMemberRequestSchema>
@@ -5654,16 +5677,16 @@ export type WebhookSourceChannelResponse = Schema.Schema.Type<
 >
 
 export const ChannelFollowerWebhookResponseSchema = Schema.Struct({
-  application_id: Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema]),
+  application_id: Schema.Union([Schema.Null, SnowflakeTypeSchema]),
   avatar: Schema.NullOr(Schema.String),
-  channel_id: Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema]),
-  guild_id: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema])),
+  channel_id: Schema.Union([Schema.Null, SnowflakeTypeSchema]),
+  guild_id: Schema.optionalKey(Schema.Union([Schema.Null, SnowflakeTypeSchema])),
   id: SnowflakeTypeSchema,
   name: Schema.String,
   type: WebhookTypesSchema,
-  user: Schema.optional(UserResponseSchema),
-  source_guild: Schema.optional(WebhookSourceGuildResponseSchema),
-  source_channel: Schema.optional(WebhookSourceChannelResponseSchema),
+  user: Schema.optionalKey(UserResponseSchema),
+  source_guild: Schema.optionalKey(WebhookSourceGuildResponseSchema),
+  source_channel: Schema.optionalKey(WebhookSourceChannelResponseSchema),
 }).annotate({ identifier: 'ChannelFollowerWebhookResponse' })
 
 export type ChannelFollowerWebhookResponse = Schema.Schema.Type<
@@ -5672,11 +5695,9 @@ export type ChannelFollowerWebhookResponse = Schema.Schema.Type<
 
 export const ChannelPermissionOverwriteRequestSchema = Schema.Struct({
   id: SnowflakeTypeSchema,
-  type: Schema.optional(
-    Schema.Union([Schema.NullOr(Schema.Null), ChannelPermissionOverwritesSchema]),
-  ),
-  allow: Schema.optional(Schema.NullOr(Schema.Number.check(Schema.isInt()))),
-  deny: Schema.optional(Schema.NullOr(Schema.Number.check(Schema.isInt()))),
+  type: Schema.optionalKey(Schema.Union([Schema.Null, ChannelPermissionOverwritesSchema])),
+  allow: Schema.optionalKey(Schema.NullOr(Schema.Number.check(Schema.isInt()))),
+  deny: Schema.optionalKey(Schema.NullOr(Schema.Number.check(Schema.isInt()))),
 }).annotate({ identifier: 'ChannelPermissionOverwriteRequest' })
 
 export type ChannelPermissionOverwriteRequest = Schema.Schema.Type<
@@ -5685,7 +5706,7 @@ export type ChannelPermissionOverwriteRequest = Schema.Schema.Type<
 
 export const ChannelSelectComponentForModalRequestSchema = Schema.Struct({
   type: MessageComponentTypesSchema,
-  id: Schema.optional(
+  id: Schema.optionalKey(
     Schema.NullOr(Schema.Number.check(Schema.isInt32(), Schema.isGreaterThanOrEqualTo(0))),
   ),
   custom_id: Schema.String.check(
@@ -5696,7 +5717,7 @@ export const ChannelSelectComponentForModalRequestSchema = Schema.Struct({
       expected: 'a string of at most 100 characters',
     }),
   ),
-  placeholder: Schema.optional(
+  placeholder: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length <= 150, {
@@ -5705,7 +5726,7 @@ export const ChannelSelectComponentForModalRequestSchema = Schema.Struct({
       ),
     ),
   ),
-  min_values: Schema.optional(
+  min_values: Schema.optionalKey(
     Schema.NullOr(
       Schema.Number.check(
         Schema.isInt(),
@@ -5714,7 +5735,7 @@ export const ChannelSelectComponentForModalRequestSchema = Schema.Struct({
       ),
     ),
   ),
-  max_values: Schema.optional(
+  max_values: Schema.optionalKey(
     Schema.NullOr(
       Schema.Number.check(
         Schema.isInt(),
@@ -5723,12 +5744,12 @@ export const ChannelSelectComponentForModalRequestSchema = Schema.Struct({
       ),
     ),
   ),
-  disabled: Schema.optional(Schema.NullOr(Schema.Boolean)),
-  required: Schema.optional(Schema.NullOr(Schema.Boolean)),
-  default_values: Schema.optional(
+  disabled: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
+  required: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
+  default_values: Schema.optionalKey(
     Schema.NullOr(Schema.Array(ChannelSelectDefaultValueSchema).check(Schema.isMaxLength(25))),
   ),
-  channel_types: Schema.optional(
+  channel_types: Schema.optionalKey(
     Schema.NullOr(Schema.Array(ChannelTypesSchema).check(Schema.isUnique())),
   ),
 }).annotate({ identifier: 'ChannelSelectComponentForModalRequest' })
@@ -5739,7 +5760,7 @@ export type ChannelSelectComponentForModalRequest = Schema.Schema.Type<
 
 export const CheckboxComponentForModalRequestSchema = Schema.Struct({
   type: MessageComponentTypesSchema,
-  id: Schema.optional(
+  id: Schema.optionalKey(
     Schema.NullOr(Schema.Number.check(Schema.isInt32(), Schema.isGreaterThanOrEqualTo(0))),
   ),
   custom_id: Schema.String.check(
@@ -5750,7 +5771,7 @@ export const CheckboxComponentForModalRequestSchema = Schema.Struct({
       expected: 'a string of at most 100 characters',
     }),
   ),
-  default: Schema.optional(Schema.NullOr(Schema.Boolean)),
+  default: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
 }).annotate({ identifier: 'CheckboxComponentForModalRequest' })
 
 export type CheckboxComponentForModalRequest = Schema.Schema.Type<
@@ -5774,7 +5795,7 @@ export const CheckboxGroupOptionForRequestSchema = Schema.Struct({
       expected: 'a string of at most 100 characters',
     }),
   ),
-  description: Schema.optional(
+  description: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length <= 100, {
@@ -5783,7 +5804,7 @@ export const CheckboxGroupOptionForRequestSchema = Schema.Struct({
       ),
     ),
   ),
-  default: Schema.optional(Schema.NullOr(Schema.Boolean)),
+  default: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
 }).annotate({ identifier: 'CheckboxGroupOptionForRequest' })
 
 export type CheckboxGroupOptionForRequest = Schema.Schema.Type<
@@ -5792,7 +5813,7 @@ export type CheckboxGroupOptionForRequest = Schema.Schema.Type<
 
 export const CheckboxGroupComponentForModalRequestSchema = Schema.Struct({
   type: MessageComponentTypesSchema,
-  id: Schema.optional(
+  id: Schema.optionalKey(
     Schema.NullOr(Schema.Number.check(Schema.isInt32(), Schema.isGreaterThanOrEqualTo(0))),
   ),
   custom_id: Schema.String.check(
@@ -5803,7 +5824,7 @@ export const CheckboxGroupComponentForModalRequestSchema = Schema.Struct({
       expected: 'a string of at most 100 characters',
     }),
   ),
-  min_values: Schema.optional(
+  min_values: Schema.optionalKey(
     Schema.NullOr(
       Schema.Number.check(
         Schema.isInt(),
@@ -5812,7 +5833,7 @@ export const CheckboxGroupComponentForModalRequestSchema = Schema.Struct({
       ),
     ),
   ),
-  max_values: Schema.optional(
+  max_values: Schema.optionalKey(
     Schema.NullOr(
       Schema.Number.check(
         Schema.isInt(),
@@ -5821,7 +5842,7 @@ export const CheckboxGroupComponentForModalRequestSchema = Schema.Struct({
       ),
     ),
   ),
-  required: Schema.optional(Schema.NullOr(Schema.Boolean)),
+  required: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
   options: Schema.Array(CheckboxGroupOptionForRequestSchema).check(
     Schema.isMinLength(1),
     Schema.isMaxLength(10),
@@ -5921,12 +5942,12 @@ export const ConnectedAccountResponseSchema = Schema.Struct({
   name: Schema.NullOr(Schema.String),
   type: ConnectedAccountProvidersSchema,
   friend_sync: Schema.Boolean,
-  integrations: Schema.optional(Schema.Array(ConnectedAccountIntegrationResponseSchema)),
+  integrations: Schema.optionalKey(Schema.Array(ConnectedAccountIntegrationResponseSchema)),
   show_activity: Schema.Boolean,
   two_way_link: Schema.Boolean,
   verified: Schema.Boolean,
   visibility: ConnectedAccountVisibilitySchema,
-  revoked: Schema.optional(Schema.Boolean),
+  revoked: Schema.optionalKey(Schema.Boolean),
 }).annotate({ identifier: 'ConnectedAccountResponse' })
 
 export type ConnectedAccountResponse = Schema.Schema.Type<typeof ConnectedAccountResponseSchema>
@@ -5963,10 +5984,10 @@ export const CreateForumThreadRequestSchema = Schema.Struct({
       expected: 'a string of at most 100 characters',
     }),
   ),
-  auto_archive_duration: Schema.optional(
-    Schema.Union([Schema.NullOr(Schema.Null), ThreadAutoArchiveDurationSchema]),
+  auto_archive_duration: Schema.optionalKey(
+    Schema.Union([Schema.Null, ThreadAutoArchiveDurationSchema]),
   ),
-  rate_limit_per_user: Schema.optional(
+  rate_limit_per_user: Schema.optionalKey(
     Schema.NullOr(
       Schema.Number.check(
         Schema.isInt32(),
@@ -5975,7 +5996,7 @@ export const CreateForumThreadRequestSchema = Schema.Struct({
       ),
     ),
   ),
-  applied_tags: Schema.optional(
+  applied_tags: Schema.optionalKey(
     Schema.NullOr(Schema.Array(SnowflakeTypeSchema).check(Schema.isMaxLength(5))),
   ),
   message: BaseCreateMessageCreateRequestSchema,
@@ -5984,7 +6005,7 @@ export const CreateForumThreadRequestSchema = Schema.Struct({
 export type CreateForumThreadRequest = Schema.Schema.Type<typeof CreateForumThreadRequestSchema>
 
 export const CreateGroupDMInviteRequestSchema = Schema.Struct({
-  max_age: Schema.optional(
+  max_age: Schema.optionalKey(
     Schema.NullOr(
       Schema.Number.check(
         Schema.isInt(),
@@ -5998,8 +6019,8 @@ export const CreateGroupDMInviteRequestSchema = Schema.Struct({
 export type CreateGroupDMInviteRequest = Schema.Schema.Type<typeof CreateGroupDMInviteRequestSchema>
 
 export const UpdateDefaultReactionEmojiRequestSchema = Schema.Struct({
-  emoji_id: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema])),
-  emoji_name: Schema.optional(
+  emoji_id: Schema.optionalKey(Schema.Union([Schema.Null, SnowflakeTypeSchema])),
+  emoji_name: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length <= 100, {
@@ -6023,8 +6044,8 @@ export const CreateOrUpdateThreadTagRequestSchema = Schema.Struct({
       expected: 'a string of at most 50 characters',
     }),
   ),
-  emoji_id: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema])),
-  emoji_name: Schema.optional(
+  emoji_id: Schema.optionalKey(Schema.Union([Schema.Null, SnowflakeTypeSchema])),
+  emoji_name: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length <= 100, {
@@ -6033,7 +6054,7 @@ export const CreateOrUpdateThreadTagRequestSchema = Schema.Struct({
       ),
     ),
   ),
-  moderated: Schema.optional(Schema.NullOr(Schema.Boolean)),
+  moderated: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
 }).annotate({ identifier: 'CreateOrUpdateThreadTagRequest' })
 
 export type CreateOrUpdateThreadTagRequest = Schema.Schema.Type<
@@ -6041,7 +6062,7 @@ export type CreateOrUpdateThreadTagRequest = Schema.Schema.Type<
 >
 
 export const CreateGuildChannelRequestSchema = Schema.Struct({
-  type: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), ChannelTypesSchema])),
+  type: Schema.optionalKey(Schema.Union([Schema.Null, ChannelTypesSchema])),
   name: Schema.String.check(
     Schema.makeFilter((input) => [...input].length >= 1, {
       expected: 'a string of at least 1 character',
@@ -6050,10 +6071,10 @@ export const CreateGuildChannelRequestSchema = Schema.Struct({
       expected: 'a string of at most 100 characters',
     }),
   ),
-  position: Schema.optional(
+  position: Schema.optionalKey(
     Schema.NullOr(Schema.Number.check(Schema.isInt32(), Schema.isGreaterThanOrEqualTo(0))),
   ),
-  topic: Schema.optional(
+  topic: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length >= 0, {
@@ -6065,14 +6086,14 @@ export const CreateGuildChannelRequestSchema = Schema.Struct({
       ),
     ),
   ),
-  bitrate: Schema.optional(
+  bitrate: Schema.optionalKey(
     Schema.NullOr(Schema.Number.check(Schema.isInt32(), Schema.isGreaterThanOrEqualTo(8000))),
   ),
-  user_limit: Schema.optional(
+  user_limit: Schema.optionalKey(
     Schema.NullOr(Schema.Number.check(Schema.isInt32(), Schema.isGreaterThanOrEqualTo(0))),
   ),
-  nsfw: Schema.optional(Schema.NullOr(Schema.Boolean)),
-  rate_limit_per_user: Schema.optional(
+  nsfw: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
+  rate_limit_per_user: Schema.optionalKey(
     Schema.NullOr(
       Schema.Number.check(
         Schema.isInt(),
@@ -6081,23 +6102,21 @@ export const CreateGuildChannelRequestSchema = Schema.Struct({
       ),
     ),
   ),
-  parent_id: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema])),
-  permission_overwrites: Schema.optional(
+  parent_id: Schema.optionalKey(Schema.Union([Schema.Null, SnowflakeTypeSchema])),
+  permission_overwrites: Schema.optionalKey(
     Schema.NullOr(
       Schema.Array(ChannelPermissionOverwriteRequestSchema).check(Schema.isMaxLength(100)),
     ),
   ),
-  rtc_region: Schema.optional(Schema.NullOr(Schema.String)),
-  video_quality_mode: Schema.optional(
-    Schema.Union([Schema.NullOr(Schema.Null), VideoQualityModesSchema]),
+  rtc_region: Schema.optionalKey(Schema.NullOr(Schema.String)),
+  video_quality_mode: Schema.optionalKey(Schema.Union([Schema.Null, VideoQualityModesSchema])),
+  default_auto_archive_duration: Schema.optionalKey(
+    Schema.Union([Schema.Null, ThreadAutoArchiveDurationSchema]),
   ),
-  default_auto_archive_duration: Schema.optional(
-    Schema.Union([Schema.NullOr(Schema.Null), ThreadAutoArchiveDurationSchema]),
+  default_reaction_emoji: Schema.optionalKey(
+    Schema.Union([Schema.Null, UpdateDefaultReactionEmojiRequestSchema]),
   ),
-  default_reaction_emoji: Schema.optional(
-    Schema.Union([Schema.NullOr(Schema.Null), UpdateDefaultReactionEmojiRequestSchema]),
-  ),
-  default_thread_rate_limit_per_user: Schema.optional(
+  default_thread_rate_limit_per_user: Schema.optionalKey(
     Schema.NullOr(
       Schema.Number.check(
         Schema.isInt(),
@@ -6106,20 +6125,16 @@ export const CreateGuildChannelRequestSchema = Schema.Struct({
       ),
     ),
   ),
-  default_sort_order: Schema.optional(
-    Schema.Union([Schema.NullOr(Schema.Null), ThreadSortOrderSchema]),
+  default_sort_order: Schema.optionalKey(Schema.Union([Schema.Null, ThreadSortOrderSchema])),
+  default_forum_layout: Schema.optionalKey(Schema.Union([Schema.Null, ForumLayoutSchema])),
+  default_tag_setting: Schema.optionalKey(
+    Schema.Union([Schema.Null, ThreadSearchTagSettingSchema]),
   ),
-  default_forum_layout: Schema.optional(
-    Schema.Union([Schema.NullOr(Schema.Null), ForumLayoutSchema]),
-  ),
-  default_tag_setting: Schema.optional(
-    Schema.Union([Schema.NullOr(Schema.Null), ThreadSearchTagSettingSchema]),
-  ),
-  available_tags: Schema.optional(
+  available_tags: Schema.optionalKey(
     Schema.NullOr(
-      Schema.Array(
-        Schema.Union([Schema.NullOr(Schema.Null), CreateOrUpdateThreadTagRequestSchema]),
-      ).check(Schema.isMaxLength(20)),
+      Schema.Array(Schema.Union([Schema.Null, CreateOrUpdateThreadTagRequestSchema])).check(
+        Schema.isMaxLength(20),
+      ),
     ),
   ),
 }).annotate({ identifier: 'CreateGuildChannelRequest' })
@@ -6135,7 +6150,7 @@ export const InviteTargetTypesSchema = Schema.Union([
 export type InviteTargetTypes = Schema.Schema.Type<typeof InviteTargetTypesSchema>
 
 export const CreateGuildInviteRequestSchema = Schema.Struct({
-  max_age: Schema.optional(
+  max_age: Schema.optionalKey(
     Schema.NullOr(
       Schema.Number.check(
         Schema.isInt(),
@@ -6144,8 +6159,8 @@ export const CreateGuildInviteRequestSchema = Schema.Struct({
       ),
     ),
   ),
-  temporary: Schema.optional(Schema.NullOr(Schema.Boolean)),
-  max_uses: Schema.optional(
+  temporary: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
+  max_uses: Schema.optionalKey(
     Schema.NullOr(
       Schema.Number.check(
         Schema.isInt(),
@@ -6154,24 +6169,22 @@ export const CreateGuildInviteRequestSchema = Schema.Struct({
       ),
     ),
   ),
-  unique: Schema.optional(Schema.NullOr(Schema.Boolean)),
-  target_user_id: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema])),
-  target_application_id: Schema.optional(
-    Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema]),
-  ),
-  target_type: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), InviteTargetTypesSchema])),
-  role_ids: Schema.optional(
+  unique: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
+  target_user_id: Schema.optionalKey(Schema.Union([Schema.Null, SnowflakeTypeSchema])),
+  target_application_id: Schema.optionalKey(Schema.Union([Schema.Null, SnowflakeTypeSchema])),
+  target_type: Schema.optionalKey(Schema.Union([Schema.Null, InviteTargetTypesSchema])),
+  role_ids: Schema.optionalKey(
     Schema.Union([
       Schema.String,
       Schema.Array(SnowflakeTypeSchema).check(Schema.isMaxLength(250), Schema.isUnique()),
-      Schema.NullOr(Schema.Null),
+      Schema.Null,
     ]),
   ),
-  target_user_ids: Schema.optional(
+  target_user_ids: Schema.optionalKey(
     Schema.Union([
       Schema.String,
       Schema.Array(SnowflakeTypeSchema).check(Schema.isMaxLength(1000), Schema.isUnique()),
-      Schema.NullOr(Schema.Null),
+      Schema.Null,
     ]).annotate({ description: 'The IDs of the users to target with this invite.' }),
   ),
 }).annotate({ identifier: 'CreateGuildInviteRequest' })
@@ -6179,7 +6192,7 @@ export const CreateGuildInviteRequestSchema = Schema.Struct({
 export type CreateGuildInviteRequest = Schema.Schema.Type<typeof CreateGuildInviteRequestSchema>
 
 export const IncomingWebhookInteractionRequestSchema = Schema.Struct({
-  content: Schema.optional(
+  content: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length <= 2000, {
@@ -6188,13 +6201,13 @@ export const IncomingWebhookInteractionRequestSchema = Schema.Struct({
       ),
     ),
   ),
-  embeds: Schema.optional(
+  embeds: Schema.optionalKey(
     Schema.NullOr(Schema.Array(RichEmbedSchema).check(Schema.isMaxLength(10))),
   ),
-  allowed_mentions: Schema.optional(
-    Schema.Union([Schema.NullOr(Schema.Null), MessageAllowedMentionsRequestSchema]),
+  allowed_mentions: Schema.optionalKey(
+    Schema.Union([Schema.Null, MessageAllowedMentionsRequestSchema]),
   ),
-  components: Schema.optional(
+  components: Schema.optionalKey(
     Schema.NullOr(
       Schema.Array(
         Schema.Union([
@@ -6209,12 +6222,12 @@ export const IncomingWebhookInteractionRequestSchema = Schema.Struct({
       ).check(Schema.isMaxLength(40)),
     ),
   ),
-  attachments: Schema.optional(
+  attachments: Schema.optionalKey(
     Schema.NullOr(Schema.Array(MessageAttachmentRequestSchema).check(Schema.isMaxLength(10))),
   ),
-  poll: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), PollCreateRequestSchema])),
-  tts: Schema.optional(Schema.NullOr(Schema.Boolean)),
-  flags: Schema.optional(Schema.NullOr(Schema.Number.check(Schema.isInt()))),
+  poll: Schema.optionalKey(Schema.Union([Schema.Null, PollCreateRequestSchema])),
+  tts: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
+  flags: Schema.optionalKey(Schema.NullOr(Schema.Number.check(Schema.isInt()))),
 }).annotate({ identifier: 'IncomingWebhookInteractionRequest' })
 
 export type IncomingWebhookInteractionRequest = Schema.Schema.Type<
@@ -6223,9 +6236,7 @@ export type IncomingWebhookInteractionRequest = Schema.Schema.Type<
 
 export const CreateMessageInteractionCallbackRequestSchema = Schema.Struct({
   type: InteractionCallbackTypesSchema,
-  data: Schema.optional(
-    Schema.Union([Schema.NullOr(Schema.Null), IncomingWebhookInteractionRequestSchema]),
-  ),
+  data: Schema.optionalKey(Schema.Union([Schema.Null, IncomingWebhookInteractionRequestSchema])),
 }).annotate({ identifier: 'CreateMessageInteractionCallbackRequest' })
 
 export type CreateMessageInteractionCallbackRequest = Schema.Schema.Type<
@@ -6283,22 +6294,22 @@ export const MessageResponseSchema = Schema.Struct({
       TextDisplayComponentResponseSchema,
     ]),
   ),
-  stickers: Schema.optional(
+  stickers: Schema.optionalKey(
     Schema.Array(Schema.Union([GuildStickerResponseSchema, StandardStickerResponseSchema])),
   ),
-  sticker_items: Schema.optional(Schema.Array(MessageStickerItemResponseSchema)),
+  sticker_items: Schema.optionalKey(Schema.Array(MessageStickerItemResponseSchema)),
   id: SnowflakeTypeSchema,
   channel_id: SnowflakeTypeSchema,
   author: UserResponseSchema,
   pinned: Schema.Boolean,
   mention_everyone: Schema.Boolean,
   tts: Schema.Boolean,
-  call: Schema.optional(MessageCallResponseSchema),
-  activity: Schema.optional(MessageActivityResponseSchema),
-  application: Schema.optional(BasicApplicationResponseWithBotSchema),
-  application_id: Schema.optional(SnowflakeTypeSchema),
-  interaction: Schema.optional(MessageInteractionResponseSchema),
-  nonce: Schema.optional(
+  call: Schema.optionalKey(MessageCallResponseSchema),
+  activity: Schema.optionalKey(MessageActivityResponseSchema),
+  application: Schema.optionalKey(BasicApplicationResponseWithBotSchema),
+  application_id: Schema.optionalKey(SnowflakeTypeSchema),
+  interaction: Schema.optionalKey(MessageInteractionResponseSchema),
+  nonce: Schema.optionalKey(
     Schema.Union([
       Schema.Union([
         Schema.BigInt,
@@ -6316,8 +6327,8 @@ export const MessageResponseSchema = Schema.Struct({
         )
         .check(
           Schema.isBetweenBigInt({ minimum: -9223372036854775808n, maximum: 9223372036854775807n }),
-          Schema.isGreaterThanOrEqualToBigInt(-9223372036854776000n),
-          Schema.isLessThanOrEqualToBigInt(9223372036854776000n),
+          Schema.isGreaterThanOrEqualToBigInt(-9223372036854775808n),
+          Schema.isLessThanOrEqualToBigInt(9223372036854775808n),
         ),
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length <= 25, {
@@ -6326,30 +6337,28 @@ export const MessageResponseSchema = Schema.Struct({
       ),
     ]),
   ),
-  webhook_id: Schema.optional(SnowflakeTypeSchema),
-  message_reference: Schema.optional(MessageReferenceResponseSchema),
-  thread: Schema.optional(ThreadResponseSchema),
-  mention_channels: Schema.optional(Schema.Array(MessageMentionChannelResponseSchema)),
-  role_subscription_data: Schema.optional(MessageRoleSubscriptionDataResponseSchema),
-  purchase_notification: Schema.optional(PurchaseNotificationResponseSchema),
-  position: Schema.optional(Schema.Number.check(Schema.isInt32())),
-  resolved: Schema.optional(ResolvedObjectsResponseSchema),
-  poll: Schema.optional(PollResponseSchema),
-  shared_client_theme: Schema.optional(CustomClientThemeResponseSchema),
-  interaction_metadata: Schema.optional(
+  webhook_id: Schema.optionalKey(SnowflakeTypeSchema),
+  message_reference: Schema.optionalKey(MessageReferenceResponseSchema),
+  thread: Schema.optionalKey(ThreadResponseSchema),
+  mention_channels: Schema.optionalKey(Schema.Array(MessageMentionChannelResponseSchema)),
+  role_subscription_data: Schema.optionalKey(MessageRoleSubscriptionDataResponseSchema),
+  purchase_notification: Schema.optionalKey(PurchaseNotificationResponseSchema),
+  position: Schema.optionalKey(Schema.Number.check(Schema.isInt32())),
+  resolved: Schema.optionalKey(ResolvedObjectsResponseSchema),
+  poll: Schema.optionalKey(PollResponseSchema),
+  shared_client_theme: Schema.optionalKey(CustomClientThemeResponseSchema),
+  interaction_metadata: Schema.optionalKey(
     Schema.Union([
       ApplicationCommandInteractionMetadataResponseSchema,
       MessageComponentInteractionMetadataResponseSchema,
       ModalSubmitInteractionMetadataResponseSchema,
     ]),
   ),
-  message_snapshots: Schema.optional(Schema.Array(MessageSnapshotResponseSchema)),
-  lobby_member: Schema.optional(MessageLobbyMemberResponseSchema),
-  actor: Schema.optional(UserResponseSchema),
-  reactions: Schema.optional(Schema.Array(MessageReactionResponseSchema)),
-  referenced_message: Schema.optional(
-    Schema.Union([Schema.NullOr(Schema.Null), BasicMessageResponseSchema]),
-  ),
+  message_snapshots: Schema.optionalKey(Schema.Array(MessageSnapshotResponseSchema)),
+  lobby_member: Schema.optionalKey(MessageLobbyMemberResponseSchema),
+  actor: Schema.optionalKey(UserResponseSchema),
+  reactions: Schema.optionalKey(Schema.Array(MessageReactionResponseSchema)),
+  referenced_message: Schema.optionalKey(Schema.Union([Schema.Null, BasicMessageResponseSchema])),
 }).annotate({ identifier: 'MessageResponse' })
 
 export type MessageResponse = Schema.Schema.Type<typeof MessageResponseSchema>
@@ -6364,8 +6373,8 @@ export type CreateMessageInteractionCallbackResponse = Schema.Schema.Type<
 >
 
 export const CreatePrivateChannelRequestSchema = Schema.Struct({
-  recipient_id: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema])),
-  access_tokens: Schema.optional(
+  recipient_id: Schema.optionalKey(Schema.Union([Schema.Null, SnowflakeTypeSchema])),
+  access_tokens: Schema.optionalKey(
     Schema.NullOr(
       Schema.Array(
         Schema.String.check(
@@ -6376,7 +6385,7 @@ export const CreatePrivateChannelRequestSchema = Schema.Struct({
       ).check(Schema.isMaxLength(1521), Schema.isUnique()),
     ),
   ),
-  nicks: Schema.optional(
+  nicks: Schema.optionalKey(
     Schema.NullOr(
       Schema.Record(
         Schema.String,
@@ -6397,7 +6406,7 @@ export type CreatePrivateChannelRequest = Schema.Schema.Type<
 >
 
 export const RoleColorsSchema = Schema.Struct({
-  primary_color: Schema.optional(
+  primary_color: Schema.optionalKey(
     Schema.NullOr(
       Schema.Number.check(
         Schema.isInt(),
@@ -6406,7 +6415,7 @@ export const RoleColorsSchema = Schema.Struct({
       ),
     ),
   ),
-  secondary_color: Schema.optional(
+  secondary_color: Schema.optionalKey(
     Schema.NullOr(
       Schema.Number.check(
         Schema.isInt(),
@@ -6415,7 +6424,7 @@ export const RoleColorsSchema = Schema.Struct({
       ),
     ),
   ),
-  tertiary_color: Schema.optional(
+  tertiary_color: Schema.optionalKey(
     Schema.NullOr(
       Schema.Number.check(
         Schema.isInt(),
@@ -6429,7 +6438,7 @@ export const RoleColorsSchema = Schema.Struct({
 export type RoleColors = Schema.Schema.Type<typeof RoleColorsSchema>
 
 export const CreateRoleRequestSchema = Schema.Struct({
-  name: Schema.optional(
+  name: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length >= 1, {
@@ -6441,8 +6450,8 @@ export const CreateRoleRequestSchema = Schema.Struct({
       ),
     ),
   ),
-  permissions: Schema.optional(Schema.NullOr(Schema.Number.check(Schema.isInt()))),
-  color: Schema.optional(
+  permissions: Schema.optionalKey(Schema.NullOr(Schema.Number.check(Schema.isInt()))),
+  color: Schema.optionalKey(
     Schema.NullOr(
       Schema.Number.check(
         Schema.isInt(),
@@ -6451,11 +6460,11 @@ export const CreateRoleRequestSchema = Schema.Struct({
       ),
     ),
   ),
-  colors: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), RoleColorsSchema])),
-  hoist: Schema.optional(Schema.NullOr(Schema.Boolean)),
-  mentionable: Schema.optional(Schema.NullOr(Schema.Boolean)),
-  icon: Schema.optional(Schema.NullOr(Schema.String)),
-  unicode_emoji: Schema.optional(
+  colors: Schema.optionalKey(Schema.Union([Schema.Null, RoleColorsSchema])),
+  hoist: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
+  mentionable: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
+  icon: Schema.optionalKey(Schema.NullOr(Schema.String)),
+  unicode_emoji: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length <= 100, {
@@ -6477,10 +6486,10 @@ export const CreateTextThreadWithMessageRequestSchema = Schema.Struct({
       expected: 'a string of at most 100 characters',
     }),
   ),
-  auto_archive_duration: Schema.optional(
-    Schema.Union([Schema.NullOr(Schema.Null), ThreadAutoArchiveDurationSchema]),
+  auto_archive_duration: Schema.optionalKey(
+    Schema.Union([Schema.Null, ThreadAutoArchiveDurationSchema]),
   ),
-  rate_limit_per_user: Schema.optional(
+  rate_limit_per_user: Schema.optionalKey(
     Schema.NullOr(
       Schema.Number.check(
         Schema.isInt32(),
@@ -6504,10 +6513,10 @@ export const CreateTextThreadWithoutMessageRequestSchema = Schema.Struct({
       expected: 'a string of at most 100 characters',
     }),
   ),
-  auto_archive_duration: Schema.optional(
-    Schema.Union([Schema.NullOr(Schema.Null), ThreadAutoArchiveDurationSchema]),
+  auto_archive_duration: Schema.optionalKey(
+    Schema.Union([Schema.Null, ThreadAutoArchiveDurationSchema]),
   ),
-  rate_limit_per_user: Schema.optional(
+  rate_limit_per_user: Schema.optionalKey(
     Schema.NullOr(
       Schema.Number.check(
         Schema.isInt32(),
@@ -6516,8 +6525,8 @@ export const CreateTextThreadWithoutMessageRequestSchema = Schema.Struct({
       ),
     ),
   ),
-  type: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), ChannelTypesSchema])),
-  invitable: Schema.optional(Schema.NullOr(Schema.Boolean)),
+  type: Schema.optionalKey(Schema.Union([Schema.Null, ChannelTypesSchema])),
+  invitable: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
 }).annotate({ identifier: 'CreateTextThreadWithoutMessageRequest' })
 
 export type CreateTextThreadWithoutMessageRequest = Schema.Schema.Type<
@@ -6527,9 +6536,9 @@ export type CreateTextThreadWithoutMessageRequest = Schema.Schema.Type<
 export const CreatedThreadResponseSchema = Schema.Struct({
   id: SnowflakeTypeSchema,
   type: ChannelTypesSchema,
-  last_message_id: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema])),
+  last_message_id: Schema.optionalKey(Schema.Union([Schema.Null, SnowflakeTypeSchema])),
   flags: Schema.Number.check(Schema.isInt32()),
-  last_pin_timestamp: Schema.optional(
+  last_pin_timestamp: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.isPattern(
@@ -6540,26 +6549,26 @@ export const CreatedThreadResponseSchema = Schema.Struct({
   ),
   guild_id: SnowflakeTypeSchema,
   name: Schema.String,
-  parent_id: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema])),
-  rate_limit_per_user: Schema.optional(Schema.Number.check(Schema.isInt32())),
-  bitrate: Schema.optional(Schema.Number.check(Schema.isInt32())),
-  user_limit: Schema.optional(Schema.Number.check(Schema.isInt32())),
-  rtc_region: Schema.optional(Schema.NullOr(Schema.String)),
-  video_quality_mode: Schema.optional(VideoQualityModesSchema),
-  permissions: Schema.optional(Schema.String),
+  parent_id: Schema.optionalKey(Schema.Union([Schema.Null, SnowflakeTypeSchema])),
+  rate_limit_per_user: Schema.optionalKey(Schema.Number.check(Schema.isInt32())),
+  bitrate: Schema.optionalKey(Schema.Number.check(Schema.isInt32())),
+  user_limit: Schema.optionalKey(Schema.Number.check(Schema.isInt32())),
+  rtc_region: Schema.optionalKey(Schema.NullOr(Schema.String)),
+  video_quality_mode: Schema.optionalKey(VideoQualityModesSchema),
+  permissions: Schema.optionalKey(Schema.String),
   owner_id: SnowflakeTypeSchema,
   thread_metadata: ThreadMetadataResponseSchema,
   message_count: Schema.Number.check(Schema.isInt32()),
   member_count: Schema.Number.check(Schema.isInt32()),
   total_message_sent: Schema.Number.check(Schema.isInt32()),
-  applied_tags: Schema.optional(Schema.Array(SnowflakeTypeSchema)),
-  member: Schema.optional(ThreadMemberResponseSchema),
+  applied_tags: Schema.optionalKey(Schema.Array(SnowflakeTypeSchema)),
+  member: Schema.optionalKey(ThreadMemberResponseSchema),
 }).annotate({ identifier: 'CreatedThreadResponse' })
 
 export type CreatedThreadResponse = Schema.Schema.Type<typeof CreatedThreadResponseSchema>
 
 export const DefaultKeywordListTriggerMetadataSchema = Schema.Struct({
-  allow_list: Schema.optional(
+  allow_list: Schema.optionalKey(
     Schema.NullOr(
       Schema.Array(
         Schema.String.check(
@@ -6573,7 +6582,7 @@ export const DefaultKeywordListTriggerMetadataSchema = Schema.Struct({
       ).check(Schema.isMaxLength(1000)),
     ),
   ),
-  presets: Schema.optional(
+  presets: Schema.optionalKey(
     Schema.NullOr(Schema.Array(AutomodKeywordPresetTypeSchema).check(Schema.isUnique())),
   ),
 }).annotate({ identifier: 'DefaultKeywordListTriggerMetadata' })
@@ -6616,15 +6625,13 @@ export type QuarantineUserActionMetadata = Schema.Schema.Type<
 
 export const QuarantineUserActionSchema = Schema.Struct({
   type: AutomodActionTypeSchema,
-  metadata: Schema.optional(
-    Schema.Union([Schema.NullOr(Schema.Null), QuarantineUserActionMetadataSchema]),
-  ),
+  metadata: Schema.optionalKey(Schema.Union([Schema.Null, QuarantineUserActionMetadataSchema])),
 }).annotate({ identifier: 'QuarantineUserAction' })
 
 export type QuarantineUserAction = Schema.Schema.Type<typeof QuarantineUserActionSchema>
 
 export const UserCommunicationDisabledActionMetadataSchema = Schema.Struct({
-  duration_seconds: Schema.optional(
+  duration_seconds: Schema.optionalKey(
     Schema.NullOr(
       Schema.Number.check(
         Schema.isInt(),
@@ -6655,7 +6662,7 @@ export const DefaultKeywordListUpsertRequestSchema = Schema.Struct({
     }),
   ),
   event_type: AutomodEventTypeSchema,
-  actions: Schema.optional(
+  actions: Schema.optionalKey(
     Schema.NullOr(
       Schema.Array(
         Schema.Union([
@@ -6667,13 +6674,13 @@ export const DefaultKeywordListUpsertRequestSchema = Schema.Struct({
       ).check(Schema.isMinLength(1), Schema.isMaxLength(5)),
     ),
   ),
-  enabled: Schema.optional(Schema.NullOr(Schema.Boolean)),
-  exempt_roles: Schema.optional(
+  enabled: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
+  exempt_roles: Schema.optionalKey(
     Schema.NullOr(
       Schema.Array(SnowflakeTypeSchema).check(Schema.isMaxLength(20), Schema.isUnique()),
     ),
   ),
-  exempt_channels: Schema.optional(
+  exempt_channels: Schema.optionalKey(
     Schema.NullOr(
       Schema.Array(SnowflakeTypeSchema).check(Schema.isMaxLength(50), Schema.isUnique()),
     ),
@@ -6687,15 +6694,15 @@ export type DefaultKeywordListUpsertRequest = Schema.Schema.Type<
 >
 
 export const DefaultKeywordListUpsertRequestPartialSchema = Schema.Struct({
-  name: Schema.optional(
+  name: Schema.optionalKey(
     Schema.String.check(
       Schema.makeFilter((input) => [...input].length <= 100, {
         expected: 'a string of at most 100 characters',
       }),
     ),
   ),
-  event_type: Schema.optional(AutomodEventTypeSchema),
-  actions: Schema.optional(
+  event_type: Schema.optionalKey(AutomodEventTypeSchema),
+  actions: Schema.optionalKey(
     Schema.NullOr(
       Schema.Array(
         Schema.Union([
@@ -6707,19 +6714,19 @@ export const DefaultKeywordListUpsertRequestPartialSchema = Schema.Struct({
       ).check(Schema.isMinLength(1), Schema.isMaxLength(5)),
     ),
   ),
-  enabled: Schema.optional(Schema.NullOr(Schema.Boolean)),
-  exempt_roles: Schema.optional(
+  enabled: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
+  exempt_roles: Schema.optionalKey(
     Schema.NullOr(
       Schema.Array(SnowflakeTypeSchema).check(Schema.isMaxLength(20), Schema.isUnique()),
     ),
   ),
-  exempt_channels: Schema.optional(
+  exempt_channels: Schema.optionalKey(
     Schema.NullOr(
       Schema.Array(SnowflakeTypeSchema).check(Schema.isMaxLength(50), Schema.isUnique()),
     ),
   ),
-  trigger_type: Schema.optional(AutomodTriggerTypeSchema),
-  trigger_metadata: Schema.optional(DefaultKeywordListTriggerMetadataSchema),
+  trigger_type: Schema.optionalKey(AutomodTriggerTypeSchema),
+  trigger_metadata: Schema.optionalKey(DefaultKeywordListTriggerMetadataSchema),
 }).annotate({ identifier: 'DefaultKeywordListUpsertRequestPartial' })
 
 export type DefaultKeywordListUpsertRequestPartial = Schema.Schema.Type<
@@ -6805,12 +6812,12 @@ export const IntegrationApplicationResponseSchema = Schema.Struct({
   name: Schema.String,
   icon: Schema.NullOr(Schema.String),
   description: Schema.String,
-  type: Schema.Union([Schema.NullOr(Schema.Null), ApplicationTypesSchema]),
-  cover_image: Schema.optional(Schema.String),
-  primary_sku_id: Schema.optional(SnowflakeTypeSchema),
+  type: Schema.Union([Schema.Null, ApplicationTypesSchema]),
+  cover_image: Schema.optionalKey(Schema.String),
+  primary_sku_id: Schema.optionalKey(SnowflakeTypeSchema),
   flags: Schema.Number.check(Schema.isInt32()),
   flags_new: Schema.String,
-  bot: Schema.optional(UserResponseSchema),
+  bot: Schema.optionalKey(UserResponseSchema),
 }).annotate({ identifier: 'IntegrationApplicationResponse' })
 
 export type IntegrationApplicationResponse = Schema.Schema.Type<
@@ -6825,7 +6832,7 @@ export const DiscordIntegrationResponseSchema = Schema.Struct({
   id: SnowflakeTypeSchema,
   application: IntegrationApplicationResponseSchema,
   scopes: Schema.Array(OAuth2ScopesSchema).check(Schema.isUnique()),
-  user: Schema.optional(UserResponseSchema),
+  user: Schema.optionalKey(UserResponseSchema),
 }).annotate({ identifier: 'DiscordIntegrationResponse' })
 
 export type DiscordIntegrationResponse = Schema.Schema.Type<typeof DiscordIntegrationResponseSchema>
@@ -6870,7 +6877,7 @@ export type EmbeddedActivityInstance = Schema.Schema.Type<typeof EmbeddedActivit
 export const EmojiResponseSchema = Schema.Struct({
   id: SnowflakeTypeSchema,
   name: Schema.String,
-  user: Schema.optional(UserResponseSchema),
+  user: Schema.optionalKey(UserResponseSchema),
   roles: Schema.Array(SnowflakeTypeSchema),
   require_colons: Schema.Boolean,
   managed: Schema.Boolean,
@@ -6907,7 +6914,7 @@ export const EntitlementResponseSchema = Schema.Struct({
   sku_id: SnowflakeTypeSchema,
   application_id: SnowflakeTypeSchema,
   user_id: SnowflakeTypeSchema,
-  guild_id: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema])),
+  guild_id: Schema.optionalKey(Schema.Union([Schema.Null, SnowflakeTypeSchema])),
   deleted: Schema.Boolean,
   starts_at: Schema.NullOr(
     Schema.String.check(
@@ -6924,7 +6931,7 @@ export const EntitlementResponseSchema = Schema.Struct({
     ),
   ),
   type: EntitlementTypesSchema,
-  fulfilled_at: Schema.optional(
+  fulfilled_at: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.isPattern(
@@ -6933,12 +6940,12 @@ export const EntitlementResponseSchema = Schema.Struct({
       ),
     ),
   ),
-  fulfillment_status: Schema.optional(
-    Schema.Union([Schema.NullOr(Schema.Null), EntitlementTenantFulfillmentStatusResponseSchema]),
+  fulfillment_status: Schema.optionalKey(
+    Schema.Union([Schema.Null, EntitlementTenantFulfillmentStatusResponseSchema]),
   ),
-  consumed: Schema.optional(Schema.Boolean),
-  gifter_user_id: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema])),
-  parent_id: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema])),
+  consumed: Schema.optionalKey(Schema.Boolean),
+  gifter_user_id: Schema.optionalKey(Schema.Union([Schema.Null, SnowflakeTypeSchema])),
+  parent_id: Schema.optionalKey(Schema.Union([Schema.Null, SnowflakeTypeSchema])),
 }).annotate({ identifier: 'EntitlementResponse' })
 
 export type EntitlementResponse = Schema.Schema.Type<typeof EntitlementResponseSchema>
@@ -7019,20 +7026,20 @@ export const ExternalConnectionIntegrationResponseSchema = Schema.Struct({
   enabled: Schema.Boolean,
   id: Schema.String,
   user: UserResponseSchema,
-  revoked: Schema.optional(Schema.Boolean),
-  expire_behavior: Schema.optional(IntegrationExpireBehaviorTypesSchema),
-  expire_grace_period: Schema.optional(IntegrationExpireGracePeriodTypesSchema),
-  subscriber_count: Schema.optional(Schema.Number.check(Schema.isInt32())),
-  synced_at: Schema.optional(
+  revoked: Schema.optionalKey(Schema.Boolean),
+  expire_behavior: Schema.optionalKey(IntegrationExpireBehaviorTypesSchema),
+  expire_grace_period: Schema.optionalKey(IntegrationExpireGracePeriodTypesSchema),
+  subscriber_count: Schema.optionalKey(Schema.Number.check(Schema.isInt32())),
+  synced_at: Schema.optionalKey(
     Schema.String.check(
       Schema.isPattern(
         /^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z|([+-](?:[01]\d|2[0-3]):[0-5]\d)))$/,
       ),
     ),
   ),
-  role_id: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema])),
-  syncing: Schema.optional(Schema.Boolean),
-  enable_emoticons: Schema.optional(Schema.Boolean),
+  role_id: Schema.optionalKey(Schema.Union([Schema.Null, SnowflakeTypeSchema])),
+  syncing: Schema.optionalKey(Schema.Boolean),
+  enable_emoticons: Schema.optionalKey(Schema.Boolean),
 }).annotate({ identifier: 'ExternalConnectionIntegrationResponse' })
 
 export type ExternalConnectionIntegrationResponse = Schema.Schema.Type<
@@ -7092,7 +7099,7 @@ export const RecurrenceRuleSchema = Schema.Struct({
       /^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z|([+-](?:[01]\d|2[0-3]):[0-5]\d)))$/,
     ),
   ).annotate({ description: 'Starting time of the recurrence interval' }),
-  end: Schema.optional(
+  end: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.isPattern(
@@ -7104,27 +7111,27 @@ export const RecurrenceRuleSchema = Schema.Struct({
   frequency: RecurrenceRuleFrequenciesSchema.annotate({
     description: 'How often the event occurs',
   }),
-  interval: Schema.optional(
+  interval: Schema.optionalKey(
     Schema.NullOr(Schema.Number.check(Schema.isInt32())).annotate({
       description: 'The spacing between events, defined by frequency',
     }),
   ),
-  by_weekday: Schema.optional(
+  by_weekday: Schema.optionalKey(
     Schema.NullOr(
       Schema.Array(RecurrenceRuleWeekdaysSchema).check(Schema.isMaxLength(7), Schema.isUnique()),
     ).annotate({ description: 'Set of specific days within a week for the event to recur on' }),
   ),
-  by_n_weekday: Schema.optional(
+  by_n_weekday: Schema.optionalKey(
     Schema.NullOr(Schema.Array(ByNWeekdaySchema).check(Schema.isMaxLength(7))).annotate({
       description: 'List of specific days within a specific week to recur on',
     }),
   ),
-  by_month: Schema.optional(
+  by_month: Schema.optionalKey(
     Schema.NullOr(
       Schema.Array(RecurrenceRuleMonthsSchema).check(Schema.isMaxLength(12), Schema.isUnique()),
     ).annotate({ description: 'Set of specific months to recur on' }),
   ),
-  by_month_day: Schema.optional(
+  by_month_day: Schema.optionalKey(
     Schema.NullOr(
       Schema.Array(
         Schema.Number.check(
@@ -7135,7 +7142,7 @@ export const RecurrenceRuleSchema = Schema.Struct({
       ).check(Schema.isMaxLength(33), Schema.isUnique()),
     ).annotate({ description: 'Set of specific dates within a month to recur on' }),
   ),
-  by_year_day: Schema.optional(
+  by_year_day: Schema.optionalKey(
     Schema.NullOr(
       Schema.Array(
         Schema.Number.check(
@@ -7146,7 +7153,7 @@ export const RecurrenceRuleSchema = Schema.Struct({
       ).check(Schema.isMaxLength(367), Schema.isUnique()),
     ).annotate({ description: 'Set of days within a year to recur on (1-364)' }),
   ),
-  count: Schema.optional(
+  count: Schema.optionalKey(
     Schema.NullOr(Schema.Number.check(Schema.isInt32())).annotate({
       description: 'Total number of times the event is allowed to recur',
     }),
@@ -7161,7 +7168,7 @@ export const ExternalScheduledEventCreateRequestSchema = Schema.Struct({
       expected: 'a string of at most 100 characters',
     }),
   ),
-  description: Schema.optional(
+  description: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length <= 1000, {
@@ -7170,13 +7177,13 @@ export const ExternalScheduledEventCreateRequestSchema = Schema.Struct({
       ),
     ),
   ),
-  image: Schema.optional(Schema.NullOr(Schema.String)),
+  image: Schema.optionalKey(Schema.NullOr(Schema.String)),
   scheduled_start_time: Schema.String.check(
     Schema.isPattern(
       /^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z|([+-](?:[01]\d|2[0-3]):[0-5]\d)))$/,
     ),
   ),
-  scheduled_end_time: Schema.optional(
+  scheduled_end_time: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.isPattern(
@@ -7187,9 +7194,9 @@ export const ExternalScheduledEventCreateRequestSchema = Schema.Struct({
   ),
   privacy_level: GuildScheduledEventPrivacyLevelsSchema,
   entity_type: GuildScheduledEventEntityTypesSchema,
-  channel_id: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema])),
-  recurrence_rule: Schema.optional(
-    Schema.Union([Schema.NullOr(Schema.Null), RecurrenceRuleSchema]).annotate({
+  channel_id: Schema.optionalKey(Schema.Union([Schema.Null, SnowflakeTypeSchema])),
+  recurrence_rule: Schema.optionalKey(
+    Schema.Union([Schema.Null, RecurrenceRuleSchema]).annotate({
       description: 'Recurrence rule for the scheduled event',
     }),
   ),
@@ -7212,17 +7219,15 @@ export type GuildScheduledEventStatuses = Schema.Schema.Type<
 >
 
 export const ExternalScheduledEventPatchRequestPartialSchema = Schema.Struct({
-  status: Schema.optional(
-    Schema.Union([Schema.NullOr(Schema.Null), GuildScheduledEventStatusesSchema]),
-  ),
-  name: Schema.optional(
+  status: Schema.optionalKey(Schema.Union([Schema.Null, GuildScheduledEventStatusesSchema])),
+  name: Schema.optionalKey(
     Schema.String.check(
       Schema.makeFilter((input) => [...input].length <= 100, {
         expected: 'a string of at most 100 characters',
       }),
     ),
   ),
-  description: Schema.optional(
+  description: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length <= 1000, {
@@ -7231,15 +7236,15 @@ export const ExternalScheduledEventPatchRequestPartialSchema = Schema.Struct({
       ),
     ),
   ),
-  image: Schema.optional(Schema.NullOr(Schema.String)),
-  scheduled_start_time: Schema.optional(
+  image: Schema.optionalKey(Schema.NullOr(Schema.String)),
+  scheduled_start_time: Schema.optionalKey(
     Schema.String.check(
       Schema.isPattern(
         /^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z|([+-](?:[01]\d|2[0-3]):[0-5]\d)))$/,
       ),
     ),
   ),
-  scheduled_end_time: Schema.optional(
+  scheduled_end_time: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.isPattern(
@@ -7248,17 +7253,17 @@ export const ExternalScheduledEventPatchRequestPartialSchema = Schema.Struct({
       ),
     ),
   ),
-  entity_type: Schema.optional(
-    Schema.Union([Schema.NullOr(Schema.Null), GuildScheduledEventEntityTypesSchema]),
+  entity_type: Schema.optionalKey(
+    Schema.Union([Schema.Null, GuildScheduledEventEntityTypesSchema]),
   ),
-  privacy_level: Schema.optional(GuildScheduledEventPrivacyLevelsSchema),
-  channel_id: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema])),
-  recurrence_rule: Schema.optional(
-    Schema.Union([Schema.NullOr(Schema.Null), RecurrenceRuleSchema]).annotate({
+  privacy_level: Schema.optionalKey(GuildScheduledEventPrivacyLevelsSchema),
+  channel_id: Schema.optionalKey(Schema.Union([Schema.Null, SnowflakeTypeSchema])),
+  recurrence_rule: Schema.optionalKey(
+    Schema.Union([Schema.Null, RecurrenceRuleSchema]).annotate({
       description: 'Recurrence rule for the scheduled event',
     }),
   ),
-  entity_metadata: Schema.optional(EntityMetadataExternalSchema),
+  entity_metadata: Schema.optionalKey(EntityMetadataExternalSchema),
 }).annotate({ identifier: 'ExternalScheduledEventPatchRequestPartial' })
 
 export type ExternalScheduledEventPatchRequestPartial = Schema.Schema.Type<
@@ -7271,7 +7276,7 @@ export const RecurrenceRuleResponseSchema = Schema.Struct({
       /^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z|([+-](?:[01]\d|2[0-3]):[0-5]\d)))$/,
     ),
   ).annotate({ description: 'Starting time of the recurrence interval' }),
-  end: Schema.optional(
+  end: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.isPattern(
@@ -7298,12 +7303,12 @@ export const RecurrenceRuleResponseSchema = Schema.Struct({
   by_month_day: Schema.NullOr(
     Schema.Array(Schema.Number.check(Schema.isInt32())).check(Schema.isUnique()),
   ).annotate({ description: 'Set of specific dates within a month to recur on' }),
-  by_year_day: Schema.optional(
+  by_year_day: Schema.optionalKey(
     Schema.NullOr(
       Schema.Array(Schema.Number.check(Schema.isInt32())).check(Schema.isUnique()),
     ).annotate({ description: 'Set of days within a year to recur on (1-364)' }),
   ),
-  count: Schema.optional(
+  count: Schema.optionalKey(
     Schema.NullOr(Schema.Number.check(Schema.isInt32())).annotate({
       description: 'Total number of times the event is allowed to recur',
     }),
@@ -7325,16 +7330,16 @@ export const ScheduledEventUserResponseSchema = Schema.Struct({
   guild_scheduled_event_id: SnowflakeTypeSchema.annotate({
     description: 'ID of the scheduled event',
   }),
-  guild_scheduled_event_exception_id: Schema.optional(
-    Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema]).annotate({
+  guild_scheduled_event_exception_id: Schema.optionalKey(
+    Schema.Union([Schema.Null, SnowflakeTypeSchema]).annotate({
       description: 'ID of the scheduled event exception',
     }),
   ),
   user_id: SnowflakeTypeSchema.annotate({ description: 'ID of the user' }),
-  user: Schema.optional(
+  user: Schema.optionalKey(
     UserResponseSchema.annotate({ description: 'User object for the RSVP user' }),
   ),
-  member: Schema.optional(
+  member: Schema.optionalKey(
     GuildMemberResponseSchema.annotate({ description: 'Guild member object for the RSVP user' }),
   ),
   response: GuildScheduledEventUserResponsesSchema.annotate({
@@ -7379,14 +7384,14 @@ export const ExternalScheduledEventResponseSchema = Schema.Struct({
   description: Schema.NullOr(Schema.String).annotate({
     description: 'Description of the scheduled event',
   }),
-  channel_id: Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema]).annotate({
+  channel_id: Schema.Union([Schema.Null, SnowflakeTypeSchema]).annotate({
     description:
       'Channel ID in which the scheduled event will be hosted, or null if entity type is EXTERNAL',
   }),
-  creator_id: Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema]).annotate({
+  creator_id: Schema.Union([Schema.Null, SnowflakeTypeSchema]).annotate({
     description: 'ID of the user that created the scheduled event',
   }),
-  creator: Schema.optional(
+  creator: Schema.optionalKey(
     UserResponseSchema.annotate({ description: 'User that created the scheduled event' }),
   ),
   image: Schema.NullOr(Schema.String).annotate({
@@ -7410,14 +7415,13 @@ export const ExternalScheduledEventResponseSchema = Schema.Struct({
   entity_type: GuildScheduledEventEntityTypesSchema.annotate({
     description: 'Type of hosting entity associated with the scheduled event',
   }),
-  entity_id: Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema]).annotate({
+  entity_id: Schema.Union([Schema.Null, SnowflakeTypeSchema]).annotate({
     description: 'ID of the hosting entity associated with the scheduled event',
   }),
-  recurrence_rule: Schema.Union([
-    Schema.NullOr(Schema.Null),
-    RecurrenceRuleResponseSchema,
-  ]).annotate({ description: 'Recurrence rule for the scheduled event, or null if not recurring' }),
-  user_count: Schema.optional(
+  recurrence_rule: Schema.Union([Schema.Null, RecurrenceRuleResponseSchema]).annotate({
+    description: 'Recurrence rule for the scheduled event, or null if not recurring',
+  }),
+  user_count: Schema.optionalKey(
     Schema.Number.check(Schema.isInt32()).annotate({
       description: 'Number of users subscribed to the scheduled event',
     }),
@@ -7425,9 +7429,7 @@ export const ExternalScheduledEventResponseSchema = Schema.Struct({
   privacy_level: GuildScheduledEventPrivacyLevelsSchema.annotate({
     description: 'Privacy level of the scheduled event',
   }),
-  user_rsvp: Schema.optional(
-    Schema.Union([Schema.NullOr(Schema.Null), ScheduledEventUserResponseSchema]),
-  ),
+  user_rsvp: Schema.optionalKey(Schema.Union([Schema.Null, ScheduledEventUserResponseSchema])),
   guild_scheduled_event_exceptions: Schema.Array(GuildScheduledEventExceptionResponseSchema),
   entity_metadata: EntityMetadataExternalResponseSchema,
 }).annotate({ identifier: 'ExternalScheduledEventResponse' })
@@ -7438,7 +7440,7 @@ export type ExternalScheduledEventResponse = Schema.Schema.Type<
 
 export const FileUploadComponentForModalRequestSchema = Schema.Struct({
   type: MessageComponentTypesSchema,
-  id: Schema.optional(
+  id: Schema.optionalKey(
     Schema.NullOr(Schema.Number.check(Schema.isInt32(), Schema.isGreaterThanOrEqualTo(0))),
   ),
   custom_id: Schema.String.check(
@@ -7449,7 +7451,7 @@ export const FileUploadComponentForModalRequestSchema = Schema.Struct({
       expected: 'a string of at most 100 characters',
     }),
   ),
-  min_values: Schema.optional(
+  min_values: Schema.optionalKey(
     Schema.NullOr(
       Schema.Number.check(
         Schema.isInt(),
@@ -7458,7 +7460,7 @@ export const FileUploadComponentForModalRequestSchema = Schema.Struct({
       ),
     ),
   ),
-  max_values: Schema.optional(
+  max_values: Schema.optionalKey(
     Schema.NullOr(
       Schema.Number.check(
         Schema.isInt(),
@@ -7467,8 +7469,8 @@ export const FileUploadComponentForModalRequestSchema = Schema.Struct({
       ),
     ),
   ),
-  required: Schema.optional(Schema.NullOr(Schema.Boolean)),
-  file_types: Schema.optional(
+  required: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
+  file_types: Schema.optionalKey(
     Schema.NullOr(
       Schema.Array(
         Schema.String.check(
@@ -7510,9 +7512,9 @@ export const InviteChannelResponseSchema = Schema.Struct({
   id: SnowflakeTypeSchema,
   type: ChannelTypesSchema,
   name: Schema.NullOr(Schema.String),
-  icon: Schema.optional(Schema.String),
-  nsfw: Schema.optional(Schema.Boolean),
-  recipients: Schema.optional(Schema.Array(InviteChannelRecipientResponseSchema)),
+  icon: Schema.optionalKey(Schema.String),
+  nsfw: Schema.optionalKey(Schema.Boolean),
+  recipients: Schema.optionalKey(Schema.Array(InviteChannelRecipientResponseSchema)),
 }).annotate({ identifier: 'InviteChannelResponse' })
 
 export type InviteChannelResponse = Schema.Schema.Type<typeof InviteChannelResponseSchema>
@@ -7520,9 +7522,9 @@ export type InviteChannelResponse = Schema.Schema.Type<typeof InviteChannelRespo
 export const FriendInviteResponseSchema = Schema.Struct({
   type: InviteTypesSchema,
   code: Schema.String,
-  inviter: Schema.optional(UserResponseSchema),
-  max_age: Schema.optional(Schema.Number.check(Schema.isInt32())),
-  created_at: Schema.optional(
+  inviter: Schema.optionalKey(UserResponseSchema),
+  max_age: Schema.optionalKey(Schema.Number.check(Schema.isInt32())),
+  created_at: Schema.optionalKey(
     Schema.String.check(
       Schema.isPattern(
         /^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z|([+-](?:[01]\d|2[0-3]):[0-5]\d)))$/,
@@ -7536,12 +7538,12 @@ export const FriendInviteResponseSchema = Schema.Struct({
       ),
     ),
   ),
-  friends_count: Schema.optional(Schema.Number.check(Schema.isInt32())),
-  channel: Schema.Union([Schema.NullOr(Schema.Null), InviteChannelResponseSchema]),
-  is_contact: Schema.optional(Schema.Boolean),
-  uses: Schema.optional(Schema.Number.check(Schema.isInt32())),
-  max_uses: Schema.optional(Schema.Number.check(Schema.isInt32())),
-  flags: Schema.optional(Schema.Number.check(Schema.isInt32())),
+  friends_count: Schema.optionalKey(Schema.Number.check(Schema.isInt32())),
+  channel: Schema.Union([Schema.Null, InviteChannelResponseSchema]),
+  is_contact: Schema.optionalKey(Schema.Boolean),
+  uses: Schema.optionalKey(Schema.Number.check(Schema.isInt32())),
+  max_uses: Schema.optionalKey(Schema.Number.check(Schema.isInt32())),
+  flags: Schema.optionalKey(Schema.Number.check(Schema.isInt32())),
 }).annotate({ identifier: 'FriendInviteResponse' })
 
 export type FriendInviteResponse = Schema.Schema.Type<typeof FriendInviteResponseSchema>
@@ -7572,7 +7574,7 @@ export const GatewayResponseSchema = Schema.Struct({
 export type GatewayResponse = Schema.Schema.Type<typeof GatewayResponseSchema>
 
 export const GithubAuthorSchema = Schema.Struct({
-  username: Schema.optional(
+  username: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length <= 152133, {
@@ -7607,7 +7609,7 @@ export const GithubCheckPullRequestSchema = Schema.Struct({
 export type GithubCheckPullRequest = Schema.Schema.Type<typeof GithubCheckPullRequestSchema>
 
 export const GithubCheckSuiteSchema = Schema.Struct({
-  conclusion: Schema.optional(
+  conclusion: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length <= 152133, {
@@ -7616,7 +7618,7 @@ export const GithubCheckSuiteSchema = Schema.Struct({
       ),
     ),
   ),
-  head_branch: Schema.optional(
+  head_branch: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length <= 152133, {
@@ -7630,7 +7632,7 @@ export const GithubCheckSuiteSchema = Schema.Struct({
       expected: 'a string of at most 152133 characters',
     }),
   ),
-  pull_requests: Schema.optional(
+  pull_requests: Schema.optionalKey(
     Schema.NullOr(Schema.Array(GithubCheckPullRequestSchema).check(Schema.isMaxLength(1521))),
   ),
   app: GithubCheckAppSchema,
@@ -7639,7 +7641,7 @@ export const GithubCheckSuiteSchema = Schema.Struct({
 export type GithubCheckSuite = Schema.Schema.Type<typeof GithubCheckSuiteSchema>
 
 export const GithubCheckRunOutputSchema = Schema.Struct({
-  title: Schema.optional(
+  title: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length <= 152133, {
@@ -7648,7 +7650,7 @@ export const GithubCheckRunOutputSchema = Schema.Struct({
       ),
     ),
   ),
-  summary: Schema.optional(
+  summary: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length <= 152133, {
@@ -7662,7 +7664,7 @@ export const GithubCheckRunOutputSchema = Schema.Struct({
 export type GithubCheckRunOutput = Schema.Schema.Type<typeof GithubCheckRunOutputSchema>
 
 export const GithubCheckRunSchema = Schema.Struct({
-  conclusion: Schema.optional(
+  conclusion: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length <= 152133, {
@@ -7683,7 +7685,7 @@ export const GithubCheckRunSchema = Schema.Struct({
     }),
   ),
   check_suite: GithubCheckSuiteSchema,
-  details_url: Schema.optional(
+  details_url: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => URL.canParse(input)),
@@ -7693,8 +7695,8 @@ export const GithubCheckRunSchema = Schema.Struct({
       ),
     ),
   ),
-  output: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), GithubCheckRunOutputSchema])),
-  pull_requests: Schema.optional(
+  output: Schema.optionalKey(Schema.Union([Schema.Null, GithubCheckRunOutputSchema])),
+  pull_requests: Schema.optionalKey(
     Schema.NullOr(Schema.Array(GithubCheckPullRequestSchema).check(Schema.isMaxLength(1521))),
   ),
 }).annotate({ identifier: 'GithubCheckRun' })
@@ -7733,7 +7735,7 @@ export const GithubCommentSchema = Schema.Struct({
     }),
   ),
   user: GithubUserSchema,
-  commit_id: Schema.optional(
+  commit_id: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length <= 152133, {
@@ -7786,7 +7788,7 @@ export const GithubDiscussionSchema = Schema.Struct({
       expected: 'a string of at most 2048 characters',
     }),
   ),
-  answer_html_url: Schema.optional(
+  answer_html_url: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => URL.canParse(input)),
@@ -7796,7 +7798,7 @@ export const GithubDiscussionSchema = Schema.Struct({
       ),
     ),
   ),
-  body: Schema.optional(
+  body: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length <= 152133, {
@@ -7825,7 +7827,7 @@ export const GithubIssueSchema = Schema.Struct({
       expected: 'a string of at most 152133 characters',
     }),
   ),
-  body: Schema.optional(
+  body: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length <= 152133, {
@@ -7834,7 +7836,7 @@ export const GithubIssueSchema = Schema.Struct({
       ),
     ),
   ),
-  pull_request: Schema.optional(Schema.Unknown),
+  pull_request: Schema.optionalKey(Schema.Unknown),
 }).annotate({ identifier: 'GithubIssue' })
 
 export type GithubIssue = Schema.Schema.Type<typeof GithubIssueSchema>
@@ -7881,7 +7883,7 @@ export type GithubRepository = Schema.Schema.Type<typeof GithubRepositorySchema>
 
 export const GithubReviewSchema = Schema.Struct({
   user: GithubUserSchema,
-  body: Schema.optional(
+  body: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length <= 152133, {
@@ -7906,7 +7908,7 @@ export const GithubReviewSchema = Schema.Struct({
 export type GithubReview = Schema.Schema.Type<typeof GithubReviewSchema>
 
 export const GithubWebhookSchema = Schema.Struct({
-  action: Schema.optional(
+  action: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length <= 152133, {
@@ -7915,7 +7917,7 @@ export const GithubWebhookSchema = Schema.Struct({
       ),
     ),
   ),
-  ref: Schema.optional(
+  ref: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length <= 152133, {
@@ -7924,7 +7926,7 @@ export const GithubWebhookSchema = Schema.Struct({
       ),
     ),
   ),
-  ref_type: Schema.optional(
+  ref_type: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length <= 152133, {
@@ -7933,20 +7935,20 @@ export const GithubWebhookSchema = Schema.Struct({
       ),
     ),
   ),
-  comment: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), GithubCommentSchema])),
-  issue: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), GithubIssueSchema])),
-  pull_request: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), GithubIssueSchema])),
-  repository: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), GithubRepositorySchema])),
-  forkee: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), GithubRepositorySchema])),
+  comment: Schema.optionalKey(Schema.Union([Schema.Null, GithubCommentSchema])),
+  issue: Schema.optionalKey(Schema.Union([Schema.Null, GithubIssueSchema])),
+  pull_request: Schema.optionalKey(Schema.Union([Schema.Null, GithubIssueSchema])),
+  repository: Schema.optionalKey(Schema.Union([Schema.Null, GithubRepositorySchema])),
+  forkee: Schema.optionalKey(Schema.Union([Schema.Null, GithubRepositorySchema])),
   sender: GithubUserSchema,
-  member: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), GithubUserSchema])),
-  release: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), GithubReleaseSchema])),
-  head_commit: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), GithubCommitSchema])),
-  commits: Schema.optional(
+  member: Schema.optionalKey(Schema.Union([Schema.Null, GithubUserSchema])),
+  release: Schema.optionalKey(Schema.Union([Schema.Null, GithubReleaseSchema])),
+  head_commit: Schema.optionalKey(Schema.Union([Schema.Null, GithubCommitSchema])),
+  commits: Schema.optionalKey(
     Schema.NullOr(Schema.Array(GithubCommitSchema).check(Schema.isMaxLength(1521))),
   ),
-  forced: Schema.optional(Schema.NullOr(Schema.Boolean)),
-  compare: Schema.optional(
+  forced: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
+  compare: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => URL.canParse(input)),
@@ -7956,11 +7958,11 @@ export const GithubWebhookSchema = Schema.Struct({
       ),
     ),
   ),
-  review: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), GithubReviewSchema])),
-  check_run: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), GithubCheckRunSchema])),
-  check_suite: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), GithubCheckSuiteSchema])),
-  discussion: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), GithubDiscussionSchema])),
-  answer: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), GithubCommentSchema])),
+  review: Schema.optionalKey(Schema.Union([Schema.Null, GithubReviewSchema])),
+  check_run: Schema.optionalKey(Schema.Union([Schema.Null, GithubCheckRunSchema])),
+  check_suite: Schema.optionalKey(Schema.Union([Schema.Null, GithubCheckSuiteSchema])),
+  discussion: Schema.optionalKey(Schema.Union([Schema.Null, GithubDiscussionSchema])),
+  answer: Schema.optionalKey(Schema.Union([Schema.Null, GithubCommentSchema])),
 }).annotate({ identifier: 'GithubWebhook' })
 
 export type GithubWebhook = Schema.Schema.Type<typeof GithubWebhookSchema>
@@ -7968,9 +7970,9 @@ export type GithubWebhook = Schema.Schema.Type<typeof GithubWebhookSchema>
 export const GroupDMInviteResponseSchema = Schema.Struct({
   type: InviteTypesSchema,
   code: Schema.String,
-  inviter: Schema.optional(UserResponseSchema),
-  max_age: Schema.optional(Schema.Number.check(Schema.isInt32())),
-  created_at: Schema.optional(
+  inviter: Schema.optionalKey(UserResponseSchema),
+  max_age: Schema.optionalKey(Schema.Number.check(Schema.isInt32())),
+  created_at: Schema.optionalKey(
     Schema.String.check(
       Schema.isPattern(
         /^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z|([+-](?:[01]\d|2[0-3]):[0-5]\d)))$/,
@@ -7985,7 +7987,9 @@ export const GroupDMInviteResponseSchema = Schema.Struct({
     ),
   ),
   channel: InviteChannelResponseSchema,
-  approximate_member_count: Schema.optional(Schema.NullOr(Schema.Number.check(Schema.isInt32()))),
+  approximate_member_count: Schema.optionalKey(
+    Schema.NullOr(Schema.Number.check(Schema.isInt32())),
+  ),
 }).annotate({ identifier: 'GroupDMInviteResponse' })
 
 export type GroupDMInviteResponse = Schema.Schema.Type<typeof GroupDMInviteResponseSchema>
@@ -8025,16 +8029,16 @@ export type PartialGuildSubscriptionIntegrationResponse = Schema.Schema.Type<
 >
 
 export const GuildIncomingWebhookResponseSchema = Schema.Struct({
-  application_id: Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema]),
+  application_id: Schema.Union([Schema.Null, SnowflakeTypeSchema]),
   avatar: Schema.NullOr(Schema.String),
-  channel_id: Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema]),
-  guild_id: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema])),
+  channel_id: Schema.Union([Schema.Null, SnowflakeTypeSchema]),
+  guild_id: Schema.optionalKey(Schema.Union([Schema.Null, SnowflakeTypeSchema])),
   id: SnowflakeTypeSchema,
   name: Schema.String,
   type: WebhookTypesSchema,
-  user: Schema.optional(UserResponseSchema),
-  token: Schema.optional(Schema.String),
-  url: Schema.optional(Schema.String.check(Schema.makeFilter((input) => URL.canParse(input)))),
+  user: Schema.optionalKey(UserResponseSchema),
+  token: Schema.optionalKey(Schema.String),
+  url: Schema.optionalKey(Schema.String.check(Schema.makeFilter((input) => URL.canParse(input)))),
 }).annotate({ identifier: 'GuildIncomingWebhookResponse' })
 
 export type GuildIncomingWebhookResponse = Schema.Schema.Type<
@@ -8050,14 +8054,14 @@ export const StageScheduledEventResponseSchema = Schema.Struct({
   description: Schema.NullOr(Schema.String).annotate({
     description: 'Description of the scheduled event',
   }),
-  channel_id: Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema]).annotate({
+  channel_id: Schema.Union([Schema.Null, SnowflakeTypeSchema]).annotate({
     description:
       'Channel ID in which the scheduled event will be hosted, or null if entity type is EXTERNAL',
   }),
-  creator_id: Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema]).annotate({
+  creator_id: Schema.Union([Schema.Null, SnowflakeTypeSchema]).annotate({
     description: 'ID of the user that created the scheduled event',
   }),
-  creator: Schema.optional(
+  creator: Schema.optionalKey(
     UserResponseSchema.annotate({ description: 'User that created the scheduled event' }),
   ),
   image: Schema.NullOr(Schema.String).annotate({
@@ -8081,14 +8085,13 @@ export const StageScheduledEventResponseSchema = Schema.Struct({
   entity_type: GuildScheduledEventEntityTypesSchema.annotate({
     description: 'Type of hosting entity associated with the scheduled event',
   }),
-  entity_id: Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema]).annotate({
+  entity_id: Schema.Union([Schema.Null, SnowflakeTypeSchema]).annotate({
     description: 'ID of the hosting entity associated with the scheduled event',
   }),
-  recurrence_rule: Schema.Union([
-    Schema.NullOr(Schema.Null),
-    RecurrenceRuleResponseSchema,
-  ]).annotate({ description: 'Recurrence rule for the scheduled event, or null if not recurring' }),
-  user_count: Schema.optional(
+  recurrence_rule: Schema.Union([Schema.Null, RecurrenceRuleResponseSchema]).annotate({
+    description: 'Recurrence rule for the scheduled event, or null if not recurring',
+  }),
+  user_count: Schema.optionalKey(
     Schema.Number.check(Schema.isInt32()).annotate({
       description: 'Number of users subscribed to the scheduled event',
     }),
@@ -8096,14 +8099,9 @@ export const StageScheduledEventResponseSchema = Schema.Struct({
   privacy_level: GuildScheduledEventPrivacyLevelsSchema.annotate({
     description: 'Privacy level of the scheduled event',
   }),
-  user_rsvp: Schema.optional(
-    Schema.Union([Schema.NullOr(Schema.Null), ScheduledEventUserResponseSchema]),
-  ),
+  user_rsvp: Schema.optionalKey(Schema.Union([Schema.Null, ScheduledEventUserResponseSchema])),
   guild_scheduled_event_exceptions: Schema.Array(GuildScheduledEventExceptionResponseSchema),
-  entity_metadata: Schema.Union([
-    Schema.NullOr(Schema.Null),
-    EntityMetadataStageInstanceResponseSchema,
-  ]),
+  entity_metadata: Schema.Union([Schema.Null, EntityMetadataStageInstanceResponseSchema]),
 }).annotate({ identifier: 'StageScheduledEventResponse' })
 
 export type StageScheduledEventResponse = Schema.Schema.Type<
@@ -8119,14 +8117,14 @@ export const VoiceScheduledEventResponseSchema = Schema.Struct({
   description: Schema.NullOr(Schema.String).annotate({
     description: 'Description of the scheduled event',
   }),
-  channel_id: Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema]).annotate({
+  channel_id: Schema.Union([Schema.Null, SnowflakeTypeSchema]).annotate({
     description:
       'Channel ID in which the scheduled event will be hosted, or null if entity type is EXTERNAL',
   }),
-  creator_id: Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema]).annotate({
+  creator_id: Schema.Union([Schema.Null, SnowflakeTypeSchema]).annotate({
     description: 'ID of the user that created the scheduled event',
   }),
-  creator: Schema.optional(
+  creator: Schema.optionalKey(
     UserResponseSchema.annotate({ description: 'User that created the scheduled event' }),
   ),
   image: Schema.NullOr(Schema.String).annotate({
@@ -8150,14 +8148,13 @@ export const VoiceScheduledEventResponseSchema = Schema.Struct({
   entity_type: GuildScheduledEventEntityTypesSchema.annotate({
     description: 'Type of hosting entity associated with the scheduled event',
   }),
-  entity_id: Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema]).annotate({
+  entity_id: Schema.Union([Schema.Null, SnowflakeTypeSchema]).annotate({
     description: 'ID of the hosting entity associated with the scheduled event',
   }),
-  recurrence_rule: Schema.Union([
-    Schema.NullOr(Schema.Null),
-    RecurrenceRuleResponseSchema,
-  ]).annotate({ description: 'Recurrence rule for the scheduled event, or null if not recurring' }),
-  user_count: Schema.optional(
+  recurrence_rule: Schema.Union([Schema.Null, RecurrenceRuleResponseSchema]).annotate({
+    description: 'Recurrence rule for the scheduled event, or null if not recurring',
+  }),
+  user_count: Schema.optionalKey(
     Schema.Number.check(Schema.isInt32()).annotate({
       description: 'Number of users subscribed to the scheduled event',
     }),
@@ -8165,11 +8162,9 @@ export const VoiceScheduledEventResponseSchema = Schema.Struct({
   privacy_level: GuildScheduledEventPrivacyLevelsSchema.annotate({
     description: 'Privacy level of the scheduled event',
   }),
-  user_rsvp: Schema.optional(
-    Schema.Union([Schema.NullOr(Schema.Null), ScheduledEventUserResponseSchema]),
-  ),
+  user_rsvp: Schema.optionalKey(Schema.Union([Schema.Null, ScheduledEventUserResponseSchema])),
   guild_scheduled_event_exceptions: Schema.Array(GuildScheduledEventExceptionResponseSchema),
-  entity_metadata: Schema.Union([Schema.NullOr(Schema.Null), EntityMetadataVoiceResponseSchema]),
+  entity_metadata: Schema.Union([Schema.Null, EntityMetadataVoiceResponseSchema]),
 }).annotate({ identifier: 'VoiceScheduledEventResponse' })
 
 export type VoiceScheduledEventResponse = Schema.Schema.Type<
@@ -8338,7 +8333,7 @@ export const GuildAuditLogResponseSchema = Schema.Struct({
       MLSpamRuleResponseSchema,
       MentionSpamRuleResponseSchema,
       UserProfileRuleResponseSchema,
-      Schema.NullOr(Schema.Null),
+      Schema.Null,
     ]),
   ),
 }).annotate({ identifier: 'GuildAuditLogResponse' })
@@ -8464,7 +8459,7 @@ export const NewMemberActionTypeSchema = Schema.Union([
 export type NewMemberActionType = Schema.Schema.Type<typeof NewMemberActionTypeSchema>
 
 export const SettingsEmojiResponseSchema = Schema.Struct({
-  id: Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema]),
+  id: Schema.Union([Schema.Null, SnowflakeTypeSchema]),
   name: Schema.NullOr(Schema.String),
   animated: Schema.Boolean,
 }).annotate({ identifier: 'SettingsEmojiResponse' })
@@ -8476,8 +8471,8 @@ export const NewMemberActionResponseSchema = Schema.Struct({
   action_type: NewMemberActionTypeSchema,
   title: Schema.String,
   description: Schema.String,
-  emoji: Schema.optional(SettingsEmojiResponseSchema),
-  icon: Schema.optional(Schema.String),
+  emoji: Schema.optionalKey(SettingsEmojiResponseSchema),
+  icon: Schema.optionalKey(Schema.String),
 }).annotate({ identifier: 'NewMemberActionResponse' })
 
 export type NewMemberActionResponse = Schema.Schema.Type<typeof NewMemberActionResponseSchema>
@@ -8485,8 +8480,8 @@ export type NewMemberActionResponse = Schema.Schema.Type<typeof NewMemberActionR
 export const ResourceChannelResponseSchema = Schema.Struct({
   channel_id: SnowflakeTypeSchema,
   title: Schema.String,
-  emoji: Schema.optional(SettingsEmojiResponseSchema),
-  icon: Schema.optional(Schema.String),
+  emoji: Schema.optionalKey(SettingsEmojiResponseSchema),
+  icon: Schema.optionalKey(Schema.String),
   description: Schema.String,
 }).annotate({ identifier: 'ResourceChannelResponse' })
 
@@ -8495,7 +8490,7 @@ export type ResourceChannelResponse = Schema.Schema.Type<typeof ResourceChannelR
 export const GuildHomeSettingsResponseSchema = Schema.Struct({
   guild_id: SnowflakeTypeSchema,
   enabled: Schema.Boolean,
-  welcome_message: Schema.optional(WelcomeMessageResponseSchema),
+  welcome_message: Schema.optionalKey(WelcomeMessageResponseSchema),
   new_member_actions: Schema.Array(NewMemberActionResponseSchema),
   resource_channels: Schema.Array(ResourceChannelResponseSchema),
 }).annotate({ identifier: 'GuildHomeSettingsResponse' })
@@ -8503,7 +8498,7 @@ export const GuildHomeSettingsResponseSchema = Schema.Struct({
 export type GuildHomeSettingsResponse = Schema.Schema.Type<typeof GuildHomeSettingsResponseSchema>
 
 export const GuildIncidentActionsRequestSchema = Schema.Struct({
-  invites_disabled_until: Schema.optional(
+  invites_disabled_until: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.isPattern(
@@ -8512,7 +8507,7 @@ export const GuildIncidentActionsRequestSchema = Schema.Struct({
       ),
     ).annotate({ description: 'When invites will be enabled again' }),
   ),
-  dms_disabled_until: Schema.optional(
+  dms_disabled_until: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.isPattern(
@@ -8577,9 +8572,9 @@ export const InviteGuildResponseSchema = Schema.Struct({
   description: Schema.NullOr(Schema.String),
   icon: Schema.NullOr(Schema.String),
   features: Schema.Array(GuildFeaturesSchema).check(Schema.isUnique()),
-  verification_level: Schema.Union([Schema.NullOr(Schema.Null), VerificationLevelsSchema]),
+  verification_level: Schema.Union([Schema.Null, VerificationLevelsSchema]),
   vanity_url_code: Schema.NullOr(Schema.String),
-  nsfw_level: Schema.Union([Schema.NullOr(Schema.Null), GuildNSFWContentLevelSchema]),
+  nsfw_level: Schema.Union([Schema.Null, GuildNSFWContentLevelSchema]),
   nsfw: Schema.NullOr(Schema.Boolean),
   premium_subscription_count: Schema.Number.check(Schema.isInt32()),
 }).annotate({ identifier: 'InviteGuildResponse' })
@@ -8591,35 +8586,35 @@ export const InviteApplicationResponseSchema = Schema.Struct({
   name: Schema.String,
   icon: Schema.NullOr(Schema.String),
   description: Schema.String,
-  type: Schema.Union([Schema.NullOr(Schema.Null), ApplicationTypesSchema]),
-  cover_image: Schema.optional(Schema.String),
-  primary_sku_id: Schema.optional(SnowflakeTypeSchema),
+  type: Schema.Union([Schema.Null, ApplicationTypesSchema]),
+  cover_image: Schema.optionalKey(Schema.String),
+  primary_sku_id: Schema.optionalKey(SnowflakeTypeSchema),
   flags: Schema.Number.check(Schema.isInt32()),
   flags_new: Schema.String,
-  bot: Schema.optional(UserResponseSchema),
-  slug: Schema.optional(Schema.String),
-  conjure_project_id: Schema.optional(SnowflakeTypeSchema),
-  vibegrations_project_id: Schema.optional(SnowflakeTypeSchema),
-  guild_id: Schema.optional(SnowflakeTypeSchema),
-  rpc_origins: Schema.optional(Schema.Array(Schema.String)),
-  bot_public: Schema.optional(Schema.Boolean),
-  bot_require_code_grant: Schema.optional(Schema.Boolean),
-  terms_of_service_url: Schema.optional(
+  bot: Schema.optionalKey(UserResponseSchema),
+  slug: Schema.optionalKey(Schema.String),
+  conjure_project_id: Schema.optionalKey(SnowflakeTypeSchema),
+  vibegrations_project_id: Schema.optionalKey(SnowflakeTypeSchema),
+  guild_id: Schema.optionalKey(SnowflakeTypeSchema),
+  rpc_origins: Schema.optionalKey(Schema.Array(Schema.String)),
+  bot_public: Schema.optionalKey(Schema.Boolean),
+  bot_require_code_grant: Schema.optionalKey(Schema.Boolean),
+  terms_of_service_url: Schema.optionalKey(
     Schema.String.check(Schema.makeFilter((input) => URL.canParse(input))),
   ),
-  privacy_policy_url: Schema.optional(
+  privacy_policy_url: Schema.optionalKey(
     Schema.String.check(Schema.makeFilter((input) => URL.canParse(input))),
   ),
-  custom_install_url: Schema.optional(
+  custom_install_url: Schema.optionalKey(
     Schema.String.check(Schema.makeFilter((input) => URL.canParse(input))),
   ),
-  install_params: Schema.optional(ApplicationOAuth2InstallParamsResponseSchema),
-  integration_types_config: Schema.optional(
+  install_params: Schema.optionalKey(ApplicationOAuth2InstallParamsResponseSchema),
+  integration_types_config: Schema.optionalKey(
     Schema.Record(Schema.String, ApplicationIntegrationTypeConfigurationResponseSchema),
   ),
   verify_key: Schema.String,
-  max_participants: Schema.optional(Schema.NullOr(Schema.Number.check(Schema.isInt32()))),
-  tags: Schema.optional(Schema.Array(Schema.String).check(Schema.isUnique())),
+  max_participants: Schema.optionalKey(Schema.NullOr(Schema.Number.check(Schema.isInt32()))),
+  tags: Schema.optionalKey(Schema.Array(Schema.String).check(Schema.isUnique())),
 }).annotate({ identifier: 'InviteApplicationResponse' })
 
 export type InviteApplicationResponse = Schema.Schema.Type<typeof InviteApplicationResponseSchema>
@@ -8633,14 +8628,14 @@ export const ScheduledEventResponseSchema = Schema.Struct({
   description: Schema.NullOr(Schema.String).annotate({
     description: 'Description of the scheduled event',
   }),
-  channel_id: Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema]).annotate({
+  channel_id: Schema.Union([Schema.Null, SnowflakeTypeSchema]).annotate({
     description:
       'Channel ID in which the scheduled event will be hosted, or null if entity type is EXTERNAL',
   }),
-  creator_id: Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema]).annotate({
+  creator_id: Schema.Union([Schema.Null, SnowflakeTypeSchema]).annotate({
     description: 'ID of the user that created the scheduled event',
   }),
-  creator: Schema.optional(
+  creator: Schema.optionalKey(
     UserResponseSchema.annotate({ description: 'User that created the scheduled event' }),
   ),
   image: Schema.NullOr(Schema.String).annotate({
@@ -8664,14 +8659,13 @@ export const ScheduledEventResponseSchema = Schema.Struct({
   entity_type: GuildScheduledEventEntityTypesSchema.annotate({
     description: 'Type of hosting entity associated with the scheduled event',
   }),
-  entity_id: Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema]).annotate({
+  entity_id: Schema.Union([Schema.Null, SnowflakeTypeSchema]).annotate({
     description: 'ID of the hosting entity associated with the scheduled event',
   }),
-  recurrence_rule: Schema.Union([
-    Schema.NullOr(Schema.Null),
-    RecurrenceRuleResponseSchema,
-  ]).annotate({ description: 'Recurrence rule for the scheduled event, or null if not recurring' }),
-  user_count: Schema.optional(
+  recurrence_rule: Schema.Union([Schema.Null, RecurrenceRuleResponseSchema]).annotate({
+    description: 'Recurrence rule for the scheduled event, or null if not recurring',
+  }),
+  user_count: Schema.optionalKey(
     Schema.Number.check(Schema.isInt32()).annotate({
       description: 'Number of users subscribed to the scheduled event',
     }),
@@ -8679,9 +8673,7 @@ export const ScheduledEventResponseSchema = Schema.Struct({
   privacy_level: GuildScheduledEventPrivacyLevelsSchema.annotate({
     description: 'Privacy level of the scheduled event',
   }),
-  user_rsvp: Schema.optional(
-    Schema.Union([Schema.NullOr(Schema.Null), ScheduledEventUserResponseSchema]),
-  ),
+  user_rsvp: Schema.optionalKey(Schema.Union([Schema.Null, ScheduledEventUserResponseSchema])),
   guild_scheduled_event_exceptions: Schema.Array(GuildScheduledEventExceptionResponseSchema),
 }).annotate({ identifier: 'ScheduledEventResponse' })
 
@@ -8695,7 +8687,7 @@ export const InviteGuildRoleResponseSchema = Schema.Struct({
   colors: GuildRoleColorsResponseSchema,
   icon: Schema.NullOr(Schema.String),
   unicode_emoji: Schema.NullOr(Schema.String),
-  permissions: Schema.optional(Schema.String),
+  permissions: Schema.optionalKey(Schema.String),
 }).annotate({ identifier: 'InviteGuildRoleResponse' })
 
 export type InviteGuildRoleResponse = Schema.Schema.Type<typeof InviteGuildRoleResponseSchema>
@@ -8703,9 +8695,9 @@ export type InviteGuildRoleResponse = Schema.Schema.Type<typeof InviteGuildRoleR
 export const GuildInviteResponseSchema = Schema.Struct({
   type: InviteTypesSchema,
   code: Schema.String,
-  inviter: Schema.optional(UserResponseSchema),
-  max_age: Schema.optional(Schema.Number.check(Schema.isInt32())),
-  created_at: Schema.optional(
+  inviter: Schema.optionalKey(UserResponseSchema),
+  max_age: Schema.optionalKey(Schema.Number.check(Schema.isInt32())),
+  created_at: Schema.optionalKey(
     Schema.String.check(
       Schema.isPattern(
         /^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z|([+-](?:[01]\d|2[0-3]):[0-5]\d)))$/,
@@ -8719,24 +8711,28 @@ export const GuildInviteResponseSchema = Schema.Struct({
       ),
     ),
   ),
-  is_contact: Schema.optional(Schema.Boolean),
-  flags: Schema.optional(Schema.Number.check(Schema.isInt32())),
+  is_contact: Schema.optionalKey(Schema.Boolean),
+  flags: Schema.optionalKey(Schema.Number.check(Schema.isInt32())),
   guild: InviteGuildResponseSchema,
   guild_id: SnowflakeTypeSchema,
   channel: InviteChannelResponseSchema,
-  target_type: Schema.optional(InviteTargetTypesSchema),
-  target_user: Schema.optional(UserResponseSchema),
-  target_application: Schema.optional(InviteApplicationResponseSchema),
-  guild_scheduled_event: Schema.optional(ScheduledEventResponseSchema),
-  target_channel_id: Schema.optional(SnowflakeTypeSchema),
-  target_message_id: Schema.optional(SnowflakeTypeSchema),
-  uses: Schema.optional(Schema.Number.check(Schema.isInt32())),
-  max_uses: Schema.optional(Schema.Number.check(Schema.isInt32())),
-  temporary: Schema.optional(Schema.Boolean),
-  approximate_member_count: Schema.optional(Schema.NullOr(Schema.Number.check(Schema.isInt32()))),
-  approximate_presence_count: Schema.optional(Schema.NullOr(Schema.Number.check(Schema.isInt32()))),
-  is_nickname_changeable: Schema.optional(Schema.Boolean),
-  roles: Schema.optional(Schema.NullOr(Schema.Array(InviteGuildRoleResponseSchema))),
+  target_type: Schema.optionalKey(InviteTargetTypesSchema),
+  target_user: Schema.optionalKey(UserResponseSchema),
+  target_application: Schema.optionalKey(InviteApplicationResponseSchema),
+  guild_scheduled_event: Schema.optionalKey(ScheduledEventResponseSchema),
+  target_channel_id: Schema.optionalKey(SnowflakeTypeSchema),
+  target_message_id: Schema.optionalKey(SnowflakeTypeSchema),
+  uses: Schema.optionalKey(Schema.Number.check(Schema.isInt32())),
+  max_uses: Schema.optionalKey(Schema.Number.check(Schema.isInt32())),
+  temporary: Schema.optionalKey(Schema.Boolean),
+  approximate_member_count: Schema.optionalKey(
+    Schema.NullOr(Schema.Number.check(Schema.isInt32())),
+  ),
+  approximate_presence_count: Schema.optionalKey(
+    Schema.NullOr(Schema.Number.check(Schema.isInt32())),
+  ),
+  is_nickname_changeable: Schema.optionalKey(Schema.Boolean),
+  roles: Schema.optionalKey(Schema.NullOr(Schema.Array(InviteGuildRoleResponseSchema))),
 }).annotate({ identifier: 'GuildInviteResponse' })
 
 export type GuildInviteResponse = Schema.Schema.Type<typeof GuildInviteResponseSchema>
@@ -8775,17 +8771,17 @@ export const MultipleChoiceFormFieldResponseSchema = Schema.Struct({
   field_type: GuildMemberVerificationFormFieldTypeSchema.annotate({
     description: 'Type of form field',
   }),
-  label: Schema.optional(Schema.String.annotate({ description: 'Label shown above field' })),
-  description: Schema.optional(
+  label: Schema.optionalKey(Schema.String.annotate({ description: 'Label shown above field' })),
+  description: Schema.optionalKey(
     Schema.String.annotate({ description: 'Optional helper text shown below label' }),
   ),
-  required: Schema.optional(
+  required: Schema.optionalKey(
     Schema.Boolean.annotate({ description: 'Whether applicant must fill in field' }),
   ),
   choices: Schema.Array(Schema.String).annotate({
     description: 'Choices applicant can select from',
   }),
-  response: Schema.optional(
+  response: Schema.optionalKey(
     Schema.Number.check(Schema.isInt32()).annotate({
       description: 'Index of choice selected by applicant',
     }),
@@ -8800,17 +8796,19 @@ export const ParagraphFormFieldResponseSchema = Schema.Struct({
   field_type: GuildMemberVerificationFormFieldTypeSchema.annotate({
     description: 'Type of form field',
   }),
-  label: Schema.optional(Schema.String.annotate({ description: 'Label shown above field' })),
-  description: Schema.optional(
+  label: Schema.optionalKey(Schema.String.annotate({ description: 'Label shown above field' })),
+  description: Schema.optionalKey(
     Schema.String.annotate({ description: 'Optional helper text shown below label' }),
   ),
-  required: Schema.optional(
+  required: Schema.optionalKey(
     Schema.Boolean.annotate({ description: 'Whether applicant must fill in field' }),
   ),
-  placeholder: Schema.optional(
+  placeholder: Schema.optionalKey(
     Schema.String.annotate({ description: 'Placeholder text shown in empty input' }),
   ),
-  response: Schema.optional(Schema.String.annotate({ description: "Applicant's text response" })),
+  response: Schema.optionalKey(
+    Schema.String.annotate({ description: "Applicant's text response" }),
+  ),
 }).annotate({ identifier: 'ParagraphFormFieldResponse' })
 
 export type ParagraphFormFieldResponse = Schema.Schema.Type<typeof ParagraphFormFieldResponseSchema>
@@ -8819,15 +8817,15 @@ export const TermsFormFieldResponseSchema = Schema.Struct({
   field_type: GuildMemberVerificationFormFieldTypeSchema.annotate({
     description: 'Type of form field',
   }),
-  label: Schema.optional(Schema.String.annotate({ description: 'Label shown above field' })),
-  description: Schema.optional(
+  label: Schema.optionalKey(Schema.String.annotate({ description: 'Label shown above field' })),
+  description: Schema.optionalKey(
     Schema.String.annotate({ description: 'Optional helper text shown below label' }),
   ),
-  required: Schema.optional(
+  required: Schema.optionalKey(
     Schema.Boolean.annotate({ description: 'Whether applicant must fill in field' }),
   ),
   values: Schema.Array(Schema.String).annotate({ description: 'Terms applicant must acknowledge' }),
-  response: Schema.optional(
+  response: Schema.optionalKey(
     Schema.Boolean.annotate({ description: 'Whether applicant accepted terms' }),
   ),
 }).annotate({ identifier: 'TermsFormFieldResponse' })
@@ -8838,17 +8836,19 @@ export const TextInputFormFieldResponseSchema = Schema.Struct({
   field_type: GuildMemberVerificationFormFieldTypeSchema.annotate({
     description: 'Type of form field',
   }),
-  label: Schema.optional(Schema.String.annotate({ description: 'Label shown above field' })),
-  description: Schema.optional(
+  label: Schema.optionalKey(Schema.String.annotate({ description: 'Label shown above field' })),
+  description: Schema.optionalKey(
     Schema.String.annotate({ description: 'Optional helper text shown below label' }),
   ),
-  required: Schema.optional(
+  required: Schema.optionalKey(
     Schema.Boolean.annotate({ description: 'Whether applicant must fill in field' }),
   ),
-  placeholder: Schema.optional(
+  placeholder: Schema.optionalKey(
     Schema.String.annotate({ description: 'Placeholder text shown in empty input' }),
   ),
-  response: Schema.optional(Schema.String.annotate({ description: "Applicant's text response" })),
+  response: Schema.optionalKey(
+    Schema.String.annotate({ description: "Applicant's text response" }),
+  ),
 }).annotate({ identifier: 'TextInputFormFieldResponse' })
 
 export type TextInputFormFieldResponse = Schema.Schema.Type<typeof TextInputFormFieldResponseSchema>
@@ -8867,17 +8867,14 @@ export const GuildJoinRequestResponseSchema = Schema.Struct({
       ),
     ),
   ),
-  application_status: Schema.Union([
-    Schema.NullOr(Schema.Null),
-    GuildJoinRequestApplicationStatusSchema,
-  ]),
+  application_status: Schema.Union([Schema.Null, GuildJoinRequestApplicationStatusSchema]),
   rejection_reason: Schema.NullOr(Schema.String).annotate({
     description: 'Reason request was rejected. Only set when application_status is REJECTED',
   }),
   guild_id: SnowflakeTypeSchema,
   user_id: SnowflakeTypeSchema,
-  user: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), UserResponseSchema])),
-  form_responses: Schema.optional(
+  user: Schema.optionalKey(Schema.Union([Schema.Null, UserResponseSchema])),
+  form_responses: Schema.optionalKey(
     Schema.NullOr(
       Schema.Array(
         Schema.Union([
@@ -8889,14 +8886,14 @@ export const GuildJoinRequestResponseSchema = Schema.Struct({
       ),
     ).annotate({ description: "Applicant's responses on join request form" }),
   ),
-  actioned_by_user: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), UserResponseSchema])),
+  actioned_by_user: Schema.optionalKey(Schema.Union([Schema.Null, UserResponseSchema])),
 }).annotate({ identifier: 'GuildJoinRequestResponse' })
 
 export type GuildJoinRequestResponse = Schema.Schema.Type<typeof GuildJoinRequestResponseSchema>
 
 export const GuildJoinRequestsListResponseSchema = Schema.Struct({
-  total: Schema.optional(Schema.Number.check(Schema.isInt32())),
-  guild_join_requests: Schema.optional(Schema.Array(GuildJoinRequestResponseSchema)),
+  total: Schema.optionalKey(Schema.Number.check(Schema.isInt32())),
+  guild_join_requests: Schema.optionalKey(Schema.Array(GuildJoinRequestResponseSchema)),
 }).annotate({ identifier: 'GuildJoinRequestsListResponse' })
 
 export type GuildJoinRequestsListResponse = Schema.Schema.Type<
@@ -8976,7 +8973,7 @@ export const UserNotificationSettingsSchema = Schema.Union([
 export type UserNotificationSettings = Schema.Schema.Type<typeof UserNotificationSettingsSchema>
 
 export const GuildPatchRequestPartialSchema = Schema.Struct({
-  name: Schema.optional(
+  name: Schema.optionalKey(
     Schema.String.check(
       Schema.makeFilter((input) => [...input].length >= 2, {
         expected: 'a string of at least 2 characters',
@@ -8986,7 +8983,7 @@ export const GuildPatchRequestPartialSchema = Schema.Struct({
       }),
     ),
   ),
-  description: Schema.optional(
+  description: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length >= 0, {
@@ -8998,29 +8995,23 @@ export const GuildPatchRequestPartialSchema = Schema.Struct({
       ),
     ),
   ),
-  region: Schema.optional(Schema.NullOr(Schema.String)),
-  icon: Schema.optional(Schema.NullOr(Schema.String)),
-  verification_level: Schema.optional(
-    Schema.Union([Schema.NullOr(Schema.Null), VerificationLevelsSchema]),
+  region: Schema.optionalKey(Schema.NullOr(Schema.String)),
+  icon: Schema.optionalKey(Schema.NullOr(Schema.String)),
+  verification_level: Schema.optionalKey(Schema.Union([Schema.Null, VerificationLevelsSchema])),
+  default_message_notifications: Schema.optionalKey(
+    Schema.Union([Schema.Null, UserNotificationSettingsSchema]),
   ),
-  default_message_notifications: Schema.optional(
-    Schema.Union([Schema.NullOr(Schema.Null), UserNotificationSettingsSchema]),
+  explicit_content_filter: Schema.optionalKey(
+    Schema.Union([Schema.Null, GuildExplicitContentFilterTypesSchema]),
   ),
-  explicit_content_filter: Schema.optional(
-    Schema.Union([Schema.NullOr(Schema.Null), GuildExplicitContentFilterTypesSchema]),
-  ),
-  preferred_locale: Schema.optional(
-    Schema.Union([Schema.NullOr(Schema.Null), AvailableLocalesEnumSchema]),
-  ),
-  afk_timeout: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), AfkTimeoutsSchema])),
-  afk_channel_id: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema])),
-  system_channel_id: Schema.optional(
-    Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema]),
-  ),
-  splash: Schema.optional(Schema.NullOr(Schema.String)),
-  banner: Schema.optional(Schema.NullOr(Schema.String)),
-  system_channel_flags: Schema.optional(Schema.NullOr(Schema.Number.check(Schema.isInt()))),
-  features: Schema.optional(
+  preferred_locale: Schema.optionalKey(Schema.Union([Schema.Null, AvailableLocalesEnumSchema])),
+  afk_timeout: Schema.optionalKey(Schema.Union([Schema.Null, AfkTimeoutsSchema])),
+  afk_channel_id: Schema.optionalKey(Schema.Union([Schema.Null, SnowflakeTypeSchema])),
+  system_channel_id: Schema.optionalKey(Schema.Union([Schema.Null, SnowflakeTypeSchema])),
+  splash: Schema.optionalKey(Schema.NullOr(Schema.String)),
+  banner: Schema.optionalKey(Schema.NullOr(Schema.String)),
+  system_channel_flags: Schema.optionalKey(Schema.NullOr(Schema.Number.check(Schema.isInt()))),
+  features: Schema.optionalKey(
     Schema.NullOr(
       Schema.Array(
         Schema.NullOr(
@@ -9033,18 +9024,12 @@ export const GuildPatchRequestPartialSchema = Schema.Struct({
       ).check(Schema.isMaxLength(1521), Schema.isUnique()),
     ),
   ),
-  discovery_splash: Schema.optional(Schema.NullOr(Schema.String)),
-  home_header: Schema.optional(Schema.NullOr(Schema.String)),
-  rules_channel_id: Schema.optional(
-    Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema]),
-  ),
-  safety_alerts_channel_id: Schema.optional(
-    Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema]),
-  ),
-  public_updates_channel_id: Schema.optional(
-    Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema]),
-  ),
-  premium_progress_bar_enabled: Schema.optional(Schema.NullOr(Schema.Boolean)),
+  discovery_splash: Schema.optionalKey(Schema.NullOr(Schema.String)),
+  home_header: Schema.optionalKey(Schema.NullOr(Schema.String)),
+  rules_channel_id: Schema.optionalKey(Schema.Union([Schema.Null, SnowflakeTypeSchema])),
+  safety_alerts_channel_id: Schema.optionalKey(Schema.Union([Schema.Null, SnowflakeTypeSchema])),
+  public_updates_channel_id: Schema.optionalKey(Schema.Union([Schema.Null, SnowflakeTypeSchema])),
+  premium_progress_bar_enabled: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
 }).annotate({ identifier: 'GuildPatchRequestPartial' })
 
 export type GuildPatchRequestPartial = Schema.Schema.Type<typeof GuildPatchRequestPartialSchema>
@@ -9092,14 +9077,14 @@ export const GuildResponseSchema = Schema.Struct({
   features: Schema.Array(GuildFeaturesSchema).check(Schema.isUnique()),
   banner: Schema.NullOr(Schema.String),
   owner_id: SnowflakeTypeSchema,
-  application_id: Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema]),
+  application_id: Schema.Union([Schema.Null, SnowflakeTypeSchema]),
   region: Schema.String,
-  afk_channel_id: Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema]),
+  afk_channel_id: Schema.Union([Schema.Null, SnowflakeTypeSchema]),
   afk_timeout: AfkTimeoutsSchema,
-  system_channel_id: Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema]),
+  system_channel_id: Schema.Union([Schema.Null, SnowflakeTypeSchema]),
   system_channel_flags: Schema.Number.check(Schema.isInt32()),
   widget_enabled: Schema.Boolean,
-  widget_channel_id: Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema]),
+  widget_channel_id: Schema.Union([Schema.Null, SnowflakeTypeSchema]),
   verification_level: VerificationLevelsSchema,
   roles: Schema.Array(GuildRoleResponseSchema),
   default_message_notifications: UserNotificationSettingsSchema,
@@ -9113,11 +9098,11 @@ export const GuildResponseSchema = Schema.Struct({
   premium_tier: PremiumGuildTiersSchema,
   premium_subscription_count: Schema.Number.check(Schema.isInt32()),
   preferred_locale: AvailableLocalesEnumSchema,
-  rules_channel_id: Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema]),
-  safety_alerts_channel_id: Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema]),
-  public_updates_channel_id: Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema]),
+  rules_channel_id: Schema.Union([Schema.Null, SnowflakeTypeSchema]),
+  safety_alerts_channel_id: Schema.Union([Schema.Null, SnowflakeTypeSchema]),
+  public_updates_channel_id: Schema.Union([Schema.Null, SnowflakeTypeSchema]),
   premium_progress_bar_enabled: Schema.Boolean,
-  premium_progress_bar_enabled_user_updated_at: Schema.optional(
+  premium_progress_bar_enabled_user_updated_at: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.isPattern(
@@ -9130,13 +9115,13 @@ export const GuildResponseSchema = Schema.Struct({
   nsfw_level: GuildNSFWContentLevelSchema,
   emojis: Schema.Array(EmojiResponseSchema),
   stickers: Schema.Array(GuildStickerResponseSchema),
-  incidents_data: Schema.Union([Schema.NullOr(Schema.Null), GuildIncidentsDataResponseSchema]),
+  incidents_data: Schema.Union([Schema.Null, GuildIncidentsDataResponseSchema]),
 }).annotate({ identifier: 'GuildResponse' })
 
 export type GuildResponse = Schema.Schema.Type<typeof GuildResponseSchema>
 
 export const GuildScheduledEventExceptionCreateRequestSchema = Schema.Struct({
-  scheduled_start_time: Schema.optional(
+  scheduled_start_time: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.isPattern(
@@ -9145,7 +9130,7 @@ export const GuildScheduledEventExceptionCreateRequestSchema = Schema.Struct({
       ),
     ).annotate({ description: 'Overridden start time of this occurrence' }),
   ),
-  scheduled_end_time: Schema.optional(
+  scheduled_end_time: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.isPattern(
@@ -9161,7 +9146,7 @@ export const GuildScheduledEventExceptionCreateRequestSchema = Schema.Struct({
   ).annotate({
     description: 'The original start time of the occurrence to create an exception for',
   }),
-  is_canceled: Schema.optional(
+  is_canceled: Schema.optionalKey(
     Schema.NullOr(Schema.Boolean).annotate({ description: 'Whether this occurrence is canceled' }),
   ),
 }).annotate({ identifier: 'GuildScheduledEventExceptionCreateRequest' })
@@ -9171,7 +9156,7 @@ export type GuildScheduledEventExceptionCreateRequest = Schema.Schema.Type<
 >
 
 export const GuildScheduledEventExceptionPatchRequestPartialSchema = Schema.Struct({
-  scheduled_start_time: Schema.optional(
+  scheduled_start_time: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.isPattern(
@@ -9180,7 +9165,7 @@ export const GuildScheduledEventExceptionPatchRequestPartialSchema = Schema.Stru
       ),
     ).annotate({ description: 'Overridden start time of this occurrence' }),
   ),
-  scheduled_end_time: Schema.optional(
+  scheduled_end_time: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.isPattern(
@@ -9189,7 +9174,7 @@ export const GuildScheduledEventExceptionPatchRequestPartialSchema = Schema.Stru
       ),
     ).annotate({ description: 'Overridden end time of this occurrence' }),
   ),
-  is_canceled: Schema.optional(
+  is_canceled: Schema.optionalKey(
     Schema.NullOr(Schema.Boolean).annotate({ description: 'Whether this occurrence is canceled' }),
   ),
 }).annotate({ identifier: 'GuildScheduledEventExceptionPatchRequestPartial' })
@@ -9229,22 +9214,22 @@ export const SearchMessageResponseSchema = Schema.Struct({
       TextDisplayComponentResponseSchema,
     ]),
   ),
-  stickers: Schema.optional(
+  stickers: Schema.optionalKey(
     Schema.Array(Schema.Union([GuildStickerResponseSchema, StandardStickerResponseSchema])),
   ),
-  sticker_items: Schema.optional(Schema.Array(MessageStickerItemResponseSchema)),
+  sticker_items: Schema.optionalKey(Schema.Array(MessageStickerItemResponseSchema)),
   id: SnowflakeTypeSchema,
   channel_id: SnowflakeTypeSchema,
   author: UserResponseSchema,
   pinned: Schema.Boolean,
   mention_everyone: Schema.Boolean,
   tts: Schema.Boolean,
-  call: Schema.optional(MessageCallResponseSchema),
-  activity: Schema.optional(MessageActivityResponseSchema),
-  application: Schema.optional(BasicApplicationResponseWithBotSchema),
-  application_id: Schema.optional(SnowflakeTypeSchema),
-  interaction: Schema.optional(MessageInteractionResponseSchema),
-  nonce: Schema.optional(
+  call: Schema.optionalKey(MessageCallResponseSchema),
+  activity: Schema.optionalKey(MessageActivityResponseSchema),
+  application: Schema.optionalKey(BasicApplicationResponseWithBotSchema),
+  application_id: Schema.optionalKey(SnowflakeTypeSchema),
+  interaction: Schema.optionalKey(MessageInteractionResponseSchema),
+  nonce: Schema.optionalKey(
     Schema.Union([
       Schema.Union([
         Schema.BigInt,
@@ -9262,8 +9247,8 @@ export const SearchMessageResponseSchema = Schema.Struct({
         )
         .check(
           Schema.isBetweenBigInt({ minimum: -9223372036854775808n, maximum: 9223372036854775807n }),
-          Schema.isGreaterThanOrEqualToBigInt(-9223372036854776000n),
-          Schema.isLessThanOrEqualToBigInt(9223372036854776000n),
+          Schema.isGreaterThanOrEqualToBigInt(-9223372036854775808n),
+          Schema.isLessThanOrEqualToBigInt(9223372036854775808n),
         ),
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length <= 25, {
@@ -9272,35 +9257,33 @@ export const SearchMessageResponseSchema = Schema.Struct({
       ),
     ]),
   ),
-  webhook_id: Schema.optional(SnowflakeTypeSchema),
-  message_reference: Schema.optional(MessageReferenceResponseSchema),
-  thread: Schema.optional(ThreadResponseSchema),
-  mention_channels: Schema.optional(Schema.Array(MessageMentionChannelResponseSchema)),
-  role_subscription_data: Schema.optional(MessageRoleSubscriptionDataResponseSchema),
-  purchase_notification: Schema.optional(PurchaseNotificationResponseSchema),
-  position: Schema.optional(Schema.Number.check(Schema.isInt32())),
-  resolved: Schema.optional(ResolvedObjectsResponseSchema),
-  poll: Schema.optional(PollResponseSchema),
-  shared_client_theme: Schema.optional(CustomClientThemeResponseSchema),
-  interaction_metadata: Schema.optional(
+  webhook_id: Schema.optionalKey(SnowflakeTypeSchema),
+  message_reference: Schema.optionalKey(MessageReferenceResponseSchema),
+  thread: Schema.optionalKey(ThreadResponseSchema),
+  mention_channels: Schema.optionalKey(Schema.Array(MessageMentionChannelResponseSchema)),
+  role_subscription_data: Schema.optionalKey(MessageRoleSubscriptionDataResponseSchema),
+  purchase_notification: Schema.optionalKey(PurchaseNotificationResponseSchema),
+  position: Schema.optionalKey(Schema.Number.check(Schema.isInt32())),
+  resolved: Schema.optionalKey(ResolvedObjectsResponseSchema),
+  poll: Schema.optionalKey(PollResponseSchema),
+  shared_client_theme: Schema.optionalKey(CustomClientThemeResponseSchema),
+  interaction_metadata: Schema.optionalKey(
     Schema.Union([
       ApplicationCommandInteractionMetadataResponseSchema,
       MessageComponentInteractionMetadataResponseSchema,
       ModalSubmitInteractionMetadataResponseSchema,
     ]),
   ),
-  message_snapshots: Schema.optional(Schema.Array(MessageSnapshotResponseSchema)),
-  lobby_member: Schema.optional(MessageLobbyMemberResponseSchema),
-  actor: Schema.optional(UserResponseSchema),
-  reactions: Schema.optional(Schema.Array(MessageReactionResponseSchema)),
-  referenced_message: Schema.optional(
-    Schema.Union([Schema.NullOr(Schema.Null), BasicMessageResponseSchema]),
-  ),
+  message_snapshots: Schema.optionalKey(Schema.Array(MessageSnapshotResponseSchema)),
+  lobby_member: Schema.optionalKey(MessageLobbyMemberResponseSchema),
+  actor: Schema.optionalKey(UserResponseSchema),
+  reactions: Schema.optionalKey(Schema.Array(MessageReactionResponseSchema)),
+  referenced_message: Schema.optionalKey(Schema.Union([Schema.Null, BasicMessageResponseSchema])),
   hit: Schema.Boolean,
-  restriction_count: Schema.optional(Schema.Number.check(Schema.isInt32())),
-  author_restriction_count: Schema.optional(Schema.Number.check(Schema.isInt32())),
-  source_author_restriction_count: Schema.optional(Schema.Number.check(Schema.isInt32())),
-  forward_source_author_id: Schema.optional(SnowflakeTypeSchema),
+  restriction_count: Schema.optionalKey(Schema.Number.check(Schema.isInt32())),
+  author_restriction_count: Schema.optionalKey(Schema.Number.check(Schema.isInt32())),
+  source_author_restriction_count: Schema.optionalKey(Schema.Number.check(Schema.isInt32())),
+  forward_source_author_id: Schema.optionalKey(SnowflakeTypeSchema),
 }).annotate({ identifier: 'SearchMessageResponse' })
 
 export type SearchMessageResponse = Schema.Schema.Type<typeof SearchMessageResponseSchema>
@@ -9309,9 +9292,9 @@ export const GuildSearchResponseSchema = Schema.Struct({
   messages: Schema.Array(Schema.Array(SearchMessageResponseSchema)),
   doing_deep_historical_index: Schema.Boolean,
   total_results: Schema.Number.check(Schema.isInt32()),
-  threads: Schema.optional(Schema.NullOr(Schema.Array(ThreadResponseSchema))),
-  members: Schema.optional(Schema.NullOr(Schema.Array(ThreadMemberResponseSchema))),
-  documents_indexed: Schema.optional(Schema.NullOr(Schema.Number.check(Schema.isInt32()))),
+  threads: Schema.optionalKey(Schema.NullOr(Schema.Array(ThreadResponseSchema))),
+  members: Schema.optionalKey(Schema.NullOr(Schema.Array(ThreadMemberResponseSchema))),
+  documents_indexed: Schema.optionalKey(Schema.NullOr(Schema.Number.check(Schema.isInt32()))),
 }).annotate({ identifier: 'GuildSearchResponse' })
 
 export type GuildSearchResponse = Schema.Schema.Type<typeof GuildSearchResponseSchema>
@@ -9331,7 +9314,7 @@ export type GuildSubscriptionIntegrationResponse = Schema.Schema.Type<
 export const GuildTemplateChannelTagsSchema = Schema.Struct({
   id: Schema.NullOr(Schema.Number.check(Schema.isInt32())),
   name: Schema.String,
-  emoji_id: Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema]),
+  emoji_id: Schema.Union([Schema.Null, SnowflakeTypeSchema]),
   emoji_name: Schema.NullOr(Schema.String),
   moderated: Schema.NullOr(Schema.Boolean),
 }).annotate({ identifier: 'GuildTemplateChannelTags' })
@@ -9348,22 +9331,16 @@ export const GuildTemplateChannelResponseSchema = Schema.Struct({
   user_limit: Schema.Number.check(Schema.isInt32()),
   nsfw: Schema.Boolean,
   rate_limit_per_user: Schema.Number.check(Schema.isInt32()),
-  parent_id: Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema]),
-  default_auto_archive_duration: Schema.Union([
-    Schema.NullOr(Schema.Null),
-    ThreadAutoArchiveDurationSchema,
-  ]),
+  parent_id: Schema.Union([Schema.Null, SnowflakeTypeSchema]),
+  default_auto_archive_duration: Schema.Union([Schema.Null, ThreadAutoArchiveDurationSchema]),
   permission_overwrites: Schema.Array(ChannelPermissionOverwriteResponseSchema),
   available_tags: Schema.NullOr(Schema.Array(GuildTemplateChannelTagsSchema)),
   template: Schema.String,
-  default_reaction_emoji: Schema.Union([
-    Schema.NullOr(Schema.Null),
-    DefaultReactionEmojiResponseSchema,
-  ]),
+  default_reaction_emoji: Schema.Union([Schema.Null, DefaultReactionEmojiResponseSchema]),
   default_thread_rate_limit_per_user: Schema.NullOr(Schema.Number.check(Schema.isInt32())),
-  default_sort_order: Schema.Union([Schema.NullOr(Schema.Null), ThreadSortOrderSchema]),
-  default_forum_layout: Schema.Union([Schema.NullOr(Schema.Null), ForumLayoutSchema]),
-  default_tag_setting: Schema.Union([Schema.NullOr(Schema.Null), ThreadSearchTagSettingSchema]),
+  default_sort_order: Schema.Union([Schema.Null, ThreadSortOrderSchema]),
+  default_forum_layout: Schema.Union([Schema.Null, ForumLayoutSchema]),
+  default_tag_setting: Schema.Union([Schema.Null, ThreadSearchTagSettingSchema]),
   theme_color: Schema.NullOr(Schema.Number.check(Schema.isInt32())),
 }).annotate({ identifier: 'GuildTemplateChannelResponse' })
 
@@ -9386,7 +9363,7 @@ export const GuildTemplateRoleResponseSchema = Schema.Struct({
   name: Schema.String,
   permissions: Schema.String,
   color: Schema.Number.check(Schema.isInt32()),
-  colors: Schema.Union([Schema.NullOr(Schema.Null), GuildTemplateRoleColorsResponseSchema]),
+  colors: Schema.Union([Schema.Null, GuildTemplateRoleColorsResponseSchema]),
   hoist: Schema.Boolean,
   mentionable: Schema.Boolean,
   icon: Schema.NullOr(Schema.String),
@@ -9403,9 +9380,9 @@ export const GuildTemplateSnapshotResponseSchema = Schema.Struct({
   default_message_notifications: UserNotificationSettingsSchema,
   explicit_content_filter: GuildExplicitContentFilterTypesSchema,
   preferred_locale: AvailableLocalesEnumSchema,
-  afk_channel_id: Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema]),
+  afk_channel_id: Schema.Union([Schema.Null, SnowflakeTypeSchema]),
   afk_timeout: AfkTimeoutsSchema,
-  system_channel_id: Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema]),
+  system_channel_id: Schema.Union([Schema.Null, SnowflakeTypeSchema]),
   system_channel_flags: Schema.Number.check(Schema.isInt32()),
   roles: Schema.Array(GuildTemplateRoleResponseSchema),
   channels: Schema.Array(GuildTemplateChannelResponseSchema),
@@ -9421,7 +9398,7 @@ export const GuildTemplateResponseSchema = Schema.Struct({
   description: Schema.NullOr(Schema.String),
   usage_count: Schema.Number.check(Schema.isInt32()),
   creator_id: SnowflakeTypeSchema,
-  creator: Schema.Union([Schema.NullOr(Schema.Null), UserResponseSchema]),
+  creator: Schema.Union([Schema.Null, UserResponseSchema]),
   created_at: Schema.String.check(
     Schema.isPattern(
       /^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z|([+-](?:[01]\d|2[0-3]):[0-5]\d)))$/,
@@ -9449,8 +9426,8 @@ export const GuildWelcomeChannelSchema = Schema.Struct({
       expected: 'a string of at most 50 characters',
     }),
   ),
-  emoji_id: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema])),
-  emoji_name: Schema.optional(
+  emoji_id: Schema.optionalKey(Schema.Union([Schema.Null, SnowflakeTypeSchema])),
+  emoji_name: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length <= 152133, {
@@ -9466,7 +9443,7 @@ export type GuildWelcomeChannel = Schema.Schema.Type<typeof GuildWelcomeChannelS
 export const GuildWelcomeScreenChannelResponseSchema = Schema.Struct({
   channel_id: SnowflakeTypeSchema,
   description: Schema.String,
-  emoji_id: Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema]),
+  emoji_id: Schema.Union([Schema.Null, SnowflakeTypeSchema]),
   emoji_name: Schema.NullOr(Schema.String),
 }).annotate({ identifier: 'GuildWelcomeScreenChannelResponse' })
 
@@ -9492,14 +9469,14 @@ export const GuildWithCountsResponseSchema = Schema.Struct({
   features: Schema.Array(GuildFeaturesSchema).check(Schema.isUnique()),
   banner: Schema.NullOr(Schema.String),
   owner_id: SnowflakeTypeSchema,
-  application_id: Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema]),
+  application_id: Schema.Union([Schema.Null, SnowflakeTypeSchema]),
   region: Schema.String,
-  afk_channel_id: Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema]),
+  afk_channel_id: Schema.Union([Schema.Null, SnowflakeTypeSchema]),
   afk_timeout: AfkTimeoutsSchema,
-  system_channel_id: Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema]),
+  system_channel_id: Schema.Union([Schema.Null, SnowflakeTypeSchema]),
   system_channel_flags: Schema.Number.check(Schema.isInt32()),
   widget_enabled: Schema.Boolean,
-  widget_channel_id: Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema]),
+  widget_channel_id: Schema.Union([Schema.Null, SnowflakeTypeSchema]),
   verification_level: VerificationLevelsSchema,
   roles: Schema.Array(GuildRoleResponseSchema),
   default_message_notifications: UserNotificationSettingsSchema,
@@ -9513,11 +9490,11 @@ export const GuildWithCountsResponseSchema = Schema.Struct({
   premium_tier: PremiumGuildTiersSchema,
   premium_subscription_count: Schema.Number.check(Schema.isInt32()),
   preferred_locale: AvailableLocalesEnumSchema,
-  rules_channel_id: Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema]),
-  safety_alerts_channel_id: Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema]),
-  public_updates_channel_id: Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema]),
+  rules_channel_id: Schema.Union([Schema.Null, SnowflakeTypeSchema]),
+  safety_alerts_channel_id: Schema.Union([Schema.Null, SnowflakeTypeSchema]),
+  public_updates_channel_id: Schema.Union([Schema.Null, SnowflakeTypeSchema]),
   premium_progress_bar_enabled: Schema.Boolean,
-  premium_progress_bar_enabled_user_updated_at: Schema.optional(
+  premium_progress_bar_enabled_user_updated_at: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.isPattern(
@@ -9530,9 +9507,13 @@ export const GuildWithCountsResponseSchema = Schema.Struct({
   nsfw_level: GuildNSFWContentLevelSchema,
   emojis: Schema.Array(EmojiResponseSchema),
   stickers: Schema.Array(GuildStickerResponseSchema),
-  incidents_data: Schema.Union([Schema.NullOr(Schema.Null), GuildIncidentsDataResponseSchema]),
-  approximate_member_count: Schema.optional(Schema.NullOr(Schema.Number.check(Schema.isInt32()))),
-  approximate_presence_count: Schema.optional(Schema.NullOr(Schema.Number.check(Schema.isInt32()))),
+  incidents_data: Schema.Union([Schema.Null, GuildIncidentsDataResponseSchema]),
+  approximate_member_count: Schema.optionalKey(
+    Schema.NullOr(Schema.Number.check(Schema.isInt32())),
+  ),
+  approximate_presence_count: Schema.optionalKey(
+    Schema.NullOr(Schema.Number.check(Schema.isInt32())),
+  ),
 }).annotate({ identifier: 'GuildWithCountsResponse' })
 
 export type GuildWithCountsResponse = Schema.Schema.Type<typeof GuildWithCountsResponseSchema>
@@ -9561,7 +9542,7 @@ export const HasOptionSchema = Schema.Union([
 export type HasOption = Schema.Schema.Type<typeof HasOptionSchema>
 
 export const IncomingWebhookRequestPartialSchema = Schema.Struct({
-  content: Schema.optional(
+  content: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length <= 2000, {
@@ -9570,13 +9551,13 @@ export const IncomingWebhookRequestPartialSchema = Schema.Struct({
       ),
     ),
   ),
-  embeds: Schema.optional(
+  embeds: Schema.optionalKey(
     Schema.NullOr(Schema.Array(RichEmbedSchema).check(Schema.isMaxLength(10))),
   ),
-  allowed_mentions: Schema.optional(
-    Schema.Union([Schema.NullOr(Schema.Null), MessageAllowedMentionsRequestSchema]),
+  allowed_mentions: Schema.optionalKey(
+    Schema.Union([Schema.Null, MessageAllowedMentionsRequestSchema]),
   ),
-  components: Schema.optional(
+  components: Schema.optionalKey(
     Schema.NullOr(
       Schema.Array(
         Schema.Union([
@@ -9591,13 +9572,13 @@ export const IncomingWebhookRequestPartialSchema = Schema.Struct({
       ).check(Schema.isMaxLength(40)),
     ),
   ),
-  attachments: Schema.optional(
+  attachments: Schema.optionalKey(
     Schema.NullOr(Schema.Array(MessageAttachmentRequestSchema).check(Schema.isMaxLength(10))),
   ),
-  poll: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), PollCreateRequestSchema])),
-  tts: Schema.optional(Schema.NullOr(Schema.Boolean)),
-  flags: Schema.optional(Schema.NullOr(Schema.Number.check(Schema.isInt()))),
-  username: Schema.optional(
+  poll: Schema.optionalKey(Schema.Union([Schema.Null, PollCreateRequestSchema])),
+  tts: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
+  flags: Schema.optionalKey(Schema.NullOr(Schema.Number.check(Schema.isInt()))),
+  username: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length >= 1, {
@@ -9609,7 +9590,7 @@ export const IncomingWebhookRequestPartialSchema = Schema.Struct({
       ),
     ),
   ),
-  avatar_url: Schema.optional(
+  avatar_url: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => URL.canParse(input)),
@@ -9619,7 +9600,7 @@ export const IncomingWebhookRequestPartialSchema = Schema.Struct({
       ),
     ),
   ),
-  thread_name: Schema.optional(
+  thread_name: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length >= 0, {
@@ -9631,7 +9612,7 @@ export const IncomingWebhookRequestPartialSchema = Schema.Struct({
       ),
     ),
   ),
-  applied_tags: Schema.optional(
+  applied_tags: Schema.optionalKey(
     Schema.NullOr(Schema.Array(SnowflakeTypeSchema).check(Schema.isMaxLength(5))),
   ),
 }).annotate({ identifier: 'IncomingWebhookRequestPartial' })
@@ -9641,7 +9622,7 @@ export type IncomingWebhookRequestPartial = Schema.Schema.Type<
 >
 
 export const IncomingWebhookUpdateForInteractionCallbackRequestPartialSchema = Schema.Struct({
-  content: Schema.optional(
+  content: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length <= 2000, {
@@ -9650,13 +9631,13 @@ export const IncomingWebhookUpdateForInteractionCallbackRequestPartialSchema = S
       ),
     ),
   ),
-  embeds: Schema.optional(
+  embeds: Schema.optionalKey(
     Schema.NullOr(Schema.Array(RichEmbedSchema).check(Schema.isMaxLength(10))),
   ),
-  allowed_mentions: Schema.optional(
-    Schema.Union([Schema.NullOr(Schema.Null), MessageAllowedMentionsRequestSchema]),
+  allowed_mentions: Schema.optionalKey(
+    Schema.Union([Schema.Null, MessageAllowedMentionsRequestSchema]),
   ),
-  components: Schema.optional(
+  components: Schema.optionalKey(
     Schema.NullOr(
       Schema.Array(
         Schema.Union([
@@ -9671,10 +9652,10 @@ export const IncomingWebhookUpdateForInteractionCallbackRequestPartialSchema = S
       ).check(Schema.isMaxLength(40)),
     ),
   ),
-  attachments: Schema.optional(
+  attachments: Schema.optionalKey(
     Schema.NullOr(Schema.Array(MessageAttachmentRequestSchema).check(Schema.isMaxLength(10))),
   ),
-  flags: Schema.optional(Schema.NullOr(Schema.Number.check(Schema.isInt()))),
+  flags: Schema.optionalKey(Schema.NullOr(Schema.Number.check(Schema.isInt()))),
 }).annotate({ identifier: 'IncomingWebhookUpdateForInteractionCallbackRequestPartial' })
 
 export type IncomingWebhookUpdateForInteractionCallbackRequestPartial = Schema.Schema.Type<
@@ -9682,7 +9663,7 @@ export type IncomingWebhookUpdateForInteractionCallbackRequestPartial = Schema.S
 >
 
 export const IncomingWebhookUpdateRequestPartialSchema = Schema.Struct({
-  content: Schema.optional(
+  content: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length <= 2000, {
@@ -9691,13 +9672,13 @@ export const IncomingWebhookUpdateRequestPartialSchema = Schema.Struct({
       ),
     ),
   ),
-  embeds: Schema.optional(
+  embeds: Schema.optionalKey(
     Schema.NullOr(Schema.Array(RichEmbedSchema).check(Schema.isMaxLength(10))),
   ),
-  allowed_mentions: Schema.optional(
-    Schema.Union([Schema.NullOr(Schema.Null), MessageAllowedMentionsRequestSchema]),
+  allowed_mentions: Schema.optionalKey(
+    Schema.Union([Schema.Null, MessageAllowedMentionsRequestSchema]),
   ),
-  components: Schema.optional(
+  components: Schema.optionalKey(
     Schema.NullOr(
       Schema.Array(
         Schema.Union([
@@ -9712,11 +9693,11 @@ export const IncomingWebhookUpdateRequestPartialSchema = Schema.Struct({
       ).check(Schema.isMaxLength(40)),
     ),
   ),
-  attachments: Schema.optional(
+  attachments: Schema.optionalKey(
     Schema.NullOr(Schema.Array(MessageAttachmentRequestSchema).check(Schema.isMaxLength(10))),
   ),
-  poll: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), PollCreateRequestSchema])),
-  flags: Schema.optional(Schema.NullOr(Schema.Number.check(Schema.isInt()))),
+  poll: Schema.optionalKey(Schema.Union([Schema.Null, PollCreateRequestSchema])),
+  flags: Schema.optionalKey(Schema.NullOr(Schema.Number.check(Schema.isInt()))),
 }).annotate({ identifier: 'IncomingWebhookUpdateRequestPartial' })
 
 export type IncomingWebhookUpdateRequestPartial = Schema.Schema.Type<
@@ -9726,12 +9707,12 @@ export type IncomingWebhookUpdateRequestPartial = Schema.Schema.Type<
 export const InteractionResponseSchema = Schema.Struct({
   id: SnowflakeTypeSchema,
   type: InteractionTypesSchema,
-  activity_instance_id: Schema.optional(Schema.NullOr(Schema.String)),
-  response_message_id: Schema.optional(SnowflakeTypeSchema),
-  response_message_loading: Schema.optional(Schema.Boolean),
-  response_message_ephemeral: Schema.optional(Schema.Boolean),
-  channel_id: Schema.optional(SnowflakeTypeSchema),
-  guild_id: Schema.optional(SnowflakeTypeSchema),
+  activity_instance_id: Schema.optionalKey(Schema.NullOr(Schema.String)),
+  response_message_id: Schema.optionalKey(SnowflakeTypeSchema),
+  response_message_loading: Schema.optionalKey(Schema.Boolean),
+  response_message_ephemeral: Schema.optionalKey(Schema.Boolean),
+  channel_id: Schema.optionalKey(SnowflakeTypeSchema),
+  guild_id: Schema.optionalKey(SnowflakeTypeSchema),
 }).annotate({ identifier: 'InteractionResponse' })
 
 export type InteractionResponse = Schema.Schema.Type<typeof InteractionResponseSchema>
@@ -9756,7 +9737,7 @@ export type UpdateMessageInteractionCallbackResponse = Schema.Schema.Type<
 
 export const InteractionCallbackResponseSchema = Schema.Struct({
   interaction: InteractionResponseSchema,
-  resource: Schema.optional(
+  resource: Schema.optionalKey(
     Schema.Union([
       CreateMessageInteractionCallbackResponseSchema,
       LaunchActivityInteractionCallbackResponseSchema,
@@ -9770,7 +9751,7 @@ export type InteractionCallbackResponse = Schema.Schema.Type<
 >
 
 export const KeywordTriggerMetadataSchema = Schema.Struct({
-  keyword_filter: Schema.optional(
+  keyword_filter: Schema.optionalKey(
     Schema.NullOr(
       Schema.Array(
         Schema.String.check(
@@ -9784,7 +9765,7 @@ export const KeywordTriggerMetadataSchema = Schema.Struct({
       ).check(Schema.isMaxLength(1000)),
     ),
   ),
-  regex_patterns: Schema.optional(
+  regex_patterns: Schema.optionalKey(
     Schema.NullOr(
       Schema.Array(
         Schema.String.check(
@@ -9798,7 +9779,7 @@ export const KeywordTriggerMetadataSchema = Schema.Struct({
       ).check(Schema.isMaxLength(10)),
     ),
   ),
-  allow_list: Schema.optional(
+  allow_list: Schema.optionalKey(
     Schema.NullOr(
       Schema.Array(
         Schema.String.check(
@@ -9823,7 +9804,7 @@ export const KeywordUpsertRequestSchema = Schema.Struct({
     }),
   ),
   event_type: AutomodEventTypeSchema,
-  actions: Schema.optional(
+  actions: Schema.optionalKey(
     Schema.NullOr(
       Schema.Array(
         Schema.Union([
@@ -9835,35 +9816,33 @@ export const KeywordUpsertRequestSchema = Schema.Struct({
       ).check(Schema.isMinLength(1), Schema.isMaxLength(5)),
     ),
   ),
-  enabled: Schema.optional(Schema.NullOr(Schema.Boolean)),
-  exempt_roles: Schema.optional(
+  enabled: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
+  exempt_roles: Schema.optionalKey(
     Schema.NullOr(
       Schema.Array(SnowflakeTypeSchema).check(Schema.isMaxLength(20), Schema.isUnique()),
     ),
   ),
-  exempt_channels: Schema.optional(
+  exempt_channels: Schema.optionalKey(
     Schema.NullOr(
       Schema.Array(SnowflakeTypeSchema).check(Schema.isMaxLength(50), Schema.isUnique()),
     ),
   ),
   trigger_type: AutomodTriggerTypeSchema,
-  trigger_metadata: Schema.optional(
-    Schema.Union([Schema.NullOr(Schema.Null), KeywordTriggerMetadataSchema]),
-  ),
+  trigger_metadata: Schema.optionalKey(Schema.Union([Schema.Null, KeywordTriggerMetadataSchema])),
 }).annotate({ identifier: 'KeywordUpsertRequest' })
 
 export type KeywordUpsertRequest = Schema.Schema.Type<typeof KeywordUpsertRequestSchema>
 
 export const KeywordUpsertRequestPartialSchema = Schema.Struct({
-  name: Schema.optional(
+  name: Schema.optionalKey(
     Schema.String.check(
       Schema.makeFilter((input) => [...input].length <= 100, {
         expected: 'a string of at most 100 characters',
       }),
     ),
   ),
-  event_type: Schema.optional(AutomodEventTypeSchema),
-  actions: Schema.optional(
+  event_type: Schema.optionalKey(AutomodEventTypeSchema),
+  actions: Schema.optionalKey(
     Schema.NullOr(
       Schema.Array(
         Schema.Union([
@@ -9875,21 +9854,19 @@ export const KeywordUpsertRequestPartialSchema = Schema.Struct({
       ).check(Schema.isMinLength(1), Schema.isMaxLength(5)),
     ),
   ),
-  enabled: Schema.optional(Schema.NullOr(Schema.Boolean)),
-  exempt_roles: Schema.optional(
+  enabled: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
+  exempt_roles: Schema.optionalKey(
     Schema.NullOr(
       Schema.Array(SnowflakeTypeSchema).check(Schema.isMaxLength(20), Schema.isUnique()),
     ),
   ),
-  exempt_channels: Schema.optional(
+  exempt_channels: Schema.optionalKey(
     Schema.NullOr(
       Schema.Array(SnowflakeTypeSchema).check(Schema.isMaxLength(50), Schema.isUnique()),
     ),
   ),
-  trigger_type: Schema.optional(AutomodTriggerTypeSchema),
-  trigger_metadata: Schema.optional(
-    Schema.Union([Schema.NullOr(Schema.Null), KeywordTriggerMetadataSchema]),
-  ),
+  trigger_type: Schema.optionalKey(AutomodTriggerTypeSchema),
+  trigger_metadata: Schema.optionalKey(Schema.Union([Schema.Null, KeywordTriggerMetadataSchema])),
 }).annotate({ identifier: 'KeywordUpsertRequestPartial' })
 
 export type KeywordUpsertRequestPartial = Schema.Schema.Type<
@@ -9898,7 +9875,7 @@ export type KeywordUpsertRequestPartial = Schema.Schema.Type<
 
 export const MentionableSelectComponentForModalRequestSchema = Schema.Struct({
   type: MessageComponentTypesSchema,
-  id: Schema.optional(
+  id: Schema.optionalKey(
     Schema.NullOr(Schema.Number.check(Schema.isInt32(), Schema.isGreaterThanOrEqualTo(0))),
   ),
   custom_id: Schema.String.check(
@@ -9909,7 +9886,7 @@ export const MentionableSelectComponentForModalRequestSchema = Schema.Struct({
       expected: 'a string of at most 100 characters',
     }),
   ),
-  placeholder: Schema.optional(
+  placeholder: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length <= 150, {
@@ -9918,7 +9895,7 @@ export const MentionableSelectComponentForModalRequestSchema = Schema.Struct({
       ),
     ),
   ),
-  min_values: Schema.optional(
+  min_values: Schema.optionalKey(
     Schema.NullOr(
       Schema.Number.check(
         Schema.isInt(),
@@ -9927,7 +9904,7 @@ export const MentionableSelectComponentForModalRequestSchema = Schema.Struct({
       ),
     ),
   ),
-  max_values: Schema.optional(
+  max_values: Schema.optionalKey(
     Schema.NullOr(
       Schema.Number.check(
         Schema.isInt(),
@@ -9936,9 +9913,9 @@ export const MentionableSelectComponentForModalRequestSchema = Schema.Struct({
       ),
     ),
   ),
-  disabled: Schema.optional(Schema.NullOr(Schema.Boolean)),
-  required: Schema.optional(Schema.NullOr(Schema.Boolean)),
-  default_values: Schema.optional(
+  disabled: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
+  required: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
+  default_values: Schema.optionalKey(
     Schema.NullOr(
       Schema.Array(
         Schema.Union([RoleSelectDefaultValueSchema, UserSelectDefaultValueSchema]),
@@ -9968,7 +9945,7 @@ export const RadioGroupOptionForRequestSchema = Schema.Struct({
       expected: 'a string of at most 100 characters',
     }),
   ),
-  description: Schema.optional(
+  description: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length <= 100, {
@@ -9977,14 +9954,14 @@ export const RadioGroupOptionForRequestSchema = Schema.Struct({
       ),
     ),
   ),
-  default: Schema.optional(Schema.NullOr(Schema.Boolean)),
+  default: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
 }).annotate({ identifier: 'RadioGroupOptionForRequest' })
 
 export type RadioGroupOptionForRequest = Schema.Schema.Type<typeof RadioGroupOptionForRequestSchema>
 
 export const RadioGroupComponentForModalRequestSchema = Schema.Struct({
   type: MessageComponentTypesSchema,
-  id: Schema.optional(
+  id: Schema.optionalKey(
     Schema.NullOr(Schema.Number.check(Schema.isInt32(), Schema.isGreaterThanOrEqualTo(0))),
   ),
   custom_id: Schema.String.check(
@@ -9995,7 +9972,7 @@ export const RadioGroupComponentForModalRequestSchema = Schema.Struct({
       expected: 'a string of at most 100 characters',
     }),
   ),
-  required: Schema.optional(Schema.NullOr(Schema.Boolean)),
+  required: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
   options: Schema.Array(RadioGroupOptionForRequestSchema).check(
     Schema.isMinLength(2),
     Schema.isMaxLength(10),
@@ -10008,7 +9985,7 @@ export type RadioGroupComponentForModalRequest = Schema.Schema.Type<
 
 export const RoleSelectComponentForModalRequestSchema = Schema.Struct({
   type: MessageComponentTypesSchema,
-  id: Schema.optional(
+  id: Schema.optionalKey(
     Schema.NullOr(Schema.Number.check(Schema.isInt32(), Schema.isGreaterThanOrEqualTo(0))),
   ),
   custom_id: Schema.String.check(
@@ -10019,7 +9996,7 @@ export const RoleSelectComponentForModalRequestSchema = Schema.Struct({
       expected: 'a string of at most 100 characters',
     }),
   ),
-  placeholder: Schema.optional(
+  placeholder: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length <= 150, {
@@ -10028,7 +10005,7 @@ export const RoleSelectComponentForModalRequestSchema = Schema.Struct({
       ),
     ),
   ),
-  min_values: Schema.optional(
+  min_values: Schema.optionalKey(
     Schema.NullOr(
       Schema.Number.check(
         Schema.isInt(),
@@ -10037,7 +10014,7 @@ export const RoleSelectComponentForModalRequestSchema = Schema.Struct({
       ),
     ),
   ),
-  max_values: Schema.optional(
+  max_values: Schema.optionalKey(
     Schema.NullOr(
       Schema.Number.check(
         Schema.isInt(),
@@ -10046,9 +10023,9 @@ export const RoleSelectComponentForModalRequestSchema = Schema.Struct({
       ),
     ),
   ),
-  disabled: Schema.optional(Schema.NullOr(Schema.Boolean)),
-  required: Schema.optional(Schema.NullOr(Schema.Boolean)),
-  default_values: Schema.optional(
+  disabled: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
+  required: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
+  default_values: Schema.optionalKey(
     Schema.NullOr(Schema.Array(RoleSelectDefaultValueSchema).check(Schema.isMaxLength(25))),
   ),
 }).annotate({ identifier: 'RoleSelectComponentForModalRequest' })
@@ -10059,7 +10036,7 @@ export type RoleSelectComponentForModalRequest = Schema.Schema.Type<
 
 export const StringSelectComponentForModalRequestSchema = Schema.Struct({
   type: MessageComponentTypesSchema,
-  id: Schema.optional(
+  id: Schema.optionalKey(
     Schema.NullOr(Schema.Number.check(Schema.isInt32(), Schema.isGreaterThanOrEqualTo(0))),
   ),
   custom_id: Schema.String.check(
@@ -10070,7 +10047,7 @@ export const StringSelectComponentForModalRequestSchema = Schema.Struct({
       expected: 'a string of at most 100 characters',
     }),
   ),
-  placeholder: Schema.optional(
+  placeholder: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length <= 150, {
@@ -10079,7 +10056,7 @@ export const StringSelectComponentForModalRequestSchema = Schema.Struct({
       ),
     ),
   ),
-  min_values: Schema.optional(
+  min_values: Schema.optionalKey(
     Schema.NullOr(
       Schema.Number.check(
         Schema.isInt(),
@@ -10088,7 +10065,7 @@ export const StringSelectComponentForModalRequestSchema = Schema.Struct({
       ),
     ),
   ),
-  max_values: Schema.optional(
+  max_values: Schema.optionalKey(
     Schema.NullOr(
       Schema.Number.check(
         Schema.isInt(),
@@ -10097,8 +10074,8 @@ export const StringSelectComponentForModalRequestSchema = Schema.Struct({
       ),
     ),
   ),
-  disabled: Schema.optional(Schema.NullOr(Schema.Boolean)),
-  required: Schema.optional(Schema.NullOr(Schema.Boolean)),
+  disabled: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
+  required: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
   options: Schema.Array(StringSelectOptionForRequestSchema).check(
     Schema.isMinLength(1),
     Schema.isMaxLength(25),
@@ -10111,7 +10088,7 @@ export type StringSelectComponentForModalRequest = Schema.Schema.Type<
 
 export const UserSelectComponentForModalRequestSchema = Schema.Struct({
   type: MessageComponentTypesSchema,
-  id: Schema.optional(
+  id: Schema.optionalKey(
     Schema.NullOr(Schema.Number.check(Schema.isInt32(), Schema.isGreaterThanOrEqualTo(0))),
   ),
   custom_id: Schema.String.check(
@@ -10122,7 +10099,7 @@ export const UserSelectComponentForModalRequestSchema = Schema.Struct({
       expected: 'a string of at most 100 characters',
     }),
   ),
-  placeholder: Schema.optional(
+  placeholder: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length <= 150, {
@@ -10131,7 +10108,7 @@ export const UserSelectComponentForModalRequestSchema = Schema.Struct({
       ),
     ),
   ),
-  min_values: Schema.optional(
+  min_values: Schema.optionalKey(
     Schema.NullOr(
       Schema.Number.check(
         Schema.isInt(),
@@ -10140,7 +10117,7 @@ export const UserSelectComponentForModalRequestSchema = Schema.Struct({
       ),
     ),
   ),
-  max_values: Schema.optional(
+  max_values: Schema.optionalKey(
     Schema.NullOr(
       Schema.Number.check(
         Schema.isInt(),
@@ -10149,9 +10126,9 @@ export const UserSelectComponentForModalRequestSchema = Schema.Struct({
       ),
     ),
   ),
-  disabled: Schema.optional(Schema.NullOr(Schema.Boolean)),
-  required: Schema.optional(Schema.NullOr(Schema.Boolean)),
-  default_values: Schema.optional(
+  disabled: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
+  required: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
+  default_values: Schema.optionalKey(
     Schema.NullOr(Schema.Array(UserSelectDefaultValueSchema).check(Schema.isMaxLength(25))),
   ),
 }).annotate({ identifier: 'UserSelectComponentForModalRequest' })
@@ -10162,7 +10139,7 @@ export type UserSelectComponentForModalRequest = Schema.Schema.Type<
 
 export const LabelComponentForModalRequestSchema = Schema.Struct({
   type: MessageComponentTypesSchema,
-  id: Schema.optional(
+  id: Schema.optionalKey(
     Schema.NullOr(Schema.Number.check(Schema.isInt32(), Schema.isGreaterThanOrEqualTo(0))),
   ),
   label: Schema.String.check(
@@ -10173,7 +10150,7 @@ export const LabelComponentForModalRequestSchema = Schema.Struct({
       expected: 'a string of at most 45 characters',
     }),
   ),
-  description: Schema.optional(
+  description: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length >= 1, {
@@ -10223,11 +10200,11 @@ export const SoundboardSoundResponseSchema = Schema.Struct({
   name: Schema.String,
   sound_id: SnowflakeTypeSchema,
   volume: Schema.Number,
-  emoji_id: Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema]),
+  emoji_id: Schema.Union([Schema.Null, SnowflakeTypeSchema]),
   emoji_name: Schema.NullOr(Schema.String),
-  guild_id: Schema.optional(SnowflakeTypeSchema),
+  guild_id: Schema.optionalKey(SnowflakeTypeSchema),
   available: Schema.Boolean,
-  user: Schema.optional(UserResponseSchema),
+  user: Schema.optionalKey(UserResponseSchema),
 }).annotate({ identifier: 'SoundboardSoundResponse' })
 
 export type SoundboardSoundResponse = Schema.Schema.Type<typeof SoundboardSoundResponseSchema>
@@ -10248,7 +10225,7 @@ export type LobbyGuildInviteResponse = Schema.Schema.Type<typeof LobbyGuildInvit
 
 export const LobbyMemberRequestSchema = Schema.Struct({
   id: SnowflakeTypeSchema,
-  metadata: Schema.optional(
+  metadata: Schema.optionalKey(
     Schema.NullOr(
       Schema.Record(
         Schema.String,
@@ -10260,8 +10237,8 @@ export const LobbyMemberRequestSchema = Schema.Struct({
       ),
     ),
   ),
-  flags: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), Schema.Literal(1)])),
-  additional_name: Schema.optional(
+  flags: Schema.optionalKey(Schema.Union([Schema.Null, Schema.Literal(1)])),
+  additional_name: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length >= 1, {
@@ -10281,7 +10258,7 @@ export const LobbyMemberResponseSchema = Schema.Struct({
   id: SnowflakeTypeSchema,
   metadata: Schema.NullOr(Schema.Record(Schema.String, Schema.String)),
   flags: Schema.Number.check(Schema.isInt32()),
-  additional_name: Schema.optional(Schema.String),
+  additional_name: Schema.optionalKey(Schema.String),
 }).annotate({ identifier: 'LobbyMemberResponse' })
 
 export type LobbyMemberResponse = Schema.Schema.Type<typeof LobbyMemberResponseSchema>
@@ -10293,11 +10270,11 @@ export const LobbyMessageResponseSchema = Schema.Struct({
   lobby_id: SnowflakeTypeSchema,
   channel_id: SnowflakeTypeSchema,
   author: UserResponseSchema,
-  lobby_member: Schema.optional(MessageLobbyMemberResponseSchema),
-  metadata: Schema.optional(Schema.Record(Schema.String, Schema.String)),
-  moderation_metadata: Schema.optional(Schema.Record(Schema.String, Schema.String)),
+  lobby_member: Schema.optionalKey(MessageLobbyMemberResponseSchema),
+  metadata: Schema.optionalKey(Schema.Record(Schema.String, Schema.String)),
+  moderation_metadata: Schema.optionalKey(Schema.Record(Schema.String, Schema.String)),
   flags: Schema.Number.check(Schema.isInt32()),
-  application_id: Schema.optional(SnowflakeTypeSchema),
+  application_id: Schema.optionalKey(SnowflakeTypeSchema),
 }).annotate({ identifier: 'LobbyMessageResponse' })
 
 export type LobbyMessageResponse = Schema.Schema.Type<typeof LobbyMessageResponseSchema>
@@ -10307,9 +10284,9 @@ export const LobbyResponseSchema = Schema.Struct({
   application_id: SnowflakeTypeSchema,
   metadata: Schema.NullOr(Schema.Record(Schema.String, Schema.String)),
   members: Schema.Array(LobbyMemberResponseSchema),
-  linked_channel: Schema.optional(GuildChannelResponseSchema),
+  linked_channel: Schema.optionalKey(GuildChannelResponseSchema),
   flags: UInt32TypeSchema,
-  override_event_webhooks_url: Schema.optional(Schema.NullOr(Schema.String)),
+  override_event_webhooks_url: Schema.optionalKey(Schema.NullOr(Schema.String)),
 }).annotate({ identifier: 'LobbyResponse' })
 
 export type LobbyResponse = Schema.Schema.Type<typeof LobbyResponseSchema>
@@ -10327,7 +10304,7 @@ export const MLSpamUpsertRequestSchema = Schema.Struct({
     }),
   ),
   event_type: AutomodEventTypeSchema,
-  actions: Schema.optional(
+  actions: Schema.optionalKey(
     Schema.NullOr(
       Schema.Array(
         Schema.Union([
@@ -10339,35 +10316,33 @@ export const MLSpamUpsertRequestSchema = Schema.Struct({
       ).check(Schema.isMinLength(1), Schema.isMaxLength(5)),
     ),
   ),
-  enabled: Schema.optional(Schema.NullOr(Schema.Boolean)),
-  exempt_roles: Schema.optional(
+  enabled: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
+  exempt_roles: Schema.optionalKey(
     Schema.NullOr(
       Schema.Array(SnowflakeTypeSchema).check(Schema.isMaxLength(20), Schema.isUnique()),
     ),
   ),
-  exempt_channels: Schema.optional(
+  exempt_channels: Schema.optionalKey(
     Schema.NullOr(
       Schema.Array(SnowflakeTypeSchema).check(Schema.isMaxLength(50), Schema.isUnique()),
     ),
   ),
   trigger_type: AutomodTriggerTypeSchema,
-  trigger_metadata: Schema.optional(
-    Schema.Union([Schema.NullOr(Schema.Null), MLSpamTriggerMetadataSchema]),
-  ),
+  trigger_metadata: Schema.optionalKey(Schema.Union([Schema.Null, MLSpamTriggerMetadataSchema])),
 }).annotate({ identifier: 'MLSpamUpsertRequest' })
 
 export type MLSpamUpsertRequest = Schema.Schema.Type<typeof MLSpamUpsertRequestSchema>
 
 export const MLSpamUpsertRequestPartialSchema = Schema.Struct({
-  name: Schema.optional(
+  name: Schema.optionalKey(
     Schema.String.check(
       Schema.makeFilter((input) => [...input].length <= 100, {
         expected: 'a string of at most 100 characters',
       }),
     ),
   ),
-  event_type: Schema.optional(AutomodEventTypeSchema),
-  actions: Schema.optional(
+  event_type: Schema.optionalKey(AutomodEventTypeSchema),
+  actions: Schema.optionalKey(
     Schema.NullOr(
       Schema.Array(
         Schema.Union([
@@ -10379,27 +10354,25 @@ export const MLSpamUpsertRequestPartialSchema = Schema.Struct({
       ).check(Schema.isMinLength(1), Schema.isMaxLength(5)),
     ),
   ),
-  enabled: Schema.optional(Schema.NullOr(Schema.Boolean)),
-  exempt_roles: Schema.optional(
+  enabled: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
+  exempt_roles: Schema.optionalKey(
     Schema.NullOr(
       Schema.Array(SnowflakeTypeSchema).check(Schema.isMaxLength(20), Schema.isUnique()),
     ),
   ),
-  exempt_channels: Schema.optional(
+  exempt_channels: Schema.optionalKey(
     Schema.NullOr(
       Schema.Array(SnowflakeTypeSchema).check(Schema.isMaxLength(50), Schema.isUnique()),
     ),
   ),
-  trigger_type: Schema.optional(AutomodTriggerTypeSchema),
-  trigger_metadata: Schema.optional(
-    Schema.Union([Schema.NullOr(Schema.Null), MLSpamTriggerMetadataSchema]),
-  ),
+  trigger_type: Schema.optionalKey(AutomodTriggerTypeSchema),
+  trigger_metadata: Schema.optionalKey(Schema.Union([Schema.Null, MLSpamTriggerMetadataSchema])),
 }).annotate({ identifier: 'MLSpamUpsertRequestPartial' })
 
 export type MLSpamUpsertRequestPartial = Schema.Schema.Type<typeof MLSpamUpsertRequestPartialSchema>
 
 export const MentionSpamTriggerMetadataSchema = Schema.Struct({
-  mention_total_limit: Schema.optional(
+  mention_total_limit: Schema.optionalKey(
     Schema.NullOr(
       Schema.Number.check(
         Schema.isInt(),
@@ -10408,7 +10381,7 @@ export const MentionSpamTriggerMetadataSchema = Schema.Struct({
       ),
     ),
   ),
-  mention_raid_protection_enabled: Schema.optional(Schema.NullOr(Schema.Boolean)),
+  mention_raid_protection_enabled: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
 }).annotate({ identifier: 'MentionSpamTriggerMetadata' })
 
 export type MentionSpamTriggerMetadata = Schema.Schema.Type<typeof MentionSpamTriggerMetadataSchema>
@@ -10420,7 +10393,7 @@ export const MentionSpamUpsertRequestSchema = Schema.Struct({
     }),
   ),
   event_type: AutomodEventTypeSchema,
-  actions: Schema.optional(
+  actions: Schema.optionalKey(
     Schema.NullOr(
       Schema.Array(
         Schema.Union([
@@ -10432,35 +10405,35 @@ export const MentionSpamUpsertRequestSchema = Schema.Struct({
       ).check(Schema.isMinLength(1), Schema.isMaxLength(5)),
     ),
   ),
-  enabled: Schema.optional(Schema.NullOr(Schema.Boolean)),
-  exempt_roles: Schema.optional(
+  enabled: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
+  exempt_roles: Schema.optionalKey(
     Schema.NullOr(
       Schema.Array(SnowflakeTypeSchema).check(Schema.isMaxLength(20), Schema.isUnique()),
     ),
   ),
-  exempt_channels: Schema.optional(
+  exempt_channels: Schema.optionalKey(
     Schema.NullOr(
       Schema.Array(SnowflakeTypeSchema).check(Schema.isMaxLength(50), Schema.isUnique()),
     ),
   ),
   trigger_type: AutomodTriggerTypeSchema,
-  trigger_metadata: Schema.optional(
-    Schema.Union([Schema.NullOr(Schema.Null), MentionSpamTriggerMetadataSchema]),
+  trigger_metadata: Schema.optionalKey(
+    Schema.Union([Schema.Null, MentionSpamTriggerMetadataSchema]),
   ),
 }).annotate({ identifier: 'MentionSpamUpsertRequest' })
 
 export type MentionSpamUpsertRequest = Schema.Schema.Type<typeof MentionSpamUpsertRequestSchema>
 
 export const MentionSpamUpsertRequestPartialSchema = Schema.Struct({
-  name: Schema.optional(
+  name: Schema.optionalKey(
     Schema.String.check(
       Schema.makeFilter((input) => [...input].length <= 100, {
         expected: 'a string of at most 100 characters',
       }),
     ),
   ),
-  event_type: Schema.optional(AutomodEventTypeSchema),
-  actions: Schema.optional(
+  event_type: Schema.optionalKey(AutomodEventTypeSchema),
+  actions: Schema.optionalKey(
     Schema.NullOr(
       Schema.Array(
         Schema.Union([
@@ -10472,20 +10445,20 @@ export const MentionSpamUpsertRequestPartialSchema = Schema.Struct({
       ).check(Schema.isMinLength(1), Schema.isMaxLength(5)),
     ),
   ),
-  enabled: Schema.optional(Schema.NullOr(Schema.Boolean)),
-  exempt_roles: Schema.optional(
+  enabled: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
+  exempt_roles: Schema.optionalKey(
     Schema.NullOr(
       Schema.Array(SnowflakeTypeSchema).check(Schema.isMaxLength(20), Schema.isUnique()),
     ),
   ),
-  exempt_channels: Schema.optional(
+  exempt_channels: Schema.optionalKey(
     Schema.NullOr(
       Schema.Array(SnowflakeTypeSchema).check(Schema.isMaxLength(50), Schema.isUnique()),
     ),
   ),
-  trigger_type: Schema.optional(AutomodTriggerTypeSchema),
-  trigger_metadata: Schema.optional(
-    Schema.Union([Schema.NullOr(Schema.Null), MentionSpamTriggerMetadataSchema]),
+  trigger_type: Schema.optionalKey(AutomodTriggerTypeSchema),
+  trigger_metadata: Schema.optionalKey(
+    Schema.Union([Schema.Null, MentionSpamTriggerMetadataSchema]),
   ),
 }).annotate({ identifier: 'MentionSpamUpsertRequestPartial' })
 
@@ -10494,17 +10467,17 @@ export type MentionSpamUpsertRequestPartial = Schema.Schema.Type<
 >
 
 export const MessageReferenceRequestSchema = Schema.Struct({
-  guild_id: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema])),
-  channel_id: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema])),
+  guild_id: Schema.optionalKey(Schema.Union([Schema.Null, SnowflakeTypeSchema])),
+  channel_id: Schema.optionalKey(Schema.Union([Schema.Null, SnowflakeTypeSchema])),
   message_id: SnowflakeTypeSchema,
-  fail_if_not_exists: Schema.optional(Schema.NullOr(Schema.Boolean)),
-  type: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), MessageReferenceTypeSchema])),
+  fail_if_not_exists: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
+  type: Schema.optionalKey(Schema.Union([Schema.Null, MessageReferenceTypeSchema])),
 }).annotate({ identifier: 'MessageReferenceRequest' })
 
 export type MessageReferenceRequest = Schema.Schema.Type<typeof MessageReferenceRequestSchema>
 
 export const MessageCreateRequestSchema = Schema.Struct({
-  content: Schema.optional(
+  content: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length <= 4000, {
@@ -10513,16 +10486,16 @@ export const MessageCreateRequestSchema = Schema.Struct({
       ),
     ),
   ),
-  embeds: Schema.optional(
+  embeds: Schema.optionalKey(
     Schema.NullOr(Schema.Array(RichEmbedSchema).check(Schema.isMaxLength(10))),
   ),
-  allowed_mentions: Schema.optional(
-    Schema.Union([Schema.NullOr(Schema.Null), MessageAllowedMentionsRequestSchema]),
+  allowed_mentions: Schema.optionalKey(
+    Schema.Union([Schema.Null, MessageAllowedMentionsRequestSchema]),
   ),
-  sticker_ids: Schema.optional(
+  sticker_ids: Schema.optionalKey(
     Schema.NullOr(Schema.Array(SnowflakeTypeSchema).check(Schema.isMaxLength(3))),
   ),
-  components: Schema.optional(
+  components: Schema.optionalKey(
     Schema.NullOr(
       Schema.Array(
         Schema.Union([
@@ -10537,18 +10510,16 @@ export const MessageCreateRequestSchema = Schema.Struct({
       ).check(Schema.isMaxLength(40)),
     ),
   ),
-  flags: Schema.optional(Schema.NullOr(Schema.Number.check(Schema.isInt()))),
-  attachments: Schema.optional(
+  flags: Schema.optionalKey(Schema.NullOr(Schema.Number.check(Schema.isInt()))),
+  attachments: Schema.optionalKey(
     Schema.NullOr(Schema.Array(MessageAttachmentRequestSchema).check(Schema.isMaxLength(10))),
   ),
-  poll: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), PollCreateRequestSchema])),
-  shared_client_theme: Schema.optional(
-    Schema.Union([Schema.NullOr(Schema.Null), CustomClientThemeShareRequestSchema]),
+  poll: Schema.optionalKey(Schema.Union([Schema.Null, PollCreateRequestSchema])),
+  shared_client_theme: Schema.optionalKey(
+    Schema.Union([Schema.Null, CustomClientThemeShareRequestSchema]),
   ),
-  message_reference: Schema.optional(
-    Schema.Union([Schema.NullOr(Schema.Null), MessageReferenceRequestSchema]),
-  ),
-  nonce: Schema.optional(
+  message_reference: Schema.optionalKey(Schema.Union([Schema.Null, MessageReferenceRequestSchema])),
+  nonce: Schema.optionalKey(
     Schema.Union([
       Schema.Union([
         Schema.BigInt,
@@ -10566,25 +10537,25 @@ export const MessageCreateRequestSchema = Schema.Struct({
         )
         .check(
           Schema.isBetweenBigInt({ minimum: -9223372036854775808n, maximum: 9223372036854775807n }),
-          Schema.isGreaterThanOrEqualToBigInt(-9223372036854776000n),
-          Schema.isLessThanOrEqualToBigInt(9223372036854776000n),
+          Schema.isGreaterThanOrEqualToBigInt(-9223372036854775808n),
+          Schema.isLessThanOrEqualToBigInt(9223372036854775808n),
         ),
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length <= 25, {
           expected: 'a string of at most 25 characters',
         }),
       ),
-      Schema.NullOr(Schema.Null),
+      Schema.Null,
     ]),
   ),
-  enforce_nonce: Schema.optional(Schema.NullOr(Schema.Boolean)),
-  tts: Schema.optional(Schema.NullOr(Schema.Boolean)),
+  enforce_nonce: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
+  tts: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
 }).annotate({ identifier: 'MessageCreateRequest' })
 
 export type MessageCreateRequest = Schema.Schema.Type<typeof MessageCreateRequestSchema>
 
 export const MessageEditRequestPartialSchema = Schema.Struct({
-  content: Schema.optional(
+  content: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length <= 4000, {
@@ -10593,17 +10564,17 @@ export const MessageEditRequestPartialSchema = Schema.Struct({
       ),
     ),
   ),
-  embeds: Schema.optional(
+  embeds: Schema.optionalKey(
     Schema.NullOr(Schema.Array(RichEmbedSchema).check(Schema.isMaxLength(10))),
   ),
-  flags: Schema.optional(Schema.NullOr(Schema.Number.check(Schema.isInt()))),
-  allowed_mentions: Schema.optional(
-    Schema.Union([Schema.NullOr(Schema.Null), MessageAllowedMentionsRequestSchema]),
+  flags: Schema.optionalKey(Schema.NullOr(Schema.Number.check(Schema.isInt()))),
+  allowed_mentions: Schema.optionalKey(
+    Schema.Union([Schema.Null, MessageAllowedMentionsRequestSchema]),
   ),
-  sticker_ids: Schema.optional(
+  sticker_ids: Schema.optionalKey(
     Schema.NullOr(Schema.Array(SnowflakeTypeSchema).check(Schema.isMaxLength(1521))),
   ),
-  components: Schema.optional(
+  components: Schema.optionalKey(
     Schema.NullOr(
       Schema.Array(
         Schema.Union([
@@ -10618,7 +10589,7 @@ export const MessageEditRequestPartialSchema = Schema.Struct({
       ).check(Schema.isMaxLength(40)),
     ),
   ),
-  attachments: Schema.optional(
+  attachments: Schema.optionalKey(
     Schema.NullOr(Schema.Array(MessageAttachmentRequestSchema).check(Schema.isMaxLength(10))),
   ),
 }).annotate({ identifier: 'MessageEditRequestPartial' })
@@ -10627,7 +10598,7 @@ export type MessageEditRequestPartial = Schema.Schema.Type<typeof MessageEditReq
 
 export const TextDisplayComponentForModalRequestSchema = Schema.Struct({
   type: MessageComponentTypesSchema,
-  id: Schema.optional(
+  id: Schema.optionalKey(
     Schema.NullOr(Schema.Number.check(Schema.isInt32(), Schema.isGreaterThanOrEqualTo(0))),
   ),
   content: Schema.String.check(
@@ -10691,8 +10662,12 @@ export const MyGuildResponseSchema = Schema.Struct({
   owner: Schema.Boolean,
   permissions: Schema.String,
   features: Schema.Array(GuildFeaturesSchema).check(Schema.isUnique()),
-  approximate_member_count: Schema.optional(Schema.NullOr(Schema.Number.check(Schema.isInt32()))),
-  approximate_presence_count: Schema.optional(Schema.NullOr(Schema.Number.check(Schema.isInt32()))),
+  approximate_member_count: Schema.optionalKey(
+    Schema.NullOr(Schema.Number.check(Schema.isInt32())),
+  ),
+  approximate_presence_count: Schema.optionalKey(
+    Schema.NullOr(Schema.Number.check(Schema.isInt32())),
+  ),
 }).annotate({ identifier: 'MyGuildResponse' })
 
 export type MyGuildResponse = Schema.Schema.Type<typeof MyGuildResponseSchema>
@@ -10705,7 +10680,7 @@ export const OAuth2GetAuthorizationResponseSchema = Schema.Struct({
     ),
   ),
   scopes: Schema.Array(OAuth2ScopesSchema).check(Schema.isUnique()),
-  user: Schema.optional(UserResponseSchema),
+  user: Schema.optionalKey(UserResponseSchema),
 }).annotate({ identifier: 'OAuth2GetAuthorizationResponse' })
 
 export type OAuth2GetAuthorizationResponse = Schema.Schema.Type<
@@ -10731,12 +10706,12 @@ export type OAuth2GetKeys = Schema.Schema.Type<typeof OAuth2GetKeysSchema>
 
 export const OAuth2GetOpenIDConnectUserInfoResponseSchema = Schema.Struct({
   sub: Schema.String,
-  email: Schema.optional(Schema.NullOr(Schema.String)),
-  email_verified: Schema.optional(Schema.Boolean),
-  preferred_username: Schema.optional(Schema.String),
-  nickname: Schema.optional(Schema.NullOr(Schema.String)),
-  picture: Schema.optional(Schema.String),
-  locale: Schema.optional(Schema.String),
+  email: Schema.optionalKey(Schema.NullOr(Schema.String)),
+  email_verified: Schema.optionalKey(Schema.Boolean),
+  preferred_username: Schema.optionalKey(Schema.String),
+  nickname: Schema.optionalKey(Schema.NullOr(Schema.String)),
+  picture: Schema.optionalKey(Schema.String),
+  locale: Schema.optionalKey(Schema.String),
 }).annotate({ identifier: 'OAuth2GetOpenIDConnectUserInfoResponse' })
 
 export type OAuth2GetOpenIDConnectUserInfoResponse = Schema.Schema.Type<
@@ -10744,7 +10719,7 @@ export type OAuth2GetOpenIDConnectUserInfoResponse = Schema.Schema.Type<
 >
 
 export const OnboardingPromptOptionRequestSchema = Schema.Struct({
-  id: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema])),
+  id: Schema.optionalKey(Schema.Union([Schema.Null, SnowflakeTypeSchema])),
   title: Schema.String.check(
     Schema.makeFilter((input) => [...input].length >= 1, {
       expected: 'a string of at least 1 character',
@@ -10753,7 +10728,7 @@ export const OnboardingPromptOptionRequestSchema = Schema.Struct({
       expected: 'a string of at most 50 characters',
     }),
   ),
-  description: Schema.optional(
+  description: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length <= 100, {
@@ -10762,8 +10737,8 @@ export const OnboardingPromptOptionRequestSchema = Schema.Struct({
       ),
     ),
   ),
-  emoji_id: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema])),
-  emoji_name: Schema.optional(
+  emoji_id: Schema.optionalKey(Schema.Union([Schema.Null, SnowflakeTypeSchema])),
+  emoji_name: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length <= 100, {
@@ -10772,13 +10747,13 @@ export const OnboardingPromptOptionRequestSchema = Schema.Struct({
       ),
     ),
   ),
-  emoji_animated: Schema.optional(Schema.NullOr(Schema.Boolean)),
-  role_ids: Schema.optional(
+  emoji_animated: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
+  role_ids: Schema.optionalKey(
     Schema.NullOr(
       Schema.Array(SnowflakeTypeSchema).check(Schema.isMaxLength(50), Schema.isUnique()),
     ),
   ),
-  channel_ids: Schema.optional(
+  channel_ids: Schema.optionalKey(
     Schema.NullOr(
       Schema.Array(SnowflakeTypeSchema).check(Schema.isMaxLength(50), Schema.isUnique()),
     ),
@@ -10887,35 +10862,35 @@ export const PrivateApplicationResponseSchema = Schema.Struct({
   name: Schema.String,
   icon: Schema.NullOr(Schema.String),
   description: Schema.String,
-  type: Schema.Union([Schema.NullOr(Schema.Null), ApplicationTypesSchema]),
-  cover_image: Schema.optional(Schema.String),
-  primary_sku_id: Schema.optional(SnowflakeTypeSchema),
+  type: Schema.Union([Schema.Null, ApplicationTypesSchema]),
+  cover_image: Schema.optionalKey(Schema.String),
+  primary_sku_id: Schema.optionalKey(SnowflakeTypeSchema),
   flags: Schema.Number.check(Schema.isInt32()),
   flags_new: Schema.String,
-  bot: Schema.optional(UserResponseSchema),
-  slug: Schema.optional(Schema.String),
-  conjure_project_id: Schema.optional(SnowflakeTypeSchema),
-  vibegrations_project_id: Schema.optional(SnowflakeTypeSchema),
-  guild_id: Schema.optional(SnowflakeTypeSchema),
-  rpc_origins: Schema.optional(Schema.Array(Schema.String)),
-  bot_public: Schema.optional(Schema.Boolean),
-  bot_require_code_grant: Schema.optional(Schema.Boolean),
-  terms_of_service_url: Schema.optional(
+  bot: Schema.optionalKey(UserResponseSchema),
+  slug: Schema.optionalKey(Schema.String),
+  conjure_project_id: Schema.optionalKey(SnowflakeTypeSchema),
+  vibegrations_project_id: Schema.optionalKey(SnowflakeTypeSchema),
+  guild_id: Schema.optionalKey(SnowflakeTypeSchema),
+  rpc_origins: Schema.optionalKey(Schema.Array(Schema.String)),
+  bot_public: Schema.optionalKey(Schema.Boolean),
+  bot_require_code_grant: Schema.optionalKey(Schema.Boolean),
+  terms_of_service_url: Schema.optionalKey(
     Schema.String.check(Schema.makeFilter((input) => URL.canParse(input))),
   ),
-  privacy_policy_url: Schema.optional(
+  privacy_policy_url: Schema.optionalKey(
     Schema.String.check(Schema.makeFilter((input) => URL.canParse(input))),
   ),
-  custom_install_url: Schema.optional(
+  custom_install_url: Schema.optionalKey(
     Schema.String.check(Schema.makeFilter((input) => URL.canParse(input))),
   ),
-  install_params: Schema.optional(ApplicationOAuth2InstallParamsResponseSchema),
-  integration_types_config: Schema.optional(
+  install_params: Schema.optionalKey(ApplicationOAuth2InstallParamsResponseSchema),
+  integration_types_config: Schema.optionalKey(
     Schema.Record(Schema.String, ApplicationIntegrationTypeConfigurationResponseSchema),
   ),
   verify_key: Schema.String,
-  max_participants: Schema.optional(Schema.NullOr(Schema.Number.check(Schema.isInt32()))),
-  tags: Schema.optional(Schema.Array(Schema.String).check(Schema.isUnique())),
+  max_participants: Schema.optionalKey(Schema.NullOr(Schema.Number.check(Schema.isInt32()))),
+  tags: Schema.optionalKey(Schema.Array(Schema.String).check(Schema.isUnique())),
   redirect_uris: Schema.Array(
     Schema.String.check(Schema.makeFilter((input) => URL.canParse(input))),
   ),
@@ -10929,13 +10904,15 @@ export const PrivateApplicationResponseSchema = Schema.Struct({
   approximate_guild_count: Schema.Number.check(Schema.isInt32()),
   approximate_user_install_count: Schema.Number.check(Schema.isInt32()),
   approximate_user_authorization_count: Schema.Number.check(Schema.isInt32()),
-  event_webhooks_url: Schema.optional(
+  event_webhooks_url: Schema.optionalKey(
     Schema.NullOr(Schema.String.check(Schema.makeFilter((input) => URL.canParse(input)))),
   ),
-  event_webhooks_status: Schema.optional(ApplicationEventWebhooksStatusSchema),
-  event_webhooks_types: Schema.optional(Schema.Array(ActionTypesSchema).check(Schema.isUnique())),
+  event_webhooks_status: Schema.optionalKey(ApplicationEventWebhooksStatusSchema),
+  event_webhooks_types: Schema.optionalKey(
+    Schema.Array(ActionTypesSchema).check(Schema.isUnique()),
+  ),
   explicit_content_filter: ApplicationExplicitContentFilterTypesSchema,
-  team: Schema.Union([Schema.NullOr(Schema.Null), TeamResponseSchema]),
+  team: Schema.Union([Schema.Null, TeamResponseSchema]),
   eligible_oauth2_scopes: Schema.Array(OAuth2ScopesSchema),
 }).annotate({ identifier: 'PrivateApplicationResponse' })
 
@@ -10943,8 +10920,8 @@ export type PrivateApplicationResponse = Schema.Schema.Type<typeof PrivateApplic
 
 export const PrivateGuildMemberResponseSchema = Schema.Struct({
   avatar: Schema.NullOr(Schema.String).annotate({ description: "the member's guild avatar hash" }),
-  avatar_decoration_data: Schema.optional(
-    Schema.Union([Schema.NullOr(Schema.Null), UserAvatarDecorationResponseSchema]).annotate({
+  avatar_decoration_data: Schema.optionalKey(
+    Schema.Union([Schema.Null, UserAvatarDecorationResponseSchema]).annotate({
       description: "data for the member's guild avatar decoration",
     }),
   ),
@@ -10982,15 +10959,15 @@ export const PrivateGuildMemberResponseSchema = Schema.Struct({
   roles: Schema.Array(SnowflakeTypeSchema)
     .check(Schema.isUnique())
     .annotate({ description: 'array of role object ids' }),
-  collectibles: Schema.optional(
-    Schema.Union([Schema.NullOr(Schema.Null), UserCollectiblesResponseSchema]).annotate({
+  collectibles: Schema.optionalKey(
+    Schema.Union([Schema.Null, UserCollectiblesResponseSchema]).annotate({
       description: "data for the member's collectibles",
     }),
   ),
   user: UserResponseSchema.annotate({ description: 'the user this guild member represents' }),
   mute: Schema.Boolean.annotate({ description: 'whether the user is muted in voice channels' }),
   deaf: Schema.Boolean.annotate({ description: 'whether the user is deafened in voice channels' }),
-  permissions: Schema.optional(Schema.String),
+  permissions: Schema.optionalKey(Schema.String),
 }).annotate({ identifier: 'PrivateGuildMemberResponse' })
 
 export type PrivateGuildMemberResponse = Schema.Schema.Type<typeof PrivateGuildMemberResponseSchema>
@@ -11001,15 +10978,15 @@ export const ProvisionalTokenResponseSchema = Schema.Struct({
   expires_in: Schema.Number.check(Schema.isInt32()),
   scope: Schema.String,
   id_token: Schema.String,
-  refresh_token: Schema.optional(Schema.NullOr(Schema.String)),
-  scopes: Schema.optional(Schema.NullOr(Schema.Array(Schema.String))),
-  expires_at_s: Schema.optional(Schema.NullOr(Schema.Number.check(Schema.isInt32()))),
+  refresh_token: Schema.optionalKey(Schema.NullOr(Schema.String)),
+  scopes: Schema.optionalKey(Schema.NullOr(Schema.Array(Schema.String))),
+  expires_at_s: Schema.optionalKey(Schema.NullOr(Schema.Number.check(Schema.isInt32()))),
 }).annotate({ identifier: 'ProvisionalTokenResponse' })
 
 export type ProvisionalTokenResponse = Schema.Schema.Type<typeof ProvisionalTokenResponseSchema>
 
 export const PruneGuildRequestSchema = Schema.Struct({
-  days: Schema.optional(
+  days: Schema.optionalKey(
     Schema.NullOr(
       Schema.Number.check(
         Schema.isInt(),
@@ -11018,12 +10995,12 @@ export const PruneGuildRequestSchema = Schema.Struct({
       ),
     ),
   ),
-  compute_prune_count: Schema.optional(Schema.NullOr(Schema.Boolean)),
-  include_roles: Schema.optional(
+  compute_prune_count: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
+  include_roles: Schema.optionalKey(
     Schema.Union([
       Schema.String,
       Schema.Array(SnowflakeTypeSchema).check(Schema.isMaxLength(100), Schema.isUnique()),
-      Schema.NullOr(Schema.Null),
+      Schema.Null,
     ]),
   ),
 }).annotate({ identifier: 'PruneGuildRequest' })
@@ -11038,7 +11015,7 @@ export const ReactionTypesSchema = Schema.Union([
 export type ReactionTypes = Schema.Schema.Type<typeof ReactionTypesSchema>
 
 export const SDKMessageRequestSchema = Schema.Struct({
-  content: Schema.optional(
+  content: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length <= 4000, {
@@ -11047,16 +11024,16 @@ export const SDKMessageRequestSchema = Schema.Struct({
       ),
     ),
   ),
-  embeds: Schema.optional(
+  embeds: Schema.optionalKey(
     Schema.NullOr(Schema.Array(RichEmbedSchema).check(Schema.isMaxLength(10))),
   ),
-  allowed_mentions: Schema.optional(
-    Schema.Union([Schema.NullOr(Schema.Null), MessageAllowedMentionsRequestSchema]),
+  allowed_mentions: Schema.optionalKey(
+    Schema.Union([Schema.Null, MessageAllowedMentionsRequestSchema]),
   ),
-  sticker_ids: Schema.optional(
+  sticker_ids: Schema.optionalKey(
     Schema.NullOr(Schema.Array(SnowflakeTypeSchema).check(Schema.isMaxLength(3))),
   ),
-  components: Schema.optional(
+  components: Schema.optionalKey(
     Schema.NullOr(
       Schema.Array(
         Schema.Union([
@@ -11071,18 +11048,16 @@ export const SDKMessageRequestSchema = Schema.Struct({
       ).check(Schema.isMaxLength(40)),
     ),
   ),
-  flags: Schema.optional(Schema.NullOr(Schema.Number.check(Schema.isInt()))),
-  attachments: Schema.optional(
+  flags: Schema.optionalKey(Schema.NullOr(Schema.Number.check(Schema.isInt()))),
+  attachments: Schema.optionalKey(
     Schema.NullOr(Schema.Array(MessageAttachmentRequestSchema).check(Schema.isMaxLength(10))),
   ),
-  poll: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), PollCreateRequestSchema])),
-  shared_client_theme: Schema.optional(
-    Schema.Union([Schema.NullOr(Schema.Null), CustomClientThemeShareRequestSchema]),
+  poll: Schema.optionalKey(Schema.Union([Schema.Null, PollCreateRequestSchema])),
+  shared_client_theme: Schema.optionalKey(
+    Schema.Union([Schema.Null, CustomClientThemeShareRequestSchema]),
   ),
-  message_reference: Schema.optional(
-    Schema.Union([Schema.NullOr(Schema.Null), MessageReferenceRequestSchema]),
-  ),
-  nonce: Schema.optional(
+  message_reference: Schema.optionalKey(Schema.Union([Schema.Null, MessageReferenceRequestSchema])),
+  nonce: Schema.optionalKey(
     Schema.Union([
       Schema.Union([
         Schema.BigInt,
@@ -11100,19 +11075,19 @@ export const SDKMessageRequestSchema = Schema.Struct({
         )
         .check(
           Schema.isBetweenBigInt({ minimum: -9223372036854775808n, maximum: 9223372036854775807n }),
-          Schema.isGreaterThanOrEqualToBigInt(-9223372036854776000n),
-          Schema.isLessThanOrEqualToBigInt(9223372036854776000n),
+          Schema.isGreaterThanOrEqualToBigInt(-9223372036854775808n),
+          Schema.isLessThanOrEqualToBigInt(9223372036854775808n),
         ),
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length <= 25, {
           expected: 'a string of at most 25 characters',
         }),
       ),
-      Schema.NullOr(Schema.Null),
+      Schema.Null,
     ]),
   ),
-  enforce_nonce: Schema.optional(Schema.NullOr(Schema.Boolean)),
-  tts: Schema.optional(Schema.NullOr(Schema.Boolean)),
+  enforce_nonce: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
+  tts: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
 }).annotate({ identifier: 'SDKMessageRequest' })
 
 export type SDKMessageRequest = Schema.Schema.Type<typeof SDKMessageRequestSchema>
@@ -11163,7 +11138,7 @@ export const SearchableEmbedTypeSchema = Schema.Union([
 export type SearchableEmbedType = Schema.Schema.Type<typeof SearchableEmbedTypeSchema>
 
 export const WebhookSlackEmbedFieldSchema = Schema.Struct({
-  name: Schema.optional(
+  name: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length <= 152133, {
@@ -11172,7 +11147,7 @@ export const WebhookSlackEmbedFieldSchema = Schema.Struct({
       ),
     ),
   ),
-  value: Schema.optional(
+  value: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length <= 152133, {
@@ -11181,13 +11156,13 @@ export const WebhookSlackEmbedFieldSchema = Schema.Struct({
       ),
     ),
   ),
-  inline: Schema.optional(Schema.NullOr(Schema.Boolean)),
+  inline: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
 }).annotate({ identifier: 'WebhookSlackEmbedField' })
 
 export type WebhookSlackEmbedField = Schema.Schema.Type<typeof WebhookSlackEmbedFieldSchema>
 
 export const WebhookSlackEmbedSchema = Schema.Struct({
-  title: Schema.optional(
+  title: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length <= 152133, {
@@ -11196,7 +11171,7 @@ export const WebhookSlackEmbedSchema = Schema.Struct({
       ),
     ),
   ),
-  title_link: Schema.optional(
+  title_link: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => URL.canParse(input)),
@@ -11206,7 +11181,7 @@ export const WebhookSlackEmbedSchema = Schema.Struct({
       ),
     ),
   ),
-  text: Schema.optional(
+  text: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length <= 152133, {
@@ -11215,7 +11190,7 @@ export const WebhookSlackEmbedSchema = Schema.Struct({
       ),
     ),
   ),
-  color: Schema.optional(
+  color: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.isPattern(/^#(([0-9a-fA-F]{2}){3}|([0-9a-fA-F]){3})$/),
@@ -11225,8 +11200,8 @@ export const WebhookSlackEmbedSchema = Schema.Struct({
       ),
     ),
   ),
-  ts: Schema.optional(Schema.NullOr(Schema.Number.check(Schema.isInt()))),
-  pretext: Schema.optional(
+  ts: Schema.optionalKey(Schema.NullOr(Schema.Number.check(Schema.isInt()))),
+  pretext: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length <= 152133, {
@@ -11235,7 +11210,7 @@ export const WebhookSlackEmbedSchema = Schema.Struct({
       ),
     ),
   ),
-  footer: Schema.optional(
+  footer: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length <= 152133, {
@@ -11244,7 +11219,7 @@ export const WebhookSlackEmbedSchema = Schema.Struct({
       ),
     ),
   ),
-  footer_icon: Schema.optional(
+  footer_icon: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => URL.canParse(input)),
@@ -11254,7 +11229,7 @@ export const WebhookSlackEmbedSchema = Schema.Struct({
       ),
     ),
   ),
-  author_name: Schema.optional(
+  author_name: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length <= 152133, {
@@ -11263,7 +11238,7 @@ export const WebhookSlackEmbedSchema = Schema.Struct({
       ),
     ),
   ),
-  author_link: Schema.optional(
+  author_link: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => URL.canParse(input)),
@@ -11273,7 +11248,7 @@ export const WebhookSlackEmbedSchema = Schema.Struct({
       ),
     ),
   ),
-  author_icon: Schema.optional(
+  author_icon: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => URL.canParse(input)),
@@ -11283,7 +11258,7 @@ export const WebhookSlackEmbedSchema = Schema.Struct({
       ),
     ),
   ),
-  image_url: Schema.optional(
+  image_url: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => URL.canParse(input)),
@@ -11293,7 +11268,7 @@ export const WebhookSlackEmbedSchema = Schema.Struct({
       ),
     ),
   ),
-  thumb_url: Schema.optional(
+  thumb_url: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => URL.canParse(input)),
@@ -11303,7 +11278,7 @@ export const WebhookSlackEmbedSchema = Schema.Struct({
       ),
     ),
   ),
-  fields: Schema.optional(
+  fields: Schema.optionalKey(
     Schema.NullOr(Schema.Array(WebhookSlackEmbedFieldSchema).check(Schema.isMaxLength(1521))),
   ),
 }).annotate({ identifier: 'WebhookSlackEmbed' })
@@ -11311,7 +11286,7 @@ export const WebhookSlackEmbedSchema = Schema.Struct({
 export type WebhookSlackEmbed = Schema.Schema.Type<typeof WebhookSlackEmbedSchema>
 
 export const SlackWebhookSchema = Schema.Struct({
-  text: Schema.optional(
+  text: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length <= 2000, {
@@ -11320,7 +11295,7 @@ export const SlackWebhookSchema = Schema.Struct({
       ),
     ),
   ),
-  username: Schema.optional(
+  username: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length <= 152133, {
@@ -11329,7 +11304,7 @@ export const SlackWebhookSchema = Schema.Struct({
       ),
     ),
   ),
-  icon_url: Schema.optional(
+  icon_url: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => URL.canParse(input)),
@@ -11339,7 +11314,7 @@ export const SlackWebhookSchema = Schema.Struct({
       ),
     ),
   ),
-  attachments: Schema.optional(
+  attachments: Schema.optionalKey(
     Schema.NullOr(Schema.Array(WebhookSlackEmbedSchema).check(Schema.isMaxLength(1521))),
   ),
 }).annotate({ identifier: 'SlackWebhook' })
@@ -11348,10 +11323,8 @@ export type SlackWebhook = Schema.Schema.Type<typeof SlackWebhookSchema>
 
 export const SocialLayerSKUPurchaseEligibilityCallbackDataSchema = Schema.Struct({
   eligible: Schema.Boolean,
-  ineligible_reason: Schema.optional(
-    Schema.Union([Schema.NullOr(Schema.Null), SKUIneligibilityReasonSchema]),
-  ),
-  ineligible_reason_description: Schema.optional(
+  ineligible_reason: Schema.optionalKey(Schema.Union([Schema.Null, SKUIneligibilityReasonSchema])),
+  ineligible_reason_description: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length <= 255, {
@@ -11398,13 +11371,13 @@ export const SoundboardCreateRequestSchema = Schema.Struct({
       expected: 'a string of at most 32 characters',
     }),
   ),
-  volume: Schema.optional(
+  volume: Schema.optionalKey(
     Schema.NullOr(
       Schema.Number.check(Schema.isGreaterThanOrEqualTo(0), Schema.isLessThanOrEqualTo(1)),
     ),
   ),
-  emoji_id: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema])),
-  emoji_name: Schema.optional(
+  emoji_id: Schema.optionalKey(Schema.Union([Schema.Null, SnowflakeTypeSchema])),
+  emoji_name: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length >= 1, {
@@ -11422,7 +11395,7 @@ export const SoundboardCreateRequestSchema = Schema.Struct({
 export type SoundboardCreateRequest = Schema.Schema.Type<typeof SoundboardCreateRequestSchema>
 
 export const SoundboardPatchRequestPartialSchema = Schema.Struct({
-  name: Schema.optional(
+  name: Schema.optionalKey(
     Schema.String.check(
       Schema.makeFilter((input) => [...input].length >= 2, {
         expected: 'a string of at least 2 characters',
@@ -11432,13 +11405,13 @@ export const SoundboardPatchRequestPartialSchema = Schema.Struct({
       }),
     ),
   ),
-  volume: Schema.optional(
+  volume: Schema.optionalKey(
     Schema.NullOr(
       Schema.Number.check(Schema.isGreaterThanOrEqualTo(0), Schema.isLessThanOrEqualTo(1)),
     ),
   ),
-  emoji_id: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema])),
-  emoji_name: Schema.optional(
+  emoji_id: Schema.optionalKey(Schema.Union([Schema.Null, SnowflakeTypeSchema])),
+  emoji_name: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length >= 1, {
@@ -11458,7 +11431,7 @@ export type SoundboardPatchRequestPartial = Schema.Schema.Type<
 
 export const SoundboardSoundSendRequestSchema = Schema.Struct({
   sound_id: SnowflakeTypeSchema,
-  source_guild_id: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema])),
+  source_guild_id: Schema.optionalKey(Schema.Union([Schema.Null, SnowflakeTypeSchema])),
 }).annotate({ identifier: 'SoundboardSoundSendRequest' })
 
 export type SoundboardSoundSendRequest = Schema.Schema.Type<typeof SoundboardSoundSendRequestSchema>
@@ -11483,7 +11456,7 @@ export const StageInstanceResponseSchema = Schema.Struct({
   privacy_level: StageInstancesPrivacyLevelsSchema,
   id: SnowflakeTypeSchema,
   discoverable_disabled: Schema.Boolean,
-  guild_scheduled_event_id: Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema]),
+  guild_scheduled_event_id: Schema.Union([Schema.Null, SnowflakeTypeSchema]),
 }).annotate({ identifier: 'StageInstanceResponse' })
 
 export type StageInstanceResponse = Schema.Schema.Type<typeof StageInstanceResponseSchema>
@@ -11494,7 +11467,7 @@ export const StageScheduledEventCreateRequestSchema = Schema.Struct({
       expected: 'a string of at most 100 characters',
     }),
   ),
-  description: Schema.optional(
+  description: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length <= 1000, {
@@ -11503,13 +11476,13 @@ export const StageScheduledEventCreateRequestSchema = Schema.Struct({
       ),
     ),
   ),
-  image: Schema.optional(Schema.NullOr(Schema.String)),
+  image: Schema.optionalKey(Schema.NullOr(Schema.String)),
   scheduled_start_time: Schema.String.check(
     Schema.isPattern(
       /^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z|([+-](?:[01]\d|2[0-3]):[0-5]\d)))$/,
     ),
   ),
-  scheduled_end_time: Schema.optional(
+  scheduled_end_time: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.isPattern(
@@ -11520,14 +11493,14 @@ export const StageScheduledEventCreateRequestSchema = Schema.Struct({
   ),
   privacy_level: GuildScheduledEventPrivacyLevelsSchema,
   entity_type: GuildScheduledEventEntityTypesSchema,
-  channel_id: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema])),
-  recurrence_rule: Schema.optional(
-    Schema.Union([Schema.NullOr(Schema.Null), RecurrenceRuleSchema]).annotate({
+  channel_id: Schema.optionalKey(Schema.Union([Schema.Null, SnowflakeTypeSchema])),
+  recurrence_rule: Schema.optionalKey(
+    Schema.Union([Schema.Null, RecurrenceRuleSchema]).annotate({
       description: 'Recurrence rule for the scheduled event',
     }),
   ),
-  entity_metadata: Schema.optional(
-    Schema.Union([Schema.NullOr(Schema.Null), EntityMetadataStageInstanceSchema]),
+  entity_metadata: Schema.optionalKey(
+    Schema.Union([Schema.Null, EntityMetadataStageInstanceSchema]),
   ),
 }).annotate({ identifier: 'StageScheduledEventCreateRequest' })
 
@@ -11536,17 +11509,15 @@ export type StageScheduledEventCreateRequest = Schema.Schema.Type<
 >
 
 export const StageScheduledEventPatchRequestPartialSchema = Schema.Struct({
-  status: Schema.optional(
-    Schema.Union([Schema.NullOr(Schema.Null), GuildScheduledEventStatusesSchema]),
-  ),
-  name: Schema.optional(
+  status: Schema.optionalKey(Schema.Union([Schema.Null, GuildScheduledEventStatusesSchema])),
+  name: Schema.optionalKey(
     Schema.String.check(
       Schema.makeFilter((input) => [...input].length <= 100, {
         expected: 'a string of at most 100 characters',
       }),
     ),
   ),
-  description: Schema.optional(
+  description: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length <= 1000, {
@@ -11555,15 +11526,15 @@ export const StageScheduledEventPatchRequestPartialSchema = Schema.Struct({
       ),
     ),
   ),
-  image: Schema.optional(Schema.NullOr(Schema.String)),
-  scheduled_start_time: Schema.optional(
+  image: Schema.optionalKey(Schema.NullOr(Schema.String)),
+  scheduled_start_time: Schema.optionalKey(
     Schema.String.check(
       Schema.isPattern(
         /^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z|([+-](?:[01]\d|2[0-3]):[0-5]\d)))$/,
       ),
     ),
   ),
-  scheduled_end_time: Schema.optional(
+  scheduled_end_time: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.isPattern(
@@ -11572,18 +11543,18 @@ export const StageScheduledEventPatchRequestPartialSchema = Schema.Struct({
       ),
     ),
   ),
-  entity_type: Schema.optional(
-    Schema.Union([Schema.NullOr(Schema.Null), GuildScheduledEventEntityTypesSchema]),
+  entity_type: Schema.optionalKey(
+    Schema.Union([Schema.Null, GuildScheduledEventEntityTypesSchema]),
   ),
-  privacy_level: Schema.optional(GuildScheduledEventPrivacyLevelsSchema),
-  channel_id: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema])),
-  recurrence_rule: Schema.optional(
-    Schema.Union([Schema.NullOr(Schema.Null), RecurrenceRuleSchema]).annotate({
+  privacy_level: Schema.optionalKey(GuildScheduledEventPrivacyLevelsSchema),
+  channel_id: Schema.optionalKey(Schema.Union([Schema.Null, SnowflakeTypeSchema])),
+  recurrence_rule: Schema.optionalKey(
+    Schema.Union([Schema.Null, RecurrenceRuleSchema]).annotate({
       description: 'Recurrence rule for the scheduled event',
     }),
   ),
-  entity_metadata: Schema.optional(
-    Schema.Union([Schema.NullOr(Schema.Null), EntityMetadataStageInstanceSchema]),
+  entity_metadata: Schema.optionalKey(
+    Schema.Union([Schema.Null, EntityMetadataStageInstanceSchema]),
   ),
 }).annotate({ identifier: 'StageScheduledEventPatchRequestPartial' })
 
@@ -11597,8 +11568,8 @@ export const StickerPackResponseSchema = Schema.Struct({
   name: Schema.String,
   description: Schema.NullOr(Schema.String),
   stickers: Schema.Array(StandardStickerResponseSchema),
-  cover_sticker_id: Schema.optional(SnowflakeTypeSchema),
-  banner_asset_id: Schema.optional(SnowflakeTypeSchema),
+  cover_sticker_id: Schema.optionalKey(SnowflakeTypeSchema),
+  banner_asset_id: Schema.optionalKey(SnowflakeTypeSchema),
 }).annotate({ identifier: 'StickerPackResponse' })
 
 export type StickerPackResponse = Schema.Schema.Type<typeof StickerPackResponseSchema>
@@ -11653,7 +11624,7 @@ export const SubscriptionResponseSchema = Schema.Struct({
       ),
     ),
   ).annotate({ description: 'When the subscription was canceled' }),
-  country: Schema.optional(
+  country: Schema.optionalKey(
     Schema.NullOr(Schema.String).annotate({
       description:
         'ISO3166-1 alpha-2 country code of the payment source used to purchase the subscription',
@@ -11711,7 +11682,7 @@ export const ThreadSearchResponseSchema = Schema.Struct({
   threads: Schema.Array(ThreadResponseSchema),
   members: Schema.Array(ThreadMemberResponseSchema),
   has_more: Schema.Boolean,
-  first_messages: Schema.optional(Schema.Array(MessageResponseSchema)),
+  first_messages: Schema.optionalKey(Schema.Array(MessageResponseSchema)),
   total_results: Schema.Number.check(Schema.isInt32()),
 }).annotate({ identifier: 'ThreadSearchResponse' })
 
@@ -11730,7 +11701,7 @@ export const ThreadsResponseSchema = Schema.Struct({
   threads: Schema.Array(ThreadResponseSchema),
   members: Schema.Array(ThreadMemberResponseSchema),
   has_more: Schema.Boolean,
-  first_messages: Schema.optional(Schema.Array(MessageResponseSchema)),
+  first_messages: Schema.optionalKey(Schema.Array(MessageResponseSchema)),
 }).annotate({ identifier: 'ThreadsResponse' })
 
 export type ThreadsResponse = Schema.Schema.Type<typeof ThreadsResponseSchema>
@@ -11748,7 +11719,7 @@ export const UnbanUserFromGuildRequestSchema = Schema.Struct({}).annotate({
 export type UnbanUserFromGuildRequest = Schema.Schema.Type<typeof UnbanUserFromGuildRequestSchema>
 
 export const UpdateApplicationUserRoleConnectionRequestSchema = Schema.Struct({
-  platform_name: Schema.optional(
+  platform_name: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length <= 50, {
@@ -11757,7 +11728,7 @@ export const UpdateApplicationUserRoleConnectionRequestSchema = Schema.Struct({
       ),
     ),
   ),
-  platform_username: Schema.optional(
+  platform_username: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length <= 100, {
@@ -11766,7 +11737,7 @@ export const UpdateApplicationUserRoleConnectionRequestSchema = Schema.Struct({
       ),
     ),
   ),
-  metadata: Schema.optional(
+  metadata: Schema.optionalKey(
     Schema.NullOr(
       Schema.Record(
         Schema.String,
@@ -11788,7 +11759,7 @@ export type UpdateApplicationUserRoleConnectionRequest = Schema.Schema.Type<
 >
 
 export const UpdateDMRequestPartialSchema = Schema.Struct({
-  name: Schema.optional(
+  name: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length >= 0, {
@@ -11805,7 +11776,7 @@ export const UpdateDMRequestPartialSchema = Schema.Struct({
 export type UpdateDMRequestPartial = Schema.Schema.Type<typeof UpdateDMRequestPartialSchema>
 
 export const UpdateGroupDMRequestPartialSchema = Schema.Struct({
-  name: Schema.optional(
+  name: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length >= 0, {
@@ -11817,7 +11788,7 @@ export const UpdateGroupDMRequestPartialSchema = Schema.Struct({
       ),
     ),
   ),
-  icon: Schema.optional(Schema.NullOr(Schema.String)),
+  icon: Schema.optionalKey(Schema.NullOr(Schema.String)),
 }).annotate({ identifier: 'UpdateGroupDMRequestPartial' })
 
 export type UpdateGroupDMRequestPartial = Schema.Schema.Type<
@@ -11833,8 +11804,8 @@ export const UpdateThreadTagRequestSchema = Schema.Struct({
       expected: 'a string of at most 50 characters',
     }),
   ),
-  emoji_id: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema])),
-  emoji_name: Schema.optional(
+  emoji_id: Schema.optionalKey(Schema.Union([Schema.Null, SnowflakeTypeSchema])),
+  emoji_name: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length <= 100, {
@@ -11843,15 +11814,15 @@ export const UpdateThreadTagRequestSchema = Schema.Struct({
       ),
     ),
   ),
-  moderated: Schema.optional(Schema.NullOr(Schema.Boolean)),
-  id: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema])),
+  moderated: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
+  id: Schema.optionalKey(Schema.Union([Schema.Null, SnowflakeTypeSchema])),
 }).annotate({ identifier: 'UpdateThreadTagRequest' })
 
 export type UpdateThreadTagRequest = Schema.Schema.Type<typeof UpdateThreadTagRequestSchema>
 
 export const UpdateGuildChannelRequestPartialSchema = Schema.Struct({
-  type: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), ChannelTypesSchema])),
-  name: Schema.optional(
+  type: Schema.optionalKey(Schema.Union([Schema.Null, ChannelTypesSchema])),
+  name: Schema.optionalKey(
     Schema.String.check(
       Schema.makeFilter((input) => [...input].length >= 1, {
         expected: 'a string of at least 1 character',
@@ -11861,10 +11832,10 @@ export const UpdateGuildChannelRequestPartialSchema = Schema.Struct({
       }),
     ),
   ),
-  position: Schema.optional(
+  position: Schema.optionalKey(
     Schema.NullOr(Schema.Number.check(Schema.isInt32(), Schema.isGreaterThanOrEqualTo(0))),
   ),
-  topic: Schema.optional(
+  topic: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length >= 0, {
@@ -11876,14 +11847,14 @@ export const UpdateGuildChannelRequestPartialSchema = Schema.Struct({
       ),
     ),
   ),
-  bitrate: Schema.optional(
+  bitrate: Schema.optionalKey(
     Schema.NullOr(Schema.Number.check(Schema.isInt32(), Schema.isGreaterThanOrEqualTo(8000))),
   ),
-  user_limit: Schema.optional(
+  user_limit: Schema.optionalKey(
     Schema.NullOr(Schema.Number.check(Schema.isInt32(), Schema.isGreaterThanOrEqualTo(0))),
   ),
-  nsfw: Schema.optional(Schema.NullOr(Schema.Boolean)),
-  rate_limit_per_user: Schema.optional(
+  nsfw: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
+  rate_limit_per_user: Schema.optionalKey(
     Schema.NullOr(
       Schema.Number.check(
         Schema.isInt(),
@@ -11892,23 +11863,21 @@ export const UpdateGuildChannelRequestPartialSchema = Schema.Struct({
       ),
     ),
   ),
-  parent_id: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema])),
-  permission_overwrites: Schema.optional(
+  parent_id: Schema.optionalKey(Schema.Union([Schema.Null, SnowflakeTypeSchema])),
+  permission_overwrites: Schema.optionalKey(
     Schema.NullOr(
       Schema.Array(ChannelPermissionOverwriteRequestSchema).check(Schema.isMaxLength(100)),
     ),
   ),
-  rtc_region: Schema.optional(Schema.NullOr(Schema.String)),
-  video_quality_mode: Schema.optional(
-    Schema.Union([Schema.NullOr(Schema.Null), VideoQualityModesSchema]),
+  rtc_region: Schema.optionalKey(Schema.NullOr(Schema.String)),
+  video_quality_mode: Schema.optionalKey(Schema.Union([Schema.Null, VideoQualityModesSchema])),
+  default_auto_archive_duration: Schema.optionalKey(
+    Schema.Union([Schema.Null, ThreadAutoArchiveDurationSchema]),
   ),
-  default_auto_archive_duration: Schema.optional(
-    Schema.Union([Schema.NullOr(Schema.Null), ThreadAutoArchiveDurationSchema]),
+  default_reaction_emoji: Schema.optionalKey(
+    Schema.Union([Schema.Null, UpdateDefaultReactionEmojiRequestSchema]),
   ),
-  default_reaction_emoji: Schema.optional(
-    Schema.Union([Schema.NullOr(Schema.Null), UpdateDefaultReactionEmojiRequestSchema]),
-  ),
-  default_thread_rate_limit_per_user: Schema.optional(
+  default_thread_rate_limit_per_user: Schema.optionalKey(
     Schema.NullOr(
       Schema.Number.check(
         Schema.isInt(),
@@ -11917,17 +11886,13 @@ export const UpdateGuildChannelRequestPartialSchema = Schema.Struct({
       ),
     ),
   ),
-  default_sort_order: Schema.optional(
-    Schema.Union([Schema.NullOr(Schema.Null), ThreadSortOrderSchema]),
+  default_sort_order: Schema.optionalKey(Schema.Union([Schema.Null, ThreadSortOrderSchema])),
+  default_forum_layout: Schema.optionalKey(Schema.Union([Schema.Null, ForumLayoutSchema])),
+  default_tag_setting: Schema.optionalKey(
+    Schema.Union([Schema.Null, ThreadSearchTagSettingSchema]),
   ),
-  default_forum_layout: Schema.optional(
-    Schema.Union([Schema.NullOr(Schema.Null), ForumLayoutSchema]),
-  ),
-  default_tag_setting: Schema.optional(
-    Schema.Union([Schema.NullOr(Schema.Null), ThreadSearchTagSettingSchema]),
-  ),
-  flags: Schema.optional(Schema.NullOr(Schema.Number.check(Schema.isInt()))),
-  available_tags: Schema.optional(
+  flags: Schema.optionalKey(Schema.NullOr(Schema.Number.check(Schema.isInt()))),
+  available_tags: Schema.optionalKey(
     Schema.NullOr(Schema.Array(UpdateThreadTagRequestSchema).check(Schema.isMaxLength(20))),
   ),
 }).annotate({ identifier: 'UpdateGuildChannelRequestPartial' })
@@ -11949,10 +11914,10 @@ export const UpdateOnboardingPromptRequestSchema = Schema.Struct({
     Schema.isMinLength(1),
     Schema.isMaxLength(50),
   ),
-  single_select: Schema.optional(Schema.NullOr(Schema.Boolean)),
-  required: Schema.optional(Schema.NullOr(Schema.Boolean)),
-  in_onboarding: Schema.optional(Schema.NullOr(Schema.Boolean)),
-  type: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), OnboardingPromptTypeSchema])),
+  single_select: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
+  required: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
+  in_onboarding: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
+  type: Schema.optionalKey(Schema.Union([Schema.Null, OnboardingPromptTypeSchema])),
   id: SnowflakeTypeSchema,
 }).annotate({ identifier: 'UpdateOnboardingPromptRequest' })
 
@@ -11961,16 +11926,16 @@ export type UpdateOnboardingPromptRequest = Schema.Schema.Type<
 >
 
 export const UpdateGuildOnboardingRequestSchema = Schema.Struct({
-  prompts: Schema.optional(
+  prompts: Schema.optionalKey(
     Schema.NullOr(Schema.Array(UpdateOnboardingPromptRequestSchema).check(Schema.isMaxLength(15))),
   ),
-  enabled: Schema.optional(Schema.NullOr(Schema.Boolean)),
-  default_channel_ids: Schema.optional(
+  enabled: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
+  default_channel_ids: Schema.optionalKey(
     Schema.NullOr(
       Schema.Array(SnowflakeTypeSchema).check(Schema.isMaxLength(500), Schema.isUnique()),
     ),
   ),
-  mode: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), GuildOnboardingModeSchema])),
+  mode: Schema.optionalKey(Schema.Union([Schema.Null, GuildOnboardingModeSchema])),
 }).annotate({ identifier: 'UpdateGuildOnboardingRequest' })
 
 export type UpdateGuildOnboardingRequest = Schema.Schema.Type<
@@ -11979,11 +11944,8 @@ export type UpdateGuildOnboardingRequest = Schema.Schema.Type<
 
 export const UpdateMessageInteractionCallbackRequestSchema = Schema.Struct({
   type: InteractionCallbackTypesSchema,
-  data: Schema.optional(
-    Schema.Union([
-      Schema.NullOr(Schema.Null),
-      IncomingWebhookUpdateForInteractionCallbackRequestPartialSchema,
-    ]),
+  data: Schema.optionalKey(
+    Schema.Union([Schema.Null, IncomingWebhookUpdateForInteractionCallbackRequestPartialSchema]),
   ),
 }).annotate({ identifier: 'UpdateMessageInteractionCallbackRequest' })
 
@@ -11992,14 +11954,14 @@ export type UpdateMessageInteractionCallbackRequest = Schema.Schema.Type<
 >
 
 export const UpdateRolePositionsRequestSchema = Schema.Struct({
-  id: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema])),
-  position: Schema.optional(Schema.NullOr(Schema.Number.check(Schema.isInt32()))),
+  id: Schema.optionalKey(Schema.Union([Schema.Null, SnowflakeTypeSchema])),
+  position: Schema.optionalKey(Schema.NullOr(Schema.Number.check(Schema.isInt32()))),
 }).annotate({ identifier: 'UpdateRolePositionsRequest' })
 
 export type UpdateRolePositionsRequest = Schema.Schema.Type<typeof UpdateRolePositionsRequestSchema>
 
 export const UpdateRoleRequestPartialSchema = Schema.Struct({
-  name: Schema.optional(
+  name: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length >= 1, {
@@ -12011,8 +11973,8 @@ export const UpdateRoleRequestPartialSchema = Schema.Struct({
       ),
     ),
   ),
-  permissions: Schema.optional(Schema.NullOr(Schema.Number.check(Schema.isInt()))),
-  color: Schema.optional(
+  permissions: Schema.optionalKey(Schema.NullOr(Schema.Number.check(Schema.isInt()))),
+  color: Schema.optionalKey(
     Schema.NullOr(
       Schema.Number.check(
         Schema.isInt(),
@@ -12021,11 +11983,11 @@ export const UpdateRoleRequestPartialSchema = Schema.Struct({
       ),
     ),
   ),
-  colors: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), RoleColorsSchema])),
-  hoist: Schema.optional(Schema.NullOr(Schema.Boolean)),
-  mentionable: Schema.optional(Schema.NullOr(Schema.Boolean)),
-  icon: Schema.optional(Schema.NullOr(Schema.String)),
-  unicode_emoji: Schema.optional(
+  colors: Schema.optionalKey(Schema.Union([Schema.Null, RoleColorsSchema])),
+  hoist: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
+  mentionable: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
+  icon: Schema.optionalKey(Schema.NullOr(Schema.String)),
+  unicode_emoji: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length <= 100, {
@@ -12039,7 +12001,7 @@ export const UpdateRoleRequestPartialSchema = Schema.Struct({
 export type UpdateRoleRequestPartial = Schema.Schema.Type<typeof UpdateRoleRequestPartialSchema>
 
 export const UpdateSelfVoiceStateRequestPartialSchema = Schema.Struct({
-  request_to_speak_timestamp: Schema.optional(
+  request_to_speak_timestamp: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.isPattern(
@@ -12048,8 +12010,8 @@ export const UpdateSelfVoiceStateRequestPartialSchema = Schema.Struct({
       ),
     ),
   ),
-  suppress: Schema.optional(Schema.NullOr(Schema.Boolean)),
-  channel_id: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema])),
+  suppress: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
+  channel_id: Schema.optionalKey(Schema.Union([Schema.Null, SnowflakeTypeSchema])),
 }).annotate({ identifier: 'UpdateSelfVoiceStateRequestPartial' })
 
 export type UpdateSelfVoiceStateRequestPartial = Schema.Schema.Type<
@@ -12057,7 +12019,7 @@ export type UpdateSelfVoiceStateRequestPartial = Schema.Schema.Type<
 >
 
 export const UpdateThreadRequestPartialSchema = Schema.Struct({
-  name: Schema.optional(
+  name: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length >= 0, {
@@ -12069,13 +12031,13 @@ export const UpdateThreadRequestPartialSchema = Schema.Struct({
       ),
     ),
   ),
-  archived: Schema.optional(Schema.NullOr(Schema.Boolean)),
-  locked: Schema.optional(Schema.NullOr(Schema.Boolean)),
-  invitable: Schema.optional(Schema.NullOr(Schema.Boolean)),
-  auto_archive_duration: Schema.optional(
-    Schema.Union([Schema.NullOr(Schema.Null), ThreadAutoArchiveDurationSchema]),
+  archived: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
+  locked: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
+  invitable: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
+  auto_archive_duration: Schema.optionalKey(
+    Schema.Union([Schema.Null, ThreadAutoArchiveDurationSchema]),
   ),
-  rate_limit_per_user: Schema.optional(
+  rate_limit_per_user: Schema.optionalKey(
     Schema.NullOr(
       Schema.Number.check(
         Schema.isInt32(),
@@ -12084,14 +12046,14 @@ export const UpdateThreadRequestPartialSchema = Schema.Struct({
       ),
     ),
   ),
-  flags: Schema.optional(Schema.NullOr(Schema.Number.check(Schema.isInt()))),
-  applied_tags: Schema.optional(
+  flags: Schema.optionalKey(Schema.NullOr(Schema.Number.check(Schema.isInt()))),
+  applied_tags: Schema.optionalKey(
     Schema.NullOr(Schema.Array(SnowflakeTypeSchema).check(Schema.isMaxLength(5))),
   ),
-  bitrate: Schema.optional(
+  bitrate: Schema.optionalKey(
     Schema.NullOr(Schema.Number.check(Schema.isInt32(), Schema.isGreaterThanOrEqualTo(8000))),
   ),
-  user_limit: Schema.optional(
+  user_limit: Schema.optionalKey(
     Schema.NullOr(
       Schema.Number.check(
         Schema.isInt(),
@@ -12100,17 +12062,15 @@ export const UpdateThreadRequestPartialSchema = Schema.Struct({
       ),
     ),
   ),
-  rtc_region: Schema.optional(Schema.NullOr(Schema.String)),
-  video_quality_mode: Schema.optional(
-    Schema.Union([Schema.NullOr(Schema.Null), VideoQualityModesSchema]),
-  ),
+  rtc_region: Schema.optionalKey(Schema.NullOr(Schema.String)),
+  video_quality_mode: Schema.optionalKey(Schema.Union([Schema.Null, VideoQualityModesSchema])),
 }).annotate({ identifier: 'UpdateThreadRequestPartial' })
 
 export type UpdateThreadRequestPartial = Schema.Schema.Type<typeof UpdateThreadRequestPartialSchema>
 
 export const UpdateVoiceStateRequestPartialSchema = Schema.Struct({
-  suppress: Schema.optional(Schema.NullOr(Schema.Boolean)),
-  channel_id: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema])),
+  suppress: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
+  channel_id: Schema.optionalKey(Schema.Union([Schema.Null, SnowflakeTypeSchema])),
 }).annotate({ identifier: 'UpdateVoiceStateRequestPartial' })
 
 export type UpdateVoiceStateRequestPartial = Schema.Schema.Type<
@@ -12140,19 +12100,19 @@ export const UserPIIResponseSchema = Schema.Struct({
     description: "the public flags on a user's account",
   }),
   flags: Int53TypeSchema.annotate({ description: "the flags on a user's account" }),
-  bot: Schema.optional(
+  bot: Schema.optionalKey(
     Schema.Boolean.annotate({ description: 'whether the user belongs to an OAuth2 application' }),
   ),
-  system: Schema.optional(
+  system: Schema.optionalKey(
     Schema.Boolean.annotate({
       description:
         'whether the user is an Official Discord System user (part of the urgent message system)',
     }),
   ),
-  banner: Schema.optional(
+  banner: Schema.optionalKey(
     Schema.NullOr(Schema.String).annotate({ description: "the user's banner hash" }),
   ),
-  accent_color: Schema.optional(
+  accent_color: Schema.optionalKey(
     Schema.NullOr(Schema.Number.check(Schema.isInt32())).annotate({
       description:
         "the user's banner color encoded as an integer representation of hexadecimal color code",
@@ -12161,30 +12121,28 @@ export const UserPIIResponseSchema = Schema.Struct({
   global_name: Schema.NullOr(Schema.String).annotate({
     description: "the user's display name, if it is set",
   }),
-  avatar_decoration_data: Schema.optional(
-    Schema.Union([Schema.NullOr(Schema.Null), UserAvatarDecorationResponseSchema]).annotate({
+  avatar_decoration_data: Schema.optionalKey(
+    Schema.Union([Schema.Null, UserAvatarDecorationResponseSchema]).annotate({
       description: "data for the user's avatar decoration",
     }),
   ),
-  collectibles: Schema.optional(
-    Schema.Union([Schema.NullOr(Schema.Null), UserCollectiblesResponseSchema]).annotate({
+  collectibles: Schema.optionalKey(
+    Schema.Union([Schema.Null, UserCollectiblesResponseSchema]).annotate({
       description: "data for the user's collectibles",
     }),
   ),
-  primary_guild: Schema.optional(
-    Schema.Union([Schema.NullOr(Schema.Null), UserPrimaryGuildResponseSchema]),
-  ),
+  primary_guild: Schema.optionalKey(Schema.Union([Schema.Null, UserPrimaryGuildResponseSchema])),
   mfa_enabled: Schema.Boolean,
   locale: AvailableLocalesEnumSchema,
-  premium_type: Schema.optional(PremiumTypesSchema),
-  email: Schema.optional(Schema.NullOr(Schema.String)),
-  verified: Schema.optional(Schema.Boolean),
+  premium_type: Schema.optionalKey(PremiumTypesSchema),
+  email: Schema.optionalKey(Schema.NullOr(Schema.String)),
+  verified: Schema.optionalKey(Schema.Boolean),
 }).annotate({ identifier: 'UserPIIResponse' })
 
 export type UserPIIResponse = Schema.Schema.Type<typeof UserPIIResponseSchema>
 
 export const UserProfileMetadataSchema = Schema.Struct({
-  keyword_filter: Schema.optional(
+  keyword_filter: Schema.optionalKey(
     Schema.NullOr(
       Schema.Array(
         Schema.String.check(
@@ -12198,7 +12156,7 @@ export const UserProfileMetadataSchema = Schema.Struct({
       ).check(Schema.isMaxLength(1000)),
     ),
   ),
-  regex_patterns: Schema.optional(
+  regex_patterns: Schema.optionalKey(
     Schema.NullOr(
       Schema.Array(
         Schema.String.check(
@@ -12212,7 +12170,7 @@ export const UserProfileMetadataSchema = Schema.Struct({
       ).check(Schema.isMaxLength(10)),
     ),
   ),
-  allow_list: Schema.optional(
+  allow_list: Schema.optionalKey(
     Schema.NullOr(
       Schema.Array(
         Schema.String.check(
@@ -12237,7 +12195,7 @@ export const UserProfileUpsertRequestSchema = Schema.Struct({
     }),
   ),
   event_type: AutomodEventTypeSchema,
-  actions: Schema.optional(
+  actions: Schema.optionalKey(
     Schema.NullOr(
       Schema.Array(
         Schema.Union([
@@ -12249,13 +12207,13 @@ export const UserProfileUpsertRequestSchema = Schema.Struct({
       ).check(Schema.isMinLength(1), Schema.isMaxLength(5)),
     ),
   ),
-  enabled: Schema.optional(Schema.NullOr(Schema.Boolean)),
-  exempt_roles: Schema.optional(
+  enabled: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
+  exempt_roles: Schema.optionalKey(
     Schema.NullOr(
       Schema.Array(SnowflakeTypeSchema).check(Schema.isMaxLength(20), Schema.isUnique()),
     ),
   ),
-  exempt_channels: Schema.optional(
+  exempt_channels: Schema.optionalKey(
     Schema.NullOr(
       Schema.Array(SnowflakeTypeSchema).check(Schema.isMaxLength(50), Schema.isUnique()),
     ),
@@ -12267,15 +12225,15 @@ export const UserProfileUpsertRequestSchema = Schema.Struct({
 export type UserProfileUpsertRequest = Schema.Schema.Type<typeof UserProfileUpsertRequestSchema>
 
 export const UserProfileUpsertRequestPartialSchema = Schema.Struct({
-  name: Schema.optional(
+  name: Schema.optionalKey(
     Schema.String.check(
       Schema.makeFilter((input) => [...input].length <= 100, {
         expected: 'a string of at most 100 characters',
       }),
     ),
   ),
-  event_type: Schema.optional(AutomodEventTypeSchema),
-  actions: Schema.optional(
+  event_type: Schema.optionalKey(AutomodEventTypeSchema),
+  actions: Schema.optionalKey(
     Schema.NullOr(
       Schema.Array(
         Schema.Union([
@@ -12287,19 +12245,19 @@ export const UserProfileUpsertRequestPartialSchema = Schema.Struct({
       ).check(Schema.isMinLength(1), Schema.isMaxLength(5)),
     ),
   ),
-  enabled: Schema.optional(Schema.NullOr(Schema.Boolean)),
-  exempt_roles: Schema.optional(
+  enabled: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
+  exempt_roles: Schema.optionalKey(
     Schema.NullOr(
       Schema.Array(SnowflakeTypeSchema).check(Schema.isMaxLength(20), Schema.isUnique()),
     ),
   ),
-  exempt_channels: Schema.optional(
+  exempt_channels: Schema.optionalKey(
     Schema.NullOr(
       Schema.Array(SnowflakeTypeSchema).check(Schema.isMaxLength(50), Schema.isUnique()),
     ),
   ),
-  trigger_type: Schema.optional(AutomodTriggerTypeSchema),
-  trigger_metadata: Schema.optional(UserProfileMetadataSchema),
+  trigger_type: Schema.optionalKey(AutomodTriggerTypeSchema),
+  trigger_metadata: Schema.optionalKey(UserProfileMetadataSchema),
 }).annotate({ identifier: 'UserProfileUpsertRequestPartial' })
 
 export type UserProfileUpsertRequestPartial = Schema.Schema.Type<
@@ -12316,7 +12274,7 @@ export type VanityURLErrorResponse = Schema.Schema.Type<typeof VanityURLErrorRes
 export const VanityURLResponseSchema = Schema.Struct({
   code: Schema.NullOr(Schema.String),
   uses: Schema.Number.check(Schema.isInt32()),
-  error: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), VanityURLErrorResponseSchema])),
+  error: Schema.optionalKey(Schema.Union([Schema.Null, VanityURLErrorResponseSchema])),
 }).annotate({ identifier: 'VanityURLResponse' })
 
 export type VanityURLResponse = Schema.Schema.Type<typeof VanityURLResponseSchema>
@@ -12337,7 +12295,7 @@ export const VoiceScheduledEventCreateRequestSchema = Schema.Struct({
       expected: 'a string of at most 100 characters',
     }),
   ),
-  description: Schema.optional(
+  description: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length <= 1000, {
@@ -12346,13 +12304,13 @@ export const VoiceScheduledEventCreateRequestSchema = Schema.Struct({
       ),
     ),
   ),
-  image: Schema.optional(Schema.NullOr(Schema.String)),
+  image: Schema.optionalKey(Schema.NullOr(Schema.String)),
   scheduled_start_time: Schema.String.check(
     Schema.isPattern(
       /^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z|([+-](?:[01]\d|2[0-3]):[0-5]\d)))$/,
     ),
   ),
-  scheduled_end_time: Schema.optional(
+  scheduled_end_time: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.isPattern(
@@ -12363,15 +12321,13 @@ export const VoiceScheduledEventCreateRequestSchema = Schema.Struct({
   ),
   privacy_level: GuildScheduledEventPrivacyLevelsSchema,
   entity_type: GuildScheduledEventEntityTypesSchema,
-  channel_id: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema])),
-  recurrence_rule: Schema.optional(
-    Schema.Union([Schema.NullOr(Schema.Null), RecurrenceRuleSchema]).annotate({
+  channel_id: Schema.optionalKey(Schema.Union([Schema.Null, SnowflakeTypeSchema])),
+  recurrence_rule: Schema.optionalKey(
+    Schema.Union([Schema.Null, RecurrenceRuleSchema]).annotate({
       description: 'Recurrence rule for the scheduled event',
     }),
   ),
-  entity_metadata: Schema.optional(
-    Schema.Union([Schema.NullOr(Schema.Null), EntityMetadataVoiceSchema]),
-  ),
+  entity_metadata: Schema.optionalKey(Schema.Union([Schema.Null, EntityMetadataVoiceSchema])),
 }).annotate({ identifier: 'VoiceScheduledEventCreateRequest' })
 
 export type VoiceScheduledEventCreateRequest = Schema.Schema.Type<
@@ -12379,17 +12335,15 @@ export type VoiceScheduledEventCreateRequest = Schema.Schema.Type<
 >
 
 export const VoiceScheduledEventPatchRequestPartialSchema = Schema.Struct({
-  status: Schema.optional(
-    Schema.Union([Schema.NullOr(Schema.Null), GuildScheduledEventStatusesSchema]),
-  ),
-  name: Schema.optional(
+  status: Schema.optionalKey(Schema.Union([Schema.Null, GuildScheduledEventStatusesSchema])),
+  name: Schema.optionalKey(
     Schema.String.check(
       Schema.makeFilter((input) => [...input].length <= 100, {
         expected: 'a string of at most 100 characters',
       }),
     ),
   ),
-  description: Schema.optional(
+  description: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length <= 1000, {
@@ -12398,15 +12352,15 @@ export const VoiceScheduledEventPatchRequestPartialSchema = Schema.Struct({
       ),
     ),
   ),
-  image: Schema.optional(Schema.NullOr(Schema.String)),
-  scheduled_start_time: Schema.optional(
+  image: Schema.optionalKey(Schema.NullOr(Schema.String)),
+  scheduled_start_time: Schema.optionalKey(
     Schema.String.check(
       Schema.isPattern(
         /^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z|([+-](?:[01]\d|2[0-3]):[0-5]\d)))$/,
       ),
     ),
   ),
-  scheduled_end_time: Schema.optional(
+  scheduled_end_time: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.isPattern(
@@ -12415,19 +12369,17 @@ export const VoiceScheduledEventPatchRequestPartialSchema = Schema.Struct({
       ),
     ),
   ),
-  entity_type: Schema.optional(
-    Schema.Union([Schema.NullOr(Schema.Null), GuildScheduledEventEntityTypesSchema]),
+  entity_type: Schema.optionalKey(
+    Schema.Union([Schema.Null, GuildScheduledEventEntityTypesSchema]),
   ),
-  privacy_level: Schema.optional(GuildScheduledEventPrivacyLevelsSchema),
-  channel_id: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema])),
-  recurrence_rule: Schema.optional(
-    Schema.Union([Schema.NullOr(Schema.Null), RecurrenceRuleSchema]).annotate({
+  privacy_level: Schema.optionalKey(GuildScheduledEventPrivacyLevelsSchema),
+  channel_id: Schema.optionalKey(Schema.Union([Schema.Null, SnowflakeTypeSchema])),
+  recurrence_rule: Schema.optionalKey(
+    Schema.Union([Schema.Null, RecurrenceRuleSchema]).annotate({
       description: 'Recurrence rule for the scheduled event',
     }),
   ),
-  entity_metadata: Schema.optional(
-    Schema.Union([Schema.NullOr(Schema.Null), EntityMetadataVoiceSchema]),
-  ),
+  entity_metadata: Schema.optionalKey(Schema.Union([Schema.Null, EntityMetadataVoiceSchema])),
 }).annotate({ identifier: 'VoiceScheduledEventPatchRequestPartial' })
 
 export type VoiceScheduledEventPatchRequestPartial = Schema.Schema.Type<
@@ -12435,10 +12387,10 @@ export type VoiceScheduledEventPatchRequestPartial = Schema.Schema.Type<
 >
 
 export const VoiceStateResponseSchema = Schema.Struct({
-  channel_id: Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema]),
+  channel_id: Schema.Union([Schema.Null, SnowflakeTypeSchema]),
   deaf: Schema.Boolean,
-  guild_id: Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema]),
-  member: Schema.optional(GuildMemberResponseSchema),
+  guild_id: Schema.Union([Schema.Null, SnowflakeTypeSchema]),
+  member: Schema.optionalKey(GuildMemberResponseSchema),
   mute: Schema.Boolean,
   request_to_speak_timestamp: Schema.NullOr(
     Schema.String.check(
@@ -12459,7 +12411,7 @@ export const VoiceStateResponseSchema = Schema.Struct({
 export type VoiceStateResponse = Schema.Schema.Type<typeof VoiceStateResponseSchema>
 
 export const WelcomeScreenPatchRequestPartialSchema = Schema.Struct({
-  description: Schema.optional(
+  description: Schema.optionalKey(
     Schema.NullOr(
       Schema.String.check(
         Schema.makeFilter((input) => [...input].length <= 140, {
@@ -12468,10 +12420,10 @@ export const WelcomeScreenPatchRequestPartialSchema = Schema.Struct({
       ),
     ),
   ),
-  welcome_channels: Schema.optional(
+  welcome_channels: Schema.optionalKey(
     Schema.NullOr(Schema.Array(GuildWelcomeChannelSchema).check(Schema.isMaxLength(5))),
   ),
-  enabled: Schema.optional(Schema.NullOr(Schema.Boolean)),
+  enabled: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
 }).annotate({ identifier: 'WelcomeScreenPatchRequestPartial' })
 
 export type WelcomeScreenPatchRequestPartial = Schema.Schema.Type<
@@ -12526,16 +12478,16 @@ export const WidgetMemberSchema = Schema.Struct({
   id: Schema.String,
   username: Schema.String,
   discriminator: WidgetUserDiscriminatorSchema,
-  avatar: Schema.NullOr(Schema.Null),
+  avatar: Schema.Null,
   status: Schema.String,
   avatar_url: Schema.String.check(Schema.makeFilter((input) => URL.canParse(input))),
-  activity: Schema.optional(WidgetActivitySchema),
-  deaf: Schema.optional(Schema.Boolean),
-  mute: Schema.optional(Schema.Boolean),
-  self_deaf: Schema.optional(Schema.Boolean),
-  self_mute: Schema.optional(Schema.Boolean),
-  suppress: Schema.optional(Schema.Boolean),
-  channel_id: Schema.optional(SnowflakeTypeSchema),
+  activity: Schema.optionalKey(WidgetActivitySchema),
+  deaf: Schema.optionalKey(Schema.Boolean),
+  mute: Schema.optionalKey(Schema.Boolean),
+  self_deaf: Schema.optionalKey(Schema.Boolean),
+  self_mute: Schema.optionalKey(Schema.Boolean),
+  suppress: Schema.optionalKey(Schema.Boolean),
+  channel_id: Schema.optionalKey(SnowflakeTypeSchema),
 }).annotate({ identifier: 'WidgetMember' })
 
 export type WidgetMember = Schema.Schema.Type<typeof WidgetMemberSchema>
@@ -12553,7 +12505,7 @@ export type WidgetResponse = Schema.Schema.Type<typeof WidgetResponseSchema>
 
 export const WidgetSettingsResponseSchema = Schema.Struct({
   enabled: Schema.Boolean,
-  channel_id: Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema]),
+  channel_id: Schema.Union([Schema.Null, SnowflakeTypeSchema]),
 }).annotate({ identifier: 'WidgetSettingsResponse' })
 
 export type WidgetSettingsResponse = Schema.Schema.Type<typeof WidgetSettingsResponseSchema>
@@ -12569,10 +12521,15 @@ export const ErrorSchema = Schema.Struct({
 
 export type Error = Schema.Schema.Type<typeof ErrorSchema>
 
-export const InnerErrorsSchema = Schema.Struct({
-  _errors: Schema.Array(ErrorSchema).annotate({ description: 'The list of errors for this field' }),
-})
-  .annotate({ parseOptions: { onExcessProperty: 'error' } })
+export const InnerErrorsSchema = Schema.StructWithRest(
+  Schema.Struct({
+    _errors: Schema.Array(ErrorSchema).annotate({
+      description: 'The list of errors for this field',
+    }),
+  }),
+  [Schema.Record(Schema.String, Schema.Unknown)],
+)
+  .check(Schema.makeFilter((input) => Object.keys(input).every((key) => ['_errors'].includes(key))))
   .annotate({ identifier: 'InnerErrors' })
 
 export type InnerErrors = Schema.Schema.Type<typeof InnerErrorsSchema>
@@ -12581,7 +12538,7 @@ type ErrorDetailsType =
   | { [key: string]: ErrorDetailsType }
   | Schema.Schema.Type<typeof InnerErrorsSchema>
 
-export const ErrorDetailsSchema: Schema.Codec<ErrorDetailsType> = Schema.Union([
+export const ErrorDetailsSchema: Schema.Codec<ErrorDetailsType, unknown> = Schema.Union([
   Schema.Record(
     Schema.String,
     Schema.suspend(() => ErrorDetailsSchema),
@@ -12591,31 +12548,77 @@ export const ErrorDetailsSchema: Schema.Codec<ErrorDetailsType> = Schema.Union([
 
 export type ErrorDetails = Schema.Schema.Type<typeof ErrorDetailsSchema>
 
-export const ErrorResponseSchema = ErrorSchema.check(
-  Schema.makeFilter((input) =>
-    Schema.is(Schema.Struct({ errors: Schema.optional(ErrorDetailsSchema) }))(input),
-  ),
-)
+export const ErrorResponseSchema = (() => {
+  const M0 = ErrorSchema
+  const M1 = Schema.Struct({ errors: Schema.optionalKey(ErrorDetailsSchema) })
+  const isAll = (input: unknown): input is typeof M0.Type & typeof M1.Type =>
+    Schema.is(M0)(input) && Schema.is(M1)(input)
+  return Schema.Unknown.pipe(
+    Schema.decodeTo(Schema.declare(isAll), {
+      decode: SchemaGetter.transformEffect((input) =>
+        Effect.all([
+          Schema.decodeUnknownEffect(M0)(input),
+          Schema.decodeUnknownEffect(M1)(input),
+        ]).pipe(
+          Effect.mapError((error) => error.issue),
+          Effect.flatMap((values) => {
+            const merged = values.every(
+              (value) => typeof value === 'object' && value !== null && !Array.isArray(value),
+            )
+              ? Object.assign({}, ...values)
+              : values[0]
+            return isAll(merged)
+              ? Effect.succeed(merged)
+              : Effect.fail(new SchemaIssue.InvalidValue(undefined, merged))
+          }),
+        ),
+      ),
+      encode: SchemaGetter.passthrough({ strict: false }),
+    }),
+  )
+})()
   .annotate({ description: 'Errors object returned by the Discord API' })
   .annotate({ identifier: 'ErrorResponse' })
 
 export type ErrorResponse = Schema.Schema.Type<typeof ErrorResponseSchema>
 
-export const RatelimitedResponseSchema = ErrorSchema.check(
-  Schema.makeFilter((input) =>
-    Schema.is(
-      Schema.Struct({
-        retry_after: Schema.Number.annotate({
-          description: 'The number of seconds to wait before retrying your request',
-        }),
-        global: Schema.Boolean.annotate({
-          description:
-            'Whether you are being ratelimited by the global ratelimit or a per-endpoint ratelimit',
-        }),
-      }),
-    )(input),
-  ),
-)
+export const RatelimitedResponseSchema = (() => {
+  const M0 = ErrorSchema
+  const M1 = Schema.Struct({
+    retry_after: Schema.Number.annotate({
+      description: 'The number of seconds to wait before retrying your request',
+    }),
+    global: Schema.Boolean.annotate({
+      description:
+        'Whether you are being ratelimited by the global ratelimit or a per-endpoint ratelimit',
+    }),
+  })
+  const isAll = (input: unknown): input is typeof M0.Type & typeof M1.Type =>
+    Schema.is(M0)(input) && Schema.is(M1)(input)
+  return Schema.Unknown.pipe(
+    Schema.decodeTo(Schema.declare(isAll), {
+      decode: SchemaGetter.transformEffect((input) =>
+        Effect.all([
+          Schema.decodeUnknownEffect(M0)(input),
+          Schema.decodeUnknownEffect(M1)(input),
+        ]).pipe(
+          Effect.mapError((error) => error.issue),
+          Effect.flatMap((values) => {
+            const merged = values.every(
+              (value) => typeof value === 'object' && value !== null && !Array.isArray(value),
+            )
+              ? Object.assign({}, ...values)
+              : values[0]
+            return isAll(merged)
+              ? Effect.succeed(merged)
+              : Effect.fail(new SchemaIssue.InvalidValue(undefined, merged))
+          }),
+        ),
+      ),
+      encode: SchemaGetter.passthrough({ strict: false }),
+    }),
+  )
+})()
   .annotate({ description: 'Ratelimit error object returned by the Discord API' })
   .annotate({ identifier: 'RatelimitedResponse' })
 

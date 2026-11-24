@@ -1,5 +1,5 @@
 import { initTRPC, TRPCError } from '@trpc/server'
-import { Schema } from 'effect'
+import { Effect, Schema, SchemaTransformation } from 'effect'
 import {
   AgentEnvironmentListResourceSchema,
   AgentListResourceSchema,
@@ -85,7 +85,7 @@ export const agentsRouter = t.router({
             )
             .pipe(Schema.withDecodingDefault(Effect.succeed(20n))),
           order: ListOrderParamSchema.pipe(Schema.withDecodingDefault(Effect.succeed('desc'))),
-          after: Schema.optional(
+          after: Schema.optionalKey(
             Schema.String.check(
               Schema.makeFilter((input) => [...input].length >= 0, {
                 expected: 'a string of at least 0 characters',
@@ -95,7 +95,7 @@ export const agentsRouter = t.router({
               }),
             ),
           ),
-          session_id: Schema.optional(
+          session_id: Schema.optionalKey(
             Schema.String.check(
               Schema.makeFilter((input) => [...input].length >= 0, {
                 expected: 'a string of at least 0 characters',
@@ -110,39 +110,49 @@ export const agentsRouter = t.router({
     )
     .output(
       Schema.toStandardSchemaV1(
-        Schema.Struct({
-          object: Schema.Literal('list')
-            .pipe(Schema.withDecodingDefault(Effect.succeed('list')))
-            .annotate({ description: 'The object type, which is always `list`.' }),
-          data: Schema.Array(AutomationResourceSchema)
-            .check(Schema.isMinLength(0), Schema.isMaxLength(2000))
-            .annotate({
-              description: 'The resources returned in this page, in the requested sort order.',
+        Schema.StructWithRest(
+          Schema.Struct({
+            object: Schema.Literal('list')
+              .pipe(Schema.withDecodingDefault(Effect.succeed('list')))
+              .annotate({ description: 'The object type, which is always `list`.' }),
+            data: Schema.Array(AutomationResourceSchema)
+              .check(Schema.isMinLength(0), Schema.isMaxLength(2000))
+              .annotate({
+                description: 'The resources returned in this page, in the requested sort order.',
+              }),
+            first_id: Schema.NullOr(
+              Schema.String.check(
+                Schema.makeFilter((input) => [...input].length >= 0, {
+                  expected: 'a string of at least 0 characters',
+                }),
+              ),
+            ).annotate({
+              description:
+                'The ID of the first resource in `data`, or `null` if the page is empty.',
             }),
-          first_id: Schema.NullOr(
-            Schema.String.check(
-              Schema.makeFilter((input) => [...input].length >= 0, {
-                expected: 'a string of at least 0 characters',
-              }),
+            last_id: Schema.NullOr(
+              Schema.String.check(
+                Schema.makeFilter((input) => [...input].length >= 0, {
+                  expected: 'a string of at least 0 characters',
+                }),
+              ),
+            ).annotate({
+              description:
+                'The ID of the last resource in `data`, or `null` if the page is empty. Pass this as `after` with the same order and filters.',
+            }),
+            has_more: Schema.Boolean.annotate({
+              description: 'Whether there are more resources to retrieve after this page.',
+            }),
+          }),
+          [Schema.Record(Schema.String, Schema.Unknown)],
+        )
+          .check(
+            Schema.makeFilter((input) =>
+              Object.keys(input).every((key) =>
+                ['object', 'data', 'first_id', 'last_id', 'has_more'].includes(key),
+              ),
             ),
-          ).annotate({
-            description: 'The ID of the first resource in `data`, or `null` if the page is empty.',
-          }),
-          last_id: Schema.NullOr(
-            Schema.String.check(
-              Schema.makeFilter((input) => [...input].length >= 0, {
-                expected: 'a string of at least 0 characters',
-              }),
-            ),
-          ).annotate({
-            description:
-              'The ID of the last resource in `data`, or `null` if the page is empty. Pass this as `after` with the same order and filters.',
-          }),
-          has_more: Schema.Boolean.annotate({
-            description: 'Whether there are more resources to retrieve after this page.',
-          }),
-        })
-          .annotate({ parseOptions: { onExcessProperty: 'error' } })
+          )
           .annotate({
             description:
               'A page of Agents API resources, with IDs for retrieving additional pages.',
@@ -189,7 +199,7 @@ export const agentsRouter = t.router({
               expected: 'a string of at most 1048576 characters',
             }),
           ),
-          name: Schema.optional(
+          name: Schema.optionalKey(
             Schema.String.check(
               Schema.makeFilter((input) => [...input].length >= 1, {
                 expected: 'a string of at least 1 character',
@@ -199,13 +209,13 @@ export const agentsRouter = t.router({
               }),
             ),
           ),
-          target: Schema.optional(
+          target: Schema.optionalKey(
             AutomationTargetParamSchema.annotate({
               description:
                 'Replaces the complete target, retaining its type and any creator session.',
             }),
           ),
-          metadata: Schema.optional(
+          metadata: Schema.optionalKey(
             Schema.Record(
               Schema.String,
               Schema.String.check(
@@ -218,7 +228,7 @@ export const agentsRouter = t.router({
               ),
             ).annotate({ description: 'Replaces all metadata; omit to leave unchanged.' }),
           ),
-          expression: Schema.optional(
+          expression: Schema.optionalKey(
             Schema.String.check(
               Schema.makeFilter((input) => [...input].length >= 1, {
                 expected: 'a string of at least 1 character',
@@ -228,7 +238,7 @@ export const agentsRouter = t.router({
               }),
             ).annotate({ description: 'Only accepted for periodic automations.' }),
           ),
-          timezone: Schema.optional(
+          timezone: Schema.optionalKey(
             Schema.String.check(
               Schema.makeFilter((input) => [...input].length >= 1, {
                 expected: 'a string of at least 1 character',
@@ -238,7 +248,7 @@ export const agentsRouter = t.router({
               }),
             ).annotate({ description: 'Only accepted for periodic automations.' }),
           ),
-          run_at: Schema.optional(
+          run_at: Schema.optionalKey(
             Schema.Union([
               Schema.BigInt,
               Schema.Number.check(Schema.isInt()),
@@ -364,7 +374,7 @@ export const agentsRouter = t.router({
             )
             .pipe(Schema.withDecodingDefault(Effect.succeed(20n))),
           order: ListOrderParamSchema.pipe(Schema.withDecodingDefault(Effect.succeed('desc'))),
-          after: Schema.optional(
+          after: Schema.optionalKey(
             Schema.String.check(
               Schema.makeFilter((input) => [...input].length >= 0, {
                 expected: 'a string of at least 0 characters',
@@ -379,39 +389,49 @@ export const agentsRouter = t.router({
     )
     .output(
       Schema.toStandardSchemaV1(
-        Schema.Struct({
-          object: Schema.Literal('list')
-            .pipe(Schema.withDecodingDefault(Effect.succeed('list')))
-            .annotate({ description: 'The object type, which is always `list`.' }),
-          data: Schema.Array(AutomationInvocationResourceSchema)
-            .check(Schema.isMinLength(0), Schema.isMaxLength(2000))
-            .annotate({
-              description: 'The resources returned in this page, in the requested sort order.',
+        Schema.StructWithRest(
+          Schema.Struct({
+            object: Schema.Literal('list')
+              .pipe(Schema.withDecodingDefault(Effect.succeed('list')))
+              .annotate({ description: 'The object type, which is always `list`.' }),
+            data: Schema.Array(AutomationInvocationResourceSchema)
+              .check(Schema.isMinLength(0), Schema.isMaxLength(2000))
+              .annotate({
+                description: 'The resources returned in this page, in the requested sort order.',
+              }),
+            first_id: Schema.NullOr(
+              Schema.String.check(
+                Schema.makeFilter((input) => [...input].length >= 0, {
+                  expected: 'a string of at least 0 characters',
+                }),
+              ),
+            ).annotate({
+              description:
+                'The ID of the first resource in `data`, or `null` if the page is empty.',
             }),
-          first_id: Schema.NullOr(
-            Schema.String.check(
-              Schema.makeFilter((input) => [...input].length >= 0, {
-                expected: 'a string of at least 0 characters',
-              }),
+            last_id: Schema.NullOr(
+              Schema.String.check(
+                Schema.makeFilter((input) => [...input].length >= 0, {
+                  expected: 'a string of at least 0 characters',
+                }),
+              ),
+            ).annotate({
+              description:
+                'The ID of the last resource in `data`, or `null` if the page is empty. Pass this as `after` with the same order and filters.',
+            }),
+            has_more: Schema.Boolean.annotate({
+              description: 'Whether there are more resources to retrieve after this page.',
+            }),
+          }),
+          [Schema.Record(Schema.String, Schema.Unknown)],
+        )
+          .check(
+            Schema.makeFilter((input) =>
+              Object.keys(input).every((key) =>
+                ['object', 'data', 'first_id', 'last_id', 'has_more'].includes(key),
+              ),
             ),
-          ).annotate({
-            description: 'The ID of the first resource in `data`, or `null` if the page is empty.',
-          }),
-          last_id: Schema.NullOr(
-            Schema.String.check(
-              Schema.makeFilter((input) => [...input].length >= 0, {
-                expected: 'a string of at least 0 characters',
-              }),
-            ),
-          ).annotate({
-            description:
-              'The ID of the last resource in `data`, or `null` if the page is empty. Pass this as `after` with the same order and filters.',
-          }),
-          has_more: Schema.Boolean.annotate({
-            description: 'Whether there are more resources to retrieve after this page.',
-          }),
-        })
-          .annotate({ parseOptions: { onExcessProperty: 'error' } })
+          )
           .annotate({
             description:
               'A page of Agents API resources, with IDs for retrieving additional pages.',
@@ -495,7 +515,7 @@ export const agentsRouter = t.router({
             )
             .pipe(Schema.withDecodingDefault(Effect.succeed(20n))),
           order: ListOrderParamSchema.pipe(Schema.withDecodingDefault(Effect.succeed('desc'))),
-          after: Schema.optional(
+          after: Schema.optionalKey(
             Schema.String.check(
               Schema.makeFilter((input) => [...input].length >= 0, {
                 expected: 'a string of at least 0 characters',
@@ -505,7 +525,7 @@ export const agentsRouter = t.router({
               }),
             ),
           ),
-          type: Schema.optional(EnvironmentTypeParamSchema),
+          type: Schema.optionalKey(EnvironmentTypeParamSchema),
         }),
       ),
     )
@@ -556,7 +576,7 @@ export const agentsRouter = t.router({
               expected: 'a string of at most 1048576 characters',
             }),
           ),
-          path: Schema.optional(
+          path: Schema.optionalKey(
             Schema.NullOr(
               Schema.String.check(
                 Schema.makeFilter((input) => [...input].length >= 0, {
@@ -568,7 +588,7 @@ export const agentsRouter = t.router({
               ),
             ),
           ),
-          limit: Schema.optional(
+          limit: Schema.optionalKey(
             Schema.NullOr(
               Schema.Union([
                 Schema.BigInt,
@@ -594,8 +614,8 @@ export const agentsRouter = t.router({
                 ),
             ),
           ),
-          order: Schema.optional(ListOrderParamSchema),
-          page: Schema.optional(
+          order: Schema.optionalKey(ListOrderParamSchema),
+          page: Schema.optionalKey(
             Schema.String.check(
               Schema.makeFilter((input) => [...input].length >= 0, {
                 expected: 'a string of at least 0 characters',
@@ -668,7 +688,7 @@ export const agentsRouter = t.router({
             )
             .pipe(Schema.withDecodingDefault(Effect.succeed(20n))),
           order: ListOrderParamSchema.pipe(Schema.withDecodingDefault(Effect.succeed('desc'))),
-          after: Schema.optional(
+          after: Schema.optionalKey(
             Schema.String.check(
               Schema.makeFilter((input) => [...input].length >= 0, {
                 expected: 'a string of at least 0 characters',
@@ -683,39 +703,49 @@ export const agentsRouter = t.router({
     )
     .output(
       Schema.toStandardSchemaV1(
-        Schema.Struct({
-          object: Schema.Literal('list')
-            .pipe(Schema.withDecodingDefault(Effect.succeed('list')))
-            .annotate({ description: 'The object type, which is always `list`.' }),
-          data: Schema.Array(SubagentResourceSchema)
-            .check(Schema.isMinLength(0), Schema.isMaxLength(2000))
-            .annotate({
-              description: 'The resources returned in this page, in the requested sort order.',
+        Schema.StructWithRest(
+          Schema.Struct({
+            object: Schema.Literal('list')
+              .pipe(Schema.withDecodingDefault(Effect.succeed('list')))
+              .annotate({ description: 'The object type, which is always `list`.' }),
+            data: Schema.Array(SubagentResourceSchema)
+              .check(Schema.isMinLength(0), Schema.isMaxLength(2000))
+              .annotate({
+                description: 'The resources returned in this page, in the requested sort order.',
+              }),
+            first_id: Schema.NullOr(
+              Schema.String.check(
+                Schema.makeFilter((input) => [...input].length >= 0, {
+                  expected: 'a string of at least 0 characters',
+                }),
+              ),
+            ).annotate({
+              description:
+                'The ID of the first resource in `data`, or `null` if the page is empty.',
             }),
-          first_id: Schema.NullOr(
-            Schema.String.check(
-              Schema.makeFilter((input) => [...input].length >= 0, {
-                expected: 'a string of at least 0 characters',
-              }),
+            last_id: Schema.NullOr(
+              Schema.String.check(
+                Schema.makeFilter((input) => [...input].length >= 0, {
+                  expected: 'a string of at least 0 characters',
+                }),
+              ),
+            ).annotate({
+              description:
+                'The ID of the last resource in `data`, or `null` if the page is empty. Pass this as `after` with the same order and filters.',
+            }),
+            has_more: Schema.Boolean.annotate({
+              description: 'Whether there are more resources to retrieve after this page.',
+            }),
+          }),
+          [Schema.Record(Schema.String, Schema.Unknown)],
+        )
+          .check(
+            Schema.makeFilter((input) =>
+              Object.keys(input).every((key) =>
+                ['object', 'data', 'first_id', 'last_id', 'has_more'].includes(key),
+              ),
             ),
-          ).annotate({
-            description: 'The ID of the first resource in `data`, or `null` if the page is empty.',
-          }),
-          last_id: Schema.NullOr(
-            Schema.String.check(
-              Schema.makeFilter((input) => [...input].length >= 0, {
-                expected: 'a string of at least 0 characters',
-              }),
-            ),
-          ).annotate({
-            description:
-              'The ID of the last resource in `data`, or `null` if the page is empty. Pass this as `after` with the same order and filters.',
-          }),
-          has_more: Schema.Boolean.annotate({
-            description: 'Whether there are more resources to retrieve after this page.',
-          }),
-        })
-          .annotate({ parseOptions: { onExcessProperty: 'error' } })
+          )
           .annotate({
             description:
               'A page of Agents API resources, with IDs for retrieving additional pages.',
@@ -796,7 +826,7 @@ export const agentsRouter = t.router({
             )
             .pipe(Schema.withDecodingDefault(Effect.succeed(20n))),
           order: ListOrderParamSchema.pipe(Schema.withDecodingDefault(Effect.succeed('desc'))),
-          after: Schema.optional(
+          after: Schema.optionalKey(
             Schema.String.check(
               Schema.makeFilter((input) => [...input].length >= 0, {
                 expected: 'a string of at least 0 characters',
@@ -857,7 +887,7 @@ export const agentsRouter = t.router({
             )
             .pipe(Schema.withDecodingDefault(Effect.succeed(20n))),
           order: ListOrderParamSchema.pipe(Schema.withDecodingDefault(Effect.succeed('desc'))),
-          after: Schema.optional(
+          after: Schema.optionalKey(
             Schema.String.check(
               Schema.makeFilter((input) => [...input].length >= 0, {
                 expected: 'a string of at least 0 characters',
@@ -967,7 +997,7 @@ export const agentsRouter = t.router({
             )
             .pipe(Schema.withDecodingDefault(Effect.succeed(20n))),
           order: ListOrderParamSchema.pipe(Schema.withDecodingDefault(Effect.succeed('desc'))),
-          after: Schema.optional(
+          after: Schema.optionalKey(
             Schema.String.check(
               Schema.makeFilter((input) => [...input].length >= 0, {
                 expected: 'a string of at least 0 characters',
@@ -1012,7 +1042,7 @@ export const agentsRouter = t.router({
             )
             .pipe(Schema.withDecodingDefault(Effect.succeed(20n))),
           order: ListOrderParamSchema.pipe(Schema.withDecodingDefault(Effect.succeed('desc'))),
-          after: Schema.optional(
+          after: Schema.optionalKey(
             Schema.String.check(
               Schema.makeFilter((input) => [...input].length >= 0, {
                 expected: 'a string of at least 0 characters',
@@ -1076,7 +1106,7 @@ export const agentsRouter = t.router({
             description:
               'Experimental settings to merge by key. Omitted settings keep their current values.',
           }),
-          model: Schema.optional(
+          model: Schema.optionalKey(
             Schema.String.check(
               Schema.makeFilter((input) => [...input].length >= 0, {
                 expected: 'a string of at least 0 characters',
@@ -1088,23 +1118,23 @@ export const agentsRouter = t.router({
               description: 'The model to use for the agent. The requested model name is preserved.',
             }),
           ),
-          reasoning: Schema.optional(
-            Schema.Union([ReasoningParamSchema, Schema.NullOr(Schema.Null)]).annotate({
+          reasoning: Schema.optionalKey(
+            Schema.Union([ReasoningParamSchema, Schema.Null]).annotate({
               description:
                 "Configuration for model reasoning. Omit to keep the current settings; pass `null` to reset to the model's default effort.",
             }),
           ),
-          text: Schema.optional(
-            Schema.Union([TextParamSchema, Schema.NullOr(Schema.Null)]).annotate({
+          text: Schema.optionalKey(
+            Schema.Union([TextParamSchema, Schema.Null]).annotate({
               description: 'Configuration for text generated by the agent.',
             }),
           ),
-          service_tier: Schema.optional(
-            Schema.Union([ServiceTierParamSchema, Schema.NullOr(Schema.Null)]).annotate({
+          service_tier: Schema.optionalKey(
+            Schema.Union([ServiceTierParamSchema, Schema.Null]).annotate({
               description: 'The service tier used for model requests.',
             }),
           ),
-          instructions: Schema.optional(
+          instructions: Schema.optionalKey(
             Schema.NullOr(
               Schema.String.check(
                 Schema.makeFilter((input) => [...input].length >= 0, {
@@ -1119,18 +1149,18 @@ export const agentsRouter = t.router({
                 "Additional instructions appended to the agent's default base instructions. Omit to leave unchanged.",
             }),
           ),
-          multi_agent: Schema.optional(
-            Schema.Union([MultiAgentConfigCurrentParamSchema, Schema.NullOr(Schema.Null)]).annotate(
-              { description: 'Configuration for creating and coordinating subagents.' },
-            ),
+          multi_agent: Schema.optionalKey(
+            Schema.Union([MultiAgentConfigCurrentParamSchema, Schema.Null]).annotate({
+              description: 'Configuration for creating and coordinating subagents.',
+            }),
           ),
-          compaction: Schema.optional(
-            Schema.Union([CompactionParamSchema, Schema.NullOr(Schema.Null)]).annotate({
+          compaction: Schema.optionalKey(
+            Schema.Union([CompactionParamSchema, Schema.Null]).annotate({
               description:
                 'Context compaction settings. Omit to keep the current settings. A supplied object replaces the settings; null or an empty object uses blocking compaction.',
             }),
           ),
-          metadata: Schema.optional(
+          metadata: Schema.optionalKey(
             Schema.NullOr(
               Schema.Record(
                 Schema.String,
@@ -1148,7 +1178,7 @@ export const agentsRouter = t.router({
                 'Replaces all metadata. Omit to leave unchanged, or pass null or {} to clear it. Up to 16 string key-value pairs, with keys up to 64 and values up to 512 characters.',
             }),
           ),
-          name: Schema.optional(
+          name: Schema.optionalKey(
             Schema.NullOr(
               Schema.String.check(
                 Schema.makeFilter((input) => [...input].length >= 0, {
@@ -1162,7 +1192,7 @@ export const agentsRouter = t.router({
               description: 'A replacement name. Omit to leave unchanged, or pass null to clear it.',
             }),
           ),
-          tools: Schema.optional(
+          tools: Schema.optionalKey(
             Schema.NullOr(
               Schema.Array(PersistedAgentToolConfigParamSchema).check(
                 Schema.isMinLength(0),
@@ -1227,7 +1257,7 @@ export const agentsRouter = t.router({
             )
             .pipe(Schema.withDecodingDefault(Effect.succeed(20n))),
           order: ListOrderParamSchema.pipe(Schema.withDecodingDefault(Effect.succeed('desc'))),
-          after: Schema.optional(
+          after: Schema.optionalKey(
             Schema.String.check(
               Schema.makeFilter((input) => [...input].length >= 0, {
                 expected: 'a string of at least 0 characters',
@@ -1287,7 +1317,7 @@ export const agentsRouter = t.router({
               expected: 'a string of at most 1048576 characters',
             }),
           ),
-          name: Schema.optional(
+          name: Schema.optionalKey(
             Schema.NullOr(
               Schema.String.check(
                 Schema.makeFilter((input) => [...input].length >= 1, {
@@ -1302,12 +1332,12 @@ export const agentsRouter = t.router({
                 'A replacement human-readable display name, or `null` to clear the name.',
             }),
           ),
-          packages: Schema.optional(
-            Schema.Union([EnvironmentPackagesParamSchema, Schema.NullOr(Schema.Null)]).annotate({
+          packages: Schema.optionalKey(
+            Schema.Union([EnvironmentPackagesParamSchema, Schema.Null]).annotate({
               description: 'Packages installed before the runtime network policy applies.',
             }),
           ),
-          setup_commands: Schema.optional(
+          setup_commands: Schema.optionalKey(
             Schema.NullOr(
               Schema.Array(SetupCommandParamSchema).check(
                 Schema.isMinLength(0),
@@ -1318,18 +1348,18 @@ export const agentsRouter = t.router({
                 'Replacement confidential setup commands, never included in returned resources.',
             }),
           ),
-          network: Schema.optional(
-            Schema.Union([NetworkPolicyParamSchema, Schema.NullOr(Schema.Null)]).annotate({
+          network: Schema.optionalKey(
+            Schema.Union([NetworkPolicyParamSchema, Schema.Null]).annotate({
               description:
                 'Network access available after setup completes. Omit to preserve the current policy, or pass `null` to reset to the default policy.',
             }),
           ),
-          desktop: Schema.optional(
-            Schema.Union([DesktopParamSchema, Schema.NullOr(Schema.Null)]).annotate({
+          desktop: Schema.optionalKey(
+            Schema.Union([DesktopParamSchema, Schema.Null]).annotate({
               description: 'Replacement desktop configuration, or null to disable the desktop.',
             }),
           ),
-          env: Schema.optional(
+          env: Schema.optionalKey(
             Schema.NullOr(
               Schema.Record(
                 Schema.String,
@@ -1344,7 +1374,7 @@ export const agentsRouter = t.router({
               ),
             ).annotate({ description: 'Replacement confidential environment values.' }),
           ),
-          capability_directories: Schema.optional(
+          capability_directories: Schema.optionalKey(
             Schema.NullOr(
               Schema.Array(
                 Schema.String.check(
@@ -1358,7 +1388,7 @@ export const agentsRouter = t.router({
               ).check(Schema.isMinLength(0), Schema.isMaxLength(16384)),
             ).annotate({ description: 'Directories that expose capabilities to the agent.' }),
           ),
-          skills: Schema.optional(
+          skills: Schema.optionalKey(
             Schema.NullOr(
               Schema.Array(HostedSkillParamSchema).check(
                 Schema.isMinLength(0),
@@ -1368,7 +1398,7 @@ export const agentsRouter = t.router({
               description: 'Replacement skill configuration installed for each new session.',
             }),
           ),
-          plugins: Schema.optional(
+          plugins: Schema.optionalKey(
             Schema.NullOr(
               Schema.Array(HostedPluginParamSchema).check(
                 Schema.isMinLength(0),
@@ -1378,7 +1408,7 @@ export const agentsRouter = t.router({
               description: 'Replacement plugin configuration installed for each new session.',
             }),
           ),
-          files: Schema.optional(
+          files: Schema.optionalKey(
             Schema.NullOr(
               Schema.Array(HostedEnvironmentFileParamSchema).check(
                 Schema.isMinLength(0),
@@ -1442,7 +1472,7 @@ export const agentsRouter = t.router({
             )
             .pipe(Schema.withDecodingDefault(Effect.succeed(20n))),
           order: ListOrderParamSchema.pipe(Schema.withDecodingDefault(Effect.succeed('desc'))),
-          after: Schema.optional(
+          after: Schema.optionalKey(
             Schema.String.check(
               Schema.makeFilter((input) => [...input].length >= 0, {
                 expected: 'a string of at least 0 characters',
@@ -1452,7 +1482,7 @@ export const agentsRouter = t.router({
               }),
             ),
           ),
-          agent_id: Schema.optional(
+          agent_id: Schema.optionalKey(
             Schema.String.check(
               Schema.makeFilter((input) => [...input].length >= 0, {
                 expected: 'a string of at least 0 characters',
@@ -1462,7 +1492,7 @@ export const agentsRouter = t.router({
               }),
             ),
           ),
-          metadata: Schema.optional(
+          metadata: Schema.optionalKey(
             Schema.Record(
               Schema.String,
               Schema.String.check(
@@ -1523,13 +1553,13 @@ export const agentsRouter = t.router({
               expected: 'a string of at most 1048576 characters',
             }),
           ),
-          prompt_cache_options: Schema.optional(
-            Schema.Union([PromptCacheOptionsParam2Schema, Schema.NullOr(Schema.Null)]).annotate({
+          prompt_cache_options: Schema.optionalKey(
+            Schema.Union([PromptCacheOptionsParam2Schema, Schema.Null]).annotate({
               description:
                 'Default prompt cache lifetime for future turns. Send null to clear the session default.',
             }),
           ),
-          vault_ids: Schema.optional(
+          vault_ids: Schema.optionalKey(
             Schema.NullOr(
               Schema.Array(
                 Schema.String.check(
@@ -1546,25 +1576,25 @@ export const agentsRouter = t.router({
                 "Replaces the session's referenced vaults. Omit to retain them; null or [] clears them.",
             }),
           ),
-          review: Schema.optional(
+          review: Schema.optionalKey(
             SessionReviewParamSchema.annotate({
               description:
                 'Default action review for new root turns. Existing turns and their subagents keep their review mode.',
             }),
           ),
-          spend_control: Schema.optional(
-            Schema.Union([SessionBudgetControlParamsSchema, Schema.NullOr(Schema.Null)]).annotate({
+          spend_control: Schema.optionalKey(
+            Schema.Union([SessionBudgetControlParamsSchema, Schema.Null]).annotate({
               description:
                 'Omit to retain the limit; null or a null limit removes it without resetting spend.',
             }),
           ),
-          agent: Schema.optional(
+          agent: Schema.optionalKey(
             UpdateSessionAgentParamSchema.annotate({
               description:
                 'Agent settings to update on this session. Omitted fields stay unchanged.',
             }),
           ),
-          metadata: Schema.optional(
+          metadata: Schema.optionalKey(
             Schema.NullOr(
               Schema.Record(
                 Schema.String,
@@ -1644,7 +1674,7 @@ export const agentsRouter = t.router({
             )
             .pipe(Schema.withDecodingDefault(Effect.succeed(20n))),
           order: ListOrderParamSchema.pipe(Schema.withDecodingDefault(Effect.succeed('desc'))),
-          after: Schema.optional(
+          after: Schema.optionalKey(
             Schema.String.check(
               Schema.makeFilter((input) => [...input].length >= 0, {
                 expected: 'a string of at least 0 characters',
@@ -1654,7 +1684,7 @@ export const agentsRouter = t.router({
               }),
             ),
           ),
-          environment_id: Schema.optional(
+          environment_id: Schema.optionalKey(
             Schema.NullOr(
               Schema.String.check(
                 Schema.makeFilter((input) => [...input].length >= 0, {
@@ -1837,7 +1867,7 @@ export const agentsRouter = t.router({
             )
             .pipe(Schema.withDecodingDefault(Effect.succeed(20n))),
           order: ListOrderParamSchema.pipe(Schema.withDecodingDefault(Effect.succeed('desc'))),
-          after: Schema.optional(
+          after: Schema.optionalKey(
             Schema.String.check(
               Schema.makeFilter((input) => [...input].length >= 0, {
                 expected: 'a string of at least 0 characters',
@@ -1890,7 +1920,7 @@ export const agentsRouter = t.router({
             )
             .pipe(Schema.withDecodingDefault(Effect.succeed(20n))),
           order: ListOrderParamSchema.pipe(Schema.withDecodingDefault(Effect.succeed('desc'))),
-          after: Schema.optional(
+          after: Schema.optionalKey(
             Schema.String.check(
               Schema.makeFilter((input) => [...input].length >= 0, {
                 expected: 'a string of at least 0 characters',
@@ -1949,7 +1979,7 @@ export const agentsRouter = t.router({
             )
             .pipe(Schema.withDecodingDefault(Effect.succeed(20n))),
           order: ListOrderParamSchema.pipe(Schema.withDecodingDefault(Effect.succeed('desc'))),
-          after: Schema.optional(
+          after: Schema.optionalKey(
             Schema.String.check(
               Schema.makeFilter((input) => [...input].length >= 0, {
                 expected: 'a string of at least 0 characters',
@@ -2043,7 +2073,7 @@ export const agentsRouter = t.router({
             )
             .pipe(Schema.withDecodingDefault(Effect.succeed(20n))),
           order: ListOrderParamSchema.pipe(Schema.withDecodingDefault(Effect.succeed('desc'))),
-          after: Schema.optional(
+          after: Schema.optionalKey(
             Schema.String.check(
               Schema.makeFilter((input) => [...input].length >= 0, {
                 expected: 'a string of at least 0 characters',

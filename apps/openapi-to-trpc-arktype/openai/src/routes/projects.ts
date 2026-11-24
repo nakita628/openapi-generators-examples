@@ -71,7 +71,7 @@ export const projectsRouter = t.router({
         project_id: 'string',
         role_name: type('string').describe('Unique name for the role.'),
         permissions: type('string[]').describe('Permissions to grant to the role.'),
-        'description?': type('string | null | null').describe('Optional description of the role.'),
+        'description?': type('string | null').describe('Optional description of the role.'),
       }),
     )
     .output(RoleSchema)
@@ -89,11 +89,11 @@ export const projectsRouter = t.router({
       type({
         project_id: 'string',
         role_id: 'string',
-        'permissions?': type('string[] | null | null').describe(
+        'permissions?': type('string[] | null').describe(
           'Updated set of permissions for the role.',
         ),
-        'description?': type('string | null | null').describe('New description for the role.'),
-        'role_name?': type('string | null | null').describe('New name for the role.'),
+        'description?': type('string | null').describe('New description for the role.'),
+        'role_name?': type('string | null').describe('New name for the role.'),
       }),
     )
     .output(RoleSchema)

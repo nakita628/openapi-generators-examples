@@ -138,11 +138,12 @@ export const playlistsHandler = new Hono()
             examples: ['items(added_by.id,track(name,href,album(name,href)))'],
           })
           .exactOptional(),
-        limit: z.coerce
-          .number()
-          .int()
-          .min(1)
-          .max(100)
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(1).max(100),
+          )
           .default(20)
           .meta({
             description:
@@ -150,9 +151,12 @@ export const playlistsHandler = new Hono()
             examples: [10],
           })
           .exactOptional(),
-        offset: z.coerce
-          .number()
-          .int()
+        offset: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
           .default(0)
           .meta({
             description:
@@ -249,9 +253,12 @@ export const playlistsHandler = new Hono()
     sValidator(
       'query',
       z.object({
-        position: z.coerce
-          .number()
-          .int()
+        position: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
           .meta({
             description:
               'The position to insert the items, a zero-based index. For example, to insert the items in the first position: `position=0`; to insert the items in the third position: `position=2`. If omitted, the items will be appended to the playlist. Items are added in the order they are listed in the query string or request body.\n',
@@ -356,11 +363,12 @@ export const playlistsHandler = new Hono()
             examples: ['items(added_by.id,track(name,href,album(name,href)))'],
           })
           .exactOptional(),
-        limit: z.coerce
-          .number()
-          .int()
-          .min(1)
-          .max(50)
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(1).max(50),
+          )
           .default(20)
           .meta({
             description:
@@ -368,9 +376,12 @@ export const playlistsHandler = new Hono()
             examples: [10],
           })
           .exactOptional(),
-        offset: z.coerce
-          .number()
-          .int()
+        offset: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
           .default(0)
           .meta({
             description:
@@ -467,9 +478,12 @@ export const playlistsHandler = new Hono()
     sValidator(
       'query',
       z.object({
-        position: z.coerce
-          .number()
-          .int()
+        position: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
           .meta({
             description:
               'The position to insert the items, a zero-based index. For example, to insert the items in the first position: `position=0`; to insert the items in the third position: `position=2`. If omitted, the items will be appended to the playlist. Items are added in the order they are listed in the query string or request body.\n',

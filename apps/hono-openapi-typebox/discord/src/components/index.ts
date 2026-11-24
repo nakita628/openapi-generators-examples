@@ -1,6 +1,31 @@
-import { resolver } from 'hono-openapi'
-import { Type, type Static } from 'typebox'
+import { resolver, validator } from 'hono-openapi'
+import { Type, type Static, type StaticDecode, type StaticEncode, type TSchema } from 'typebox'
 import { Compile } from 'typebox/compile'
+
+const toStandardSchemaV1 = <T extends TSchema>(schema: T) => {
+  const validator = Compile(schema)
+  return Object.assign(validator, {
+    '~standard': {
+      version: 1 as const,
+      vendor: 'typebox',
+      validate: (value: unknown) =>
+        validator.Check(value)
+          ? { value: validator.Decode(value) }
+          : {
+              issues: validator.Errors(value).map((error) => ({
+                message: error.message,
+                path: error.instancePath
+                  .split('/')
+                  .slice(1)
+                  .map((key) => key.replaceAll('~1', '/').replaceAll('~0', '~')),
+              })),
+            },
+      types: undefined as
+        | { readonly input: StaticEncode<T>; readonly output: StaticDecode<T> }
+        | undefined,
+    },
+  })
+}
 
 export const AccountResponseSchema = Type.Object(
   { id: Type.String(), name: Type.Union([Type.String(), Type.Null()]) },
@@ -60,7 +85,7 @@ export type SnowflakeType = Static<typeof SnowflakeTypeSchema>
 
 export const ComponentEmojiForRequestSchema = Type.Object(
   {
-    id: Type.Optional(Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema])),
+    id: Type.Optional(Type.Union([Type.Null(), SnowflakeTypeSchema])),
     name: Type.String({ maxLength: 32 }),
   },
   { ref: 'ComponentEmojiForRequest' },
@@ -79,12 +104,8 @@ export const ButtonComponentForMessageRequestSchema = Type.Object(
     label: Type.Optional(Type.Union([Type.String({ maxLength: 80 }), Type.Null()])),
     disabled: Type.Optional(Type.Union([Type.Boolean(), Type.Null()])),
     url: Type.Optional(Type.Union([Type.String({ format: 'uri', maxLength: 512 }), Type.Null()])),
-    sku_id: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
-    ),
-    emoji: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), ComponentEmojiForRequestSchema]),
-    ),
+    sku_id: Type.Optional(Type.Union([Type.Null(), SnowflakeTypeSchema])),
+    emoji: Type.Optional(Type.Union([Type.Null(), ComponentEmojiForRequestSchema])),
   },
   { ref: 'ButtonComponentForMessageRequest' },
 )
@@ -227,9 +248,7 @@ export const StringSelectOptionForRequestSchema = Type.Object(
     value: Type.String({ minLength: 1, maxLength: 100 }),
     description: Type.Optional(Type.Union([Type.String({ maxLength: 100 }), Type.Null()])),
     default: Type.Optional(Type.Union([Type.Boolean(), Type.Null()])),
-    emoji: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), ComponentEmojiForRequestSchema]),
-    ),
+    emoji: Type.Optional(Type.Union([Type.Null(), ComponentEmojiForRequestSchema])),
   },
   { ref: 'StringSelectOptionForRequest' },
 )
@@ -707,7 +726,7 @@ export type Int53Type = Static<typeof Int53TypeSchema>
 export const UserAvatarDecorationResponseSchema = Type.Object(
   {
     asset: Type.String({ description: 'the avatar decoration hash' }),
-    sku_id: Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema], {
+    sku_id: Type.Union([Type.Null(), SnowflakeTypeSchema], {
       description: "id of the avatar decoration's SKU",
     }),
   },
@@ -738,7 +757,7 @@ export type NameplatePalette = Static<typeof NameplatePaletteSchema>
 
 export const UserNameplateResponseSchema = Type.Object(
   {
-    sku_id: Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema], {
+    sku_id: Type.Union([Type.Null(), SnowflakeTypeSchema], {
       description: 'ID of the nameplate SKU',
     }),
     asset: Type.String({ description: 'Path to the nameplate asset' }),
@@ -752,7 +771,7 @@ export type UserNameplateResponse = Static<typeof UserNameplateResponseSchema>
 
 export const UserCollectiblesResponseSchema = Type.Object(
   {
-    nameplate: Type.Union([Type.Union([Type.Null(), Type.Null()]), UserNameplateResponseSchema], {
+    nameplate: Type.Union([Type.Null(), UserNameplateResponseSchema], {
       description: 'Object mapping of nameplate data',
     }),
   },
@@ -763,7 +782,7 @@ export type UserCollectiblesResponse = Static<typeof UserCollectiblesResponseSch
 
 export const UserPrimaryGuildResponseSchema = Type.Object(
   {
-    identity_guild_id: Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema], {
+    identity_guild_id: Type.Union([Type.Null(), SnowflakeTypeSchema], {
       description: "the id of the user's primary guild",
     }),
     identity_enabled: Type.Union([
@@ -817,19 +836,18 @@ export const UserResponseSchema = Type.Object(
       Type.Null(),
     ]),
     avatar_decoration_data: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), UserAvatarDecorationResponseSchema], {
+      Type.Union([Type.Null(), UserAvatarDecorationResponseSchema], {
         description: "data for the user's avatar decoration",
       }),
     ),
     collectibles: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), UserCollectiblesResponseSchema], {
+      Type.Union([Type.Null(), UserCollectiblesResponseSchema], {
         description: "data for the user's collectibles",
       }),
     ),
-    primary_guild: Type.Union(
-      [Type.Union([Type.Null(), Type.Null()]), UserPrimaryGuildResponseSchema],
-      { description: "the user's primary guild" },
-    ),
+    primary_guild: Type.Union([Type.Null(), UserPrimaryGuildResponseSchema], {
+      description: "the user's primary guild",
+    }),
   },
   { ref: 'UserResponse' },
 )
@@ -989,7 +1007,7 @@ export const ApplicationResponseSchema = Type.Object(
     name: Type.String(),
     icon: Type.Union([Type.String(), Type.Null()]),
     description: Type.String(),
-    type: Type.Union([Type.Union([Type.Null(), Type.Null()]), ApplicationTypesSchema]),
+    type: Type.Union([Type.Null(), ApplicationTypesSchema]),
     cover_image: Type.Optional(Type.String()),
     primary_sku_id: Type.Optional(SnowflakeTypeSchema),
     flags: Type.Integer(),
@@ -1213,13 +1231,9 @@ export const InteractionApplicationCommandAutocompleteCallbackIntegerDataSchema 
   {
     choices: Type.Optional(
       Type.Union([
-        Type.Array(
-          Type.Union([
-            Type.Union([Type.Null(), Type.Null()]),
-            ApplicationCommandOptionIntegerChoiceSchema,
-          ]),
-          { maxItems: 25 },
-        ),
+        Type.Array(Type.Union([Type.Null(), ApplicationCommandOptionIntegerChoiceSchema]), {
+          maxItems: 25,
+        }),
         Type.Null(),
       ]),
     ),
@@ -1255,13 +1269,9 @@ export const InteractionApplicationCommandAutocompleteCallbackNumberDataSchema =
   {
     choices: Type.Optional(
       Type.Union([
-        Type.Array(
-          Type.Union([
-            Type.Union([Type.Null(), Type.Null()]),
-            ApplicationCommandOptionNumberChoiceSchema,
-          ]),
-          { maxItems: 25 },
-        ),
+        Type.Array(Type.Union([Type.Null(), ApplicationCommandOptionNumberChoiceSchema]), {
+          maxItems: 25,
+        }),
         Type.Null(),
       ]),
     ),
@@ -1297,13 +1307,9 @@ export const InteractionApplicationCommandAutocompleteCallbackStringDataSchema =
   {
     choices: Type.Optional(
       Type.Union([
-        Type.Array(
-          Type.Union([
-            Type.Union([Type.Null(), Type.Null()]),
-            ApplicationCommandOptionStringChoiceSchema,
-          ]),
-          { maxItems: 25 },
-        ),
+        Type.Array(Type.Union([Type.Null(), ApplicationCommandOptionStringChoiceSchema]), {
+          maxItems: 25,
+        }),
         Type.Null(),
       ]),
     ),
@@ -1464,8 +1470,8 @@ export const ApplicationCommandIntegerOptionSchema = Type.Object(
         Type.Null(),
       ]),
     ),
-    min_value: Type.Optional(Type.Union([Type.Union([Type.Null(), Type.Null()]), Int53TypeSchema])),
-    max_value: Type.Optional(Type.Union([Type.Union([Type.Null(), Type.Null()]), Int53TypeSchema])),
+    min_value: Type.Optional(Type.Union([Type.Null(), Int53TypeSchema])),
+    max_value: Type.Optional(Type.Union([Type.Null(), Int53TypeSchema])),
   },
   { ref: 'ApplicationCommandIntegerOption' },
 )
@@ -1838,14 +1844,12 @@ export const ApplicationCommandCreateRequestSchema = Type.Object(
       ]),
     ),
     handler: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), ApplicationCommandHandlerSchema], {
+      Type.Union([Type.Null(), ApplicationCommandHandlerSchema], {
         description:
           "Determines whether the interaction is handled by the app's interactions handler or by Discord",
       }),
     ),
-    type: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), ApplicationCommandTypeSchema]),
-    ),
+    type: Type.Optional(Type.Union([Type.Null(), ApplicationCommandTypeSchema])),
   },
   { ref: 'ApplicationCommandCreateRequest' },
 )
@@ -2074,7 +2078,7 @@ export const ApplicationCommandPatchRequestPartialSchema = Type.Object(
       ]),
     ),
     handler: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), ApplicationCommandHandlerSchema], {
+      Type.Union([Type.Null(), ApplicationCommandHandlerSchema], {
         description:
           "Determines whether the interaction is handled by the app's interactions handler or by Discord",
       }),
@@ -2347,15 +2351,13 @@ export const ApplicationCommandUpdateRequestSchema = Type.Object(
       ]),
     ),
     handler: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), ApplicationCommandHandlerSchema], {
+      Type.Union([Type.Null(), ApplicationCommandHandlerSchema], {
         description:
           "Determines whether the interaction is handled by the app's interactions handler or by Discord",
       }),
     ),
-    type: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), ApplicationCommandTypeSchema]),
-    ),
-    id: Type.Optional(Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema])),
+    type: Type.Optional(Type.Union([Type.Null(), ApplicationCommandTypeSchema])),
+    id: Type.Optional(Type.Union([Type.Null(), SnowflakeTypeSchema])),
   },
   { ref: 'ApplicationCommandUpdateRequest' },
 )
@@ -2404,7 +2406,7 @@ export type ApplicationOAuth2InstallParams = Static<typeof ApplicationOAuth2Inst
 export const ApplicationIntegrationTypeConfigurationSchema = Type.Object(
   {
     oauth2_install_params: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), ApplicationOAuth2InstallParamsSchema]),
+      Type.Union([Type.Null(), ApplicationOAuth2InstallParamsSchema]),
     ),
   },
   { ref: 'ApplicationIntegrationTypeConfiguration' },
@@ -2429,23 +2431,16 @@ export const ApplicationFormPartialSchema = Type.Object(
     ),
     icon: Type.Optional(Type.Union([Type.String(), Type.Null()])),
     cover_image: Type.Optional(Type.Union([Type.String(), Type.Null()])),
-    team_id: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
-    ),
+    team_id: Type.Optional(Type.Union([Type.Null(), SnowflakeTypeSchema])),
     flags: Type.Optional(Type.Union([Type.Integer(), Type.Null()])),
     interactions_endpoint_url: Type.Optional(
       Type.Union([Type.String({ format: 'uri', maxLength: 2048 }), Type.Null()]),
     ),
     explicit_content_filter: Type.Optional(
-      Type.Union([
-        Type.Union([Type.Null(), Type.Null()]),
-        ApplicationExplicitContentFilterTypesSchema,
-      ]),
+      Type.Union([Type.Null(), ApplicationExplicitContentFilterTypesSchema]),
     ),
     max_participants: Type.Optional(Type.Union([Type.Integer({ minimum: -1 }), Type.Null()])),
-    type: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), ApplicationTypesSchema]),
-    ),
+    type: Type.Optional(Type.Union([Type.Null(), ApplicationTypesSchema])),
     tags: Type.Optional(
       Type.Union([
         Type.Array(Type.String({ maxLength: 20 }), { maxItems: 5, uniqueItems: true }),
@@ -2455,9 +2450,7 @@ export const ApplicationFormPartialSchema = Type.Object(
     custom_install_url: Type.Optional(
       Type.Union([Type.String({ format: 'uri', maxLength: 2048 }), Type.Null()]),
     ),
-    install_params: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), ApplicationOAuth2InstallParamsSchema]),
-    ),
+    install_params: Type.Optional(Type.Union([Type.Null(), ApplicationOAuth2InstallParamsSchema])),
     role_connections_verification_url: Type.Optional(
       Type.Union([Type.String({ format: 'uri', maxLength: 2048 }), Type.Null()]),
     ),
@@ -2465,17 +2458,14 @@ export const ApplicationFormPartialSchema = Type.Object(
       Type.Union([
         Type.Record(
           Type.String(),
-          Type.Union([
-            Type.Union([Type.Null(), Type.Null()]),
-            ApplicationIntegrationTypeConfigurationSchema,
-          ]),
+          Type.Union([Type.Null(), ApplicationIntegrationTypeConfigurationSchema]),
           { minProperties: 1, maxProperties: 2 },
         ),
         Type.Null(),
       ]),
     ),
     event_webhooks_status: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), ApplicationEventWebhooksStatusSchema]),
+      Type.Union([Type.Null(), ApplicationEventWebhooksStatusSchema]),
     ),
     event_webhooks_url: Type.Optional(
       Type.Union([
@@ -2532,12 +2522,10 @@ export type WebhookTypes = Static<typeof WebhookTypesSchema>
 
 export const ApplicationIncomingWebhookResponseSchema = Type.Object(
   {
-    application_id: Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
+    application_id: Type.Union([Type.Null(), SnowflakeTypeSchema]),
     avatar: Type.Union([Type.String(), Type.Null()]),
-    channel_id: Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
-    guild_id: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
-    ),
+    channel_id: Type.Union([Type.Null(), SnowflakeTypeSchema]),
+    guild_id: Type.Optional(Type.Union([Type.Null(), SnowflakeTypeSchema])),
     id: SnowflakeTypeSchema,
     name: Type.String(),
     type: WebhookTypesSchema,
@@ -2758,8 +2746,8 @@ export const AuditLogEntryResponseSchema = Type.Object(
   {
     id: SnowflakeTypeSchema,
     action_type: AuditLogActionTypesSchema,
-    user_id: Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
-    target_id: Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
+    user_id: Type.Union([Type.Null(), SnowflakeTypeSchema]),
+    target_id: Type.Union([Type.Null(), SnowflakeTypeSchema]),
     changes: Type.Optional(Type.Array(AuditLogObjectChangeResponseSchema)),
     options: Type.Optional(Type.Record(Type.String(), Type.String())),
     reason: Type.Optional(Type.String()),
@@ -3021,30 +3009,16 @@ export const RichEmbedSchema = Type.Object(
     ),
     timestamp: Type.Optional(Type.Union([Type.String({ format: 'date-time' }), Type.Null()])),
     description: Type.Optional(Type.Union([Type.String({ maxLength: 4096 }), Type.Null()])),
-    author: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), RichEmbedAuthorSchema]),
-    ),
-    image: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), RichEmbedImageSchema]),
-    ),
-    thumbnail: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), RichEmbedThumbnailSchema]),
-    ),
-    footer: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), RichEmbedFooterSchema]),
-    ),
+    author: Type.Optional(Type.Union([Type.Null(), RichEmbedAuthorSchema])),
+    image: Type.Optional(Type.Union([Type.Null(), RichEmbedImageSchema])),
+    thumbnail: Type.Optional(Type.Union([Type.Null(), RichEmbedThumbnailSchema])),
+    footer: Type.Optional(Type.Union([Type.Null(), RichEmbedFooterSchema])),
     fields: Type.Optional(
       Type.Union([Type.Array(RichEmbedFieldSchema, { maxItems: 25 }), Type.Null()]),
     ),
-    provider: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), RichEmbedProviderSchema]),
-    ),
-    video: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), RichEmbedVideoSchema]),
-    ),
-    audio: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), RichEmbedAudioSchema]),
-    ),
+    provider: Type.Optional(Type.Union([Type.Null(), RichEmbedProviderSchema])),
+    video: Type.Optional(Type.Union([Type.Null(), RichEmbedVideoSchema])),
+    audio: Type.Optional(Type.Union([Type.Null(), RichEmbedAudioSchema])),
   },
   { ref: 'RichEmbed' },
 )
@@ -3055,16 +3029,16 @@ export const MessageAllowedMentionsRequestSchema = Type.Object(
   {
     parse: Type.Optional(
       Type.Union([
-        Type.Array(
-          Type.Union([Type.Union([Type.Null(), Type.Null()]), AllowedMentionTypesSchema]),
-          { maxItems: 1521, uniqueItems: true },
-        ),
+        Type.Array(Type.Union([Type.Null(), AllowedMentionTypesSchema]), {
+          maxItems: 1521,
+          uniqueItems: true,
+        }),
         Type.Null(),
       ]),
     ),
     users: Type.Optional(
       Type.Union([
-        Type.Array(Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]), {
+        Type.Array(Type.Union([Type.Null(), SnowflakeTypeSchema]), {
           maxItems: 100,
           uniqueItems: true,
         }),
@@ -3073,7 +3047,7 @@ export const MessageAllowedMentionsRequestSchema = Type.Object(
     ),
     roles: Type.Optional(
       Type.Union([
-        Type.Array(Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]), {
+        Type.Array(Type.Union([Type.Null(), SnowflakeTypeSchema]), {
           maxItems: 100,
           uniqueItems: true,
         }),
@@ -3209,12 +3183,7 @@ export const SeparatorComponentForMessageRequestSchema = Type.Object(
   {
     type: MessageComponentTypesSchema,
     id: Type.Optional(Type.Union([Type.Integer({ minimum: 0 }), Type.Null()])),
-    spacing: Type.Optional(
-      Type.Union([
-        Type.Union([Type.Null(), Type.Null()]),
-        MessageComponentSeparatorSpacingSizeSchema,
-      ]),
-    ),
+    spacing: Type.Optional(Type.Union([Type.Null(), MessageComponentSeparatorSpacingSizeSchema])),
     divider: Type.Optional(Type.Union([Type.Boolean(), Type.Null()])),
   },
   { ref: 'SeparatorComponentForMessageRequest' },
@@ -3273,9 +3242,7 @@ export type MessageAttachmentRequest = Static<typeof MessageAttachmentRequestSch
 export const PollEmojiSchema = Type.Object(
   {
     id: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema], {
-        description: 'The ID of the custom emoji',
-      }),
+      Type.Union([Type.Null(), SnowflakeTypeSchema], { description: 'The ID of the custom emoji' }),
     ),
     name: Type.Optional(
       Type.Union([
@@ -3304,9 +3271,7 @@ export const PollMediaSchema = Type.Object(
       ]),
     ),
     emoji: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), PollEmojiSchema], {
-        description: 'The emoji of the field',
-      }),
+      Type.Union([Type.Null(), PollEmojiSchema], { description: 'The emoji of the field' }),
     ),
   },
   { ref: 'PollMedia' },
@@ -3317,9 +3282,7 @@ export type PollMedia = Static<typeof PollMediaSchema>
 export const PollEmojiCreateRequestSchema = Type.Object(
   {
     id: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema], {
-        description: 'The ID of the custom emoji',
-      }),
+      Type.Union([Type.Null(), SnowflakeTypeSchema], { description: 'The ID of the custom emoji' }),
     ),
     name: Type.Optional(
       Type.Union([
@@ -3348,7 +3311,7 @@ export const PollMediaCreateRequestSchema = Type.Object(
       ]),
     ),
     emoji: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), PollEmojiCreateRequestSchema], {
+      Type.Union([Type.Null(), PollEmojiCreateRequestSchema], {
         description: 'The emoji of the field',
       }),
     ),
@@ -3387,7 +3350,7 @@ export const PollCreateRequestSchema = Type.Object(
       ]),
     ),
     layout_type: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), PollLayoutTypesSchema], {
+      Type.Union([Type.Null(), PollLayoutTypesSchema], {
         description: 'The layout type of the poll. Defaults to... DEFAULT!',
       }),
     ),
@@ -3428,10 +3391,7 @@ export const CustomClientThemeShareRequestSchema = Type.Object(
     gradient_angle: Type.Integer({ minimum: 0, maximum: 360 }),
     base_mix: Type.Integer({ minimum: 0, maximum: 100 }),
     base_theme: Type.Optional(
-      Type.Union([
-        Type.Union([Type.Null(), Type.Null()]),
-        MessageShareCustomUserThemeBaseThemeSchema,
-      ]),
+      Type.Union([Type.Null(), MessageShareCustomUserThemeBaseThemeSchema]),
     ),
   },
   { ref: 'CustomClientThemeShareRequest' },
@@ -3443,9 +3403,7 @@ export const BaseCreateMessageCreateRequestSchema = Type.Object(
   {
     content: Type.Optional(Type.Union([Type.String({ maxLength: 4000 }), Type.Null()])),
     embeds: Type.Optional(Type.Union([Type.Array(RichEmbedSchema, { maxItems: 10 }), Type.Null()])),
-    allowed_mentions: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), MessageAllowedMentionsRequestSchema]),
-    ),
+    allowed_mentions: Type.Optional(Type.Union([Type.Null(), MessageAllowedMentionsRequestSchema])),
     sticker_ids: Type.Optional(
       Type.Union([Type.Array(SnowflakeTypeSchema, { maxItems: 3 }), Type.Null()]),
     ),
@@ -3470,11 +3428,9 @@ export const BaseCreateMessageCreateRequestSchema = Type.Object(
     attachments: Type.Optional(
       Type.Union([Type.Array(MessageAttachmentRequestSchema, { maxItems: 10 }), Type.Null()]),
     ),
-    poll: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), PollCreateRequestSchema]),
-    ),
+    poll: Type.Optional(Type.Union([Type.Null(), PollCreateRequestSchema])),
     shared_client_theme: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), CustomClientThemeShareRequestSchema]),
+      Type.Union([Type.Null(), CustomClientThemeShareRequestSchema]),
     ),
   },
   { ref: 'BaseCreateMessageCreateRequest' },
@@ -3488,7 +3444,7 @@ export const BasicApplicationResponseWithBotSchema = Type.Object(
     name: Type.String(),
     icon: Type.Union([Type.String(), Type.Null()]),
     description: Type.String(),
-    type: Type.Union([Type.Union([Type.Null(), Type.Null()]), ApplicationTypesSchema]),
+    type: Type.Union([Type.Null(), ApplicationTypesSchema]),
     cover_image: Type.Optional(Type.String()),
     primary_sku_id: Type.Optional(SnowflakeTypeSchema),
     flags: Type.Integer(),
@@ -3507,7 +3463,7 @@ export const BasicGuildMemberResponseSchema = Type.Object(
       Type.Null(),
     ]),
     avatar_decoration_data: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), UserAvatarDecorationResponseSchema], {
+      Type.Union([Type.Null(), UserAvatarDecorationResponseSchema], {
         description: "data for the member's guild avatar decoration",
       }),
     ),
@@ -3541,7 +3497,7 @@ export const BasicGuildMemberResponseSchema = Type.Object(
       description: 'array of role object ids',
     }),
     collectibles: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), UserCollectiblesResponseSchema], {
+      Type.Union([Type.Null(), UserCollectiblesResponseSchema], {
         description: "data for the member's collectibles",
       }),
     ),
@@ -3887,7 +3843,7 @@ export const GuildStickerResponseSchema = Type.Object(
     name: Type.String(),
     tags: Type.String(),
     type: StickerTypesSchema,
-    format_type: Type.Union([Type.Union([Type.Null(), Type.Null()]), StickerFormatTypesSchema]),
+    format_type: Type.Union([Type.Null(), StickerFormatTypesSchema]),
     description: Type.Union([Type.String(), Type.Null()]),
     available: Type.Boolean(),
     guild_id: SnowflakeTypeSchema,
@@ -3904,7 +3860,7 @@ export const StandardStickerResponseSchema = Type.Object(
     name: Type.String(),
     tags: Type.String(),
     type: StickerTypesSchema,
-    format_type: Type.Union([Type.Union([Type.Null(), Type.Null()]), StickerFormatTypesSchema]),
+    format_type: Type.Union([Type.Null(), StickerFormatTypesSchema]),
     description: Type.Union([Type.String(), Type.Null()]),
     pack_id: SnowflakeTypeSchema,
     sort_value: Type.Integer(),
@@ -4013,7 +3969,7 @@ export const GuildMemberResponseSchema = Type.Object(
       Type.Null(),
     ]),
     avatar_decoration_data: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), UserAvatarDecorationResponseSchema], {
+      Type.Union([Type.Null(), UserAvatarDecorationResponseSchema], {
         description: "data for the member's guild avatar decoration",
       }),
     ),
@@ -4047,7 +4003,7 @@ export const GuildMemberResponseSchema = Type.Object(
       description: 'array of role object ids',
     }),
     collectibles: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), UserCollectiblesResponseSchema], {
+      Type.Union([Type.Null(), UserCollectiblesResponseSchema], {
         description: "data for the member's collectibles",
       }),
     ),
@@ -4077,18 +4033,14 @@ export const ThreadResponseSchema = Type.Object(
   {
     id: SnowflakeTypeSchema,
     type: ChannelTypesSchema,
-    last_message_id: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
-    ),
+    last_message_id: Type.Optional(Type.Union([Type.Null(), SnowflakeTypeSchema])),
     flags: Type.Integer(),
     last_pin_timestamp: Type.Optional(
       Type.Union([Type.String({ format: 'date-time' }), Type.Null()]),
     ),
     guild_id: SnowflakeTypeSchema,
     name: Type.String(),
-    parent_id: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
-    ),
+    parent_id: Type.Optional(Type.Union([Type.Null(), SnowflakeTypeSchema])),
     rate_limit_per_user: Type.Optional(Type.Integer()),
     bitrate: Type.Optional(Type.Integer()),
     user_limit: Type.Optional(Type.Integer()),
@@ -4180,7 +4132,7 @@ export const ForumTagResponseSchema = Type.Object(
     id: SnowflakeTypeSchema,
     name: Type.String(),
     moderated: Type.Boolean(),
-    emoji_id: Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
+    emoji_id: Type.Union([Type.Null(), SnowflakeTypeSchema]),
     emoji_name: Type.Union([Type.String(), Type.Null()]),
   },
   { ref: 'ForumTagResponse' },
@@ -4190,7 +4142,7 @@ export type ForumTagResponse = Static<typeof ForumTagResponseSchema>
 
 export const DefaultReactionEmojiResponseSchema = Type.Object(
   {
-    emoji_id: Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
+    emoji_id: Type.Union([Type.Null(), SnowflakeTypeSchema]),
     emoji_name: Type.Union([Type.String(), Type.Null()]),
   },
   { ref: 'DefaultReactionEmojiResponse' },
@@ -4239,18 +4191,14 @@ export const GuildChannelResponseSchema = Type.Object(
   {
     id: SnowflakeTypeSchema,
     type: ChannelTypesSchema,
-    last_message_id: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
-    ),
+    last_message_id: Type.Optional(Type.Union([Type.Null(), SnowflakeTypeSchema])),
     flags: Type.Integer(),
     last_pin_timestamp: Type.Optional(
       Type.Union([Type.String({ format: 'date-time' }), Type.Null()]),
     ),
     guild_id: SnowflakeTypeSchema,
     name: Type.String(),
-    parent_id: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
-    ),
+    parent_id: Type.Optional(Type.Union([Type.Null(), SnowflakeTypeSchema])),
     rate_limit_per_user: Type.Optional(Type.Integer()),
     bitrate: Type.Optional(Type.Integer()),
     user_limit: Type.Optional(Type.Integer()),
@@ -4265,15 +4213,11 @@ export const GuildChannelResponseSchema = Type.Object(
     nsfw: Type.Optional(Type.Boolean()),
     available_tags: Type.Optional(Type.Array(ForumTagResponseSchema)),
     default_reaction_emoji: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), DefaultReactionEmojiResponseSchema]),
+      Type.Union([Type.Null(), DefaultReactionEmojiResponseSchema]),
     ),
-    default_sort_order: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), ThreadSortOrderSchema]),
-    ),
+    default_sort_order: Type.Optional(Type.Union([Type.Null(), ThreadSortOrderSchema])),
     default_forum_layout: Type.Optional(ForumLayoutSchema),
-    default_tag_setting: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), ThreadSearchTagSettingSchema]),
-    ),
+    default_tag_setting: Type.Optional(Type.Union([Type.Null(), ThreadSearchTagSettingSchema])),
   },
   { ref: 'GuildChannelResponse' },
 )
@@ -4284,9 +4228,7 @@ export const PrivateChannelResponseSchema = Type.Object(
   {
     id: SnowflakeTypeSchema,
     type: ChannelTypesSchema,
-    last_message_id: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
-    ),
+    last_message_id: Type.Optional(Type.Union([Type.Null(), SnowflakeTypeSchema])),
     flags: Type.Integer(),
     last_pin_timestamp: Type.Optional(
       Type.Union([Type.String({ format: 'date-time' }), Type.Null()]),
@@ -4302,9 +4244,7 @@ export const PrivateGroupChannelResponseSchema = Type.Object(
   {
     id: SnowflakeTypeSchema,
     type: ChannelTypesSchema,
-    last_message_id: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
-    ),
+    last_message_id: Type.Optional(Type.Union([Type.Null(), SnowflakeTypeSchema])),
     flags: Type.Integer(),
     last_pin_timestamp: Type.Optional(
       Type.Union([Type.String({ format: 'date-time' }), Type.Null()]),
@@ -4334,12 +4274,12 @@ export type GuildRoleColorsResponse = Static<typeof GuildRoleColorsResponseSchem
 
 export const GuildRoleTagsResponseSchema = Type.Object(
   {
-    premium_subscriber: Type.Optional(Type.Union([Type.Null(), Type.Null()])),
+    premium_subscriber: Type.Optional(Type.Null()),
     bot_id: Type.Optional(SnowflakeTypeSchema),
     integration_id: Type.Optional(SnowflakeTypeSchema),
     subscription_listing_id: Type.Optional(SnowflakeTypeSchema),
-    available_for_purchase: Type.Optional(Type.Union([Type.Null(), Type.Null()])),
-    guild_connections: Type.Optional(Type.Union([Type.Null(), Type.Null()])),
+    available_for_purchase: Type.Optional(Type.Null()),
+    guild_connections: Type.Optional(Type.Null()),
   },
   { ref: 'GuildRoleTagsResponse' },
 )
@@ -4398,7 +4338,7 @@ export type ResolvedObjectsResponse = Static<typeof ResolvedObjectsResponseSchem
 
 export const MessageReactionEmojiResponseSchema = Type.Object(
   {
-    id: Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
+    id: Type.Union([Type.Null(), SnowflakeTypeSchema]),
     name: Type.Union([Type.String(), Type.Null()]),
     animated: Type.Optional(Type.Boolean()),
   },
@@ -4638,9 +4578,7 @@ export type BlockMessageActionMetadata = Static<typeof BlockMessageActionMetadat
 export const BlockMessageActionSchema = Type.Object(
   {
     type: AutomodActionTypeSchema,
-    metadata: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), BlockMessageActionMetadataSchema]),
-    ),
+    metadata: Type.Optional(Type.Union([Type.Null(), BlockMessageActionMetadataSchema])),
   },
   { ref: 'BlockMessageAction' },
 )
@@ -4721,7 +4659,7 @@ export const BulkLobbyMemberRequestSchema = Type.Object(
         Type.Null(),
       ]),
     ),
-    flags: Type.Optional(Type.Union([Type.Union([Type.Null(), Type.Null()]), Type.Literal(1)])),
+    flags: Type.Optional(Type.Union([Type.Null(), Type.Literal(1)])),
     additional_name: Type.Optional(
       Type.Union([Type.String({ minLength: 1, maxLength: 80 }), Type.Null()]),
     ),
@@ -4796,12 +4734,10 @@ export type WebhookSourceChannelResponse = Static<typeof WebhookSourceChannelRes
 
 export const ChannelFollowerWebhookResponseSchema = Type.Object(
   {
-    application_id: Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
+    application_id: Type.Union([Type.Null(), SnowflakeTypeSchema]),
     avatar: Type.Union([Type.String(), Type.Null()]),
-    channel_id: Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
-    guild_id: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
-    ),
+    channel_id: Type.Union([Type.Null(), SnowflakeTypeSchema]),
+    guild_id: Type.Optional(Type.Union([Type.Null(), SnowflakeTypeSchema])),
     id: SnowflakeTypeSchema,
     name: Type.String(),
     type: WebhookTypesSchema,
@@ -4817,9 +4753,7 @@ export type ChannelFollowerWebhookResponse = Static<typeof ChannelFollowerWebhoo
 export const ChannelPermissionOverwriteRequestSchema = Type.Object(
   {
     id: SnowflakeTypeSchema,
-    type: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), ChannelPermissionOverwritesSchema]),
-    ),
+    type: Type.Optional(Type.Union([Type.Null(), ChannelPermissionOverwritesSchema])),
     allow: Type.Optional(Type.Union([Type.Integer(), Type.Null()])),
     deny: Type.Optional(Type.Union([Type.Integer(), Type.Null()])),
   },
@@ -5033,7 +4967,7 @@ export const CreateForumThreadRequestSchema = Type.Object(
   {
     name: Type.String({ minLength: 1, maxLength: 100 }),
     auto_archive_duration: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), ThreadAutoArchiveDurationSchema]),
+      Type.Union([Type.Null(), ThreadAutoArchiveDurationSchema]),
     ),
     rate_limit_per_user: Type.Optional(
       Type.Union([Type.Integer({ minimum: 0, maximum: 21600 }), Type.Null()]),
@@ -5061,9 +4995,7 @@ export type CreateGroupDMInviteRequest = Static<typeof CreateGroupDMInviteReques
 
 export const UpdateDefaultReactionEmojiRequestSchema = Type.Object(
   {
-    emoji_id: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
-    ),
+    emoji_id: Type.Optional(Type.Union([Type.Null(), SnowflakeTypeSchema])),
     emoji_name: Type.Optional(Type.Union([Type.String({ maxLength: 100 }), Type.Null()])),
   },
   { ref: 'UpdateDefaultReactionEmojiRequest' },
@@ -5076,9 +5008,7 @@ export type UpdateDefaultReactionEmojiRequest = Static<
 export const CreateOrUpdateThreadTagRequestSchema = Type.Object(
   {
     name: Type.String({ minLength: 0, maxLength: 50 }),
-    emoji_id: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
-    ),
+    emoji_id: Type.Optional(Type.Union([Type.Null(), SnowflakeTypeSchema])),
     emoji_name: Type.Optional(Type.Union([Type.String({ maxLength: 100 }), Type.Null()])),
     moderated: Type.Optional(Type.Union([Type.Boolean(), Type.Null()])),
   },
@@ -5089,7 +5019,7 @@ export type CreateOrUpdateThreadTagRequest = Static<typeof CreateOrUpdateThreadT
 
 export const CreateGuildChannelRequestSchema = Type.Object(
   {
-    type: Type.Optional(Type.Union([Type.Union([Type.Null(), Type.Null()]), ChannelTypesSchema])),
+    type: Type.Optional(Type.Union([Type.Null(), ChannelTypesSchema])),
     name: Type.String({ minLength: 1, maxLength: 100 }),
     position: Type.Optional(Type.Union([Type.Integer({ minimum: 0 }), Type.Null()])),
     topic: Type.Optional(Type.Union([Type.String({ minLength: 0, maxLength: 4096 }), Type.Null()])),
@@ -5099,9 +5029,7 @@ export const CreateGuildChannelRequestSchema = Type.Object(
     rate_limit_per_user: Type.Optional(
       Type.Union([Type.Integer({ minimum: 0, maximum: 21600 }), Type.Null()]),
     ),
-    parent_id: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
-    ),
+    parent_id: Type.Optional(Type.Union([Type.Null(), SnowflakeTypeSchema])),
     permission_overwrites: Type.Optional(
       Type.Union([
         Type.Array(ChannelPermissionOverwriteRequestSchema, { maxItems: 100 }),
@@ -5109,36 +5037,24 @@ export const CreateGuildChannelRequestSchema = Type.Object(
       ]),
     ),
     rtc_region: Type.Optional(Type.Union([Type.String(), Type.Null()])),
-    video_quality_mode: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), VideoQualityModesSchema]),
-    ),
+    video_quality_mode: Type.Optional(Type.Union([Type.Null(), VideoQualityModesSchema])),
     default_auto_archive_duration: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), ThreadAutoArchiveDurationSchema]),
+      Type.Union([Type.Null(), ThreadAutoArchiveDurationSchema]),
     ),
     default_reaction_emoji: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), UpdateDefaultReactionEmojiRequestSchema]),
+      Type.Union([Type.Null(), UpdateDefaultReactionEmojiRequestSchema]),
     ),
     default_thread_rate_limit_per_user: Type.Optional(
       Type.Union([Type.Integer({ minimum: 0, maximum: 21600 }), Type.Null()]),
     ),
-    default_sort_order: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), ThreadSortOrderSchema]),
-    ),
-    default_forum_layout: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), ForumLayoutSchema]),
-    ),
-    default_tag_setting: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), ThreadSearchTagSettingSchema]),
-    ),
+    default_sort_order: Type.Optional(Type.Union([Type.Null(), ThreadSortOrderSchema])),
+    default_forum_layout: Type.Optional(Type.Union([Type.Null(), ForumLayoutSchema])),
+    default_tag_setting: Type.Optional(Type.Union([Type.Null(), ThreadSearchTagSettingSchema])),
     available_tags: Type.Optional(
       Type.Union([
-        Type.Array(
-          Type.Union([
-            Type.Union([Type.Null(), Type.Null()]),
-            CreateOrUpdateThreadTagRequestSchema,
-          ]),
-          { maxItems: 20 },
-        ),
+        Type.Array(Type.Union([Type.Null(), CreateOrUpdateThreadTagRequestSchema]), {
+          maxItems: 20,
+        }),
         Type.Null(),
       ]),
     ),
@@ -5163,20 +5079,14 @@ export const CreateGuildInviteRequestSchema = Type.Object(
     temporary: Type.Optional(Type.Union([Type.Boolean(), Type.Null()])),
     max_uses: Type.Optional(Type.Union([Type.Integer({ minimum: 0, maximum: 100 }), Type.Null()])),
     unique: Type.Optional(Type.Union([Type.Boolean(), Type.Null()])),
-    target_user_id: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
-    ),
-    target_application_id: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
-    ),
-    target_type: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), InviteTargetTypesSchema]),
-    ),
+    target_user_id: Type.Optional(Type.Union([Type.Null(), SnowflakeTypeSchema])),
+    target_application_id: Type.Optional(Type.Union([Type.Null(), SnowflakeTypeSchema])),
+    target_type: Type.Optional(Type.Union([Type.Null(), InviteTargetTypesSchema])),
     role_ids: Type.Optional(
       Type.Union([
         Type.String(),
         Type.Array(SnowflakeTypeSchema, { maxItems: 250, uniqueItems: true }),
-        Type.Union([Type.Null(), Type.Null()]),
+        Type.Null(),
       ]),
     ),
     target_user_ids: Type.Optional(
@@ -5184,7 +5094,7 @@ export const CreateGuildInviteRequestSchema = Type.Object(
         [
           Type.String(),
           Type.Array(SnowflakeTypeSchema, { maxItems: 1000, uniqueItems: true }),
-          Type.Union([Type.Null(), Type.Null()]),
+          Type.Null(),
         ],
         { description: 'The IDs of the users to target with this invite.' },
       ),
@@ -5199,9 +5109,7 @@ export const IncomingWebhookInteractionRequestSchema = Type.Object(
   {
     content: Type.Optional(Type.Union([Type.String({ maxLength: 2000 }), Type.Null()])),
     embeds: Type.Optional(Type.Union([Type.Array(RichEmbedSchema, { maxItems: 10 }), Type.Null()])),
-    allowed_mentions: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), MessageAllowedMentionsRequestSchema]),
-    ),
+    allowed_mentions: Type.Optional(Type.Union([Type.Null(), MessageAllowedMentionsRequestSchema])),
     components: Type.Optional(
       Type.Union([
         Type.Array(
@@ -5222,9 +5130,7 @@ export const IncomingWebhookInteractionRequestSchema = Type.Object(
     attachments: Type.Optional(
       Type.Union([Type.Array(MessageAttachmentRequestSchema, { maxItems: 10 }), Type.Null()]),
     ),
-    poll: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), PollCreateRequestSchema]),
-    ),
+    poll: Type.Optional(Type.Union([Type.Null(), PollCreateRequestSchema])),
     tts: Type.Optional(Type.Union([Type.Boolean(), Type.Null()])),
     flags: Type.Optional(Type.Union([Type.Integer(), Type.Null()])),
   },
@@ -5238,9 +5144,7 @@ export type IncomingWebhookInteractionRequest = Static<
 export const CreateMessageInteractionCallbackRequestSchema = Type.Object(
   {
     type: InteractionCallbackTypesSchema,
-    data: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), IncomingWebhookInteractionRequestSchema]),
-    ),
+    data: Type.Optional(Type.Union([Type.Null(), IncomingWebhookInteractionRequestSchema])),
   },
   { ref: 'CreateMessageInteractionCallbackRequest' },
 )
@@ -5336,9 +5240,7 @@ export const MessageResponseSchema = Type.Object(
     lobby_member: Type.Optional(MessageLobbyMemberResponseSchema),
     actor: Type.Optional(UserResponseSchema),
     reactions: Type.Optional(Type.Array(MessageReactionResponseSchema)),
-    referenced_message: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), BasicMessageResponseSchema]),
-    ),
+    referenced_message: Type.Optional(Type.Union([Type.Null(), BasicMessageResponseSchema])),
   },
   { ref: 'MessageResponse' },
 )
@@ -5356,9 +5258,7 @@ export type CreateMessageInteractionCallbackResponse = Static<
 
 export const CreatePrivateChannelRequestSchema = Type.Object(
   {
-    recipient_id: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
-    ),
+    recipient_id: Type.Optional(Type.Union([Type.Null(), SnowflakeTypeSchema])),
     access_tokens: Type.Optional(
       Type.Union([
         Type.Array(Type.String({ maxLength: 152133 }), { maxItems: 1521, uniqueItems: true }),
@@ -5403,7 +5303,7 @@ export const CreateRoleRequestSchema = Type.Object(
     color: Type.Optional(
       Type.Union([Type.Integer({ minimum: 0, maximum: 16777215 }), Type.Null()]),
     ),
-    colors: Type.Optional(Type.Union([Type.Union([Type.Null(), Type.Null()]), RoleColorsSchema])),
+    colors: Type.Optional(Type.Union([Type.Null(), RoleColorsSchema])),
     hoist: Type.Optional(Type.Union([Type.Boolean(), Type.Null()])),
     mentionable: Type.Optional(Type.Union([Type.Boolean(), Type.Null()])),
     icon: Type.Optional(Type.Union([Type.String(), Type.Null()])),
@@ -5418,7 +5318,7 @@ export const CreateTextThreadWithMessageRequestSchema = Type.Object(
   {
     name: Type.String({ minLength: 1, maxLength: 100 }),
     auto_archive_duration: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), ThreadAutoArchiveDurationSchema]),
+      Type.Union([Type.Null(), ThreadAutoArchiveDurationSchema]),
     ),
     rate_limit_per_user: Type.Optional(
       Type.Union([Type.Integer({ minimum: 0, maximum: 21600 }), Type.Null()]),
@@ -5435,12 +5335,12 @@ export const CreateTextThreadWithoutMessageRequestSchema = Type.Object(
   {
     name: Type.String({ minLength: 1, maxLength: 100 }),
     auto_archive_duration: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), ThreadAutoArchiveDurationSchema]),
+      Type.Union([Type.Null(), ThreadAutoArchiveDurationSchema]),
     ),
     rate_limit_per_user: Type.Optional(
       Type.Union([Type.Integer({ minimum: 0, maximum: 21600 }), Type.Null()]),
     ),
-    type: Type.Optional(Type.Union([Type.Union([Type.Null(), Type.Null()]), ChannelTypesSchema])),
+    type: Type.Optional(Type.Union([Type.Null(), ChannelTypesSchema])),
     invitable: Type.Optional(Type.Union([Type.Boolean(), Type.Null()])),
   },
   { ref: 'CreateTextThreadWithoutMessageRequest' },
@@ -5454,18 +5354,14 @@ export const CreatedThreadResponseSchema = Type.Object(
   {
     id: SnowflakeTypeSchema,
     type: ChannelTypesSchema,
-    last_message_id: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
-    ),
+    last_message_id: Type.Optional(Type.Union([Type.Null(), SnowflakeTypeSchema])),
     flags: Type.Integer(),
     last_pin_timestamp: Type.Optional(
       Type.Union([Type.String({ format: 'date-time' }), Type.Null()]),
     ),
     guild_id: SnowflakeTypeSchema,
     name: Type.String(),
-    parent_id: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
-    ),
+    parent_id: Type.Optional(Type.Union([Type.Null(), SnowflakeTypeSchema])),
     rate_limit_per_user: Type.Optional(Type.Integer()),
     bitrate: Type.Optional(Type.Integer()),
     user_limit: Type.Optional(Type.Integer()),
@@ -5540,9 +5436,7 @@ export type QuarantineUserActionMetadata = Static<typeof QuarantineUserActionMet
 export const QuarantineUserActionSchema = Type.Object(
   {
     type: AutomodActionTypeSchema,
-    metadata: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), QuarantineUserActionMetadataSchema]),
-    ),
+    metadata: Type.Optional(Type.Union([Type.Null(), QuarantineUserActionMetadataSchema])),
   },
   { ref: 'QuarantineUserAction' },
 )
@@ -5734,7 +5628,7 @@ export const IntegrationApplicationResponseSchema = Type.Object(
     name: Type.String(),
     icon: Type.Union([Type.String(), Type.Null()]),
     description: Type.String(),
-    type: Type.Union([Type.Union([Type.Null(), Type.Null()]), ApplicationTypesSchema]),
+    type: Type.Union([Type.Null(), ApplicationTypesSchema]),
     cover_image: Type.Optional(Type.String()),
     primary_sku_id: Type.Optional(SnowflakeTypeSchema),
     flags: Type.Integer(),
@@ -5851,27 +5745,18 @@ export const EntitlementResponseSchema = Type.Object(
     sku_id: SnowflakeTypeSchema,
     application_id: SnowflakeTypeSchema,
     user_id: SnowflakeTypeSchema,
-    guild_id: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
-    ),
+    guild_id: Type.Optional(Type.Union([Type.Null(), SnowflakeTypeSchema])),
     deleted: Type.Boolean(),
     starts_at: Type.Union([Type.String({ format: 'date-time' }), Type.Null()]),
     ends_at: Type.Union([Type.String({ format: 'date-time' }), Type.Null()]),
     type: EntitlementTypesSchema,
     fulfilled_at: Type.Optional(Type.Union([Type.String({ format: 'date-time' }), Type.Null()])),
     fulfillment_status: Type.Optional(
-      Type.Union([
-        Type.Union([Type.Null(), Type.Null()]),
-        EntitlementTenantFulfillmentStatusResponseSchema,
-      ]),
+      Type.Union([Type.Null(), EntitlementTenantFulfillmentStatusResponseSchema]),
     ),
     consumed: Type.Optional(Type.Boolean()),
-    gifter_user_id: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
-    ),
-    parent_id: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
-    ),
+    gifter_user_id: Type.Optional(Type.Union([Type.Null(), SnowflakeTypeSchema])),
+    parent_id: Type.Optional(Type.Union([Type.Null(), SnowflakeTypeSchema])),
   },
   { ref: 'EntitlementResponse' },
 )
@@ -5954,9 +5839,7 @@ export const ExternalConnectionIntegrationResponseSchema = Type.Object(
     expire_grace_period: Type.Optional(IntegrationExpireGracePeriodTypesSchema),
     subscriber_count: Type.Optional(Type.Integer()),
     synced_at: Type.Optional(Type.String({ format: 'date-time' })),
-    role_id: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
-    ),
+    role_id: Type.Optional(Type.Union([Type.Null(), SnowflakeTypeSchema])),
     syncing: Type.Optional(Type.Boolean()),
     enable_emoticons: Type.Optional(Type.Boolean()),
   },
@@ -6099,11 +5982,9 @@ export const ExternalScheduledEventCreateRequestSchema = Type.Object(
     ),
     privacy_level: GuildScheduledEventPrivacyLevelsSchema,
     entity_type: GuildScheduledEventEntityTypesSchema,
-    channel_id: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
-    ),
+    channel_id: Type.Optional(Type.Union([Type.Null(), SnowflakeTypeSchema])),
     recurrence_rule: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), RecurrenceRuleSchema], {
+      Type.Union([Type.Null(), RecurrenceRuleSchema], {
         description: 'Recurrence rule for the scheduled event',
       }),
     ),
@@ -6125,9 +6006,7 @@ export type GuildScheduledEventStatuses = Static<typeof GuildScheduledEventStatu
 
 export const ExternalScheduledEventPatchRequestPartialSchema = Type.Object(
   {
-    status: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), GuildScheduledEventStatusesSchema]),
-    ),
+    status: Type.Optional(Type.Union([Type.Null(), GuildScheduledEventStatusesSchema])),
     name: Type.Optional(Type.String({ maxLength: 100 })),
     description: Type.Optional(Type.Union([Type.String({ maxLength: 1000 }), Type.Null()])),
     image: Type.Optional(Type.Union([Type.String(), Type.Null()])),
@@ -6135,15 +6014,11 @@ export const ExternalScheduledEventPatchRequestPartialSchema = Type.Object(
     scheduled_end_time: Type.Optional(
       Type.Union([Type.String({ format: 'date-time' }), Type.Null()]),
     ),
-    entity_type: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), GuildScheduledEventEntityTypesSchema]),
-    ),
+    entity_type: Type.Optional(Type.Union([Type.Null(), GuildScheduledEventEntityTypesSchema])),
     privacy_level: Type.Optional(GuildScheduledEventPrivacyLevelsSchema),
-    channel_id: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
-    ),
+    channel_id: Type.Optional(Type.Union([Type.Null(), SnowflakeTypeSchema])),
     recurrence_rule: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), RecurrenceRuleSchema], {
+      Type.Union([Type.Null(), RecurrenceRuleSchema], {
         description: 'Recurrence rule for the scheduled event',
       }),
     ),
@@ -6232,7 +6107,7 @@ export const ScheduledEventUserResponseSchema = Type.Object(
   {
     guild_scheduled_event_id: SnowflakeTypeSchema,
     guild_scheduled_event_exception_id: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema], {
+      Type.Union([Type.Null(), SnowflakeTypeSchema], {
         description: 'ID of the scheduled event exception',
       }),
     ),
@@ -6276,11 +6151,11 @@ export const ExternalScheduledEventResponseSchema = Type.Object(
       Type.String({ description: 'Description of the scheduled event' }),
       Type.Null(),
     ]),
-    channel_id: Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema], {
+    channel_id: Type.Union([Type.Null(), SnowflakeTypeSchema], {
       description:
         'Channel ID in which the scheduled event will be hosted, or null if entity type is EXTERNAL',
     }),
-    creator_id: Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema], {
+    creator_id: Type.Union([Type.Null(), SnowflakeTypeSchema], {
       description: 'ID of the user that created the scheduled event',
     }),
     creator: Type.Optional(UserResponseSchema),
@@ -6301,20 +6176,17 @@ export const ExternalScheduledEventResponseSchema = Type.Object(
     ]),
     status: GuildScheduledEventStatusesSchema,
     entity_type: GuildScheduledEventEntityTypesSchema,
-    entity_id: Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema], {
+    entity_id: Type.Union([Type.Null(), SnowflakeTypeSchema], {
       description: 'ID of the hosting entity associated with the scheduled event',
     }),
-    recurrence_rule: Type.Union(
-      [Type.Union([Type.Null(), Type.Null()]), RecurrenceRuleResponseSchema],
-      { description: 'Recurrence rule for the scheduled event, or null if not recurring' },
-    ),
+    recurrence_rule: Type.Union([Type.Null(), RecurrenceRuleResponseSchema], {
+      description: 'Recurrence rule for the scheduled event, or null if not recurring',
+    }),
     user_count: Type.Optional(
       Type.Integer({ description: 'Number of users subscribed to the scheduled event' }),
     ),
     privacy_level: GuildScheduledEventPrivacyLevelsSchema,
-    user_rsvp: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), ScheduledEventUserResponseSchema]),
-    ),
+    user_rsvp: Type.Optional(Type.Union([Type.Null(), ScheduledEventUserResponseSchema])),
     guild_scheduled_event_exceptions: Type.Array(GuildScheduledEventExceptionResponseSchema),
     entity_metadata: EntityMetadataExternalResponseSchema,
   },
@@ -6388,7 +6260,7 @@ export const FriendInviteResponseSchema = Type.Object(
     created_at: Type.Optional(Type.String({ format: 'date-time' })),
     expires_at: Type.Union([Type.String({ format: 'date-time' }), Type.Null()]),
     friends_count: Type.Optional(Type.Integer()),
-    channel: Type.Union([Type.Union([Type.Null(), Type.Null()]), InviteChannelResponseSchema]),
+    channel: Type.Union([Type.Null(), InviteChannelResponseSchema]),
     is_contact: Type.Optional(Type.Boolean()),
     uses: Type.Optional(Type.Integer()),
     max_uses: Type.Optional(Type.Integer()),
@@ -6489,9 +6361,7 @@ export const GithubCheckRunSchema = Type.Object(
     details_url: Type.Optional(
       Type.Union([Type.String({ format: 'uri', maxLength: 2048 }), Type.Null()]),
     ),
-    output: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), GithubCheckRunOutputSchema]),
-    ),
+    output: Type.Optional(Type.Union([Type.Null(), GithubCheckRunOutputSchema])),
     pull_requests: Type.Optional(
       Type.Union([Type.Array(GithubCheckPullRequestSchema, { maxItems: 1521 }), Type.Null()]),
     ),
@@ -6610,27 +6480,15 @@ export const GithubWebhookSchema = Type.Object(
     action: Type.Optional(Type.Union([Type.String({ maxLength: 152133 }), Type.Null()])),
     ref: Type.Optional(Type.Union([Type.String({ maxLength: 152133 }), Type.Null()])),
     ref_type: Type.Optional(Type.Union([Type.String({ maxLength: 152133 }), Type.Null()])),
-    comment: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), GithubCommentSchema]),
-    ),
-    issue: Type.Optional(Type.Union([Type.Union([Type.Null(), Type.Null()]), GithubIssueSchema])),
-    pull_request: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), GithubIssueSchema]),
-    ),
-    repository: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), GithubRepositorySchema]),
-    ),
-    forkee: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), GithubRepositorySchema]),
-    ),
+    comment: Type.Optional(Type.Union([Type.Null(), GithubCommentSchema])),
+    issue: Type.Optional(Type.Union([Type.Null(), GithubIssueSchema])),
+    pull_request: Type.Optional(Type.Union([Type.Null(), GithubIssueSchema])),
+    repository: Type.Optional(Type.Union([Type.Null(), GithubRepositorySchema])),
+    forkee: Type.Optional(Type.Union([Type.Null(), GithubRepositorySchema])),
     sender: GithubUserSchema,
-    member: Type.Optional(Type.Union([Type.Union([Type.Null(), Type.Null()]), GithubUserSchema])),
-    release: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), GithubReleaseSchema]),
-    ),
-    head_commit: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), GithubCommitSchema]),
-    ),
+    member: Type.Optional(Type.Union([Type.Null(), GithubUserSchema])),
+    release: Type.Optional(Type.Union([Type.Null(), GithubReleaseSchema])),
+    head_commit: Type.Optional(Type.Union([Type.Null(), GithubCommitSchema])),
     commits: Type.Optional(
       Type.Union([Type.Array(GithubCommitSchema, { maxItems: 1521 }), Type.Null()]),
     ),
@@ -6638,19 +6496,11 @@ export const GithubWebhookSchema = Type.Object(
     compare: Type.Optional(
       Type.Union([Type.String({ format: 'uri', maxLength: 2048 }), Type.Null()]),
     ),
-    review: Type.Optional(Type.Union([Type.Union([Type.Null(), Type.Null()]), GithubReviewSchema])),
-    check_run: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), GithubCheckRunSchema]),
-    ),
-    check_suite: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), GithubCheckSuiteSchema]),
-    ),
-    discussion: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), GithubDiscussionSchema]),
-    ),
-    answer: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), GithubCommentSchema]),
-    ),
+    review: Type.Optional(Type.Union([Type.Null(), GithubReviewSchema])),
+    check_run: Type.Optional(Type.Union([Type.Null(), GithubCheckRunSchema])),
+    check_suite: Type.Optional(Type.Union([Type.Null(), GithubCheckSuiteSchema])),
+    discussion: Type.Optional(Type.Union([Type.Null(), GithubDiscussionSchema])),
+    answer: Type.Optional(Type.Union([Type.Null(), GithubCommentSchema])),
   },
   { ref: 'GithubWebhook' },
 )
@@ -6718,12 +6568,10 @@ export type PartialGuildSubscriptionIntegrationResponse = Static<
 
 export const GuildIncomingWebhookResponseSchema = Type.Object(
   {
-    application_id: Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
+    application_id: Type.Union([Type.Null(), SnowflakeTypeSchema]),
     avatar: Type.Union([Type.String(), Type.Null()]),
-    channel_id: Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
-    guild_id: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
-    ),
+    channel_id: Type.Union([Type.Null(), SnowflakeTypeSchema]),
+    guild_id: Type.Optional(Type.Union([Type.Null(), SnowflakeTypeSchema])),
     id: SnowflakeTypeSchema,
     name: Type.String(),
     type: WebhookTypesSchema,
@@ -6745,11 +6593,11 @@ export const StageScheduledEventResponseSchema = Type.Object(
       Type.String({ description: 'Description of the scheduled event' }),
       Type.Null(),
     ]),
-    channel_id: Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema], {
+    channel_id: Type.Union([Type.Null(), SnowflakeTypeSchema], {
       description:
         'Channel ID in which the scheduled event will be hosted, or null if entity type is EXTERNAL',
     }),
-    creator_id: Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema], {
+    creator_id: Type.Union([Type.Null(), SnowflakeTypeSchema], {
       description: 'ID of the user that created the scheduled event',
     }),
     creator: Type.Optional(UserResponseSchema),
@@ -6770,25 +6618,19 @@ export const StageScheduledEventResponseSchema = Type.Object(
     ]),
     status: GuildScheduledEventStatusesSchema,
     entity_type: GuildScheduledEventEntityTypesSchema,
-    entity_id: Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema], {
+    entity_id: Type.Union([Type.Null(), SnowflakeTypeSchema], {
       description: 'ID of the hosting entity associated with the scheduled event',
     }),
-    recurrence_rule: Type.Union(
-      [Type.Union([Type.Null(), Type.Null()]), RecurrenceRuleResponseSchema],
-      { description: 'Recurrence rule for the scheduled event, or null if not recurring' },
-    ),
+    recurrence_rule: Type.Union([Type.Null(), RecurrenceRuleResponseSchema], {
+      description: 'Recurrence rule for the scheduled event, or null if not recurring',
+    }),
     user_count: Type.Optional(
       Type.Integer({ description: 'Number of users subscribed to the scheduled event' }),
     ),
     privacy_level: GuildScheduledEventPrivacyLevelsSchema,
-    user_rsvp: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), ScheduledEventUserResponseSchema]),
-    ),
+    user_rsvp: Type.Optional(Type.Union([Type.Null(), ScheduledEventUserResponseSchema])),
     guild_scheduled_event_exceptions: Type.Array(GuildScheduledEventExceptionResponseSchema),
-    entity_metadata: Type.Union([
-      Type.Union([Type.Null(), Type.Null()]),
-      EntityMetadataStageInstanceResponseSchema,
-    ]),
+    entity_metadata: Type.Union([Type.Null(), EntityMetadataStageInstanceResponseSchema]),
   },
   { ref: 'StageScheduledEventResponse' },
 )
@@ -6804,11 +6646,11 @@ export const VoiceScheduledEventResponseSchema = Type.Object(
       Type.String({ description: 'Description of the scheduled event' }),
       Type.Null(),
     ]),
-    channel_id: Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema], {
+    channel_id: Type.Union([Type.Null(), SnowflakeTypeSchema], {
       description:
         'Channel ID in which the scheduled event will be hosted, or null if entity type is EXTERNAL',
     }),
-    creator_id: Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema], {
+    creator_id: Type.Union([Type.Null(), SnowflakeTypeSchema], {
       description: 'ID of the user that created the scheduled event',
     }),
     creator: Type.Optional(UserResponseSchema),
@@ -6829,25 +6671,19 @@ export const VoiceScheduledEventResponseSchema = Type.Object(
     ]),
     status: GuildScheduledEventStatusesSchema,
     entity_type: GuildScheduledEventEntityTypesSchema,
-    entity_id: Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema], {
+    entity_id: Type.Union([Type.Null(), SnowflakeTypeSchema], {
       description: 'ID of the hosting entity associated with the scheduled event',
     }),
-    recurrence_rule: Type.Union(
-      [Type.Union([Type.Null(), Type.Null()]), RecurrenceRuleResponseSchema],
-      { description: 'Recurrence rule for the scheduled event, or null if not recurring' },
-    ),
+    recurrence_rule: Type.Union([Type.Null(), RecurrenceRuleResponseSchema], {
+      description: 'Recurrence rule for the scheduled event, or null if not recurring',
+    }),
     user_count: Type.Optional(
       Type.Integer({ description: 'Number of users subscribed to the scheduled event' }),
     ),
     privacy_level: GuildScheduledEventPrivacyLevelsSchema,
-    user_rsvp: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), ScheduledEventUserResponseSchema]),
-    ),
+    user_rsvp: Type.Optional(Type.Union([Type.Null(), ScheduledEventUserResponseSchema])),
     guild_scheduled_event_exceptions: Type.Array(GuildScheduledEventExceptionResponseSchema),
-    entity_metadata: Type.Union([
-      Type.Union([Type.Null(), Type.Null()]),
-      EntityMetadataVoiceResponseSchema,
-    ]),
+    entity_metadata: Type.Union([Type.Null(), EntityMetadataVoiceResponseSchema]),
   },
   { ref: 'VoiceScheduledEventResponse' },
 )
@@ -7030,7 +6866,7 @@ export const GuildAuditLogResponseSchema = Type.Object(
         MLSpamRuleResponseSchema,
         MentionSpamRuleResponseSchema,
         UserProfileRuleResponseSchema,
-        Type.Union([Type.Null(), Type.Null()]),
+        Type.Null(),
       ]),
     ),
   },
@@ -7148,7 +6984,7 @@ export type NewMemberActionType = Static<typeof NewMemberActionTypeSchema>
 
 export const SettingsEmojiResponseSchema = Type.Object(
   {
-    id: Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
+    id: Type.Union([Type.Null(), SnowflakeTypeSchema]),
     name: Type.Union([Type.String(), Type.Null()]),
     animated: Type.Boolean(),
   },
@@ -7265,12 +7101,9 @@ export const InviteGuildResponseSchema = Type.Object(
     description: Type.Union([Type.String(), Type.Null()]),
     icon: Type.Union([Type.String(), Type.Null()]),
     features: Type.Array(GuildFeaturesSchema, { uniqueItems: true }),
-    verification_level: Type.Union([
-      Type.Union([Type.Null(), Type.Null()]),
-      VerificationLevelsSchema,
-    ]),
+    verification_level: Type.Union([Type.Null(), VerificationLevelsSchema]),
     vanity_url_code: Type.Union([Type.String(), Type.Null()]),
-    nsfw_level: Type.Union([Type.Union([Type.Null(), Type.Null()]), GuildNSFWContentLevelSchema]),
+    nsfw_level: Type.Union([Type.Null(), GuildNSFWContentLevelSchema]),
     nsfw: Type.Union([Type.Boolean(), Type.Null()]),
     premium_subscription_count: Type.Integer(),
   },
@@ -7285,7 +7118,7 @@ export const InviteApplicationResponseSchema = Type.Object(
     name: Type.String(),
     icon: Type.Union([Type.String(), Type.Null()]),
     description: Type.String(),
-    type: Type.Union([Type.Union([Type.Null(), Type.Null()]), ApplicationTypesSchema]),
+    type: Type.Union([Type.Null(), ApplicationTypesSchema]),
     cover_image: Type.Optional(Type.String()),
     primary_sku_id: Type.Optional(SnowflakeTypeSchema),
     flags: Type.Integer(),
@@ -7323,11 +7156,11 @@ export const ScheduledEventResponseSchema = Type.Object(
       Type.String({ description: 'Description of the scheduled event' }),
       Type.Null(),
     ]),
-    channel_id: Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema], {
+    channel_id: Type.Union([Type.Null(), SnowflakeTypeSchema], {
       description:
         'Channel ID in which the scheduled event will be hosted, or null if entity type is EXTERNAL',
     }),
-    creator_id: Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema], {
+    creator_id: Type.Union([Type.Null(), SnowflakeTypeSchema], {
       description: 'ID of the user that created the scheduled event',
     }),
     creator: Type.Optional(UserResponseSchema),
@@ -7348,20 +7181,17 @@ export const ScheduledEventResponseSchema = Type.Object(
     ]),
     status: GuildScheduledEventStatusesSchema,
     entity_type: GuildScheduledEventEntityTypesSchema,
-    entity_id: Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema], {
+    entity_id: Type.Union([Type.Null(), SnowflakeTypeSchema], {
       description: 'ID of the hosting entity associated with the scheduled event',
     }),
-    recurrence_rule: Type.Union(
-      [Type.Union([Type.Null(), Type.Null()]), RecurrenceRuleResponseSchema],
-      { description: 'Recurrence rule for the scheduled event, or null if not recurring' },
-    ),
+    recurrence_rule: Type.Union([Type.Null(), RecurrenceRuleResponseSchema], {
+      description: 'Recurrence rule for the scheduled event, or null if not recurring',
+    }),
     user_count: Type.Optional(
       Type.Integer({ description: 'Number of users subscribed to the scheduled event' }),
     ),
     privacy_level: GuildScheduledEventPrivacyLevelsSchema,
-    user_rsvp: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), ScheduledEventUserResponseSchema]),
-    ),
+    user_rsvp: Type.Optional(Type.Union([Type.Null(), ScheduledEventUserResponseSchema])),
     guild_scheduled_event_exceptions: Type.Array(GuildScheduledEventExceptionResponseSchema),
   },
   { ref: 'ScheduledEventResponse' },
@@ -7526,10 +7356,7 @@ export const GuildJoinRequestResponseSchema = Type.Object(
     id: SnowflakeTypeSchema,
     created_at: Type.String({ format: 'date-time' }),
     reviewed_at: Type.Union([Type.String({ format: 'date-time' }), Type.Null()]),
-    application_status: Type.Union([
-      Type.Union([Type.Null(), Type.Null()]),
-      GuildJoinRequestApplicationStatusSchema,
-    ]),
+    application_status: Type.Union([Type.Null(), GuildJoinRequestApplicationStatusSchema]),
     rejection_reason: Type.Union([
       Type.String({
         description: 'Reason request was rejected. Only set when application_status is REJECTED',
@@ -7538,7 +7365,7 @@ export const GuildJoinRequestResponseSchema = Type.Object(
     ]),
     guild_id: SnowflakeTypeSchema,
     user_id: SnowflakeTypeSchema,
-    user: Type.Optional(Type.Union([Type.Union([Type.Null(), Type.Null()]), UserResponseSchema])),
+    user: Type.Optional(Type.Union([Type.Null(), UserResponseSchema])),
     form_responses: Type.Optional(
       Type.Union([
         Type.Array(
@@ -7553,9 +7380,7 @@ export const GuildJoinRequestResponseSchema = Type.Object(
         Type.Null(),
       ]),
     ),
-    actioned_by_user: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), UserResponseSchema]),
-    ),
+    actioned_by_user: Type.Optional(Type.Union([Type.Null(), UserResponseSchema])),
   },
   { ref: 'GuildJoinRequestResponse' },
 )
@@ -7669,27 +7494,17 @@ export const GuildPatchRequestPartialSchema = Type.Object(
     ),
     region: Type.Optional(Type.Union([Type.String(), Type.Null()])),
     icon: Type.Optional(Type.Union([Type.String(), Type.Null()])),
-    verification_level: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), VerificationLevelsSchema]),
-    ),
+    verification_level: Type.Optional(Type.Union([Type.Null(), VerificationLevelsSchema])),
     default_message_notifications: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), UserNotificationSettingsSchema]),
+      Type.Union([Type.Null(), UserNotificationSettingsSchema]),
     ),
     explicit_content_filter: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), GuildExplicitContentFilterTypesSchema]),
+      Type.Union([Type.Null(), GuildExplicitContentFilterTypesSchema]),
     ),
-    preferred_locale: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), AvailableLocalesEnumSchema]),
-    ),
-    afk_timeout: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), AfkTimeoutsSchema]),
-    ),
-    afk_channel_id: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
-    ),
-    system_channel_id: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
-    ),
+    preferred_locale: Type.Optional(Type.Union([Type.Null(), AvailableLocalesEnumSchema])),
+    afk_timeout: Type.Optional(Type.Union([Type.Null(), AfkTimeoutsSchema])),
+    afk_channel_id: Type.Optional(Type.Union([Type.Null(), SnowflakeTypeSchema])),
+    system_channel_id: Type.Optional(Type.Union([Type.Null(), SnowflakeTypeSchema])),
     splash: Type.Optional(Type.Union([Type.String(), Type.Null()])),
     banner: Type.Optional(Type.Union([Type.String(), Type.Null()])),
     system_channel_flags: Type.Optional(Type.Union([Type.Integer(), Type.Null()])),
@@ -7704,15 +7519,9 @@ export const GuildPatchRequestPartialSchema = Type.Object(
     ),
     discovery_splash: Type.Optional(Type.Union([Type.String(), Type.Null()])),
     home_header: Type.Optional(Type.Union([Type.String(), Type.Null()])),
-    rules_channel_id: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
-    ),
-    safety_alerts_channel_id: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
-    ),
-    public_updates_channel_id: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
-    ),
+    rules_channel_id: Type.Optional(Type.Union([Type.Null(), SnowflakeTypeSchema])),
+    safety_alerts_channel_id: Type.Optional(Type.Union([Type.Null(), SnowflakeTypeSchema])),
+    public_updates_channel_id: Type.Optional(Type.Union([Type.Null(), SnowflakeTypeSchema])),
     premium_progress_bar_enabled: Type.Optional(Type.Union([Type.Boolean(), Type.Null()])),
   },
   { ref: 'GuildPatchRequestPartial' },
@@ -7771,14 +7580,14 @@ export const GuildResponseSchema = Type.Object(
     features: Type.Array(GuildFeaturesSchema, { uniqueItems: true }),
     banner: Type.Union([Type.String(), Type.Null()]),
     owner_id: SnowflakeTypeSchema,
-    application_id: Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
+    application_id: Type.Union([Type.Null(), SnowflakeTypeSchema]),
     region: Type.String(),
-    afk_channel_id: Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
+    afk_channel_id: Type.Union([Type.Null(), SnowflakeTypeSchema]),
     afk_timeout: AfkTimeoutsSchema,
-    system_channel_id: Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
+    system_channel_id: Type.Union([Type.Null(), SnowflakeTypeSchema]),
     system_channel_flags: Type.Integer(),
     widget_enabled: Type.Boolean(),
-    widget_channel_id: Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
+    widget_channel_id: Type.Union([Type.Null(), SnowflakeTypeSchema]),
     verification_level: VerificationLevelsSchema,
     roles: Type.Array(GuildRoleResponseSchema),
     default_message_notifications: UserNotificationSettingsSchema,
@@ -7792,15 +7601,9 @@ export const GuildResponseSchema = Type.Object(
     premium_tier: PremiumGuildTiersSchema,
     premium_subscription_count: Type.Integer(),
     preferred_locale: AvailableLocalesEnumSchema,
-    rules_channel_id: Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
-    safety_alerts_channel_id: Type.Union([
-      Type.Union([Type.Null(), Type.Null()]),
-      SnowflakeTypeSchema,
-    ]),
-    public_updates_channel_id: Type.Union([
-      Type.Union([Type.Null(), Type.Null()]),
-      SnowflakeTypeSchema,
-    ]),
+    rules_channel_id: Type.Union([Type.Null(), SnowflakeTypeSchema]),
+    safety_alerts_channel_id: Type.Union([Type.Null(), SnowflakeTypeSchema]),
+    public_updates_channel_id: Type.Union([Type.Null(), SnowflakeTypeSchema]),
     premium_progress_bar_enabled: Type.Boolean(),
     premium_progress_bar_enabled_user_updated_at: Type.Optional(
       Type.Union([Type.String({ format: 'date-time' }), Type.Null()]),
@@ -7809,10 +7612,7 @@ export const GuildResponseSchema = Type.Object(
     nsfw_level: GuildNSFWContentLevelSchema,
     emojis: Type.Array(EmojiResponseSchema),
     stickers: Type.Array(GuildStickerResponseSchema),
-    incidents_data: Type.Union([
-      Type.Union([Type.Null(), Type.Null()]),
-      GuildIncidentsDataResponseSchema,
-    ]),
+    incidents_data: Type.Union([Type.Null(), GuildIncidentsDataResponseSchema]),
   },
   { ref: 'GuildResponse' },
 )
@@ -7949,9 +7749,7 @@ export const SearchMessageResponseSchema = Type.Object(
     lobby_member: Type.Optional(MessageLobbyMemberResponseSchema),
     actor: Type.Optional(UserResponseSchema),
     reactions: Type.Optional(Type.Array(MessageReactionResponseSchema)),
-    referenced_message: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), BasicMessageResponseSchema]),
-    ),
+    referenced_message: Type.Optional(Type.Union([Type.Null(), BasicMessageResponseSchema])),
     hit: Type.Boolean(),
     restriction_count: Type.Optional(Type.Integer()),
     author_restriction_count: Type.Optional(Type.Integer()),
@@ -7996,7 +7794,7 @@ export const GuildTemplateChannelTagsSchema = Type.Object(
   {
     id: Type.Union([Type.Integer(), Type.Null()]),
     name: Type.String(),
-    emoji_id: Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
+    emoji_id: Type.Union([Type.Null(), SnowflakeTypeSchema]),
     emoji_name: Type.Union([Type.String(), Type.Null()]),
     moderated: Type.Union([Type.Boolean(), Type.Null()]),
   },
@@ -8016,25 +7814,16 @@ export const GuildTemplateChannelResponseSchema = Type.Object(
     user_limit: Type.Integer(),
     nsfw: Type.Boolean(),
     rate_limit_per_user: Type.Integer(),
-    parent_id: Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
-    default_auto_archive_duration: Type.Union([
-      Type.Union([Type.Null(), Type.Null()]),
-      ThreadAutoArchiveDurationSchema,
-    ]),
+    parent_id: Type.Union([Type.Null(), SnowflakeTypeSchema]),
+    default_auto_archive_duration: Type.Union([Type.Null(), ThreadAutoArchiveDurationSchema]),
     permission_overwrites: Type.Array(ChannelPermissionOverwriteResponseSchema),
     available_tags: Type.Union([Type.Array(GuildTemplateChannelTagsSchema), Type.Null()]),
     template: Type.String(),
-    default_reaction_emoji: Type.Union([
-      Type.Union([Type.Null(), Type.Null()]),
-      DefaultReactionEmojiResponseSchema,
-    ]),
+    default_reaction_emoji: Type.Union([Type.Null(), DefaultReactionEmojiResponseSchema]),
     default_thread_rate_limit_per_user: Type.Union([Type.Integer(), Type.Null()]),
-    default_sort_order: Type.Union([Type.Union([Type.Null(), Type.Null()]), ThreadSortOrderSchema]),
-    default_forum_layout: Type.Union([Type.Union([Type.Null(), Type.Null()]), ForumLayoutSchema]),
-    default_tag_setting: Type.Union([
-      Type.Union([Type.Null(), Type.Null()]),
-      ThreadSearchTagSettingSchema,
-    ]),
+    default_sort_order: Type.Union([Type.Null(), ThreadSortOrderSchema]),
+    default_forum_layout: Type.Union([Type.Null(), ForumLayoutSchema]),
+    default_tag_setting: Type.Union([Type.Null(), ThreadSearchTagSettingSchema]),
     theme_color: Type.Union([Type.Integer(), Type.Null()]),
   },
   { ref: 'GuildTemplateChannelResponse' },
@@ -8059,10 +7848,7 @@ export const GuildTemplateRoleResponseSchema = Type.Object(
     name: Type.String(),
     permissions: Type.String(),
     color: Type.Integer(),
-    colors: Type.Union([
-      Type.Union([Type.Null(), Type.Null()]),
-      GuildTemplateRoleColorsResponseSchema,
-    ]),
+    colors: Type.Union([Type.Null(), GuildTemplateRoleColorsResponseSchema]),
     hoist: Type.Boolean(),
     mentionable: Type.Boolean(),
     icon: Type.Union([Type.String(), Type.Null()]),
@@ -8082,9 +7868,9 @@ export const GuildTemplateSnapshotResponseSchema = Type.Object(
     default_message_notifications: UserNotificationSettingsSchema,
     explicit_content_filter: GuildExplicitContentFilterTypesSchema,
     preferred_locale: AvailableLocalesEnumSchema,
-    afk_channel_id: Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
+    afk_channel_id: Type.Union([Type.Null(), SnowflakeTypeSchema]),
     afk_timeout: AfkTimeoutsSchema,
-    system_channel_id: Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
+    system_channel_id: Type.Union([Type.Null(), SnowflakeTypeSchema]),
     system_channel_flags: Type.Integer(),
     roles: Type.Array(GuildTemplateRoleResponseSchema),
     channels: Type.Array(GuildTemplateChannelResponseSchema),
@@ -8101,7 +7887,7 @@ export const GuildTemplateResponseSchema = Type.Object(
     description: Type.Union([Type.String(), Type.Null()]),
     usage_count: Type.Integer(),
     creator_id: SnowflakeTypeSchema,
-    creator: Type.Union([Type.Union([Type.Null(), Type.Null()]), UserResponseSchema]),
+    creator: Type.Union([Type.Null(), UserResponseSchema]),
     created_at: Type.String({ format: 'date-time' }),
     updated_at: Type.String({ format: 'date-time' }),
     source_guild_id: SnowflakeTypeSchema,
@@ -8117,9 +7903,7 @@ export const GuildWelcomeChannelSchema = Type.Object(
   {
     channel_id: SnowflakeTypeSchema,
     description: Type.String({ minLength: 1, maxLength: 50 }),
-    emoji_id: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
-    ),
+    emoji_id: Type.Optional(Type.Union([Type.Null(), SnowflakeTypeSchema])),
     emoji_name: Type.Optional(Type.Union([Type.String({ maxLength: 152133 }), Type.Null()])),
   },
   { ref: 'GuildWelcomeChannel' },
@@ -8131,7 +7915,7 @@ export const GuildWelcomeScreenChannelResponseSchema = Type.Object(
   {
     channel_id: SnowflakeTypeSchema,
     description: Type.String(),
-    emoji_id: Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
+    emoji_id: Type.Union([Type.Null(), SnowflakeTypeSchema]),
     emoji_name: Type.Union([Type.String(), Type.Null()]),
   },
   { ref: 'GuildWelcomeScreenChannelResponse' },
@@ -8163,14 +7947,14 @@ export const GuildWithCountsResponseSchema = Type.Object(
     features: Type.Array(GuildFeaturesSchema, { uniqueItems: true }),
     banner: Type.Union([Type.String(), Type.Null()]),
     owner_id: SnowflakeTypeSchema,
-    application_id: Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
+    application_id: Type.Union([Type.Null(), SnowflakeTypeSchema]),
     region: Type.String(),
-    afk_channel_id: Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
+    afk_channel_id: Type.Union([Type.Null(), SnowflakeTypeSchema]),
     afk_timeout: AfkTimeoutsSchema,
-    system_channel_id: Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
+    system_channel_id: Type.Union([Type.Null(), SnowflakeTypeSchema]),
     system_channel_flags: Type.Integer(),
     widget_enabled: Type.Boolean(),
-    widget_channel_id: Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
+    widget_channel_id: Type.Union([Type.Null(), SnowflakeTypeSchema]),
     verification_level: VerificationLevelsSchema,
     roles: Type.Array(GuildRoleResponseSchema),
     default_message_notifications: UserNotificationSettingsSchema,
@@ -8184,15 +7968,9 @@ export const GuildWithCountsResponseSchema = Type.Object(
     premium_tier: PremiumGuildTiersSchema,
     premium_subscription_count: Type.Integer(),
     preferred_locale: AvailableLocalesEnumSchema,
-    rules_channel_id: Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
-    safety_alerts_channel_id: Type.Union([
-      Type.Union([Type.Null(), Type.Null()]),
-      SnowflakeTypeSchema,
-    ]),
-    public_updates_channel_id: Type.Union([
-      Type.Union([Type.Null(), Type.Null()]),
-      SnowflakeTypeSchema,
-    ]),
+    rules_channel_id: Type.Union([Type.Null(), SnowflakeTypeSchema]),
+    safety_alerts_channel_id: Type.Union([Type.Null(), SnowflakeTypeSchema]),
+    public_updates_channel_id: Type.Union([Type.Null(), SnowflakeTypeSchema]),
     premium_progress_bar_enabled: Type.Boolean(),
     premium_progress_bar_enabled_user_updated_at: Type.Optional(
       Type.Union([Type.String({ format: 'date-time' }), Type.Null()]),
@@ -8201,10 +7979,7 @@ export const GuildWithCountsResponseSchema = Type.Object(
     nsfw_level: GuildNSFWContentLevelSchema,
     emojis: Type.Array(EmojiResponseSchema),
     stickers: Type.Array(GuildStickerResponseSchema),
-    incidents_data: Type.Union([
-      Type.Union([Type.Null(), Type.Null()]),
-      GuildIncidentsDataResponseSchema,
-    ]),
+    incidents_data: Type.Union([Type.Null(), GuildIncidentsDataResponseSchema]),
     approximate_member_count: Type.Optional(Type.Union([Type.Integer(), Type.Null()])),
     approximate_presence_count: Type.Optional(Type.Union([Type.Integer(), Type.Null()])),
   },
@@ -8243,9 +8018,7 @@ export const IncomingWebhookRequestPartialSchema = Type.Object(
   {
     content: Type.Optional(Type.Union([Type.String({ maxLength: 2000 }), Type.Null()])),
     embeds: Type.Optional(Type.Union([Type.Array(RichEmbedSchema, { maxItems: 10 }), Type.Null()])),
-    allowed_mentions: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), MessageAllowedMentionsRequestSchema]),
-    ),
+    allowed_mentions: Type.Optional(Type.Union([Type.Null(), MessageAllowedMentionsRequestSchema])),
     components: Type.Optional(
       Type.Union([
         Type.Array(
@@ -8266,9 +8039,7 @@ export const IncomingWebhookRequestPartialSchema = Type.Object(
     attachments: Type.Optional(
       Type.Union([Type.Array(MessageAttachmentRequestSchema, { maxItems: 10 }), Type.Null()]),
     ),
-    poll: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), PollCreateRequestSchema]),
-    ),
+    poll: Type.Optional(Type.Union([Type.Null(), PollCreateRequestSchema])),
     tts: Type.Optional(Type.Union([Type.Boolean(), Type.Null()])),
     flags: Type.Optional(Type.Union([Type.Integer(), Type.Null()])),
     username: Type.Optional(
@@ -8293,9 +8064,7 @@ export const IncomingWebhookUpdateForInteractionCallbackRequestPartialSchema = T
   {
     content: Type.Optional(Type.Union([Type.String({ maxLength: 2000 }), Type.Null()])),
     embeds: Type.Optional(Type.Union([Type.Array(RichEmbedSchema, { maxItems: 10 }), Type.Null()])),
-    allowed_mentions: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), MessageAllowedMentionsRequestSchema]),
-    ),
+    allowed_mentions: Type.Optional(Type.Union([Type.Null(), MessageAllowedMentionsRequestSchema])),
     components: Type.Optional(
       Type.Union([
         Type.Array(
@@ -8329,9 +8098,7 @@ export const IncomingWebhookUpdateRequestPartialSchema = Type.Object(
   {
     content: Type.Optional(Type.Union([Type.String({ maxLength: 2000 }), Type.Null()])),
     embeds: Type.Optional(Type.Union([Type.Array(RichEmbedSchema, { maxItems: 10 }), Type.Null()])),
-    allowed_mentions: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), MessageAllowedMentionsRequestSchema]),
-    ),
+    allowed_mentions: Type.Optional(Type.Union([Type.Null(), MessageAllowedMentionsRequestSchema])),
     components: Type.Optional(
       Type.Union([
         Type.Array(
@@ -8352,9 +8119,7 @@ export const IncomingWebhookUpdateRequestPartialSchema = Type.Object(
     attachments: Type.Optional(
       Type.Union([Type.Array(MessageAttachmentRequestSchema, { maxItems: 10 }), Type.Null()]),
     ),
-    poll: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), PollCreateRequestSchema]),
-    ),
+    poll: Type.Optional(Type.Union([Type.Null(), PollCreateRequestSchema])),
     flags: Type.Optional(Type.Union([Type.Integer(), Type.Null()])),
   },
   { ref: 'IncomingWebhookUpdateRequestPartial' },
@@ -8475,9 +8240,7 @@ export const KeywordUpsertRequestSchema = Type.Object(
       ]),
     ),
     trigger_type: AutomodTriggerTypeSchema,
-    trigger_metadata: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), KeywordTriggerMetadataSchema]),
-    ),
+    trigger_metadata: Type.Optional(Type.Union([Type.Null(), KeywordTriggerMetadataSchema])),
   },
   { ref: 'KeywordUpsertRequest' },
 )
@@ -8516,9 +8279,7 @@ export const KeywordUpsertRequestPartialSchema = Type.Object(
       ]),
     ),
     trigger_type: Type.Optional(AutomodTriggerTypeSchema),
-    trigger_metadata: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), KeywordTriggerMetadataSchema]),
-    ),
+    trigger_metadata: Type.Optional(Type.Union([Type.Null(), KeywordTriggerMetadataSchema])),
   },
   { ref: 'KeywordUpsertRequestPartial' },
 )
@@ -8686,7 +8447,7 @@ export const SoundboardSoundResponseSchema = Type.Object(
     name: Type.String(),
     sound_id: SnowflakeTypeSchema,
     volume: Type.Number(),
-    emoji_id: Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
+    emoji_id: Type.Union([Type.Null(), SnowflakeTypeSchema]),
     emoji_name: Type.Union([Type.String(), Type.Null()]),
     guild_id: Type.Optional(SnowflakeTypeSchema),
     available: Type.Boolean(),
@@ -8722,7 +8483,7 @@ export const LobbyMemberRequestSchema = Type.Object(
         Type.Null(),
       ]),
     ),
-    flags: Type.Optional(Type.Union([Type.Union([Type.Null(), Type.Null()]), Type.Literal(1)])),
+    flags: Type.Optional(Type.Union([Type.Null(), Type.Literal(1)])),
     additional_name: Type.Optional(
       Type.Union([Type.String({ minLength: 1, maxLength: 80 }), Type.Null()]),
     ),
@@ -8814,9 +8575,7 @@ export const MLSpamUpsertRequestSchema = Type.Object(
       ]),
     ),
     trigger_type: AutomodTriggerTypeSchema,
-    trigger_metadata: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), MLSpamTriggerMetadataSchema]),
-    ),
+    trigger_metadata: Type.Optional(Type.Union([Type.Null(), MLSpamTriggerMetadataSchema])),
   },
   { ref: 'MLSpamUpsertRequest' },
 )
@@ -8855,9 +8614,7 @@ export const MLSpamUpsertRequestPartialSchema = Type.Object(
       ]),
     ),
     trigger_type: Type.Optional(AutomodTriggerTypeSchema),
-    trigger_metadata: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), MLSpamTriggerMetadataSchema]),
-    ),
+    trigger_metadata: Type.Optional(Type.Union([Type.Null(), MLSpamTriggerMetadataSchema])),
   },
   { ref: 'MLSpamUpsertRequestPartial' },
 )
@@ -8908,9 +8665,7 @@ export const MentionSpamUpsertRequestSchema = Type.Object(
       ]),
     ),
     trigger_type: AutomodTriggerTypeSchema,
-    trigger_metadata: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), MentionSpamTriggerMetadataSchema]),
-    ),
+    trigger_metadata: Type.Optional(Type.Union([Type.Null(), MentionSpamTriggerMetadataSchema])),
   },
   { ref: 'MentionSpamUpsertRequest' },
 )
@@ -8949,9 +8704,7 @@ export const MentionSpamUpsertRequestPartialSchema = Type.Object(
       ]),
     ),
     trigger_type: Type.Optional(AutomodTriggerTypeSchema),
-    trigger_metadata: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), MentionSpamTriggerMetadataSchema]),
-    ),
+    trigger_metadata: Type.Optional(Type.Union([Type.Null(), MentionSpamTriggerMetadataSchema])),
   },
   { ref: 'MentionSpamUpsertRequestPartial' },
 )
@@ -8960,17 +8713,11 @@ export type MentionSpamUpsertRequestPartial = Static<typeof MentionSpamUpsertReq
 
 export const MessageReferenceRequestSchema = Type.Object(
   {
-    guild_id: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
-    ),
-    channel_id: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
-    ),
+    guild_id: Type.Optional(Type.Union([Type.Null(), SnowflakeTypeSchema])),
+    channel_id: Type.Optional(Type.Union([Type.Null(), SnowflakeTypeSchema])),
     message_id: SnowflakeTypeSchema,
     fail_if_not_exists: Type.Optional(Type.Union([Type.Boolean(), Type.Null()])),
-    type: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), MessageReferenceTypeSchema]),
-    ),
+    type: Type.Optional(Type.Union([Type.Null(), MessageReferenceTypeSchema])),
   },
   { ref: 'MessageReferenceRequest' },
 )
@@ -8981,9 +8728,7 @@ export const MessageCreateRequestSchema = Type.Object(
   {
     content: Type.Optional(Type.Union([Type.String({ maxLength: 4000 }), Type.Null()])),
     embeds: Type.Optional(Type.Union([Type.Array(RichEmbedSchema, { maxItems: 10 }), Type.Null()])),
-    allowed_mentions: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), MessageAllowedMentionsRequestSchema]),
-    ),
+    allowed_mentions: Type.Optional(Type.Union([Type.Null(), MessageAllowedMentionsRequestSchema])),
     sticker_ids: Type.Optional(
       Type.Union([Type.Array(SnowflakeTypeSchema, { maxItems: 3 }), Type.Null()]),
     ),
@@ -9008,20 +8753,16 @@ export const MessageCreateRequestSchema = Type.Object(
     attachments: Type.Optional(
       Type.Union([Type.Array(MessageAttachmentRequestSchema, { maxItems: 10 }), Type.Null()]),
     ),
-    poll: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), PollCreateRequestSchema]),
-    ),
+    poll: Type.Optional(Type.Union([Type.Null(), PollCreateRequestSchema])),
     shared_client_theme: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), CustomClientThemeShareRequestSchema]),
+      Type.Union([Type.Null(), CustomClientThemeShareRequestSchema]),
     ),
-    message_reference: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), MessageReferenceRequestSchema]),
-    ),
+    message_reference: Type.Optional(Type.Union([Type.Null(), MessageReferenceRequestSchema])),
     nonce: Type.Optional(
       Type.Union([
         Type.Integer({ minimum: -9223372036854776000, maximum: 9223372036854776000 }),
         Type.String({ maxLength: 25 }),
-        Type.Union([Type.Null(), Type.Null()]),
+        Type.Null(),
       ]),
     ),
     enforce_nonce: Type.Optional(Type.Union([Type.Boolean(), Type.Null()])),
@@ -9037,9 +8778,7 @@ export const MessageEditRequestPartialSchema = Type.Object(
     content: Type.Optional(Type.Union([Type.String({ maxLength: 4000 }), Type.Null()])),
     embeds: Type.Optional(Type.Union([Type.Array(RichEmbedSchema, { maxItems: 10 }), Type.Null()])),
     flags: Type.Optional(Type.Union([Type.Integer(), Type.Null()])),
-    allowed_mentions: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), MessageAllowedMentionsRequestSchema]),
-    ),
+    allowed_mentions: Type.Optional(Type.Union([Type.Null(), MessageAllowedMentionsRequestSchema])),
     sticker_ids: Type.Optional(
       Type.Union([Type.Array(SnowflakeTypeSchema, { maxItems: 1521 }), Type.Null()]),
     ),
@@ -9178,12 +8917,10 @@ export type OAuth2GetOpenIDConnectUserInfoResponse = Static<
 
 export const OnboardingPromptOptionRequestSchema = Type.Object(
   {
-    id: Type.Optional(Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema])),
+    id: Type.Optional(Type.Union([Type.Null(), SnowflakeTypeSchema])),
     title: Type.String({ minLength: 1, maxLength: 50 }),
     description: Type.Optional(Type.Union([Type.String({ maxLength: 100 }), Type.Null()])),
-    emoji_id: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
-    ),
+    emoji_id: Type.Optional(Type.Union([Type.Null(), SnowflakeTypeSchema])),
     emoji_name: Type.Optional(Type.Union([Type.String({ maxLength: 100 }), Type.Null()])),
     emoji_animated: Type.Optional(Type.Union([Type.Boolean(), Type.Null()])),
     role_ids: Type.Optional(
@@ -9317,7 +9054,7 @@ export const PrivateApplicationResponseSchema = Type.Object(
     name: Type.String(),
     icon: Type.Union([Type.String(), Type.Null()]),
     description: Type.String(),
-    type: Type.Union([Type.Union([Type.Null(), Type.Null()]), ApplicationTypesSchema]),
+    type: Type.Union([Type.Null(), ApplicationTypesSchema]),
     cover_image: Type.Optional(Type.String()),
     primary_sku_id: Type.Optional(SnowflakeTypeSchema),
     flags: Type.Integer(),
@@ -9351,7 +9088,7 @@ export const PrivateApplicationResponseSchema = Type.Object(
     event_webhooks_status: Type.Optional(ApplicationEventWebhooksStatusSchema),
     event_webhooks_types: Type.Optional(Type.Array(ActionTypesSchema, { uniqueItems: true })),
     explicit_content_filter: ApplicationExplicitContentFilterTypesSchema,
-    team: Type.Union([Type.Union([Type.Null(), Type.Null()]), TeamResponseSchema]),
+    team: Type.Union([Type.Null(), TeamResponseSchema]),
     eligible_oauth2_scopes: Type.Array(OAuth2ScopesSchema),
   },
   { ref: 'PrivateApplicationResponse' },
@@ -9366,7 +9103,7 @@ export const PrivateGuildMemberResponseSchema = Type.Object(
       Type.Null(),
     ]),
     avatar_decoration_data: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), UserAvatarDecorationResponseSchema], {
+      Type.Union([Type.Null(), UserAvatarDecorationResponseSchema], {
         description: "data for the member's guild avatar decoration",
       }),
     ),
@@ -9400,7 +9137,7 @@ export const PrivateGuildMemberResponseSchema = Type.Object(
       description: 'array of role object ids',
     }),
     collectibles: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), UserCollectiblesResponseSchema], {
+      Type.Union([Type.Null(), UserCollectiblesResponseSchema], {
         description: "data for the member's collectibles",
       }),
     ),
@@ -9438,7 +9175,7 @@ export const PruneGuildRequestSchema = Type.Object(
       Type.Union([
         Type.String(),
         Type.Array(SnowflakeTypeSchema, { maxItems: 100, uniqueItems: true }),
-        Type.Union([Type.Null(), Type.Null()]),
+        Type.Null(),
       ]),
     ),
   },
@@ -9461,9 +9198,7 @@ export const SDKMessageRequestSchema = Type.Object(
   {
     content: Type.Optional(Type.Union([Type.String({ maxLength: 4000 }), Type.Null()])),
     embeds: Type.Optional(Type.Union([Type.Array(RichEmbedSchema, { maxItems: 10 }), Type.Null()])),
-    allowed_mentions: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), MessageAllowedMentionsRequestSchema]),
-    ),
+    allowed_mentions: Type.Optional(Type.Union([Type.Null(), MessageAllowedMentionsRequestSchema])),
     sticker_ids: Type.Optional(
       Type.Union([Type.Array(SnowflakeTypeSchema, { maxItems: 3 }), Type.Null()]),
     ),
@@ -9488,20 +9223,16 @@ export const SDKMessageRequestSchema = Type.Object(
     attachments: Type.Optional(
       Type.Union([Type.Array(MessageAttachmentRequestSchema, { maxItems: 10 }), Type.Null()]),
     ),
-    poll: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), PollCreateRequestSchema]),
-    ),
+    poll: Type.Optional(Type.Union([Type.Null(), PollCreateRequestSchema])),
     shared_client_theme: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), CustomClientThemeShareRequestSchema]),
+      Type.Union([Type.Null(), CustomClientThemeShareRequestSchema]),
     ),
-    message_reference: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), MessageReferenceRequestSchema]),
-    ),
+    message_reference: Type.Optional(Type.Union([Type.Null(), MessageReferenceRequestSchema])),
     nonce: Type.Optional(
       Type.Union([
         Type.Integer({ minimum: -9223372036854776000, maximum: 9223372036854776000 }),
         Type.String({ maxLength: 25 }),
-        Type.Union([Type.Null(), Type.Null()]),
+        Type.Null(),
       ]),
     ),
     enforce_nonce: Type.Optional(Type.Union([Type.Boolean(), Type.Null()])),
@@ -9633,9 +9364,7 @@ export type SlackWebhook = Static<typeof SlackWebhookSchema>
 export const SocialLayerSKUPurchaseEligibilityCallbackDataSchema = Type.Object(
   {
     eligible: Type.Boolean(),
-    ineligible_reason: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), SKUIneligibilityReasonSchema]),
-    ),
+    ineligible_reason: Type.Optional(Type.Union([Type.Null(), SKUIneligibilityReasonSchema])),
     ineligible_reason_description: Type.Optional(
       Type.Union([Type.String({ maxLength: 255 }), Type.Null()]),
     ),
@@ -9676,9 +9405,7 @@ export const SoundboardCreateRequestSchema = Type.Object(
   {
     name: Type.String({ minLength: 2, maxLength: 32 }),
     volume: Type.Optional(Type.Union([Type.Number({ minimum: 0, maximum: 1 }), Type.Null()])),
-    emoji_id: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
-    ),
+    emoji_id: Type.Optional(Type.Union([Type.Null(), SnowflakeTypeSchema])),
     emoji_name: Type.Optional(
       Type.Union([Type.String({ minLength: 1, maxLength: 32 }), Type.Null()]),
     ),
@@ -9693,9 +9420,7 @@ export const SoundboardPatchRequestPartialSchema = Type.Object(
   {
     name: Type.Optional(Type.String({ minLength: 2, maxLength: 32 })),
     volume: Type.Optional(Type.Union([Type.Number({ minimum: 0, maximum: 1 }), Type.Null()])),
-    emoji_id: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
-    ),
+    emoji_id: Type.Optional(Type.Union([Type.Null(), SnowflakeTypeSchema])),
     emoji_name: Type.Optional(
       Type.Union([Type.String({ minLength: 1, maxLength: 32 }), Type.Null()]),
     ),
@@ -9708,9 +9433,7 @@ export type SoundboardPatchRequestPartial = Static<typeof SoundboardPatchRequest
 export const SoundboardSoundSendRequestSchema = Type.Object(
   {
     sound_id: SnowflakeTypeSchema,
-    source_guild_id: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
-    ),
+    source_guild_id: Type.Optional(Type.Union([Type.Null(), SnowflakeTypeSchema])),
   },
   { ref: 'SoundboardSoundSendRequest' },
 )
@@ -9735,10 +9458,7 @@ export const StageInstanceResponseSchema = Type.Object(
     privacy_level: StageInstancesPrivacyLevelsSchema,
     id: SnowflakeTypeSchema,
     discoverable_disabled: Type.Boolean(),
-    guild_scheduled_event_id: Type.Union([
-      Type.Union([Type.Null(), Type.Null()]),
-      SnowflakeTypeSchema,
-    ]),
+    guild_scheduled_event_id: Type.Union([Type.Null(), SnowflakeTypeSchema]),
   },
   { ref: 'StageInstanceResponse' },
 )
@@ -9756,17 +9476,13 @@ export const StageScheduledEventCreateRequestSchema = Type.Object(
     ),
     privacy_level: GuildScheduledEventPrivacyLevelsSchema,
     entity_type: GuildScheduledEventEntityTypesSchema,
-    channel_id: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
-    ),
+    channel_id: Type.Optional(Type.Union([Type.Null(), SnowflakeTypeSchema])),
     recurrence_rule: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), RecurrenceRuleSchema], {
+      Type.Union([Type.Null(), RecurrenceRuleSchema], {
         description: 'Recurrence rule for the scheduled event',
       }),
     ),
-    entity_metadata: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), EntityMetadataStageInstanceSchema]),
-    ),
+    entity_metadata: Type.Optional(Type.Union([Type.Null(), EntityMetadataStageInstanceSchema])),
   },
   { ref: 'StageScheduledEventCreateRequest' },
 )
@@ -9775,9 +9491,7 @@ export type StageScheduledEventCreateRequest = Static<typeof StageScheduledEvent
 
 export const StageScheduledEventPatchRequestPartialSchema = Type.Object(
   {
-    status: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), GuildScheduledEventStatusesSchema]),
-    ),
+    status: Type.Optional(Type.Union([Type.Null(), GuildScheduledEventStatusesSchema])),
     name: Type.Optional(Type.String({ maxLength: 100 })),
     description: Type.Optional(Type.Union([Type.String({ maxLength: 1000 }), Type.Null()])),
     image: Type.Optional(Type.Union([Type.String(), Type.Null()])),
@@ -9785,21 +9499,15 @@ export const StageScheduledEventPatchRequestPartialSchema = Type.Object(
     scheduled_end_time: Type.Optional(
       Type.Union([Type.String({ format: 'date-time' }), Type.Null()]),
     ),
-    entity_type: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), GuildScheduledEventEntityTypesSchema]),
-    ),
+    entity_type: Type.Optional(Type.Union([Type.Null(), GuildScheduledEventEntityTypesSchema])),
     privacy_level: Type.Optional(GuildScheduledEventPrivacyLevelsSchema),
-    channel_id: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
-    ),
+    channel_id: Type.Optional(Type.Union([Type.Null(), SnowflakeTypeSchema])),
     recurrence_rule: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), RecurrenceRuleSchema], {
+      Type.Union([Type.Null(), RecurrenceRuleSchema], {
         description: 'Recurrence rule for the scheduled event',
       }),
     ),
-    entity_metadata: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), EntityMetadataStageInstanceSchema]),
-    ),
+    entity_metadata: Type.Optional(Type.Union([Type.Null(), EntityMetadataStageInstanceSchema])),
   },
   { ref: 'StageScheduledEventPatchRequestPartial' },
 )
@@ -10013,12 +9721,10 @@ export type UpdateGroupDMRequestPartial = Static<typeof UpdateGroupDMRequestPart
 export const UpdateThreadTagRequestSchema = Type.Object(
   {
     name: Type.String({ minLength: 0, maxLength: 50 }),
-    emoji_id: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
-    ),
+    emoji_id: Type.Optional(Type.Union([Type.Null(), SnowflakeTypeSchema])),
     emoji_name: Type.Optional(Type.Union([Type.String({ maxLength: 100 }), Type.Null()])),
     moderated: Type.Optional(Type.Union([Type.Boolean(), Type.Null()])),
-    id: Type.Optional(Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema])),
+    id: Type.Optional(Type.Union([Type.Null(), SnowflakeTypeSchema])),
   },
   { ref: 'UpdateThreadTagRequest' },
 )
@@ -10027,7 +9733,7 @@ export type UpdateThreadTagRequest = Static<typeof UpdateThreadTagRequestSchema>
 
 export const UpdateGuildChannelRequestPartialSchema = Type.Object(
   {
-    type: Type.Optional(Type.Union([Type.Union([Type.Null(), Type.Null()]), ChannelTypesSchema])),
+    type: Type.Optional(Type.Union([Type.Null(), ChannelTypesSchema])),
     name: Type.Optional(Type.String({ minLength: 1, maxLength: 100 })),
     position: Type.Optional(Type.Union([Type.Integer({ minimum: 0 }), Type.Null()])),
     topic: Type.Optional(Type.Union([Type.String({ minLength: 0, maxLength: 4096 }), Type.Null()])),
@@ -10037,9 +9743,7 @@ export const UpdateGuildChannelRequestPartialSchema = Type.Object(
     rate_limit_per_user: Type.Optional(
       Type.Union([Type.Integer({ minimum: 0, maximum: 21600 }), Type.Null()]),
     ),
-    parent_id: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
-    ),
+    parent_id: Type.Optional(Type.Union([Type.Null(), SnowflakeTypeSchema])),
     permission_overwrites: Type.Optional(
       Type.Union([
         Type.Array(ChannelPermissionOverwriteRequestSchema, { maxItems: 100 }),
@@ -10047,27 +9751,19 @@ export const UpdateGuildChannelRequestPartialSchema = Type.Object(
       ]),
     ),
     rtc_region: Type.Optional(Type.Union([Type.String(), Type.Null()])),
-    video_quality_mode: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), VideoQualityModesSchema]),
-    ),
+    video_quality_mode: Type.Optional(Type.Union([Type.Null(), VideoQualityModesSchema])),
     default_auto_archive_duration: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), ThreadAutoArchiveDurationSchema]),
+      Type.Union([Type.Null(), ThreadAutoArchiveDurationSchema]),
     ),
     default_reaction_emoji: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), UpdateDefaultReactionEmojiRequestSchema]),
+      Type.Union([Type.Null(), UpdateDefaultReactionEmojiRequestSchema]),
     ),
     default_thread_rate_limit_per_user: Type.Optional(
       Type.Union([Type.Integer({ minimum: 0, maximum: 21600 }), Type.Null()]),
     ),
-    default_sort_order: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), ThreadSortOrderSchema]),
-    ),
-    default_forum_layout: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), ForumLayoutSchema]),
-    ),
-    default_tag_setting: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), ThreadSearchTagSettingSchema]),
-    ),
+    default_sort_order: Type.Optional(Type.Union([Type.Null(), ThreadSortOrderSchema])),
+    default_forum_layout: Type.Optional(Type.Union([Type.Null(), ForumLayoutSchema])),
+    default_tag_setting: Type.Optional(Type.Union([Type.Null(), ThreadSearchTagSettingSchema])),
     flags: Type.Optional(Type.Union([Type.Integer(), Type.Null()])),
     available_tags: Type.Optional(
       Type.Union([Type.Array(UpdateThreadTagRequestSchema, { maxItems: 20 }), Type.Null()]),
@@ -10085,9 +9781,7 @@ export const UpdateOnboardingPromptRequestSchema = Type.Object(
     single_select: Type.Optional(Type.Union([Type.Boolean(), Type.Null()])),
     required: Type.Optional(Type.Union([Type.Boolean(), Type.Null()])),
     in_onboarding: Type.Optional(Type.Union([Type.Boolean(), Type.Null()])),
-    type: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), OnboardingPromptTypeSchema]),
-    ),
+    type: Type.Optional(Type.Union([Type.Null(), OnboardingPromptTypeSchema])),
     id: SnowflakeTypeSchema,
   },
   { ref: 'UpdateOnboardingPromptRequest' },
@@ -10107,9 +9801,7 @@ export const UpdateGuildOnboardingRequestSchema = Type.Object(
         Type.Null(),
       ]),
     ),
-    mode: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), GuildOnboardingModeSchema]),
-    ),
+    mode: Type.Optional(Type.Union([Type.Null(), GuildOnboardingModeSchema])),
   },
   { ref: 'UpdateGuildOnboardingRequest' },
 )
@@ -10120,10 +9812,7 @@ export const UpdateMessageInteractionCallbackRequestSchema = Type.Object(
   {
     type: InteractionCallbackTypesSchema,
     data: Type.Optional(
-      Type.Union([
-        Type.Union([Type.Null(), Type.Null()]),
-        IncomingWebhookUpdateForInteractionCallbackRequestPartialSchema,
-      ]),
+      Type.Union([Type.Null(), IncomingWebhookUpdateForInteractionCallbackRequestPartialSchema]),
     ),
   },
   { ref: 'UpdateMessageInteractionCallbackRequest' },
@@ -10135,7 +9824,7 @@ export type UpdateMessageInteractionCallbackRequest = Static<
 
 export const UpdateRolePositionsRequestSchema = Type.Object(
   {
-    id: Type.Optional(Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema])),
+    id: Type.Optional(Type.Union([Type.Null(), SnowflakeTypeSchema])),
     position: Type.Optional(Type.Union([Type.Integer(), Type.Null()])),
   },
   { ref: 'UpdateRolePositionsRequest' },
@@ -10150,7 +9839,7 @@ export const UpdateRoleRequestPartialSchema = Type.Object(
     color: Type.Optional(
       Type.Union([Type.Integer({ minimum: 0, maximum: 16777215 }), Type.Null()]),
     ),
-    colors: Type.Optional(Type.Union([Type.Union([Type.Null(), Type.Null()]), RoleColorsSchema])),
+    colors: Type.Optional(Type.Union([Type.Null(), RoleColorsSchema])),
     hoist: Type.Optional(Type.Union([Type.Boolean(), Type.Null()])),
     mentionable: Type.Optional(Type.Union([Type.Boolean(), Type.Null()])),
     icon: Type.Optional(Type.Union([Type.String(), Type.Null()])),
@@ -10167,9 +9856,7 @@ export const UpdateSelfVoiceStateRequestPartialSchema = Type.Object(
       Type.Union([Type.String({ format: 'date-time' }), Type.Null()]),
     ),
     suppress: Type.Optional(Type.Union([Type.Boolean(), Type.Null()])),
-    channel_id: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
-    ),
+    channel_id: Type.Optional(Type.Union([Type.Null(), SnowflakeTypeSchema])),
   },
   { ref: 'UpdateSelfVoiceStateRequestPartial' },
 )
@@ -10185,7 +9872,7 @@ export const UpdateThreadRequestPartialSchema = Type.Object(
     locked: Type.Optional(Type.Union([Type.Boolean(), Type.Null()])),
     invitable: Type.Optional(Type.Union([Type.Boolean(), Type.Null()])),
     auto_archive_duration: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), ThreadAutoArchiveDurationSchema]),
+      Type.Union([Type.Null(), ThreadAutoArchiveDurationSchema]),
     ),
     rate_limit_per_user: Type.Optional(
       Type.Union([Type.Integer({ minimum: 0, maximum: 21600 }), Type.Null()]),
@@ -10197,9 +9884,7 @@ export const UpdateThreadRequestPartialSchema = Type.Object(
     bitrate: Type.Optional(Type.Union([Type.Integer({ minimum: 8000 }), Type.Null()])),
     user_limit: Type.Optional(Type.Union([Type.Integer({ minimum: 0, maximum: 99 }), Type.Null()])),
     rtc_region: Type.Optional(Type.Union([Type.String(), Type.Null()])),
-    video_quality_mode: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), VideoQualityModesSchema]),
-    ),
+    video_quality_mode: Type.Optional(Type.Union([Type.Null(), VideoQualityModesSchema])),
   },
   { ref: 'UpdateThreadRequestPartial' },
 )
@@ -10209,9 +9894,7 @@ export type UpdateThreadRequestPartial = Static<typeof UpdateThreadRequestPartia
 export const UpdateVoiceStateRequestPartialSchema = Type.Object(
   {
     suppress: Type.Optional(Type.Union([Type.Boolean(), Type.Null()])),
-    channel_id: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
-    ),
+    channel_id: Type.Optional(Type.Union([Type.Null(), SnowflakeTypeSchema])),
   },
   { ref: 'UpdateVoiceStateRequestPartial' },
 )
@@ -10265,18 +9948,16 @@ export const UserPIIResponseSchema = Type.Object(
       Type.Null(),
     ]),
     avatar_decoration_data: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), UserAvatarDecorationResponseSchema], {
+      Type.Union([Type.Null(), UserAvatarDecorationResponseSchema], {
         description: "data for the user's avatar decoration",
       }),
     ),
     collectibles: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), UserCollectiblesResponseSchema], {
+      Type.Union([Type.Null(), UserCollectiblesResponseSchema], {
         description: "data for the user's collectibles",
       }),
     ),
-    primary_guild: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), UserPrimaryGuildResponseSchema]),
-    ),
+    primary_guild: Type.Optional(Type.Union([Type.Null(), UserPrimaryGuildResponseSchema])),
     mfa_enabled: Type.Boolean(),
     locale: AvailableLocalesEnumSchema,
     premium_type: Type.Optional(PremiumTypesSchema),
@@ -10403,9 +10084,7 @@ export const VanityURLResponseSchema = Type.Object(
   {
     code: Type.Union([Type.String(), Type.Null()]),
     uses: Type.Integer(),
-    error: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), VanityURLErrorResponseSchema]),
-    ),
+    error: Type.Optional(Type.Union([Type.Null(), VanityURLErrorResponseSchema])),
   },
   { ref: 'VanityURLResponse' },
 )
@@ -10436,17 +10115,13 @@ export const VoiceScheduledEventCreateRequestSchema = Type.Object(
     ),
     privacy_level: GuildScheduledEventPrivacyLevelsSchema,
     entity_type: GuildScheduledEventEntityTypesSchema,
-    channel_id: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
-    ),
+    channel_id: Type.Optional(Type.Union([Type.Null(), SnowflakeTypeSchema])),
     recurrence_rule: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), RecurrenceRuleSchema], {
+      Type.Union([Type.Null(), RecurrenceRuleSchema], {
         description: 'Recurrence rule for the scheduled event',
       }),
     ),
-    entity_metadata: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), EntityMetadataVoiceSchema]),
-    ),
+    entity_metadata: Type.Optional(Type.Union([Type.Null(), EntityMetadataVoiceSchema])),
   },
   { ref: 'VoiceScheduledEventCreateRequest' },
 )
@@ -10455,9 +10130,7 @@ export type VoiceScheduledEventCreateRequest = Static<typeof VoiceScheduledEvent
 
 export const VoiceScheduledEventPatchRequestPartialSchema = Type.Object(
   {
-    status: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), GuildScheduledEventStatusesSchema]),
-    ),
+    status: Type.Optional(Type.Union([Type.Null(), GuildScheduledEventStatusesSchema])),
     name: Type.Optional(Type.String({ maxLength: 100 })),
     description: Type.Optional(Type.Union([Type.String({ maxLength: 1000 }), Type.Null()])),
     image: Type.Optional(Type.Union([Type.String(), Type.Null()])),
@@ -10465,21 +10138,15 @@ export const VoiceScheduledEventPatchRequestPartialSchema = Type.Object(
     scheduled_end_time: Type.Optional(
       Type.Union([Type.String({ format: 'date-time' }), Type.Null()]),
     ),
-    entity_type: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), GuildScheduledEventEntityTypesSchema]),
-    ),
+    entity_type: Type.Optional(Type.Union([Type.Null(), GuildScheduledEventEntityTypesSchema])),
     privacy_level: Type.Optional(GuildScheduledEventPrivacyLevelsSchema),
-    channel_id: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
-    ),
+    channel_id: Type.Optional(Type.Union([Type.Null(), SnowflakeTypeSchema])),
     recurrence_rule: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), RecurrenceRuleSchema], {
+      Type.Union([Type.Null(), RecurrenceRuleSchema], {
         description: 'Recurrence rule for the scheduled event',
       }),
     ),
-    entity_metadata: Type.Optional(
-      Type.Union([Type.Union([Type.Null(), Type.Null()]), EntityMetadataVoiceSchema]),
-    ),
+    entity_metadata: Type.Optional(Type.Union([Type.Null(), EntityMetadataVoiceSchema])),
   },
   { ref: 'VoiceScheduledEventPatchRequestPartial' },
 )
@@ -10490,9 +10157,9 @@ export type VoiceScheduledEventPatchRequestPartial = Static<
 
 export const VoiceStateResponseSchema = Type.Object(
   {
-    channel_id: Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
+    channel_id: Type.Union([Type.Null(), SnowflakeTypeSchema]),
     deaf: Type.Boolean(),
-    guild_id: Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
+    guild_id: Type.Union([Type.Null(), SnowflakeTypeSchema]),
     member: Type.Optional(GuildMemberResponseSchema),
     mute: Type.Boolean(),
     request_to_speak_timestamp: Type.Union([Type.String({ format: 'date-time' }), Type.Null()]),
@@ -10571,7 +10238,7 @@ export const WidgetMemberSchema = Type.Object(
     id: Type.String(),
     username: Type.String(),
     discriminator: WidgetUserDiscriminatorSchema,
-    avatar: Type.Union([Type.Null(), Type.Null()]),
+    avatar: Type.Null(),
     status: Type.String(),
     avatar_url: Type.String({ format: 'uri' }),
     activity: Type.Optional(WidgetActivitySchema),
@@ -10602,10 +10269,7 @@ export const WidgetResponseSchema = Type.Object(
 export type WidgetResponse = Static<typeof WidgetResponseSchema>
 
 export const WidgetSettingsResponseSchema = Type.Object(
-  {
-    enabled: Type.Boolean(),
-    channel_id: Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
-  },
+  { enabled: Type.Boolean(), channel_id: Type.Union([Type.Null(), SnowflakeTypeSchema]) },
   { ref: 'WidgetSettingsResponse' },
 )
 
@@ -10666,11 +10330,11 @@ export const RatelimitedResponseSchema = Type.Intersect(
 
 export type RatelimitedResponse = Static<typeof RatelimitedResponseSchema>
 
-export const XRateLimitLimitHeaderSchema = resolver(Compile(Type.Integer()))
-export const XRateLimitRemainingHeaderSchema = resolver(Compile(Type.Integer()))
-export const XRateLimitResetHeaderSchema = resolver(Compile(Type.Number()))
-export const XRateLimitResetAfterHeaderSchema = resolver(Compile(Type.Number()))
-export const XRateLimitBucketHeaderSchema = resolver(Compile(Type.String()))
+export const XRateLimitLimitHeaderSchema = resolver(toStandardSchemaV1(Type.Integer()))
+export const XRateLimitRemainingHeaderSchema = resolver(toStandardSchemaV1(Type.Integer()))
+export const XRateLimitResetHeaderSchema = resolver(toStandardSchemaV1(Type.Number()))
+export const XRateLimitResetAfterHeaderSchema = resolver(toStandardSchemaV1(Type.Number()))
+export const XRateLimitBucketHeaderSchema = resolver(toStandardSchemaV1(Type.String()))
 
 export const BotTokenSecurityScheme = {
   type: 'apiKey',
@@ -10881,7 +10545,7 @@ export const ClientErrorResponseResponse = {
     'X-RateLimit-Reset-After': { $ref: '#/components/headers/X-RateLimit-Reset-After' },
     'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
   },
-  content: { 'application/json': { schema: resolver(Compile(ErrorResponseSchema)) } },
+  content: { 'application/json': { schema: resolver(toStandardSchemaV1(ErrorResponseSchema)) } },
 }
 export const ClientRatelimitedResponseResponse = {
   description: 'Client ratelimited response',
@@ -10892,5 +10556,7 @@ export const ClientRatelimitedResponseResponse = {
     'X-RateLimit-Reset-After': { $ref: '#/components/headers/X-RateLimit-Reset-After' },
     'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
   },
-  content: { 'application/json': { schema: resolver(Compile(RatelimitedResponseSchema)) } },
+  content: {
+    'application/json': { schema: resolver(toStandardSchemaV1(RatelimitedResponseSchema)) },
+  },
 }

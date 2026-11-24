@@ -58,41 +58,51 @@ export const agentsHandler = new Hono()
             'application/json': {
               schema: resolver(
                 Schema.toStandardSchemaV1(
-                  Schema.Struct({
-                    object: Schema.Literal('list')
-                      .pipe(Schema.withDecodingDefault(Effect.succeed('list')))
-                      .annotate({ description: 'The object type, which is always `list`.' }),
-                    data: Schema.Array(AutomationResourceSchema)
-                      .check(Schema.isMinLength(0), Schema.isMaxLength(2000))
-                      .annotate({
+                  Schema.StructWithRest(
+                    Schema.Struct({
+                      object: Schema.Literal('list')
+                        .pipe(Schema.withDecodingDefault(Effect.succeed('list')))
+                        .annotate({ description: 'The object type, which is always `list`.' }),
+                      data: Schema.Array(AutomationResourceSchema)
+                        .check(Schema.isMinLength(0), Schema.isMaxLength(2000))
+                        .annotate({
+                          description:
+                            'The resources returned in this page, in the requested sort order.',
+                        }),
+                      first_id: Schema.NullOr(
+                        Schema.String.check(
+                          Schema.makeFilter((input) => [...input].length >= 0, {
+                            expected: 'a string of at least 0 characters',
+                          }),
+                        ),
+                      ).annotate({
                         description:
-                          'The resources returned in this page, in the requested sort order.',
+                          'The ID of the first resource in `data`, or `null` if the page is empty.',
                       }),
-                    first_id: Schema.NullOr(
-                      Schema.String.check(
-                        Schema.makeFilter((input) => [...input].length >= 0, {
-                          expected: 'a string of at least 0 characters',
-                        }),
+                      last_id: Schema.NullOr(
+                        Schema.String.check(
+                          Schema.makeFilter((input) => [...input].length >= 0, {
+                            expected: 'a string of at least 0 characters',
+                          }),
+                        ),
+                      ).annotate({
+                        description:
+                          'The ID of the last resource in `data`, or `null` if the page is empty. Pass this as `after` with the same order and filters.',
+                      }),
+                      has_more: Schema.Boolean.annotate({
+                        description:
+                          'Whether there are more resources to retrieve after this page.',
+                      }),
+                    }),
+                    [Schema.Record(Schema.String, Schema.Unknown)],
+                  )
+                    .check(
+                      Schema.makeFilter((input) =>
+                        Object.keys(input).every((key) =>
+                          ['object', 'data', 'first_id', 'last_id', 'has_more'].includes(key),
+                        ),
                       ),
-                    ).annotate({
-                      description:
-                        'The ID of the first resource in `data`, or `null` if the page is empty.',
-                    }),
-                    last_id: Schema.NullOr(
-                      Schema.String.check(
-                        Schema.makeFilter((input) => [...input].length >= 0, {
-                          expected: 'a string of at least 0 characters',
-                        }),
-                      ),
-                    ).annotate({
-                      description:
-                        'The ID of the last resource in `data`, or `null` if the page is empty. Pass this as `after` with the same order and filters.',
-                    }),
-                    has_more: Schema.Boolean.annotate({
-                      description: 'Whether there are more resources to retrieve after this page.',
-                    }),
-                  })
-                    .annotate({ parseOptions: { onExcessProperty: 'error' } })
+                    )
                     .annotate({
                       description:
                         'A page of Agents API resources, with IDs for retrieving additional pages.',
@@ -181,7 +191,7 @@ export const agentsHandler = new Hono()
             Schema.isLessThanOrEqualToBigInt(100n),
           ).pipe(Schema.withDecodingDefaultType(Effect.succeed(20n))),
           order: ListOrderParamSchema.pipe(Schema.withDecodingDefaultType(Effect.succeed('desc'))),
-          after: Schema.optional(
+          after: Schema.optionalKey(
             Schema.String.check(
               Schema.makeFilter((input) => [...input].length >= 0, {
                 expected: 'a string of at least 0 characters',
@@ -191,7 +201,7 @@ export const agentsHandler = new Hono()
               }),
             ),
           ),
-          session_id: Schema.optional(
+          session_id: Schema.optionalKey(
             Schema.String.check(
               Schema.makeFilter((input) => [...input].length >= 0, {
                 expected: 'a string of at least 0 characters',
@@ -755,41 +765,51 @@ export const agentsHandler = new Hono()
             'application/json': {
               schema: resolver(
                 Schema.toStandardSchemaV1(
-                  Schema.Struct({
-                    object: Schema.Literal('list')
-                      .pipe(Schema.withDecodingDefault(Effect.succeed('list')))
-                      .annotate({ description: 'The object type, which is always `list`.' }),
-                    data: Schema.Array(AutomationInvocationResourceSchema)
-                      .check(Schema.isMinLength(0), Schema.isMaxLength(2000))
-                      .annotate({
+                  Schema.StructWithRest(
+                    Schema.Struct({
+                      object: Schema.Literal('list')
+                        .pipe(Schema.withDecodingDefault(Effect.succeed('list')))
+                        .annotate({ description: 'The object type, which is always `list`.' }),
+                      data: Schema.Array(AutomationInvocationResourceSchema)
+                        .check(Schema.isMinLength(0), Schema.isMaxLength(2000))
+                        .annotate({
+                          description:
+                            'The resources returned in this page, in the requested sort order.',
+                        }),
+                      first_id: Schema.NullOr(
+                        Schema.String.check(
+                          Schema.makeFilter((input) => [...input].length >= 0, {
+                            expected: 'a string of at least 0 characters',
+                          }),
+                        ),
+                      ).annotate({
                         description:
-                          'The resources returned in this page, in the requested sort order.',
+                          'The ID of the first resource in `data`, or `null` if the page is empty.',
                       }),
-                    first_id: Schema.NullOr(
-                      Schema.String.check(
-                        Schema.makeFilter((input) => [...input].length >= 0, {
-                          expected: 'a string of at least 0 characters',
-                        }),
+                      last_id: Schema.NullOr(
+                        Schema.String.check(
+                          Schema.makeFilter((input) => [...input].length >= 0, {
+                            expected: 'a string of at least 0 characters',
+                          }),
+                        ),
+                      ).annotate({
+                        description:
+                          'The ID of the last resource in `data`, or `null` if the page is empty. Pass this as `after` with the same order and filters.',
+                      }),
+                      has_more: Schema.Boolean.annotate({
+                        description:
+                          'Whether there are more resources to retrieve after this page.',
+                      }),
+                    }),
+                    [Schema.Record(Schema.String, Schema.Unknown)],
+                  )
+                    .check(
+                      Schema.makeFilter((input) =>
+                        Object.keys(input).every((key) =>
+                          ['object', 'data', 'first_id', 'last_id', 'has_more'].includes(key),
+                        ),
                       ),
-                    ).annotate({
-                      description:
-                        'The ID of the first resource in `data`, or `null` if the page is empty.',
-                    }),
-                    last_id: Schema.NullOr(
-                      Schema.String.check(
-                        Schema.makeFilter((input) => [...input].length >= 0, {
-                          expected: 'a string of at least 0 characters',
-                        }),
-                      ),
-                    ).annotate({
-                      description:
-                        'The ID of the last resource in `data`, or `null` if the page is empty. Pass this as `after` with the same order and filters.',
-                    }),
-                    has_more: Schema.Boolean.annotate({
-                      description: 'Whether there are more resources to retrieve after this page.',
-                    }),
-                  })
-                    .annotate({ parseOptions: { onExcessProperty: 'error' } })
+                    )
                     .annotate({
                       description:
                         'A page of Agents API resources, with IDs for retrieving additional pages.',
@@ -893,7 +913,7 @@ export const agentsHandler = new Hono()
             Schema.isLessThanOrEqualToBigInt(100n),
           ).pipe(Schema.withDecodingDefaultType(Effect.succeed(20n))),
           order: ListOrderParamSchema.pipe(Schema.withDecodingDefaultType(Effect.succeed('desc'))),
-          after: Schema.optional(
+          after: Schema.optionalKey(
             Schema.String.check(
               Schema.makeFilter((input) => [...input].length >= 0, {
                 expected: 'a string of at least 0 characters',
@@ -1186,7 +1206,7 @@ export const agentsHandler = new Hono()
             Schema.isLessThanOrEqualToBigInt(100n),
           ).pipe(Schema.withDecodingDefaultType(Effect.succeed(20n))),
           order: ListOrderParamSchema.pipe(Schema.withDecodingDefaultType(Effect.succeed('desc'))),
-          after: Schema.optional(
+          after: Schema.optionalKey(
             Schema.String.check(
               Schema.makeFilter((input) => [...input].length >= 0, {
                 expected: 'a string of at least 0 characters',
@@ -1196,7 +1216,7 @@ export const agentsHandler = new Hono()
               }),
             ),
           ),
-          type: Schema.optional(EnvironmentTypeParamSchema),
+          type: Schema.optionalKey(EnvironmentTypeParamSchema),
         }),
       ),
     ),
@@ -1289,7 +1309,7 @@ export const agentsHandler = new Hono()
       'header',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          'idempotency-key': Schema.optional(
+          'idempotency-key': Schema.optionalKey(
             Schema.String.check(
               Schema.makeFilter((input) => [...input].length >= 1, {
                 expected: 'a string of at least 1 character',
@@ -1491,7 +1511,7 @@ export const agentsHandler = new Hono()
       'query',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          path: Schema.optional(
+          path: Schema.optionalKey(
             Schema.NullOr(
               Schema.String.check(
                 Schema.makeFilter((input) => [...input].length >= 0, {
@@ -1503,7 +1523,7 @@ export const agentsHandler = new Hono()
               ),
             ),
           ),
-          limit: Schema.optional(
+          limit: Schema.optionalKey(
             Schema.Unknown.pipe(
               Schema.decodeTo(
                 Schema.Unknown,
@@ -1526,8 +1546,8 @@ export const agentsHandler = new Hono()
               ),
             ),
           ),
-          order: Schema.optional(ListOrderParamSchema),
-          page: Schema.optional(
+          order: Schema.optionalKey(ListOrderParamSchema),
+          page: Schema.optionalKey(
             Schema.String.check(
               Schema.makeFilter((input) => [...input].length >= 0, {
                 expected: 'a string of at least 0 characters',
@@ -1658,41 +1678,51 @@ export const agentsHandler = new Hono()
             'application/json': {
               schema: resolver(
                 Schema.toStandardSchemaV1(
-                  Schema.Struct({
-                    object: Schema.Literal('list')
-                      .pipe(Schema.withDecodingDefault(Effect.succeed('list')))
-                      .annotate({ description: 'The object type, which is always `list`.' }),
-                    data: Schema.Array(SubagentResourceSchema)
-                      .check(Schema.isMinLength(0), Schema.isMaxLength(2000))
-                      .annotate({
+                  Schema.StructWithRest(
+                    Schema.Struct({
+                      object: Schema.Literal('list')
+                        .pipe(Schema.withDecodingDefault(Effect.succeed('list')))
+                        .annotate({ description: 'The object type, which is always `list`.' }),
+                      data: Schema.Array(SubagentResourceSchema)
+                        .check(Schema.isMinLength(0), Schema.isMaxLength(2000))
+                        .annotate({
+                          description:
+                            'The resources returned in this page, in the requested sort order.',
+                        }),
+                      first_id: Schema.NullOr(
+                        Schema.String.check(
+                          Schema.makeFilter((input) => [...input].length >= 0, {
+                            expected: 'a string of at least 0 characters',
+                          }),
+                        ),
+                      ).annotate({
                         description:
-                          'The resources returned in this page, in the requested sort order.',
+                          'The ID of the first resource in `data`, or `null` if the page is empty.',
                       }),
-                    first_id: Schema.NullOr(
-                      Schema.String.check(
-                        Schema.makeFilter((input) => [...input].length >= 0, {
-                          expected: 'a string of at least 0 characters',
-                        }),
+                      last_id: Schema.NullOr(
+                        Schema.String.check(
+                          Schema.makeFilter((input) => [...input].length >= 0, {
+                            expected: 'a string of at least 0 characters',
+                          }),
+                        ),
+                      ).annotate({
+                        description:
+                          'The ID of the last resource in `data`, or `null` if the page is empty. Pass this as `after` with the same order and filters.',
+                      }),
+                      has_more: Schema.Boolean.annotate({
+                        description:
+                          'Whether there are more resources to retrieve after this page.',
+                      }),
+                    }),
+                    [Schema.Record(Schema.String, Schema.Unknown)],
+                  )
+                    .check(
+                      Schema.makeFilter((input) =>
+                        Object.keys(input).every((key) =>
+                          ['object', 'data', 'first_id', 'last_id', 'has_more'].includes(key),
+                        ),
                       ),
-                    ).annotate({
-                      description:
-                        'The ID of the first resource in `data`, or `null` if the page is empty.',
-                    }),
-                    last_id: Schema.NullOr(
-                      Schema.String.check(
-                        Schema.makeFilter((input) => [...input].length >= 0, {
-                          expected: 'a string of at least 0 characters',
-                        }),
-                      ),
-                    ).annotate({
-                      description:
-                        'The ID of the last resource in `data`, or `null` if the page is empty. Pass this as `after` with the same order and filters.',
-                    }),
-                    has_more: Schema.Boolean.annotate({
-                      description: 'Whether there are more resources to retrieve after this page.',
-                    }),
-                  })
-                    .annotate({ parseOptions: { onExcessProperty: 'error' } })
+                    )
                     .annotate({
                       description:
                         'A page of Agents API resources, with IDs for retrieving additional pages.',
@@ -1788,7 +1818,7 @@ export const agentsHandler = new Hono()
             Schema.isLessThanOrEqualToBigInt(100n),
           ).pipe(Schema.withDecodingDefaultType(Effect.succeed(20n))),
           order: ListOrderParamSchema.pipe(Schema.withDecodingDefaultType(Effect.succeed('desc'))),
-          after: Schema.optional(
+          after: Schema.optionalKey(
             Schema.String.check(
               Schema.makeFilter((input) => [...input].length >= 0, {
                 expected: 'a string of at least 0 characters',
@@ -2014,7 +2044,7 @@ export const agentsHandler = new Hono()
             Schema.isLessThanOrEqualToBigInt(100n),
           ).pipe(Schema.withDecodingDefaultType(Effect.succeed(20n))),
           order: ListOrderParamSchema.pipe(Schema.withDecodingDefaultType(Effect.succeed('desc'))),
-          after: Schema.optional(
+          after: Schema.optionalKey(
             Schema.String.check(
               Schema.makeFilter((input) => [...input].length >= 0, {
                 expected: 'a string of at least 0 characters',
@@ -2140,7 +2170,7 @@ export const agentsHandler = new Hono()
             Schema.isLessThanOrEqualToBigInt(100n),
           ).pipe(Schema.withDecodingDefaultType(Effect.succeed(20n))),
           order: ListOrderParamSchema.pipe(Schema.withDecodingDefaultType(Effect.succeed('desc'))),
-          after: Schema.optional(
+          after: Schema.optionalKey(
             Schema.String.check(
               Schema.makeFilter((input) => [...input].length >= 0, {
                 expected: 'a string of at least 0 characters',
@@ -2380,7 +2410,7 @@ export const agentsHandler = new Hono()
             Schema.isLessThanOrEqualToBigInt(100n),
           ).pipe(Schema.withDecodingDefaultType(Effect.succeed(20n))),
           order: ListOrderParamSchema.pipe(Schema.withDecodingDefaultType(Effect.succeed('desc'))),
-          after: Schema.optional(
+          after: Schema.optionalKey(
             Schema.String.check(
               Schema.makeFilter((input) => [...input].length >= 0, {
                 expected: 'a string of at least 0 characters',
@@ -2483,7 +2513,7 @@ export const agentsHandler = new Hono()
             Schema.isLessThanOrEqualToBigInt(100n),
           ).pipe(Schema.withDecodingDefaultType(Effect.succeed(20n))),
           order: ListOrderParamSchema.pipe(Schema.withDecodingDefaultType(Effect.succeed('desc'))),
-          after: Schema.optional(
+          after: Schema.optionalKey(
             Schema.String.check(
               Schema.makeFilter((input) => [...input].length >= 0, {
                 expected: 'a string of at least 0 characters',
@@ -2933,7 +2963,7 @@ export const agentsHandler = new Hono()
             Schema.isLessThanOrEqualToBigInt(100n),
           ).pipe(Schema.withDecodingDefaultType(Effect.succeed(20n))),
           order: ListOrderParamSchema.pipe(Schema.withDecodingDefaultType(Effect.succeed('desc'))),
-          after: Schema.optional(
+          after: Schema.optionalKey(
             Schema.String.check(
               Schema.makeFilter((input) => [...input].length >= 0, {
                 expected: 'a string of at least 0 characters',
@@ -3375,7 +3405,7 @@ export const agentsHandler = new Hono()
             Schema.isLessThanOrEqualToBigInt(100n),
           ).pipe(Schema.withDecodingDefaultType(Effect.succeed(20n))),
           order: ListOrderParamSchema.pipe(Schema.withDecodingDefaultType(Effect.succeed('desc'))),
-          after: Schema.optional(
+          after: Schema.optionalKey(
             Schema.String.check(
               Schema.makeFilter((input) => [...input].length >= 0, {
                 expected: 'a string of at least 0 characters',
@@ -3385,7 +3415,7 @@ export const agentsHandler = new Hono()
               }),
             ),
           ),
-          agent_id: Schema.optional(
+          agent_id: Schema.optionalKey(
             Schema.String.check(
               Schema.makeFilter((input) => [...input].length >= 0, {
                 expected: 'a string of at least 0 characters',
@@ -3395,7 +3425,7 @@ export const agentsHandler = new Hono()
               }),
             ),
           ),
-          metadata: Schema.optional(
+          metadata: Schema.optionalKey(
             Schema.Record(
               Schema.String,
               Schema.String.check(
@@ -3882,7 +3912,7 @@ export const agentsHandler = new Hono()
             Schema.isLessThanOrEqualToBigInt(100n),
           ).pipe(Schema.withDecodingDefaultType(Effect.succeed(20n))),
           order: ListOrderParamSchema.pipe(Schema.withDecodingDefaultType(Effect.succeed('desc'))),
-          after: Schema.optional(
+          after: Schema.optionalKey(
             Schema.String.check(
               Schema.makeFilter((input) => [...input].length >= 0, {
                 expected: 'a string of at least 0 characters',
@@ -3892,7 +3922,7 @@ export const agentsHandler = new Hono()
               }),
             ),
           ),
-          environment_id: Schema.optional(
+          environment_id: Schema.optionalKey(
             Schema.NullOr(
               Schema.String.check(
                 Schema.makeFilter((input) => [...input].length >= 0, {
@@ -4408,7 +4438,7 @@ export const agentsHandler = new Hono()
       'header',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          'idempotency-key': Schema.optional(
+          'idempotency-key': Schema.optionalKey(
             Schema.String.check(
               Schema.makeFilter((input) => [...input].length >= 1, {
                 expected: 'a string of at least 1 character',
@@ -4527,7 +4557,7 @@ export const agentsHandler = new Hono()
             Schema.isLessThanOrEqualToBigInt(100n),
           ).pipe(Schema.withDecodingDefaultType(Effect.succeed(20n))),
           order: ListOrderParamSchema.pipe(Schema.withDecodingDefaultType(Effect.succeed('desc'))),
-          after: Schema.optional(
+          after: Schema.optionalKey(
             Schema.String.check(
               Schema.makeFilter((input) => [...input].length >= 0, {
                 expected: 'a string of at least 0 characters',
@@ -4645,7 +4675,7 @@ export const agentsHandler = new Hono()
             Schema.isLessThanOrEqualToBigInt(100n),
           ).pipe(Schema.withDecodingDefaultType(Effect.succeed(20n))),
           order: ListOrderParamSchema.pipe(Schema.withDecodingDefaultType(Effect.succeed('desc'))),
-          after: Schema.optional(
+          after: Schema.optionalKey(
             Schema.String.check(
               Schema.makeFilter((input) => [...input].length >= 0, {
                 expected: 'a string of at least 0 characters',
@@ -4763,7 +4793,7 @@ export const agentsHandler = new Hono()
             Schema.isLessThanOrEqualToBigInt(100n),
           ).pipe(Schema.withDecodingDefaultType(Effect.succeed(20n))),
           order: ListOrderParamSchema.pipe(Schema.withDecodingDefaultType(Effect.succeed('desc'))),
-          after: Schema.optional(
+          after: Schema.optionalKey(
             Schema.String.check(
               Schema.makeFilter((input) => [...input].length >= 0, {
                 expected: 'a string of at least 0 characters',
@@ -4987,7 +5017,7 @@ export const agentsHandler = new Hono()
             Schema.isLessThanOrEqualToBigInt(100n),
           ).pipe(Schema.withDecodingDefaultType(Effect.succeed(20n))),
           order: ListOrderParamSchema.pipe(Schema.withDecodingDefaultType(Effect.succeed('desc'))),
-          after: Schema.optional(
+          after: Schema.optionalKey(
             Schema.String.check(
               Schema.makeFilter((input) => [...input].length >= 0, {
                 expected: 'a string of at least 0 characters',

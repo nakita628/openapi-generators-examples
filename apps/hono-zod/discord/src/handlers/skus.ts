@@ -12,7 +12,13 @@ export const skusHandler = new Hono()
       z.object({
         before: SnowflakeTypeSchema.exactOptional(),
         after: SnowflakeTypeSchema.exactOptional(),
-        limit: z.coerce.number().int().min(1).max(100).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(1).max(100),
+          )
+          .exactOptional(),
         user_id: SnowflakeTypeSchema.exactOptional(),
       }),
     ),

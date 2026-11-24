@@ -24,7 +24,7 @@ export const StationSchema = Schema.Struct({
     description: 'The country code of the station.',
     jsonSchemaExamples: ['DE', 'FR'],
   }),
-  timezone: Schema.optional(
+  timezone: Schema.optionalKey(
     Schema.String.annotate({
       description:
         'The timezone of the station in the [IANA Time Zone Database format](https://www.iana.org/time-zones).',
@@ -36,44 +36,44 @@ export const StationSchema = Schema.Struct({
 export type Station = Schema.Schema.Type<typeof StationSchema>
 
 export const LinksSelfSchema = Schema.Struct({
-  self: Schema.optional(Schema.String.check(Schema.makeFilter((input) => URL.canParse(input)))),
+  self: Schema.optionalKey(Schema.String.check(Schema.makeFilter((input) => URL.canParse(input)))),
 }).annotate({ identifier: 'Links-Self' })
 
 export type LinksSelf = Schema.Schema.Type<typeof LinksSelfSchema>
 
 export const LinksPaginationSchema = Schema.Struct({
-  next: Schema.optional(Schema.String.check(Schema.makeFilter((input) => URL.canParse(input)))),
-  prev: Schema.optional(Schema.String.check(Schema.makeFilter((input) => URL.canParse(input)))),
+  next: Schema.optionalKey(Schema.String.check(Schema.makeFilter((input) => URL.canParse(input)))),
+  prev: Schema.optionalKey(Schema.String.check(Schema.makeFilter((input) => URL.canParse(input)))),
 }).annotate({ identifier: 'Links-Pagination' })
 
 export type LinksPagination = Schema.Schema.Type<typeof LinksPaginationSchema>
 
 export const ProblemSchema = Schema.Struct({
-  type: Schema.optional(
+  type: Schema.optionalKey(
     Schema.String.annotate({
       description: 'A URI reference that identifies the problem type',
       jsonSchemaExamples: ['https://example.com/probs/out-of-credit'],
     }),
   ),
-  title: Schema.optional(
+  title: Schema.optionalKey(
     Schema.String.annotate({
       description: 'A short, human-readable summary of the problem type',
       jsonSchemaExamples: ['You do not have enough credit.'],
     }),
   ),
-  detail: Schema.optional(
+  detail: Schema.optionalKey(
     Schema.String.annotate({
       description: 'A human-readable explanation specific to this occurrence of the problem',
       jsonSchemaExamples: ['Your current balance is 30, but that costs 50.'],
     }),
   ),
-  instance: Schema.optional(
+  instance: Schema.optionalKey(
     Schema.String.annotate({
       description: 'A URI reference that identifies the specific occurrence of the problem',
       jsonSchemaExamples: ['/account/12345/msgs/abc'],
     }),
   ),
-  status: Schema.optional(
+  status: Schema.optionalKey(
     Schema.Number.check(Schema.isInt()).annotate({
       description: 'The HTTP status code',
       jsonSchemaExamples: [400],
@@ -84,25 +84,25 @@ export const ProblemSchema = Schema.Struct({
 export type Problem = Schema.Schema.Type<typeof ProblemSchema>
 
 export const TripSchema = Schema.Struct({
-  id: Schema.optional(
+  id: Schema.optionalKey(
     Schema.String.check(Schema.isUUID()).annotate({
       description: 'Unique identifier for the trip',
       jsonSchemaExamples: ['4f4e4e1-c824-4d63-b37a-d8d698862f1d'],
     }),
   ),
-  origin: Schema.optional(
+  origin: Schema.optionalKey(
     Schema.String.annotate({
       description: 'The starting station of the trip',
       jsonSchemaExamples: ['Berlin Hauptbahnhof', 'Paris Gare du Nord'],
     }),
   ),
-  destination: Schema.optional(
+  destination: Schema.optionalKey(
     Schema.String.annotate({
       description: 'The destination station of the trip',
       jsonSchemaExamples: ['Paris Gare du Nord', 'Berlin Hauptbahnhof'],
     }),
   ),
-  departure_time: Schema.optional(
+  departure_time: Schema.optionalKey(
     Schema.String.check(
       Schema.isPattern(
         /^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z|([+-](?:[01]\d|2[0-3]):[0-5]\d)))$/,
@@ -112,7 +112,7 @@ export const TripSchema = Schema.Struct({
       jsonSchemaExamples: ['2024-02-01T10:00:00Z'],
     }),
   ),
-  arrival_time: Schema.optional(
+  arrival_time: Schema.optionalKey(
     Schema.String.check(
       Schema.isPattern(
         /^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z|([+-](?:[01]\d|2[0-3]):[0-5]\d)))$/,
@@ -122,19 +122,19 @@ export const TripSchema = Schema.Struct({
       jsonSchemaExamples: ['2024-02-01T16:00:00Z'],
     }),
   ),
-  operator: Schema.optional(
+  operator: Schema.optionalKey(
     Schema.String.annotate({
       description: 'The name of the operator of the trip',
       jsonSchemaExamples: ['Deutsche Bahn', 'SNCF'],
     }),
   ),
-  price: Schema.optional(
+  price: Schema.optionalKey(
     Schema.Number.annotate({ description: 'The cost of the trip', jsonSchemaExamples: [50] }),
   ),
-  bicycles_allowed: Schema.optional(
+  bicycles_allowed: Schema.optionalKey(
     Schema.Boolean.annotate({ description: 'Indicates whether bicycles are allowed on the trip' }),
   ),
-  dogs_allowed: Schema.optional(
+  dogs_allowed: Schema.optionalKey(
     Schema.Boolean.annotate({ description: 'Indicates whether dogs are allowed on the trip' }),
   ),
 }).annotate({ identifier: 'Trip' })
@@ -142,29 +142,29 @@ export const TripSchema = Schema.Struct({
 export type Trip = Schema.Schema.Type<typeof TripSchema>
 
 export const BookingSchema = Schema.Struct({
-  id: Schema.optional(
+  id: Schema.optionalKey(
     Schema.String.check(Schema.isUUID()).annotate({
       description: 'Unique identifier for the booking',
       jsonSchemaExamples: ['3f3e3e1-c824-4d63-b37a-d8d698862f1d'],
       readOnly: true,
     }),
   ),
-  trip_id: Schema.optional(
+  trip_id: Schema.optionalKey(
     Schema.String.check(Schema.isUUID()).annotate({
       description: 'Identifier of the booked trip',
       jsonSchemaExamples: ['4f4e4e1-c824-4d63-b37a-d8d698862f1d'],
     }),
   ),
-  passenger_name: Schema.optional(
+  passenger_name: Schema.optionalKey(
     Schema.String.annotate({
       description: 'Name of the passenger',
       jsonSchemaExamples: ['John Doe'],
     }),
   ),
-  has_bicycle: Schema.optional(
+  has_bicycle: Schema.optionalKey(
     Schema.Boolean.annotate({ description: 'Indicates whether the passenger has a bicycle.' }),
   ),
-  has_dog: Schema.optional(
+  has_dog: Schema.optionalKey(
     Schema.Boolean.annotate({ description: 'Indicates whether the passenger has a dog.' }),
   ),
 }).annotate({ identifier: 'Booking' })
@@ -172,12 +172,12 @@ export const BookingSchema = Schema.Struct({
 export type Booking = Schema.Schema.Type<typeof BookingSchema>
 
 export const WrapperCollectionSchema = Schema.Struct({
-  data: Schema.optional(
+  data: Schema.optionalKey(
     Schema.Array(Schema.Struct({})).annotate({
       description: 'The wrapper for a collection is an array of objects.',
     }),
   ),
-  links: Schema.optional(
+  links: Schema.optionalKey(
     Schema.Struct({}).annotate({
       description: 'A set of hypermedia links which serve as controls for the client.',
       readOnly: true,
@@ -193,30 +193,30 @@ export const WrapperCollectionSchema = Schema.Struct({
 export type WrapperCollection = Schema.Schema.Type<typeof WrapperCollectionSchema>
 
 export const BookingPaymentSchema = Schema.Struct({
-  id: Schema.optional(
+  id: Schema.optionalKey(
     Schema.String.check(Schema.isUUID()).annotate({
       description:
         'Unique identifier for the payment. This will be a unique identifier for the payment, and is used to reference the payment in other objects.',
       readOnly: true,
     }),
   ),
-  amount: Schema.optional(
+  amount: Schema.optionalKey(
     Schema.Number.check(Schema.isGreaterThan(0)).annotate({
       description:
         'Amount intended to be collected by this payment. A positive decimal figure describing the amount to be collected.',
       jsonSchemaExamples: [49.99],
     }),
   ),
-  currency: Schema.optional(
+  currency: Schema.optionalKey(
     Schema.Literals(['bam', 'bgn', 'chf', 'eur', 'gbp', 'nok', 'sek', 'try']).annotate({
       description:
         'Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase.',
     }),
   ),
-  source: Schema.optional(
+  source: Schema.optionalKey(
     Schema.Union([
       Schema.Struct({
-        object: Schema.optional(Schema.Literal('card')),
+        object: Schema.optionalKey(Schema.Literal('card')),
         name: Schema.String.annotate({
           description: "Cardholder's full name as it appears on the card.",
           jsonSchemaExamples: ['Francis Bourgeois'],
@@ -279,20 +279,20 @@ export const BookingPaymentSchema = Schema.Struct({
             description: "Four-digit number representing the card's expiration year.",
             jsonSchemaExamples: [2025],
           }),
-        address_line1: Schema.optional(Schema.String.annotate({ writeOnly: true })),
-        address_line2: Schema.optional(Schema.String.annotate({ writeOnly: true })),
-        address_city: Schema.optional(Schema.String),
+        address_line1: Schema.optionalKey(Schema.String.annotate({ writeOnly: true })),
+        address_line2: Schema.optionalKey(Schema.String.annotate({ writeOnly: true })),
+        address_city: Schema.optionalKey(Schema.String),
         address_country: Schema.String,
-        address_post_code: Schema.optional(Schema.String),
+        address_post_code: Schema.optionalKey(Schema.String),
       }).annotate({ description: 'A card (debit or credit) to take payment from.' }),
       Schema.Struct({
-        object: Schema.optional(Schema.Literal('bank_account')),
+        object: Schema.optionalKey(Schema.Literal('bank_account')),
         name: Schema.String,
         number: Schema.String.annotate({
           description:
             'The account number for the bank account, in string form. Must be a current account.',
         }),
-        sort_code: Schema.optional(
+        sort_code: Schema.optionalKey(
           Schema.String.annotate({
             description:
               'The sort code for the bank account, in string form. Must be a six-digit number.',
@@ -318,7 +318,7 @@ export const BookingPaymentSchema = Schema.Struct({
         'The payment source to take the payment from. This can be a card or a bank account. Some of these properties will be hidden on read to protect PII leaking.',
     }),
   ),
-  status: Schema.optional(
+  status: Schema.optionalKey(
     Schema.Literals(['pending', 'succeeded', 'failed']).annotate({
       description: 'The status of the payment, one of `pending`, `succeeded`, or `failed`.',
       readOnly: true,
@@ -329,7 +329,7 @@ export const BookingPaymentSchema = Schema.Struct({
 export type BookingPayment = Schema.Schema.Type<typeof BookingPaymentSchema>
 
 export const LinksBookingSchema = Schema.Struct({
-  booking: Schema.optional(
+  booking: Schema.optionalKey(
     Schema.String.check(Schema.makeFilter((input) => URL.canParse(input))).annotate({
       jsonSchemaExamples: ['https://api.example.com/bookings/1725ff48-ab45-4bb5-9d02-88745177dedb'],
     }),

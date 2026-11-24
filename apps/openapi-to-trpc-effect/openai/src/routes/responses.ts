@@ -1,5 +1,5 @@
 import { initTRPC, TRPCError } from '@trpc/server'
-import { Schema } from 'effect'
+import { Effect, Schema } from 'effect'
 import {
   BetaCompactResourceSchema,
   BetaCompactResponseMethodPublicBodySchema,
@@ -34,10 +34,10 @@ export const responsesRouter = t.router({
           response_id: Schema.String.annotate({
             jsonSchemaExamples: ['resp_677efb5139a88190b512bc3fef8e535d'],
           }),
-          include: Schema.optional(Schema.Array(IncludeEnumSchema)),
-          stream: Schema.optional(Schema.Boolean),
-          starting_after: Schema.optional(Schema.Number.check(Schema.isInt())),
-          include_obfuscation: Schema.optional(Schema.Boolean),
+          include: Schema.optionalKey(Schema.Array(IncludeEnumSchema)),
+          stream: Schema.optionalKey(Schema.Boolean),
+          starting_after: Schema.optionalKey(Schema.Number.check(Schema.isInt())),
+          include_obfuscation: Schema.optionalKey(Schema.Boolean),
         }),
       ),
     )
@@ -91,9 +91,9 @@ export const responsesRouter = t.router({
           limit: Schema.Number.check(Schema.isInt()).pipe(
             Schema.withDecodingDefault(Effect.succeed(20)),
           ),
-          order: Schema.optional(Schema.Literals(['asc', 'desc'])),
-          after: Schema.optional(Schema.String),
-          include: Schema.optional(Schema.Array(IncludeEnumSchema)),
+          order: Schema.optionalKey(Schema.Literals(['asc', 'desc'])),
+          after: Schema.optionalKey(Schema.String),
+          include: Schema.optionalKey(Schema.Array(IncludeEnumSchema)),
         }),
       ),
     )
@@ -120,10 +120,10 @@ export const responsesRouter = t.router({
           response_id: Schema.String.annotate({
             jsonSchemaExamples: ['resp_677efb5139a88190b512bc3fef8e535d'],
           }),
-          include: Schema.optional(Schema.Array(BetaIncludeEnumSchema)),
-          stream: Schema.optional(Schema.Boolean),
-          starting_after: Schema.optional(Schema.Number.check(Schema.isInt())),
-          include_obfuscation: Schema.optional(Schema.Boolean),
+          include: Schema.optionalKey(Schema.Array(BetaIncludeEnumSchema)),
+          stream: Schema.optionalKey(Schema.Boolean),
+          starting_after: Schema.optionalKey(Schema.Number.check(Schema.isInt())),
+          include_obfuscation: Schema.optionalKey(Schema.Boolean),
         }),
       ),
     )
@@ -183,9 +183,9 @@ export const responsesRouter = t.router({
           limit: Schema.Number.check(Schema.isInt()).pipe(
             Schema.withDecodingDefault(Effect.succeed(20)),
           ),
-          order: Schema.optional(Schema.Literals(['asc', 'desc'])),
-          after: Schema.optional(Schema.String),
-          include: Schema.optional(Schema.Array(BetaIncludeEnumSchema)),
+          order: Schema.optionalKey(Schema.Literals(['asc', 'desc'])),
+          after: Schema.optionalKey(Schema.String),
+          include: Schema.optionalKey(Schema.Array(BetaIncludeEnumSchema)),
         }),
       ),
     )

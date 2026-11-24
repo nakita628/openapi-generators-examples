@@ -1,5 +1,5 @@
 import { initTRPC, TRPCError } from '@trpc/server'
-import { Schema } from 'effect'
+import { Effect, Schema } from 'effect'
 import { BatchSchema, CreateBatchRequestSchema, ListBatchesResponseSchema } from '../components'
 
 const t = initTRPC.create()
@@ -9,7 +9,7 @@ export const batchesRouter = t.router({
     .input(
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          after: Schema.optional(Schema.String),
+          after: Schema.optionalKey(Schema.String),
           limit: Schema.Number.check(Schema.isInt()).pipe(
             Schema.withDecodingDefault(Effect.succeed(20)),
           ),

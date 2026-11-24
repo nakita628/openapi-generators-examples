@@ -19,15 +19,15 @@ export const videosRouter = t.router({
     .input(
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          limit: Schema.optional(
+          limit: Schema.optionalKey(
             Schema.Number.check(
               Schema.isInt(),
               Schema.isGreaterThanOrEqualTo(0),
               Schema.isLessThanOrEqualTo(100),
             ),
           ),
-          order: Schema.optional(OrderEnumSchema),
-          after: Schema.optional(
+          order: Schema.optionalKey(OrderEnumSchema),
+          after: Schema.optionalKey(
             Schema.String.annotate({
               description: 'Identifier for the last item from the previous pagination request',
             }),
@@ -99,7 +99,7 @@ export const videosRouter = t.router({
       Schema.toStandardSchemaV1(
         Schema.Struct({
           video_id: Schema.String.annotate({ jsonSchemaExamples: ['video_123'] }),
-          variant: Schema.optional(VideoContentVariantSchema),
+          variant: Schema.optionalKey(VideoContentVariantSchema),
         }),
       ),
     )

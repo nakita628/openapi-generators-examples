@@ -494,15 +494,15 @@ export const organizationRouter = t.router({
       z.object({
         project_id: z.string(),
         name: z
-          .union([z.string(), z.null().nullable()])
+          .union([z.string(), z.null()])
           .meta({ description: 'The updated name of the project, this name appears in reports.' })
           .exactOptional(),
         external_key_id: z
-          .union([z.string(), z.null().nullable()])
+          .union([z.string(), z.null()])
           .meta({ description: 'External key ID to associate with the project.' })
           .exactOptional(),
         geography: z
-          .union([z.string(), z.null().nullable()])
+          .union([z.string(), z.null()])
           .meta({
             description:
               'Geography for the project.\nDeprecated: use `residency` when creating a project to configure data residency. This field is retained for backward compatibility.',
@@ -698,23 +698,23 @@ export const organizationRouter = t.router({
       z.object({
         project_id: z.string(),
         file_search: z
-          .union([HostedToolPermissionUpdateSchema, z.null().nullable()])
+          .union([HostedToolPermissionUpdateSchema, z.null()])
           .meta({ description: 'The file search permission update.' })
           .exactOptional(),
         web_search: z
-          .union([HostedToolPermissionUpdateSchema, z.null().nullable()])
+          .union([HostedToolPermissionUpdateSchema, z.null()])
           .meta({ description: 'The web search permission update.' })
           .exactOptional(),
         image_generation: z
-          .union([HostedToolPermissionUpdateSchema, z.null().nullable()])
+          .union([HostedToolPermissionUpdateSchema, z.null()])
           .meta({ description: 'The image generation permission update.' })
           .exactOptional(),
         mcp: z
-          .union([HostedToolPermissionUpdateSchema, z.null().nullable()])
+          .union([HostedToolPermissionUpdateSchema, z.null()])
           .meta({ description: 'The MCP permission update.' })
           .exactOptional(),
         code_interpreter: z
-          .union([HostedToolPermissionUpdateSchema, z.null().nullable()])
+          .union([HostedToolPermissionUpdateSchema, z.null()])
           .meta({ description: 'The code interpreter permission update.' })
           .exactOptional(),
       }),
@@ -829,11 +829,11 @@ export const organizationRouter = t.router({
               .meta({
                 description: 'Create the service account without default roles or an API key.',
               }),
-            z.null().nullable(),
+            z.null(),
           ])
           .exactOptional(),
         expires_in_seconds: z
-          .union([z.int().min(1).max(31536000), z.null().nullable()])
+          .union([z.int().min(1).max(31536000), z.null()])
           .meta({
             description:
               'Number of seconds until the initial API key expires. If omitted or null, the key does not expire unless the effective organization or project policy requires an expiration. When a policy sets a maximum lifetime, this value must be provided and must not exceed that limit. A non-null value cannot be used when `create_service_account_only` is true.',
@@ -955,11 +955,11 @@ export const organizationRouter = t.router({
       z.object({
         project_id: z.string(),
         user_id: z
-          .union([z.string(), z.null().nullable()])
+          .union([z.string(), z.null()])
           .meta({ description: 'The ID of the user.' })
           .exactOptional(),
         email: z
-          .union([z.string(), z.null().nullable()])
+          .union([z.string(), z.null()])
           .meta({ description: 'Email of the user to add.' })
           .exactOptional(),
         role: z.string().meta({ description: '`owner` or `member`' }),
@@ -981,7 +981,7 @@ export const organizationRouter = t.router({
         project_id: z.string(),
         user_id: z.string(),
         role: z
-          .union([z.string(), z.null().nullable()])
+          .union([z.string(), z.null()])
           .meta({ description: '`owner` or `member`' })
           .exactOptional(),
       }),
@@ -1025,15 +1025,15 @@ export const organizationRouter = t.router({
       z.object({
         role_id: z.string(),
         permissions: z
-          .union([z.array(z.string()), z.null().nullable()])
+          .union([z.array(z.string()), z.null()])
           .meta({ description: 'Updated set of permissions for the role.' })
           .exactOptional(),
         description: z
-          .union([z.string(), z.null().nullable()])
+          .union([z.string(), z.null()])
           .meta({ description: 'New description for the role.' })
           .exactOptional(),
         role_name: z
-          .union([z.string(), z.null().nullable()])
+          .union([z.string(), z.null()])
           .meta({ description: 'New name for the role.' })
           .exactOptional(),
       }),
@@ -1333,19 +1333,19 @@ export const organizationRouter = t.router({
       z.object({
         user_id: z.string(),
         role: z
-          .union([z.string(), z.null().nullable()])
+          .union([z.string(), z.null()])
           .meta({ description: '`owner` or `reader`' })
           .exactOptional(),
         role_id: z
-          .union([z.string(), z.null().nullable()])
+          .union([z.string(), z.null()])
           .meta({ description: 'Role ID to assign to the user.' })
           .exactOptional(),
         technical_level: z
-          .union([z.string(), z.null().nullable()])
+          .union([z.string(), z.null()])
           .meta({ description: 'Technical level metadata.' })
           .exactOptional(),
         developer_persona: z
-          .union([z.string(), z.null().nullable()])
+          .union([z.string(), z.null()])
           .meta({ description: 'Developer persona metadata.' })
           .exactOptional(),
       }),
@@ -1401,7 +1401,7 @@ export const organizationRouter = t.router({
       z.object({
         limit: z.int().min(0).max(100).exactOptional(),
         order: OrderEnumSchema.exactOptional(),
-        after: z.union([z.string(), z.null().nullable()]).exactOptional(),
+        after: z.union([z.string(), z.null()]).exactOptional(),
         purpose: ExternalKeyPurposeSchema.exactOptional(),
       }),
     )
@@ -1469,7 +1469,7 @@ export const organizationRouter = t.router({
         verification: z
           .xor([DiscoveryVerificationParamSchema, UploadedJwksVerificationParamSchema])
           .exactOptional(),
-        description: z.union([z.string(), z.null().nullable()]).exactOptional(),
+        description: z.union([z.string(), z.null()]).exactOptional(),
         attribute_transformations: z.array(TransformationParamSchema).max(20).exactOptional(),
         enabled: z.boolean().exactOptional(),
       }),
@@ -1540,8 +1540,8 @@ export const organizationRouter = t.router({
         z.object({
           workload_identity_provider_id: z.string().min(1),
           workload_identity_federation_rule_id: z.string().min(1),
-          name: z.union([z.string(), z.null().nullable()]).exactOptional(),
-          description: z.union([z.string(), z.null().nullable()]).exactOptional(),
+          name: z.union([z.string(), z.null()]).exactOptional(),
+          description: z.union([z.string(), z.null()]).exactOptional(),
           attribute_matchers: z
             .record(z.string(), z.xor([z.string(), z.boolean(), z.union([z.int(), z.number()])]))
             .exactOptional(),
@@ -1571,7 +1571,7 @@ export const organizationRouter = t.router({
     .input(
       z.object({
         start_time: z.int(),
-        end_time: z.union([z.int(), z.null().nullable()]).exactOptional(),
+        end_time: z.union([z.int(), z.null()]).exactOptional(),
         bucket_width: z
           .union([
             z
@@ -1580,10 +1580,10 @@ export const organizationRouter = t.router({
                 description:
                   'Width of each time bucket in response. Currently `1m`, `1h` and `1d` are supported, default to `1d`.',
               }),
-            z.null().nullable(),
+            z.null(),
           ])
           .exactOptional(),
-        limit: z.union([z.int(), z.null().nullable()]).exactOptional(),
+        limit: z.union([z.int(), z.null()]).exactOptional(),
         page: z
           .union([
             z
@@ -1592,7 +1592,7 @@ export const organizationRouter = t.router({
                 description:
                   'A cursor for use in pagination. Corresponding to the `next_page` field from the previous response.',
               }),
-            z.null().nullable(),
+            z.null(),
           ])
           .exactOptional(),
         project_ids: z
@@ -1600,7 +1600,7 @@ export const organizationRouter = t.router({
             z
               .xor([z.array(z.string())])
               .meta({ description: 'Return only usage for these projects.' }),
-            z.null().nullable(),
+            z.null(),
           ])
           .exactOptional(),
         group_by: z
@@ -1611,7 +1611,7 @@ export const organizationRouter = t.router({
                 description:
                   'Group the usage data by the specified fields. Support fields include `project_id`, `user_id`, `api_key_id`, `model`, `batch`, `service_tier`, `api_source` or any combination of them. When grouped by `api_source`, results use `agents_api` for attributed Agents API activity and `unlabeled` for all other activity. Without source grouping, `api_source` is null.',
               }),
-            z.null().nullable(),
+            z.null(),
           ])
           .exactOptional(),
         user_ids: z
@@ -1619,7 +1619,7 @@ export const organizationRouter = t.router({
             z
               .xor([z.array(z.string())])
               .meta({ description: 'Return only usage for these users.' }),
-            z.null().nullable(),
+            z.null(),
           ])
           .exactOptional(),
         api_key_ids: z
@@ -1627,7 +1627,7 @@ export const organizationRouter = t.router({
             z
               .xor([z.array(z.string())])
               .meta({ description: 'Return only usage for these API keys.' }),
-            z.null().nullable(),
+            z.null(),
           ])
           .exactOptional(),
         models: z
@@ -1635,10 +1635,10 @@ export const organizationRouter = t.router({
             z
               .xor([z.array(z.string())])
               .meta({ description: 'Return only usage for these models.' }),
-            z.null().nullable(),
+            z.null(),
           ])
           .exactOptional(),
-        batch: z.union([z.boolean(), z.null().nullable()]).exactOptional(),
+        batch: z.union([z.boolean(), z.null()]).exactOptional(),
       }),
     )
     .output(PublicDecisionsUsageResponseResourceSchema)
@@ -1649,14 +1649,14 @@ export const organizationRouter = t.router({
     .input(
       z.object({
         project_id: z
-          .union([z.string().meta({ examples: ['proj_123'] }), z.null().nullable()])
+          .union([z.string().meta({ examples: ['proj_123'] }), z.null()])
           .exactOptional(),
         after: z
           .union([
             z
               .string()
               .meta({ description: 'Return external storage configurations after this ID.' }),
-            z.null().nullable(),
+            z.null(),
           ])
           .exactOptional(),
         order: ExternalStorageOrderSchema.exactOptional(),
@@ -1737,7 +1737,7 @@ export const organizationRouter = t.router({
               description:
                 'Configure email notifications when the spend limit is reached. Leave this out to keep the current settings, or send null to reset to owner-only notifications.',
             }),
-            z.null().nullable(),
+            z.null(),
           ])
           .exactOptional(),
       }),
@@ -1795,7 +1795,7 @@ export const organizationRouter = t.router({
               .min(1)
               .max(31536000)
               .meta({ description: 'Number of seconds until the API key expires.' }),
-            z.null().nullable(),
+            z.null(),
           ])
           .exactOptional(),
       }),

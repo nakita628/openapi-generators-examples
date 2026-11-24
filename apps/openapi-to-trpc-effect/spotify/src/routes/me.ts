@@ -1,5 +1,5 @@
 import { initTRPC, TRPCError } from '@trpc/server'
-import { Schema } from 'effect'
+import { Effect, Schema } from 'effect'
 import {
   CurrentlyPlayingContextObjectSchema,
   CurrentlyPlayingObjectSchema,
@@ -147,19 +147,19 @@ export const meRouter = t.router({
             description:
               'The name for the new playlist, for example `"Your Coolest Playlist"`. This name does not need to be unique; a user may have several playlists with the same name.\n',
           }),
-          public: Schema.optional(
+          public: Schema.optionalKey(
             Schema.Boolean.annotate({
               description:
                 "Defaults to `true`. The playlist's public/private status (if it should be added to the user's profile or not): `true` the playlist will be public, `false` the playlist will be private. To be able to create private playlists, the user must have granted the `playlist-modify-private` [scope](/documentation/web-api/concepts/scopes/#list-of-scopes). For more about public/private status, see [Working with Playlists](/documentation/web-api/concepts/playlists)\n",
             }),
           ),
-          collaborative: Schema.optional(
+          collaborative: Schema.optionalKey(
             Schema.Boolean.annotate({
               description:
                 'Defaults to `false`. If `true` the playlist will be collaborative. _**Note**: to create a collaborative playlist you must also set `public` to `false`. To create collaborative playlists you must have granted `playlist-modify-private` and `playlist-modify-public` [scopes](/documentation/web-api/concepts/scopes/#list-of-scopes)._\n',
             }),
           ),
-          description: Schema.optional(
+          description: Schema.optionalKey(
             Schema.String.annotate({
               description:
                 'value for playlist description as displayed in Spotify Clients and in the Web API.\n',
@@ -254,7 +254,7 @@ export const meRouter = t.router({
                 'The index of the first item to return. Default: 0 (the first item). Use with limit to get the next set of items.\n',
               jsonSchemaExamples: [5],
             }),
-          market: Schema.optional(
+          market: Schema.optionalKey(
             Schema.String.annotate({
               description:
                 'An [ISO 3166-1 alpha-2 country code](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2).\n  If a country code is specified, only content that is available in that market will be returned.<br/>\n  If a valid user access token is specified in the request header, the country associated with\n  the user account will take priority over this parameter.<br/>\n  _**Note**: If neither market or user country are provided, the content is considered unavailable for the client._<br/>\n  Users can view the country that is associated with their account in the [account settings](https://www.spotify.com/account/overview/).\n',
@@ -328,7 +328,7 @@ export const meRouter = t.router({
     .input(
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          market: Schema.optional(
+          market: Schema.optionalKey(
             Schema.String.annotate({
               description:
                 'An [ISO 3166-1 alpha-2 country code](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2).\n  If a country code is specified, only content that is available in that market will be returned.<br/>\n  If a valid user access token is specified in the request header, the country associated with\n  the user account will take priority over this parameter.<br/>\n  _**Note**: If neither market or user country are provided, the content is considered unavailable for the client._<br/>\n  Users can view the country that is associated with their account in the [account settings](https://www.spotify.com/account/overview/).\n',
@@ -368,7 +368,7 @@ export const meRouter = t.router({
             description:
               'A JSON array of the [Spotify IDs](/documentation/web-api/concepts/spotify-uris-ids). For example: `["4iV5W9uYEdYUVa79Axb7Rh", "1301WleyT98MSxVHPZCA6M"]`<br/>A maximum of 50 items can be specified in one request. _**Note**: if the `timestamped_ids` is present in the body, any IDs listed in the query parameters (deprecated) or the `ids` field in the body will be ignored._\n',
           }),
-          timestamped_ids: Schema.optional(
+          timestamped_ids: Schema.optionalKey(
             Schema.Array(
               Schema.Struct({
                 id: Schema.String.annotate({
@@ -438,7 +438,7 @@ export const meRouter = t.router({
     .input(
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          market: Schema.optional(
+          market: Schema.optionalKey(
             Schema.String.annotate({
               description:
                 'An [ISO 3166-1 alpha-2 country code](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2).\n  If a country code is specified, only content that is available in that market will be returned.<br/>\n  If a valid user access token is specified in the request header, the country associated with\n  the user account will take priority over this parameter.<br/>\n  _**Note**: If neither market or user country are provided, the content is considered unavailable for the client._<br/>\n  Users can view the country that is associated with their account in the [account settings](https://www.spotify.com/account/overview/).\n',
@@ -575,7 +575,7 @@ export const meRouter = t.router({
               'A comma-separated list of the [Spotify IDs](/documentation/web-api/concepts/spotify-uris-ids) for the shows. Maximum: 50 IDs.\n',
             jsonSchemaExamples: ['5CfCWKI5pZ28U0uOzXkDHe,5as3aKmN2k11yfDDDSrvaZ'],
           }),
-          market: Schema.optional(
+          market: Schema.optionalKey(
             Schema.String.annotate({
               description:
                 'An [ISO 3166-1 alpha-2 country code](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2).\n  If a country code is specified, only content that is available in that market will be returned.<br/>\n  If a valid user access token is specified in the request header, the country associated with\n  the user account will take priority over this parameter.<br/>\n  _**Note**: If neither market or user country are provided, the content is considered unavailable for the client._<br/>\n  Users can view the country that is associated with their account in the [account settings](https://www.spotify.com/account/overview/).\n',
@@ -616,7 +616,7 @@ export const meRouter = t.router({
             description: 'The ID type: currently only `artist` is supported.\n',
             jsonSchemaExamples: ['artist'],
           }),
-          after: Schema.optional(
+          after: Schema.optionalKey(
             Schema.String.annotate({
               description: 'The last artist ID retrieved from the previous request.\n',
               jsonSchemaExamples: ['0I2XqVXqHScXjHhk6AYYRe'],
@@ -716,14 +716,14 @@ export const meRouter = t.router({
     .input(
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          market: Schema.optional(
+          market: Schema.optionalKey(
             Schema.String.annotate({
               description:
                 'An [ISO 3166-1 alpha-2 country code](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2).\n  If a country code is specified, only content that is available in that market will be returned.<br/>\n  If a valid user access token is specified in the request header, the country associated with\n  the user account will take priority over this parameter.<br/>\n  _**Note**: If neither market or user country are provided, the content is considered unavailable for the client._<br/>\n  Users can view the country that is associated with their account in the [account settings](https://www.spotify.com/account/overview/).\n',
               jsonSchemaExamples: ['ES'],
             }),
           ),
-          additional_types: Schema.optional(
+          additional_types: Schema.optionalKey(
             Schema.String.annotate({
               description:
                 'A comma-separated list of item types that your client supports besides the default `track` type. Valid types are: `track` and `episode`.<br/>\n_**Note**: This parameter was introduced to allow existing clients to maintain their current behaviour and might be deprecated in the future._<br/>\nIn addition to providing this parameter, make sure that your client properly handles cases of new types in the future by checking against the `type` field of each object.\n',
@@ -744,7 +744,7 @@ export const meRouter = t.router({
             description:
               'A JSON array containing the ID of the device on which playback should be started/transferred.<br/>For example:`{device_ids:["74ASZWbe4lXaubB36ztrGX"]}`<br/>_**Note**: Although an array is accepted, only a single device_id is currently supported. Supplying more than one will return `400 Bad Request`_\n',
           }),
-          play: Schema.optional(
+          play: Schema.optionalKey(
             Schema.Boolean.annotate({
               description:
                 '**true**: ensure playback happens on new device.<br/>**false** or not provided: keep the current playback state.\n',
@@ -765,14 +765,14 @@ export const meRouter = t.router({
     .input(
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          market: Schema.optional(
+          market: Schema.optionalKey(
             Schema.String.annotate({
               description:
                 'An [ISO 3166-1 alpha-2 country code](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2).\n  If a country code is specified, only content that is available in that market will be returned.<br/>\n  If a valid user access token is specified in the request header, the country associated with\n  the user account will take priority over this parameter.<br/>\n  _**Note**: If neither market or user country are provided, the content is considered unavailable for the client._<br/>\n  Users can view the country that is associated with their account in the [account settings](https://www.spotify.com/account/overview/).\n',
               jsonSchemaExamples: ['ES'],
             }),
           ),
-          additional_types: Schema.optional(
+          additional_types: Schema.optionalKey(
             Schema.String.annotate({
               description:
                 'A comma-separated list of item types that your client supports besides the default `track` type. Valid types are: `track` and `episode`.<br/>\n_**Note**: This parameter was introduced to allow existing clients to maintain their current behaviour and might be deprecated in the future._<br/>\nIn addition to providing this parameter, make sure that your client properly handles cases of new types in the future by checking against the `type` field of each object.\n',
@@ -789,32 +789,32 @@ export const meRouter = t.router({
     .input(
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          device_id: Schema.optional(
+          device_id: Schema.optionalKey(
             Schema.String.annotate({
               description:
                 "The id of the device this command is targeting. If not supplied, the user's currently active device is the target.",
               jsonSchemaExamples: ['0d1841b0976bae2a3a310dd74c0f3df354899bc8'],
             }),
           ),
-          context_uri: Schema.optional(
+          context_uri: Schema.optionalKey(
             Schema.String.annotate({
               description:
                 'Optional. Spotify URI of the context to play.\nValid contexts are albums, artists & playlists.\n`{context_uri:"spotify:album:1Je1IMUlBXcx1Fz0WE7oPT"}`\n',
             }),
           ),
-          uris: Schema.optional(
+          uris: Schema.optionalKey(
             Schema.Array(Schema.String).annotate({
               description:
                 'Optional. A JSON array of the Spotify track URIs to play.\nFor example: `{"uris": ["spotify:track:4iV5W9uYEdYUVa79Axb7Rh", "spotify:track:1301WleyT98MSxVHPZCA6M"]}`\n',
             }),
           ),
-          offset: Schema.optional(
+          offset: Schema.optionalKey(
             Schema.Unknown.annotate({
               description:
                 'Optional. Indicates from where in the context playback should start. Only available when context_uri corresponds to an album or playlist object\n"position" is zero based and can’t be negative. Example: `"offset": {"position": 5}`\n"uri" is a string representing the uri of the item to start at. Example: `"offset": {"uri": "spotify:track:1301WleyT98MSxVHPZCA6M"}`\n',
             }),
           ),
-          position_ms: Schema.optional(
+          position_ms: Schema.optionalKey(
             Schema.Number.check(Schema.isInt()).annotate({
               description:
                 'Indicates from what position to start playback. Must be a positive number. Passing in a position that is greater than the length of the track will cause the player to start playing the next song.\n',
@@ -830,7 +830,7 @@ export const meRouter = t.router({
     .input(
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          device_id: Schema.optional(
+          device_id: Schema.optionalKey(
             Schema.String.annotate({
               description:
                 "The id of the device this command is targeting. If not supplied, the user's currently active device is the target.\n",
@@ -847,7 +847,7 @@ export const meRouter = t.router({
     .input(
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          device_id: Schema.optional(
+          device_id: Schema.optionalKey(
             Schema.String.annotate({
               description:
                 "The id of the device this command is targeting. If not supplied, the user's currently active device is the target.",
@@ -864,7 +864,7 @@ export const meRouter = t.router({
     .input(
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          device_id: Schema.optional(
+          device_id: Schema.optionalKey(
             Schema.String.annotate({
               description:
                 "The id of the device this command is targeting. If\nnot supplied, the user's currently active device is the target.\n",
@@ -886,7 +886,7 @@ export const meRouter = t.router({
               'The position in milliseconds to seek to. Must be a\npositive number. Passing in a position that is greater than the length of\nthe track will cause the player to start playing the next song.\n',
             jsonSchemaExamples: [25000],
           }),
-          device_id: Schema.optional(
+          device_id: Schema.optionalKey(
             Schema.String.annotate({
               description:
                 "The id of the device this command is targeting. If\nnot supplied, the user's currently active device is the target.\n",
@@ -908,7 +908,7 @@ export const meRouter = t.router({
               '**track**, **context** or **off**.<br/>\n**track** will repeat the current track.<br/>\n**context** will repeat the current context.<br/>\n**off** will turn repeat off.\n',
             jsonSchemaExamples: ['context'],
           }),
-          device_id: Schema.optional(
+          device_id: Schema.optionalKey(
             Schema.String.annotate({
               description:
                 "The id of the device this command is targeting. If\nnot supplied, the user's currently active device is the target.\n",
@@ -929,7 +929,7 @@ export const meRouter = t.router({
             description: 'The volume to set. Must be a value from 0 to 100 inclusive.\n',
             jsonSchemaExamples: [50],
           }),
-          device_id: Schema.optional(
+          device_id: Schema.optionalKey(
             Schema.String.annotate({
               description:
                 "The id of the device this command is targeting. If not supplied, the user's currently active device is the target.\n",
@@ -951,7 +951,7 @@ export const meRouter = t.router({
               "**true** : Shuffle user's playback.<br/>\n**false** : Do not shuffle user's playback.\n",
             jsonSchemaExamples: [true],
           }),
-          device_id: Schema.optional(
+          device_id: Schema.optionalKey(
             Schema.String.annotate({
               description:
                 "The id of the device this command is targeting. If\nnot supplied, the user's currently active device is the target.\n",
@@ -979,14 +979,14 @@ export const meRouter = t.router({
                 'The maximum number of items to return. Default: 20. Minimum: 1. Maximum: 50.\n',
               jsonSchemaExamples: [10],
             }),
-          after: Schema.optional(
+          after: Schema.optionalKey(
             Schema.Number.check(Schema.isInt()).annotate({
               description:
                 'A Unix timestamp in milliseconds. Returns all items\nafter (but not including) this cursor position. If `after` is specified, `before`\nmust not be specified.\n',
               jsonSchemaExamples: [1484811043508],
             }),
           ),
-          before: Schema.optional(
+          before: Schema.optionalKey(
             Schema.Number.check(Schema.isInt()).annotate({
               description:
                 'A Unix timestamp in milliseconds. Returns all items\nbefore (but not including) this cursor position. If `before` is specified,\n`after` must not be specified.\n',
@@ -1011,7 +1011,7 @@ export const meRouter = t.router({
               'The uri of the item to add to the queue. Must be a track or an episode uri.\n',
             jsonSchemaExamples: ['spotify:track:4iV5W9uYEdYUVa79Axb7Rh'],
           }),
-          device_id: Schema.optional(
+          device_id: Schema.optionalKey(
             Schema.String.annotate({
               description:
                 "The id of the device this command is targeting. If\nnot supplied, the user's currently active device is the target.\n",

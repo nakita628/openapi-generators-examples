@@ -111,7 +111,7 @@ export const audiobooksHandler = new Hono()
         ),
         'limit?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .to('number.integer >= 1 & number.integer <= 50')
@@ -120,7 +120,7 @@ export const audiobooksHandler = new Hono()
           ),
         'offset?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .describe(

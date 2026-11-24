@@ -12,18 +12,18 @@ export const storeHandler = new Hono()
       'form',
       Type.Object({
         id: Type.Optional(
-          Codec(Type.String())
-            .Decode((value) => Number.parseInt(value, 10))
+          Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+            .Decode((value) => Number(value))
             .Encode((value) => String(value)),
         ),
         petId: Type.Optional(
-          Codec(Type.String())
-            .Decode((value) => Number.parseInt(value, 10))
+          Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+            .Decode((value) => Number(value))
             .Encode((value) => String(value)),
         ),
         quantity: Type.Optional(
-          Codec(Type.String())
-            .Decode((value) => Number.parseInt(value, 10))
+          Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+            .Decode((value) => Number(value))
             .Encode((value) => String(value)),
         ),
         shipDate: Type.Optional(Type.String({ format: 'date-time' })),
@@ -34,8 +34,10 @@ export const storeHandler = new Hono()
           ),
         ),
         complete: Type.Optional(
-          Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-            .Decode((value) => value === 'true')
+          Codec(
+            Type.String({ pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i }),
+          )
+            .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
             .Encode((value) => (value ? 'true' : 'false')),
         ),
       }),
@@ -47,8 +49,8 @@ export const storeHandler = new Hono()
     tbValidator(
       'param',
       Type.Object({
-        orderId: Codec(Type.String())
-          .Decode((value) => Number.parseInt(value, 10))
+        orderId: Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+          .Decode((value) => Number(value))
           .Encode((value) => String(value)),
       }),
     ),
@@ -59,8 +61,8 @@ export const storeHandler = new Hono()
     tbValidator(
       'param',
       Type.Object({
-        orderId: Codec(Type.String())
-          .Decode((value) => Number.parseInt(value, 10))
+        orderId: Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+          .Decode((value) => Number(value))
           .Encode((value) => String(value)),
       }),
     ),

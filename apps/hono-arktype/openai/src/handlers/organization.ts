@@ -59,7 +59,7 @@ export const organizationHandler = new Hono()
         ),
         'limit?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .describe('Maximum number of keys to return.'),
@@ -101,7 +101,7 @@ export const organizationHandler = new Hono()
         'effective_at?': type({
           'gt?': type('string')
             .pipe((data, ctx) => {
-              const value = Number(data)
+              const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
               return Number.isSafeInteger(value) ? value : ctx.error('an integer')
             })
             .describe(
@@ -109,7 +109,7 @@ export const organizationHandler = new Hono()
             ),
           'gte?': type('string')
             .pipe((data, ctx) => {
-              const value = Number(data)
+              const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
               return Number.isSafeInteger(value) ? value : ctx.error('an integer')
             })
             .describe(
@@ -117,7 +117,7 @@ export const organizationHandler = new Hono()
             ),
           'lt?': type('string')
             .pipe((data, ctx) => {
-              const value = Number(data)
+              const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
               return Number.isSafeInteger(value) ? value : ctx.error('an integer')
             })
             .describe(
@@ -125,7 +125,7 @@ export const organizationHandler = new Hono()
             ),
           'lte?': type('string')
             .pipe((data, ctx) => {
-              const value = Number(data)
+              const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
               return Number.isSafeInteger(value) ? value : ctx.error('an integer')
             })
             .describe(
@@ -152,7 +152,7 @@ export const organizationHandler = new Hono()
           (data) => /^(?:true|1|yes|on|y|enabled)$/i.test(data),
         ),
         'limit?': type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'after?': 'string',
@@ -167,7 +167,7 @@ export const organizationHandler = new Hono()
       'query',
       type({
         'limit?': type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'after?': 'string',
@@ -217,11 +217,11 @@ export const organizationHandler = new Hono()
       'query',
       type({
         start_time: type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'end_time?': type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'bucket_width?': "'1d'",
@@ -238,7 +238,7 @@ export const organizationHandler = new Hono()
           .pipe((data) => (data === undefined || Array.isArray(data) ? data : [data]))
           .to("'project_id' | 'user_id' | 'line_item' | 'api_key_id' | 'api_source'[]"),
         'limit?': type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'page?': 'string',
@@ -259,7 +259,7 @@ export const organizationHandler = new Hono()
       type({
         'limit?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .to('number.integer >= 0 & number.integer <= 1000'),
@@ -294,7 +294,7 @@ export const organizationHandler = new Hono()
       type({
         'limit?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .to('number.integer >= 0 & number.integer <= 1000'),
@@ -328,7 +328,7 @@ export const organizationHandler = new Hono()
       type({
         'limit?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .to('number.integer >= 0 & number.integer <= 1000'),
@@ -360,7 +360,7 @@ export const organizationHandler = new Hono()
       'query',
       type({
         'limit?': type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'after?': 'string',
@@ -385,7 +385,7 @@ export const organizationHandler = new Hono()
       'query',
       type({
         'limit?': type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'after?': 'string',
@@ -415,7 +415,7 @@ export const organizationHandler = new Hono()
       'query',
       type({
         'limit?': type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'after?': 'string',
@@ -452,7 +452,7 @@ export const organizationHandler = new Hono()
       'query',
       type({
         'limit?': type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'after?': 'string',
@@ -492,7 +492,7 @@ export const organizationHandler = new Hono()
       type({
         'limit?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .to('number.integer >= 0 & number.integer <= 100'),
@@ -553,7 +553,7 @@ export const organizationHandler = new Hono()
       'query',
       type({
         'limit?': type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'after?': 'string',
@@ -575,7 +575,7 @@ export const organizationHandler = new Hono()
       'query',
       type({
         'limit?': type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'after?': 'string',
@@ -613,7 +613,7 @@ export const organizationHandler = new Hono()
       type({
         'limit?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .to('number.integer >= 0 & number.integer <= 100'),
@@ -653,7 +653,7 @@ export const organizationHandler = new Hono()
       'query',
       type({
         'limit?': type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'after?': 'string',
@@ -690,7 +690,7 @@ export const organizationHandler = new Hono()
       type({
         'limit?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .to('number.integer >= 0 & number.integer <= 1000'),
@@ -724,7 +724,7 @@ export const organizationHandler = new Hono()
       type({
         'limit?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .to('number.integer >= 0 & number.integer <= 100'),
@@ -758,11 +758,11 @@ export const organizationHandler = new Hono()
       'query',
       type({
         start_time: type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'end_time?': type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'bucket_width?': "'1m' | '1h' | '1d'",
@@ -782,7 +782,7 @@ export const organizationHandler = new Hono()
           .pipe((data) => (data === undefined || Array.isArray(data) ? data : [data]))
           .to("'project_id' | 'user_id' | 'api_key_id' | 'model'[]"),
         'limit?': type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'page?': 'string',
@@ -796,11 +796,11 @@ export const organizationHandler = new Hono()
       'query',
       type({
         start_time: type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'end_time?': type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'bucket_width?': "'1m' | '1h' | '1d'",
@@ -820,7 +820,7 @@ export const organizationHandler = new Hono()
           .pipe((data) => (data === undefined || Array.isArray(data) ? data : [data]))
           .to("'project_id' | 'user_id' | 'api_key_id' | 'model'[]"),
         'limit?': type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'page?': 'string',
@@ -834,11 +834,11 @@ export const organizationHandler = new Hono()
       'query',
       type({
         start_time: type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'end_time?': type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'bucket_width?': "'1m' | '1h' | '1d'",
@@ -849,7 +849,7 @@ export const organizationHandler = new Hono()
           .pipe((data) => (data === undefined || Array.isArray(data) ? data : [data]))
           .to("'project_id'[]"),
         'limit?': type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'page?': 'string',
@@ -863,11 +863,11 @@ export const organizationHandler = new Hono()
       'query',
       type({
         start_time: type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'end_time?': type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'bucket_width?': "'1m' | '1h' | '1d'",
@@ -892,7 +892,7 @@ export const organizationHandler = new Hono()
             "'project_id' | 'user_id' | 'api_key_id' | 'model' | 'batch' | 'service_tier' | 'api_source'[]",
           ),
         'limit?': type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'page?': 'string',
@@ -906,11 +906,11 @@ export const organizationHandler = new Hono()
       'query',
       type({
         start_time: type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'end_time?': type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'bucket_width?': "'1m' | '1h' | '1d'",
@@ -930,7 +930,7 @@ export const organizationHandler = new Hono()
           .pipe((data) => (data === undefined || Array.isArray(data) ? data : [data]))
           .to("'project_id' | 'user_id' | 'api_key_id' | 'model'[]"),
         'limit?': type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'page?': 'string',
@@ -944,11 +944,11 @@ export const organizationHandler = new Hono()
       'query',
       type({
         start_time: type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'end_time?': type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'bucket_width?': "'1m' | '1h' | '1d'",
@@ -968,7 +968,7 @@ export const organizationHandler = new Hono()
           .pipe((data) => (data === undefined || Array.isArray(data) ? data : [data]))
           .to("'project_id' | 'user_id' | 'api_key_id' | 'vector_store_id'[]"),
         'limit?': type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'page?': 'string',
@@ -982,11 +982,11 @@ export const organizationHandler = new Hono()
       'query',
       type({
         start_time: type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'end_time?': type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'bucket_width?': "'1m' | '1h' | '1d'",
@@ -1012,7 +1012,7 @@ export const organizationHandler = new Hono()
           .pipe((data) => (data === undefined || Array.isArray(data) ? data : [data]))
           .to("'project_id' | 'user_id' | 'api_key_id' | 'model' | 'size' | 'source'[]"),
         'limit?': type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'page?': 'string',
@@ -1026,11 +1026,11 @@ export const organizationHandler = new Hono()
       'query',
       type({
         start_time: type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'end_time?': type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'bucket_width?': "'1m' | '1h' | '1d'",
@@ -1050,7 +1050,7 @@ export const organizationHandler = new Hono()
           .pipe((data) => (data === undefined || Array.isArray(data) ? data : [data]))
           .to("'project_id' | 'user_id' | 'api_key_id' | 'model'[]"),
         'limit?': type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'page?': 'string',
@@ -1064,11 +1064,11 @@ export const organizationHandler = new Hono()
       'query',
       type({
         start_time: type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'end_time?': type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'bucket_width?': "'1m' | '1h' | '1d'",
@@ -1079,7 +1079,7 @@ export const organizationHandler = new Hono()
           .pipe((data) => (data === undefined || Array.isArray(data) ? data : [data]))
           .to("'project_id'[]"),
         'limit?': type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'page?': 'string',
@@ -1093,11 +1093,11 @@ export const organizationHandler = new Hono()
       'query',
       type({
         start_time: type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'end_time?': type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'bucket_width?': "'1m' | '1h' | '1d'",
@@ -1122,7 +1122,7 @@ export const organizationHandler = new Hono()
             "'project_id' | 'user_id' | 'api_key_id' | 'model' | 'context_level' | 'api_source'[]",
           ),
         'limit?': type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'page?': 'string',
@@ -1136,7 +1136,7 @@ export const organizationHandler = new Hono()
       'query',
       type({
         'limit?': type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'after?': 'string',
@@ -1167,7 +1167,7 @@ export const organizationHandler = new Hono()
       type({
         'limit?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .to('number.integer >= 0 & number.integer <= 1000'),
@@ -1200,7 +1200,7 @@ export const organizationHandler = new Hono()
       type({
         'limit?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .to('number.integer >= 0 & number.integer <= 100'),
@@ -1210,7 +1210,7 @@ export const organizationHandler = new Hono()
             type('string'),
             type('unknown')
               .pipe((data) => (data === 'null' ? null : data))
-              .to('null | null'),
+              .to('null'),
           ]) {
             const out = branch(data)
             if (!(out instanceof type.errors)) return out
@@ -1249,7 +1249,7 @@ export const organizationHandler = new Hono()
       type({
         'limit?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .to('number.integer >= 1 & number.integer <= 100'),
@@ -1318,7 +1318,7 @@ export const organizationHandler = new Hono()
       type({
         'limit?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .to('number.integer >= 1 & number.integer <= 100'),
@@ -1398,7 +1398,7 @@ export const organizationHandler = new Hono()
       'query',
       type({
         start_time: type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'end_time?': type('unknown').pipe(
@@ -1407,12 +1407,12 @@ export const organizationHandler = new Hono()
             type('unknown').pipe((data, ctx) => {
               for (const branch of [
                 type('string').pipe((data, ctx) => {
-                  const value = Number(data)
+                  const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
                   return Number.isSafeInteger(value) ? value : ctx.error('an integer')
                 }),
                 type('unknown')
                   .pipe((data) => (data === 'null' ? null : data))
-                  .to('null | null'),
+                  .to('null'),
               ]) {
                 const out = branch(data)
                 if (!(out instanceof type.errors)) return out
@@ -1431,7 +1431,7 @@ export const organizationHandler = new Hono()
                 ),
                 type('unknown')
                   .pipe((data) => (data === 'null' ? null : data))
-                  .to('null | null'),
+                  .to('null'),
               ]) {
                 const out = branch(data)
                 if (!(out instanceof type.errors)) return out
@@ -1446,12 +1446,12 @@ export const organizationHandler = new Hono()
             type('unknown').pipe((data, ctx) => {
               for (const branch of [
                 type('string').pipe((data, ctx) => {
-                  const value = Number(data)
+                  const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
                   return Number.isSafeInteger(value) ? value : ctx.error('an integer')
                 }),
                 type('unknown')
                   .pipe((data) => (data === 'null' ? null : data))
-                  .to('null | null'),
+                  .to('null'),
               ]) {
                 const out = branch(data)
                 if (!(out instanceof type.errors)) return out
@@ -1467,7 +1467,7 @@ export const organizationHandler = new Hono()
             ),
             type('unknown')
               .pipe((data) => (data === 'null' ? null : data))
-              .to('null | null'),
+              .to('null'),
           ]) {
             const out = branch(data)
             if (!(out instanceof type.errors)) return out
@@ -1494,7 +1494,7 @@ export const organizationHandler = new Hono()
                   .describe('Return only usage for these projects.'),
                 type('unknown')
                   .pipe((data) => (data === 'null' ? null : data))
-                  .to('null | null'),
+                  .to('null'),
               ]) {
                 const out = branch(data)
                 if (!(out instanceof type.errors)) return out
@@ -1526,7 +1526,7 @@ export const organizationHandler = new Hono()
                   ),
                 type('unknown')
                   .pipe((data) => (data === 'null' ? null : data))
-                  .to('null | null'),
+                  .to('null'),
               ]) {
                 const out = branch(data)
                 if (!(out instanceof type.errors)) return out
@@ -1555,7 +1555,7 @@ export const organizationHandler = new Hono()
                   .describe('Return only usage for these users.'),
                 type('unknown')
                   .pipe((data) => (data === 'null' ? null : data))
-                  .to('null | null'),
+                  .to('null'),
               ]) {
                 const out = branch(data)
                 if (!(out instanceof type.errors)) return out
@@ -1584,7 +1584,7 @@ export const organizationHandler = new Hono()
                   .describe('Return only usage for these API keys.'),
                 type('unknown')
                   .pipe((data) => (data === 'null' ? null : data))
-                  .to('null | null'),
+                  .to('null'),
               ]) {
                 const out = branch(data)
                 if (!(out instanceof type.errors)) return out
@@ -1613,7 +1613,7 @@ export const organizationHandler = new Hono()
                   .describe('Return only usage for these models.'),
                 type('unknown')
                   .pipe((data) => (data === 'null' ? null : data))
-                  .to('null | null'),
+                  .to('null'),
               ]) {
                 const out = branch(data)
                 if (!(out instanceof type.errors)) return out
@@ -1632,7 +1632,7 @@ export const organizationHandler = new Hono()
                 ),
                 type('unknown')
                   .pipe((data) => (data === 'null' ? null : data))
-                  .to('null | null'),
+                  .to('null'),
               ]) {
                 const out = branch(data)
                 if (!(out instanceof type.errors)) return out
@@ -1655,7 +1655,7 @@ export const organizationHandler = new Hono()
             type('string'),
             type('unknown')
               .pipe((data) => (data === 'null' ? null : data))
-              .to('null | null'),
+              .to('null'),
           ]) {
             const out = branch(data)
             if (!(out instanceof type.errors)) return out
@@ -1667,7 +1667,7 @@ export const organizationHandler = new Hono()
             type('string').describe('Return external storage configurations after this ID.'),
             type('unknown')
               .pipe((data) => (data === 'null' ? null : data))
-              .to('null | null'),
+              .to('null'),
           ]) {
             const out = branch(data)
             if (!(out instanceof type.errors)) return out
@@ -1677,7 +1677,7 @@ export const organizationHandler = new Hono()
         'order?': ExternalStorageOrderSchema,
         'limit?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .to('number.integer >= 1 & number.integer <= 100'),

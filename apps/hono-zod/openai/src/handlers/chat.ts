@@ -21,13 +21,20 @@ export const chatHandler = new Hono()
                     description:
                       'Set of 16 key-value pairs that can be attached to an object. This can be\nuseful for storing additional information about the object in a structured\nformat, and querying for objects via API or the dashboard.\n\nKeys are strings with a maximum length of 64 characters. Values are strings\nwith a maximum length of 512 characters.\n',
                   }),
-                z.preprocess((val) => (val === 'null' ? null : val), z.null().nullable()),
+                z.preprocess((val) => (val === 'null' ? null : val), z.null()),
               ])
               .nullable(),
           )
           .exactOptional(),
         after: z.string().exactOptional(),
-        limit: z.coerce.number().int().default(20).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
+          .default(20)
+          .exactOptional(),
         order: z.enum(['asc', 'desc']).default('asc').exactOptional(),
       }),
     ),
@@ -57,7 +64,14 @@ export const chatHandler = new Hono()
       'query',
       z.object({
         after: z.string().exactOptional(),
-        limit: z.coerce.number().int().default(20).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
+          .default(20)
+          .exactOptional(),
         order: z.enum(['asc', 'desc']).default('asc').exactOptional(),
       }),
     ),

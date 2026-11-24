@@ -4,8 +4,9 @@ import type {
   CreateMutationOptions,
   QueryClient,
 } from '@tanstack/solid-query'
-import type { BetaResponse } from '../components/schemas'
-import { client } from '../lib'
+import type { Static } from 'elysia'
+import type { BetaResponseSchema } from '../components/schemas'
+import { client, clientOrigin } from '../lib'
 
 export function getAgentsKey() {
   return ['agents'] as const
@@ -30676,24 +30677,24 @@ export function createPostResponsesBetaTrue<
 }
 
 export function getResponsesResponseIdBetaTrueQueryKey(
-  response_id: string,
+  params: string,
   options?: { headers?: Record<string, string>; query?: Record<string, unknown> },
 ) {
   const { headers: _a, ...keyArgs } = options ?? {}
-  return ['responses', '/responses/{response_id}?beta=true', response_id, keyArgs] as const
+  return ['responses', '/responses/{response_id}?beta=true', params, keyArgs] as const
 }
 
-export function getResponsesResponseIdBetaTrueQueryOptions<TData = BetaResponse, TError = unknown>(
-  response_id: string,
-  options?: { headers?: Record<string, string>; query?: Record<string, unknown> },
-) {
+export function getResponsesResponseIdBetaTrueQueryOptions<
+  TData = Static<typeof BetaResponseSchema>,
+  TError = unknown,
+>(params: string, options?: { headers?: Record<string, string>; query?: Record<string, unknown> }) {
   return queryOptions<
-    BetaResponse,
+    Static<typeof BetaResponseSchema>,
     TError,
     TData,
     ReturnType<typeof getResponsesResponseIdBetaTrueQueryKey>
   >({
-    queryKey: getResponsesResponseIdBetaTrueQueryKey(response_id, options),
+    queryKey: getResponsesResponseIdBetaTrueQueryKey(params, options),
     queryFn: async ({ signal }) => {
       const search = new URLSearchParams()
       for (const [k, v] of Object.entries(options?.query ?? {})) {
@@ -30707,7 +30708,7 @@ export function getResponsesResponseIdBetaTrueQueryOptions<TData = BetaResponse,
         }
       }
       const res = await fetch(
-        `/responses/${encodeURIComponent(response_id)}?beta=true${search.size ? `?${search}` : ''}`,
+        `${clientOrigin}/responses/${encodeURIComponent(params)}?beta=true${search.size ? `?${search}` : ''}`,
         { headers: options?.headers, signal },
       )
       if (!res.ok) throw await res.json()
@@ -30716,13 +30717,16 @@ export function getResponsesResponseIdBetaTrueQueryOptions<TData = BetaResponse,
   })
 }
 
-export function createResponsesResponseIdBetaTrue<TData = BetaResponse, TError = unknown>(
-  response_id: () => string,
+export function createResponsesResponseIdBetaTrue<
+  TData = Static<typeof BetaResponseSchema>,
+  TError = unknown,
+>(
+  params: () => string,
   options?: () => {
     query?: Omit<
       ReturnType<
         UndefinedInitialDataOptions<
-          BetaResponse,
+          Static<typeof BetaResponseSchema>,
           TError,
           TData,
           ReturnType<typeof getResponsesResponseIdBetaTrueQueryKey>
@@ -30737,7 +30741,7 @@ export function createResponsesResponseIdBetaTrue<TData = BetaResponse, TError =
   return createQuery(() => {
     const { query, options: clientOptions } = options?.() ?? {}
     return {
-      ...getResponsesResponseIdBetaTrueQueryOptions<TData, TError>(response_id(), clientOptions),
+      ...getResponsesResponseIdBetaTrueQueryOptions<TData, TError>(params(), clientOptions),
       ...query,
     }
   }, queryClient)
@@ -30750,7 +30754,7 @@ export function getDeleteResponsesResponseIdBetaTrueMutationKey() {
 export function getDeleteResponsesResponseIdBetaTrueMutationOptions<
   TError = unknown,
   TOnMutateResult = unknown,
->(response_id: string) {
+>(params: string) {
   return mutationOptions<
     unknown,
     TError,
@@ -30759,7 +30763,7 @@ export function getDeleteResponsesResponseIdBetaTrueMutationOptions<
   >({
     mutationKey: getDeleteResponsesResponseIdBetaTrueMutationKey(),
     mutationFn: async ({ body, options }) => {
-      const res = await fetch(`/responses/${encodeURIComponent(response_id)}?beta=true`, {
+      const res = await fetch(`${clientOrigin}/responses/${encodeURIComponent(params)}?beta=true`, {
         method: 'DELETE',
         headers: { 'content-type': 'application/json', ...options?.headers },
         body: body === undefined ? undefined : JSON.stringify(body),
@@ -30774,7 +30778,7 @@ export function createDeleteResponsesResponseIdBetaTrue<
   TError = unknown,
   TOnMutateResult = unknown,
 >(
-  response_id: () => string,
+  params: () => string,
   options?: () => {
     mutation?: Omit<
       ReturnType<
@@ -30795,7 +30799,7 @@ export function createDeleteResponsesResponseIdBetaTrue<
     const mutationDefaults = getDeleteResponsesResponseIdBetaTrueMutationOptions<
       TError,
       TOnMutateResult
-    >(response_id())
+    >(params())
     return {
       ...mutation,
       ...mutationDefaults,

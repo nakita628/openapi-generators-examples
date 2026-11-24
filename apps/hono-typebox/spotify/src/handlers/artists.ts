@@ -61,13 +61,23 @@ export const artistsHandler = new Hono()
           }),
         ),
         limit: Type.Optional(
-          Codec(Type.String({ default: '5' }))
-            .Decode((value) => Number.parseInt(value, 10))
+          Codec(
+            Type.Refine(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '5' }),
+                (value) => Number(value) >= 0,
+                () => 'must be >= 0',
+              ),
+              (value) => Number(value) <= 10,
+              () => 'must be <= 10',
+            ),
+          )
+            .Decode((value) => Number(value))
             .Encode((value) => String(value)),
         ),
         offset: Type.Optional(
-          Codec(Type.String({ default: '0' }))
-            .Decode((value) => Number.parseInt(value, 10))
+          Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '0' }))
+            .Decode((value) => Number(value))
             .Encode((value) => String(value)),
         ),
       }),

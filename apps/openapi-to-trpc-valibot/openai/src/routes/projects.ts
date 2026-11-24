@@ -76,7 +76,7 @@ export const projectsRouter = t.router({
         ),
         description: v.optional(
           v.pipe(
-            v.union([v.string(), v.nullable(v.null())]),
+            v.union([v.string(), v.null()]),
             v.description('Optional description of the role.'),
           ),
         ),
@@ -99,21 +99,15 @@ export const projectsRouter = t.router({
         role_id: v.string(),
         permissions: v.optional(
           v.pipe(
-            v.union([v.array(v.string()), v.nullable(v.null())]),
+            v.union([v.array(v.string()), v.null()]),
             v.description('Updated set of permissions for the role.'),
           ),
         ),
         description: v.optional(
-          v.pipe(
-            v.union([v.string(), v.nullable(v.null())]),
-            v.description('New description for the role.'),
-          ),
+          v.pipe(v.union([v.string(), v.null()]), v.description('New description for the role.')),
         ),
         role_name: v.optional(
-          v.pipe(
-            v.union([v.string(), v.nullable(v.null())]),
-            v.description('New name for the role.'),
-          ),
+          v.pipe(v.union([v.string(), v.null()]), v.description('New name for the role.')),
         ),
       }),
     )

@@ -19,7 +19,7 @@ export const imagesHandler = new Hono()
       'form',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          frame_count: Schema.optional(
+          frame_count: Schema.optionalKey(
             Schema.Unknown.pipe(
               Schema.decodeTo(
                 Schema.Unknown,
@@ -30,11 +30,21 @@ export const imagesHandler = new Hono()
               ),
               Schema.decodeTo(
                 Schema.NullOr(
-                  Schema.FiniteFromString.check(
-                    Schema.isInt(),
-                    Schema.isGreaterThanOrEqualTo(2),
-                    Schema.isLessThanOrEqualTo(16),
-                  ),
+                  Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+                    .pipe(
+                      Schema.decodeTo(
+                        Schema.Finite,
+                        SchemaTransformation.transform({
+                          decode: (input) => Number(input),
+                          encode: (output) => String(output),
+                        }),
+                      ),
+                    )
+                    .check(
+                      Schema.isInt(),
+                      Schema.isGreaterThanOrEqualTo(2),
+                      Schema.isLessThanOrEqualTo(16),
+                    ),
                 ),
               ),
             ).annotate({
@@ -42,7 +52,7 @@ export const imagesHandler = new Hono()
                 "Number of frames for GIF output. Accepts integers from 2 through 16. Defaults to 9 when omitted. Only supported with output_format=gif. The requested size must satisfy the selected model's GIF size limits. GIF output does not support streaming, partial images, masks, or custom output compression. Requires access to the GIF preview for the selected model.",
             }),
           ),
-          frame_duration_ms: Schema.optional(
+          frame_duration_ms: Schema.optionalKey(
             Schema.Unknown.pipe(
               Schema.decodeTo(
                 Schema.Unknown,
@@ -53,7 +63,17 @@ export const imagesHandler = new Hono()
               ),
               Schema.decodeTo(
                 Schema.NullOr(
-                  Schema.FiniteFromString.check(Schema.isInt(), Schema.isGreaterThanOrEqualTo(20)),
+                  Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+                    .pipe(
+                      Schema.decodeTo(
+                        Schema.Finite,
+                        SchemaTransformation.transform({
+                          decode: (input) => Number(input),
+                          encode: (output) => String(output),
+                        }),
+                      ),
+                    )
+                    .check(Schema.isInt(), Schema.isGreaterThanOrEqualTo(20)),
                 ),
               ),
             ).annotate({
@@ -61,7 +81,7 @@ export const imagesHandler = new Hono()
                 'Requested delay per GIF frame, in milliseconds. Defaults to 200 when omitted. GIF output rounds to the nearest 10 ms and caps the encoded delay at 655,350 ms per frame. Only supported with output_format=gif.',
             }),
           ),
-          complexity: Schema.optional(ComplexitySchema),
+          complexity: Schema.optionalKey(ComplexitySchema),
           image: Schema.Union([
             Schema.instanceOf(File),
             Schema.Unknown.pipe(
@@ -84,13 +104,13 @@ export const imagesHandler = new Hono()
               'A text description of the desired image(s). The maximum length is 32000 characters for the GPT image models.',
             jsonSchemaExamples: ['A cute baby sea otter wearing a beret'],
           }),
-          mask: Schema.optional(
+          mask: Schema.optionalKey(
             Schema.instanceOf(File).annotate({
               description:
                 'An additional image whose fully transparent areas (e.g. where alpha is zero) indicate where `image` should be edited. If there are multiple images provided, the mask will be applied on the first image. Must be a valid PNG file, less than 4MB, and have the same dimensions as `image`.',
             }),
           ),
-          markup: Schema.optional(
+          markup: Schema.optionalKey(
             MarkupSchema.annotate({
               description:
                 "A transparent PNG overlaid on the first image to guide the edit. Must match that image's dimensions after orientation and contain transparent pixels. Supports GPT Image 2.5. Cannot be combined with mask.",
@@ -106,7 +126,7 @@ export const imagesHandler = new Hono()
                   encode: (output) => output,
                 }),
               ),
-              Schema.decodeTo(Schema.NullOr(Schema.Null)),
+              Schema.decodeTo(Schema.Null),
             ),
           ])
             .pipe(Schema.withDecodingDefaultType(Effect.succeed('auto')))
@@ -147,11 +167,21 @@ export const imagesHandler = new Hono()
             ),
             Schema.decodeTo(
               Schema.NullOr(
-                Schema.FiniteFromString.check(
-                  Schema.isInt(),
-                  Schema.isGreaterThanOrEqualTo(1),
-                  Schema.isLessThanOrEqualTo(10),
-                ),
+                Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+                  .pipe(
+                    Schema.decodeTo(
+                      Schema.Finite,
+                      SchemaTransformation.transform({
+                        decode: (input) => Number(input),
+                        encode: (output) => String(output),
+                      }),
+                    ),
+                  )
+                  .check(
+                    Schema.isInt(),
+                    Schema.isGreaterThanOrEqualTo(1),
+                    Schema.isLessThanOrEqualTo(10),
+                  ),
               ),
             ),
           )
@@ -171,7 +201,7 @@ export const imagesHandler = new Hono()
                   encode: (output) => output,
                 }),
               ),
-              Schema.decodeTo(Schema.NullOr(Schema.Null)),
+              Schema.decodeTo(Schema.Null),
             ),
           ])
             .pipe(Schema.withDecodingDefaultType(Effect.succeed('auto')))
@@ -180,8 +210,8 @@ export const imagesHandler = new Hono()
                 "The size of the generated images. Defaults to `auto`. For `gpt-image-2`, `gpt-image-2-2026-04-21`, `gpt-image-2.5-sunburst`, `gpt-image-2.5-sunburst-2026-09-08`, `gpt-image-2.5-flare`, and `gpt-image-2.5-flare-2026-09-08`, arbitrary resolutions are supported as `WIDTHxHEIGHT` strings, for example `1536x864`. Width and height must both be divisible by 16 and the requested aspect ratio must be between 1:3 and 3:1. Resolutions above `2560x1440` are experimental, and the maximum supported resolution is `3840x2160`. The requested size must also satisfy the model's current pixel and edge limits. The standard sizes `1024x1024`, `1536x1024`, and `1024x1536` are supported by the GPT image models; `auto` is supported for models that allow automatic sizing.",
               jsonSchemaExamples: ['1024x1024'],
             }),
-          response_format: Schema.optional(
-            Schema.NullOr(Schema.Literals(['url', 'b64_json', null])).annotate({
+          response_format: Schema.optionalKey(
+            Schema.NullOr(Schema.Literals(['url', 'b64_json'])).annotate({
               description:
                 'Legacy response format parameter for retired image models. Unsupported for GPT image models, which always return base64-encoded images.',
               jsonSchemaDeprecated: true,
@@ -207,7 +237,7 @@ export const imagesHandler = new Hono()
                         encode: (output) => output,
                       }),
                     ),
-                    Schema.decodeTo(Schema.NullOr(Schema.Null)),
+                    Schema.decodeTo(Schema.Null),
                   ),
                 ]),
               ),
@@ -219,7 +249,7 @@ export const imagesHandler = new Hono()
                 'The format in which the generated images are returned. This parameter is\nonly supported for the GPT image models.\nThe default value is `png`.\nSVG output requires a supported image model and project access.\n',
               jsonSchemaExamples: ['png'],
             }),
-          svg: Schema.optional(
+          svg: Schema.optionalKey(
             Schema.Unknown.pipe(
               Schema.decodeTo(
                 Schema.Unknown,
@@ -232,14 +262,14 @@ export const imagesHandler = new Hono()
                 Schema.NullOr(
                   Schema.Union([
                     Schema.Struct({
-                      model: Schema.optional(
+                      model: Schema.optionalKey(
                         Schema.String.check(
                           Schema.makeFilter((input) => [...input].length >= 1, {
                             expected: 'a string of at least 1 character',
                           }),
                         ),
                       ),
-                      reasoning: Schema.optional(
+                      reasoning: Schema.optionalKey(
                         Schema.Unknown.pipe(
                           Schema.decodeTo(
                             Schema.Unknown,
@@ -263,7 +293,7 @@ export const imagesHandler = new Hono()
                                       encode: (output) => output,
                                     }),
                                   ),
-                                  Schema.decodeTo(Schema.NullOr(Schema.Null)),
+                                  Schema.decodeTo(Schema.Null),
                                 ),
                               ]),
                             ),
@@ -279,7 +309,7 @@ export const imagesHandler = new Hono()
                           encode: (output) => output,
                         }),
                       ),
-                      Schema.decodeTo(Schema.NullOr(Schema.Null)),
+                      Schema.decodeTo(Schema.Null),
                     ),
                   ]),
                 ),
@@ -297,7 +327,21 @@ export const imagesHandler = new Hono()
                 encode: (output) => output,
               }),
             ),
-            Schema.decodeTo(Schema.NullOr(Schema.FiniteFromString.check(Schema.isInt()))),
+            Schema.decodeTo(
+              Schema.NullOr(
+                Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+                  .pipe(
+                    Schema.decodeTo(
+                      Schema.Finite,
+                      SchemaTransformation.transform({
+                        decode: (input) => Number(input),
+                        encode: (output) => String(output),
+                      }),
+                    ),
+                  )
+                  .check(Schema.isInt()),
+              ),
+            ),
           )
             .pipe(Schema.withDecodingDefaultType(Effect.succeed(100)))
             .annotate({
@@ -305,7 +349,7 @@ export const imagesHandler = new Hono()
                 'The compression level (0-100%) for the generated images. This parameter\nis only supported for the GPT image models with the `webp` or `jpeg` output\nformats, and defaults to 100.\n',
               jsonSchemaExamples: [100],
             }),
-          safety_identifier: Schema.optional(
+          safety_identifier: Schema.optionalKey(
             Schema.NullOr(
               Schema.String.check(
                 Schema.makeFilter((input) => [...input].length <= 128, {
@@ -318,7 +362,7 @@ export const imagesHandler = new Hono()
               jsonSchemaExamples: ['user-1234'],
             }),
           ),
-          user: Schema.optional(
+          user: Schema.optionalKey(
             Schema.String.annotate({
               description:
                 'Deprecated: use `safety_identifier` instead. This parameter remains accepted for backward compatibility and is used when `safety_identifier` is omitted, null, or empty. [Learn more](https://developers.openai.com/api/docs/guides/safety-best-practices#implement-safety-identifiers).',
@@ -326,7 +370,7 @@ export const imagesHandler = new Hono()
               jsonSchemaDeprecated: true,
             }),
           ),
-          input_fidelity: Schema.optional(
+          input_fidelity: Schema.optionalKey(
             Schema.Unknown.pipe(
               Schema.decodeTo(
                 Schema.Unknown,
@@ -347,7 +391,7 @@ export const imagesHandler = new Hono()
                           encode: (output) => output,
                         }),
                       ),
-                      Schema.decodeTo(Schema.NullOr(Schema.Null)),
+                      Schema.decodeTo(Schema.Null),
                     ),
                   ]),
                 ),
@@ -395,11 +439,21 @@ export const imagesHandler = new Hono()
             Schema.decodeTo(
               Schema.NullOr(
                 Schema.Union([
-                  Schema.FiniteFromString.check(
-                    Schema.isInt(),
-                    Schema.isGreaterThanOrEqualTo(0),
-                    Schema.isLessThanOrEqualTo(3),
-                  )
+                  Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+                    .pipe(
+                      Schema.decodeTo(
+                        Schema.Finite,
+                        SchemaTransformation.transform({
+                          decode: (input) => Number(input),
+                          encode: (output) => String(output),
+                        }),
+                      ),
+                    )
+                    .check(
+                      Schema.isInt(),
+                      Schema.isGreaterThanOrEqualTo(0),
+                      Schema.isLessThanOrEqualTo(3),
+                    )
                     .pipe(Schema.withDecodingDefaultType(Effect.succeed(0)))
                     .annotate({
                       description:
@@ -414,7 +468,7 @@ export const imagesHandler = new Hono()
                         encode: (output) => output,
                       }),
                     ),
-                    Schema.decodeTo(Schema.NullOr(Schema.Null)),
+                    Schema.decodeTo(Schema.Null),
                   ),
                 ]),
               ),
@@ -430,7 +484,7 @@ export const imagesHandler = new Hono()
                   encode: (output) => output,
                 }),
               ),
-              Schema.decodeTo(Schema.NullOr(Schema.Null)),
+              Schema.decodeTo(Schema.Null),
             ),
           ])
             .pipe(Schema.withDecodingDefaultType(Effect.succeed('auto')))
@@ -470,7 +524,7 @@ export const imagesHandler = new Hono()
                   encode: (output) => output,
                 }),
               ),
-              Schema.decodeTo(Schema.NullOr(Schema.Null)),
+              Schema.decodeTo(Schema.Null),
             ),
           ])
             .pipe(Schema.withDecodingDefaultType(Effect.succeed('dall-e-2')))
@@ -489,11 +543,21 @@ export const imagesHandler = new Hono()
             ),
             Schema.decodeTo(
               Schema.NullOr(
-                Schema.FiniteFromString.check(
-                  Schema.isInt(),
-                  Schema.isGreaterThanOrEqualTo(1),
-                  Schema.isLessThanOrEqualTo(10),
-                ),
+                Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+                  .pipe(
+                    Schema.decodeTo(
+                      Schema.Finite,
+                      SchemaTransformation.transform({
+                        decode: (input) => Number(input),
+                        encode: (output) => String(output),
+                      }),
+                    ),
+                  )
+                  .check(
+                    Schema.isInt(),
+                    Schema.isGreaterThanOrEqualTo(1),
+                    Schema.isLessThanOrEqualTo(10),
+                  ),
               ),
             ),
           )
@@ -502,21 +566,21 @@ export const imagesHandler = new Hono()
               description: 'The number of images to generate. Must be between 1 and 10.',
               jsonSchemaExamples: [1],
             }),
-          response_format: Schema.NullOr(Schema.Literals(['url', 'b64_json', null]))
+          response_format: Schema.NullOr(Schema.Literals(['url', 'b64_json']))
             .pipe(Schema.withDecodingDefaultType(Effect.succeed('url')))
             .annotate({
               description:
                 'The format in which the generated images are returned. Must be one of `url` or `b64_json`. URLs are only valid for 60 minutes after the image has been generated.',
               jsonSchemaExamples: ['url'],
             }),
-          size: Schema.NullOr(Schema.Literals(['256x256', '512x512', '1024x1024', null]))
+          size: Schema.NullOr(Schema.Literals(['256x256', '512x512', '1024x1024']))
             .pipe(Schema.withDecodingDefaultType(Effect.succeed('1024x1024')))
             .annotate({
               description:
                 'The size of the generated images. Must be one of `256x256`, `512x512`, or `1024x1024`.',
               jsonSchemaExamples: ['1024x1024'],
             }),
-          user: Schema.optional(
+          user: Schema.optionalKey(
             Schema.String.annotate({
               description:
                 'A unique identifier representing your end-user, which can help OpenAI to monitor and detect abuse. [Learn more](https://developers.openai.com/api/docs/guides/safety-best-practices#implement-safety-identifiers).\n',

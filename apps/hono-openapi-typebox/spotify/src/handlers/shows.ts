@@ -1,6 +1,6 @@
 import { Hono } from 'hono'
 import { describeRoute, validator } from 'hono-openapi'
-import { Type, Codec } from 'typebox'
+import { Type, Codec, type StaticDecode, type StaticEncode, type TSchema } from 'typebox'
 import { Compile } from 'typebox/compile'
 import {
   UnauthorizedResponse,
@@ -10,6 +10,31 @@ import {
   ManySimplifiedShowsResponse,
   PagingSimplifiedEpisodeObjectResponse,
 } from '../components'
+
+const toStandardSchemaV1 = <T extends TSchema>(schema: T) => {
+  const validator = Compile(schema)
+  return Object.assign(validator, {
+    '~standard': {
+      version: 1 as const,
+      vendor: 'typebox',
+      validate: (value: unknown) =>
+        validator.Check(value)
+          ? { value: validator.Decode(value) }
+          : {
+              issues: validator.Errors(value).map((error) => ({
+                message: error.message,
+                path: error.instancePath
+                  .split('/')
+                  .slice(1)
+                  .map((key) => key.replaceAll('~1', '/').replaceAll('~0', '~')),
+              })),
+            },
+      types: undefined as
+        | { readonly input: StaticEncode<T>; readonly output: StaticDecode<T> }
+        | undefined,
+    },
+  })
+}
 
 export const showsHandler = new Hono()
   .get(
@@ -30,7 +55,7 @@ export const showsHandler = new Hono()
     }),
     validator(
       'param',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           id: Type.String({
             description:
@@ -42,7 +67,7 @@ export const showsHandler = new Hono()
     ),
     validator(
       'query',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           market: Type.Optional(
             Type.String({
@@ -75,7 +100,7 @@ export const showsHandler = new Hono()
     }),
     validator(
       'query',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           market: Type.Optional(
             Type.String({
@@ -112,7 +137,7 @@ export const showsHandler = new Hono()
     }),
     validator(
       'param',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           id: Type.String({
             description:
@@ -124,7 +149,7 @@ export const showsHandler = new Hono()
     ),
     validator(
       'query',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           market: Type.Optional(
             Type.String({
@@ -134,13 +159,23 @@ export const showsHandler = new Hono()
             }),
           ),
           limit: Type.Optional(
-            Codec(Type.String({ default: '20' }))
-              .Decode((value) => Number.parseInt(value, 10))
+            Codec(
+              Type.Refine(
+                Type.Refine(
+                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '20' }),
+                  (value) => Number(value) >= 1,
+                  () => 'must be >= 1',
+                ),
+                (value) => Number(value) <= 50,
+                () => 'must be <= 50',
+              ),
+            )
+              .Decode((value) => Number(value))
               .Encode((value) => String(value)),
           ),
           offset: Type.Optional(
-            Codec(Type.String({ default: '0' }))
-              .Decode((value) => Number.parseInt(value, 10))
+            Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '0' }))
+              .Decode((value) => Number(value))
               .Encode((value) => String(value)),
           ),
         }),

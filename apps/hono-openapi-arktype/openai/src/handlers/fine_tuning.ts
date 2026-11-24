@@ -102,7 +102,7 @@ export const fineTuningHandler = new Hono()
         'project_id?': 'string',
         'after?': 'string',
         'limit?': type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'order?': "'ascending' | 'descending'",
@@ -212,7 +212,7 @@ export const fineTuningHandler = new Hono()
       type({
         'after?': 'string',
         'limit?': type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'metadata?': type('unknown').pipe(
@@ -339,7 +339,7 @@ export const fineTuningHandler = new Hono()
       type({
         'after?': 'string',
         'limit?': type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
       }),
@@ -380,7 +380,7 @@ export const fineTuningHandler = new Hono()
       type({
         'after?': 'string',
         'limit?': type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
       }),

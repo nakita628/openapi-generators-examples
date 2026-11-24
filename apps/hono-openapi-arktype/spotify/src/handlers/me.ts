@@ -47,7 +47,7 @@ export const meHandler = new Hono()
       type({
         'limit?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .to('number.integer >= 1 & number.integer <= 50')
@@ -56,7 +56,7 @@ export const meHandler = new Hono()
           ),
         'offset?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .describe(
@@ -185,7 +185,7 @@ export const meHandler = new Hono()
       type({
         'limit?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .to('number.integer >= 1 & number.integer <= 50')
@@ -194,7 +194,7 @@ export const meHandler = new Hono()
           ),
         'offset?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .describe(
@@ -358,7 +358,7 @@ export const meHandler = new Hono()
       type({
         'limit?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .to('number.integer >= 1 & number.integer <= 50')
@@ -367,7 +367,7 @@ export const meHandler = new Hono()
           ),
         'offset?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .describe(
@@ -503,7 +503,7 @@ export const meHandler = new Hono()
         ),
         'limit?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .to('number.integer >= 1 & number.integer <= 50')
@@ -512,7 +512,7 @@ export const meHandler = new Hono()
           ),
         'offset?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .describe(
@@ -652,7 +652,7 @@ export const meHandler = new Hono()
         ),
         'limit?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .to('number.integer >= 1 & number.integer <= 50')
@@ -661,7 +661,7 @@ export const meHandler = new Hono()
           ),
         'offset?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .describe(
@@ -791,7 +791,7 @@ export const meHandler = new Hono()
       type({
         'limit?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .to('number.integer >= 1 & number.integer <= 50')
@@ -800,7 +800,7 @@ export const meHandler = new Hono()
           ),
         'offset?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .describe(
@@ -934,7 +934,7 @@ export const meHandler = new Hono()
         ),
         'limit?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .to('number.integer >= 1 & number.integer <= 50')
@@ -1296,7 +1296,7 @@ export const meHandler = new Hono()
       type({
         position_ms: type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .describe(
@@ -1359,7 +1359,7 @@ export const meHandler = new Hono()
       type({
         volume_percent: type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .describe('The volume to set. Must be a value from 0 to 100 inclusive.\n'),
@@ -1422,7 +1422,7 @@ export const meHandler = new Hono()
       type({
         'limit?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .to('number.integer >= 1 & number.integer <= 50')
@@ -1431,7 +1431,7 @@ export const meHandler = new Hono()
           ),
         'after?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .describe(
@@ -1439,7 +1439,7 @@ export const meHandler = new Hono()
           ),
         'before?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .describe(
@@ -1518,7 +1518,7 @@ export const meHandler = new Hono()
         ),
         'limit?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .to('number.integer >= 1 & number.integer <= 50')
@@ -1527,7 +1527,7 @@ export const meHandler = new Hono()
           ),
         'offset?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .describe(
@@ -1560,7 +1560,7 @@ export const meHandler = new Hono()
         ),
         'limit?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .to('number.integer >= 1 & number.integer <= 50')
@@ -1569,7 +1569,7 @@ export const meHandler = new Hono()
           ),
         'offset?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .describe(

@@ -1,5 +1,5 @@
 import { initTRPC, TRPCError } from '@trpc/server'
-import { Schema } from 'effect'
+import { Effect, Schema } from 'effect'
 import {
   PagingArtistObjectSchema,
   PagingPlaylistObjectSchema,
@@ -36,7 +36,7 @@ export const searchRouter = t.router({
             description:
               'A comma-separated list of item types to search across. Search results include hits\nfrom all the specified item types. For example: `q=abacab&type=album,track` returns\nboth albums and tracks matching "abacab".\n',
           }),
-          market: Schema.optional(
+          market: Schema.optionalKey(
             Schema.String.annotate({
               description:
                 'An [ISO 3166-1 alpha-2 country code](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2).\n  If a country code is specified, only content that is available in that market will be returned.<br/>\n  If a valid user access token is specified in the request header, the country associated with\n  the user account will take priority over this parameter.<br/>\n  _**Note**: If neither market or user country are provided, the content is considered unavailable for the client._<br/>\n  Users can view the country that is associated with their account in the [account settings](https://www.spotify.com/account/overview/).\n',
@@ -64,7 +64,7 @@ export const searchRouter = t.router({
                 'The index of the first result to return. Use\nwith limit to get the next page of search results.\n',
               jsonSchemaExamples: [5],
             }),
-          include_external: Schema.optional(
+          include_external: Schema.optionalKey(
             Schema.Literal('audio').annotate({
               description:
                 'If `include_external=audio` is specified it signals that the client can play externally hosted audio content, and marks\nthe content as playable in the response. By default externally hosted audio content is marked as unplayable in the response.\n',
@@ -76,13 +76,13 @@ export const searchRouter = t.router({
     .output(
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          tracks: Schema.optional(PagingTrackObjectSchema),
-          artists: Schema.optional(PagingArtistObjectSchema),
-          albums: Schema.optional(PagingSimplifiedAlbumObjectSchema),
-          playlists: Schema.optional(PagingPlaylistObjectSchema),
-          shows: Schema.optional(PagingSimplifiedShowObjectSchema),
-          episodes: Schema.optional(PagingSimplifiedEpisodeObjectSchema),
-          audiobooks: Schema.optional(PagingSimplifiedAudiobookObjectSchema),
+          tracks: Schema.optionalKey(PagingTrackObjectSchema),
+          artists: Schema.optionalKey(PagingArtistObjectSchema),
+          albums: Schema.optionalKey(PagingSimplifiedAlbumObjectSchema),
+          playlists: Schema.optionalKey(PagingPlaylistObjectSchema),
+          shows: Schema.optionalKey(PagingSimplifiedShowObjectSchema),
+          episodes: Schema.optionalKey(PagingSimplifiedEpisodeObjectSchema),
+          audiobooks: Schema.optionalKey(PagingSimplifiedAudiobookObjectSchema),
         }),
       ),
     )

@@ -9,7 +9,7 @@ export const responsesBetaTrueHandler = new Hono().post(
     'header',
     Schema.toStandardSchemaV1(
       Schema.Struct({
-        'openai-beta': Schema.optional(
+        'openai-beta': Schema.optionalKey(
           Schema.Unknown.pipe(
             Schema.decodeTo(
               Schema.Unknown,

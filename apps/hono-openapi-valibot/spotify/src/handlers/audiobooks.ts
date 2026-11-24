@@ -145,7 +145,8 @@ export const audiobooksHandler = new Hono()
           v.optional(
             v.pipe(
               v.string(),
-              v.transform(Number),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
               v.number(),
               v.safeInteger(),
               v.minValue(1),
@@ -159,7 +160,16 @@ export const audiobooksHandler = new Hono()
           v.metadata({ examples: [10] }),
         ),
         offset: v.pipe(
-          v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '0'),
+          v.optional(
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+            ),
+            '0',
+          ),
           v.description(
             'The index of the first item to return. Default: 0 (the first item). Use with limit to get the next set of items.\n',
           ),

@@ -45,11 +45,12 @@ export const meHandler = new Hono()
     validator(
       'query',
       z.object({
-        limit: z.coerce
-          .number()
-          .int()
-          .min(1)
-          .max(50)
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(1).max(50),
+          )
           .default(20)
           .meta({
             description:
@@ -57,9 +58,12 @@ export const meHandler = new Hono()
             examples: [10],
           })
           .exactOptional(),
-        offset: z.coerce
-          .number()
-          .int()
+        offset: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
           .default(0)
           .meta({
             description:
@@ -200,11 +204,12 @@ export const meHandler = new Hono()
     validator(
       'query',
       z.object({
-        limit: z.coerce
-          .number()
-          .int()
-          .min(1)
-          .max(50)
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(1).max(50),
+          )
           .default(20)
           .meta({
             description:
@@ -212,9 +217,12 @@ export const meHandler = new Hono()
             examples: [10],
           })
           .exactOptional(),
-        offset: z.coerce
-          .number()
-          .int()
+        offset: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
           .default(0)
           .meta({
             description:
@@ -412,11 +420,12 @@ export const meHandler = new Hono()
     validator(
       'query',
       z.object({
-        limit: z.coerce
-          .number()
-          .int()
-          .min(1)
-          .max(50)
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(1).max(50),
+          )
           .default(20)
           .meta({
             description:
@@ -424,9 +433,12 @@ export const meHandler = new Hono()
             examples: [10],
           })
           .exactOptional(),
-        offset: z.coerce
-          .number()
-          .int()
+        offset: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
           .default(0)
           .meta({
             description:
@@ -590,11 +602,12 @@ export const meHandler = new Hono()
             examples: ['ES'],
           })
           .exactOptional(),
-        limit: z.coerce
-          .number()
-          .int()
-          .min(1)
-          .max(50)
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(1).max(50),
+          )
           .default(20)
           .meta({
             description:
@@ -602,9 +615,12 @@ export const meHandler = new Hono()
             examples: [10],
           })
           .exactOptional(),
-        offset: z.coerce
-          .number()
-          .int()
+        offset: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
           .default(0)
           .meta({
             description:
@@ -768,11 +784,12 @@ export const meHandler = new Hono()
             examples: ['ES'],
           })
           .exactOptional(),
-        limit: z.coerce
-          .number()
-          .int()
-          .min(1)
-          .max(50)
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(1).max(50),
+          )
           .default(20)
           .meta({
             description:
@@ -780,9 +797,12 @@ export const meHandler = new Hono()
             examples: [10],
           })
           .exactOptional(),
-        offset: z.coerce
-          .number()
-          .int()
+        offset: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
           .default(0)
           .meta({
             description:
@@ -929,11 +949,12 @@ export const meHandler = new Hono()
     validator(
       'query',
       z.object({
-        limit: z.coerce
-          .number()
-          .int()
-          .min(1)
-          .max(50)
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(1).max(50),
+          )
           .default(20)
           .meta({
             description:
@@ -941,9 +962,12 @@ export const meHandler = new Hono()
             examples: [10],
           })
           .exactOptional(),
-        offset: z.coerce
-          .number()
-          .int()
+        offset: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
           .default(0)
           .meta({
             description:
@@ -1111,11 +1135,12 @@ export const meHandler = new Hono()
             examples: ['0I2XqVXqHScXjHhk6AYYRe'],
           })
           .exactOptional(),
-        limit: z.coerce
-          .number()
-          .int()
-          .min(1)
-          .max(50)
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(1).max(50),
+          )
           .default(20)
           .meta({
             description:
@@ -1570,9 +1595,12 @@ export const meHandler = new Hono()
     validator(
       'query',
       z.object({
-        position_ms: z.coerce
-          .number()
-          .int()
+        position_ms: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
           .meta({
             description:
               'The position in milliseconds to seek to. Must be a\npositive number. Passing in a position that is greater than the length of\nthe track will cause the player to start playing the next song.\n',
@@ -1647,9 +1675,12 @@ export const meHandler = new Hono()
     validator(
       'query',
       z.object({
-        volume_percent: z.coerce
-          .number()
-          .int()
+        volume_percent: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
           .meta({
             description: 'The volume to set. Must be a value from 0 to 100 inclusive.\n',
             examples: [50],
@@ -1723,11 +1754,12 @@ export const meHandler = new Hono()
     validator(
       'query',
       z.object({
-        limit: z.coerce
-          .number()
-          .int()
-          .min(1)
-          .max(50)
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(1).max(50),
+          )
           .default(20)
           .meta({
             description:
@@ -1735,18 +1767,24 @@ export const meHandler = new Hono()
             examples: [10],
           })
           .exactOptional(),
-        after: z.coerce
-          .number()
-          .int()
+        after: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
           .meta({
             description:
               'A Unix timestamp in milliseconds. Returns all items\nafter (but not including) this cursor position. If `after` is specified, `before`\nmust not be specified.\n',
             examples: [1484811043508],
           })
           .exactOptional(),
-        before: z.coerce
-          .number()
-          .int()
+        before: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
           .meta({
             description:
               'A Unix timestamp in milliseconds. Returns all items\nbefore (but not including) this cursor position. If `before` is specified,\n`after` must not be specified.\n',
@@ -1838,11 +1876,12 @@ export const meHandler = new Hono()
             examples: ['medium_term'],
           })
           .exactOptional(),
-        limit: z.coerce
-          .number()
-          .int()
-          .min(1)
-          .max(50)
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(1).max(50),
+          )
           .default(20)
           .meta({
             description:
@@ -1850,9 +1889,12 @@ export const meHandler = new Hono()
             examples: [10],
           })
           .exactOptional(),
-        offset: z.coerce
-          .number()
-          .int()
+        offset: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
           .default(0)
           .meta({
             description:
@@ -1891,11 +1933,12 @@ export const meHandler = new Hono()
             examples: ['medium_term'],
           })
           .exactOptional(),
-        limit: z.coerce
-          .number()
-          .int()
-          .min(1)
-          .max(50)
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(1).max(50),
+          )
           .default(20)
           .meta({
             description:
@@ -1903,9 +1946,12 @@ export const meHandler = new Hono()
             examples: [10],
           })
           .exactOptional(),
-        offset: z.coerce
-          .number()
-          .int()
+        offset: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
           .default(0)
           .meta({
             description:

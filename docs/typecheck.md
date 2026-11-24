@@ -4,32 +4,34 @@ One `tsc -p` per app × document (`bun scripts/typecheck.ts`), over the generate
 tsconfig. There is no CI: `scripts/generate.ts` and `scripts/typecheck.ts` record each result in
 [results.json](./results.json), and `bun scripts/results.ts write` writes this file from it.
 
-55 outputs of 5 documents: 42 with no errors, 13 with errors, 0 not checked; 0 attempts failed.
+200 outputs of 8 documents: 188 with no errors, 12 with errors, 0 not checked; 0 attempts failed.
 
-Generators (outputs): asphodelos@0.3.1 (5), openapi-to-trpc@0.3.0 (20), wakusei@0.1.0 (30).
+Generators (outputs): asphodelos@0.3.1 (3), asphodelos@0.5.1 (5), openapi-to-trpc@0.3.0 (11), openapi-to-trpc@0.3.1 (21), takibi-hono@0.10.2 (112), wakusei@0.1.0 (48).
 
 ## Errors
 
 | Document | App | Errors | Where | Codes | Cause |
 | --- | --- | --- | --- | --- | --- |
-| [discord](../openapi/discord.json) | elysia-typebox | 7 | `src/hooks/*` | TS2305 ×7 | nakita628/asphodelos#38 |
-| [discord](../openapi/discord.json) | openapi-to-trpc-arktype | 1 | `src/components/index.ts` | TS2589 ×1 | nakita628/openapi-to-trpc#54 |
-| [discord](../openapi/discord.json) | openapi-to-trpc-effect | 27 | `src/components/index.ts`, `src/routes/*` | TS7006 ×18, TS2304 ×9 | nakita628/openapi-to-trpc#54 |
-| [openai](../openapi/openai.yaml) | elysia-typebox | 291 | `src/hooks/*` | TS2339 ×268, TS7053 ×16, TS2305 ×7 | nakita628/asphodelos#39, nakita628/asphodelos#38 |
-| [openai](../openapi/openai.yaml) | openapi-to-trpc-arktype | 8 | `src/components/index.ts` | TS2589 ×8 | nakita628/openapi-to-trpc#54, then nakita628/truth#59, nakita628/truth#58 |
-| [openai](../openapi/openai.yaml) | openapi-to-trpc-effect | 1661 | `src/components/index.ts`, `src/routes/*` | TS2304 ×1305, TS7006 ×186, TS2345 ×144, TS2322 ×18, TS2339 ×8 | nakita628/openapi-to-trpc#54, then nakita628/truth#60 |
-| [openai](../openapi/openai.yaml) | openapi-to-trpc-valibot | 2 | `src/components/index.ts` | TS2322 ×2 | nakita628/openapi-to-trpc#54 |
-| [openai](../openapi/openai.yaml) | openapi-to-trpc-zod | 2 | `src/components/index.ts` | TS2345 ×2 | nakita628/openapi-to-trpc#54 |
-| [openai](../openapi/openai.yaml) | wakusei-contract-arktype | 5 | `src/components/index.ts` | TS2322 ×4, TS2589 ×1 | nakita628/truth#59, nakita628/truth#58 |
-| [openai](../openapi/openai.yaml) | wakusei-server-arktype | 5 | `src/components/index.ts` | TS2322 ×4, TS2589 ×1 | nakita628/truth#59, nakita628/truth#58 |
-| [petstore](../openapi/petstore.json) | openapi-to-trpc-effect | 41 | `src/routes/*`, `src/components/index.ts` | TS7006 ×26, TS2304 ×14, TS2345 ×1 | nakita628/openapi-to-trpc#54 |
-| [spotify](../openapi/spotify.yaml) | openapi-to-trpc-effect | 54 | `src/routes/*`, `src/components/index.ts` | TS2304 ×48, TS7006 ×6 | nakita628/openapi-to-trpc#54 |
-| [train-travel](../openapi/train-travel.json) | openapi-to-trpc-effect | 15 | `src/routes/*`, `src/components/index.ts` | TS7006 ×8, TS2304 ×6, TS2345 ×1 | nakita628/openapi-to-trpc#54 |
+| [discord](../openapi/discord.json) | hono-define-handler-effect | 8 | `src/routes.ts` | TS2304 ×6, TS7006 ×2 | nakita628/takibi-hono#96 |
+| [discord](../openapi/discord.json) | hono-effect | 8 | `src/components/index.ts` | TS2304 ×6, TS7006 ×2 | nakita628/takibi-hono#96 |
+| [discord](../openapi/discord.json) | hono-openapi-effect | 8 | `src/components/index.ts` | TS2304 ×6, TS7006 ×2 | nakita628/takibi-hono#96 |
+| [openai](../openapi/openai.yaml) | elysia-typebox | 284 | `src/hooks/*` | TS2339 ×268, TS7053 ×16 | nakita628/asphodelos#39 |
+| [openai](../openapi/openai.yaml) | hono-define-handler-effect | 5097 | `src/routes.ts` | TS2304 ×3738, TS7006 ×1246, TS2345 ×111, TS2322 ×2 | nakita628/takibi-hono#96 |
+| [openai](../openapi/openai.yaml) | hono-effect | 5017 | `src/components/index.ts`, `src/handlers/*` | TS2304 ×3738, TS7006 ×1246, TS2345 ×31, TS2322 ×2 | nakita628/takibi-hono#96 |
+| [openai](../openapi/openai.yaml) | hono-openapi-effect | 5104 | `src/components/index.ts`, `src/handlers/*` | TS2304 ×3738, TS7006 ×1246, TS2345 ×118, TS2322 ×2 | nakita628/takibi-hono#96 |
+| [spotify](../openapi/spotify.yaml) | hono-define-handler-effect | 164 | `src/routes.ts` | TS2304 ×120, TS7006 ×40, TS2345 ×4 | nakita628/takibi-hono#96 |
+| [spotify](../openapi/spotify.yaml) | hono-effect | 156 | `src/components/index.ts` | TS2304 ×117, TS7006 ×39 | nakita628/takibi-hono#96 |
+| [spotify](../openapi/spotify.yaml) | hono-openapi-effect | 160 | `src/components/index.ts` | TS2304 ×117, TS7006 ×39, TS2345 ×4 | nakita628/takibi-hono#96 |
+| [train-travel](../openapi/train-travel.json) | hono-define-handler-effect | 36 | `src/routes.ts` | TS2304 ×27, TS7006 ×9 | nakita628/takibi-hono#96 |
+| [train-travel](../openapi/train-travel.json) | hono-openapi-effect | 76 | `src/handlers/*` | TS2304 ×57, TS7006 ×19 | nakita628/takibi-hono#96 |
 
 ## No errors
 
-- [discord](../openapi/discord.json): openapi-to-trpc-valibot, openapi-to-trpc-zod, wakusei-contract-arktype, wakusei-contract-valibot, wakusei-contract-zod, wakusei-server-arktype, wakusei-server-valibot, wakusei-server-zod
-- [openai](../openapi/openai.yaml): wakusei-contract-valibot, wakusei-contract-zod, wakusei-server-valibot, wakusei-server-zod
-- [petstore](../openapi/petstore.json): elysia-typebox, openapi-to-trpc-arktype, openapi-to-trpc-valibot, openapi-to-trpc-zod, wakusei-contract-arktype, wakusei-contract-valibot, wakusei-contract-zod, wakusei-server-arktype, wakusei-server-valibot, wakusei-server-zod
-- [spotify](../openapi/spotify.yaml): elysia-typebox, openapi-to-trpc-arktype, openapi-to-trpc-valibot, openapi-to-trpc-zod, wakusei-contract-arktype, wakusei-contract-valibot, wakusei-contract-zod, wakusei-server-arktype, wakusei-server-valibot, wakusei-server-zod
-- [train-travel](../openapi/train-travel.json): elysia-typebox, openapi-to-trpc-arktype, openapi-to-trpc-valibot, openapi-to-trpc-zod, wakusei-contract-arktype, wakusei-contract-valibot, wakusei-contract-zod, wakusei-server-arktype, wakusei-server-valibot, wakusei-server-zod
+- [discord](../openapi/discord.json): elysia-typebox, hono-arktype, hono-define-handler-arktype, hono-define-handler-valibot, hono-define-handler-zod, hono-openapi-arktype, hono-openapi-typebox, hono-openapi-valibot, hono-openapi-zod, hono-typebox, hono-valibot, hono-zod, openapi-to-trpc-arktype, openapi-to-trpc-effect, openapi-to-trpc-valibot, openapi-to-trpc-zod, wakusei-contract-arktype, wakusei-contract-valibot, wakusei-contract-zod, wakusei-server-arktype, wakusei-server-valibot, wakusei-server-zod
+- [line-channel-access-token](../openapi/line-channel-access-token.yaml): elysia-typebox, hono-arktype, hono-define-handler-arktype, hono-define-handler-effect, hono-define-handler-valibot, hono-define-handler-zod, hono-effect, hono-openapi-arktype, hono-openapi-effect, hono-openapi-typebox, hono-openapi-valibot, hono-openapi-zod, hono-typebox, hono-valibot, hono-zod, openapi-to-trpc-arktype, openapi-to-trpc-effect, openapi-to-trpc-valibot, openapi-to-trpc-zod, wakusei-contract-arktype, wakusei-contract-valibot, wakusei-contract-zod, wakusei-server-arktype, wakusei-server-valibot, wakusei-server-zod
+- [line-insight](../openapi/line-insight.yaml): elysia-typebox, hono-arktype, hono-define-handler-arktype, hono-define-handler-effect, hono-define-handler-valibot, hono-define-handler-zod, hono-effect, hono-openapi-arktype, hono-openapi-effect, hono-openapi-typebox, hono-openapi-valibot, hono-openapi-zod, hono-typebox, hono-valibot, hono-zod, openapi-to-trpc-arktype, openapi-to-trpc-effect, openapi-to-trpc-valibot, openapi-to-trpc-zod, wakusei-contract-arktype, wakusei-contract-valibot, wakusei-contract-zod, wakusei-server-arktype, wakusei-server-valibot, wakusei-server-zod
+- [openai](../openapi/openai.yaml): hono-arktype, hono-define-handler-arktype, hono-define-handler-valibot, hono-define-handler-zod, hono-openapi-arktype, hono-openapi-typebox, hono-openapi-valibot, hono-openapi-zod, hono-typebox, hono-valibot, hono-zod, openapi-to-trpc-arktype, openapi-to-trpc-effect, openapi-to-trpc-valibot, openapi-to-trpc-zod, wakusei-contract-arktype, wakusei-contract-valibot, wakusei-contract-zod, wakusei-server-arktype, wakusei-server-valibot, wakusei-server-zod
+- [petstore](../openapi/petstore.json): elysia-typebox, hono-arktype, hono-define-handler-arktype, hono-define-handler-effect, hono-define-handler-valibot, hono-define-handler-zod, hono-effect, hono-openapi-arktype, hono-openapi-effect, hono-openapi-typebox, hono-openapi-valibot, hono-openapi-zod, hono-typebox, hono-valibot, hono-zod, openapi-to-trpc-arktype, openapi-to-trpc-effect, openapi-to-trpc-valibot, openapi-to-trpc-zod, wakusei-contract-arktype, wakusei-contract-valibot, wakusei-contract-zod, wakusei-server-arktype, wakusei-server-valibot, wakusei-server-zod
+- [spotify](../openapi/spotify.yaml): elysia-typebox, hono-arktype, hono-define-handler-arktype, hono-define-handler-valibot, hono-define-handler-zod, hono-openapi-arktype, hono-openapi-typebox, hono-openapi-valibot, hono-openapi-zod, hono-typebox, hono-valibot, hono-zod, openapi-to-trpc-arktype, openapi-to-trpc-effect, openapi-to-trpc-valibot, openapi-to-trpc-zod, wakusei-contract-arktype, wakusei-contract-valibot, wakusei-contract-zod, wakusei-server-arktype, wakusei-server-valibot, wakusei-server-zod
+- [train-travel](../openapi/train-travel.json): elysia-typebox, hono-arktype, hono-define-handler-arktype, hono-define-handler-valibot, hono-define-handler-zod, hono-effect, hono-openapi-arktype, hono-openapi-typebox, hono-openapi-valibot, hono-openapi-zod, hono-typebox, hono-valibot, hono-zod, openapi-to-trpc-arktype, openapi-to-trpc-effect, openapi-to-trpc-valibot, openapi-to-trpc-zod, wakusei-contract-arktype, wakusei-contract-valibot, wakusei-contract-zod, wakusei-server-arktype, wakusei-server-valibot, wakusei-server-zod
+- [twilio](../openapi/twilio.json): elysia-typebox, hono-arktype, hono-define-handler-arktype, hono-define-handler-effect, hono-define-handler-valibot, hono-define-handler-zod, hono-effect, hono-openapi-arktype, hono-openapi-effect, hono-openapi-typebox, hono-openapi-valibot, hono-openapi-zod, hono-typebox, hono-valibot, hono-zod, openapi-to-trpc-arktype, openapi-to-trpc-effect, openapi-to-trpc-valibot, openapi-to-trpc-zod, wakusei-contract-arktype, wakusei-contract-valibot, wakusei-contract-zod, wakusei-server-arktype, wakusei-server-valibot, wakusei-server-zod

@@ -18,15 +18,15 @@ export const skillsRouter = t.router({
     .input(
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          limit: Schema.optional(
+          limit: Schema.optionalKey(
             Schema.Number.check(
               Schema.isInt(),
               Schema.isGreaterThanOrEqualTo(0),
               Schema.isLessThanOrEqualTo(100),
             ),
           ),
-          order: Schema.optional(OrderEnumSchema),
-          after: Schema.optional(
+          order: Schema.optionalKey(OrderEnumSchema),
+          after: Schema.optionalKey(
             Schema.String.annotate({
               description: 'Identifier for the last item from the previous pagination request',
             }),
@@ -94,15 +94,17 @@ export const skillsRouter = t.router({
       Schema.toStandardSchemaV1(
         Schema.Struct({
           skill_id: Schema.String.annotate({ jsonSchemaExamples: ['skill_123'] }),
-          limit: Schema.optional(
+          limit: Schema.optionalKey(
             Schema.Number.check(
               Schema.isInt(),
               Schema.isGreaterThanOrEqualTo(0),
               Schema.isLessThanOrEqualTo(100),
             ),
           ),
-          order: Schema.optional(OrderEnumSchema),
-          after: Schema.optional(Schema.String.annotate({ jsonSchemaExamples: ['skillver_123'] })),
+          order: Schema.optionalKey(OrderEnumSchema),
+          after: Schema.optionalKey(
+            Schema.String.annotate({ jsonSchemaExamples: ['skillver_123'] }),
+          ),
         }),
       ),
     )
@@ -123,7 +125,7 @@ export const skillsRouter = t.router({
               }),
             Schema.instanceOf(File).annotate({ description: 'Skill zip file to upload.' }),
           ]),
-          default: Schema.optional(
+          default: Schema.optionalKey(
             Schema.Boolean.annotate({ description: 'Whether to set this version as the default.' }),
           ),
         }),

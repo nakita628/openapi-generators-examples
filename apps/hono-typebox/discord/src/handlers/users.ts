@@ -20,15 +20,17 @@ export const usersHandler = new Hono()
         sku_ids: Type.Optional(
           Type.Union([
             Type.String(),
-            Type.Array(Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]), {
+            Type.Array(Type.Union([Type.Null(), SnowflakeTypeSchema]), {
               maxItems: 100,
               uniqueItems: true,
             }),
           ]),
         ),
         exclude_consumed: Type.Optional(
-          Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-            .Decode((value) => value === 'true')
+          Codec(
+            Type.String({ pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i }),
+          )
+            .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
             .Encode((value) => (value ? 'true' : 'false')),
         ),
       }),
@@ -61,18 +63,36 @@ export const usersHandler = new Hono()
         before: Type.Optional(SnowflakeTypeSchema),
         after: Type.Optional(SnowflakeTypeSchema),
         limit: Type.Optional(
-          Codec(Type.String())
-            .Decode((value) => Number.parseInt(value, 10))
+          Codec(
+            Type.Refine(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                (value) => Number(value) >= 1,
+                () => 'must be >= 1',
+              ),
+              (value) => Number(value) <= 200,
+              () => 'must be <= 200',
+            ),
+          )
+            .Decode((value) => Number(value))
             .Encode((value) => String(value)),
         ),
         shard: Type.Optional(
-          Codec(Type.String())
-            .Decode((value) => Number.parseInt(value, 10))
+          Codec(
+            Type.Refine(
+              Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+              (value) => Number(value) >= 0,
+              () => 'must be >= 0',
+            ),
+          )
+            .Decode((value) => Number(value))
             .Encode((value) => String(value)),
         ),
         with_counts: Type.Optional(
-          Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-            .Decode((value) => value === 'true')
+          Codec(
+            Type.String({ pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i }),
+          )
+            .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
             .Encode((value) => (value ? 'true' : 'false')),
         ),
       }),

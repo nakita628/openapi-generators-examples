@@ -1,6 +1,6 @@
 import { Hono } from 'hono'
 import { sValidator } from '@hono/standard-validator'
-import { Effect, Schema } from 'effect'
+import { Effect, Schema, SchemaTransformation } from 'effect'
 import { CreateEvalRequestSchema, CreateEvalRunRequestSchema, MetadataSchema } from '../components'
 
 export const evalsHandler = new Hono()
@@ -10,10 +10,19 @@ export const evalsHandler = new Hono()
       'query',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          after: Schema.optional(Schema.String),
-          limit: Schema.FiniteFromString.check(Schema.isInt()).pipe(
-            Schema.withDecodingDefaultType(Effect.succeed(20)),
-          ),
+          after: Schema.optionalKey(Schema.String),
+          limit: Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+            .pipe(
+              Schema.decodeTo(
+                Schema.Finite,
+                SchemaTransformation.transform({
+                  decode: (input) => Number(input),
+                  encode: (output) => String(output),
+                }),
+              ),
+            )
+            .check(Schema.isInt())
+            .pipe(Schema.withDecodingDefaultType(Effect.succeed(20))),
           order: Schema.Literals(['asc', 'desc']).pipe(
             Schema.withDecodingDefaultType(Effect.succeed('asc')),
           ),
@@ -38,8 +47,10 @@ export const evalsHandler = new Hono()
       'json',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          name: Schema.optional(Schema.String.annotate({ description: 'Rename the evaluation.' })),
-          metadata: Schema.optional(MetadataSchema),
+          name: Schema.optionalKey(
+            Schema.String.annotate({ description: 'Rename the evaluation.' }),
+          ),
+          metadata: Schema.optionalKey(MetadataSchema),
         }),
       ),
     ),
@@ -57,14 +68,23 @@ export const evalsHandler = new Hono()
       'query',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          after: Schema.optional(Schema.String),
-          limit: Schema.FiniteFromString.check(Schema.isInt()).pipe(
-            Schema.withDecodingDefaultType(Effect.succeed(20)),
-          ),
+          after: Schema.optionalKey(Schema.String),
+          limit: Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+            .pipe(
+              Schema.decodeTo(
+                Schema.Finite,
+                SchemaTransformation.transform({
+                  decode: (input) => Number(input),
+                  encode: (output) => String(output),
+                }),
+              ),
+            )
+            .check(Schema.isInt())
+            .pipe(Schema.withDecodingDefaultType(Effect.succeed(20))),
           order: Schema.Literals(['asc', 'desc']).pipe(
             Schema.withDecodingDefaultType(Effect.succeed('asc')),
           ),
-          status: Schema.optional(
+          status: Schema.optionalKey(
             Schema.Literals(['queued', 'in_progress', 'completed', 'canceled', 'failed']),
           ),
         }),
@@ -112,11 +132,20 @@ export const evalsHandler = new Hono()
       'query',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          after: Schema.optional(Schema.String),
-          limit: Schema.FiniteFromString.check(Schema.isInt()).pipe(
-            Schema.withDecodingDefaultType(Effect.succeed(20)),
-          ),
-          status: Schema.optional(Schema.Literals(['fail', 'pass'])),
+          after: Schema.optionalKey(Schema.String),
+          limit: Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+            .pipe(
+              Schema.decodeTo(
+                Schema.Finite,
+                SchemaTransformation.transform({
+                  decode: (input) => Number(input),
+                  encode: (output) => String(output),
+                }),
+              ),
+            )
+            .check(Schema.isInt())
+            .pipe(Schema.withDecodingDefaultType(Effect.succeed(20))),
+          status: Schema.optionalKey(Schema.Literals(['fail', 'pass'])),
           order: Schema.Literals(['asc', 'desc']).pipe(
             Schema.withDecodingDefaultType(Effect.succeed('asc')),
           ),

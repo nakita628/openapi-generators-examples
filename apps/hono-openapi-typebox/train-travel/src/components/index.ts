@@ -1,6 +1,31 @@
-import { resolver } from 'hono-openapi'
-import { Type, type Static } from 'typebox'
+import { resolver, validator } from 'hono-openapi'
+import { Type, type Static, type StaticDecode, type StaticEncode, type TSchema } from 'typebox'
 import { Compile } from 'typebox/compile'
+
+const toStandardSchemaV1 = <T extends TSchema>(schema: T) => {
+  const validator = Compile(schema)
+  return Object.assign(validator, {
+    '~standard': {
+      version: 1 as const,
+      vendor: 'typebox',
+      validate: (value: unknown) =>
+        validator.Check(value)
+          ? { value: validator.Decode(value) }
+          : {
+              issues: validator.Errors(value).map((error) => ({
+                message: error.message,
+                path: error.instancePath
+                  .split('/')
+                  .slice(1)
+                  .map((key) => key.replaceAll('~1', '/').replaceAll('~0', '~')),
+              })),
+            },
+      types: undefined as
+        | { readonly input: StaticEncode<T>; readonly output: StaticDecode<T> }
+        | undefined,
+    },
+  })
+}
 
 export const StationSchema = Type.Object(
   {
@@ -337,9 +362,9 @@ export const LinksBookingSchema = Type.Object(
 export type LinksBooking = Static<typeof LinksBookingSchema>
 
 export const RateLimitHeaderSchema = resolver(
-  Compile(Type.String({ examples: ['limit=10, remaining=0, reset=10'] })),
+  toStandardSchemaV1(Type.String({ examples: ['limit=10, remaining=0, reset=10'] })),
 )
-export const RetryAfterHeaderSchema = resolver(Compile(Type.String()))
+export const RetryAfterHeaderSchema = resolver(toStandardSchemaV1(Type.String()))
 
 export const OAuth2SecurityScheme = {
   type: 'oauth2',
@@ -358,7 +383,7 @@ export const BadRequestResponse = {
   headers: { RateLimit: { $ref: '#/components/headers/RateLimit' } },
   content: {
     'application/problem+json': {
-      schema: resolver(Compile(ProblemSchema)),
+      schema: resolver(toStandardSchemaV1(ProblemSchema)),
       example: {
         type: 'https://example.com/errors/bad-request',
         title: 'Bad Request',
@@ -367,7 +392,7 @@ export const BadRequestResponse = {
       },
     },
     'application/problem+xml': {
-      schema: resolver(Compile(ProblemSchema)),
+      schema: resolver(toStandardSchemaV1(ProblemSchema)),
       example: {
         type: 'https://example.com/errors/bad-request',
         title: 'Bad Request',
@@ -382,7 +407,7 @@ export const ConflictResponse = {
   headers: { RateLimit: { $ref: '#/components/headers/RateLimit' } },
   content: {
     'application/problem+json': {
-      schema: resolver(Compile(ProblemSchema)),
+      schema: resolver(toStandardSchemaV1(ProblemSchema)),
       example: {
         type: 'https://example.com/errors/conflict',
         title: 'Conflict',
@@ -391,7 +416,7 @@ export const ConflictResponse = {
       },
     },
     'application/problem+xml': {
-      schema: resolver(Compile(ProblemSchema)),
+      schema: resolver(toStandardSchemaV1(ProblemSchema)),
       example: {
         type: 'https://example.com/errors/conflict',
         title: 'Conflict',
@@ -406,7 +431,7 @@ export const ForbiddenResponse = {
   headers: { RateLimit: { $ref: '#/components/headers/RateLimit' } },
   content: {
     'application/problem+json': {
-      schema: resolver(Compile(ProblemSchema)),
+      schema: resolver(toStandardSchemaV1(ProblemSchema)),
       example: {
         type: 'https://example.com/errors/forbidden',
         title: 'Forbidden',
@@ -415,7 +440,7 @@ export const ForbiddenResponse = {
       },
     },
     'application/problem+xml': {
-      schema: resolver(Compile(ProblemSchema)),
+      schema: resolver(toStandardSchemaV1(ProblemSchema)),
       example: {
         type: 'https://example.com/errors/forbidden',
         title: 'Forbidden',
@@ -430,7 +455,7 @@ export const InternalServerErrorResponse = {
   headers: { RateLimit: { $ref: '#/components/headers/RateLimit' } },
   content: {
     'application/problem+json': {
-      schema: resolver(Compile(ProblemSchema)),
+      schema: resolver(toStandardSchemaV1(ProblemSchema)),
       example: {
         type: 'https://example.com/errors/internal-server-error',
         title: 'Internal Server Error',
@@ -439,7 +464,7 @@ export const InternalServerErrorResponse = {
       },
     },
     'application/problem+xml': {
-      schema: resolver(Compile(ProblemSchema)),
+      schema: resolver(toStandardSchemaV1(ProblemSchema)),
       example: {
         type: 'https://example.com/errors/internal-server-error',
         title: 'Internal Server Error',
@@ -454,7 +479,7 @@ export const NotFoundResponse = {
   headers: { RateLimit: { $ref: '#/components/headers/RateLimit' } },
   content: {
     'application/problem+json': {
-      schema: resolver(Compile(ProblemSchema)),
+      schema: resolver(toStandardSchemaV1(ProblemSchema)),
       example: {
         type: 'https://example.com/errors/not-found',
         title: 'Not Found',
@@ -463,7 +488,7 @@ export const NotFoundResponse = {
       },
     },
     'application/problem+xml': {
-      schema: resolver(Compile(ProblemSchema)),
+      schema: resolver(toStandardSchemaV1(ProblemSchema)),
       example: {
         type: 'https://example.com/errors/not-found',
         title: 'Not Found',
@@ -481,7 +506,7 @@ export const TooManyRequestsResponse = {
   },
   content: {
     'application/problem+json': {
-      schema: resolver(Compile(ProblemSchema)),
+      schema: resolver(toStandardSchemaV1(ProblemSchema)),
       example: {
         type: 'https://example.com/errors/too-many-requests',
         title: 'Too Many Requests',
@@ -490,7 +515,7 @@ export const TooManyRequestsResponse = {
       },
     },
     'application/problem+xml': {
-      schema: resolver(Compile(ProblemSchema)),
+      schema: resolver(toStandardSchemaV1(ProblemSchema)),
       example: {
         type: 'https://example.com/errors/too-many-requests',
         title: 'Too Many Requests',
@@ -505,7 +530,7 @@ export const UnauthorizedResponse = {
   headers: { RateLimit: { $ref: '#/components/headers/RateLimit' } },
   content: {
     'application/problem+json': {
-      schema: resolver(Compile(ProblemSchema)),
+      schema: resolver(toStandardSchemaV1(ProblemSchema)),
       example: {
         type: 'https://example.com/errors/unauthorized',
         title: 'Unauthorized',
@@ -514,7 +539,7 @@ export const UnauthorizedResponse = {
       },
     },
     'application/problem+xml': {
-      schema: resolver(Compile(ProblemSchema)),
+      schema: resolver(toStandardSchemaV1(ProblemSchema)),
       example: {
         type: 'https://example.com/errors/unauthorized',
         title: 'Unauthorized',

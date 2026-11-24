@@ -845,11 +845,17 @@ export const PlaylistTrackObjectSchema = v.pipe(
         ),
       ),
       item: v.pipe(
-        v.union([TrackObjectSchema, EpisodeObjectSchema]),
+        v.union([
+          v.intersect([TrackObjectSchema, v.object({ type: v.literal('TrackObject') })]),
+          v.intersect([EpisodeObjectSchema, v.object({ type: v.literal('EpisodeObject') })]),
+        ]),
         v.description('Information about the track or episode.'),
       ),
       track: v.pipe(
-        v.union([TrackObjectSchema, EpisodeObjectSchema]),
+        v.union([
+          v.intersect([TrackObjectSchema, v.object({ type: v.literal('TrackObject') })]),
+          v.intersect([EpisodeObjectSchema, v.object({ type: v.literal('EpisodeObject') })]),
+        ]),
         v.description(
           '**Deprecated:** Use `item` instead. Information about the track or episode.\n',
         ),
@@ -866,11 +872,19 @@ export const QueueObjectSchema = v.pipe(
   v.partial(
     v.object({
       currently_playing: v.pipe(
-        v.union([TrackObjectSchema, EpisodeObjectSchema]),
+        v.union([
+          v.intersect([TrackObjectSchema, v.object({ type: v.literal('TrackObject') })]),
+          v.intersect([EpisodeObjectSchema, v.object({ type: v.literal('EpisodeObject') })]),
+        ]),
         v.description('The currently playing track or episode. Can be `null`.'),
       ),
       queue: v.pipe(
-        v.array(v.union([TrackObjectSchema, EpisodeObjectSchema])),
+        v.array(
+          v.union([
+            v.intersect([TrackObjectSchema, v.object({ type: v.literal('TrackObject') })]),
+            v.intersect([EpisodeObjectSchema, v.object({ type: v.literal('EpisodeObject') })]),
+          ]),
+        ),
         v.description('The tracks or episodes in the queue. Can be empty.'),
       ),
     }),
@@ -1003,7 +1017,10 @@ export const CurrentlyPlayingContextObjectSchema = v.pipe(
         v.description('If something is currently playing, return `true`.'),
       ),
       item: v.pipe(
-        v.union([TrackObjectSchema, EpisodeObjectSchema]),
+        v.union([
+          v.intersect([TrackObjectSchema, v.object({ type: v.literal('TrackObject') })]),
+          v.intersect([EpisodeObjectSchema, v.object({ type: v.literal('EpisodeObject') })]),
+        ]),
         v.description('The currently playing track or episode. Can be `null`.'),
       ),
       currently_playing_type: v.pipe(
@@ -1911,40 +1928,43 @@ export type CursorPagingSimplifiedArtistObject = v.InferOutput<
 >
 
 export const PagingObjectSchema = v.pipe(
-  v.object({
-    href: v.pipe(
-      v.string(),
-      v.description('A link to the Web API endpoint returning the full result of the request\n'),
-      v.metadata({ examples: ['https://api.spotify.com/v1/me/shows?offset=0&limit=20\n'] }),
-    ),
-    limit: v.pipe(
-      v.pipe(v.number(), v.integer()),
-      v.description(
-        'The maximum number of items in the response (as set in the query or by default).\n',
+  v.pipe(
+    v.looseObject({
+      href: v.pipe(
+        v.string(),
+        v.description('A link to the Web API endpoint returning the full result of the request\n'),
+        v.metadata({ examples: ['https://api.spotify.com/v1/me/shows?offset=0&limit=20\n'] }),
       ),
-      v.metadata({ examples: [20] }),
-    ),
-    next: v.pipe(
-      v.nullable(v.string()),
-      v.description('URL to the next page of items. ( `null` if none)\n'),
-      v.metadata({ examples: ['https://api.spotify.com/v1/me/shows?offset=1&limit=1'] }),
-    ),
-    offset: v.pipe(
-      v.pipe(v.number(), v.integer()),
-      v.description('The offset of the items returned (as set in the query or by default)\n'),
-      v.metadata({ examples: [0] }),
-    ),
-    previous: v.pipe(
-      v.nullable(v.string()),
-      v.description('URL to the previous page of items. ( `null` if none)\n'),
-      v.metadata({ examples: ['https://api.spotify.com/v1/me/shows?offset=1&limit=1'] }),
-    ),
-    total: v.pipe(
-      v.pipe(v.number(), v.integer()),
-      v.description('The total number of items available to return.\n'),
-      v.metadata({ examples: [4] }),
-    ),
-  }),
+      limit: v.pipe(
+        v.pipe(v.number(), v.integer()),
+        v.description(
+          'The maximum number of items in the response (as set in the query or by default).\n',
+        ),
+        v.metadata({ examples: [20] }),
+      ),
+      next: v.pipe(
+        v.nullable(v.string()),
+        v.description('URL to the next page of items. ( `null` if none)\n'),
+        v.metadata({ examples: ['https://api.spotify.com/v1/me/shows?offset=1&limit=1'] }),
+      ),
+      offset: v.pipe(
+        v.pipe(v.number(), v.integer()),
+        v.description('The offset of the items returned (as set in the query or by default)\n'),
+        v.metadata({ examples: [0] }),
+      ),
+      previous: v.pipe(
+        v.nullable(v.string()),
+        v.description('URL to the previous page of items. ( `null` if none)\n'),
+        v.metadata({ examples: ['https://api.spotify.com/v1/me/shows?offset=1&limit=1'] }),
+      ),
+      total: v.pipe(
+        v.pipe(v.number(), v.integer()),
+        v.description('The total number of items available to return.\n'),
+        v.metadata({ examples: [4] }),
+      ),
+    }),
+    v.check((input) => ['items'].every((key) => key in input)),
+  ),
   v.metadata({ ref: 'PagingObject' }),
 )
 
@@ -2864,7 +2884,10 @@ export const CurrentlyPlayingObjectSchema = v.pipe(
         v.description('If something is currently playing, return `true`.'),
       ),
       item: v.pipe(
-        v.union([TrackObjectSchema, EpisodeObjectSchema]),
+        v.union([
+          v.intersect([TrackObjectSchema, v.object({ type: v.literal('TrackObject') })]),
+          v.intersect([EpisodeObjectSchema, v.object({ type: v.literal('EpisodeObject') })]),
+        ]),
         v.description('The currently playing track or episode. Can be `null`.'),
       ),
       currently_playing_type: v.pipe(
@@ -2950,7 +2973,8 @@ export const QueryLimitParamsSchema = resolver(
     v.optional(
       v.pipe(
         v.string(),
-        v.transform(Number),
+        v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.transform((input) => Number(input)),
         v.number(),
         v.safeInteger(),
         v.minValue(1),
@@ -2964,7 +2988,16 @@ export const QueryLimitParamsSchema = resolver(
 )
 export const QueryOffsetParamsSchema = resolver(
   v.pipe(
-    v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '0'),
+    v.optional(
+      v.pipe(
+        v.string(),
+        v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.transform((input) => Number(input)),
+        v.number(),
+        v.safeInteger(),
+      ),
+      '0',
+    ),
     v.description(
       'The index of the first item to return. Default: 0 (the first item). Use with limit to get the next set of items.\n',
     ),

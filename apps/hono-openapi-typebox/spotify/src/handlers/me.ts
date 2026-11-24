@@ -1,6 +1,6 @@
 import { Hono } from 'hono'
 import { describeRoute, resolver, validator } from 'hono-openapi'
-import { Type, Codec } from 'typebox'
+import { Type, Codec, type StaticDecode, type StaticEncode, type TSchema } from 'typebox'
 import { Compile } from 'typebox/compile'
 import {
   ErrorObjectSchema,
@@ -26,6 +26,31 @@ import {
   PagingTrackObjectResponse,
 } from '../components'
 
+const toStandardSchemaV1 = <T extends TSchema>(schema: T) => {
+  const validator = Compile(schema)
+  return Object.assign(validator, {
+    '~standard': {
+      version: 1 as const,
+      vendor: 'typebox',
+      validate: (value: unknown) =>
+        validator.Check(value)
+          ? { value: validator.Decode(value) }
+          : {
+              issues: validator.Errors(value).map((error) => ({
+                message: error.message,
+                path: error.instancePath
+                  .split('/')
+                  .slice(1)
+                  .map((key) => key.replaceAll('~1', '/').replaceAll('~0', '~')),
+              })),
+            },
+      types: undefined as
+        | { readonly input: StaticEncode<T>; readonly output: StaticDecode<T> }
+        | undefined,
+    },
+  })
+}
+
 export const meHandler = new Hono()
   .get(
     '/me/audiobooks',
@@ -45,16 +70,26 @@ export const meHandler = new Hono()
     }),
     validator(
       'query',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           limit: Type.Optional(
-            Codec(Type.String({ default: '20' }))
-              .Decode((value) => Number.parseInt(value, 10))
+            Codec(
+              Type.Refine(
+                Type.Refine(
+                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '20' }),
+                  (value) => Number(value) >= 1,
+                  () => 'must be >= 1',
+                ),
+                (value) => Number(value) <= 50,
+                () => 'must be <= 50',
+              ),
+            )
+              .Decode((value) => Number(value))
               .Encode((value) => String(value)),
           ),
           offset: Type.Optional(
-            Codec(Type.String({ default: '0' }))
-              .Decode((value) => Number.parseInt(value, 10))
+            Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '0' }))
+              .Decode((value) => Number(value))
               .Encode((value) => String(value)),
           ),
         }),
@@ -81,7 +116,7 @@ export const meHandler = new Hono()
     }),
     validator(
       'query',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           ids: Type.String({
             description:
@@ -112,7 +147,7 @@ export const meHandler = new Hono()
     }),
     validator(
       'query',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           ids: Type.String({
             description:
@@ -143,7 +178,7 @@ export const meHandler = new Hono()
     }),
     validator(
       'query',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           ids: Type.String({
             description:
@@ -190,16 +225,26 @@ export const meHandler = new Hono()
     }),
     validator(
       'query',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           limit: Type.Optional(
-            Codec(Type.String({ default: '20' }))
-              .Decode((value) => Number.parseInt(value, 10))
+            Codec(
+              Type.Refine(
+                Type.Refine(
+                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '20' }),
+                  (value) => Number(value) >= 1,
+                  () => 'must be >= 1',
+                ),
+                (value) => Number(value) <= 50,
+                () => 'must be <= 50',
+              ),
+            )
+              .Decode((value) => Number(value))
               .Encode((value) => String(value)),
           ),
           offset: Type.Optional(
-            Codec(Type.String({ default: '0' }))
-              .Decode((value) => Number.parseInt(value, 10))
+            Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '0' }))
+              .Decode((value) => Number(value))
               .Encode((value) => String(value)),
           ),
         }),
@@ -225,7 +270,7 @@ export const meHandler = new Hono()
     }),
     validator(
       'json',
-      Compile(
+      toStandardSchemaV1(
         Type.Object(
           {
             name: Type.String({
@@ -274,7 +319,9 @@ export const meHandler = new Hono()
         '400': {
           description:
             'Bad Request. Possible reasons: missing `uris` parameter, invalid URI format, unsupported URI type, or more than 40 URIs provided.\n',
-          content: { 'application/json': { schema: resolver(Compile(ErrorObjectSchema)) } },
+          content: {
+            'application/json': { schema: resolver(toStandardSchemaV1(ErrorObjectSchema)) },
+          },
         },
         '401': UnauthorizedResponse,
         '403': ForbiddenResponse,
@@ -286,7 +333,7 @@ export const meHandler = new Hono()
     }),
     validator(
       'query',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           uris: Type.String({
             description:
@@ -311,7 +358,9 @@ export const meHandler = new Hono()
         '400': {
           description:
             'Bad Request. Possible reasons: missing `uris` parameter, invalid URI format, unsupported URI type, or more than 40 URIs provided.\n',
-          content: { 'application/json': { schema: resolver(Compile(ErrorObjectSchema)) } },
+          content: {
+            'application/json': { schema: resolver(toStandardSchemaV1(ErrorObjectSchema)) },
+          },
         },
         '401': UnauthorizedResponse,
         '403': ForbiddenResponse,
@@ -323,7 +372,7 @@ export const meHandler = new Hono()
     }),
     validator(
       'query',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           uris: Type.String({
             description:
@@ -348,7 +397,9 @@ export const meHandler = new Hono()
         '400': {
           description:
             'Bad Request. Possible reasons: missing `uris` parameter, invalid URI format, unsupported URI type, or more than 40 URIs provided.\n',
-          content: { 'application/json': { schema: resolver(Compile(ErrorObjectSchema)) } },
+          content: {
+            'application/json': { schema: resolver(toStandardSchemaV1(ErrorObjectSchema)) },
+          },
         },
         '401': UnauthorizedResponse,
         '403': ForbiddenResponse,
@@ -358,7 +409,7 @@ export const meHandler = new Hono()
     }),
     validator(
       'query',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           uris: Type.String({
             description:
@@ -390,16 +441,26 @@ export const meHandler = new Hono()
     }),
     validator(
       'query',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           limit: Type.Optional(
-            Codec(Type.String({ default: '20' }))
-              .Decode((value) => Number.parseInt(value, 10))
+            Codec(
+              Type.Refine(
+                Type.Refine(
+                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '20' }),
+                  (value) => Number(value) >= 1,
+                  () => 'must be >= 1',
+                ),
+                (value) => Number(value) <= 50,
+                () => 'must be <= 50',
+              ),
+            )
+              .Decode((value) => Number(value))
               .Encode((value) => String(value)),
           ),
           offset: Type.Optional(
-            Codec(Type.String({ default: '0' }))
-              .Decode((value) => Number.parseInt(value, 10))
+            Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '0' }))
+              .Decode((value) => Number(value))
               .Encode((value) => String(value)),
           ),
           market: Type.Optional(
@@ -433,7 +494,7 @@ export const meHandler = new Hono()
     }),
     validator(
       'query',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           ids: Type.String({
             description:
@@ -445,7 +506,7 @@ export const meHandler = new Hono()
     ),
     validator(
       'json',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           ids: Type.Optional(
             Type.Array(Type.String(), {
@@ -477,7 +538,7 @@ export const meHandler = new Hono()
     }),
     validator(
       'query',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           ids: Type.String({
             description:
@@ -489,7 +550,7 @@ export const meHandler = new Hono()
     ),
     validator(
       'json',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           ids: Type.Optional(
             Type.Array(Type.String(), {
@@ -521,7 +582,7 @@ export const meHandler = new Hono()
     }),
     validator(
       'query',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           ids: Type.String({
             description:
@@ -551,7 +612,7 @@ export const meHandler = new Hono()
     }),
     validator(
       'query',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           market: Type.Optional(
             Type.String({
@@ -561,13 +622,23 @@ export const meHandler = new Hono()
             }),
           ),
           limit: Type.Optional(
-            Codec(Type.String({ default: '20' }))
-              .Decode((value) => Number.parseInt(value, 10))
+            Codec(
+              Type.Refine(
+                Type.Refine(
+                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '20' }),
+                  (value) => Number(value) >= 1,
+                  () => 'must be >= 1',
+                ),
+                (value) => Number(value) <= 50,
+                () => 'must be <= 50',
+              ),
+            )
+              .Decode((value) => Number(value))
               .Encode((value) => String(value)),
           ),
           offset: Type.Optional(
-            Codec(Type.String({ default: '0' }))
-              .Decode((value) => Number.parseInt(value, 10))
+            Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '0' }))
+              .Decode((value) => Number(value))
               .Encode((value) => String(value)),
           ),
         }),
@@ -594,7 +665,7 @@ export const meHandler = new Hono()
     }),
     validator(
       'json',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           ids: Type.Array(Type.String(), {
             description:
@@ -643,7 +714,7 @@ export const meHandler = new Hono()
     }),
     validator(
       'query',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           ids: Type.String({
             description:
@@ -655,7 +726,7 @@ export const meHandler = new Hono()
     ),
     validator(
       'json',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           ids: Type.Optional(
             Type.Array(Type.String(), {
@@ -687,7 +758,7 @@ export const meHandler = new Hono()
     }),
     validator(
       'query',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           ids: Type.String({
             description:
@@ -716,7 +787,7 @@ export const meHandler = new Hono()
     }),
     validator(
       'query',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           market: Type.Optional(
             Type.String({
@@ -726,13 +797,23 @@ export const meHandler = new Hono()
             }),
           ),
           limit: Type.Optional(
-            Codec(Type.String({ default: '20' }))
-              .Decode((value) => Number.parseInt(value, 10))
+            Codec(
+              Type.Refine(
+                Type.Refine(
+                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '20' }),
+                  (value) => Number(value) >= 1,
+                  () => 'must be >= 1',
+                ),
+                (value) => Number(value) <= 50,
+                () => 'must be <= 50',
+              ),
+            )
+              .Decode((value) => Number(value))
               .Encode((value) => String(value)),
           ),
           offset: Type.Optional(
-            Codec(Type.String({ default: '0' }))
-              .Decode((value) => Number.parseInt(value, 10))
+            Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '0' }))
+              .Decode((value) => Number(value))
               .Encode((value) => String(value)),
           ),
         }),
@@ -759,7 +840,7 @@ export const meHandler = new Hono()
     }),
     validator(
       'query',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           ids: Type.String({
             description:
@@ -771,7 +852,7 @@ export const meHandler = new Hono()
     ),
     validator(
       'json',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           ids: Type.Array(Type.String(), {
             description:
@@ -801,7 +882,7 @@ export const meHandler = new Hono()
     }),
     validator(
       'query',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           ids: Type.String({
             description:
@@ -813,7 +894,7 @@ export const meHandler = new Hono()
     ),
     validator(
       'json',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           ids: Type.Optional(
             Type.Array(Type.String(), {
@@ -845,7 +926,7 @@ export const meHandler = new Hono()
     }),
     validator(
       'query',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           ids: Type.String({
             description:
@@ -875,16 +956,26 @@ export const meHandler = new Hono()
     }),
     validator(
       'query',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           limit: Type.Optional(
-            Codec(Type.String({ default: '20' }))
-              .Decode((value) => Number.parseInt(value, 10))
+            Codec(
+              Type.Refine(
+                Type.Refine(
+                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '20' }),
+                  (value) => Number(value) >= 1,
+                  () => 'must be >= 1',
+                ),
+                (value) => Number(value) <= 50,
+                () => 'must be <= 50',
+              ),
+            )
+              .Decode((value) => Number(value))
               .Encode((value) => String(value)),
           ),
           offset: Type.Optional(
-            Codec(Type.String({ default: '0' }))
-              .Decode((value) => Number.parseInt(value, 10))
+            Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '0' }))
+              .Decode((value) => Number(value))
               .Encode((value) => String(value)),
           ),
         }),
@@ -911,7 +1002,7 @@ export const meHandler = new Hono()
     }),
     validator(
       'query',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           ids: Type.String({
             description:
@@ -923,7 +1014,7 @@ export const meHandler = new Hono()
     ),
     validator(
       'json',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           ids: Type.Optional(
             Type.Array(Type.String(), {
@@ -955,7 +1046,7 @@ export const meHandler = new Hono()
     }),
     validator(
       'query',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           ids: Type.String({
             description:
@@ -974,7 +1065,7 @@ export const meHandler = new Hono()
     ),
     validator(
       'json',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           ids: Type.Optional(
             Type.Array(Type.String(), {
@@ -1006,7 +1097,7 @@ export const meHandler = new Hono()
     }),
     validator(
       'query',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           ids: Type.String({
             description:
@@ -1035,7 +1126,7 @@ export const meHandler = new Hono()
     }),
     validator(
       'query',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           type: Type.Literal('artist', {
             description: 'The ID type: currently only `artist` is supported.\n',
@@ -1048,8 +1139,18 @@ export const meHandler = new Hono()
             }),
           ),
           limit: Type.Optional(
-            Codec(Type.String({ default: '20' }))
-              .Decode((value) => Number.parseInt(value, 10))
+            Codec(
+              Type.Refine(
+                Type.Refine(
+                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '20' }),
+                  (value) => Number(value) >= 1,
+                  () => 'must be >= 1',
+                ),
+                (value) => Number(value) <= 50,
+                () => 'must be <= 50',
+              ),
+            )
+              .Decode((value) => Number(value))
               .Encode((value) => String(value)),
           ),
         }),
@@ -1076,7 +1177,7 @@ export const meHandler = new Hono()
     }),
     validator(
       'query',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           type: Type.Union([Type.Literal('artist'), Type.Literal('user')], {
             description: 'The ID type.\n',
@@ -1092,7 +1193,7 @@ export const meHandler = new Hono()
     ),
     validator(
       'json',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           ids: Type.Array(Type.String(), {
             description:
@@ -1122,7 +1223,7 @@ export const meHandler = new Hono()
     }),
     validator(
       'query',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           type: Type.Union([Type.Literal('artist'), Type.Literal('user')], {
             description: 'The ID type: either `artist` or `user`.\n',
@@ -1138,7 +1239,7 @@ export const meHandler = new Hono()
     ),
     validator(
       'json',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           ids: Type.Optional(
             Type.Array(Type.String(), {
@@ -1170,7 +1271,7 @@ export const meHandler = new Hono()
     }),
     validator(
       'query',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           type: Type.Union([Type.Literal('artist'), Type.Literal('user')], {
             description: 'The ID type: either `artist` or `user`.\n',
@@ -1205,7 +1306,7 @@ export const meHandler = new Hono()
     }),
     validator(
       'query',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           market: Type.Optional(
             Type.String({
@@ -1243,7 +1344,7 @@ export const meHandler = new Hono()
     }),
     validator(
       'json',
-      Compile(
+      toStandardSchemaV1(
         Type.Object(
           {
             device_ids: Type.Array(Type.String(), {
@@ -1298,7 +1399,7 @@ export const meHandler = new Hono()
     }),
     validator(
       'query',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           market: Type.Optional(
             Type.String({
@@ -1336,7 +1437,7 @@ export const meHandler = new Hono()
     }),
     validator(
       'query',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           device_id: Type.Optional(
             Type.String({
@@ -1350,7 +1451,7 @@ export const meHandler = new Hono()
     ),
     validator(
       'json',
-      Compile(
+      toStandardSchemaV1(
         Type.Object(
           {
             context_uri: Type.Optional(
@@ -1410,7 +1511,7 @@ export const meHandler = new Hono()
     }),
     validator(
       'query',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           device_id: Type.Optional(
             Type.String({
@@ -1442,7 +1543,7 @@ export const meHandler = new Hono()
     }),
     validator(
       'query',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           device_id: Type.Optional(
             Type.String({
@@ -1474,7 +1575,7 @@ export const meHandler = new Hono()
     }),
     validator(
       'query',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           device_id: Type.Optional(
             Type.String({
@@ -1506,10 +1607,10 @@ export const meHandler = new Hono()
     }),
     validator(
       'query',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
-          position_ms: Codec(Type.String())
-            .Decode((value) => Number.parseInt(value, 10))
+          position_ms: Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+            .Decode((value) => Number(value))
             .Encode((value) => String(value)),
           device_id: Type.Optional(
             Type.String({
@@ -1541,7 +1642,7 @@ export const meHandler = new Hono()
     }),
     validator(
       'query',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           state: Type.String({
             description:
@@ -1578,10 +1679,10 @@ export const meHandler = new Hono()
     }),
     validator(
       'query',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
-          volume_percent: Codec(Type.String())
-            .Decode((value) => Number.parseInt(value, 10))
+          volume_percent: Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+            .Decode((value) => Number(value))
             .Encode((value) => String(value)),
           device_id: Type.Optional(
             Type.String({
@@ -1613,10 +1714,12 @@ export const meHandler = new Hono()
     }),
     validator(
       'query',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
-          state: Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-            .Decode((value) => value === 'true')
+          state: Codec(
+            Type.String({ pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i }),
+          )
+            .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
             .Encode((value) => (value ? 'true' : 'false')),
           device_id: Type.Optional(
             Type.String({
@@ -1648,21 +1751,31 @@ export const meHandler = new Hono()
     }),
     validator(
       'query',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           limit: Type.Optional(
-            Codec(Type.String({ default: '20' }))
-              .Decode((value) => Number.parseInt(value, 10))
+            Codec(
+              Type.Refine(
+                Type.Refine(
+                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '20' }),
+                  (value) => Number(value) >= 1,
+                  () => 'must be >= 1',
+                ),
+                (value) => Number(value) <= 50,
+                () => 'must be <= 50',
+              ),
+            )
+              .Decode((value) => Number(value))
               .Encode((value) => String(value)),
           ),
           after: Type.Optional(
-            Codec(Type.String())
-              .Decode((value) => Number.parseInt(value, 10))
+            Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+              .Decode((value) => Number(value))
               .Encode((value) => String(value)),
           ),
           before: Type.Optional(
-            Codec(Type.String())
-              .Decode((value) => Number.parseInt(value, 10))
+            Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+              .Decode((value) => Number(value))
               .Encode((value) => String(value)),
           ),
         }),
@@ -1705,7 +1818,7 @@ export const meHandler = new Hono()
     }),
     validator(
       'query',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           uri: Type.String({
             description:
@@ -1741,7 +1854,7 @@ export const meHandler = new Hono()
     }),
     validator(
       'query',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           time_range: Type.Optional(
             Type.String({
@@ -1752,13 +1865,23 @@ export const meHandler = new Hono()
             }),
           ),
           limit: Type.Optional(
-            Codec(Type.String({ default: '20' }))
-              .Decode((value) => Number.parseInt(value, 10))
+            Codec(
+              Type.Refine(
+                Type.Refine(
+                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '20' }),
+                  (value) => Number(value) >= 1,
+                  () => 'must be >= 1',
+                ),
+                (value) => Number(value) <= 50,
+                () => 'must be <= 50',
+              ),
+            )
+              .Decode((value) => Number(value))
               .Encode((value) => String(value)),
           ),
           offset: Type.Optional(
-            Codec(Type.String({ default: '0' }))
-              .Decode((value) => Number.parseInt(value, 10))
+            Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '0' }))
+              .Decode((value) => Number(value))
               .Encode((value) => String(value)),
           ),
         }),
@@ -1783,7 +1906,7 @@ export const meHandler = new Hono()
     }),
     validator(
       'query',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           time_range: Type.Optional(
             Type.String({
@@ -1794,13 +1917,23 @@ export const meHandler = new Hono()
             }),
           ),
           limit: Type.Optional(
-            Codec(Type.String({ default: '20' }))
-              .Decode((value) => Number.parseInt(value, 10))
+            Codec(
+              Type.Refine(
+                Type.Refine(
+                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '20' }),
+                  (value) => Number(value) >= 1,
+                  () => 'must be >= 1',
+                ),
+                (value) => Number(value) <= 50,
+                () => 'must be <= 50',
+              ),
+            )
+              .Decode((value) => Number(value))
               .Encode((value) => String(value)),
           ),
           offset: Type.Optional(
-            Codec(Type.String({ default: '0' }))
-              .Decode((value) => Number.parseInt(value, 10))
+            Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '0' }))
+              .Decode((value) => Number(value))
               .Encode((value) => String(value)),
           ),
         }),

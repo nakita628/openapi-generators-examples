@@ -43,7 +43,7 @@ export const lobbiesHandler = new Hono()
           v.nullable(v.record(v.string(), v.pipe(v.string(), v.maxCodePoints(1024)))),
         ),
         secret: v.pipe(v.string(), v.maxCodePoints(250)),
-        flags: v.optional(v.union([v.nullable(v.null()), v.literal(1)])),
+        flags: v.optional(v.union([v.null(), v.literal(1)])),
         name: v.optional(v.nullable(v.pipe(v.string(), v.minCodePoints(1), v.maxCodePoints(100)))),
       }),
     ),
@@ -67,7 +67,7 @@ export const lobbiesHandler = new Hono()
           ),
           members: v.nullable(v.pipe(v.array(LobbyMemberRequestSchema), v.maxLength(25))),
           metadata: v.nullable(v.record(v.string(), v.pipe(v.string(), v.maxCodePoints(1024)))),
-          flags: v.union([v.nullable(v.null()), v.literal(1)]),
+          flags: v.union([v.null(), v.literal(1)]),
           override_event_webhooks_url: v.nullable(
             v.pipe(v.string(), v.url(), v.maxCodePoints(512)),
           ),
@@ -106,7 +106,7 @@ export const lobbiesHandler = new Hono()
           ),
           metadata: v.nullable(v.record(v.string(), v.pipe(v.string(), v.maxCodePoints(1024)))),
           members: v.nullable(v.pipe(v.array(LobbyMemberRequestSchema), v.maxLength(25))),
-          flags: v.union([v.nullable(v.null()), v.literal(1)]),
+          flags: v.union([v.null(), v.literal(1)]),
           override_event_webhooks_url: v.nullable(
             v.pipe(v.string(), v.url(), v.maxCodePoints(512)),
           ),
@@ -121,7 +121,7 @@ export const lobbiesHandler = new Hono()
     sValidator('param', v.object({ lobby_id: SnowflakeTypeSchema })),
     sValidator(
       'json',
-      v.partial(v.object({ channel_id: v.union([v.nullable(v.null()), SnowflakeTypeSchema]) })),
+      v.partial(v.object({ channel_id: v.union([v.null(), SnowflakeTypeSchema]) })),
     ),
     (c) => { throw new Error('Not implemented') },
   )
@@ -152,7 +152,7 @@ export const lobbiesHandler = new Hono()
       v.partial(
         v.object({
           metadata: v.nullable(v.record(v.string(), v.pipe(v.string(), v.maxCodePoints(1024)))),
-          flags: v.union([v.nullable(v.null()), v.literal(1)]),
+          flags: v.union([v.null(), v.literal(1)]),
           additional_name: v.nullable(v.pipe(v.string(), v.minCodePoints(1), v.maxCodePoints(80))),
         }),
       ),
@@ -178,7 +178,8 @@ export const lobbiesHandler = new Hono()
         v.object({
           limit: v.pipe(
             v.string(),
-            v.transform(Number),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
             v.minValue(1),
@@ -219,7 +220,8 @@ export const lobbiesHandler = new Hono()
                         v.nullable(
                           v.pipe(
                             v.string(),
-                            v.transform(Number),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
                             v.number(),
                             v.safeInteger(),
                             v.minValue(0),
@@ -244,7 +246,7 @@ export const lobbiesHandler = new Hono()
                             v.pipe(
                               v.unknown(),
                               v.transform((input) => (input === 'null' ? null : input)),
-                              v.nullable(v.null()),
+                              v.null(),
                             ),
                             RichEmbedAuthorSchema,
                           ]),
@@ -258,7 +260,7 @@ export const lobbiesHandler = new Hono()
                             v.pipe(
                               v.unknown(),
                               v.transform((input) => (input === 'null' ? null : input)),
-                              v.nullable(v.null()),
+                              v.null(),
                             ),
                             v.partial(
                               v.object({
@@ -269,7 +271,8 @@ export const lobbiesHandler = new Hono()
                                   v.nullable(
                                     v.pipe(
                                       v.string(),
-                                      v.transform(Number),
+                                      v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                      v.transform((input) => Number(input)),
                                       v.number(),
                                       v.safeInteger(),
                                     ),
@@ -281,7 +284,8 @@ export const lobbiesHandler = new Hono()
                                   v.nullable(
                                     v.pipe(
                                       v.string(),
-                                      v.transform(Number),
+                                      v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                      v.transform((input) => Number(input)),
                                       v.number(),
                                       v.safeInteger(),
                                     ),
@@ -294,7 +298,8 @@ export const lobbiesHandler = new Hono()
                                   v.nullable(
                                     v.pipe(
                                       v.string(),
-                                      v.transform(Number),
+                                      v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                      v.transform((input) => Number(input)),
                                       v.number(),
                                       v.safeInteger(),
                                       v.minValue(0),
@@ -331,7 +336,7 @@ export const lobbiesHandler = new Hono()
                             v.pipe(
                               v.unknown(),
                               v.transform((input) => (input === 'null' ? null : input)),
-                              v.nullable(v.null()),
+                              v.null(),
                             ),
                             v.partial(
                               v.object({
@@ -342,7 +347,8 @@ export const lobbiesHandler = new Hono()
                                   v.nullable(
                                     v.pipe(
                                       v.string(),
-                                      v.transform(Number),
+                                      v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                      v.transform((input) => Number(input)),
                                       v.number(),
                                       v.safeInteger(),
                                     ),
@@ -354,7 +360,8 @@ export const lobbiesHandler = new Hono()
                                   v.nullable(
                                     v.pipe(
                                       v.string(),
-                                      v.transform(Number),
+                                      v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                      v.transform((input) => Number(input)),
                                       v.number(),
                                       v.safeInteger(),
                                     ),
@@ -367,7 +374,8 @@ export const lobbiesHandler = new Hono()
                                   v.nullable(
                                     v.pipe(
                                       v.string(),
-                                      v.transform(Number),
+                                      v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                      v.transform((input) => Number(input)),
                                       v.number(),
                                       v.safeInteger(),
                                       v.minValue(0),
@@ -404,7 +412,7 @@ export const lobbiesHandler = new Hono()
                             v.pipe(
                               v.unknown(),
                               v.transform((input) => (input === 'null' ? null : input)),
-                              v.nullable(v.null()),
+                              v.null(),
                             ),
                             RichEmbedFooterSchema,
                           ]),
@@ -454,7 +462,7 @@ export const lobbiesHandler = new Hono()
                             v.pipe(
                               v.unknown(),
                               v.transform((input) => (input === 'null' ? null : input)),
-                              v.nullable(v.null()),
+                              v.null(),
                             ),
                             RichEmbedProviderSchema,
                           ]),
@@ -468,7 +476,7 @@ export const lobbiesHandler = new Hono()
                             v.pipe(
                               v.unknown(),
                               v.transform((input) => (input === 'null' ? null : input)),
-                              v.nullable(v.null()),
+                              v.null(),
                             ),
                             v.partial(
                               v.object({
@@ -479,7 +487,8 @@ export const lobbiesHandler = new Hono()
                                   v.nullable(
                                     v.pipe(
                                       v.string(),
-                                      v.transform(Number),
+                                      v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                      v.transform((input) => Number(input)),
                                       v.number(),
                                       v.safeInteger(),
                                     ),
@@ -491,7 +500,8 @@ export const lobbiesHandler = new Hono()
                                   v.nullable(
                                     v.pipe(
                                       v.string(),
-                                      v.transform(Number),
+                                      v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                      v.transform((input) => Number(input)),
                                       v.number(),
                                       v.safeInteger(),
                                     ),
@@ -504,7 +514,8 @@ export const lobbiesHandler = new Hono()
                                   v.nullable(
                                     v.pipe(
                                       v.string(),
-                                      v.transform(Number),
+                                      v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                      v.transform((input) => Number(input)),
                                       v.number(),
                                       v.safeInteger(),
                                       v.minValue(0),
@@ -541,7 +552,7 @@ export const lobbiesHandler = new Hono()
                             v.pipe(
                               v.unknown(),
                               v.transform((input) => (input === 'null' ? null : input)),
-                              v.nullable(v.null()),
+                              v.null(),
                             ),
                             RichEmbedAudioSchema,
                           ]),
@@ -562,7 +573,7 @@ export const lobbiesHandler = new Hono()
                 v.pipe(
                   v.unknown(),
                   v.transform((input) => (input === 'null' ? null : input)),
-                  v.nullable(v.null()),
+                  v.null(),
                 ),
                 v.partial(
                   v.object({
@@ -584,7 +595,7 @@ export const lobbiesHandler = new Hono()
                                   v.pipe(
                                     v.unknown(),
                                     v.transform((input) => (input === 'null' ? null : input)),
-                                    v.nullable(v.null()),
+                                    v.null(),
                                   ),
                                   AllowedMentionTypesSchema,
                                 ]),
@@ -614,7 +625,7 @@ export const lobbiesHandler = new Hono()
                                   v.pipe(
                                     v.unknown(),
                                     v.transform((input) => (input === 'null' ? null : input)),
-                                    v.nullable(v.null()),
+                                    v.null(),
                                   ),
                                   SnowflakeTypeSchema,
                                 ]),
@@ -644,7 +655,7 @@ export const lobbiesHandler = new Hono()
                                   v.pipe(
                                     v.unknown(),
                                     v.transform((input) => (input === 'null' ? null : input)),
-                                    v.nullable(v.null()),
+                                    v.null(),
                                   ),
                                   SnowflakeTypeSchema,
                                 ]),
@@ -700,83 +711,183 @@ export const lobbiesHandler = new Hono()
                     v.object({
                       type: v.union([
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(1)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(1),
+                          ),
                           v.description('Container for other components'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(2)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(2),
+                          ),
                           v.description('Button object'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(3)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(3),
+                          ),
                           v.description('Select menu for picking from defined text options'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(4)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(4),
+                          ),
                           v.description('Text input object'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(5)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(5),
+                          ),
                           v.description('Select menu for users'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(6)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(6),
+                          ),
                           v.description('Select menu for roles'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(7)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(7),
+                          ),
                           v.description('Select menu for mentionables (users and roles)'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(8)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(8),
+                          ),
                           v.description('Select menu for channels'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(9)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(9),
+                          ),
                           v.description('Section component'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(10)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(10),
+                          ),
                           v.description('Text component'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(11)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(11),
+                          ),
                           v.description('Thumbnail component'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(12)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(12),
+                          ),
                           v.description('Media gallery component'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(13)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(13),
+                          ),
                           v.description('File component'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(14)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(14),
+                          ),
                           v.description('Separator component'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(17)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(17),
+                          ),
                           v.description('Container component'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(18)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(18),
+                          ),
                           v.description('Label component'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(19)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(19),
+                          ),
                           v.description('File upload component'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(21)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(21),
+                          ),
                           v.description('Radio group component'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(22)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(22),
+                          ),
                           v.description('Checkbox group component'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(23)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(23),
+                          ),
                           v.description('Checkbox component'),
                         ),
                       ]),
@@ -787,7 +898,8 @@ export const lobbiesHandler = new Hono()
                           v.nullable(
                             v.pipe(
                               v.string(),
-                              v.transform(Number),
+                              v.regex(/^-?(?:0|[1-9]\d*)$/),
+                              v.transform((input) => Number(input)),
                               v.number(),
                               v.safeInteger(),
                               v.minValue(-2147483648),
@@ -807,85 +919,185 @@ export const lobbiesHandler = new Hono()
                             v.object({
                               type: v.union([
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(1)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(1),
+                                  ),
                                   v.description('Container for other components'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(2)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(2),
+                                  ),
                                   v.description('Button object'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(3)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(3),
+                                  ),
                                   v.description(
                                     'Select menu for picking from defined text options',
                                   ),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(4)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(4),
+                                  ),
                                   v.description('Text input object'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(5)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(5),
+                                  ),
                                   v.description('Select menu for users'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(6)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(6),
+                                  ),
                                   v.description('Select menu for roles'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(7)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(7),
+                                  ),
                                   v.description('Select menu for mentionables (users and roles)'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(8)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(8),
+                                  ),
                                   v.description('Select menu for channels'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(9)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(9),
+                                  ),
                                   v.description('Section component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(10)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(10),
+                                  ),
                                   v.description('Text component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(11)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(11),
+                                  ),
                                   v.description('Thumbnail component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(12)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(12),
+                                  ),
                                   v.description('Media gallery component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(13)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(13),
+                                  ),
                                   v.description('File component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(14)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(14),
+                                  ),
                                   v.description('Separator component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(17)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(17),
+                                  ),
                                   v.description('Container component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(18)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(18),
+                                  ),
                                   v.description('Label component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(19)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(19),
+                                  ),
                                   v.description('File upload component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(21)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(21),
+                                  ),
                                   v.description('Radio group component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(22)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(22),
+                                  ),
                                   v.description('Checkbox group component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(23)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(23),
+                                  ),
                                   v.description('Checkbox component'),
                                 ),
                               ]),
@@ -896,7 +1108,8 @@ export const lobbiesHandler = new Hono()
                                   v.nullable(
                                     v.pipe(
                                       v.string(),
-                                      v.transform(Number),
+                                      v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                      v.transform((input) => Number(input)),
                                       v.number(),
                                       v.safeInteger(),
                                       v.minValue(-2147483648),
@@ -912,12 +1125,42 @@ export const lobbiesHandler = new Hono()
                                 ),
                               ),
                               style: v.union([
-                                v.pipe(v.string(), v.transform(Number), v.literal(1)),
-                                v.pipe(v.string(), v.transform(Number), v.literal(2)),
-                                v.pipe(v.string(), v.transform(Number), v.literal(3)),
-                                v.pipe(v.string(), v.transform(Number), v.literal(4)),
-                                v.pipe(v.string(), v.transform(Number), v.literal(5)),
-                                v.pipe(v.string(), v.transform(Number), v.literal(6)),
+                                v.pipe(
+                                  v.string(),
+                                  v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                  v.transform((input) => Number(input)),
+                                  v.literal(1),
+                                ),
+                                v.pipe(
+                                  v.string(),
+                                  v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                  v.transform((input) => Number(input)),
+                                  v.literal(2),
+                                ),
+                                v.pipe(
+                                  v.string(),
+                                  v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                  v.transform((input) => Number(input)),
+                                  v.literal(3),
+                                ),
+                                v.pipe(
+                                  v.string(),
+                                  v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                  v.transform((input) => Number(input)),
+                                  v.literal(4),
+                                ),
+                                v.pipe(
+                                  v.string(),
+                                  v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                  v.transform((input) => Number(input)),
+                                  v.literal(5),
+                                ),
+                                v.pipe(
+                                  v.string(),
+                                  v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                  v.transform((input) => Number(input)),
+                                  v.literal(6),
+                                ),
                               ]),
                               label: v.optional(
                                 v.nullable(v.pipe(v.string(), v.maxCodePoints(80))),
@@ -951,7 +1194,7 @@ export const lobbiesHandler = new Hono()
                                       v.pipe(
                                         v.unknown(),
                                         v.transform((input) => (input === 'null' ? null : input)),
-                                        v.nullable(v.null()),
+                                        v.null(),
                                       ),
                                       SnowflakeTypeSchema,
                                     ]),
@@ -967,7 +1210,7 @@ export const lobbiesHandler = new Hono()
                                       v.pipe(
                                         v.unknown(),
                                         v.transform((input) => (input === 'null' ? null : input)),
-                                        v.nullable(v.null()),
+                                        v.null(),
                                       ),
                                       v.object({
                                         id: v.optional(
@@ -983,7 +1226,7 @@ export const lobbiesHandler = new Hono()
                                                   v.transform((input) =>
                                                     input === 'null' ? null : input,
                                                   ),
-                                                  v.nullable(v.null()),
+                                                  v.null(),
                                                 ),
                                                 SnowflakeTypeSchema,
                                               ]),
@@ -1000,85 +1243,185 @@ export const lobbiesHandler = new Hono()
                             v.object({
                               type: v.union([
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(1)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(1),
+                                  ),
                                   v.description('Container for other components'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(2)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(2),
+                                  ),
                                   v.description('Button object'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(3)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(3),
+                                  ),
                                   v.description(
                                     'Select menu for picking from defined text options',
                                   ),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(4)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(4),
+                                  ),
                                   v.description('Text input object'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(5)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(5),
+                                  ),
                                   v.description('Select menu for users'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(6)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(6),
+                                  ),
                                   v.description('Select menu for roles'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(7)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(7),
+                                  ),
                                   v.description('Select menu for mentionables (users and roles)'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(8)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(8),
+                                  ),
                                   v.description('Select menu for channels'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(9)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(9),
+                                  ),
                                   v.description('Section component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(10)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(10),
+                                  ),
                                   v.description('Text component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(11)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(11),
+                                  ),
                                   v.description('Thumbnail component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(12)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(12),
+                                  ),
                                   v.description('Media gallery component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(13)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(13),
+                                  ),
                                   v.description('File component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(14)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(14),
+                                  ),
                                   v.description('Separator component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(17)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(17),
+                                  ),
                                   v.description('Container component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(18)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(18),
+                                  ),
                                   v.description('Label component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(19)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(19),
+                                  ),
                                   v.description('File upload component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(21)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(21),
+                                  ),
                                   v.description('Radio group component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(22)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(22),
+                                  ),
                                   v.description('Checkbox group component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(23)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(23),
+                                  ),
                                   v.description('Checkbox component'),
                                 ),
                               ]),
@@ -1089,7 +1432,8 @@ export const lobbiesHandler = new Hono()
                                   v.nullable(
                                     v.pipe(
                                       v.string(),
-                                      v.transform(Number),
+                                      v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                      v.transform((input) => Number(input)),
                                       v.number(),
                                       v.safeInteger(),
                                       v.minValue(-2147483648),
@@ -1114,7 +1458,8 @@ export const lobbiesHandler = new Hono()
                                   v.nullable(
                                     v.pipe(
                                       v.string(),
-                                      v.transform(Number),
+                                      v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                      v.transform((input) => Number(input)),
                                       v.number(),
                                       v.safeInteger(),
                                       v.minValue(0),
@@ -1130,7 +1475,8 @@ export const lobbiesHandler = new Hono()
                                   v.nullable(
                                     v.pipe(
                                       v.string(),
-                                      v.transform(Number),
+                                      v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                      v.transform((input) => Number(input)),
                                       v.number(),
                                       v.safeInteger(),
                                       v.minValue(1),
@@ -1206,67 +1552,127 @@ export const lobbiesHandler = new Hono()
                                       v.array(
                                         v.union([
                                           v.pipe(
-                                            v.pipe(v.string(), v.transform(Number), v.literal(1)),
+                                            v.pipe(
+                                              v.string(),
+                                              v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                              v.transform((input) => Number(input)),
+                                              v.literal(1),
+                                            ),
                                             v.description('A direct message between users'),
                                           ),
                                           v.pipe(
-                                            v.pipe(v.string(), v.transform(Number), v.literal(3)),
+                                            v.pipe(
+                                              v.string(),
+                                              v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                              v.transform((input) => Number(input)),
+                                              v.literal(3),
+                                            ),
                                             v.description(
                                               'A direct message between multiple users',
                                             ),
                                           ),
                                           v.pipe(
-                                            v.pipe(v.string(), v.transform(Number), v.literal(0)),
+                                            v.pipe(
+                                              v.string(),
+                                              v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                              v.transform((input) => Number(input)),
+                                              v.literal(0),
+                                            ),
                                             v.description('A text channel within a server'),
                                           ),
                                           v.pipe(
-                                            v.pipe(v.string(), v.transform(Number), v.literal(2)),
+                                            v.pipe(
+                                              v.string(),
+                                              v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                              v.transform((input) => Number(input)),
+                                              v.literal(2),
+                                            ),
                                             v.description('A voice channel within a server'),
                                           ),
                                           v.pipe(
-                                            v.pipe(v.string(), v.transform(Number), v.literal(4)),
+                                            v.pipe(
+                                              v.string(),
+                                              v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                              v.transform((input) => Number(input)),
+                                              v.literal(4),
+                                            ),
                                             v.description(
                                               'An organizational category that contains up to 50 channels',
                                             ),
                                           ),
                                           v.pipe(
-                                            v.pipe(v.string(), v.transform(Number), v.literal(5)),
+                                            v.pipe(
+                                              v.string(),
+                                              v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                              v.transform((input) => Number(input)),
+                                              v.literal(5),
+                                            ),
                                             v.description(
                                               'A channel that users can follow and crosspost into their own server (formerly news channels)',
                                             ),
                                           ),
                                           v.pipe(
-                                            v.pipe(v.string(), v.transform(Number), v.literal(10)),
+                                            v.pipe(
+                                              v.string(),
+                                              v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                              v.transform((input) => Number(input)),
+                                              v.literal(10),
+                                            ),
                                             v.description(
                                               'A temporary sub-channel within a GUILD_ANNOUNCEMENT channel',
                                             ),
                                           ),
                                           v.pipe(
-                                            v.pipe(v.string(), v.transform(Number), v.literal(11)),
+                                            v.pipe(
+                                              v.string(),
+                                              v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                              v.transform((input) => Number(input)),
+                                              v.literal(11),
+                                            ),
                                             v.description(
                                               'A temporary sub-channel within a GUILD_TEXT or GUILD_THREADS_ONLY channel type set',
                                             ),
                                           ),
                                           v.pipe(
-                                            v.pipe(v.string(), v.transform(Number), v.literal(12)),
+                                            v.pipe(
+                                              v.string(),
+                                              v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                              v.transform((input) => Number(input)),
+                                              v.literal(12),
+                                            ),
                                             v.description(
                                               'A temporary sub-channel within a GUILD_TEXT channel that is only viewable by those invited and those with the MANAGE_THREADS permission',
                                             ),
                                           ),
                                           v.pipe(
-                                            v.pipe(v.string(), v.transform(Number), v.literal(13)),
+                                            v.pipe(
+                                              v.string(),
+                                              v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                              v.transform((input) => Number(input)),
+                                              v.literal(13),
+                                            ),
                                             v.description(
                                               'A voice channel for hosting events with an audience',
                                             ),
                                           ),
                                           v.pipe(
-                                            v.pipe(v.string(), v.transform(Number), v.literal(14)),
+                                            v.pipe(
+                                              v.string(),
+                                              v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                              v.transform((input) => Number(input)),
+                                              v.literal(14),
+                                            ),
                                             v.description(
                                               'The channel in a hub containing the listed servers',
                                             ),
                                           ),
                                           v.pipe(
-                                            v.pipe(v.string(), v.transform(Number), v.literal(15)),
+                                            v.pipe(
+                                              v.string(),
+                                              v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                              v.transform((input) => Number(input)),
+                                              v.literal(15),
+                                            ),
                                             v.description('Channel that can only contain threads'),
                                           ),
                                         ]),
@@ -1280,85 +1686,185 @@ export const lobbiesHandler = new Hono()
                             v.object({
                               type: v.union([
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(1)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(1),
+                                  ),
                                   v.description('Container for other components'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(2)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(2),
+                                  ),
                                   v.description('Button object'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(3)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(3),
+                                  ),
                                   v.description(
                                     'Select menu for picking from defined text options',
                                   ),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(4)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(4),
+                                  ),
                                   v.description('Text input object'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(5)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(5),
+                                  ),
                                   v.description('Select menu for users'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(6)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(6),
+                                  ),
                                   v.description('Select menu for roles'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(7)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(7),
+                                  ),
                                   v.description('Select menu for mentionables (users and roles)'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(8)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(8),
+                                  ),
                                   v.description('Select menu for channels'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(9)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(9),
+                                  ),
                                   v.description('Section component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(10)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(10),
+                                  ),
                                   v.description('Text component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(11)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(11),
+                                  ),
                                   v.description('Thumbnail component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(12)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(12),
+                                  ),
                                   v.description('Media gallery component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(13)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(13),
+                                  ),
                                   v.description('File component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(14)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(14),
+                                  ),
                                   v.description('Separator component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(17)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(17),
+                                  ),
                                   v.description('Container component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(18)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(18),
+                                  ),
                                   v.description('Label component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(19)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(19),
+                                  ),
                                   v.description('File upload component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(21)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(21),
+                                  ),
                                   v.description('Radio group component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(22)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(22),
+                                  ),
                                   v.description('Checkbox group component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(23)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(23),
+                                  ),
                                   v.description('Checkbox component'),
                                 ),
                               ]),
@@ -1369,7 +1875,8 @@ export const lobbiesHandler = new Hono()
                                   v.nullable(
                                     v.pipe(
                                       v.string(),
-                                      v.transform(Number),
+                                      v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                      v.transform((input) => Number(input)),
                                       v.number(),
                                       v.safeInteger(),
                                       v.minValue(-2147483648),
@@ -1394,7 +1901,8 @@ export const lobbiesHandler = new Hono()
                                   v.nullable(
                                     v.pipe(
                                       v.string(),
-                                      v.transform(Number),
+                                      v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                      v.transform((input) => Number(input)),
                                       v.number(),
                                       v.safeInteger(),
                                       v.minValue(0),
@@ -1410,7 +1918,8 @@ export const lobbiesHandler = new Hono()
                                   v.nullable(
                                     v.pipe(
                                       v.string(),
-                                      v.transform(Number),
+                                      v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                      v.transform((input) => Number(input)),
                                       v.number(),
                                       v.safeInteger(),
                                       v.minValue(1),
@@ -1480,85 +1989,185 @@ export const lobbiesHandler = new Hono()
                             v.object({
                               type: v.union([
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(1)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(1),
+                                  ),
                                   v.description('Container for other components'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(2)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(2),
+                                  ),
                                   v.description('Button object'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(3)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(3),
+                                  ),
                                   v.description(
                                     'Select menu for picking from defined text options',
                                   ),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(4)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(4),
+                                  ),
                                   v.description('Text input object'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(5)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(5),
+                                  ),
                                   v.description('Select menu for users'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(6)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(6),
+                                  ),
                                   v.description('Select menu for roles'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(7)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(7),
+                                  ),
                                   v.description('Select menu for mentionables (users and roles)'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(8)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(8),
+                                  ),
                                   v.description('Select menu for channels'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(9)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(9),
+                                  ),
                                   v.description('Section component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(10)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(10),
+                                  ),
                                   v.description('Text component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(11)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(11),
+                                  ),
                                   v.description('Thumbnail component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(12)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(12),
+                                  ),
                                   v.description('Media gallery component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(13)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(13),
+                                  ),
                                   v.description('File component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(14)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(14),
+                                  ),
                                   v.description('Separator component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(17)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(17),
+                                  ),
                                   v.description('Container component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(18)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(18),
+                                  ),
                                   v.description('Label component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(19)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(19),
+                                  ),
                                   v.description('File upload component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(21)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(21),
+                                  ),
                                   v.description('Radio group component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(22)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(22),
+                                  ),
                                   v.description('Checkbox group component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(23)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(23),
+                                  ),
                                   v.description('Checkbox component'),
                                 ),
                               ]),
@@ -1569,7 +2178,8 @@ export const lobbiesHandler = new Hono()
                                   v.nullable(
                                     v.pipe(
                                       v.string(),
-                                      v.transform(Number),
+                                      v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                      v.transform((input) => Number(input)),
                                       v.number(),
                                       v.safeInteger(),
                                       v.minValue(-2147483648),
@@ -1594,7 +2204,8 @@ export const lobbiesHandler = new Hono()
                                   v.nullable(
                                     v.pipe(
                                       v.string(),
-                                      v.transform(Number),
+                                      v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                      v.transform((input) => Number(input)),
                                       v.number(),
                                       v.safeInteger(),
                                       v.minValue(0),
@@ -1610,7 +2221,8 @@ export const lobbiesHandler = new Hono()
                                   v.nullable(
                                     v.pipe(
                                       v.string(),
-                                      v.transform(Number),
+                                      v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                      v.transform((input) => Number(input)),
                                       v.number(),
                                       v.safeInteger(),
                                       v.minValue(1),
@@ -1675,85 +2287,185 @@ export const lobbiesHandler = new Hono()
                             v.object({
                               type: v.union([
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(1)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(1),
+                                  ),
                                   v.description('Container for other components'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(2)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(2),
+                                  ),
                                   v.description('Button object'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(3)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(3),
+                                  ),
                                   v.description(
                                     'Select menu for picking from defined text options',
                                   ),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(4)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(4),
+                                  ),
                                   v.description('Text input object'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(5)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(5),
+                                  ),
                                   v.description('Select menu for users'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(6)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(6),
+                                  ),
                                   v.description('Select menu for roles'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(7)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(7),
+                                  ),
                                   v.description('Select menu for mentionables (users and roles)'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(8)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(8),
+                                  ),
                                   v.description('Select menu for channels'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(9)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(9),
+                                  ),
                                   v.description('Section component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(10)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(10),
+                                  ),
                                   v.description('Text component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(11)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(11),
+                                  ),
                                   v.description('Thumbnail component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(12)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(12),
+                                  ),
                                   v.description('Media gallery component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(13)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(13),
+                                  ),
                                   v.description('File component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(14)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(14),
+                                  ),
                                   v.description('Separator component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(17)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(17),
+                                  ),
                                   v.description('Container component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(18)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(18),
+                                  ),
                                   v.description('Label component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(19)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(19),
+                                  ),
                                   v.description('File upload component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(21)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(21),
+                                  ),
                                   v.description('Radio group component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(22)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(22),
+                                  ),
                                   v.description('Checkbox group component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(23)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(23),
+                                  ),
                                   v.description('Checkbox component'),
                                 ),
                               ]),
@@ -1764,7 +2476,8 @@ export const lobbiesHandler = new Hono()
                                   v.nullable(
                                     v.pipe(
                                       v.string(),
-                                      v.transform(Number),
+                                      v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                      v.transform((input) => Number(input)),
                                       v.number(),
                                       v.safeInteger(),
                                       v.minValue(-2147483648),
@@ -1789,7 +2502,8 @@ export const lobbiesHandler = new Hono()
                                   v.nullable(
                                     v.pipe(
                                       v.string(),
-                                      v.transform(Number),
+                                      v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                      v.transform((input) => Number(input)),
                                       v.number(),
                                       v.safeInteger(),
                                       v.minValue(0),
@@ -1805,7 +2519,8 @@ export const lobbiesHandler = new Hono()
                                   v.nullable(
                                     v.pipe(
                                       v.string(),
-                                      v.transform(Number),
+                                      v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                      v.transform((input) => Number(input)),
                                       v.number(),
                                       v.safeInteger(),
                                       v.minValue(1),
@@ -1896,7 +2611,7 @@ export const lobbiesHandler = new Hono()
                                               v.transform((input) =>
                                                 input === 'null' ? null : input,
                                               ),
-                                              v.nullable(v.null()),
+                                              v.null(),
                                             ),
                                             v.object({
                                               id: v.optional(
@@ -1912,7 +2627,7 @@ export const lobbiesHandler = new Hono()
                                                         v.transform((input) =>
                                                           input === 'null' ? null : input,
                                                         ),
-                                                        v.nullable(v.null()),
+                                                        v.null(),
                                                       ),
                                                       SnowflakeTypeSchema,
                                                     ]),
@@ -1934,85 +2649,185 @@ export const lobbiesHandler = new Hono()
                             v.object({
                               type: v.union([
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(1)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(1),
+                                  ),
                                   v.description('Container for other components'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(2)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(2),
+                                  ),
                                   v.description('Button object'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(3)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(3),
+                                  ),
                                   v.description(
                                     'Select menu for picking from defined text options',
                                   ),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(4)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(4),
+                                  ),
                                   v.description('Text input object'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(5)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(5),
+                                  ),
                                   v.description('Select menu for users'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(6)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(6),
+                                  ),
                                   v.description('Select menu for roles'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(7)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(7),
+                                  ),
                                   v.description('Select menu for mentionables (users and roles)'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(8)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(8),
+                                  ),
                                   v.description('Select menu for channels'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(9)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(9),
+                                  ),
                                   v.description('Section component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(10)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(10),
+                                  ),
                                   v.description('Text component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(11)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(11),
+                                  ),
                                   v.description('Thumbnail component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(12)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(12),
+                                  ),
                                   v.description('Media gallery component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(13)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(13),
+                                  ),
                                   v.description('File component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(14)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(14),
+                                  ),
                                   v.description('Separator component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(17)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(17),
+                                  ),
                                   v.description('Container component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(18)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(18),
+                                  ),
                                   v.description('Label component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(19)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(19),
+                                  ),
                                   v.description('File upload component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(21)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(21),
+                                  ),
                                   v.description('Radio group component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(22)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(22),
+                                  ),
                                   v.description('Checkbox group component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(23)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(23),
+                                  ),
                                   v.description('Checkbox component'),
                                 ),
                               ]),
@@ -2023,7 +2838,8 @@ export const lobbiesHandler = new Hono()
                                   v.nullable(
                                     v.pipe(
                                       v.string(),
-                                      v.transform(Number),
+                                      v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                      v.transform((input) => Number(input)),
                                       v.number(),
                                       v.safeInteger(),
                                       v.minValue(-2147483648),
@@ -2048,7 +2864,8 @@ export const lobbiesHandler = new Hono()
                                   v.nullable(
                                     v.pipe(
                                       v.string(),
-                                      v.transform(Number),
+                                      v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                      v.transform((input) => Number(input)),
                                       v.number(),
                                       v.safeInteger(),
                                       v.minValue(0),
@@ -2064,7 +2881,8 @@ export const lobbiesHandler = new Hono()
                                   v.nullable(
                                     v.pipe(
                                       v.string(),
-                                      v.transform(Number),
+                                      v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                      v.transform((input) => Number(input)),
                                       v.number(),
                                       v.safeInteger(),
                                       v.minValue(1),
@@ -2135,83 +2953,183 @@ export const lobbiesHandler = new Hono()
                     v.object({
                       type: v.union([
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(1)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(1),
+                          ),
                           v.description('Container for other components'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(2)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(2),
+                          ),
                           v.description('Button object'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(3)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(3),
+                          ),
                           v.description('Select menu for picking from defined text options'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(4)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(4),
+                          ),
                           v.description('Text input object'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(5)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(5),
+                          ),
                           v.description('Select menu for users'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(6)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(6),
+                          ),
                           v.description('Select menu for roles'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(7)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(7),
+                          ),
                           v.description('Select menu for mentionables (users and roles)'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(8)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(8),
+                          ),
                           v.description('Select menu for channels'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(9)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(9),
+                          ),
                           v.description('Section component'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(10)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(10),
+                          ),
                           v.description('Text component'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(11)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(11),
+                          ),
                           v.description('Thumbnail component'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(12)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(12),
+                          ),
                           v.description('Media gallery component'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(13)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(13),
+                          ),
                           v.description('File component'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(14)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(14),
+                          ),
                           v.description('Separator component'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(17)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(17),
+                          ),
                           v.description('Container component'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(18)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(18),
+                          ),
                           v.description('Label component'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(19)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(19),
+                          ),
                           v.description('File upload component'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(21)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(21),
+                          ),
                           v.description('Radio group component'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(22)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(22),
+                          ),
                           v.description('Checkbox group component'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(23)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(23),
+                          ),
                           v.description('Checkbox component'),
                         ),
                       ]),
@@ -2222,7 +3140,8 @@ export const lobbiesHandler = new Hono()
                           v.nullable(
                             v.pipe(
                               v.string(),
-                              v.transform(Number),
+                              v.regex(/^-?(?:0|[1-9]\d*)$/),
+                              v.transform((input) => Number(input)),
                               v.number(),
                               v.safeInteger(),
                               v.minValue(-2147483648),
@@ -2239,7 +3158,8 @@ export const lobbiesHandler = new Hono()
                           v.nullable(
                             v.pipe(
                               v.string(),
-                              v.transform(Number),
+                              v.regex(/^-?(?:0|[1-9]\d*)$/),
+                              v.transform((input) => Number(input)),
                               v.number(),
                               v.safeInteger(),
                               v.minValue(0),
@@ -2258,85 +3178,185 @@ export const lobbiesHandler = new Hono()
                             v.object({
                               type: v.union([
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(1)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(1),
+                                  ),
                                   v.description('Container for other components'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(2)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(2),
+                                  ),
                                   v.description('Button object'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(3)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(3),
+                                  ),
                                   v.description(
                                     'Select menu for picking from defined text options',
                                   ),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(4)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(4),
+                                  ),
                                   v.description('Text input object'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(5)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(5),
+                                  ),
                                   v.description('Select menu for users'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(6)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(6),
+                                  ),
                                   v.description('Select menu for roles'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(7)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(7),
+                                  ),
                                   v.description('Select menu for mentionables (users and roles)'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(8)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(8),
+                                  ),
                                   v.description('Select menu for channels'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(9)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(9),
+                                  ),
                                   v.description('Section component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(10)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(10),
+                                  ),
                                   v.description('Text component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(11)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(11),
+                                  ),
                                   v.description('Thumbnail component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(12)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(12),
+                                  ),
                                   v.description('Media gallery component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(13)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(13),
+                                  ),
                                   v.description('File component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(14)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(14),
+                                  ),
                                   v.description('Separator component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(17)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(17),
+                                  ),
                                   v.description('Container component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(18)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(18),
+                                  ),
                                   v.description('Label component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(19)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(19),
+                                  ),
                                   v.description('File upload component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(21)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(21),
+                                  ),
                                   v.description('Radio group component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(22)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(22),
+                                  ),
                                   v.description('Checkbox group component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(23)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(23),
+                                  ),
                                   v.description('Checkbox component'),
                                 ),
                               ]),
@@ -2347,7 +3367,8 @@ export const lobbiesHandler = new Hono()
                                   v.nullable(
                                     v.pipe(
                                       v.string(),
-                                      v.transform(Number),
+                                      v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                      v.transform((input) => Number(input)),
                                       v.number(),
                                       v.safeInteger(),
                                       v.minValue(-2147483648),
@@ -2367,87 +3388,187 @@ export const lobbiesHandler = new Hono()
                                     v.object({
                                       type: v.union([
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(1)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(1),
+                                          ),
                                           v.description('Container for other components'),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(2)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(2),
+                                          ),
                                           v.description('Button object'),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(3)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(3),
+                                          ),
                                           v.description(
                                             'Select menu for picking from defined text options',
                                           ),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(4)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(4),
+                                          ),
                                           v.description('Text input object'),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(5)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(5),
+                                          ),
                                           v.description('Select menu for users'),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(6)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(6),
+                                          ),
                                           v.description('Select menu for roles'),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(7)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(7),
+                                          ),
                                           v.description(
                                             'Select menu for mentionables (users and roles)',
                                           ),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(8)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(8),
+                                          ),
                                           v.description('Select menu for channels'),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(9)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(9),
+                                          ),
                                           v.description('Section component'),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(10)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(10),
+                                          ),
                                           v.description('Text component'),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(11)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(11),
+                                          ),
                                           v.description('Thumbnail component'),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(12)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(12),
+                                          ),
                                           v.description('Media gallery component'),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(13)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(13),
+                                          ),
                                           v.description('File component'),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(14)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(14),
+                                          ),
                                           v.description('Separator component'),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(17)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(17),
+                                          ),
                                           v.description('Container component'),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(18)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(18),
+                                          ),
                                           v.description('Label component'),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(19)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(19),
+                                          ),
                                           v.description('File upload component'),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(21)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(21),
+                                          ),
                                           v.description('Radio group component'),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(22)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(22),
+                                          ),
                                           v.description('Checkbox group component'),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(23)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(23),
+                                          ),
                                           v.description('Checkbox component'),
                                         ),
                                       ]),
@@ -2458,7 +3579,8 @@ export const lobbiesHandler = new Hono()
                                           v.nullable(
                                             v.pipe(
                                               v.string(),
-                                              v.transform(Number),
+                                              v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                              v.transform((input) => Number(input)),
                                               v.number(),
                                               v.safeInteger(),
                                               v.minValue(-2147483648),
@@ -2478,12 +3600,42 @@ export const lobbiesHandler = new Hono()
                                         ),
                                       ),
                                       style: v.union([
-                                        v.pipe(v.string(), v.transform(Number), v.literal(1)),
-                                        v.pipe(v.string(), v.transform(Number), v.literal(2)),
-                                        v.pipe(v.string(), v.transform(Number), v.literal(3)),
-                                        v.pipe(v.string(), v.transform(Number), v.literal(4)),
-                                        v.pipe(v.string(), v.transform(Number), v.literal(5)),
-                                        v.pipe(v.string(), v.transform(Number), v.literal(6)),
+                                        v.pipe(
+                                          v.string(),
+                                          v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                          v.transform((input) => Number(input)),
+                                          v.literal(1),
+                                        ),
+                                        v.pipe(
+                                          v.string(),
+                                          v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                          v.transform((input) => Number(input)),
+                                          v.literal(2),
+                                        ),
+                                        v.pipe(
+                                          v.string(),
+                                          v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                          v.transform((input) => Number(input)),
+                                          v.literal(3),
+                                        ),
+                                        v.pipe(
+                                          v.string(),
+                                          v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                          v.transform((input) => Number(input)),
+                                          v.literal(4),
+                                        ),
+                                        v.pipe(
+                                          v.string(),
+                                          v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                          v.transform((input) => Number(input)),
+                                          v.literal(5),
+                                        ),
+                                        v.pipe(
+                                          v.string(),
+                                          v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                          v.transform((input) => Number(input)),
+                                          v.literal(6),
+                                        ),
                                       ]),
                                       label: v.optional(
                                         v.nullable(v.pipe(v.string(), v.maxCodePoints(80))),
@@ -2521,7 +3673,7 @@ export const lobbiesHandler = new Hono()
                                                 v.transform((input) =>
                                                   input === 'null' ? null : input,
                                                 ),
-                                                v.nullable(v.null()),
+                                                v.null(),
                                               ),
                                               SnowflakeTypeSchema,
                                             ]),
@@ -2539,7 +3691,7 @@ export const lobbiesHandler = new Hono()
                                                 v.transform((input) =>
                                                   input === 'null' ? null : input,
                                                 ),
-                                                v.nullable(v.null()),
+                                                v.null(),
                                               ),
                                               v.object({
                                                 id: v.optional(
@@ -2555,7 +3707,7 @@ export const lobbiesHandler = new Hono()
                                                           v.transform((input) =>
                                                             input === 'null' ? null : input,
                                                           ),
-                                                          v.nullable(v.null()),
+                                                          v.null(),
                                                         ),
                                                         SnowflakeTypeSchema,
                                                       ]),
@@ -2572,87 +3724,187 @@ export const lobbiesHandler = new Hono()
                                     v.object({
                                       type: v.union([
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(1)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(1),
+                                          ),
                                           v.description('Container for other components'),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(2)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(2),
+                                          ),
                                           v.description('Button object'),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(3)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(3),
+                                          ),
                                           v.description(
                                             'Select menu for picking from defined text options',
                                           ),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(4)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(4),
+                                          ),
                                           v.description('Text input object'),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(5)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(5),
+                                          ),
                                           v.description('Select menu for users'),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(6)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(6),
+                                          ),
                                           v.description('Select menu for roles'),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(7)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(7),
+                                          ),
                                           v.description(
                                             'Select menu for mentionables (users and roles)',
                                           ),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(8)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(8),
+                                          ),
                                           v.description('Select menu for channels'),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(9)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(9),
+                                          ),
                                           v.description('Section component'),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(10)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(10),
+                                          ),
                                           v.description('Text component'),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(11)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(11),
+                                          ),
                                           v.description('Thumbnail component'),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(12)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(12),
+                                          ),
                                           v.description('Media gallery component'),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(13)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(13),
+                                          ),
                                           v.description('File component'),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(14)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(14),
+                                          ),
                                           v.description('Separator component'),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(17)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(17),
+                                          ),
                                           v.description('Container component'),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(18)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(18),
+                                          ),
                                           v.description('Label component'),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(19)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(19),
+                                          ),
                                           v.description('File upload component'),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(21)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(21),
+                                          ),
                                           v.description('Radio group component'),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(22)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(22),
+                                          ),
                                           v.description('Checkbox group component'),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(23)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(23),
+                                          ),
                                           v.description('Checkbox component'),
                                         ),
                                       ]),
@@ -2663,7 +3915,8 @@ export const lobbiesHandler = new Hono()
                                           v.nullable(
                                             v.pipe(
                                               v.string(),
-                                              v.transform(Number),
+                                              v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                              v.transform((input) => Number(input)),
                                               v.number(),
                                               v.safeInteger(),
                                               v.minValue(-2147483648),
@@ -2688,7 +3941,8 @@ export const lobbiesHandler = new Hono()
                                           v.nullable(
                                             v.pipe(
                                               v.string(),
-                                              v.transform(Number),
+                                              v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                              v.transform((input) => Number(input)),
                                               v.number(),
                                               v.safeInteger(),
                                               v.minValue(0),
@@ -2704,7 +3958,8 @@ export const lobbiesHandler = new Hono()
                                           v.nullable(
                                             v.pipe(
                                               v.string(),
-                                              v.transform(Number),
+                                              v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                              v.transform((input) => Number(input)),
                                               v.number(),
                                               v.safeInteger(),
                                               v.minValue(1),
@@ -2782,7 +4037,8 @@ export const lobbiesHandler = new Hono()
                                                   v.pipe(
                                                     v.pipe(
                                                       v.string(),
-                                                      v.transform(Number),
+                                                      v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                                      v.transform((input) => Number(input)),
                                                       v.literal(1),
                                                     ),
                                                     v.description('A direct message between users'),
@@ -2790,7 +4046,8 @@ export const lobbiesHandler = new Hono()
                                                   v.pipe(
                                                     v.pipe(
                                                       v.string(),
-                                                      v.transform(Number),
+                                                      v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                                      v.transform((input) => Number(input)),
                                                       v.literal(3),
                                                     ),
                                                     v.description(
@@ -2800,7 +4057,8 @@ export const lobbiesHandler = new Hono()
                                                   v.pipe(
                                                     v.pipe(
                                                       v.string(),
-                                                      v.transform(Number),
+                                                      v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                                      v.transform((input) => Number(input)),
                                                       v.literal(0),
                                                     ),
                                                     v.description('A text channel within a server'),
@@ -2808,7 +4066,8 @@ export const lobbiesHandler = new Hono()
                                                   v.pipe(
                                                     v.pipe(
                                                       v.string(),
-                                                      v.transform(Number),
+                                                      v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                                      v.transform((input) => Number(input)),
                                                       v.literal(2),
                                                     ),
                                                     v.description(
@@ -2818,7 +4077,8 @@ export const lobbiesHandler = new Hono()
                                                   v.pipe(
                                                     v.pipe(
                                                       v.string(),
-                                                      v.transform(Number),
+                                                      v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                                      v.transform((input) => Number(input)),
                                                       v.literal(4),
                                                     ),
                                                     v.description(
@@ -2828,7 +4088,8 @@ export const lobbiesHandler = new Hono()
                                                   v.pipe(
                                                     v.pipe(
                                                       v.string(),
-                                                      v.transform(Number),
+                                                      v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                                      v.transform((input) => Number(input)),
                                                       v.literal(5),
                                                     ),
                                                     v.description(
@@ -2838,7 +4099,8 @@ export const lobbiesHandler = new Hono()
                                                   v.pipe(
                                                     v.pipe(
                                                       v.string(),
-                                                      v.transform(Number),
+                                                      v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                                      v.transform((input) => Number(input)),
                                                       v.literal(10),
                                                     ),
                                                     v.description(
@@ -2848,7 +4110,8 @@ export const lobbiesHandler = new Hono()
                                                   v.pipe(
                                                     v.pipe(
                                                       v.string(),
-                                                      v.transform(Number),
+                                                      v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                                      v.transform((input) => Number(input)),
                                                       v.literal(11),
                                                     ),
                                                     v.description(
@@ -2858,7 +4121,8 @@ export const lobbiesHandler = new Hono()
                                                   v.pipe(
                                                     v.pipe(
                                                       v.string(),
-                                                      v.transform(Number),
+                                                      v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                                      v.transform((input) => Number(input)),
                                                       v.literal(12),
                                                     ),
                                                     v.description(
@@ -2868,7 +4132,8 @@ export const lobbiesHandler = new Hono()
                                                   v.pipe(
                                                     v.pipe(
                                                       v.string(),
-                                                      v.transform(Number),
+                                                      v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                                      v.transform((input) => Number(input)),
                                                       v.literal(13),
                                                     ),
                                                     v.description(
@@ -2878,7 +4143,8 @@ export const lobbiesHandler = new Hono()
                                                   v.pipe(
                                                     v.pipe(
                                                       v.string(),
-                                                      v.transform(Number),
+                                                      v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                                      v.transform((input) => Number(input)),
                                                       v.literal(14),
                                                     ),
                                                     v.description(
@@ -2888,7 +4154,8 @@ export const lobbiesHandler = new Hono()
                                                   v.pipe(
                                                     v.pipe(
                                                       v.string(),
-                                                      v.transform(Number),
+                                                      v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                                      v.transform((input) => Number(input)),
                                                       v.literal(15),
                                                     ),
                                                     v.description(
@@ -2908,87 +4175,187 @@ export const lobbiesHandler = new Hono()
                                     v.object({
                                       type: v.union([
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(1)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(1),
+                                          ),
                                           v.description('Container for other components'),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(2)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(2),
+                                          ),
                                           v.description('Button object'),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(3)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(3),
+                                          ),
                                           v.description(
                                             'Select menu for picking from defined text options',
                                           ),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(4)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(4),
+                                          ),
                                           v.description('Text input object'),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(5)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(5),
+                                          ),
                                           v.description('Select menu for users'),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(6)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(6),
+                                          ),
                                           v.description('Select menu for roles'),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(7)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(7),
+                                          ),
                                           v.description(
                                             'Select menu for mentionables (users and roles)',
                                           ),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(8)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(8),
+                                          ),
                                           v.description('Select menu for channels'),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(9)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(9),
+                                          ),
                                           v.description('Section component'),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(10)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(10),
+                                          ),
                                           v.description('Text component'),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(11)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(11),
+                                          ),
                                           v.description('Thumbnail component'),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(12)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(12),
+                                          ),
                                           v.description('Media gallery component'),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(13)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(13),
+                                          ),
                                           v.description('File component'),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(14)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(14),
+                                          ),
                                           v.description('Separator component'),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(17)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(17),
+                                          ),
                                           v.description('Container component'),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(18)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(18),
+                                          ),
                                           v.description('Label component'),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(19)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(19),
+                                          ),
                                           v.description('File upload component'),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(21)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(21),
+                                          ),
                                           v.description('Radio group component'),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(22)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(22),
+                                          ),
                                           v.description('Checkbox group component'),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(23)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(23),
+                                          ),
                                           v.description('Checkbox component'),
                                         ),
                                       ]),
@@ -2999,7 +4366,8 @@ export const lobbiesHandler = new Hono()
                                           v.nullable(
                                             v.pipe(
                                               v.string(),
-                                              v.transform(Number),
+                                              v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                              v.transform((input) => Number(input)),
                                               v.number(),
                                               v.safeInteger(),
                                               v.minValue(-2147483648),
@@ -3024,7 +4392,8 @@ export const lobbiesHandler = new Hono()
                                           v.nullable(
                                             v.pipe(
                                               v.string(),
-                                              v.transform(Number),
+                                              v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                              v.transform((input) => Number(input)),
                                               v.number(),
                                               v.safeInteger(),
                                               v.minValue(0),
@@ -3040,7 +4409,8 @@ export const lobbiesHandler = new Hono()
                                           v.nullable(
                                             v.pipe(
                                               v.string(),
-                                              v.transform(Number),
+                                              v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                              v.transform((input) => Number(input)),
                                               v.number(),
                                               v.safeInteger(),
                                               v.minValue(1),
@@ -3110,87 +4480,187 @@ export const lobbiesHandler = new Hono()
                                     v.object({
                                       type: v.union([
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(1)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(1),
+                                          ),
                                           v.description('Container for other components'),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(2)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(2),
+                                          ),
                                           v.description('Button object'),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(3)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(3),
+                                          ),
                                           v.description(
                                             'Select menu for picking from defined text options',
                                           ),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(4)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(4),
+                                          ),
                                           v.description('Text input object'),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(5)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(5),
+                                          ),
                                           v.description('Select menu for users'),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(6)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(6),
+                                          ),
                                           v.description('Select menu for roles'),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(7)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(7),
+                                          ),
                                           v.description(
                                             'Select menu for mentionables (users and roles)',
                                           ),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(8)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(8),
+                                          ),
                                           v.description('Select menu for channels'),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(9)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(9),
+                                          ),
                                           v.description('Section component'),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(10)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(10),
+                                          ),
                                           v.description('Text component'),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(11)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(11),
+                                          ),
                                           v.description('Thumbnail component'),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(12)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(12),
+                                          ),
                                           v.description('Media gallery component'),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(13)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(13),
+                                          ),
                                           v.description('File component'),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(14)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(14),
+                                          ),
                                           v.description('Separator component'),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(17)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(17),
+                                          ),
                                           v.description('Container component'),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(18)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(18),
+                                          ),
                                           v.description('Label component'),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(19)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(19),
+                                          ),
                                           v.description('File upload component'),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(21)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(21),
+                                          ),
                                           v.description('Radio group component'),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(22)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(22),
+                                          ),
                                           v.description('Checkbox group component'),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(23)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(23),
+                                          ),
                                           v.description('Checkbox component'),
                                         ),
                                       ]),
@@ -3201,7 +4671,8 @@ export const lobbiesHandler = new Hono()
                                           v.nullable(
                                             v.pipe(
                                               v.string(),
-                                              v.transform(Number),
+                                              v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                              v.transform((input) => Number(input)),
                                               v.number(),
                                               v.safeInteger(),
                                               v.minValue(-2147483648),
@@ -3226,7 +4697,8 @@ export const lobbiesHandler = new Hono()
                                           v.nullable(
                                             v.pipe(
                                               v.string(),
-                                              v.transform(Number),
+                                              v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                              v.transform((input) => Number(input)),
                                               v.number(),
                                               v.safeInteger(),
                                               v.minValue(0),
@@ -3242,7 +4714,8 @@ export const lobbiesHandler = new Hono()
                                           v.nullable(
                                             v.pipe(
                                               v.string(),
-                                              v.transform(Number),
+                                              v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                              v.transform((input) => Number(input)),
                                               v.number(),
                                               v.safeInteger(),
                                               v.minValue(1),
@@ -3307,87 +4780,187 @@ export const lobbiesHandler = new Hono()
                                     v.object({
                                       type: v.union([
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(1)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(1),
+                                          ),
                                           v.description('Container for other components'),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(2)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(2),
+                                          ),
                                           v.description('Button object'),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(3)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(3),
+                                          ),
                                           v.description(
                                             'Select menu for picking from defined text options',
                                           ),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(4)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(4),
+                                          ),
                                           v.description('Text input object'),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(5)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(5),
+                                          ),
                                           v.description('Select menu for users'),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(6)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(6),
+                                          ),
                                           v.description('Select menu for roles'),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(7)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(7),
+                                          ),
                                           v.description(
                                             'Select menu for mentionables (users and roles)',
                                           ),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(8)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(8),
+                                          ),
                                           v.description('Select menu for channels'),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(9)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(9),
+                                          ),
                                           v.description('Section component'),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(10)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(10),
+                                          ),
                                           v.description('Text component'),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(11)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(11),
+                                          ),
                                           v.description('Thumbnail component'),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(12)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(12),
+                                          ),
                                           v.description('Media gallery component'),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(13)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(13),
+                                          ),
                                           v.description('File component'),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(14)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(14),
+                                          ),
                                           v.description('Separator component'),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(17)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(17),
+                                          ),
                                           v.description('Container component'),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(18)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(18),
+                                          ),
                                           v.description('Label component'),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(19)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(19),
+                                          ),
                                           v.description('File upload component'),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(21)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(21),
+                                          ),
                                           v.description('Radio group component'),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(22)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(22),
+                                          ),
                                           v.description('Checkbox group component'),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(23)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(23),
+                                          ),
                                           v.description('Checkbox component'),
                                         ),
                                       ]),
@@ -3398,7 +4971,8 @@ export const lobbiesHandler = new Hono()
                                           v.nullable(
                                             v.pipe(
                                               v.string(),
-                                              v.transform(Number),
+                                              v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                              v.transform((input) => Number(input)),
                                               v.number(),
                                               v.safeInteger(),
                                               v.minValue(-2147483648),
@@ -3423,7 +4997,8 @@ export const lobbiesHandler = new Hono()
                                           v.nullable(
                                             v.pipe(
                                               v.string(),
-                                              v.transform(Number),
+                                              v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                              v.transform((input) => Number(input)),
                                               v.number(),
                                               v.safeInteger(),
                                               v.minValue(0),
@@ -3439,7 +5014,8 @@ export const lobbiesHandler = new Hono()
                                           v.nullable(
                                             v.pipe(
                                               v.string(),
-                                              v.transform(Number),
+                                              v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                              v.transform((input) => Number(input)),
                                               v.number(),
                                               v.safeInteger(),
                                               v.minValue(1),
@@ -3536,7 +5112,7 @@ export const lobbiesHandler = new Hono()
                                                       v.transform((input) =>
                                                         input === 'null' ? null : input,
                                                       ),
-                                                      v.nullable(v.null()),
+                                                      v.null(),
                                                     ),
                                                     v.object({
                                                       id: v.optional(
@@ -3552,7 +5128,7 @@ export const lobbiesHandler = new Hono()
                                                                 v.transform((input) =>
                                                                   input === 'null' ? null : input,
                                                                 ),
-                                                                v.nullable(v.null()),
+                                                                v.null(),
                                                               ),
                                                               SnowflakeTypeSchema,
                                                             ]),
@@ -3574,87 +5150,187 @@ export const lobbiesHandler = new Hono()
                                     v.object({
                                       type: v.union([
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(1)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(1),
+                                          ),
                                           v.description('Container for other components'),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(2)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(2),
+                                          ),
                                           v.description('Button object'),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(3)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(3),
+                                          ),
                                           v.description(
                                             'Select menu for picking from defined text options',
                                           ),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(4)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(4),
+                                          ),
                                           v.description('Text input object'),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(5)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(5),
+                                          ),
                                           v.description('Select menu for users'),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(6)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(6),
+                                          ),
                                           v.description('Select menu for roles'),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(7)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(7),
+                                          ),
                                           v.description(
                                             'Select menu for mentionables (users and roles)',
                                           ),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(8)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(8),
+                                          ),
                                           v.description('Select menu for channels'),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(9)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(9),
+                                          ),
                                           v.description('Section component'),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(10)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(10),
+                                          ),
                                           v.description('Text component'),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(11)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(11),
+                                          ),
                                           v.description('Thumbnail component'),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(12)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(12),
+                                          ),
                                           v.description('Media gallery component'),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(13)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(13),
+                                          ),
                                           v.description('File component'),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(14)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(14),
+                                          ),
                                           v.description('Separator component'),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(17)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(17),
+                                          ),
                                           v.description('Container component'),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(18)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(18),
+                                          ),
                                           v.description('Label component'),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(19)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(19),
+                                          ),
                                           v.description('File upload component'),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(21)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(21),
+                                          ),
                                           v.description('Radio group component'),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(22)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(22),
+                                          ),
                                           v.description('Checkbox group component'),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(23)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(23),
+                                          ),
                                           v.description('Checkbox component'),
                                         ),
                                       ]),
@@ -3665,7 +5341,8 @@ export const lobbiesHandler = new Hono()
                                           v.nullable(
                                             v.pipe(
                                               v.string(),
-                                              v.transform(Number),
+                                              v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                              v.transform((input) => Number(input)),
                                               v.number(),
                                               v.safeInteger(),
                                               v.minValue(-2147483648),
@@ -3690,7 +5367,8 @@ export const lobbiesHandler = new Hono()
                                           v.nullable(
                                             v.pipe(
                                               v.string(),
-                                              v.transform(Number),
+                                              v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                              v.transform((input) => Number(input)),
                                               v.number(),
                                               v.safeInteger(),
                                               v.minValue(0),
@@ -3706,7 +5384,8 @@ export const lobbiesHandler = new Hono()
                                           v.nullable(
                                             v.pipe(
                                               v.string(),
-                                              v.transform(Number),
+                                              v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                              v.transform((input) => Number(input)),
                                               v.number(),
                                               v.safeInteger(),
                                               v.minValue(1),
@@ -3777,85 +5456,185 @@ export const lobbiesHandler = new Hono()
                             v.object({
                               type: v.union([
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(1)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(1),
+                                  ),
                                   v.description('Container for other components'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(2)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(2),
+                                  ),
                                   v.description('Button object'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(3)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(3),
+                                  ),
                                   v.description(
                                     'Select menu for picking from defined text options',
                                   ),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(4)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(4),
+                                  ),
                                   v.description('Text input object'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(5)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(5),
+                                  ),
                                   v.description('Select menu for users'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(6)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(6),
+                                  ),
                                   v.description('Select menu for roles'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(7)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(7),
+                                  ),
                                   v.description('Select menu for mentionables (users and roles)'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(8)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(8),
+                                  ),
                                   v.description('Select menu for channels'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(9)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(9),
+                                  ),
                                   v.description('Section component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(10)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(10),
+                                  ),
                                   v.description('Text component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(11)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(11),
+                                  ),
                                   v.description('Thumbnail component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(12)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(12),
+                                  ),
                                   v.description('Media gallery component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(13)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(13),
+                                  ),
                                   v.description('File component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(14)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(14),
+                                  ),
                                   v.description('Separator component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(17)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(17),
+                                  ),
                                   v.description('Container component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(18)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(18),
+                                  ),
                                   v.description('Label component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(19)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(19),
+                                  ),
                                   v.description('File upload component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(21)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(21),
+                                  ),
                                   v.description('Radio group component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(22)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(22),
+                                  ),
                                   v.description('Checkbox group component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(23)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(23),
+                                  ),
                                   v.description('Checkbox component'),
                                 ),
                               ]),
@@ -3866,7 +5645,8 @@ export const lobbiesHandler = new Hono()
                                   v.nullable(
                                     v.pipe(
                                       v.string(),
-                                      v.transform(Number),
+                                      v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                      v.transform((input) => Number(input)),
                                       v.number(),
                                       v.safeInteger(),
                                       v.minValue(-2147483648),
@@ -3898,85 +5678,185 @@ export const lobbiesHandler = new Hono()
                             v.object({
                               type: v.union([
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(1)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(1),
+                                  ),
                                   v.description('Container for other components'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(2)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(2),
+                                  ),
                                   v.description('Button object'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(3)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(3),
+                                  ),
                                   v.description(
                                     'Select menu for picking from defined text options',
                                   ),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(4)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(4),
+                                  ),
                                   v.description('Text input object'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(5)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(5),
+                                  ),
                                   v.description('Select menu for users'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(6)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(6),
+                                  ),
                                   v.description('Select menu for roles'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(7)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(7),
+                                  ),
                                   v.description('Select menu for mentionables (users and roles)'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(8)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(8),
+                                  ),
                                   v.description('Select menu for channels'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(9)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(9),
+                                  ),
                                   v.description('Section component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(10)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(10),
+                                  ),
                                   v.description('Text component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(11)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(11),
+                                  ),
                                   v.description('Thumbnail component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(12)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(12),
+                                  ),
                                   v.description('Media gallery component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(13)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(13),
+                                  ),
                                   v.description('File component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(14)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(14),
+                                  ),
                                   v.description('Separator component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(17)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(17),
+                                  ),
                                   v.description('Container component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(18)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(18),
+                                  ),
                                   v.description('Label component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(19)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(19),
+                                  ),
                                   v.description('File upload component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(21)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(21),
+                                  ),
                                   v.description('Radio group component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(22)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(22),
+                                  ),
                                   v.description('Checkbox group component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(23)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(23),
+                                  ),
                                   v.description('Checkbox component'),
                                 ),
                               ]),
@@ -3987,7 +5867,8 @@ export const lobbiesHandler = new Hono()
                                   v.nullable(
                                     v.pipe(
                                       v.string(),
-                                      v.transform(Number),
+                                      v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                      v.transform((input) => Number(input)),
                                       v.number(),
                                       v.safeInteger(),
                                       v.minValue(-2147483648),
@@ -4040,85 +5921,185 @@ export const lobbiesHandler = new Hono()
                             v.object({
                               type: v.union([
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(1)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(1),
+                                  ),
                                   v.description('Container for other components'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(2)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(2),
+                                  ),
                                   v.description('Button object'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(3)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(3),
+                                  ),
                                   v.description(
                                     'Select menu for picking from defined text options',
                                   ),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(4)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(4),
+                                  ),
                                   v.description('Text input object'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(5)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(5),
+                                  ),
                                   v.description('Select menu for users'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(6)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(6),
+                                  ),
                                   v.description('Select menu for roles'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(7)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(7),
+                                  ),
                                   v.description('Select menu for mentionables (users and roles)'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(8)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(8),
+                                  ),
                                   v.description('Select menu for channels'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(9)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(9),
+                                  ),
                                   v.description('Section component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(10)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(10),
+                                  ),
                                   v.description('Text component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(11)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(11),
+                                  ),
                                   v.description('Thumbnail component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(12)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(12),
+                                  ),
                                   v.description('Media gallery component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(13)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(13),
+                                  ),
                                   v.description('File component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(14)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(14),
+                                  ),
                                   v.description('Separator component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(17)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(17),
+                                  ),
                                   v.description('Container component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(18)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(18),
+                                  ),
                                   v.description('Label component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(19)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(19),
+                                  ),
                                   v.description('File upload component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(21)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(21),
+                                  ),
                                   v.description('Radio group component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(22)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(22),
+                                  ),
                                   v.description('Checkbox group component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(23)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(23),
+                                  ),
                                   v.description('Checkbox component'),
                                 ),
                               ]),
@@ -4129,7 +6110,8 @@ export const lobbiesHandler = new Hono()
                                   v.nullable(
                                     v.pipe(
                                       v.string(),
-                                      v.transform(Number),
+                                      v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                      v.transform((input) => Number(input)),
                                       v.number(),
                                       v.safeInteger(),
                                       v.minValue(-2147483648),
@@ -4148,87 +6130,187 @@ export const lobbiesHandler = new Hono()
                                   v.object({
                                     type: v.union([
                                       v.pipe(
-                                        v.pipe(v.string(), v.transform(Number), v.literal(1)),
+                                        v.pipe(
+                                          v.string(),
+                                          v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                          v.transform((input) => Number(input)),
+                                          v.literal(1),
+                                        ),
                                         v.description('Container for other components'),
                                       ),
                                       v.pipe(
-                                        v.pipe(v.string(), v.transform(Number), v.literal(2)),
+                                        v.pipe(
+                                          v.string(),
+                                          v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                          v.transform((input) => Number(input)),
+                                          v.literal(2),
+                                        ),
                                         v.description('Button object'),
                                       ),
                                       v.pipe(
-                                        v.pipe(v.string(), v.transform(Number), v.literal(3)),
+                                        v.pipe(
+                                          v.string(),
+                                          v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                          v.transform((input) => Number(input)),
+                                          v.literal(3),
+                                        ),
                                         v.description(
                                           'Select menu for picking from defined text options',
                                         ),
                                       ),
                                       v.pipe(
-                                        v.pipe(v.string(), v.transform(Number), v.literal(4)),
+                                        v.pipe(
+                                          v.string(),
+                                          v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                          v.transform((input) => Number(input)),
+                                          v.literal(4),
+                                        ),
                                         v.description('Text input object'),
                                       ),
                                       v.pipe(
-                                        v.pipe(v.string(), v.transform(Number), v.literal(5)),
+                                        v.pipe(
+                                          v.string(),
+                                          v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                          v.transform((input) => Number(input)),
+                                          v.literal(5),
+                                        ),
                                         v.description('Select menu for users'),
                                       ),
                                       v.pipe(
-                                        v.pipe(v.string(), v.transform(Number), v.literal(6)),
+                                        v.pipe(
+                                          v.string(),
+                                          v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                          v.transform((input) => Number(input)),
+                                          v.literal(6),
+                                        ),
                                         v.description('Select menu for roles'),
                                       ),
                                       v.pipe(
-                                        v.pipe(v.string(), v.transform(Number), v.literal(7)),
+                                        v.pipe(
+                                          v.string(),
+                                          v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                          v.transform((input) => Number(input)),
+                                          v.literal(7),
+                                        ),
                                         v.description(
                                           'Select menu for mentionables (users and roles)',
                                         ),
                                       ),
                                       v.pipe(
-                                        v.pipe(v.string(), v.transform(Number), v.literal(8)),
+                                        v.pipe(
+                                          v.string(),
+                                          v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                          v.transform((input) => Number(input)),
+                                          v.literal(8),
+                                        ),
                                         v.description('Select menu for channels'),
                                       ),
                                       v.pipe(
-                                        v.pipe(v.string(), v.transform(Number), v.literal(9)),
+                                        v.pipe(
+                                          v.string(),
+                                          v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                          v.transform((input) => Number(input)),
+                                          v.literal(9),
+                                        ),
                                         v.description('Section component'),
                                       ),
                                       v.pipe(
-                                        v.pipe(v.string(), v.transform(Number), v.literal(10)),
+                                        v.pipe(
+                                          v.string(),
+                                          v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                          v.transform((input) => Number(input)),
+                                          v.literal(10),
+                                        ),
                                         v.description('Text component'),
                                       ),
                                       v.pipe(
-                                        v.pipe(v.string(), v.transform(Number), v.literal(11)),
+                                        v.pipe(
+                                          v.string(),
+                                          v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                          v.transform((input) => Number(input)),
+                                          v.literal(11),
+                                        ),
                                         v.description('Thumbnail component'),
                                       ),
                                       v.pipe(
-                                        v.pipe(v.string(), v.transform(Number), v.literal(12)),
+                                        v.pipe(
+                                          v.string(),
+                                          v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                          v.transform((input) => Number(input)),
+                                          v.literal(12),
+                                        ),
                                         v.description('Media gallery component'),
                                       ),
                                       v.pipe(
-                                        v.pipe(v.string(), v.transform(Number), v.literal(13)),
+                                        v.pipe(
+                                          v.string(),
+                                          v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                          v.transform((input) => Number(input)),
+                                          v.literal(13),
+                                        ),
                                         v.description('File component'),
                                       ),
                                       v.pipe(
-                                        v.pipe(v.string(), v.transform(Number), v.literal(14)),
+                                        v.pipe(
+                                          v.string(),
+                                          v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                          v.transform((input) => Number(input)),
+                                          v.literal(14),
+                                        ),
                                         v.description('Separator component'),
                                       ),
                                       v.pipe(
-                                        v.pipe(v.string(), v.transform(Number), v.literal(17)),
+                                        v.pipe(
+                                          v.string(),
+                                          v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                          v.transform((input) => Number(input)),
+                                          v.literal(17),
+                                        ),
                                         v.description('Container component'),
                                       ),
                                       v.pipe(
-                                        v.pipe(v.string(), v.transform(Number), v.literal(18)),
+                                        v.pipe(
+                                          v.string(),
+                                          v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                          v.transform((input) => Number(input)),
+                                          v.literal(18),
+                                        ),
                                         v.description('Label component'),
                                       ),
                                       v.pipe(
-                                        v.pipe(v.string(), v.transform(Number), v.literal(19)),
+                                        v.pipe(
+                                          v.string(),
+                                          v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                          v.transform((input) => Number(input)),
+                                          v.literal(19),
+                                        ),
                                         v.description('File upload component'),
                                       ),
                                       v.pipe(
-                                        v.pipe(v.string(), v.transform(Number), v.literal(21)),
+                                        v.pipe(
+                                          v.string(),
+                                          v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                          v.transform((input) => Number(input)),
+                                          v.literal(21),
+                                        ),
                                         v.description('Radio group component'),
                                       ),
                                       v.pipe(
-                                        v.pipe(v.string(), v.transform(Number), v.literal(22)),
+                                        v.pipe(
+                                          v.string(),
+                                          v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                          v.transform((input) => Number(input)),
+                                          v.literal(22),
+                                        ),
                                         v.description('Checkbox group component'),
                                       ),
                                       v.pipe(
-                                        v.pipe(v.string(), v.transform(Number), v.literal(23)),
+                                        v.pipe(
+                                          v.string(),
+                                          v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                          v.transform((input) => Number(input)),
+                                          v.literal(23),
+                                        ),
                                         v.description('Checkbox component'),
                                       ),
                                     ]),
@@ -4239,7 +6321,8 @@ export const lobbiesHandler = new Hono()
                                         v.nullable(
                                           v.pipe(
                                             v.string(),
-                                            v.transform(Number),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
                                             v.number(),
                                             v.safeInteger(),
                                             v.minValue(-2147483648),
@@ -4263,87 +6346,187 @@ export const lobbiesHandler = new Hono()
                                 v.object({
                                   type: v.union([
                                     v.pipe(
-                                      v.pipe(v.string(), v.transform(Number), v.literal(1)),
+                                      v.pipe(
+                                        v.string(),
+                                        v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                        v.transform((input) => Number(input)),
+                                        v.literal(1),
+                                      ),
                                       v.description('Container for other components'),
                                     ),
                                     v.pipe(
-                                      v.pipe(v.string(), v.transform(Number), v.literal(2)),
+                                      v.pipe(
+                                        v.string(),
+                                        v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                        v.transform((input) => Number(input)),
+                                        v.literal(2),
+                                      ),
                                       v.description('Button object'),
                                     ),
                                     v.pipe(
-                                      v.pipe(v.string(), v.transform(Number), v.literal(3)),
+                                      v.pipe(
+                                        v.string(),
+                                        v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                        v.transform((input) => Number(input)),
+                                        v.literal(3),
+                                      ),
                                       v.description(
                                         'Select menu for picking from defined text options',
                                       ),
                                     ),
                                     v.pipe(
-                                      v.pipe(v.string(), v.transform(Number), v.literal(4)),
+                                      v.pipe(
+                                        v.string(),
+                                        v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                        v.transform((input) => Number(input)),
+                                        v.literal(4),
+                                      ),
                                       v.description('Text input object'),
                                     ),
                                     v.pipe(
-                                      v.pipe(v.string(), v.transform(Number), v.literal(5)),
+                                      v.pipe(
+                                        v.string(),
+                                        v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                        v.transform((input) => Number(input)),
+                                        v.literal(5),
+                                      ),
                                       v.description('Select menu for users'),
                                     ),
                                     v.pipe(
-                                      v.pipe(v.string(), v.transform(Number), v.literal(6)),
+                                      v.pipe(
+                                        v.string(),
+                                        v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                        v.transform((input) => Number(input)),
+                                        v.literal(6),
+                                      ),
                                       v.description('Select menu for roles'),
                                     ),
                                     v.pipe(
-                                      v.pipe(v.string(), v.transform(Number), v.literal(7)),
+                                      v.pipe(
+                                        v.string(),
+                                        v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                        v.transform((input) => Number(input)),
+                                        v.literal(7),
+                                      ),
                                       v.description(
                                         'Select menu for mentionables (users and roles)',
                                       ),
                                     ),
                                     v.pipe(
-                                      v.pipe(v.string(), v.transform(Number), v.literal(8)),
+                                      v.pipe(
+                                        v.string(),
+                                        v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                        v.transform((input) => Number(input)),
+                                        v.literal(8),
+                                      ),
                                       v.description('Select menu for channels'),
                                     ),
                                     v.pipe(
-                                      v.pipe(v.string(), v.transform(Number), v.literal(9)),
+                                      v.pipe(
+                                        v.string(),
+                                        v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                        v.transform((input) => Number(input)),
+                                        v.literal(9),
+                                      ),
                                       v.description('Section component'),
                                     ),
                                     v.pipe(
-                                      v.pipe(v.string(), v.transform(Number), v.literal(10)),
+                                      v.pipe(
+                                        v.string(),
+                                        v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                        v.transform((input) => Number(input)),
+                                        v.literal(10),
+                                      ),
                                       v.description('Text component'),
                                     ),
                                     v.pipe(
-                                      v.pipe(v.string(), v.transform(Number), v.literal(11)),
+                                      v.pipe(
+                                        v.string(),
+                                        v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                        v.transform((input) => Number(input)),
+                                        v.literal(11),
+                                      ),
                                       v.description('Thumbnail component'),
                                     ),
                                     v.pipe(
-                                      v.pipe(v.string(), v.transform(Number), v.literal(12)),
+                                      v.pipe(
+                                        v.string(),
+                                        v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                        v.transform((input) => Number(input)),
+                                        v.literal(12),
+                                      ),
                                       v.description('Media gallery component'),
                                     ),
                                     v.pipe(
-                                      v.pipe(v.string(), v.transform(Number), v.literal(13)),
+                                      v.pipe(
+                                        v.string(),
+                                        v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                        v.transform((input) => Number(input)),
+                                        v.literal(13),
+                                      ),
                                       v.description('File component'),
                                     ),
                                     v.pipe(
-                                      v.pipe(v.string(), v.transform(Number), v.literal(14)),
+                                      v.pipe(
+                                        v.string(),
+                                        v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                        v.transform((input) => Number(input)),
+                                        v.literal(14),
+                                      ),
                                       v.description('Separator component'),
                                     ),
                                     v.pipe(
-                                      v.pipe(v.string(), v.transform(Number), v.literal(17)),
+                                      v.pipe(
+                                        v.string(),
+                                        v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                        v.transform((input) => Number(input)),
+                                        v.literal(17),
+                                      ),
                                       v.description('Container component'),
                                     ),
                                     v.pipe(
-                                      v.pipe(v.string(), v.transform(Number), v.literal(18)),
+                                      v.pipe(
+                                        v.string(),
+                                        v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                        v.transform((input) => Number(input)),
+                                        v.literal(18),
+                                      ),
                                       v.description('Label component'),
                                     ),
                                     v.pipe(
-                                      v.pipe(v.string(), v.transform(Number), v.literal(19)),
+                                      v.pipe(
+                                        v.string(),
+                                        v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                        v.transform((input) => Number(input)),
+                                        v.literal(19),
+                                      ),
                                       v.description('File upload component'),
                                     ),
                                     v.pipe(
-                                      v.pipe(v.string(), v.transform(Number), v.literal(21)),
+                                      v.pipe(
+                                        v.string(),
+                                        v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                        v.transform((input) => Number(input)),
+                                        v.literal(21),
+                                      ),
                                       v.description('Radio group component'),
                                     ),
                                     v.pipe(
-                                      v.pipe(v.string(), v.transform(Number), v.literal(22)),
+                                      v.pipe(
+                                        v.string(),
+                                        v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                        v.transform((input) => Number(input)),
+                                        v.literal(22),
+                                      ),
                                       v.description('Checkbox group component'),
                                     ),
                                     v.pipe(
-                                      v.pipe(v.string(), v.transform(Number), v.literal(23)),
+                                      v.pipe(
+                                        v.string(),
+                                        v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                        v.transform((input) => Number(input)),
+                                        v.literal(23),
+                                      ),
                                       v.description('Checkbox component'),
                                     ),
                                   ]),
@@ -4354,7 +6537,8 @@ export const lobbiesHandler = new Hono()
                                       v.nullable(
                                         v.pipe(
                                           v.string(),
-                                          v.transform(Number),
+                                          v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                          v.transform((input) => Number(input)),
                                           v.number(),
                                           v.safeInteger(),
                                           v.minValue(-2147483648),
@@ -4370,12 +6554,42 @@ export const lobbiesHandler = new Hono()
                                     ),
                                   ),
                                   style: v.union([
-                                    v.pipe(v.string(), v.transform(Number), v.literal(1)),
-                                    v.pipe(v.string(), v.transform(Number), v.literal(2)),
-                                    v.pipe(v.string(), v.transform(Number), v.literal(3)),
-                                    v.pipe(v.string(), v.transform(Number), v.literal(4)),
-                                    v.pipe(v.string(), v.transform(Number), v.literal(5)),
-                                    v.pipe(v.string(), v.transform(Number), v.literal(6)),
+                                    v.pipe(
+                                      v.string(),
+                                      v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                      v.transform((input) => Number(input)),
+                                      v.literal(1),
+                                    ),
+                                    v.pipe(
+                                      v.string(),
+                                      v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                      v.transform((input) => Number(input)),
+                                      v.literal(2),
+                                    ),
+                                    v.pipe(
+                                      v.string(),
+                                      v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                      v.transform((input) => Number(input)),
+                                      v.literal(3),
+                                    ),
+                                    v.pipe(
+                                      v.string(),
+                                      v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                      v.transform((input) => Number(input)),
+                                      v.literal(4),
+                                    ),
+                                    v.pipe(
+                                      v.string(),
+                                      v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                      v.transform((input) => Number(input)),
+                                      v.literal(5),
+                                    ),
+                                    v.pipe(
+                                      v.string(),
+                                      v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                      v.transform((input) => Number(input)),
+                                      v.literal(6),
+                                    ),
                                   ]),
                                   label: v.optional(
                                     v.nullable(v.pipe(v.string(), v.maxCodePoints(80))),
@@ -4411,7 +6625,7 @@ export const lobbiesHandler = new Hono()
                                             v.transform((input) =>
                                               input === 'null' ? null : input,
                                             ),
-                                            v.nullable(v.null()),
+                                            v.null(),
                                           ),
                                           SnowflakeTypeSchema,
                                         ]),
@@ -4429,7 +6643,7 @@ export const lobbiesHandler = new Hono()
                                             v.transform((input) =>
                                               input === 'null' ? null : input,
                                             ),
-                                            v.nullable(v.null()),
+                                            v.null(),
                                           ),
                                           v.object({
                                             id: v.optional(
@@ -4445,7 +6659,7 @@ export const lobbiesHandler = new Hono()
                                                       v.transform((input) =>
                                                         input === 'null' ? null : input,
                                                       ),
-                                                      v.nullable(v.null()),
+                                                      v.null(),
                                                     ),
                                                     SnowflakeTypeSchema,
                                                   ]),
@@ -4462,87 +6676,187 @@ export const lobbiesHandler = new Hono()
                                 v.object({
                                   type: v.union([
                                     v.pipe(
-                                      v.pipe(v.string(), v.transform(Number), v.literal(1)),
+                                      v.pipe(
+                                        v.string(),
+                                        v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                        v.transform((input) => Number(input)),
+                                        v.literal(1),
+                                      ),
                                       v.description('Container for other components'),
                                     ),
                                     v.pipe(
-                                      v.pipe(v.string(), v.transform(Number), v.literal(2)),
+                                      v.pipe(
+                                        v.string(),
+                                        v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                        v.transform((input) => Number(input)),
+                                        v.literal(2),
+                                      ),
                                       v.description('Button object'),
                                     ),
                                     v.pipe(
-                                      v.pipe(v.string(), v.transform(Number), v.literal(3)),
+                                      v.pipe(
+                                        v.string(),
+                                        v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                        v.transform((input) => Number(input)),
+                                        v.literal(3),
+                                      ),
                                       v.description(
                                         'Select menu for picking from defined text options',
                                       ),
                                     ),
                                     v.pipe(
-                                      v.pipe(v.string(), v.transform(Number), v.literal(4)),
+                                      v.pipe(
+                                        v.string(),
+                                        v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                        v.transform((input) => Number(input)),
+                                        v.literal(4),
+                                      ),
                                       v.description('Text input object'),
                                     ),
                                     v.pipe(
-                                      v.pipe(v.string(), v.transform(Number), v.literal(5)),
+                                      v.pipe(
+                                        v.string(),
+                                        v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                        v.transform((input) => Number(input)),
+                                        v.literal(5),
+                                      ),
                                       v.description('Select menu for users'),
                                     ),
                                     v.pipe(
-                                      v.pipe(v.string(), v.transform(Number), v.literal(6)),
+                                      v.pipe(
+                                        v.string(),
+                                        v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                        v.transform((input) => Number(input)),
+                                        v.literal(6),
+                                      ),
                                       v.description('Select menu for roles'),
                                     ),
                                     v.pipe(
-                                      v.pipe(v.string(), v.transform(Number), v.literal(7)),
+                                      v.pipe(
+                                        v.string(),
+                                        v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                        v.transform((input) => Number(input)),
+                                        v.literal(7),
+                                      ),
                                       v.description(
                                         'Select menu for mentionables (users and roles)',
                                       ),
                                     ),
                                     v.pipe(
-                                      v.pipe(v.string(), v.transform(Number), v.literal(8)),
+                                      v.pipe(
+                                        v.string(),
+                                        v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                        v.transform((input) => Number(input)),
+                                        v.literal(8),
+                                      ),
                                       v.description('Select menu for channels'),
                                     ),
                                     v.pipe(
-                                      v.pipe(v.string(), v.transform(Number), v.literal(9)),
+                                      v.pipe(
+                                        v.string(),
+                                        v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                        v.transform((input) => Number(input)),
+                                        v.literal(9),
+                                      ),
                                       v.description('Section component'),
                                     ),
                                     v.pipe(
-                                      v.pipe(v.string(), v.transform(Number), v.literal(10)),
+                                      v.pipe(
+                                        v.string(),
+                                        v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                        v.transform((input) => Number(input)),
+                                        v.literal(10),
+                                      ),
                                       v.description('Text component'),
                                     ),
                                     v.pipe(
-                                      v.pipe(v.string(), v.transform(Number), v.literal(11)),
+                                      v.pipe(
+                                        v.string(),
+                                        v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                        v.transform((input) => Number(input)),
+                                        v.literal(11),
+                                      ),
                                       v.description('Thumbnail component'),
                                     ),
                                     v.pipe(
-                                      v.pipe(v.string(), v.transform(Number), v.literal(12)),
+                                      v.pipe(
+                                        v.string(),
+                                        v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                        v.transform((input) => Number(input)),
+                                        v.literal(12),
+                                      ),
                                       v.description('Media gallery component'),
                                     ),
                                     v.pipe(
-                                      v.pipe(v.string(), v.transform(Number), v.literal(13)),
+                                      v.pipe(
+                                        v.string(),
+                                        v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                        v.transform((input) => Number(input)),
+                                        v.literal(13),
+                                      ),
                                       v.description('File component'),
                                     ),
                                     v.pipe(
-                                      v.pipe(v.string(), v.transform(Number), v.literal(14)),
+                                      v.pipe(
+                                        v.string(),
+                                        v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                        v.transform((input) => Number(input)),
+                                        v.literal(14),
+                                      ),
                                       v.description('Separator component'),
                                     ),
                                     v.pipe(
-                                      v.pipe(v.string(), v.transform(Number), v.literal(17)),
+                                      v.pipe(
+                                        v.string(),
+                                        v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                        v.transform((input) => Number(input)),
+                                        v.literal(17),
+                                      ),
                                       v.description('Container component'),
                                     ),
                                     v.pipe(
-                                      v.pipe(v.string(), v.transform(Number), v.literal(18)),
+                                      v.pipe(
+                                        v.string(),
+                                        v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                        v.transform((input) => Number(input)),
+                                        v.literal(18),
+                                      ),
                                       v.description('Label component'),
                                     ),
                                     v.pipe(
-                                      v.pipe(v.string(), v.transform(Number), v.literal(19)),
+                                      v.pipe(
+                                        v.string(),
+                                        v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                        v.transform((input) => Number(input)),
+                                        v.literal(19),
+                                      ),
                                       v.description('File upload component'),
                                     ),
                                     v.pipe(
-                                      v.pipe(v.string(), v.transform(Number), v.literal(21)),
+                                      v.pipe(
+                                        v.string(),
+                                        v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                        v.transform((input) => Number(input)),
+                                        v.literal(21),
+                                      ),
                                       v.description('Radio group component'),
                                     ),
                                     v.pipe(
-                                      v.pipe(v.string(), v.transform(Number), v.literal(22)),
+                                      v.pipe(
+                                        v.string(),
+                                        v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                        v.transform((input) => Number(input)),
+                                        v.literal(22),
+                                      ),
                                       v.description('Checkbox group component'),
                                     ),
                                     v.pipe(
-                                      v.pipe(v.string(), v.transform(Number), v.literal(23)),
+                                      v.pipe(
+                                        v.string(),
+                                        v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                        v.transform((input) => Number(input)),
+                                        v.literal(23),
+                                      ),
                                       v.description('Checkbox component'),
                                     ),
                                   ]),
@@ -4553,7 +6867,8 @@ export const lobbiesHandler = new Hono()
                                       v.nullable(
                                         v.pipe(
                                           v.string(),
-                                          v.transform(Number),
+                                          v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                          v.transform((input) => Number(input)),
                                           v.number(),
                                           v.safeInteger(),
                                           v.minValue(-2147483648),
@@ -4592,85 +6907,185 @@ export const lobbiesHandler = new Hono()
                             v.object({
                               type: v.union([
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(1)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(1),
+                                  ),
                                   v.description('Container for other components'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(2)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(2),
+                                  ),
                                   v.description('Button object'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(3)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(3),
+                                  ),
                                   v.description(
                                     'Select menu for picking from defined text options',
                                   ),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(4)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(4),
+                                  ),
                                   v.description('Text input object'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(5)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(5),
+                                  ),
                                   v.description('Select menu for users'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(6)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(6),
+                                  ),
                                   v.description('Select menu for roles'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(7)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(7),
+                                  ),
                                   v.description('Select menu for mentionables (users and roles)'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(8)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(8),
+                                  ),
                                   v.description('Select menu for channels'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(9)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(9),
+                                  ),
                                   v.description('Section component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(10)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(10),
+                                  ),
                                   v.description('Text component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(11)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(11),
+                                  ),
                                   v.description('Thumbnail component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(12)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(12),
+                                  ),
                                   v.description('Media gallery component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(13)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(13),
+                                  ),
                                   v.description('File component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(14)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(14),
+                                  ),
                                   v.description('Separator component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(17)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(17),
+                                  ),
                                   v.description('Container component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(18)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(18),
+                                  ),
                                   v.description('Label component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(19)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(19),
+                                  ),
                                   v.description('File upload component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(21)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(21),
+                                  ),
                                   v.description('Radio group component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(22)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(22),
+                                  ),
                                   v.description('Checkbox group component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(23)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(23),
+                                  ),
                                   v.description('Checkbox component'),
                                 ),
                               ]),
@@ -4681,7 +7096,8 @@ export const lobbiesHandler = new Hono()
                                   v.nullable(
                                     v.pipe(
                                       v.string(),
-                                      v.transform(Number),
+                                      v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                      v.transform((input) => Number(input)),
                                       v.number(),
                                       v.safeInteger(),
                                       v.minValue(-2147483648),
@@ -4700,15 +7116,25 @@ export const lobbiesHandler = new Hono()
                                       v.pipe(
                                         v.unknown(),
                                         v.transform((input) => (input === 'null' ? null : input)),
-                                        v.nullable(v.null()),
+                                        v.null(),
                                       ),
                                       v.union([
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(1)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(1),
+                                          ),
                                           v.description('Small spacing'),
                                         ),
                                         v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(2)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(2),
+                                          ),
                                           v.description('Large spacing'),
                                         ),
                                       ]),
@@ -4737,85 +7163,185 @@ export const lobbiesHandler = new Hono()
                             v.object({
                               type: v.union([
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(1)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(1),
+                                  ),
                                   v.description('Container for other components'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(2)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(2),
+                                  ),
                                   v.description('Button object'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(3)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(3),
+                                  ),
                                   v.description(
                                     'Select menu for picking from defined text options',
                                   ),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(4)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(4),
+                                  ),
                                   v.description('Text input object'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(5)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(5),
+                                  ),
                                   v.description('Select menu for users'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(6)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(6),
+                                  ),
                                   v.description('Select menu for roles'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(7)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(7),
+                                  ),
                                   v.description('Select menu for mentionables (users and roles)'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(8)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(8),
+                                  ),
                                   v.description('Select menu for channels'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(9)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(9),
+                                  ),
                                   v.description('Section component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(10)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(10),
+                                  ),
                                   v.description('Text component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(11)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(11),
+                                  ),
                                   v.description('Thumbnail component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(12)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(12),
+                                  ),
                                   v.description('Media gallery component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(13)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(13),
+                                  ),
                                   v.description('File component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(14)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(14),
+                                  ),
                                   v.description('Separator component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(17)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(17),
+                                  ),
                                   v.description('Container component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(18)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(18),
+                                  ),
                                   v.description('Label component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(19)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(19),
+                                  ),
                                   v.description('File upload component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(21)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(21),
+                                  ),
                                   v.description('Radio group component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(22)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(22),
+                                  ),
                                   v.description('Checkbox group component'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(23)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(23),
+                                  ),
                                   v.description('Checkbox component'),
                                 ),
                               ]),
@@ -4826,7 +7352,8 @@ export const lobbiesHandler = new Hono()
                                   v.nullable(
                                     v.pipe(
                                       v.string(),
-                                      v.transform(Number),
+                                      v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                      v.transform((input) => Number(input)),
                                       v.number(),
                                       v.safeInteger(),
                                       v.minValue(-2147483648),
@@ -4864,83 +7391,183 @@ export const lobbiesHandler = new Hono()
                     v.object({
                       type: v.union([
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(1)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(1),
+                          ),
                           v.description('Container for other components'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(2)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(2),
+                          ),
                           v.description('Button object'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(3)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(3),
+                          ),
                           v.description('Select menu for picking from defined text options'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(4)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(4),
+                          ),
                           v.description('Text input object'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(5)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(5),
+                          ),
                           v.description('Select menu for users'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(6)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(6),
+                          ),
                           v.description('Select menu for roles'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(7)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(7),
+                          ),
                           v.description('Select menu for mentionables (users and roles)'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(8)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(8),
+                          ),
                           v.description('Select menu for channels'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(9)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(9),
+                          ),
                           v.description('Section component'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(10)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(10),
+                          ),
                           v.description('Text component'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(11)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(11),
+                          ),
                           v.description('Thumbnail component'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(12)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(12),
+                          ),
                           v.description('Media gallery component'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(13)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(13),
+                          ),
                           v.description('File component'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(14)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(14),
+                          ),
                           v.description('Separator component'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(17)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(17),
+                          ),
                           v.description('Container component'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(18)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(18),
+                          ),
                           v.description('Label component'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(19)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(19),
+                          ),
                           v.description('File upload component'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(21)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(21),
+                          ),
                           v.description('Radio group component'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(22)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(22),
+                          ),
                           v.description('Checkbox group component'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(23)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(23),
+                          ),
                           v.description('Checkbox component'),
                         ),
                       ]),
@@ -4951,7 +7578,8 @@ export const lobbiesHandler = new Hono()
                           v.nullable(
                             v.pipe(
                               v.string(),
-                              v.transform(Number),
+                              v.regex(/^-?(?:0|[1-9]\d*)$/),
+                              v.transform((input) => Number(input)),
                               v.number(),
                               v.safeInteger(),
                               v.minValue(-2147483648),
@@ -4979,83 +7607,183 @@ export const lobbiesHandler = new Hono()
                     v.object({
                       type: v.union([
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(1)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(1),
+                          ),
                           v.description('Container for other components'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(2)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(2),
+                          ),
                           v.description('Button object'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(3)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(3),
+                          ),
                           v.description('Select menu for picking from defined text options'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(4)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(4),
+                          ),
                           v.description('Text input object'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(5)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(5),
+                          ),
                           v.description('Select menu for users'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(6)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(6),
+                          ),
                           v.description('Select menu for roles'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(7)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(7),
+                          ),
                           v.description('Select menu for mentionables (users and roles)'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(8)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(8),
+                          ),
                           v.description('Select menu for channels'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(9)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(9),
+                          ),
                           v.description('Section component'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(10)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(10),
+                          ),
                           v.description('Text component'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(11)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(11),
+                          ),
                           v.description('Thumbnail component'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(12)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(12),
+                          ),
                           v.description('Media gallery component'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(13)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(13),
+                          ),
                           v.description('File component'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(14)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(14),
+                          ),
                           v.description('Separator component'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(17)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(17),
+                          ),
                           v.description('Container component'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(18)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(18),
+                          ),
                           v.description('Label component'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(19)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(19),
+                          ),
                           v.description('File upload component'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(21)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(21),
+                          ),
                           v.description('Radio group component'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(22)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(22),
+                          ),
                           v.description('Checkbox group component'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(23)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(23),
+                          ),
                           v.description('Checkbox component'),
                         ),
                       ]),
@@ -5066,7 +7794,8 @@ export const lobbiesHandler = new Hono()
                           v.nullable(
                             v.pipe(
                               v.string(),
-                              v.transform(Number),
+                              v.regex(/^-?(?:0|[1-9]\d*)$/),
+                              v.transform((input) => Number(input)),
                               v.number(),
                               v.safeInteger(),
                               v.minValue(-2147483648),
@@ -5115,83 +7844,183 @@ export const lobbiesHandler = new Hono()
                     v.object({
                       type: v.union([
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(1)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(1),
+                          ),
                           v.description('Container for other components'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(2)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(2),
+                          ),
                           v.description('Button object'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(3)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(3),
+                          ),
                           v.description('Select menu for picking from defined text options'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(4)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(4),
+                          ),
                           v.description('Text input object'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(5)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(5),
+                          ),
                           v.description('Select menu for users'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(6)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(6),
+                          ),
                           v.description('Select menu for roles'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(7)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(7),
+                          ),
                           v.description('Select menu for mentionables (users and roles)'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(8)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(8),
+                          ),
                           v.description('Select menu for channels'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(9)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(9),
+                          ),
                           v.description('Section component'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(10)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(10),
+                          ),
                           v.description('Text component'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(11)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(11),
+                          ),
                           v.description('Thumbnail component'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(12)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(12),
+                          ),
                           v.description('Media gallery component'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(13)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(13),
+                          ),
                           v.description('File component'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(14)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(14),
+                          ),
                           v.description('Separator component'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(17)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(17),
+                          ),
                           v.description('Container component'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(18)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(18),
+                          ),
                           v.description('Label component'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(19)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(19),
+                          ),
                           v.description('File upload component'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(21)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(21),
+                          ),
                           v.description('Radio group component'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(22)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(22),
+                          ),
                           v.description('Checkbox group component'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(23)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(23),
+                          ),
                           v.description('Checkbox component'),
                         ),
                       ]),
@@ -5202,7 +8031,8 @@ export const lobbiesHandler = new Hono()
                           v.nullable(
                             v.pipe(
                               v.string(),
-                              v.transform(Number),
+                              v.regex(/^-?(?:0|[1-9]\d*)$/),
+                              v.transform((input) => Number(input)),
                               v.number(),
                               v.safeInteger(),
                               v.minValue(-2147483648),
@@ -5221,83 +8051,183 @@ export const lobbiesHandler = new Hono()
                           v.object({
                             type: v.union([
                               v.pipe(
-                                v.pipe(v.string(), v.transform(Number), v.literal(1)),
+                                v.pipe(
+                                  v.string(),
+                                  v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                  v.transform((input) => Number(input)),
+                                  v.literal(1),
+                                ),
                                 v.description('Container for other components'),
                               ),
                               v.pipe(
-                                v.pipe(v.string(), v.transform(Number), v.literal(2)),
+                                v.pipe(
+                                  v.string(),
+                                  v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                  v.transform((input) => Number(input)),
+                                  v.literal(2),
+                                ),
                                 v.description('Button object'),
                               ),
                               v.pipe(
-                                v.pipe(v.string(), v.transform(Number), v.literal(3)),
+                                v.pipe(
+                                  v.string(),
+                                  v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                  v.transform((input) => Number(input)),
+                                  v.literal(3),
+                                ),
                                 v.description('Select menu for picking from defined text options'),
                               ),
                               v.pipe(
-                                v.pipe(v.string(), v.transform(Number), v.literal(4)),
+                                v.pipe(
+                                  v.string(),
+                                  v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                  v.transform((input) => Number(input)),
+                                  v.literal(4),
+                                ),
                                 v.description('Text input object'),
                               ),
                               v.pipe(
-                                v.pipe(v.string(), v.transform(Number), v.literal(5)),
+                                v.pipe(
+                                  v.string(),
+                                  v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                  v.transform((input) => Number(input)),
+                                  v.literal(5),
+                                ),
                                 v.description('Select menu for users'),
                               ),
                               v.pipe(
-                                v.pipe(v.string(), v.transform(Number), v.literal(6)),
+                                v.pipe(
+                                  v.string(),
+                                  v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                  v.transform((input) => Number(input)),
+                                  v.literal(6),
+                                ),
                                 v.description('Select menu for roles'),
                               ),
                               v.pipe(
-                                v.pipe(v.string(), v.transform(Number), v.literal(7)),
+                                v.pipe(
+                                  v.string(),
+                                  v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                  v.transform((input) => Number(input)),
+                                  v.literal(7),
+                                ),
                                 v.description('Select menu for mentionables (users and roles)'),
                               ),
                               v.pipe(
-                                v.pipe(v.string(), v.transform(Number), v.literal(8)),
+                                v.pipe(
+                                  v.string(),
+                                  v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                  v.transform((input) => Number(input)),
+                                  v.literal(8),
+                                ),
                                 v.description('Select menu for channels'),
                               ),
                               v.pipe(
-                                v.pipe(v.string(), v.transform(Number), v.literal(9)),
+                                v.pipe(
+                                  v.string(),
+                                  v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                  v.transform((input) => Number(input)),
+                                  v.literal(9),
+                                ),
                                 v.description('Section component'),
                               ),
                               v.pipe(
-                                v.pipe(v.string(), v.transform(Number), v.literal(10)),
+                                v.pipe(
+                                  v.string(),
+                                  v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                  v.transform((input) => Number(input)),
+                                  v.literal(10),
+                                ),
                                 v.description('Text component'),
                               ),
                               v.pipe(
-                                v.pipe(v.string(), v.transform(Number), v.literal(11)),
+                                v.pipe(
+                                  v.string(),
+                                  v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                  v.transform((input) => Number(input)),
+                                  v.literal(11),
+                                ),
                                 v.description('Thumbnail component'),
                               ),
                               v.pipe(
-                                v.pipe(v.string(), v.transform(Number), v.literal(12)),
+                                v.pipe(
+                                  v.string(),
+                                  v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                  v.transform((input) => Number(input)),
+                                  v.literal(12),
+                                ),
                                 v.description('Media gallery component'),
                               ),
                               v.pipe(
-                                v.pipe(v.string(), v.transform(Number), v.literal(13)),
+                                v.pipe(
+                                  v.string(),
+                                  v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                  v.transform((input) => Number(input)),
+                                  v.literal(13),
+                                ),
                                 v.description('File component'),
                               ),
                               v.pipe(
-                                v.pipe(v.string(), v.transform(Number), v.literal(14)),
+                                v.pipe(
+                                  v.string(),
+                                  v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                  v.transform((input) => Number(input)),
+                                  v.literal(14),
+                                ),
                                 v.description('Separator component'),
                               ),
                               v.pipe(
-                                v.pipe(v.string(), v.transform(Number), v.literal(17)),
+                                v.pipe(
+                                  v.string(),
+                                  v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                  v.transform((input) => Number(input)),
+                                  v.literal(17),
+                                ),
                                 v.description('Container component'),
                               ),
                               v.pipe(
-                                v.pipe(v.string(), v.transform(Number), v.literal(18)),
+                                v.pipe(
+                                  v.string(),
+                                  v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                  v.transform((input) => Number(input)),
+                                  v.literal(18),
+                                ),
                                 v.description('Label component'),
                               ),
                               v.pipe(
-                                v.pipe(v.string(), v.transform(Number), v.literal(19)),
+                                v.pipe(
+                                  v.string(),
+                                  v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                  v.transform((input) => Number(input)),
+                                  v.literal(19),
+                                ),
                                 v.description('File upload component'),
                               ),
                               v.pipe(
-                                v.pipe(v.string(), v.transform(Number), v.literal(21)),
+                                v.pipe(
+                                  v.string(),
+                                  v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                  v.transform((input) => Number(input)),
+                                  v.literal(21),
+                                ),
                                 v.description('Radio group component'),
                               ),
                               v.pipe(
-                                v.pipe(v.string(), v.transform(Number), v.literal(22)),
+                                v.pipe(
+                                  v.string(),
+                                  v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                  v.transform((input) => Number(input)),
+                                  v.literal(22),
+                                ),
                                 v.description('Checkbox group component'),
                               ),
                               v.pipe(
-                                v.pipe(v.string(), v.transform(Number), v.literal(23)),
+                                v.pipe(
+                                  v.string(),
+                                  v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                  v.transform((input) => Number(input)),
+                                  v.literal(23),
+                                ),
                                 v.description('Checkbox component'),
                               ),
                             ]),
@@ -5308,7 +8238,8 @@ export const lobbiesHandler = new Hono()
                                 v.nullable(
                                   v.pipe(
                                     v.string(),
-                                    v.transform(Number),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
                                     v.number(),
                                     v.safeInteger(),
                                     v.minValue(-2147483648),
@@ -5328,83 +8259,183 @@ export const lobbiesHandler = new Hono()
                         v.object({
                           type: v.union([
                             v.pipe(
-                              v.pipe(v.string(), v.transform(Number), v.literal(1)),
+                              v.pipe(
+                                v.string(),
+                                v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                v.transform((input) => Number(input)),
+                                v.literal(1),
+                              ),
                               v.description('Container for other components'),
                             ),
                             v.pipe(
-                              v.pipe(v.string(), v.transform(Number), v.literal(2)),
+                              v.pipe(
+                                v.string(),
+                                v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                v.transform((input) => Number(input)),
+                                v.literal(2),
+                              ),
                               v.description('Button object'),
                             ),
                             v.pipe(
-                              v.pipe(v.string(), v.transform(Number), v.literal(3)),
+                              v.pipe(
+                                v.string(),
+                                v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                v.transform((input) => Number(input)),
+                                v.literal(3),
+                              ),
                               v.description('Select menu for picking from defined text options'),
                             ),
                             v.pipe(
-                              v.pipe(v.string(), v.transform(Number), v.literal(4)),
+                              v.pipe(
+                                v.string(),
+                                v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                v.transform((input) => Number(input)),
+                                v.literal(4),
+                              ),
                               v.description('Text input object'),
                             ),
                             v.pipe(
-                              v.pipe(v.string(), v.transform(Number), v.literal(5)),
+                              v.pipe(
+                                v.string(),
+                                v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                v.transform((input) => Number(input)),
+                                v.literal(5),
+                              ),
                               v.description('Select menu for users'),
                             ),
                             v.pipe(
-                              v.pipe(v.string(), v.transform(Number), v.literal(6)),
+                              v.pipe(
+                                v.string(),
+                                v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                v.transform((input) => Number(input)),
+                                v.literal(6),
+                              ),
                               v.description('Select menu for roles'),
                             ),
                             v.pipe(
-                              v.pipe(v.string(), v.transform(Number), v.literal(7)),
+                              v.pipe(
+                                v.string(),
+                                v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                v.transform((input) => Number(input)),
+                                v.literal(7),
+                              ),
                               v.description('Select menu for mentionables (users and roles)'),
                             ),
                             v.pipe(
-                              v.pipe(v.string(), v.transform(Number), v.literal(8)),
+                              v.pipe(
+                                v.string(),
+                                v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                v.transform((input) => Number(input)),
+                                v.literal(8),
+                              ),
                               v.description('Select menu for channels'),
                             ),
                             v.pipe(
-                              v.pipe(v.string(), v.transform(Number), v.literal(9)),
+                              v.pipe(
+                                v.string(),
+                                v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                v.transform((input) => Number(input)),
+                                v.literal(9),
+                              ),
                               v.description('Section component'),
                             ),
                             v.pipe(
-                              v.pipe(v.string(), v.transform(Number), v.literal(10)),
+                              v.pipe(
+                                v.string(),
+                                v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                v.transform((input) => Number(input)),
+                                v.literal(10),
+                              ),
                               v.description('Text component'),
                             ),
                             v.pipe(
-                              v.pipe(v.string(), v.transform(Number), v.literal(11)),
+                              v.pipe(
+                                v.string(),
+                                v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                v.transform((input) => Number(input)),
+                                v.literal(11),
+                              ),
                               v.description('Thumbnail component'),
                             ),
                             v.pipe(
-                              v.pipe(v.string(), v.transform(Number), v.literal(12)),
+                              v.pipe(
+                                v.string(),
+                                v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                v.transform((input) => Number(input)),
+                                v.literal(12),
+                              ),
                               v.description('Media gallery component'),
                             ),
                             v.pipe(
-                              v.pipe(v.string(), v.transform(Number), v.literal(13)),
+                              v.pipe(
+                                v.string(),
+                                v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                v.transform((input) => Number(input)),
+                                v.literal(13),
+                              ),
                               v.description('File component'),
                             ),
                             v.pipe(
-                              v.pipe(v.string(), v.transform(Number), v.literal(14)),
+                              v.pipe(
+                                v.string(),
+                                v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                v.transform((input) => Number(input)),
+                                v.literal(14),
+                              ),
                               v.description('Separator component'),
                             ),
                             v.pipe(
-                              v.pipe(v.string(), v.transform(Number), v.literal(17)),
+                              v.pipe(
+                                v.string(),
+                                v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                v.transform((input) => Number(input)),
+                                v.literal(17),
+                              ),
                               v.description('Container component'),
                             ),
                             v.pipe(
-                              v.pipe(v.string(), v.transform(Number), v.literal(18)),
+                              v.pipe(
+                                v.string(),
+                                v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                v.transform((input) => Number(input)),
+                                v.literal(18),
+                              ),
                               v.description('Label component'),
                             ),
                             v.pipe(
-                              v.pipe(v.string(), v.transform(Number), v.literal(19)),
+                              v.pipe(
+                                v.string(),
+                                v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                v.transform((input) => Number(input)),
+                                v.literal(19),
+                              ),
                               v.description('File upload component'),
                             ),
                             v.pipe(
-                              v.pipe(v.string(), v.transform(Number), v.literal(21)),
+                              v.pipe(
+                                v.string(),
+                                v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                v.transform((input) => Number(input)),
+                                v.literal(21),
+                              ),
                               v.description('Radio group component'),
                             ),
                             v.pipe(
-                              v.pipe(v.string(), v.transform(Number), v.literal(22)),
+                              v.pipe(
+                                v.string(),
+                                v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                v.transform((input) => Number(input)),
+                                v.literal(22),
+                              ),
                               v.description('Checkbox group component'),
                             ),
                             v.pipe(
-                              v.pipe(v.string(), v.transform(Number), v.literal(23)),
+                              v.pipe(
+                                v.string(),
+                                v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                v.transform((input) => Number(input)),
+                                v.literal(23),
+                              ),
                               v.description('Checkbox component'),
                             ),
                           ]),
@@ -5415,7 +8446,8 @@ export const lobbiesHandler = new Hono()
                               v.nullable(
                                 v.pipe(
                                   v.string(),
-                                  v.transform(Number),
+                                  v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                  v.transform((input) => Number(input)),
                                   v.number(),
                                   v.safeInteger(),
                                   v.minValue(-2147483648),
@@ -5431,12 +8463,42 @@ export const lobbiesHandler = new Hono()
                             ),
                           ),
                           style: v.union([
-                            v.pipe(v.string(), v.transform(Number), v.literal(1)),
-                            v.pipe(v.string(), v.transform(Number), v.literal(2)),
-                            v.pipe(v.string(), v.transform(Number), v.literal(3)),
-                            v.pipe(v.string(), v.transform(Number), v.literal(4)),
-                            v.pipe(v.string(), v.transform(Number), v.literal(5)),
-                            v.pipe(v.string(), v.transform(Number), v.literal(6)),
+                            v.pipe(
+                              v.string(),
+                              v.regex(/^-?(?:0|[1-9]\d*)$/),
+                              v.transform((input) => Number(input)),
+                              v.literal(1),
+                            ),
+                            v.pipe(
+                              v.string(),
+                              v.regex(/^-?(?:0|[1-9]\d*)$/),
+                              v.transform((input) => Number(input)),
+                              v.literal(2),
+                            ),
+                            v.pipe(
+                              v.string(),
+                              v.regex(/^-?(?:0|[1-9]\d*)$/),
+                              v.transform((input) => Number(input)),
+                              v.literal(3),
+                            ),
+                            v.pipe(
+                              v.string(),
+                              v.regex(/^-?(?:0|[1-9]\d*)$/),
+                              v.transform((input) => Number(input)),
+                              v.literal(4),
+                            ),
+                            v.pipe(
+                              v.string(),
+                              v.regex(/^-?(?:0|[1-9]\d*)$/),
+                              v.transform((input) => Number(input)),
+                              v.literal(5),
+                            ),
+                            v.pipe(
+                              v.string(),
+                              v.regex(/^-?(?:0|[1-9]\d*)$/),
+                              v.transform((input) => Number(input)),
+                              v.literal(6),
+                            ),
                           ]),
                           label: v.optional(v.nullable(v.pipe(v.string(), v.maxCodePoints(80)))),
                           disabled: v.optional(
@@ -5468,7 +8530,7 @@ export const lobbiesHandler = new Hono()
                                   v.pipe(
                                     v.unknown(),
                                     v.transform((input) => (input === 'null' ? null : input)),
-                                    v.nullable(v.null()),
+                                    v.null(),
                                   ),
                                   SnowflakeTypeSchema,
                                 ]),
@@ -5484,7 +8546,7 @@ export const lobbiesHandler = new Hono()
                                   v.pipe(
                                     v.unknown(),
                                     v.transform((input) => (input === 'null' ? null : input)),
-                                    v.nullable(v.null()),
+                                    v.null(),
                                   ),
                                   v.object({
                                     id: v.optional(
@@ -5498,7 +8560,7 @@ export const lobbiesHandler = new Hono()
                                               v.transform((input) =>
                                                 input === 'null' ? null : input,
                                               ),
-                                              v.nullable(v.null()),
+                                              v.null(),
                                             ),
                                             SnowflakeTypeSchema,
                                           ]),
@@ -5515,83 +8577,183 @@ export const lobbiesHandler = new Hono()
                         v.object({
                           type: v.union([
                             v.pipe(
-                              v.pipe(v.string(), v.transform(Number), v.literal(1)),
+                              v.pipe(
+                                v.string(),
+                                v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                v.transform((input) => Number(input)),
+                                v.literal(1),
+                              ),
                               v.description('Container for other components'),
                             ),
                             v.pipe(
-                              v.pipe(v.string(), v.transform(Number), v.literal(2)),
+                              v.pipe(
+                                v.string(),
+                                v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                v.transform((input) => Number(input)),
+                                v.literal(2),
+                              ),
                               v.description('Button object'),
                             ),
                             v.pipe(
-                              v.pipe(v.string(), v.transform(Number), v.literal(3)),
+                              v.pipe(
+                                v.string(),
+                                v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                v.transform((input) => Number(input)),
+                                v.literal(3),
+                              ),
                               v.description('Select menu for picking from defined text options'),
                             ),
                             v.pipe(
-                              v.pipe(v.string(), v.transform(Number), v.literal(4)),
+                              v.pipe(
+                                v.string(),
+                                v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                v.transform((input) => Number(input)),
+                                v.literal(4),
+                              ),
                               v.description('Text input object'),
                             ),
                             v.pipe(
-                              v.pipe(v.string(), v.transform(Number), v.literal(5)),
+                              v.pipe(
+                                v.string(),
+                                v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                v.transform((input) => Number(input)),
+                                v.literal(5),
+                              ),
                               v.description('Select menu for users'),
                             ),
                             v.pipe(
-                              v.pipe(v.string(), v.transform(Number), v.literal(6)),
+                              v.pipe(
+                                v.string(),
+                                v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                v.transform((input) => Number(input)),
+                                v.literal(6),
+                              ),
                               v.description('Select menu for roles'),
                             ),
                             v.pipe(
-                              v.pipe(v.string(), v.transform(Number), v.literal(7)),
+                              v.pipe(
+                                v.string(),
+                                v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                v.transform((input) => Number(input)),
+                                v.literal(7),
+                              ),
                               v.description('Select menu for mentionables (users and roles)'),
                             ),
                             v.pipe(
-                              v.pipe(v.string(), v.transform(Number), v.literal(8)),
+                              v.pipe(
+                                v.string(),
+                                v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                v.transform((input) => Number(input)),
+                                v.literal(8),
+                              ),
                               v.description('Select menu for channels'),
                             ),
                             v.pipe(
-                              v.pipe(v.string(), v.transform(Number), v.literal(9)),
+                              v.pipe(
+                                v.string(),
+                                v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                v.transform((input) => Number(input)),
+                                v.literal(9),
+                              ),
                               v.description('Section component'),
                             ),
                             v.pipe(
-                              v.pipe(v.string(), v.transform(Number), v.literal(10)),
+                              v.pipe(
+                                v.string(),
+                                v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                v.transform((input) => Number(input)),
+                                v.literal(10),
+                              ),
                               v.description('Text component'),
                             ),
                             v.pipe(
-                              v.pipe(v.string(), v.transform(Number), v.literal(11)),
+                              v.pipe(
+                                v.string(),
+                                v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                v.transform((input) => Number(input)),
+                                v.literal(11),
+                              ),
                               v.description('Thumbnail component'),
                             ),
                             v.pipe(
-                              v.pipe(v.string(), v.transform(Number), v.literal(12)),
+                              v.pipe(
+                                v.string(),
+                                v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                v.transform((input) => Number(input)),
+                                v.literal(12),
+                              ),
                               v.description('Media gallery component'),
                             ),
                             v.pipe(
-                              v.pipe(v.string(), v.transform(Number), v.literal(13)),
+                              v.pipe(
+                                v.string(),
+                                v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                v.transform((input) => Number(input)),
+                                v.literal(13),
+                              ),
                               v.description('File component'),
                             ),
                             v.pipe(
-                              v.pipe(v.string(), v.transform(Number), v.literal(14)),
+                              v.pipe(
+                                v.string(),
+                                v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                v.transform((input) => Number(input)),
+                                v.literal(14),
+                              ),
                               v.description('Separator component'),
                             ),
                             v.pipe(
-                              v.pipe(v.string(), v.transform(Number), v.literal(17)),
+                              v.pipe(
+                                v.string(),
+                                v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                v.transform((input) => Number(input)),
+                                v.literal(17),
+                              ),
                               v.description('Container component'),
                             ),
                             v.pipe(
-                              v.pipe(v.string(), v.transform(Number), v.literal(18)),
+                              v.pipe(
+                                v.string(),
+                                v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                v.transform((input) => Number(input)),
+                                v.literal(18),
+                              ),
                               v.description('Label component'),
                             ),
                             v.pipe(
-                              v.pipe(v.string(), v.transform(Number), v.literal(19)),
+                              v.pipe(
+                                v.string(),
+                                v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                v.transform((input) => Number(input)),
+                                v.literal(19),
+                              ),
                               v.description('File upload component'),
                             ),
                             v.pipe(
-                              v.pipe(v.string(), v.transform(Number), v.literal(21)),
+                              v.pipe(
+                                v.string(),
+                                v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                v.transform((input) => Number(input)),
+                                v.literal(21),
+                              ),
                               v.description('Radio group component'),
                             ),
                             v.pipe(
-                              v.pipe(v.string(), v.transform(Number), v.literal(22)),
+                              v.pipe(
+                                v.string(),
+                                v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                v.transform((input) => Number(input)),
+                                v.literal(22),
+                              ),
                               v.description('Checkbox group component'),
                             ),
                             v.pipe(
-                              v.pipe(v.string(), v.transform(Number), v.literal(23)),
+                              v.pipe(
+                                v.string(),
+                                v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                v.transform((input) => Number(input)),
+                                v.literal(23),
+                              ),
                               v.description('Checkbox component'),
                             ),
                           ]),
@@ -5602,7 +8764,8 @@ export const lobbiesHandler = new Hono()
                               v.nullable(
                                 v.pipe(
                                   v.string(),
-                                  v.transform(Number),
+                                  v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                  v.transform((input) => Number(input)),
                                   v.number(),
                                   v.safeInteger(),
                                   v.minValue(-2147483648),
@@ -5641,83 +8804,183 @@ export const lobbiesHandler = new Hono()
                     v.object({
                       type: v.union([
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(1)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(1),
+                          ),
                           v.description('Container for other components'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(2)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(2),
+                          ),
                           v.description('Button object'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(3)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(3),
+                          ),
                           v.description('Select menu for picking from defined text options'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(4)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(4),
+                          ),
                           v.description('Text input object'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(5)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(5),
+                          ),
                           v.description('Select menu for users'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(6)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(6),
+                          ),
                           v.description('Select menu for roles'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(7)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(7),
+                          ),
                           v.description('Select menu for mentionables (users and roles)'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(8)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(8),
+                          ),
                           v.description('Select menu for channels'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(9)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(9),
+                          ),
                           v.description('Section component'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(10)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(10),
+                          ),
                           v.description('Text component'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(11)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(11),
+                          ),
                           v.description('Thumbnail component'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(12)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(12),
+                          ),
                           v.description('Media gallery component'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(13)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(13),
+                          ),
                           v.description('File component'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(14)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(14),
+                          ),
                           v.description('Separator component'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(17)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(17),
+                          ),
                           v.description('Container component'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(18)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(18),
+                          ),
                           v.description('Label component'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(19)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(19),
+                          ),
                           v.description('File upload component'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(21)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(21),
+                          ),
                           v.description('Radio group component'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(22)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(22),
+                          ),
                           v.description('Checkbox group component'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(23)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(23),
+                          ),
                           v.description('Checkbox component'),
                         ),
                       ]),
@@ -5728,7 +8991,8 @@ export const lobbiesHandler = new Hono()
                           v.nullable(
                             v.pipe(
                               v.string(),
-                              v.transform(Number),
+                              v.regex(/^-?(?:0|[1-9]\d*)$/),
+                              v.transform((input) => Number(input)),
                               v.number(),
                               v.safeInteger(),
                               v.minValue(-2147483648),
@@ -5747,15 +9011,25 @@ export const lobbiesHandler = new Hono()
                               v.pipe(
                                 v.unknown(),
                                 v.transform((input) => (input === 'null' ? null : input)),
-                                v.nullable(v.null()),
+                                v.null(),
                               ),
                               v.union([
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(1)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(1),
+                                  ),
                                   v.description('Small spacing'),
                                 ),
                                 v.pipe(
-                                  v.pipe(v.string(), v.transform(Number), v.literal(2)),
+                                  v.pipe(
+                                    v.string(),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
+                                    v.literal(2),
+                                  ),
                                   v.description('Large spacing'),
                                 ),
                               ]),
@@ -5780,83 +9054,183 @@ export const lobbiesHandler = new Hono()
                     v.object({
                       type: v.union([
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(1)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(1),
+                          ),
                           v.description('Container for other components'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(2)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(2),
+                          ),
                           v.description('Button object'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(3)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(3),
+                          ),
                           v.description('Select menu for picking from defined text options'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(4)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(4),
+                          ),
                           v.description('Text input object'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(5)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(5),
+                          ),
                           v.description('Select menu for users'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(6)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(6),
+                          ),
                           v.description('Select menu for roles'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(7)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(7),
+                          ),
                           v.description('Select menu for mentionables (users and roles)'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(8)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(8),
+                          ),
                           v.description('Select menu for channels'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(9)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(9),
+                          ),
                           v.description('Section component'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(10)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(10),
+                          ),
                           v.description('Text component'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(11)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(11),
+                          ),
                           v.description('Thumbnail component'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(12)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(12),
+                          ),
                           v.description('Media gallery component'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(13)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(13),
+                          ),
                           v.description('File component'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(14)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(14),
+                          ),
                           v.description('Separator component'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(17)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(17),
+                          ),
                           v.description('Container component'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(18)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(18),
+                          ),
                           v.description('Label component'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(19)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(19),
+                          ),
                           v.description('File upload component'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(21)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(21),
+                          ),
                           v.description('Radio group component'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(22)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(22),
+                          ),
                           v.description('Checkbox group component'),
                         ),
                         v.pipe(
-                          v.pipe(v.string(), v.transform(Number), v.literal(23)),
+                          v.pipe(
+                            v.string(),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
+                            v.literal(23),
+                          ),
                           v.description('Checkbox component'),
                         ),
                       ]),
@@ -5867,7 +9241,8 @@ export const lobbiesHandler = new Hono()
                           v.nullable(
                             v.pipe(
                               v.string(),
-                              v.transform(Number),
+                              v.regex(/^-?(?:0|[1-9]\d*)$/),
+                              v.transform((input) => Number(input)),
                               v.number(),
                               v.safeInteger(),
                               v.minValue(-2147483648),
@@ -5888,7 +9263,15 @@ export const lobbiesHandler = new Hono()
           flags: v.pipe(
             v.unknown(),
             v.transform((input) => (input === 'null' ? null : input)),
-            v.nullable(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger())),
+            v.nullable(
+              v.pipe(
+                v.string(),
+                v.regex(/^-?(?:0|[1-9]\d*)$/),
+                v.transform((input) => Number(input)),
+                v.number(),
+                v.safeInteger(),
+              ),
+            ),
           ),
           attachments: v.pipe(
             v.unknown(),
@@ -5913,7 +9296,8 @@ export const lobbiesHandler = new Hono()
                         v.nullable(
                           v.pipe(
                             v.string(),
-                            v.transform(Number),
+                            v.regex(/^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/),
+                            v.transform((input) => Number(input)),
                             v.number(),
                             v.finite(),
                             v.minValue(0),
@@ -5951,7 +9335,7 @@ export const lobbiesHandler = new Hono()
                 v.pipe(
                   v.unknown(),
                   v.transform((input) => (input === 'null' ? null : input)),
-                  v.nullable(v.null()),
+                  v.null(),
                 ),
                 v.object({
                   question: v.pipe(
@@ -5970,7 +9354,7 @@ export const lobbiesHandler = new Hono()
                                 v.pipe(
                                   v.unknown(),
                                   v.transform((input) => (input === 'null' ? null : input)),
-                                  v.nullable(v.null()),
+                                  v.null(),
                                 ),
                                 v.partial(
                                   v.object({
@@ -5985,7 +9369,7 @@ export const lobbiesHandler = new Hono()
                                               v.transform((input) =>
                                                 input === 'null' ? null : input,
                                               ),
-                                              v.nullable(v.null()),
+                                              v.null(),
                                             ),
                                             SnowflakeTypeSchema,
                                           ]),
@@ -6054,7 +9438,7 @@ export const lobbiesHandler = new Hono()
                                         v.pipe(
                                           v.unknown(),
                                           v.transform((input) => (input === 'null' ? null : input)),
-                                          v.nullable(v.null()),
+                                          v.null(),
                                         ),
                                         v.partial(
                                           v.object({
@@ -6071,7 +9455,7 @@ export const lobbiesHandler = new Hono()
                                                       v.transform((input) =>
                                                         input === 'null' ? null : input,
                                                       ),
-                                                      v.nullable(v.null()),
+                                                      v.null(),
                                                     ),
                                                     SnowflakeTypeSchema,
                                                   ]),
@@ -6149,11 +9533,16 @@ export const lobbiesHandler = new Hono()
                             v.pipe(
                               v.unknown(),
                               v.transform((input) => (input === 'null' ? null : input)),
-                              v.nullable(v.null()),
+                              v.null(),
                             ),
                             v.union([
                               v.pipe(
-                                v.pipe(v.string(), v.transform(Number), v.literal(1)),
+                                v.pipe(
+                                  v.string(),
+                                  v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                  v.transform((input) => Number(input)),
+                                  v.literal(1),
+                                ),
                                 v.description('The, uhm, default layout type.'),
                               ),
                             ]),
@@ -6171,7 +9560,8 @@ export const lobbiesHandler = new Hono()
                         v.nullable(
                           v.pipe(
                             v.string(),
-                            v.transform(Number),
+                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                            v.transform((input) => Number(input)),
                             v.number(),
                             v.safeInteger(),
                             v.minValue(-2147483648),
@@ -6198,7 +9588,7 @@ export const lobbiesHandler = new Hono()
                 v.pipe(
                   v.unknown(),
                   v.transform((input) => (input === 'null' ? null : input)),
-                  v.nullable(v.null()),
+                  v.null(),
                 ),
                 v.object({
                   colors: v.pipe(
@@ -6212,7 +9602,8 @@ export const lobbiesHandler = new Hono()
                   ),
                   gradient_angle: v.pipe(
                     v.string(),
-                    v.transform(Number),
+                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                    v.transform((input) => Number(input)),
                     v.number(),
                     v.safeInteger(),
                     v.minValue(-2147483648),
@@ -6222,7 +9613,8 @@ export const lobbiesHandler = new Hono()
                   ),
                   base_mix: v.pipe(
                     v.string(),
-                    v.transform(Number),
+                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                    v.transform((input) => Number(input)),
                     v.number(),
                     v.safeInteger(),
                     v.minValue(-2147483648),
@@ -6239,27 +9631,52 @@ export const lobbiesHandler = new Hono()
                           v.pipe(
                             v.unknown(),
                             v.transform((input) => (input === 'null' ? null : input)),
-                            v.nullable(v.null()),
+                            v.null(),
                           ),
                           v.union([
                             v.pipe(
-                              v.pipe(v.string(), v.transform(Number), v.literal(0)),
+                              v.pipe(
+                                v.string(),
+                                v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                v.transform((input) => Number(input)),
+                                v.literal(0),
+                              ),
                               v.description('No base theme'),
                             ),
                             v.pipe(
-                              v.pipe(v.string(), v.transform(Number), v.literal(1)),
+                              v.pipe(
+                                v.string(),
+                                v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                v.transform((input) => Number(input)),
+                                v.literal(1),
+                              ),
                               v.description('Dark base theme'),
                             ),
                             v.pipe(
-                              v.pipe(v.string(), v.transform(Number), v.literal(2)),
+                              v.pipe(
+                                v.string(),
+                                v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                v.transform((input) => Number(input)),
+                                v.literal(2),
+                              ),
                               v.description('Light base theme'),
                             ),
                             v.pipe(
-                              v.pipe(v.string(), v.transform(Number), v.literal(3)),
+                              v.pipe(
+                                v.string(),
+                                v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                v.transform((input) => Number(input)),
+                                v.literal(3),
+                              ),
                               v.description('Darker base theme'),
                             ),
                             v.pipe(
-                              v.pipe(v.string(), v.transform(Number), v.literal(4)),
+                              v.pipe(
+                                v.string(),
+                                v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                v.transform((input) => Number(input)),
+                                v.literal(4),
+                              ),
                               v.description('Midnight base theme'),
                             ),
                           ]),
@@ -6279,7 +9696,7 @@ export const lobbiesHandler = new Hono()
                 v.pipe(
                   v.unknown(),
                   v.transform((input) => (input === 'null' ? null : input)),
-                  v.nullable(v.null()),
+                  v.null(),
                 ),
                 v.object({
                   guild_id: v.optional(
@@ -6291,7 +9708,7 @@ export const lobbiesHandler = new Hono()
                           v.pipe(
                             v.unknown(),
                             v.transform((input) => (input === 'null' ? null : input)),
-                            v.nullable(v.null()),
+                            v.null(),
                           ),
                           SnowflakeTypeSchema,
                         ]),
@@ -6307,7 +9724,7 @@ export const lobbiesHandler = new Hono()
                           v.pipe(
                             v.unknown(),
                             v.transform((input) => (input === 'null' ? null : input)),
-                            v.nullable(v.null()),
+                            v.null(),
                           ),
                           SnowflakeTypeSchema,
                         ]),
@@ -6337,11 +9754,16 @@ export const lobbiesHandler = new Hono()
                           v.pipe(
                             v.unknown(),
                             v.transform((input) => (input === 'null' ? null : input)),
-                            v.nullable(v.null()),
+                            v.null(),
                           ),
                           v.union([
                             v.pipe(
-                              v.pipe(v.string(), v.transform(Number), v.literal(0)),
+                              v.pipe(
+                                v.string(),
+                                v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                v.transform((input) => Number(input)),
+                                v.literal(0),
+                              ),
                               v.description('Reference to a message'),
                             ),
                           ]),
@@ -6360,14 +9782,14 @@ export const lobbiesHandler = new Hono()
               v.transform((input) => BigInt(input)),
               v.minValue(-9223372036854775808n),
               v.maxValue(9223372036854775807n),
-              v.minValue(-9223372036854776000n),
-              v.maxValue(9223372036854776000n),
+              v.minValue(-9223372036854775808n),
+              v.maxValue(9223372036854775808n),
             ),
             v.pipe(v.string(), v.maxCodePoints(25)),
             v.pipe(
               v.unknown(),
               v.transform((input) => (input === 'null' ? null : input)),
-              v.nullable(v.null()),
+              v.null(),
             ),
           ]),
           enforce_nonce: v.pipe(

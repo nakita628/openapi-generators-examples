@@ -490,19 +490,19 @@ export const organizationRouter = t.router({
         project_id: v.string(),
         name: v.optional(
           v.pipe(
-            v.union([v.string(), v.nullable(v.null())]),
+            v.union([v.string(), v.null()]),
             v.description('The updated name of the project, this name appears in reports.'),
           ),
         ),
         external_key_id: v.optional(
           v.pipe(
-            v.union([v.string(), v.nullable(v.null())]),
+            v.union([v.string(), v.null()]),
             v.description('External key ID to associate with the project.'),
           ),
         ),
         geography: v.optional(
           v.pipe(
-            v.union([v.string(), v.nullable(v.null())]),
+            v.union([v.string(), v.null()]),
             v.description(
               'Geography for the project.\nDeprecated: use `residency` when creating a project to configure data residency. This field is retained for backward compatibility.',
             ),
@@ -704,31 +704,31 @@ export const organizationRouter = t.router({
         project_id: v.string(),
         file_search: v.optional(
           v.pipe(
-            v.union([HostedToolPermissionUpdateSchema, v.nullable(v.null())]),
+            v.union([HostedToolPermissionUpdateSchema, v.null()]),
             v.description('The file search permission update.'),
           ),
         ),
         web_search: v.optional(
           v.pipe(
-            v.union([HostedToolPermissionUpdateSchema, v.nullable(v.null())]),
+            v.union([HostedToolPermissionUpdateSchema, v.null()]),
             v.description('The web search permission update.'),
           ),
         ),
         image_generation: v.optional(
           v.pipe(
-            v.union([HostedToolPermissionUpdateSchema, v.nullable(v.null())]),
+            v.union([HostedToolPermissionUpdateSchema, v.null()]),
             v.description('The image generation permission update.'),
           ),
         ),
         mcp: v.optional(
           v.pipe(
-            v.union([HostedToolPermissionUpdateSchema, v.nullable(v.null())]),
+            v.union([HostedToolPermissionUpdateSchema, v.null()]),
             v.description('The MCP permission update.'),
           ),
         ),
         code_interpreter: v.optional(
           v.pipe(
-            v.union([HostedToolPermissionUpdateSchema, v.nullable(v.null())]),
+            v.union([HostedToolPermissionUpdateSchema, v.null()]),
             v.description('The code interpreter permission update.'),
           ),
         ),
@@ -852,14 +852,14 @@ export const organizationRouter = t.router({
               v.boolean(),
               v.description('Create the service account without default roles or an API key.'),
             ),
-            v.nullable(v.null()),
+            v.null(),
           ]),
         ),
         expires_in_seconds: v.optional(
           v.pipe(
             v.union([
               v.pipe(v.number(), v.integer(), v.minValue(1), v.maxValue(31536000)),
-              v.nullable(v.null()),
+              v.null(),
             ]),
             v.description(
               'Number of seconds until the initial API key expires. If omitted or null, the key does not expire unless the effective organization or project policy requires an expiration. When a policy sets a maximum lifetime, this value must be provided and must not exceed that limit. A non-null value cannot be used when `create_service_account_only` is true.',
@@ -986,13 +986,10 @@ export const organizationRouter = t.router({
       v.object({
         project_id: v.string(),
         user_id: v.optional(
-          v.pipe(v.union([v.string(), v.nullable(v.null())]), v.description('The ID of the user.')),
+          v.pipe(v.union([v.string(), v.null()]), v.description('The ID of the user.')),
         ),
         email: v.optional(
-          v.pipe(
-            v.union([v.string(), v.nullable(v.null())]),
-            v.description('Email of the user to add.'),
-          ),
+          v.pipe(v.union([v.string(), v.null()]), v.description('Email of the user to add.')),
         ),
         role: v.pipe(v.string(), v.description('`owner` or `member`')),
       }),
@@ -1013,7 +1010,7 @@ export const organizationRouter = t.router({
         project_id: v.string(),
         user_id: v.string(),
         role: v.optional(
-          v.pipe(v.union([v.string(), v.nullable(v.null())]), v.description('`owner` or `member`')),
+          v.pipe(v.union([v.string(), v.null()]), v.description('`owner` or `member`')),
         ),
       }),
     )
@@ -1057,21 +1054,15 @@ export const organizationRouter = t.router({
         role_id: v.string(),
         permissions: v.optional(
           v.pipe(
-            v.union([v.array(v.string()), v.nullable(v.null())]),
+            v.union([v.array(v.string()), v.null()]),
             v.description('Updated set of permissions for the role.'),
           ),
         ),
         description: v.optional(
-          v.pipe(
-            v.union([v.string(), v.nullable(v.null())]),
-            v.description('New description for the role.'),
-          ),
+          v.pipe(v.union([v.string(), v.null()]), v.description('New description for the role.')),
         ),
         role_name: v.optional(
-          v.pipe(
-            v.union([v.string(), v.nullable(v.null())]),
-            v.description('New name for the role.'),
-          ),
+          v.pipe(v.union([v.string(), v.null()]), v.description('New name for the role.')),
         ),
       }),
     )
@@ -1378,25 +1369,16 @@ export const organizationRouter = t.router({
       v.object({
         user_id: v.string(),
         role: v.optional(
-          v.pipe(v.union([v.string(), v.nullable(v.null())]), v.description('`owner` or `reader`')),
+          v.pipe(v.union([v.string(), v.null()]), v.description('`owner` or `reader`')),
         ),
         role_id: v.optional(
-          v.pipe(
-            v.union([v.string(), v.nullable(v.null())]),
-            v.description('Role ID to assign to the user.'),
-          ),
+          v.pipe(v.union([v.string(), v.null()]), v.description('Role ID to assign to the user.')),
         ),
         technical_level: v.optional(
-          v.pipe(
-            v.union([v.string(), v.nullable(v.null())]),
-            v.description('Technical level metadata.'),
-          ),
+          v.pipe(v.union([v.string(), v.null()]), v.description('Technical level metadata.')),
         ),
         developer_persona: v.optional(
-          v.pipe(
-            v.union([v.string(), v.nullable(v.null())]),
-            v.description('Developer persona metadata.'),
-          ),
+          v.pipe(v.union([v.string(), v.null()]), v.description('Developer persona metadata.')),
         ),
       }),
     )
@@ -1452,7 +1434,7 @@ export const organizationRouter = t.router({
         v.object({
           limit: v.pipe(v.number(), v.integer(), v.minValue(0), v.maxValue(100)),
           order: OrderEnumSchema,
-          after: v.union([v.string(), v.nullable(v.null())]),
+          after: v.union([v.string(), v.null()]),
           purpose: ExternalKeyPurposeSchema,
         }),
       ),
@@ -1524,7 +1506,7 @@ export const organizationRouter = t.router({
         verification: v.optional(
           v.union([DiscoveryVerificationParamSchema, UploadedJwksVerificationParamSchema]),
         ),
-        description: v.optional(v.union([v.string(), v.nullable(v.null())])),
+        description: v.optional(v.union([v.string(), v.null()])),
         attribute_transformations: v.optional(
           v.pipe(v.array(TransformationParamSchema), v.maxLength(20)),
         ),
@@ -1601,8 +1583,8 @@ export const organizationRouter = t.router({
         v.object({
           workload_identity_provider_id: v.pipe(v.string(), v.minCodePoints(1)),
           workload_identity_federation_rule_id: v.pipe(v.string(), v.minCodePoints(1)),
-          name: v.optional(v.union([v.string(), v.nullable(v.null())])),
-          description: v.optional(v.union([v.string(), v.nullable(v.null())])),
+          name: v.optional(v.union([v.string(), v.null()])),
+          description: v.optional(v.union([v.string(), v.null()])),
           attribute_matchers: v.optional(
             v.record(
               v.string(),
@@ -1639,7 +1621,7 @@ export const organizationRouter = t.router({
     .input(
       v.object({
         start_time: v.pipe(v.number(), v.integer()),
-        end_time: v.optional(v.union([v.pipe(v.number(), v.integer()), v.nullable(v.null())])),
+        end_time: v.optional(v.union([v.pipe(v.number(), v.integer()), v.null()])),
         bucket_width: v.optional(
           v.union([
             v.pipe(
@@ -1648,10 +1630,10 @@ export const organizationRouter = t.router({
                 'Width of each time bucket in response. Currently `1m`, `1h` and `1d` are supported, default to `1d`.',
               ),
             ),
-            v.nullable(v.null()),
+            v.null(),
           ]),
         ),
-        limit: v.optional(v.union([v.pipe(v.number(), v.integer()), v.nullable(v.null())])),
+        limit: v.optional(v.union([v.pipe(v.number(), v.integer()), v.null()])),
         page: v.optional(
           v.union([
             v.pipe(
@@ -1660,7 +1642,7 @@ export const organizationRouter = t.router({
                 'A cursor for use in pagination. Corresponding to the `next_page` field from the previous response.',
               ),
             ),
-            v.nullable(v.null()),
+            v.null(),
           ]),
         ),
         project_ids: v.optional(
@@ -1669,7 +1651,7 @@ export const organizationRouter = t.router({
               v.union([v.array(v.string())]),
               v.description('Return only usage for these projects.'),
             ),
-            v.nullable(v.null()),
+            v.null(),
           ]),
         ),
         group_by: v.optional(
@@ -1680,7 +1662,7 @@ export const organizationRouter = t.router({
                 'Group the usage data by the specified fields. Support fields include `project_id`, `user_id`, `api_key_id`, `model`, `batch`, `service_tier`, `api_source` or any combination of them. When grouped by `api_source`, results use `agents_api` for attributed Agents API activity and `unlabeled` for all other activity. Without source grouping, `api_source` is null.',
               ),
             ),
-            v.nullable(v.null()),
+            v.null(),
           ]),
         ),
         user_ids: v.optional(
@@ -1689,7 +1671,7 @@ export const organizationRouter = t.router({
               v.union([v.array(v.string())]),
               v.description('Return only usage for these users.'),
             ),
-            v.nullable(v.null()),
+            v.null(),
           ]),
         ),
         api_key_ids: v.optional(
@@ -1698,7 +1680,7 @@ export const organizationRouter = t.router({
               v.union([v.array(v.string())]),
               v.description('Return only usage for these API keys.'),
             ),
-            v.nullable(v.null()),
+            v.null(),
           ]),
         ),
         models: v.optional(
@@ -1707,10 +1689,10 @@ export const organizationRouter = t.router({
               v.union([v.array(v.string())]),
               v.description('Return only usage for these models.'),
             ),
-            v.nullable(v.null()),
+            v.null(),
           ]),
         ),
-        batch: v.optional(v.union([v.boolean(), v.nullable(v.null())])),
+        batch: v.optional(v.union([v.boolean(), v.null()])),
       }),
     )
     .output(PublicDecisionsUsageResponseResourceSchema)
@@ -1723,14 +1705,14 @@ export const organizationRouter = t.router({
         v.object({
           project_id: v.union([
             v.pipe(v.string(), v.metadata({ examples: ['proj_123'] })),
-            v.nullable(v.null()),
+            v.null(),
           ]),
           after: v.union([
             v.pipe(
               v.string(),
               v.description('Return external storage configurations after this ID.'),
             ),
-            v.nullable(v.null()),
+            v.null(),
           ]),
           order: ExternalStorageOrderSchema,
           limit: v.pipe(v.number(), v.integer(), v.minValue(1), v.maxValue(100)),
@@ -1825,7 +1807,7 @@ export const organizationRouter = t.router({
                 'Configure email notifications when the spend limit is reached. Leave this out to keep the current settings, or send null to reset to owner-only notifications.',
               ),
             ),
-            v.nullable(v.null()),
+            v.null(),
           ]),
         ),
       }),
@@ -1891,7 +1873,7 @@ export const organizationRouter = t.router({
               v.pipe(v.number(), v.integer(), v.minValue(1), v.maxValue(31536000)),
               v.description('Number of seconds until the API key expires.'),
             ),
-            v.nullable(v.null()),
+            v.null(),
           ]),
         ),
       }),

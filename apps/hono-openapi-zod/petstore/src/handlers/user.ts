@@ -55,9 +55,12 @@ export const userHandler = new Hono()
           .string()
           .meta({ examples: ['12345'] })
           .exactOptional(),
-        userStatus: z.coerce
-          .number()
-          .pipe(z.int32())
+        userStatus: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.int32(),
+          )
           .meta({ description: 'User Status', examples: [1] })
           .exactOptional(),
       }),
@@ -205,9 +208,12 @@ export const userHandler = new Hono()
           .string()
           .meta({ examples: ['12345'] })
           .exactOptional(),
-        userStatus: z.coerce
-          .number()
-          .pipe(z.int32())
+        userStatus: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.int32(),
+          )
           .meta({ description: 'User Status', examples: [1] })
           .exactOptional(),
       }),

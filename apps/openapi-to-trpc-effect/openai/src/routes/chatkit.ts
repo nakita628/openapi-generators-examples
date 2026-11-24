@@ -36,21 +36,21 @@ export const chatkitRouter = t.router({
       Schema.toStandardSchemaV1(
         Schema.Struct({
           thread_id: Schema.String.annotate({ jsonSchemaExamples: ['cthr_123'] }),
-          limit: Schema.optional(
+          limit: Schema.optionalKey(
             Schema.Number.check(
               Schema.isInt(),
               Schema.isGreaterThanOrEqualTo(0),
               Schema.isLessThanOrEqualTo(100),
             ),
           ),
-          order: Schema.optional(OrderEnumSchema),
-          after: Schema.optional(
+          order: Schema.optionalKey(OrderEnumSchema),
+          after: Schema.optionalKey(
             Schema.String.annotate({
               description:
                 'List items created after this thread item ID. Defaults to null for the first page.',
             }),
           ),
-          before: Schema.optional(
+          before: Schema.optionalKey(
             Schema.String.annotate({
               description:
                 'List items created before this thread item ID. Defaults to null for the newest results.',
@@ -87,27 +87,27 @@ export const chatkitRouter = t.router({
     .input(
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          limit: Schema.optional(
+          limit: Schema.optionalKey(
             Schema.Number.check(
               Schema.isInt(),
               Schema.isGreaterThanOrEqualTo(0),
               Schema.isLessThanOrEqualTo(100),
             ),
           ),
-          order: Schema.optional(OrderEnumSchema),
-          after: Schema.optional(
+          order: Schema.optionalKey(OrderEnumSchema),
+          after: Schema.optionalKey(
             Schema.String.annotate({
               description:
                 'List items created after this thread item ID. Defaults to null for the first page.',
             }),
           ),
-          before: Schema.optional(
+          before: Schema.optionalKey(
             Schema.String.annotate({
               description:
                 'List items created before this thread item ID. Defaults to null for the newest results.',
             }),
           ),
-          user: Schema.optional(
+          user: Schema.optionalKey(
             Schema.String.check(
               Schema.makeFilter((input) => [...input].length >= 1, {
                 expected: 'a string of at least 1 character',

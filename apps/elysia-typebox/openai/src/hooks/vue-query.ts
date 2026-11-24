@@ -7,8 +7,9 @@ import type {
 } from '@tanstack/vue-query'
 import { computed, toValue } from 'vue'
 import type { MaybeRefOrGetter } from 'vue'
-import type { BetaResponse } from '../components/schemas'
-import { client } from '../lib'
+import type { Static } from 'elysia'
+import type { BetaResponseSchema } from '../components/schemas'
+import { client, clientOrigin } from '../lib'
 
 export function getAgentsKey() {
   return ['agents'] as const
@@ -31103,19 +31104,19 @@ export function usePostResponsesBetaTrue<
 }
 
 export function getResponsesResponseIdBetaTrueQueryKey(
-  response_id: MaybeRefOrGetter<string>,
+  params: MaybeRefOrGetter<string>,
   options?: { headers?: Record<string, string>; query?: Record<string, unknown> },
 ) {
   const { headers: _a, ...keyArgs } = options ?? {}
-  return ['responses', '/responses/{response_id}?beta=true', toValue(response_id), keyArgs] as const
+  return ['responses', '/responses/{response_id}?beta=true', toValue(params), keyArgs] as const
 }
 
 export function getResponsesResponseIdBetaTrueQueryOptions(
-  response_id: MaybeRefOrGetter<string>,
+  params: MaybeRefOrGetter<string>,
   options?: { headers?: Record<string, string>; query?: Record<string, unknown> },
 ) {
   return {
-    queryKey: computed(() => getResponsesResponseIdBetaTrueQueryKey(response_id, options)),
+    queryKey: computed(() => getResponsesResponseIdBetaTrueQueryKey(params, options)),
     queryFn: async ({ signal }: QueryFunctionContext) => {
       const search = new URLSearchParams()
       for (const [k, v] of Object.entries(options?.query ?? {})) {
@@ -31129,7 +31130,7 @@ export function getResponsesResponseIdBetaTrueQueryOptions(
         }
       }
       const res = await fetch(
-        `/responses/${encodeURIComponent(toValue(response_id))}?beta=true${search.size ? `?${search}` : ''}`,
+        `${clientOrigin}/responses/${encodeURIComponent(toValue(params))}?beta=true${search.size ? `?${search}` : ''}`,
         { headers: options?.headers, signal },
       )
       if (!res.ok) throw await res.json()
@@ -31138,16 +31139,19 @@ export function getResponsesResponseIdBetaTrueQueryOptions(
   }
 }
 
-export function useResponsesResponseIdBetaTrue<TData = BetaResponse, TError = unknown>(
-  response_id: MaybeRefOrGetter<string>,
+export function useResponsesResponseIdBetaTrue<
+  TData = Static<typeof BetaResponseSchema>,
+  TError = unknown,
+>(
+  params: MaybeRefOrGetter<string>,
   options?: {
     query?: Omit<
       Extract<
         UseQueryOptions<
-          BetaResponse,
+          Static<typeof BetaResponseSchema>,
           TError,
           TData,
-          BetaResponse,
+          Static<typeof BetaResponseSchema>,
           ReturnType<typeof getResponsesResponseIdBetaTrueQueryKey>
         >,
         { queryKey: unknown }
@@ -31162,7 +31166,7 @@ export function useResponsesResponseIdBetaTrue<TData = BetaResponse, TError = un
   return useQuery(
     {
       ...queryOptions,
-      queryKey: computed(() => getResponsesResponseIdBetaTrueQueryKey(response_id, clientOptions)),
+      queryKey: computed(() => getResponsesResponseIdBetaTrueQueryKey(params, clientOptions)),
       queryFn: async ({ signal }) => {
         const search = new URLSearchParams()
         for (const [k, v] of Object.entries(clientOptions?.query ?? {})) {
@@ -31176,7 +31180,7 @@ export function useResponsesResponseIdBetaTrue<TData = BetaResponse, TError = un
           }
         }
         const res = await fetch(
-          `/responses/${encodeURIComponent(toValue(response_id))}?beta=true${search.size ? `?${search}` : ''}`,
+          `${clientOrigin}/responses/${encodeURIComponent(toValue(params))}?beta=true${search.size ? `?${search}` : ''}`,
           { headers: clientOptions?.headers, signal },
         )
         if (!res.ok) throw await res.json()
@@ -31194,7 +31198,7 @@ export function getDeleteResponsesResponseIdBetaTrueMutationKey() {
 export function getDeleteResponsesResponseIdBetaTrueMutationOptions<
   TError = unknown,
   TOnMutateResult = unknown,
->(response_id: MaybeRefOrGetter<string>) {
+>(params: MaybeRefOrGetter<string>) {
   return mutationOptions<
     unknown,
     TError,
@@ -31203,11 +31207,14 @@ export function getDeleteResponsesResponseIdBetaTrueMutationOptions<
   >({
     mutationKey: getDeleteResponsesResponseIdBetaTrueMutationKey(),
     mutationFn: async ({ body, options }) => {
-      const res = await fetch(`/responses/${encodeURIComponent(toValue(response_id))}?beta=true`, {
-        method: 'DELETE',
-        headers: { 'content-type': 'application/json', ...options?.headers },
-        body: body === undefined ? undefined : JSON.stringify(body),
-      })
+      const res = await fetch(
+        `${clientOrigin}/responses/${encodeURIComponent(toValue(params))}?beta=true`,
+        {
+          method: 'DELETE',
+          headers: { 'content-type': 'application/json', ...options?.headers },
+          body: body === undefined ? undefined : JSON.stringify(body),
+        },
+      )
       if (!res.ok) throw await res.json()
       return JSON.parse(await res.text())
     },
@@ -31215,7 +31222,7 @@ export function getDeleteResponsesResponseIdBetaTrueMutationOptions<
 }
 
 export function useDeleteResponsesResponseIdBetaTrue<TError = unknown, TOnMutateResult = unknown>(
-  response_id: MaybeRefOrGetter<string>,
+  params: MaybeRefOrGetter<string>,
   options?: {
     mutation?: Omit<
       Extract<
@@ -31236,7 +31243,7 @@ export function useDeleteResponsesResponseIdBetaTrue<TError = unknown, TOnMutate
   const mutationDefaults = getDeleteResponsesResponseIdBetaTrueMutationOptions<
     TError,
     TOnMutateResult
-  >(response_id)
+  >(params)
   return useMutation(
     {
       ...mutation,

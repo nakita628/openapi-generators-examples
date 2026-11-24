@@ -1,7 +1,7 @@
-import { Schema } from 'effect'
+import { Effect, Schema, SchemaGetter, SchemaIssue, SchemaTransformation } from 'effect'
 
 export const ExternalUrlObjectSchema = Schema.Struct({
-  spotify: Schema.optional(
+  spotify: Schema.optionalKey(
     Schema.String.annotate({
       description:
         'The [Spotify URL](/documentation/web-api/concepts/spotify-uris-ids) for the object.\n',
@@ -12,22 +12,22 @@ export const ExternalUrlObjectSchema = Schema.Struct({
 export type ExternalUrlObjectSchema = Schema.Schema.Type<typeof ExternalUrlObjectSchema>
 
 export const LinkedTrackObjectSchema = Schema.Struct({
-  external_urls: Schema.optional(
+  external_urls: Schema.optionalKey(
     ExternalUrlObjectSchema.annotate({ description: 'Known external URLs for this track.\n' }),
   ),
-  href: Schema.optional(
+  href: Schema.optionalKey(
     Schema.String.annotate({
       description: 'A link to the Web API endpoint providing full details of the track.\n',
     }),
   ),
-  id: Schema.optional(
+  id: Schema.optionalKey(
     Schema.String.annotate({
       description:
         'The [Spotify ID](/documentation/web-api/concepts/spotify-uris-ids) for the track.\n',
     }),
   ),
-  type: Schema.optional(Schema.String.annotate({ description: 'The object type: "track".\n' })),
-  uri: Schema.optional(
+  type: Schema.optionalKey(Schema.String.annotate({ description: 'The object type: "track".\n' })),
+  uri: Schema.optionalKey(
     Schema.String.annotate({
       description:
         'The [Spotify URI](/documentation/web-api/concepts/spotify-uris-ids) for the track.\n',
@@ -38,7 +38,7 @@ export const LinkedTrackObjectSchema = Schema.Struct({
 export type LinkedTrackObjectSchema = Schema.Schema.Type<typeof LinkedTrackObjectSchema>
 
 export const TrackRestrictionObjectSchema = Schema.Struct({
-  reason: Schema.optional(
+  reason: Schema.optionalKey(
     Schema.String.annotate({
       description:
         "The reason for the restriction. Supported values:\n- `market` - The content item is not available in the given market.\n- `product` - The content item is not available for the user's subscription type.\n- `explicit` - The content item is explicit and the user's account is set to not play explicit content.\n\nAdditional reasons may be added in the future.\n**Note**: If you use this field, make sure that your application safely handles unknown values.\n",
@@ -49,7 +49,7 @@ export const TrackRestrictionObjectSchema = Schema.Struct({
 export type TrackRestrictionObjectSchema = Schema.Schema.Type<typeof TrackRestrictionObjectSchema>
 
 export const AlbumRestrictionObjectSchema = Schema.Struct({
-  reason: Schema.optional(
+  reason: Schema.optionalKey(
     Schema.Literals(['market', 'product', 'explicit']).annotate({
       description:
         "The reason for the restriction. Albums may be restricted if the content is not available in a given market, to the user's subscription type, or when the user's account is set to not play explicit content.\nAdditional reasons may be added in the future.\n",
@@ -60,7 +60,7 @@ export const AlbumRestrictionObjectSchema = Schema.Struct({
 export type AlbumRestrictionObjectSchema = Schema.Schema.Type<typeof AlbumRestrictionObjectSchema>
 
 export const EpisodeRestrictionObjectSchema = Schema.Struct({
-  reason: Schema.optional(
+  reason: Schema.optionalKey(
     Schema.String.annotate({
       description:
         "The reason for the restriction. Supported values:\n- `market` - The content item is not available in the given market.\n- `product` - The content item is not available for the user's subscription type.\n- `explicit` - The content item is explicit and the user's account is set to not play explicit content.\n\nAdditional reasons may be added in the future.\n**Note**: If you use this field, make sure that your application safely handles unknown values.\n",
@@ -73,7 +73,7 @@ export type EpisodeRestrictionObjectSchema = Schema.Schema.Type<
 >
 
 export const ChapterRestrictionObjectSchema = Schema.Struct({
-  reason: Schema.optional(
+  reason: Schema.optionalKey(
     Schema.String.annotate({
       description:
         "The reason for the restriction. Supported values:\n- `market` - The content item is not available in the given market.\n- `product` - The content item is not available for the user's subscription type.\n- `explicit` - The content item is explicit and the user's account is set to not play explicit content.\n- `payment_required` - Payment is required to play the content item.\n\nAdditional reasons may be added in the future.\n**Note**: If you use this field, make sure that your application safely handles unknown values.\n",
@@ -86,13 +86,13 @@ export type ChapterRestrictionObjectSchema = Schema.Schema.Type<
 >
 
 export const FollowersObjectSchema = Schema.Struct({
-  href: Schema.optional(
+  href: Schema.optionalKey(
     Schema.NullOr(Schema.String).annotate({
       description:
         'This will always be set to null, as the Web API does not support it at the moment.\n',
     }),
   ),
-  total: Schema.optional(
+  total: Schema.optionalKey(
     Schema.Number.check(Schema.isInt()).annotate({
       description: 'The total number of followers.\n',
     }),
@@ -119,16 +119,16 @@ export const ImageObjectSchema = Schema.Struct({
 export type ImageObjectSchema = Schema.Schema.Type<typeof ImageObjectSchema>
 
 export const ArtistObjectSchema = Schema.Struct({
-  external_urls: Schema.optional(
+  external_urls: Schema.optionalKey(
     ExternalUrlObjectSchema.annotate({ description: 'Known external URLs for this artist.\n' }),
   ),
-  followers: Schema.optional(
+  followers: Schema.optionalKey(
     FollowersObjectSchema.annotate({
       description: 'Information about the followers of the artist.\n',
       jsonSchemaDeprecated: true,
     }),
   ),
-  genres: Schema.optional(
+  genres: Schema.optionalKey(
     Schema.Array(Schema.String).annotate({
       description:
         'A list of the genres the artist is associated with. If not yet classified, the array is empty.\n',
@@ -136,32 +136,34 @@ export const ArtistObjectSchema = Schema.Struct({
       jsonSchemaDeprecated: true,
     }),
   ),
-  href: Schema.optional(
+  href: Schema.optionalKey(
     Schema.String.annotate({
       description: 'A link to the Web API endpoint providing full details of the artist.\n',
     }),
   ),
-  id: Schema.optional(
+  id: Schema.optionalKey(
     Schema.String.annotate({
       description:
         'The [Spotify ID](/documentation/web-api/concepts/spotify-uris-ids) for the artist.\n',
     }),
   ),
-  images: Schema.optional(
+  images: Schema.optionalKey(
     Schema.Array(ImageObjectSchema).annotate({
       description: 'Images of the artist in various sizes, widest first.\n',
     }),
   ),
-  name: Schema.optional(Schema.String.annotate({ description: 'The name of the artist.\n' })),
-  popularity: Schema.optional(
+  name: Schema.optionalKey(Schema.String.annotate({ description: 'The name of the artist.\n' })),
+  popularity: Schema.optionalKey(
     Schema.Number.check(Schema.isInt()).annotate({
       description:
         "The popularity of the artist. The value will be between 0 and 100, with 100 being the most popular. The artist's popularity is calculated from the popularity of all the artist's tracks.\n",
       jsonSchemaDeprecated: true,
     }),
   ),
-  type: Schema.optional(Schema.Literal('artist').annotate({ description: 'The object type.\n' })),
-  uri: Schema.optional(
+  type: Schema.optionalKey(
+    Schema.Literal('artist').annotate({ description: 'The object type.\n' }),
+  ),
+  uri: Schema.optionalKey(
     Schema.String.annotate({
       description:
         'The [Spotify URI](/documentation/web-api/concepts/spotify-uris-ids) for the artist.\n',
@@ -172,23 +174,25 @@ export const ArtistObjectSchema = Schema.Struct({
 export type ArtistObjectSchema = Schema.Schema.Type<typeof ArtistObjectSchema>
 
 export const SimplifiedArtistObjectSchema = Schema.Struct({
-  external_urls: Schema.optional(
+  external_urls: Schema.optionalKey(
     ExternalUrlObjectSchema.annotate({ description: 'Known external URLs for this artist.\n' }),
   ),
-  href: Schema.optional(
+  href: Schema.optionalKey(
     Schema.String.annotate({
       description: 'A link to the Web API endpoint providing full details of the artist.\n',
     }),
   ),
-  id: Schema.optional(
+  id: Schema.optionalKey(
     Schema.String.annotate({
       description:
         'The [Spotify ID](/documentation/web-api/concepts/spotify-uris-ids) for the artist.\n',
     }),
   ),
-  name: Schema.optional(Schema.String.annotate({ description: 'The name of the artist.\n' })),
-  type: Schema.optional(Schema.Literal('artist').annotate({ description: 'The object type.\n' })),
-  uri: Schema.optional(
+  name: Schema.optionalKey(Schema.String.annotate({ description: 'The name of the artist.\n' })),
+  type: Schema.optionalKey(
+    Schema.Literal('artist').annotate({ description: 'The object type.\n' }),
+  ),
+  uri: Schema.optionalKey(
     Schema.String.annotate({
       description:
         'The [Spotify URI](/documentation/web-api/concepts/spotify-uris-ids) for the artist.\n',
@@ -239,7 +243,7 @@ export const AlbumBaseSchema = Schema.Struct({
     description: 'The precision with which `release_date` value is known.\n',
     jsonSchemaExamples: ['year'],
   }),
-  restrictions: Schema.optional(
+  restrictions: Schema.optionalKey(
     AlbumRestrictionObjectSchema.annotate({
       description: 'Included in the response when a content restriction is applied.\n',
     }),
@@ -254,35 +258,57 @@ export const AlbumBaseSchema = Schema.Struct({
 
 export type AlbumBaseSchema = Schema.Schema.Type<typeof AlbumBaseSchema>
 
-export const SimplifiedAlbumObjectSchema = AlbumBaseSchema.check(
-  Schema.makeFilter((input) =>
-    Schema.is(
-      Schema.Struct({
-        artists: Schema.Array(SimplifiedArtistObjectSchema).annotate({
-          description:
-            'The artists of the album. Each artist object includes a link in `href` to more detailed information about the artist.\n',
-        }),
-      }),
-    )(input),
-  ),
-)
+export const SimplifiedAlbumObjectSchema = (() => {
+  const M0 = AlbumBaseSchema
+  const M1 = Schema.Struct({
+    artists: Schema.Array(SimplifiedArtistObjectSchema).annotate({
+      description:
+        'The artists of the album. Each artist object includes a link in `href` to more detailed information about the artist.\n',
+    }),
+  })
+  const isAll = (input: unknown): input is typeof M0.Type & typeof M1.Type =>
+    Schema.is(M0)(input) && Schema.is(M1)(input)
+  return Schema.Unknown.pipe(
+    Schema.decodeTo(Schema.declare(isAll), {
+      decode: SchemaGetter.transformEffect((input) =>
+        Effect.all([
+          Schema.decodeUnknownEffect(M0)(input),
+          Schema.decodeUnknownEffect(M1)(input),
+        ]).pipe(
+          Effect.mapError((error) => error.issue),
+          Effect.flatMap((values) => {
+            const merged = values.every(
+              (value) => typeof value === 'object' && value !== null && !Array.isArray(value),
+            )
+              ? Object.assign({}, ...values)
+              : values[0]
+            return isAll(merged)
+              ? Effect.succeed(merged)
+              : Effect.fail(new SchemaIssue.InvalidValue(undefined, merged))
+          }),
+        ),
+      ),
+      encode: SchemaGetter.passthrough({ strict: false }),
+    }),
+  )
+})()
 
 export type SimplifiedAlbumObjectSchema = Schema.Schema.Type<typeof SimplifiedAlbumObjectSchema>
 
 export const ExternalIdObjectSchema = Schema.Struct({
-  isrc: Schema.optional(
+  isrc: Schema.optionalKey(
     Schema.String.annotate({
       description:
         '[International Standard Recording Code](http://en.wikipedia.org/wiki/International_Standard_Recording_Code)\n',
     }),
   ),
-  ean: Schema.optional(
+  ean: Schema.optionalKey(
     Schema.String.annotate({
       description:
         '[International Article Number](http://en.wikipedia.org/wiki/International_Article_Number_%28EAN%29)\n',
     }),
   ),
-  upc: Schema.optional(
+  upc: Schema.optionalKey(
     Schema.String.annotate({
       description:
         '[Universal Product Code](http://en.wikipedia.org/wiki/Universal_Product_Code)\n',
@@ -293,107 +319,107 @@ export const ExternalIdObjectSchema = Schema.Struct({
 export type ExternalIdObjectSchema = Schema.Schema.Type<typeof ExternalIdObjectSchema>
 
 export const TrackObjectSchema = Schema.Struct({
-  album: Schema.optional(
+  album: Schema.optionalKey(
     SimplifiedAlbumObjectSchema.annotate({
       description:
         'The album on which the track appears. The album object includes a link in `href` to full information about the album.\n',
     }),
   ),
-  artists: Schema.optional(
+  artists: Schema.optionalKey(
     Schema.Array(SimplifiedArtistObjectSchema).annotate({
       description:
         'The artists who performed the track. Each artist object includes a link in `href` to more detailed information about the artist.\n',
     }),
   ),
-  available_markets: Schema.optional(
+  available_markets: Schema.optionalKey(
     Schema.Array(Schema.String).annotate({
       description:
         'A list of the countries in which the track can be played, identified by their [ISO 3166-1 alpha-2](http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) code.\n',
       jsonSchemaDeprecated: true,
     }),
   ),
-  disc_number: Schema.optional(
+  disc_number: Schema.optionalKey(
     Schema.Number.check(Schema.isInt()).annotate({
       description:
         'The disc number (usually `1` unless the album consists of more than one disc).\n',
     }),
   ),
-  duration_ms: Schema.optional(
+  duration_ms: Schema.optionalKey(
     Schema.Number.check(Schema.isInt()).annotate({
       description: 'The track length in milliseconds.\n',
     }),
   ),
-  explicit: Schema.optional(
+  explicit: Schema.optionalKey(
     Schema.Boolean.annotate({
       description:
         'Whether or not the track has explicit lyrics ( `true` = yes it does; `false` = no it does not OR unknown).\n',
     }),
   ),
-  external_ids: Schema.optional(
+  external_ids: Schema.optionalKey(
     ExternalIdObjectSchema.annotate({ description: 'Known external IDs for the track.\n' }),
   ),
-  external_urls: Schema.optional(
+  external_urls: Schema.optionalKey(
     ExternalUrlObjectSchema.annotate({ description: 'Known external URLs for this track.\n' }),
   ),
-  href: Schema.optional(
+  href: Schema.optionalKey(
     Schema.String.annotate({
       description: 'A link to the Web API endpoint providing full details of the track.\n',
     }),
   ),
-  id: Schema.optional(
+  id: Schema.optionalKey(
     Schema.String.annotate({
       description:
         'The [Spotify ID](/documentation/web-api/concepts/spotify-uris-ids) for the track.\n',
     }),
   ),
-  is_playable: Schema.optional(
+  is_playable: Schema.optionalKey(
     Schema.Boolean.annotate({
       description:
         'Part of the response when [Track Relinking](/documentation/web-api/concepts/track-relinking) is applied. If `true`, the track is playable in the given market. Otherwise `false`.\n',
     }),
   ),
-  linked_from: Schema.optional(
+  linked_from: Schema.optionalKey(
     LinkedTrackObjectSchema.annotate({
       description:
         'Part of the response when [Track Relinking](/documentation/web-api/concepts/track-relinking) is applied, and the requested track has been replaced with different track. The track in the `linked_from` object contains information about the originally requested track.',
       jsonSchemaDeprecated: true,
     }),
   ),
-  restrictions: Schema.optional(
+  restrictions: Schema.optionalKey(
     TrackRestrictionObjectSchema.annotate({
       description: 'Included in the response when a content restriction is applied.\n',
     }),
   ),
-  name: Schema.optional(Schema.String.annotate({ description: 'The name of the track.\n' })),
-  popularity: Schema.optional(
+  name: Schema.optionalKey(Schema.String.annotate({ description: 'The name of the track.\n' })),
+  popularity: Schema.optionalKey(
     Schema.Number.check(Schema.isInt()).annotate({
       description:
         'The popularity of the track. The value will be between 0 and 100, with 100 being the most popular.<br/>The popularity of a track is a value between 0 and 100, with 100 being the most popular. The popularity is calculated by algorithm and is based, in the most part, on the total number of plays the track has had and how recent those plays are.<br/>Generally speaking, songs that are being played a lot now will have a higher popularity than songs that were played a lot in the past. Duplicate tracks (e.g. the same track from a single and an album) are rated independently. Artist and album popularity is derived mathematically from track popularity. _**Note**: the popularity value may lag actual popularity by a few days: the value is not updated in real time._\n',
       jsonSchemaDeprecated: true,
     }),
   ),
-  preview_url: Schema.optional(
+  preview_url: Schema.optionalKey(
     Schema.NullOr(Schema.String).annotate({
       description: 'A link to a 30 second preview (MP3 format) of the track. Can be `null`\n',
       jsonSchemaDeprecated: true,
     }),
   ),
-  track_number: Schema.optional(
+  track_number: Schema.optionalKey(
     Schema.Number.check(Schema.isInt()).annotate({
       description:
         'The number of the track. If an album has several discs, the track number is the number on the specified disc.\n',
     }),
   ),
-  type: Schema.optional(
+  type: Schema.optionalKey(
     Schema.Literal('track').annotate({ description: 'The object type: "track".\n' }),
   ),
-  uri: Schema.optional(
+  uri: Schema.optionalKey(
     Schema.String.annotate({
       description:
         'The [Spotify URI](/documentation/web-api/concepts/spotify-uris-ids) for the track.\n',
     }),
   ),
-  is_local: Schema.optional(
+  is_local: Schema.optionalKey(
     Schema.Boolean.annotate({ description: 'Whether or not the track is from a local file.\n' }),
   ),
 })
@@ -401,20 +427,20 @@ export const TrackObjectSchema = Schema.Struct({
 export type TrackObjectSchema = Schema.Schema.Type<typeof TrackObjectSchema>
 
 export const ContextObjectSchema = Schema.Struct({
-  type: Schema.optional(
+  type: Schema.optionalKey(
     Schema.String.annotate({
       description: 'The object type, e.g. "artist", "playlist", "album", "show".\n',
     }),
   ),
-  href: Schema.optional(
+  href: Schema.optionalKey(
     Schema.String.annotate({
       description: 'A link to the Web API endpoint providing full details of the track.',
     }),
   ),
-  external_urls: Schema.optional(
+  external_urls: Schema.optionalKey(
     ExternalUrlObjectSchema.annotate({ description: 'External URLs for this context.' }),
   ),
-  uri: Schema.optional(
+  uri: Schema.optionalKey(
     Schema.String.annotate({
       description:
         'The [Spotify URI](/documentation/web-api/concepts/spotify-uris-ids) for the context.\n',
@@ -425,17 +451,17 @@ export const ContextObjectSchema = Schema.Struct({
 export type ContextObjectSchema = Schema.Schema.Type<typeof ContextObjectSchema>
 
 export const PlayHistoryObjectSchema = Schema.Struct({
-  track: Schema.optional(
+  track: Schema.optionalKey(
     TrackObjectSchema.annotate({ description: 'The track the user listened to.' }),
   ),
-  played_at: Schema.optional(
+  played_at: Schema.optionalKey(
     Schema.String.check(
       Schema.isPattern(
         /^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z|([+-](?:[01]\d|2[0-3]):[0-5]\d)))$/,
       ),
     ).annotate({ description: 'The date and time the track was played.' }),
   ),
-  context: Schema.optional(
+  context: Schema.optionalKey(
     ContextObjectSchema.annotate({ description: 'The context the track was played from.' }),
   ),
 })
@@ -443,22 +469,22 @@ export const PlayHistoryObjectSchema = Schema.Struct({
 export type PlayHistoryObjectSchema = Schema.Schema.Type<typeof PlayHistoryObjectSchema>
 
 export const PlaylistUserObjectSchema = Schema.Struct({
-  external_urls: Schema.optional(
+  external_urls: Schema.optionalKey(
     ExternalUrlObjectSchema.annotate({
       description: 'Known public external URLs for this user.\n',
     }),
   ),
-  href: Schema.optional(
+  href: Schema.optionalKey(
     Schema.String.annotate({ description: 'A link to the Web API endpoint for this user.\n' }),
   ),
-  id: Schema.optional(
+  id: Schema.optionalKey(
     Schema.String.annotate({
       description:
         'The [Spotify user ID](/documentation/web-api/concepts/spotify-uris-ids) for this user.\n',
     }),
   ),
-  type: Schema.optional(Schema.Literal('user').annotate({ description: 'The object type.\n' })),
-  uri: Schema.optional(
+  type: Schema.optionalKey(Schema.Literal('user').annotate({ description: 'The object type.\n' })),
+  uri: Schema.optionalKey(
     Schema.String.annotate({
       description:
         'The [Spotify URI](/documentation/web-api/concepts/spotify-uris-ids) for this user.\n',
@@ -469,12 +495,12 @@ export const PlaylistUserObjectSchema = Schema.Struct({
 export type PlaylistUserObjectSchema = Schema.Schema.Type<typeof PlaylistUserObjectSchema>
 
 export const ResumePointObjectSchema = Schema.Struct({
-  fully_played: Schema.optional(
+  fully_played: Schema.optionalKey(
     Schema.Boolean.annotate({
       description: 'Whether or not the episode has been fully played by the user.\n',
     }),
   ),
-  resume_position_ms: Schema.optional(
+  resume_position_ms: Schema.optionalKey(
     Schema.Number.check(Schema.isInt()).annotate({
       description: "The user's most recent position in the episode in milliseconds.\n",
     }),
@@ -532,7 +558,7 @@ export const EpisodeBaseSchema = Schema.Struct({
   is_playable: Schema.Boolean.annotate({
     description: 'True if the episode is playable in the given market. Otherwise false.\n',
   }),
-  language: Schema.optional(
+  language: Schema.optionalKey(
     Schema.String.annotate({
       description:
         'The language used in the episode, identified by a [ISO 639](https://en.wikipedia.org/wiki/ISO_639) code. This field is deprecated and might be removed in the future. Please use the `languages` field instead.\n',
@@ -560,7 +586,7 @@ export const EpisodeBaseSchema = Schema.Struct({
     description: 'The precision with which `release_date` value is known.\n',
     jsonSchemaExamples: ['day'],
   }),
-  resume_point: Schema.optional(
+  resume_point: Schema.optionalKey(
     ResumePointObjectSchema.annotate({
       description:
         "The user's most recent position in the episode. Set if the supplied access token is a user token and has the scope 'user-read-playback-position'.\n",
@@ -572,7 +598,7 @@ export const EpisodeBaseSchema = Schema.Struct({
       'The [Spotify URI](/documentation/web-api/concepts/spotify-uris-ids) for the episode.\n',
     jsonSchemaExamples: ['spotify:episode:0zLhl3WsOCQHbe1BPTiHgr'],
   }),
-  restrictions: Schema.optional(
+  restrictions: Schema.optionalKey(
     EpisodeRestrictionObjectSchema.annotate({
       description: 'Included in the response when a content restriction is applied.\n',
     }),
@@ -582,10 +608,10 @@ export const EpisodeBaseSchema = Schema.Struct({
 export type EpisodeBaseSchema = Schema.Schema.Type<typeof EpisodeBaseSchema>
 
 export const CopyrightObjectSchema = Schema.Struct({
-  text: Schema.optional(
+  text: Schema.optionalKey(
     Schema.String.annotate({ description: 'The copyright text for this content.\n' }),
   ),
-  type: Schema.optional(
+  type: Schema.optionalKey(
     Schema.String.annotate({
       description:
         'The type of copyright: `C` = the copyright, `P` = the sound recording (performance) copyright.\n',
@@ -658,22 +684,44 @@ export const SimplifiedShowObjectSchema = ShowBaseSchema
 
 export type SimplifiedShowObjectSchema = Schema.Schema.Type<typeof SimplifiedShowObjectSchema>
 
-export const EpisodeObjectSchema = EpisodeBaseSchema.check(
-  Schema.makeFilter((input) =>
-    Schema.is(
-      Schema.Struct({
-        show: SimplifiedShowObjectSchema.annotate({
-          description: 'The show on which the episode belongs.\n',
-        }),
-      }),
-    )(input),
-  ),
-)
+export const EpisodeObjectSchema = (() => {
+  const M0 = EpisodeBaseSchema
+  const M1 = Schema.Struct({
+    show: SimplifiedShowObjectSchema.annotate({
+      description: 'The show on which the episode belongs.\n',
+    }),
+  })
+  const isAll = (input: unknown): input is typeof M0.Type & typeof M1.Type =>
+    Schema.is(M0)(input) && Schema.is(M1)(input)
+  return Schema.Unknown.pipe(
+    Schema.decodeTo(Schema.declare(isAll), {
+      decode: SchemaGetter.transformEffect((input) =>
+        Effect.all([
+          Schema.decodeUnknownEffect(M0)(input),
+          Schema.decodeUnknownEffect(M1)(input),
+        ]).pipe(
+          Effect.mapError((error) => error.issue),
+          Effect.flatMap((values) => {
+            const merged = values.every(
+              (value) => typeof value === 'object' && value !== null && !Array.isArray(value),
+            )
+              ? Object.assign({}, ...values)
+              : values[0]
+            return isAll(merged)
+              ? Effect.succeed(merged)
+              : Effect.fail(new SchemaIssue.InvalidValue(undefined, merged))
+          }),
+        ),
+      ),
+      encode: SchemaGetter.passthrough({ strict: false }),
+    }),
+  )
+})()
 
 export type EpisodeObjectSchema = Schema.Schema.Type<typeof EpisodeObjectSchema>
 
 export const PlaylistTrackObjectSchema = Schema.Struct({
-  added_at: Schema.optional(
+  added_at: Schema.optionalKey(
     Schema.String.check(
       Schema.isPattern(
         /^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z|([+-](?:[01]\d|2[0-3]):[0-5]\d)))$/,
@@ -683,25 +731,141 @@ export const PlaylistTrackObjectSchema = Schema.Struct({
         'The date and time the track or episode was added. _**Note**: some very old playlists may return `null` in this field._\n',
     }),
   ),
-  added_by: Schema.optional(
+  added_by: Schema.optionalKey(
     PlaylistUserObjectSchema.annotate({
       description:
         'The Spotify user who added the track or episode. _**Note**: some very old playlists may return `null` in this field._\n',
     }),
   ),
-  is_local: Schema.optional(
+  is_local: Schema.optionalKey(
     Schema.Boolean.annotate({
       description:
         'Whether this track or episode is a [local file](/documentation/web-api/concepts/playlists/#local-files) or not.\n',
     }),
   ),
-  item: Schema.optional(
-    Schema.Union([TrackObjectSchema, EpisodeObjectSchema]).annotate({
-      description: 'Information about the track or episode.',
-    }),
+  item: Schema.optionalKey(
+    Schema.Union([
+      (() => {
+        const M0 = TrackObjectSchema
+        const M1 = Schema.Struct({ type: Schema.Literal('TrackObject') })
+        const isAll = (input: unknown): input is typeof M0.Type & typeof M1.Type =>
+          Schema.is(M0)(input) && Schema.is(M1)(input)
+        return Schema.Unknown.pipe(
+          Schema.decodeTo(Schema.declare(isAll), {
+            decode: SchemaGetter.transformEffect((input) =>
+              Effect.all([
+                Schema.decodeUnknownEffect(M0)(input),
+                Schema.decodeUnknownEffect(M1)(input),
+              ]).pipe(
+                Effect.mapError((error) => error.issue),
+                Effect.flatMap((values) => {
+                  const merged = values.every(
+                    (value) => typeof value === 'object' && value !== null && !Array.isArray(value),
+                  )
+                    ? Object.assign({}, ...values)
+                    : values[0]
+                  return isAll(merged)
+                    ? Effect.succeed(merged)
+                    : Effect.fail(new SchemaIssue.InvalidValue(undefined, merged))
+                }),
+              ),
+            ),
+            encode: SchemaGetter.passthrough({ strict: false }),
+          }),
+        )
+      })(),
+      (() => {
+        const M0 = EpisodeObjectSchema
+        const M1 = Schema.Struct({ type: Schema.Literal('EpisodeObject') })
+        const isAll = (input: unknown): input is typeof M0.Type & typeof M1.Type =>
+          Schema.is(M0)(input) && Schema.is(M1)(input)
+        return Schema.Unknown.pipe(
+          Schema.decodeTo(Schema.declare(isAll), {
+            decode: SchemaGetter.transformEffect((input) =>
+              Effect.all([
+                Schema.decodeUnknownEffect(M0)(input),
+                Schema.decodeUnknownEffect(M1)(input),
+              ]).pipe(
+                Effect.mapError((error) => error.issue),
+                Effect.flatMap((values) => {
+                  const merged = values.every(
+                    (value) => typeof value === 'object' && value !== null && !Array.isArray(value),
+                  )
+                    ? Object.assign({}, ...values)
+                    : values[0]
+                  return isAll(merged)
+                    ? Effect.succeed(merged)
+                    : Effect.fail(new SchemaIssue.InvalidValue(undefined, merged))
+                }),
+              ),
+            ),
+            encode: SchemaGetter.passthrough({ strict: false }),
+          }),
+        )
+      })(),
+    ]).annotate({ description: 'Information about the track or episode.' }),
   ),
-  track: Schema.optional(
-    Schema.Union([TrackObjectSchema, EpisodeObjectSchema]).annotate({
+  track: Schema.optionalKey(
+    Schema.Union([
+      (() => {
+        const M0 = TrackObjectSchema
+        const M1 = Schema.Struct({ type: Schema.Literal('TrackObject') })
+        const isAll = (input: unknown): input is typeof M0.Type & typeof M1.Type =>
+          Schema.is(M0)(input) && Schema.is(M1)(input)
+        return Schema.Unknown.pipe(
+          Schema.decodeTo(Schema.declare(isAll), {
+            decode: SchemaGetter.transformEffect((input) =>
+              Effect.all([
+                Schema.decodeUnknownEffect(M0)(input),
+                Schema.decodeUnknownEffect(M1)(input),
+              ]).pipe(
+                Effect.mapError((error) => error.issue),
+                Effect.flatMap((values) => {
+                  const merged = values.every(
+                    (value) => typeof value === 'object' && value !== null && !Array.isArray(value),
+                  )
+                    ? Object.assign({}, ...values)
+                    : values[0]
+                  return isAll(merged)
+                    ? Effect.succeed(merged)
+                    : Effect.fail(new SchemaIssue.InvalidValue(undefined, merged))
+                }),
+              ),
+            ),
+            encode: SchemaGetter.passthrough({ strict: false }),
+          }),
+        )
+      })(),
+      (() => {
+        const M0 = EpisodeObjectSchema
+        const M1 = Schema.Struct({ type: Schema.Literal('EpisodeObject') })
+        const isAll = (input: unknown): input is typeof M0.Type & typeof M1.Type =>
+          Schema.is(M0)(input) && Schema.is(M1)(input)
+        return Schema.Unknown.pipe(
+          Schema.decodeTo(Schema.declare(isAll), {
+            decode: SchemaGetter.transformEffect((input) =>
+              Effect.all([
+                Schema.decodeUnknownEffect(M0)(input),
+                Schema.decodeUnknownEffect(M1)(input),
+              ]).pipe(
+                Effect.mapError((error) => error.issue),
+                Effect.flatMap((values) => {
+                  const merged = values.every(
+                    (value) => typeof value === 'object' && value !== null && !Array.isArray(value),
+                  )
+                    ? Object.assign({}, ...values)
+                    : values[0]
+                  return isAll(merged)
+                    ? Effect.succeed(merged)
+                    : Effect.fail(new SchemaIssue.InvalidValue(undefined, merged))
+                }),
+              ),
+            ),
+            encode: SchemaGetter.passthrough({ strict: false }),
+          }),
+        )
+      })(),
+    ]).annotate({
       description: '**Deprecated:** Use `item` instead. Information about the track or episode.\n',
       jsonSchemaDeprecated: true,
     }),
@@ -711,53 +875,171 @@ export const PlaylistTrackObjectSchema = Schema.Struct({
 export type PlaylistTrackObjectSchema = Schema.Schema.Type<typeof PlaylistTrackObjectSchema>
 
 export const QueueObjectSchema = Schema.Struct({
-  currently_playing: Schema.optional(
-    Schema.Union([TrackObjectSchema, EpisodeObjectSchema]).annotate({
-      description: 'The currently playing track or episode. Can be `null`.',
-    }),
+  currently_playing: Schema.optionalKey(
+    Schema.Union([
+      (() => {
+        const M0 = TrackObjectSchema
+        const M1 = Schema.Struct({ type: Schema.Literal('TrackObject') })
+        const isAll = (input: unknown): input is typeof M0.Type & typeof M1.Type =>
+          Schema.is(M0)(input) && Schema.is(M1)(input)
+        return Schema.Unknown.pipe(
+          Schema.decodeTo(Schema.declare(isAll), {
+            decode: SchemaGetter.transformEffect((input) =>
+              Effect.all([
+                Schema.decodeUnknownEffect(M0)(input),
+                Schema.decodeUnknownEffect(M1)(input),
+              ]).pipe(
+                Effect.mapError((error) => error.issue),
+                Effect.flatMap((values) => {
+                  const merged = values.every(
+                    (value) => typeof value === 'object' && value !== null && !Array.isArray(value),
+                  )
+                    ? Object.assign({}, ...values)
+                    : values[0]
+                  return isAll(merged)
+                    ? Effect.succeed(merged)
+                    : Effect.fail(new SchemaIssue.InvalidValue(undefined, merged))
+                }),
+              ),
+            ),
+            encode: SchemaGetter.passthrough({ strict: false }),
+          }),
+        )
+      })(),
+      (() => {
+        const M0 = EpisodeObjectSchema
+        const M1 = Schema.Struct({ type: Schema.Literal('EpisodeObject') })
+        const isAll = (input: unknown): input is typeof M0.Type & typeof M1.Type =>
+          Schema.is(M0)(input) && Schema.is(M1)(input)
+        return Schema.Unknown.pipe(
+          Schema.decodeTo(Schema.declare(isAll), {
+            decode: SchemaGetter.transformEffect((input) =>
+              Effect.all([
+                Schema.decodeUnknownEffect(M0)(input),
+                Schema.decodeUnknownEffect(M1)(input),
+              ]).pipe(
+                Effect.mapError((error) => error.issue),
+                Effect.flatMap((values) => {
+                  const merged = values.every(
+                    (value) => typeof value === 'object' && value !== null && !Array.isArray(value),
+                  )
+                    ? Object.assign({}, ...values)
+                    : values[0]
+                  return isAll(merged)
+                    ? Effect.succeed(merged)
+                    : Effect.fail(new SchemaIssue.InvalidValue(undefined, merged))
+                }),
+              ),
+            ),
+            encode: SchemaGetter.passthrough({ strict: false }),
+          }),
+        )
+      })(),
+    ]).annotate({ description: 'The currently playing track or episode. Can be `null`.' }),
   ),
-  queue: Schema.optional(
-    Schema.Array(Schema.Union([TrackObjectSchema, EpisodeObjectSchema])).annotate({
-      description: 'The tracks or episodes in the queue. Can be empty.',
-    }),
+  queue: Schema.optionalKey(
+    Schema.Array(
+      Schema.Union([
+        (() => {
+          const M0 = TrackObjectSchema
+          const M1 = Schema.Struct({ type: Schema.Literal('TrackObject') })
+          const isAll = (input: unknown): input is typeof M0.Type & typeof M1.Type =>
+            Schema.is(M0)(input) && Schema.is(M1)(input)
+          return Schema.Unknown.pipe(
+            Schema.decodeTo(Schema.declare(isAll), {
+              decode: SchemaGetter.transformEffect((input) =>
+                Effect.all([
+                  Schema.decodeUnknownEffect(M0)(input),
+                  Schema.decodeUnknownEffect(M1)(input),
+                ]).pipe(
+                  Effect.mapError((error) => error.issue),
+                  Effect.flatMap((values) => {
+                    const merged = values.every(
+                      (value) =>
+                        typeof value === 'object' && value !== null && !Array.isArray(value),
+                    )
+                      ? Object.assign({}, ...values)
+                      : values[0]
+                    return isAll(merged)
+                      ? Effect.succeed(merged)
+                      : Effect.fail(new SchemaIssue.InvalidValue(undefined, merged))
+                  }),
+                ),
+              ),
+              encode: SchemaGetter.passthrough({ strict: false }),
+            }),
+          )
+        })(),
+        (() => {
+          const M0 = EpisodeObjectSchema
+          const M1 = Schema.Struct({ type: Schema.Literal('EpisodeObject') })
+          const isAll = (input: unknown): input is typeof M0.Type & typeof M1.Type =>
+            Schema.is(M0)(input) && Schema.is(M1)(input)
+          return Schema.Unknown.pipe(
+            Schema.decodeTo(Schema.declare(isAll), {
+              decode: SchemaGetter.transformEffect((input) =>
+                Effect.all([
+                  Schema.decodeUnknownEffect(M0)(input),
+                  Schema.decodeUnknownEffect(M1)(input),
+                ]).pipe(
+                  Effect.mapError((error) => error.issue),
+                  Effect.flatMap((values) => {
+                    const merged = values.every(
+                      (value) =>
+                        typeof value === 'object' && value !== null && !Array.isArray(value),
+                    )
+                      ? Object.assign({}, ...values)
+                      : values[0]
+                    return isAll(merged)
+                      ? Effect.succeed(merged)
+                      : Effect.fail(new SchemaIssue.InvalidValue(undefined, merged))
+                  }),
+                ),
+              ),
+              encode: SchemaGetter.passthrough({ strict: false }),
+            }),
+          )
+        })(),
+      ]),
+    ).annotate({ description: 'The tracks or episodes in the queue. Can be empty.' }),
   ),
 })
 
 export type QueueObjectSchema = Schema.Schema.Type<typeof QueueObjectSchema>
 
 export const DeviceObjectSchema = Schema.Struct({
-  id: Schema.optional(
+  id: Schema.optionalKey(
     Schema.NullOr(Schema.String).annotate({
       description:
         'The device ID. This ID is unique and persistent to some extent. However, this is not guaranteed and any cached `device_id` should periodically be cleared out and refetched as necessary.',
     }),
   ),
-  is_active: Schema.optional(
+  is_active: Schema.optionalKey(
     Schema.Boolean.annotate({ description: 'If this device is the currently active device.' }),
   ),
-  is_private_session: Schema.optional(
+  is_private_session: Schema.optionalKey(
     Schema.Boolean.annotate({ description: 'If this device is currently in a private session.' }),
   ),
-  is_restricted: Schema.optional(
+  is_restricted: Schema.optionalKey(
     Schema.Boolean.annotate({
       description:
         'Whether controlling this device is restricted. At present if this is "true" then no Web API commands will be accepted by this device.',
     }),
   ),
-  name: Schema.optional(
+  name: Schema.optionalKey(
     Schema.String.annotate({
       description:
         'A human-readable name for the device. Some devices have a name that the user can configure (e.g. \\"Loudest speaker\\") and some devices have a generic name associated with the manufacturer or device model.',
       jsonSchemaExamples: ['Kitchen speaker'],
     }),
   ),
-  type: Schema.optional(
+  type: Schema.optionalKey(
     Schema.String.annotate({
       description: 'Device type, such as "computer", "smartphone" or "speaker".',
       jsonSchemaExamples: ['computer'],
     }),
   ),
-  volume_percent: Schema.optional(
+  volume_percent: Schema.optionalKey(
     Schema.NullOr(
       Schema.Number.check(
         Schema.isInt(),
@@ -766,7 +1048,7 @@ export const DeviceObjectSchema = Schema.Struct({
       ),
     ).annotate({ description: 'The current volume in percent.', jsonSchemaExamples: [59] }),
   ),
-  supports_volume: Schema.optional(
+  supports_volume: Schema.optionalKey(
     Schema.Boolean.annotate({ description: 'If this device can be used to set the volume.' }),
   ),
 })
@@ -774,30 +1056,32 @@ export const DeviceObjectSchema = Schema.Struct({
 export type DeviceObjectSchema = Schema.Schema.Type<typeof DeviceObjectSchema>
 
 export const DisallowsObjectSchema = Schema.Struct({
-  interrupting_playback: Schema.optional(
+  interrupting_playback: Schema.optionalKey(
     Schema.Boolean.annotate({ description: 'Interrupting playback. Optional field.' }),
   ),
-  pausing: Schema.optional(Schema.Boolean.annotate({ description: 'Pausing. Optional field.' })),
-  resuming: Schema.optional(Schema.Boolean.annotate({ description: 'Resuming. Optional field.' })),
-  seeking: Schema.optional(
+  pausing: Schema.optionalKey(Schema.Boolean.annotate({ description: 'Pausing. Optional field.' })),
+  resuming: Schema.optionalKey(
+    Schema.Boolean.annotate({ description: 'Resuming. Optional field.' }),
+  ),
+  seeking: Schema.optionalKey(
     Schema.Boolean.annotate({ description: 'Seeking playback location. Optional field.' }),
   ),
-  skipping_next: Schema.optional(
+  skipping_next: Schema.optionalKey(
     Schema.Boolean.annotate({ description: 'Skipping to the next context. Optional field.' }),
   ),
-  skipping_prev: Schema.optional(
+  skipping_prev: Schema.optionalKey(
     Schema.Boolean.annotate({ description: 'Skipping to the previous context. Optional field.' }),
   ),
-  toggling_repeat_context: Schema.optional(
+  toggling_repeat_context: Schema.optionalKey(
     Schema.Boolean.annotate({ description: 'Toggling repeat context flag. Optional field.' }),
   ),
-  toggling_shuffle: Schema.optional(
+  toggling_shuffle: Schema.optionalKey(
     Schema.Boolean.annotate({ description: 'Toggling shuffle flag. Optional field.' }),
   ),
-  toggling_repeat_track: Schema.optional(
+  toggling_repeat_track: Schema.optionalKey(
     Schema.Boolean.annotate({ description: 'Toggling repeat track flag. Optional field.' }),
   ),
-  transferring_playback: Schema.optional(
+  transferring_playback: Schema.optionalKey(
     Schema.Boolean.annotate({
       description: 'Transfering playback between devices. Optional field.',
     }),
@@ -807,17 +1091,17 @@ export const DisallowsObjectSchema = Schema.Struct({
 export type DisallowsObjectSchema = Schema.Schema.Type<typeof DisallowsObjectSchema>
 
 export const CurrentlyPlayingContextObjectSchema = Schema.Struct({
-  device: Schema.optional(
+  device: Schema.optionalKey(
     DeviceObjectSchema.annotate({ description: 'The device that is currently active.\n' }),
   ),
-  repeat_state: Schema.optional(Schema.String.annotate({ description: 'off, track, context' })),
-  shuffle_state: Schema.optional(
+  repeat_state: Schema.optionalKey(Schema.String.annotate({ description: 'off, track, context' })),
+  shuffle_state: Schema.optionalKey(
     Schema.Boolean.annotate({ description: 'If shuffle is on or off.' }),
   ),
-  context: Schema.optional(
+  context: Schema.optionalKey(
     ContextObjectSchema.annotate({ description: 'A Context Object. Can be `null`.' }),
   ),
-  timestamp: Schema.optional(
+  timestamp: Schema.optionalKey(
     Schema.Union([
       Schema.BigInt,
       Schema.Number.check(Schema.isInt()),
@@ -840,26 +1124,83 @@ export const CurrentlyPlayingContextObjectSchema = Schema.Struct({
           'Unix Millisecond Timestamp when playback state was last changed (play, pause, skip, scrub, new song, etc.).',
       }),
   ),
-  progress_ms: Schema.optional(
+  progress_ms: Schema.optionalKey(
     Schema.Number.check(Schema.isInt()).annotate({
       description: 'Progress into the currently playing track or episode. Can be `null`.',
     }),
   ),
-  is_playing: Schema.optional(
+  is_playing: Schema.optionalKey(
     Schema.Boolean.annotate({ description: 'If something is currently playing, return `true`.' }),
   ),
-  item: Schema.optional(
-    Schema.Union([TrackObjectSchema, EpisodeObjectSchema]).annotate({
-      description: 'The currently playing track or episode. Can be `null`.',
-    }),
+  item: Schema.optionalKey(
+    Schema.Union([
+      (() => {
+        const M0 = TrackObjectSchema
+        const M1 = Schema.Struct({ type: Schema.Literal('TrackObject') })
+        const isAll = (input: unknown): input is typeof M0.Type & typeof M1.Type =>
+          Schema.is(M0)(input) && Schema.is(M1)(input)
+        return Schema.Unknown.pipe(
+          Schema.decodeTo(Schema.declare(isAll), {
+            decode: SchemaGetter.transformEffect((input) =>
+              Effect.all([
+                Schema.decodeUnknownEffect(M0)(input),
+                Schema.decodeUnknownEffect(M1)(input),
+              ]).pipe(
+                Effect.mapError((error) => error.issue),
+                Effect.flatMap((values) => {
+                  const merged = values.every(
+                    (value) => typeof value === 'object' && value !== null && !Array.isArray(value),
+                  )
+                    ? Object.assign({}, ...values)
+                    : values[0]
+                  return isAll(merged)
+                    ? Effect.succeed(merged)
+                    : Effect.fail(new SchemaIssue.InvalidValue(undefined, merged))
+                }),
+              ),
+            ),
+            encode: SchemaGetter.passthrough({ strict: false }),
+          }),
+        )
+      })(),
+      (() => {
+        const M0 = EpisodeObjectSchema
+        const M1 = Schema.Struct({ type: Schema.Literal('EpisodeObject') })
+        const isAll = (input: unknown): input is typeof M0.Type & typeof M1.Type =>
+          Schema.is(M0)(input) && Schema.is(M1)(input)
+        return Schema.Unknown.pipe(
+          Schema.decodeTo(Schema.declare(isAll), {
+            decode: SchemaGetter.transformEffect((input) =>
+              Effect.all([
+                Schema.decodeUnknownEffect(M0)(input),
+                Schema.decodeUnknownEffect(M1)(input),
+              ]).pipe(
+                Effect.mapError((error) => error.issue),
+                Effect.flatMap((values) => {
+                  const merged = values.every(
+                    (value) => typeof value === 'object' && value !== null && !Array.isArray(value),
+                  )
+                    ? Object.assign({}, ...values)
+                    : values[0]
+                  return isAll(merged)
+                    ? Effect.succeed(merged)
+                    : Effect.fail(new SchemaIssue.InvalidValue(undefined, merged))
+                }),
+              ),
+            ),
+            encode: SchemaGetter.passthrough({ strict: false }),
+          }),
+        )
+      })(),
+    ]).annotate({ description: 'The currently playing track or episode. Can be `null`.' }),
   ),
-  currently_playing_type: Schema.optional(
+  currently_playing_type: Schema.optionalKey(
     Schema.String.annotate({
       description:
         'The object type of the currently playing item. Can be one of `track`, `episode`, `ad` or `unknown`.\n',
     }),
   ),
-  actions: Schema.optional(
+  actions: Schema.optionalKey(
     DisallowsObjectSchema.annotate({
       description:
         'Allows to update the user interface based on which playback actions are available within the current context.\n',
@@ -888,12 +1229,12 @@ export const ErrorObjectSchema = Schema.Struct({
 export type ErrorObjectSchema = Schema.Schema.Type<typeof ErrorObjectSchema>
 
 export const ExplicitContentSettingsObjectSchema = Schema.Struct({
-  filter_enabled: Schema.optional(
+  filter_enabled: Schema.optionalKey(
     Schema.Boolean.annotate({
       description: 'When `true`, indicates that explicit content should not be played.\n',
     }),
   ),
-  filter_locked: Schema.optional(
+  filter_locked: Schema.optionalKey(
     Schema.Boolean.annotate({
       description:
         "When `true`, indicates that the explicit content setting is locked and can't be changed by the user.\n",
@@ -906,69 +1247,69 @@ export type ExplicitContentSettingsObjectSchema = Schema.Schema.Type<
 >
 
 export const PrivateUserObjectSchema = Schema.Struct({
-  account_id: Schema.optional(
+  account_id: Schema.optionalKey(
     Schema.String.annotate({
       description:
         "A public, immutable, pseudoanonymous identifier for the user's account. Use this field for account linking rather than the `id` field, as it is stable and will not change over the lifetime of the account.\n",
       jsonSchemaExamples: ['aB3dE5fG7h'],
     }),
   ),
-  country: Schema.optional(
+  country: Schema.optionalKey(
     Schema.String.annotate({
       description:
         "The country of the user, as set in the user's account profile. An [ISO 3166-1 alpha-2 country code](http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2). _This field is only available when the current user has granted access to the [user-read-private](/documentation/web-api/concepts/scopes/#list-of-scopes) scope._\n",
       jsonSchemaDeprecated: true,
     }),
   ),
-  display_name: Schema.optional(
+  display_name: Schema.optionalKey(
     Schema.String.annotate({
       description: "The name displayed on the user's profile. `null` if not available.\n",
     }),
   ),
-  email: Schema.optional(
+  email: Schema.optionalKey(
     Schema.String.annotate({
       description:
         "The user's email address, as entered by the user when creating their account. _**Important!** This email address is unverified; there is no proof that it actually belongs to the user._ _This field is only available when the current user has granted access to the [user-read-email](/documentation/web-api/concepts/scopes/#list-of-scopes) scope._\n",
       jsonSchemaDeprecated: true,
     }),
   ),
-  explicit_content: Schema.optional(
+  explicit_content: Schema.optionalKey(
     ExplicitContentSettingsObjectSchema.annotate({
       description:
         "The user's explicit content settings. _This field is only available when the current user has granted access to the [user-read-private](/documentation/web-api/concepts/scopes/#list-of-scopes) scope._\n",
       jsonSchemaDeprecated: true,
     }),
   ),
-  external_urls: Schema.optional(
+  external_urls: Schema.optionalKey(
     ExternalUrlObjectSchema.annotate({ description: 'Known external URLs for this user.' }),
   ),
-  followers: Schema.optional(
+  followers: Schema.optionalKey(
     FollowersObjectSchema.annotate({
       description: 'Information about the followers of the user.',
       jsonSchemaDeprecated: true,
     }),
   ),
-  href: Schema.optional(
+  href: Schema.optionalKey(
     Schema.String.annotate({ description: 'A link to the Web API endpoint for this user.\n' }),
   ),
-  id: Schema.optional(
+  id: Schema.optionalKey(
     Schema.String.annotate({
       description:
         'The [Spotify user ID](/documentation/web-api/concepts/spotify-uris-ids) for the user. Do not use this field for account linking — use `account_id` instead, which is immutable.\n',
     }),
   ),
-  images: Schema.optional(
+  images: Schema.optionalKey(
     Schema.Array(ImageObjectSchema).annotate({ description: "The user's profile image." }),
   ),
-  product: Schema.optional(
+  product: Schema.optionalKey(
     Schema.String.annotate({
       description:
         'The user\'s Spotify subscription level: "premium", "free", etc. (The subscription level "open" can be considered the same as "free".) _This field is only available when the current user has granted access to the [user-read-private](/documentation/web-api/concepts/scopes/#list-of-scopes) scope._\n',
       jsonSchemaDeprecated: true,
     }),
   ),
-  type: Schema.optional(Schema.String.annotate({ description: 'The object type: "user"\n' })),
-  uri: Schema.optional(
+  type: Schema.optionalKey(Schema.String.annotate({ description: 'The object type: "user"\n' })),
+  uri: Schema.optionalKey(
     Schema.String.annotate({
       description:
         'The [Spotify URI](/documentation/web-api/concepts/spotify-uris-ids) for the user.\n',
@@ -979,36 +1320,36 @@ export const PrivateUserObjectSchema = Schema.Struct({
 export type PrivateUserObjectSchema = Schema.Schema.Type<typeof PrivateUserObjectSchema>
 
 export const PublicUserObjectSchema = Schema.Struct({
-  display_name: Schema.optional(
+  display_name: Schema.optionalKey(
     Schema.NullOr(Schema.String).annotate({
       description: "The name displayed on the user's profile. `null` if not available.\n",
     }),
   ),
-  external_urls: Schema.optional(
+  external_urls: Schema.optionalKey(
     ExternalUrlObjectSchema.annotate({
       description: 'Known public external URLs for this user.\n',
     }),
   ),
-  followers: Schema.optional(
+  followers: Schema.optionalKey(
     FollowersObjectSchema.annotate({
       description: 'Information about the followers of this user.\n',
       jsonSchemaDeprecated: true,
     }),
   ),
-  href: Schema.optional(
+  href: Schema.optionalKey(
     Schema.String.annotate({ description: 'A link to the Web API endpoint for this user.\n' }),
   ),
-  id: Schema.optional(
+  id: Schema.optionalKey(
     Schema.String.annotate({
       description:
         'The [Spotify user ID](/documentation/web-api/concepts/spotify-uris-ids) for this user.\n',
     }),
   ),
-  images: Schema.optional(
+  images: Schema.optionalKey(
     Schema.Array(ImageObjectSchema).annotate({ description: "The user's profile image.\n" }),
   ),
-  type: Schema.optional(Schema.Literal('user').annotate({ description: 'The object type.\n' })),
-  uri: Schema.optional(
+  type: Schema.optionalKey(Schema.Literal('user').annotate({ description: 'The object type.\n' })),
+  uri: Schema.optionalKey(
     Schema.String.annotate({
       description:
         'The [Spotify URI](/documentation/web-api/concepts/spotify-uris-ids) for this user.\n',
@@ -1071,19 +1412,19 @@ export const ModeSchema = Schema.Number.check(Schema.isInt()).annotate({
 export type ModeSchema = Schema.Schema.Type<typeof ModeSchema>
 
 export const TimeIntervalObjectSchema = Schema.Struct({
-  start: Schema.optional(
+  start: Schema.optionalKey(
     Schema.Number.annotate({
       description: 'The starting point (in seconds) of the time interval.',
       jsonSchemaExamples: [0.49567],
     }),
   ),
-  duration: Schema.optional(
+  duration: Schema.optionalKey(
     Schema.Number.annotate({
       description: 'The duration (in seconds) of the time interval.',
       jsonSchemaExamples: [2.18749],
     }),
   ),
-  confidence: Schema.optional(
+  confidence: Schema.optionalKey(
     Schema.Number.check(Schema.isGreaterThanOrEqualTo(0), Schema.isLessThanOrEqualTo(1)).annotate({
       description: 'The confidence, from 0.0 to 1.0, of the reliability of the interval.',
       jsonSchemaExamples: [0.925],
@@ -1094,74 +1435,74 @@ export const TimeIntervalObjectSchema = Schema.Struct({
 export type TimeIntervalObjectSchema = Schema.Schema.Type<typeof TimeIntervalObjectSchema>
 
 export const SectionObjectSchema = Schema.Struct({
-  start: Schema.optional(
+  start: Schema.optionalKey(
     Schema.Number.annotate({
       description: 'The starting point (in seconds) of the section.',
       jsonSchemaExamples: [0],
     }),
   ),
-  duration: Schema.optional(
+  duration: Schema.optionalKey(
     Schema.Number.annotate({
       description: 'The duration (in seconds) of the section.',
       jsonSchemaExamples: [6.97092],
     }),
   ),
-  confidence: Schema.optional(
+  confidence: Schema.optionalKey(
     Schema.Number.check(Schema.isGreaterThanOrEqualTo(0), Schema.isLessThanOrEqualTo(1)).annotate({
       description:
         'The confidence, from 0.0 to 1.0, of the reliability of the section\'s "designation".',
       jsonSchemaExamples: [1],
     }),
   ),
-  loudness: Schema.optional(
+  loudness: Schema.optionalKey(
     Schema.Number.annotate({
       description:
         'The overall loudness of the section in decibels (dB). Loudness values are useful for comparing relative loudness of sections within tracks.',
       jsonSchemaExamples: [-14.938],
     }),
   ),
-  tempo: Schema.optional(
+  tempo: Schema.optionalKey(
     Schema.Number.annotate({
       description:
         'The overall estimated tempo of the section in beats per minute (BPM). In musical terminology, tempo is the speed or pace of a given piece and derives directly from the average beat duration.',
       jsonSchemaExamples: [113.178],
     }),
   ),
-  tempo_confidence: Schema.optional(
+  tempo_confidence: Schema.optionalKey(
     Schema.Number.check(Schema.isGreaterThanOrEqualTo(0), Schema.isLessThanOrEqualTo(1)).annotate({
       description:
         "The confidence, from 0.0 to 1.0, of the reliability of the tempo. Some tracks contain tempo changes or sounds which don't contain tempo (like pure speech) which would correspond to a low value in this field.",
       jsonSchemaExamples: [0.647],
     }),
   ),
-  key: Schema.optional(
+  key: Schema.optionalKey(
     Schema.Number.check(Schema.isInt()).annotate({
       description:
         'The estimated overall key of the section. The values in this field ranging from 0 to 11 mapping to pitches using standard Pitch Class notation (E.g. 0 = C, 1 = C♯/D♭, 2 = D, and so on). If no key was detected, the value is -1.',
       jsonSchemaExamples: [9],
     }),
   ),
-  key_confidence: Schema.optional(
+  key_confidence: Schema.optionalKey(
     Schema.Number.check(Schema.isGreaterThanOrEqualTo(0), Schema.isLessThanOrEqualTo(1)).annotate({
       description:
         'The confidence, from 0.0 to 1.0, of the reliability of the key. Songs with many key changes may correspond to low values in this field.',
       jsonSchemaExamples: [0.297],
     }),
   ),
-  mode: Schema.optional(
+  mode: Schema.optionalKey(
     Schema.Literals([-1, 0, 1]).annotate({
       description:
         'Indicates the modality (major or minor) of a section, the type of scale from which its melodic content is derived. This field will contain a 0 for "minor", a 1 for "major", or a -1 for no result. Note that the major key (e.g. C major) could more likely be confused with the minor key at 3 semitones lower (e.g. A minor) as both keys carry the same pitches.',
     }),
   ),
-  mode_confidence: Schema.optional(
+  mode_confidence: Schema.optionalKey(
     Schema.Number.check(Schema.isGreaterThanOrEqualTo(0), Schema.isLessThanOrEqualTo(1)).annotate({
       description: 'The confidence, from 0.0 to 1.0, of the reliability of the `mode`.',
       jsonSchemaExamples: [0.471],
     }),
   ),
-  time_signature: Schema.optional(TimeSignatureSchema),
-  time_signature_confidence: Schema.optional(
+  time_signature: Schema.optionalKey(TimeSignatureSchema),
+  time_signature_confidence: Schema.optionalKey(
     Schema.Number.check(Schema.isGreaterThanOrEqualTo(0), Schema.isLessThanOrEqualTo(1)).annotate({
       description:
         'The confidence, from 0.0 to 1.0, of the reliability of the `time_signature`. Sections with time signature changes may correspond to low values in this field.',
@@ -1173,54 +1514,54 @@ export const SectionObjectSchema = Schema.Struct({
 export type SectionObjectSchema = Schema.Schema.Type<typeof SectionObjectSchema>
 
 export const SegmentObjectSchema = Schema.Struct({
-  start: Schema.optional(
+  start: Schema.optionalKey(
     Schema.Number.annotate({
       description: 'The starting point (in seconds) of the segment.',
       jsonSchemaExamples: [0.70154],
     }),
   ),
-  duration: Schema.optional(
+  duration: Schema.optionalKey(
     Schema.Number.annotate({
       description: 'The duration (in seconds) of the segment.',
       jsonSchemaExamples: [0.19891],
     }),
   ),
-  confidence: Schema.optional(
+  confidence: Schema.optionalKey(
     Schema.Number.check(Schema.isGreaterThanOrEqualTo(0), Schema.isLessThanOrEqualTo(1)).annotate({
       description:
         'The confidence, from 0.0 to 1.0, of the reliability of the segmentation. Segments of the song which are difficult to logically segment (e.g: noise) may correspond to low values in this field.\n',
       jsonSchemaExamples: [0.435],
     }),
   ),
-  loudness_start: Schema.optional(
+  loudness_start: Schema.optionalKey(
     Schema.Number.annotate({
       description:
         'The onset loudness of the segment in decibels (dB). Combined with `loudness_max` and `loudness_max_time`, these components can be used to describe the "attack" of the segment.',
       jsonSchemaExamples: [-23.053],
     }),
   ),
-  loudness_max: Schema.optional(
+  loudness_max: Schema.optionalKey(
     Schema.Number.annotate({
       description:
         'The peak loudness of the segment in decibels (dB). Combined with `loudness_start` and `loudness_max_time`, these components can be used to describe the "attack" of the segment.',
       jsonSchemaExamples: [-14.25],
     }),
   ),
-  loudness_max_time: Schema.optional(
+  loudness_max_time: Schema.optionalKey(
     Schema.Number.annotate({
       description:
         'The segment-relative offset of the segment peak loudness in seconds. Combined with `loudness_start` and `loudness_max`, these components can be used to desctibe the "attack" of the segment.',
       jsonSchemaExamples: [0.07305],
     }),
   ),
-  loudness_end: Schema.optional(
+  loudness_end: Schema.optionalKey(
     Schema.Number.annotate({
       description:
         'The offset loudness of the segment in decibels (dB). This value should be equivalent to the loudness_start of the following segment.',
       jsonSchemaExamples: [0],
     }),
   ),
-  pitches: Schema.optional(
+  pitches: Schema.optionalKey(
     Schema.Array(
       Schema.Number.check(Schema.isGreaterThanOrEqualTo(0), Schema.isLessThanOrEqualTo(1)),
     ).annotate({
@@ -1229,7 +1570,7 @@ export const SegmentObjectSchema = Schema.Struct({
       jsonSchemaExamples: [[0.212, 0.141, 0.294]],
     }),
   ),
-  timbre: Schema.optional(
+  timbre: Schema.optionalKey(
     Schema.Array(Schema.Number).annotate({
       description:
         'Timbre is the quality of a musical note or sound that distinguishes different types of musical instruments, or voices. It is a complex notion also referred to as sound color, texture, or tone quality, and is derived from the shape of a segment’s spectro-temporal surface, independently of pitch and loudness. The timbre feature is a vector that includes 12 unbounded values roughly centered around 0. Those values are high level abstractions of the spectral surface, ordered by degree of importance.\n\nFor completeness however, the first dimension represents the average loudness of the segment; second emphasizes brightness; third is more closely correlated to the flatness of a sound; fourth to sounds with a stronger attack; etc. See an image below representing the 12 basis functions (i.e. template segments).\n![timbre basis functions](/assets/audio/Timbre_basis_functions.png)\n\nThe actual timbre of the segment is best described as a linear combination of these 12 basis functions weighted by the coefficient values: timbre = c1 x b1 + c2 x b2 + ... + c12 x b12, where c1 to c12 represent the 12 coefficients and b1 to b12 the 12 basis functions as displayed below. Timbre vectors are best used in comparison with each other.\n',
@@ -1241,35 +1582,35 @@ export const SegmentObjectSchema = Schema.Struct({
 export type SegmentObjectSchema = Schema.Schema.Type<typeof SegmentObjectSchema>
 
 export const AudioAnalysisObjectSchema = Schema.Struct({
-  meta: Schema.optional(
+  meta: Schema.optionalKey(
     Schema.Struct({
-      analyzer_version: Schema.optional(
+      analyzer_version: Schema.optionalKey(
         Schema.String.annotate({
           description: 'The version of the Analyzer used to analyze this track.',
           jsonSchemaExamples: ['4.0.0'],
         }),
       ),
-      platform: Schema.optional(
+      platform: Schema.optionalKey(
         Schema.String.annotate({
           description: "The platform used to read the track's audio data.",
           jsonSchemaExamples: ['Linux'],
         }),
       ),
-      detailed_status: Schema.optional(
+      detailed_status: Schema.optionalKey(
         Schema.String.annotate({
           description:
             'A detailed status code for this track. If analysis data is missing, this code may explain why.',
           jsonSchemaExamples: ['OK'],
         }),
       ),
-      status_code: Schema.optional(
+      status_code: Schema.optionalKey(
         Schema.Number.check(Schema.isInt()).annotate({
           description:
             'The return code of the analyzer process. 0 if successful, 1 if any errors occurred.',
           jsonSchemaExamples: [0],
         }),
       ),
-      timestamp: Schema.optional(
+      timestamp: Schema.optionalKey(
         Schema.Union([
           Schema.BigInt,
           Schema.Number.check(Schema.isInt()),
@@ -1295,13 +1636,13 @@ export const AudioAnalysisObjectSchema = Schema.Struct({
             jsonSchemaExamples: [1495193577],
           }),
       ),
-      analysis_time: Schema.optional(
+      analysis_time: Schema.optionalKey(
         Schema.Number.annotate({
           description: 'The amount of time taken to analyze this track.',
           jsonSchemaExamples: [6.93906],
         }),
       ),
-      input_process: Schema.optional(
+      input_process: Schema.optionalKey(
         Schema.String.annotate({
           description: "The method used to read the track's audio data.",
           jsonSchemaExamples: ['libvorbisfile L+R 44100->22050'],
@@ -1309,69 +1650,69 @@ export const AudioAnalysisObjectSchema = Schema.Struct({
       ),
     }),
   ),
-  track: Schema.optional(
+  track: Schema.optionalKey(
     Schema.Struct({
-      num_samples: Schema.optional(
+      num_samples: Schema.optionalKey(
         Schema.Number.check(Schema.isInt()).annotate({
           description:
             'The exact number of audio samples analyzed from this track. See also `analysis_sample_rate`.',
           jsonSchemaExamples: [4585515],
         }),
       ),
-      duration: Schema.optional(
+      duration: Schema.optionalKey(
         Schema.Number.annotate({
           description: 'Length of the track in seconds.',
           jsonSchemaExamples: [207.95985],
         }),
       ),
-      sample_md5: Schema.optional(
+      sample_md5: Schema.optionalKey(
         Schema.String.annotate({ description: 'This field will always contain the empty string.' }),
       ),
-      offset_seconds: Schema.optional(
+      offset_seconds: Schema.optionalKey(
         Schema.Number.check(Schema.isInt()).annotate({
           description:
             'An offset to the start of the region of the track that was analyzed. (As the entire track is analyzed, this should always be 0.)',
           jsonSchemaExamples: [0],
         }),
       ),
-      window_seconds: Schema.optional(
+      window_seconds: Schema.optionalKey(
         Schema.Number.check(Schema.isInt()).annotate({
           description:
             'The length of the region of the track was analyzed, if a subset of the track was analyzed. (As the entire track is analyzed, this should always be 0.)',
           jsonSchemaExamples: [0],
         }),
       ),
-      analysis_sample_rate: Schema.optional(
+      analysis_sample_rate: Schema.optionalKey(
         Schema.Number.check(Schema.isInt()).annotate({
           description:
             'The sample rate used to decode and analyze this track. May differ from the actual sample rate of this track available on Spotify.',
           jsonSchemaExamples: [22050],
         }),
       ),
-      analysis_channels: Schema.optional(
+      analysis_channels: Schema.optionalKey(
         Schema.Number.check(Schema.isInt()).annotate({
           description:
             'The number of channels used for analysis. If 1, all channels are summed together to mono before analysis.',
           jsonSchemaExamples: [1],
         }),
       ),
-      end_of_fade_in: Schema.optional(
+      end_of_fade_in: Schema.optionalKey(
         Schema.Number.annotate({
           description:
             "The time, in seconds, at which the track's fade-in period ends. If the track has no fade-in, this will be 0.0.",
           jsonSchemaExamples: [0],
         }),
       ),
-      start_of_fade_out: Schema.optional(
+      start_of_fade_out: Schema.optionalKey(
         Schema.Number.annotate({
           description:
             "The time, in seconds, at which the track's fade-out period starts. If the track has no fade-out, this should match the track's length.",
           jsonSchemaExamples: [201.13705],
         }),
       ),
-      loudness: Schema.optional(LoudnessSchema),
-      tempo: Schema.optional(TempoSchema),
-      tempo_confidence: Schema.optional(
+      loudness: Schema.optionalKey(LoudnessSchema),
+      tempo: Schema.optionalKey(TempoSchema),
+      tempo_confidence: Schema.optionalKey(
         Schema.Number.check(
           Schema.isGreaterThanOrEqualTo(0),
           Schema.isLessThanOrEqualTo(1),
@@ -1380,8 +1721,8 @@ export const AudioAnalysisObjectSchema = Schema.Struct({
           jsonSchemaExamples: [0.73],
         }),
       ),
-      time_signature: Schema.optional(TimeSignatureSchema),
-      time_signature_confidence: Schema.optional(
+      time_signature: Schema.optionalKey(TimeSignatureSchema),
+      time_signature_confidence: Schema.optionalKey(
         Schema.Number.check(
           Schema.isGreaterThanOrEqualTo(0),
           Schema.isLessThanOrEqualTo(1),
@@ -1391,8 +1732,8 @@ export const AudioAnalysisObjectSchema = Schema.Struct({
           jsonSchemaExamples: [0.994],
         }),
       ),
-      key: Schema.optional(KeySchema),
-      key_confidence: Schema.optional(
+      key: Schema.optionalKey(KeySchema),
+      key_confidence: Schema.optionalKey(
         Schema.Number.check(
           Schema.isGreaterThanOrEqualTo(0),
           Schema.isLessThanOrEqualTo(1),
@@ -1401,8 +1742,8 @@ export const AudioAnalysisObjectSchema = Schema.Struct({
           jsonSchemaExamples: [0.408],
         }),
       ),
-      mode: Schema.optional(ModeSchema),
-      mode_confidence: Schema.optional(
+      mode: Schema.optionalKey(ModeSchema),
+      mode_confidence: Schema.optionalKey(
         Schema.Number.check(
           Schema.isGreaterThanOrEqualTo(0),
           Schema.isLessThanOrEqualTo(1),
@@ -1411,50 +1752,50 @@ export const AudioAnalysisObjectSchema = Schema.Struct({
           jsonSchemaExamples: [0.485],
         }),
       ),
-      codestring: Schema.optional(
+      codestring: Schema.optionalKey(
         Schema.String.annotate({
           description:
             'An [Echo Nest Musical Fingerprint (ENMFP)](https://academiccommons.columbia.edu/doi/10.7916/D8Q248M4) codestring for this track.',
         }),
       ),
-      code_version: Schema.optional(
+      code_version: Schema.optionalKey(
         Schema.Number.annotate({
           description:
             'A version number for the Echo Nest Musical Fingerprint format used in the codestring field.',
           jsonSchemaExamples: [3.15],
         }),
       ),
-      echoprintstring: Schema.optional(
+      echoprintstring: Schema.optionalKey(
         Schema.String.annotate({
           description:
             'An [EchoPrint](https://github.com/spotify/echoprint-codegen) codestring for this track.',
         }),
       ),
-      echoprint_version: Schema.optional(
+      echoprint_version: Schema.optionalKey(
         Schema.Number.annotate({
           description:
             'A version number for the EchoPrint format used in the echoprintstring field.',
           jsonSchemaExamples: [4.15],
         }),
       ),
-      synchstring: Schema.optional(
+      synchstring: Schema.optionalKey(
         Schema.String.annotate({
           description: 'A [Synchstring](https://github.com/echonest/synchdata) for this track.',
         }),
       ),
-      synch_version: Schema.optional(
+      synch_version: Schema.optionalKey(
         Schema.Number.annotate({
           description: 'A version number for the Synchstring used in the synchstring field.',
           jsonSchemaExamples: [1],
         }),
       ),
-      rhythmstring: Schema.optional(
+      rhythmstring: Schema.optionalKey(
         Schema.String.annotate({
           description:
             'A Rhythmstring for this track. The format of this string is similar to the Synchstring.',
         }),
       ),
-      rhythm_version: Schema.optional(
+      rhythm_version: Schema.optionalKey(
         Schema.Number.annotate({
           description: 'A version number for the Rhythmstring used in the rhythmstring field.',
           jsonSchemaExamples: [1],
@@ -1462,30 +1803,30 @@ export const AudioAnalysisObjectSchema = Schema.Struct({
       ),
     }),
   ),
-  bars: Schema.optional(
+  bars: Schema.optionalKey(
     Schema.Array(TimeIntervalObjectSchema).annotate({
       description:
         'The time intervals of the bars throughout the track. A bar (or measure) is a segment of time defined as a given number of beats.',
     }),
   ),
-  beats: Schema.optional(
+  beats: Schema.optionalKey(
     Schema.Array(TimeIntervalObjectSchema).annotate({
       description:
         'The time intervals of beats throughout the track. A beat is the basic time unit of a piece of music; for example, each tick of a metronome. Beats are typically multiples of tatums.',
     }),
   ),
-  sections: Schema.optional(
+  sections: Schema.optionalKey(
     Schema.Array(SectionObjectSchema).annotate({
       description:
         'Sections are defined by large variations in rhythm or timbre, e.g. chorus, verse, bridge, guitar solo, etc. Each section contains its own descriptions of tempo, key, mode, time_signature, and loudness.',
     }),
   ),
-  segments: Schema.optional(
+  segments: Schema.optionalKey(
     Schema.Array(SegmentObjectSchema).annotate({
       description: 'Each segment contains a roughly conisistent sound throughout its duration.',
     }),
   ),
-  tatums: Schema.optional(
+  tatums: Schema.optionalKey(
     Schema.Array(TimeIntervalObjectSchema).annotate({
       description:
         'A tatum represents the lowest regular pulse train that a listener intuitively infers from the timing of perceived musical events (segments).',
@@ -1496,7 +1837,7 @@ export const AudioAnalysisObjectSchema = Schema.Struct({
 export type AudioAnalysisObjectSchema = Schema.Schema.Type<typeof AudioAnalysisObjectSchema>
 
 export const AudioFeaturesObjectSchema = Schema.Struct({
-  acousticness: Schema.optional(
+  acousticness: Schema.optionalKey(
     Schema.Number.check(
       Schema.isBetween({ minimum: -3.4028234663852886e38, maximum: 3.4028234663852886e38 }),
       Schema.isGreaterThanOrEqualTo(0),
@@ -1507,14 +1848,14 @@ export const AudioFeaturesObjectSchema = Schema.Struct({
       jsonSchemaExamples: [0.00242],
     }),
   ),
-  analysis_url: Schema.optional(
+  analysis_url: Schema.optionalKey(
     Schema.String.annotate({
       description:
         'A URL to access the full audio analysis of this track. An access token is required to access this data.\n',
       jsonSchemaExamples: ['https://api.spotify.com/v1/audio-analysis/2takcwOaAZWiXQijPHIx7B\n'],
     }),
   ),
-  danceability: Schema.optional(
+  danceability: Schema.optionalKey(
     Schema.Number.check(
       Schema.isBetween({ minimum: -3.4028234663852886e38, maximum: 3.4028234663852886e38 }),
     ).annotate({
@@ -1523,13 +1864,13 @@ export const AudioFeaturesObjectSchema = Schema.Struct({
       jsonSchemaExamples: [0.585],
     }),
   ),
-  duration_ms: Schema.optional(
+  duration_ms: Schema.optionalKey(
     Schema.Number.check(Schema.isInt()).annotate({
       description: 'The duration of the track in milliseconds.\n',
       jsonSchemaExamples: [237040],
     }),
   ),
-  energy: Schema.optional(
+  energy: Schema.optionalKey(
     Schema.Number.check(
       Schema.isBetween({ minimum: -3.4028234663852886e38, maximum: 3.4028234663852886e38 }),
     ).annotate({
@@ -1538,13 +1879,13 @@ export const AudioFeaturesObjectSchema = Schema.Struct({
       jsonSchemaExamples: [0.842],
     }),
   ),
-  id: Schema.optional(
+  id: Schema.optionalKey(
     Schema.String.annotate({
       description: 'The Spotify ID for the track.\n',
       jsonSchemaExamples: ['2takcwOaAZWiXQijPHIx7B'],
     }),
   ),
-  instrumentalness: Schema.optional(
+  instrumentalness: Schema.optionalKey(
     Schema.Number.check(
       Schema.isBetween({ minimum: -3.4028234663852886e38, maximum: 3.4028234663852886e38 }),
     ).annotate({
@@ -1553,8 +1894,8 @@ export const AudioFeaturesObjectSchema = Schema.Struct({
       jsonSchemaExamples: [0.00686],
     }),
   ),
-  key: Schema.optional(KeySchema),
-  liveness: Schema.optional(
+  key: Schema.optionalKey(KeySchema),
+  liveness: Schema.optionalKey(
     Schema.Number.check(
       Schema.isBetween({ minimum: -3.4028234663852886e38, maximum: 3.4028234663852886e38 }),
     ).annotate({
@@ -1563,9 +1904,9 @@ export const AudioFeaturesObjectSchema = Schema.Struct({
       jsonSchemaExamples: [0.0866],
     }),
   ),
-  loudness: Schema.optional(LoudnessSchema),
-  mode: Schema.optional(ModeSchema),
-  speechiness: Schema.optional(
+  loudness: Schema.optionalKey(LoudnessSchema),
+  mode: Schema.optionalKey(ModeSchema),
+  speechiness: Schema.optionalKey(
     Schema.Number.check(
       Schema.isBetween({ minimum: -3.4028234663852886e38, maximum: 3.4028234663852886e38 }),
     ).annotate({
@@ -1574,24 +1915,24 @@ export const AudioFeaturesObjectSchema = Schema.Struct({
       jsonSchemaExamples: [0.0556],
     }),
   ),
-  tempo: Schema.optional(TempoSchema),
-  time_signature: Schema.optional(TimeSignatureSchema),
-  track_href: Schema.optional(
+  tempo: Schema.optionalKey(TempoSchema),
+  time_signature: Schema.optionalKey(TimeSignatureSchema),
+  track_href: Schema.optionalKey(
     Schema.String.annotate({
       description: 'A link to the Web API endpoint providing full details of the track.\n',
       jsonSchemaExamples: ['https://api.spotify.com/v1/tracks/2takcwOaAZWiXQijPHIx7B\n'],
     }),
   ),
-  type: Schema.optional(
+  type: Schema.optionalKey(
     Schema.Literal('audio_features').annotate({ description: 'The object type.\n' }),
   ),
-  uri: Schema.optional(
+  uri: Schema.optionalKey(
     Schema.String.annotate({
       description: 'The Spotify URI for the track.\n',
       jsonSchemaExamples: ['spotify:track:2takcwOaAZWiXQijPHIx7B'],
     }),
   ),
-  valence: Schema.optional(
+  valence: Schema.optionalKey(
     Schema.Number.check(
       Schema.isBetween({ minimum: -3.4028234663852886e38, maximum: 3.4028234663852886e38 }),
       Schema.isGreaterThanOrEqualTo(0),
@@ -1607,88 +1948,88 @@ export const AudioFeaturesObjectSchema = Schema.Struct({
 export type AudioFeaturesObjectSchema = Schema.Schema.Type<typeof AudioFeaturesObjectSchema>
 
 export const SimplifiedTrackObjectSchema = Schema.Struct({
-  artists: Schema.optional(
+  artists: Schema.optionalKey(
     Schema.Array(SimplifiedArtistObjectSchema).annotate({
       description:
         'The artists who performed the track. Each artist object includes a link in `href` to more detailed information about the artist.',
     }),
   ),
-  available_markets: Schema.optional(
+  available_markets: Schema.optionalKey(
     Schema.Array(Schema.String).annotate({
       description:
         'A list of the countries in which the track can be played, identified by their [ISO 3166-1 alpha-2](http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) code.\n',
       jsonSchemaDeprecated: true,
     }),
   ),
-  disc_number: Schema.optional(
+  disc_number: Schema.optionalKey(
     Schema.Number.check(Schema.isInt()).annotate({
       description: 'The disc number (usually `1` unless the album consists of more than one disc).',
     }),
   ),
-  duration_ms: Schema.optional(
+  duration_ms: Schema.optionalKey(
     Schema.Number.check(Schema.isInt()).annotate({
       description: 'The track length in milliseconds.',
     }),
   ),
-  explicit: Schema.optional(
+  explicit: Schema.optionalKey(
     Schema.Boolean.annotate({
       description:
         'Whether or not the track has explicit lyrics ( `true` = yes it does; `false` = no it does not OR unknown).',
     }),
   ),
-  external_urls: Schema.optional(
+  external_urls: Schema.optionalKey(
     ExternalUrlObjectSchema.annotate({ description: 'External URLs for this track.\n' }),
   ),
-  href: Schema.optional(
+  href: Schema.optionalKey(
     Schema.String.annotate({
       description: 'A link to the Web API endpoint providing full details of the track.',
     }),
   ),
-  id: Schema.optional(
+  id: Schema.optionalKey(
     Schema.String.annotate({
       description:
         'The [Spotify ID](/documentation/web-api/concepts/spotify-uris-ids) for the track.\n',
     }),
   ),
-  is_playable: Schema.optional(
+  is_playable: Schema.optionalKey(
     Schema.Boolean.annotate({
       description:
         'Part of the response when [Track Relinking](/documentation/web-api/concepts/track-relinking/) is applied. If `true`, the track is playable in the given market. Otherwise `false`.\n',
     }),
   ),
-  linked_from: Schema.optional(
+  linked_from: Schema.optionalKey(
     LinkedTrackObjectSchema.annotate({
       description:
         'Part of the response when [Track Relinking](/documentation/web-api/concepts/track-relinking/) is applied and is only part of the response if the track linking, in fact, exists. The requested track has been replaced with a different track. The track in the `linked_from` object contains information about the originally requested track.',
       jsonSchemaDeprecated: true,
     }),
   ),
-  restrictions: Schema.optional(
+  restrictions: Schema.optionalKey(
     TrackRestrictionObjectSchema.annotate({
       description: 'Included in the response when a content restriction is applied.\n',
     }),
   ),
-  name: Schema.optional(Schema.String.annotate({ description: 'The name of the track.' })),
-  preview_url: Schema.optional(
+  name: Schema.optionalKey(Schema.String.annotate({ description: 'The name of the track.' })),
+  preview_url: Schema.optionalKey(
     Schema.NullOr(Schema.String).annotate({
       description: 'A URL to a 30 second preview (MP3 format) of the track.\n',
       jsonSchemaDeprecated: true,
     }),
   ),
-  track_number: Schema.optional(
+  track_number: Schema.optionalKey(
     Schema.Number.check(Schema.isInt()).annotate({
       description:
         'The number of the track. If an album has several discs, the track number is the number on the specified disc.\n',
     }),
   ),
-  type: Schema.optional(Schema.String.annotate({ description: 'The object type: "track".\n' })),
-  uri: Schema.optional(
+  type: Schema.optionalKey(Schema.String.annotate({ description: 'The object type: "track".\n' })),
+  uri: Schema.optionalKey(
     Schema.String.annotate({
       description:
         'The [Spotify URI](/documentation/web-api/concepts/spotify-uris-ids) for the track.\n',
     }),
   ),
-  is_local: Schema.optional(
+  is_local: Schema.optionalKey(
     Schema.Boolean.annotate({ description: 'Whether or not the track is from a local file.\n' }),
   ),
 })
@@ -1696,12 +2037,12 @@ export const SimplifiedTrackObjectSchema = Schema.Struct({
 export type SimplifiedTrackObjectSchema = Schema.Schema.Type<typeof SimplifiedTrackObjectSchema>
 
 export const CursorObjectSchema = Schema.Struct({
-  after: Schema.optional(
+  after: Schema.optionalKey(
     Schema.String.annotate({
       description: 'The cursor to use as key to find the next page of items.',
     }),
   ),
-  before: Schema.optional(
+  before: Schema.optionalKey(
     Schema.String.annotate({
       description: 'The cursor to use as key to find the previous page of items.',
     }),
@@ -1711,24 +2052,24 @@ export const CursorObjectSchema = Schema.Struct({
 export type CursorObjectSchema = Schema.Schema.Type<typeof CursorObjectSchema>
 
 export const CursorPagingObjectSchema = Schema.Struct({
-  href: Schema.optional(
+  href: Schema.optionalKey(
     Schema.String.annotate({
       description: 'A link to the Web API endpoint returning the full result of the request.',
     }),
   ),
-  limit: Schema.optional(
+  limit: Schema.optionalKey(
     Schema.Number.check(Schema.isInt()).annotate({
       description:
         'The maximum number of items in the response (as set in the query or by default).',
     }),
   ),
-  next: Schema.optional(
+  next: Schema.optionalKey(
     Schema.String.annotate({ description: 'URL to the next page of items. ( `null` if none)' }),
   ),
-  cursors: Schema.optional(
+  cursors: Schema.optionalKey(
     CursorObjectSchema.annotate({ description: 'The cursors used to find the next set of items.' }),
   ),
-  total: Schema.optional(
+  total: Schema.optionalKey(
     Schema.Number.check(Schema.isInt()).annotate({
       description: 'The total number of items available to return.',
     }),
@@ -1737,82 +2078,153 @@ export const CursorPagingObjectSchema = Schema.Struct({
 
 export type CursorPagingObjectSchema = Schema.Schema.Type<typeof CursorPagingObjectSchema>
 
-export const CursorPagingPlayHistoryObjectSchema = CursorPagingObjectSchema.check(
-  Schema.makeFilter((input) =>
-    Schema.is(Schema.Struct({ items: Schema.optional(Schema.Array(PlayHistoryObjectSchema)) }))(
-      input,
-    ),
-  ),
-)
+export const CursorPagingPlayHistoryObjectSchema = (() => {
+  const M0 = CursorPagingObjectSchema
+  const M1 = Schema.Struct({ items: Schema.optionalKey(Schema.Array(PlayHistoryObjectSchema)) })
+  const isAll = (input: unknown): input is typeof M0.Type & typeof M1.Type =>
+    Schema.is(M0)(input) && Schema.is(M1)(input)
+  return Schema.Unknown.pipe(
+    Schema.decodeTo(Schema.declare(isAll), {
+      decode: SchemaGetter.transformEffect((input) =>
+        Effect.all([
+          Schema.decodeUnknownEffect(M0)(input),
+          Schema.decodeUnknownEffect(M1)(input),
+        ]).pipe(
+          Effect.mapError((error) => error.issue),
+          Effect.flatMap((values) => {
+            const merged = values.every(
+              (value) => typeof value === 'object' && value !== null && !Array.isArray(value),
+            )
+              ? Object.assign({}, ...values)
+              : values[0]
+            return isAll(merged)
+              ? Effect.succeed(merged)
+              : Effect.fail(new SchemaIssue.InvalidValue(undefined, merged))
+          }),
+        ),
+      ),
+      encode: SchemaGetter.passthrough({ strict: false }),
+    }),
+  )
+})()
 
 export type CursorPagingPlayHistoryObjectSchema = Schema.Schema.Type<
   typeof CursorPagingPlayHistoryObjectSchema
 >
 
-export const CursorPagingSimplifiedArtistObjectSchema = CursorPagingObjectSchema.check(
-  Schema.makeFilter((input) =>
-    Schema.is(Schema.Struct({ items: Schema.optional(Schema.Array(ArtistObjectSchema)) }))(input),
-  ),
-)
+export const CursorPagingSimplifiedArtistObjectSchema = (() => {
+  const M0 = CursorPagingObjectSchema
+  const M1 = Schema.Struct({ items: Schema.optionalKey(Schema.Array(ArtistObjectSchema)) })
+  const isAll = (input: unknown): input is typeof M0.Type & typeof M1.Type =>
+    Schema.is(M0)(input) && Schema.is(M1)(input)
+  return Schema.Unknown.pipe(
+    Schema.decodeTo(Schema.declare(isAll), {
+      decode: SchemaGetter.transformEffect((input) =>
+        Effect.all([
+          Schema.decodeUnknownEffect(M0)(input),
+          Schema.decodeUnknownEffect(M1)(input),
+        ]).pipe(
+          Effect.mapError((error) => error.issue),
+          Effect.flatMap((values) => {
+            const merged = values.every(
+              (value) => typeof value === 'object' && value !== null && !Array.isArray(value),
+            )
+              ? Object.assign({}, ...values)
+              : values[0]
+            return isAll(merged)
+              ? Effect.succeed(merged)
+              : Effect.fail(new SchemaIssue.InvalidValue(undefined, merged))
+          }),
+        ),
+      ),
+      encode: SchemaGetter.passthrough({ strict: false }),
+    }),
+  )
+})()
 
 export type CursorPagingSimplifiedArtistObjectSchema = Schema.Schema.Type<
   typeof CursorPagingSimplifiedArtistObjectSchema
 >
 
-export const PagingObjectSchema = Schema.Struct({
-  href: Schema.String.annotate({
-    description: 'A link to the Web API endpoint returning the full result of the request\n',
-    jsonSchemaExamples: ['https://api.spotify.com/v1/me/shows?offset=0&limit=20\n'],
+export const PagingObjectSchema = Schema.StructWithRest(
+  Schema.Struct({
+    href: Schema.String.annotate({
+      description: 'A link to the Web API endpoint returning the full result of the request\n',
+      jsonSchemaExamples: ['https://api.spotify.com/v1/me/shows?offset=0&limit=20\n'],
+    }),
+    limit: Schema.Number.check(Schema.isInt()).annotate({
+      description:
+        'The maximum number of items in the response (as set in the query or by default).\n',
+      jsonSchemaExamples: [20],
+    }),
+    next: Schema.NullOr(Schema.String).annotate({
+      description: 'URL to the next page of items. ( `null` if none)\n',
+      jsonSchemaExamples: ['https://api.spotify.com/v1/me/shows?offset=1&limit=1'],
+    }),
+    offset: Schema.Number.check(Schema.isInt()).annotate({
+      description: 'The offset of the items returned (as set in the query or by default)\n',
+      jsonSchemaExamples: [0],
+    }),
+    previous: Schema.NullOr(Schema.String).annotate({
+      description: 'URL to the previous page of items. ( `null` if none)\n',
+      jsonSchemaExamples: ['https://api.spotify.com/v1/me/shows?offset=1&limit=1'],
+    }),
+    total: Schema.Number.check(Schema.isInt()).annotate({
+      description: 'The total number of items available to return.\n',
+      jsonSchemaExamples: [4],
+    }),
   }),
-  limit: Schema.Number.check(Schema.isInt()).annotate({
-    description:
-      'The maximum number of items in the response (as set in the query or by default).\n',
-    jsonSchemaExamples: [20],
-  }),
-  next: Schema.NullOr(Schema.String).annotate({
-    description: 'URL to the next page of items. ( `null` if none)\n',
-    jsonSchemaExamples: ['https://api.spotify.com/v1/me/shows?offset=1&limit=1'],
-  }),
-  offset: Schema.Number.check(Schema.isInt()).annotate({
-    description: 'The offset of the items returned (as set in the query or by default)\n',
-    jsonSchemaExamples: [0],
-  }),
-  previous: Schema.NullOr(Schema.String).annotate({
-    description: 'URL to the previous page of items. ( `null` if none)\n',
-    jsonSchemaExamples: ['https://api.spotify.com/v1/me/shows?offset=1&limit=1'],
-  }),
-  total: Schema.Number.check(Schema.isInt()).annotate({
-    description: 'The total number of items available to return.\n',
-    jsonSchemaExamples: [4],
-  }),
-})
+  [Schema.Record(Schema.String, Schema.Unknown)],
+).check(Schema.makeFilter((input) => ['items'].every((key) => key in input)))
 
 export type PagingObjectSchema = Schema.Schema.Type<typeof PagingObjectSchema>
 
-export const PlaylistOwnerObjectSchema = PlaylistUserObjectSchema.check(
-  Schema.makeFilter((input) =>
-    Schema.is(
-      Schema.Struct({
-        display_name: Schema.optional(
-          Schema.NullOr(Schema.String).annotate({
-            description: "The name displayed on the user's profile. `null` if not available.\n",
+export const PlaylistOwnerObjectSchema = (() => {
+  const M0 = PlaylistUserObjectSchema
+  const M1 = Schema.Struct({
+    display_name: Schema.optionalKey(
+      Schema.NullOr(Schema.String).annotate({
+        description: "The name displayed on the user's profile. `null` if not available.\n",
+      }),
+    ),
+  })
+  const isAll = (input: unknown): input is typeof M0.Type & typeof M1.Type =>
+    Schema.is(M0)(input) && Schema.is(M1)(input)
+  return Schema.Unknown.pipe(
+    Schema.decodeTo(Schema.declare(isAll), {
+      decode: SchemaGetter.transformEffect((input) =>
+        Effect.all([
+          Schema.decodeUnknownEffect(M0)(input),
+          Schema.decodeUnknownEffect(M1)(input),
+        ]).pipe(
+          Effect.mapError((error) => error.issue),
+          Effect.flatMap((values) => {
+            const merged = values.every(
+              (value) => typeof value === 'object' && value !== null && !Array.isArray(value),
+            )
+              ? Object.assign({}, ...values)
+              : values[0]
+            return isAll(merged)
+              ? Effect.succeed(merged)
+              : Effect.fail(new SchemaIssue.InvalidValue(undefined, merged))
           }),
         ),
-      }),
-    )(input),
-  ),
-)
+      ),
+      encode: SchemaGetter.passthrough({ strict: false }),
+    }),
+  )
+})()
 
 export type PlaylistOwnerObjectSchema = Schema.Schema.Type<typeof PlaylistOwnerObjectSchema>
 
 export const PlaylistTracksRefObjectSchema = Schema.Struct({
-  href: Schema.optional(
+  href: Schema.optionalKey(
     Schema.String.annotate({
       description:
         "A link to the Web API endpoint where full details of the playlist's tracks can be retrieved.\n",
     }),
   ),
-  total: Schema.optional(
+  total: Schema.optionalKey(
     Schema.Number.check(Schema.isInt()).annotate({
       description: 'Number of tracks in the playlist.\n',
     }),
@@ -1822,68 +2234,70 @@ export const PlaylistTracksRefObjectSchema = Schema.Struct({
 export type PlaylistTracksRefObjectSchema = Schema.Schema.Type<typeof PlaylistTracksRefObjectSchema>
 
 export const SimplifiedPlaylistObjectSchema = Schema.Struct({
-  collaborative: Schema.optional(
+  collaborative: Schema.optionalKey(
     Schema.Boolean.annotate({
       description: '`true` if the owner allows other users to modify the playlist.\n',
     }),
   ),
-  description: Schema.optional(
+  description: Schema.optionalKey(
     Schema.String.annotate({
       description:
         'The playlist description. _Only returned for modified, verified playlists, otherwise_ `null`.\n',
     }),
   ),
-  external_urls: Schema.optional(
+  external_urls: Schema.optionalKey(
     ExternalUrlObjectSchema.annotate({ description: 'Known external URLs for this playlist.\n' }),
   ),
-  href: Schema.optional(
+  href: Schema.optionalKey(
     Schema.String.annotate({
       description: 'A link to the Web API endpoint providing full details of the playlist.\n',
     }),
   ),
-  id: Schema.optional(
+  id: Schema.optionalKey(
     Schema.String.annotate({
       description:
         'The [Spotify ID](/documentation/web-api/concepts/spotify-uris-ids) for the playlist.\n',
     }),
   ),
-  images: Schema.optional(
+  images: Schema.optionalKey(
     Schema.Array(ImageObjectSchema).annotate({
       description:
         'Images for the playlist. The array may be empty or contain up to three images. The images are returned by size in descending order. See [Working with Playlists](/documentation/web-api/concepts/playlists). _**Note**: If returned, the source URL for the image (`url`) is temporary and will expire in less than a day._\n',
     }),
   ),
-  name: Schema.optional(Schema.String.annotate({ description: 'The name of the playlist.\n' })),
-  owner: Schema.optional(
+  name: Schema.optionalKey(Schema.String.annotate({ description: 'The name of the playlist.\n' })),
+  owner: Schema.optionalKey(
     PlaylistOwnerObjectSchema.annotate({ description: 'The user who owns the playlist\n' }),
   ),
-  public: Schema.optional(
+  public: Schema.optionalKey(
     Schema.Boolean.annotate({
       description:
         "The playlist's public/private status (if it is added to the user's profile): `true` the playlist is public, `false` the playlist is private, `null` the playlist status is not relevant. For more about public/private status, see [Working with Playlists](/documentation/web-api/concepts/playlists)\n",
     }),
   ),
-  snapshot_id: Schema.optional(
+  snapshot_id: Schema.optionalKey(
     Schema.String.annotate({
       description:
         'The version identifier for the current playlist. Can be supplied in other requests to target a specific playlist version\n',
     }),
   ),
-  items: Schema.optional(
+  items: Schema.optionalKey(
     PlaylistTracksRefObjectSchema.annotate({
       description:
         "A collection containing a link ( `href` ) to the Web API endpoint where full details of the playlist's items can be retrieved, along with the `total` number of items in the playlist. Note, a track object may be `null`. This can happen if a track is no longer available.\n",
     }),
   ),
-  tracks: Schema.optional(
+  tracks: Schema.optionalKey(
     PlaylistTracksRefObjectSchema.annotate({
       description:
         "**Deprecated:** Use `items` instead. A collection containing a link ( `href` ) to the Web API endpoint where full details of the playlist's tracks can be retrieved, along with the `total` number of tracks in the playlist. Note, a track object may be `null`. This can happen if a track is no longer available.\n",
       jsonSchemaDeprecated: true,
     }),
   ),
-  type: Schema.optional(Schema.String.annotate({ description: 'The object type: "playlist"\n' })),
-  uri: Schema.optional(
+  type: Schema.optionalKey(
+    Schema.String.annotate({ description: 'The object type: "playlist"\n' }),
+  ),
+  uri: Schema.optionalKey(
     Schema.String.annotate({
       description:
         'The [Spotify URI](/documentation/web-api/concepts/spotify-uris-ids) for the playlist.\n',
@@ -1895,134 +2309,270 @@ export type SimplifiedPlaylistObjectSchema = Schema.Schema.Type<
   typeof SimplifiedPlaylistObjectSchema
 >
 
-export const PagingPlaylistObjectSchema = PagingObjectSchema.check(
-  Schema.makeFilter((input) =>
-    Schema.is(
-      Schema.Struct({ items: Schema.optional(Schema.Array(SimplifiedPlaylistObjectSchema)) }),
-    )(input),
-  ),
-)
+export const PagingPlaylistObjectSchema = (() => {
+  const M0 = PagingObjectSchema
+  const M1 = Schema.Struct({
+    items: Schema.optionalKey(Schema.Array(SimplifiedPlaylistObjectSchema)),
+  })
+  const isAll = (input: unknown): input is typeof M0.Type & typeof M1.Type =>
+    Schema.is(M0)(input) && Schema.is(M1)(input)
+  return Schema.Unknown.pipe(
+    Schema.decodeTo(Schema.declare(isAll), {
+      decode: SchemaGetter.transformEffect((input) =>
+        Effect.all([
+          Schema.decodeUnknownEffect(M0)(input),
+          Schema.decodeUnknownEffect(M1)(input),
+        ]).pipe(
+          Effect.mapError((error) => error.issue),
+          Effect.flatMap((values) => {
+            const merged = values.every(
+              (value) => typeof value === 'object' && value !== null && !Array.isArray(value),
+            )
+              ? Object.assign({}, ...values)
+              : values[0]
+            return isAll(merged)
+              ? Effect.succeed(merged)
+              : Effect.fail(new SchemaIssue.InvalidValue(undefined, merged))
+          }),
+        ),
+      ),
+      encode: SchemaGetter.passthrough({ strict: false }),
+    }),
+  )
+})()
 
 export type PagingPlaylistObjectSchema = Schema.Schema.Type<typeof PagingPlaylistObjectSchema>
 
 export const PagingFeaturedPlaylistObjectSchema = Schema.Struct({
-  message: Schema.optional(
+  message: Schema.optionalKey(
     Schema.String.annotate({
       description: 'The localized message of a playlist.\n',
       jsonSchemaExamples: ['Popular Playlists'],
     }),
   ),
-  playlists: Schema.optional(PagingPlaylistObjectSchema),
+  playlists: Schema.optionalKey(PagingPlaylistObjectSchema),
 })
 
 export type PagingFeaturedPlaylistObjectSchema = Schema.Schema.Type<
   typeof PagingFeaturedPlaylistObjectSchema
 >
 
-export const ArtistDiscographyAlbumObjectSchema = SimplifiedAlbumObjectSchema.check(
-  Schema.makeFilter((input) =>
-    Schema.is(
-      Schema.Struct({
-        album_group: Schema.Literals(['album', 'single', 'compilation', 'appears_on']).annotate({
-          description: 'This field describes the relationship between the artist and the album.\n',
-          jsonSchemaExamples: ['compilation'],
-          jsonSchemaDeprecated: true,
-        }),
-      }),
-    )(input),
-  ),
-)
+export const ArtistDiscographyAlbumObjectSchema = (() => {
+  const M0 = SimplifiedAlbumObjectSchema
+  const M1 = Schema.Struct({
+    album_group: Schema.Literals(['album', 'single', 'compilation', 'appears_on']).annotate({
+      description: 'This field describes the relationship between the artist and the album.\n',
+      jsonSchemaExamples: ['compilation'],
+      jsonSchemaDeprecated: true,
+    }),
+  })
+  const isAll = (input: unknown): input is typeof M0.Type & typeof M1.Type =>
+    Schema.is(M0)(input) && Schema.is(M1)(input)
+  return Schema.Unknown.pipe(
+    Schema.decodeTo(Schema.declare(isAll), {
+      decode: SchemaGetter.transformEffect((input) =>
+        Effect.all([
+          Schema.decodeUnknownEffect(M0)(input),
+          Schema.decodeUnknownEffect(M1)(input),
+        ]).pipe(
+          Effect.mapError((error) => error.issue),
+          Effect.flatMap((values) => {
+            const merged = values.every(
+              (value) => typeof value === 'object' && value !== null && !Array.isArray(value),
+            )
+              ? Object.assign({}, ...values)
+              : values[0]
+            return isAll(merged)
+              ? Effect.succeed(merged)
+              : Effect.fail(new SchemaIssue.InvalidValue(undefined, merged))
+          }),
+        ),
+      ),
+      encode: SchemaGetter.passthrough({ strict: false }),
+    }),
+  )
+})()
 
 export type ArtistDiscographyAlbumObjectSchema = Schema.Schema.Type<
   typeof ArtistDiscographyAlbumObjectSchema
 >
 
-export const PagingArtistDiscographyAlbumObjectSchema = PagingObjectSchema.check(
-  Schema.makeFilter((input) =>
-    Schema.is(
-      Schema.Struct({ items: Schema.optional(Schema.Array(ArtistDiscographyAlbumObjectSchema)) }),
-    )(input),
-  ),
-)
+export const PagingArtistDiscographyAlbumObjectSchema = (() => {
+  const M0 = PagingObjectSchema
+  const M1 = Schema.Struct({
+    items: Schema.optionalKey(Schema.Array(ArtistDiscographyAlbumObjectSchema)),
+  })
+  const isAll = (input: unknown): input is typeof M0.Type & typeof M1.Type =>
+    Schema.is(M0)(input) && Schema.is(M1)(input)
+  return Schema.Unknown.pipe(
+    Schema.decodeTo(Schema.declare(isAll), {
+      decode: SchemaGetter.transformEffect((input) =>
+        Effect.all([
+          Schema.decodeUnknownEffect(M0)(input),
+          Schema.decodeUnknownEffect(M1)(input),
+        ]).pipe(
+          Effect.mapError((error) => error.issue),
+          Effect.flatMap((values) => {
+            const merged = values.every(
+              (value) => typeof value === 'object' && value !== null && !Array.isArray(value),
+            )
+              ? Object.assign({}, ...values)
+              : values[0]
+            return isAll(merged)
+              ? Effect.succeed(merged)
+              : Effect.fail(new SchemaIssue.InvalidValue(undefined, merged))
+          }),
+        ),
+      ),
+      encode: SchemaGetter.passthrough({ strict: false }),
+    }),
+  )
+})()
 
 export type PagingArtistDiscographyAlbumObjectSchema = Schema.Schema.Type<
   typeof PagingArtistDiscographyAlbumObjectSchema
 >
 
-export const PagingSimplifiedAlbumObjectSchema = PagingObjectSchema.check(
-  Schema.makeFilter((input) =>
-    Schema.is(Schema.Struct({ items: Schema.optional(Schema.Array(SimplifiedAlbumObjectSchema)) }))(
-      input,
-    ),
-  ),
-)
+export const PagingSimplifiedAlbumObjectSchema = (() => {
+  const M0 = PagingObjectSchema
+  const M1 = Schema.Struct({ items: Schema.optionalKey(Schema.Array(SimplifiedAlbumObjectSchema)) })
+  const isAll = (input: unknown): input is typeof M0.Type & typeof M1.Type =>
+    Schema.is(M0)(input) && Schema.is(M1)(input)
+  return Schema.Unknown.pipe(
+    Schema.decodeTo(Schema.declare(isAll), {
+      decode: SchemaGetter.transformEffect((input) =>
+        Effect.all([
+          Schema.decodeUnknownEffect(M0)(input),
+          Schema.decodeUnknownEffect(M1)(input),
+        ]).pipe(
+          Effect.mapError((error) => error.issue),
+          Effect.flatMap((values) => {
+            const merged = values.every(
+              (value) => typeof value === 'object' && value !== null && !Array.isArray(value),
+            )
+              ? Object.assign({}, ...values)
+              : values[0]
+            return isAll(merged)
+              ? Effect.succeed(merged)
+              : Effect.fail(new SchemaIssue.InvalidValue(undefined, merged))
+          }),
+        ),
+      ),
+      encode: SchemaGetter.passthrough({ strict: false }),
+    }),
+  )
+})()
 
 export type PagingSimplifiedAlbumObjectSchema = Schema.Schema.Type<
   typeof PagingSimplifiedAlbumObjectSchema
 >
 
-export const PagingSimplifiedTrackObjectSchema = PagingObjectSchema.check(
-  Schema.makeFilter((input) =>
-    Schema.is(Schema.Struct({ items: Schema.optional(Schema.Array(SimplifiedTrackObjectSchema)) }))(
-      input,
-    ),
-  ),
-)
+export const PagingSimplifiedTrackObjectSchema = (() => {
+  const M0 = PagingObjectSchema
+  const M1 = Schema.Struct({ items: Schema.optionalKey(Schema.Array(SimplifiedTrackObjectSchema)) })
+  const isAll = (input: unknown): input is typeof M0.Type & typeof M1.Type =>
+    Schema.is(M0)(input) && Schema.is(M1)(input)
+  return Schema.Unknown.pipe(
+    Schema.decodeTo(Schema.declare(isAll), {
+      decode: SchemaGetter.transformEffect((input) =>
+        Effect.all([
+          Schema.decodeUnknownEffect(M0)(input),
+          Schema.decodeUnknownEffect(M1)(input),
+        ]).pipe(
+          Effect.mapError((error) => error.issue),
+          Effect.flatMap((values) => {
+            const merged = values.every(
+              (value) => typeof value === 'object' && value !== null && !Array.isArray(value),
+            )
+              ? Object.assign({}, ...values)
+              : values[0]
+            return isAll(merged)
+              ? Effect.succeed(merged)
+              : Effect.fail(new SchemaIssue.InvalidValue(undefined, merged))
+          }),
+        ),
+      ),
+      encode: SchemaGetter.passthrough({ strict: false }),
+    }),
+  )
+})()
 
 export type PagingSimplifiedTrackObjectSchema = Schema.Schema.Type<
   typeof PagingSimplifiedTrackObjectSchema
 >
 
-export const AlbumObjectSchema = AlbumBaseSchema.check(
-  Schema.makeFilter((input) =>
-    Schema.is(
-      Schema.Struct({
-        artists: Schema.optional(
-          Schema.Array(SimplifiedArtistObjectSchema).annotate({
-            description:
-              'The artists of the album. Each artist object includes a link in `href` to more detailed information about the artist.\n',
-          }),
-        ),
-        tracks: Schema.optional(
-          PagingSimplifiedTrackObjectSchema.annotate({ description: 'The tracks of the album.\n' }),
-        ),
-        copyrights: Schema.optional(
-          Schema.Array(CopyrightObjectSchema).annotate({
-            description: 'The copyright statements of the album.\n',
-          }),
-        ),
-        external_ids: Schema.optional(
-          ExternalIdObjectSchema.annotate({ description: 'Known external IDs for the album.\n' }),
-        ),
-        genres: Schema.optional(
-          Schema.Array(Schema.String).annotate({
-            description: '**Deprecated** The array is always empty.\n',
-            jsonSchemaExamples: [[]],
-            jsonSchemaDeprecated: true,
-          }),
-        ),
-        label: Schema.optional(
-          Schema.String.annotate({
-            description: 'The label associated with the album.\n',
-            jsonSchemaDeprecated: true,
-          }),
-        ),
-        popularity: Schema.optional(
-          Schema.Number.check(Schema.isInt()).annotate({
-            description:
-              'The popularity of the album. The value will be between 0 and 100, with 100 being the most popular.\n',
-            jsonSchemaDeprecated: true,
-          }),
-        ),
+export const AlbumObjectSchema = (() => {
+  const M0 = AlbumBaseSchema
+  const M1 = Schema.Struct({
+    artists: Schema.optionalKey(
+      Schema.Array(SimplifiedArtistObjectSchema).annotate({
+        description:
+          'The artists of the album. Each artist object includes a link in `href` to more detailed information about the artist.\n',
       }),
-    )(input),
-  ),
-)
+    ),
+    tracks: Schema.optionalKey(
+      PagingSimplifiedTrackObjectSchema.annotate({ description: 'The tracks of the album.\n' }),
+    ),
+    copyrights: Schema.optionalKey(
+      Schema.Array(CopyrightObjectSchema).annotate({
+        description: 'The copyright statements of the album.\n',
+      }),
+    ),
+    external_ids: Schema.optionalKey(
+      ExternalIdObjectSchema.annotate({ description: 'Known external IDs for the album.\n' }),
+    ),
+    genres: Schema.optionalKey(
+      Schema.Array(Schema.String).annotate({
+        description: '**Deprecated** The array is always empty.\n',
+        jsonSchemaExamples: [[]],
+        jsonSchemaDeprecated: true,
+      }),
+    ),
+    label: Schema.optionalKey(
+      Schema.String.annotate({
+        description: 'The label associated with the album.\n',
+        jsonSchemaDeprecated: true,
+      }),
+    ),
+    popularity: Schema.optionalKey(
+      Schema.Number.check(Schema.isInt()).annotate({
+        description:
+          'The popularity of the album. The value will be between 0 and 100, with 100 being the most popular.\n',
+        jsonSchemaDeprecated: true,
+      }),
+    ),
+  })
+  const isAll = (input: unknown): input is typeof M0.Type & typeof M1.Type =>
+    Schema.is(M0)(input) && Schema.is(M1)(input)
+  return Schema.Unknown.pipe(
+    Schema.decodeTo(Schema.declare(isAll), {
+      decode: SchemaGetter.transformEffect((input) =>
+        Effect.all([
+          Schema.decodeUnknownEffect(M0)(input),
+          Schema.decodeUnknownEffect(M1)(input),
+        ]).pipe(
+          Effect.mapError((error) => error.issue),
+          Effect.flatMap((values) => {
+            const merged = values.every(
+              (value) => typeof value === 'object' && value !== null && !Array.isArray(value),
+            )
+              ? Object.assign({}, ...values)
+              : values[0]
+            return isAll(merged)
+              ? Effect.succeed(merged)
+              : Effect.fail(new SchemaIssue.InvalidValue(undefined, merged))
+          }),
+        ),
+      ),
+      encode: SchemaGetter.passthrough({ strict: false }),
+    }),
+  )
+})()
 
 export type AlbumObjectSchema = Schema.Schema.Type<typeof AlbumObjectSchema>
 
 export const SavedAlbumObjectSchema = Schema.Struct({
-  added_at: Schema.optional(
+  added_at: Schema.optionalKey(
     Schema.String.check(
       Schema.isPattern(
         /^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z|([+-](?:[01]\d|2[0-3]):[0-5]\d)))$/,
@@ -2032,25 +2582,47 @@ export const SavedAlbumObjectSchema = Schema.Struct({
         'The date and time the album was saved\nTimestamps are returned in ISO 8601 format as Coordinated Universal Time (UTC) with a zero offset: YYYY-MM-DDTHH:MM:SSZ.\nIf the time is imprecise (for example, the date/time of an album release), an additional field indicates the precision; see for example, release_date in an album object.\n',
     }),
   ),
-  album: Schema.optional(
+  album: Schema.optionalKey(
     AlbumObjectSchema.annotate({ description: 'Information about the album.' }),
   ),
 })
 
 export type SavedAlbumObjectSchema = Schema.Schema.Type<typeof SavedAlbumObjectSchema>
 
-export const PagingSavedAlbumObjectSchema = PagingObjectSchema.check(
-  Schema.makeFilter((input) =>
-    Schema.is(Schema.Struct({ items: Schema.optional(Schema.Array(SavedAlbumObjectSchema)) }))(
-      input,
-    ),
-  ),
-)
+export const PagingSavedAlbumObjectSchema = (() => {
+  const M0 = PagingObjectSchema
+  const M1 = Schema.Struct({ items: Schema.optionalKey(Schema.Array(SavedAlbumObjectSchema)) })
+  const isAll = (input: unknown): input is typeof M0.Type & typeof M1.Type =>
+    Schema.is(M0)(input) && Schema.is(M1)(input)
+  return Schema.Unknown.pipe(
+    Schema.decodeTo(Schema.declare(isAll), {
+      decode: SchemaGetter.transformEffect((input) =>
+        Effect.all([
+          Schema.decodeUnknownEffect(M0)(input),
+          Schema.decodeUnknownEffect(M1)(input),
+        ]).pipe(
+          Effect.mapError((error) => error.issue),
+          Effect.flatMap((values) => {
+            const merged = values.every(
+              (value) => typeof value === 'object' && value !== null && !Array.isArray(value),
+            )
+              ? Object.assign({}, ...values)
+              : values[0]
+            return isAll(merged)
+              ? Effect.succeed(merged)
+              : Effect.fail(new SchemaIssue.InvalidValue(undefined, merged))
+          }),
+        ),
+      ),
+      encode: SchemaGetter.passthrough({ strict: false }),
+    }),
+  )
+})()
 
 export type PagingSavedAlbumObjectSchema = Schema.Schema.Type<typeof PagingSavedAlbumObjectSchema>
 
 export const SavedTrackObjectSchema = Schema.Struct({
-  added_at: Schema.optional(
+  added_at: Schema.optionalKey(
     Schema.String.check(
       Schema.isPattern(
         /^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z|([+-](?:[01]\d|2[0-3]):[0-5]\d)))$/,
@@ -2060,57 +2632,147 @@ export const SavedTrackObjectSchema = Schema.Struct({
         'The date and time the track was saved.\nTimestamps are returned in ISO 8601 format as Coordinated Universal Time (UTC) with a zero offset: YYYY-MM-DDTHH:MM:SSZ.\nIf the time is imprecise (for example, the date/time of an album release), an additional field indicates the precision; see for example, release_date in an album object.\n',
     }),
   ),
-  track: Schema.optional(
+  track: Schema.optionalKey(
     TrackObjectSchema.annotate({ description: 'Information about the track.' }),
   ),
 })
 
 export type SavedTrackObjectSchema = Schema.Schema.Type<typeof SavedTrackObjectSchema>
 
-export const PagingSavedTrackObjectSchema = PagingObjectSchema.check(
-  Schema.makeFilter((input) =>
-    Schema.is(Schema.Struct({ items: Schema.optional(Schema.Array(SavedTrackObjectSchema)) }))(
-      input,
-    ),
-  ),
-)
+export const PagingSavedTrackObjectSchema = (() => {
+  const M0 = PagingObjectSchema
+  const M1 = Schema.Struct({ items: Schema.optionalKey(Schema.Array(SavedTrackObjectSchema)) })
+  const isAll = (input: unknown): input is typeof M0.Type & typeof M1.Type =>
+    Schema.is(M0)(input) && Schema.is(M1)(input)
+  return Schema.Unknown.pipe(
+    Schema.decodeTo(Schema.declare(isAll), {
+      decode: SchemaGetter.transformEffect((input) =>
+        Effect.all([
+          Schema.decodeUnknownEffect(M0)(input),
+          Schema.decodeUnknownEffect(M1)(input),
+        ]).pipe(
+          Effect.mapError((error) => error.issue),
+          Effect.flatMap((values) => {
+            const merged = values.every(
+              (value) => typeof value === 'object' && value !== null && !Array.isArray(value),
+            )
+              ? Object.assign({}, ...values)
+              : values[0]
+            return isAll(merged)
+              ? Effect.succeed(merged)
+              : Effect.fail(new SchemaIssue.InvalidValue(undefined, merged))
+          }),
+        ),
+      ),
+      encode: SchemaGetter.passthrough({ strict: false }),
+    }),
+  )
+})()
 
 export type PagingSavedTrackObjectSchema = Schema.Schema.Type<typeof PagingSavedTrackObjectSchema>
 
-export const PagingTrackObjectSchema = PagingObjectSchema.check(
-  Schema.makeFilter((input) =>
-    Schema.is(Schema.Struct({ items: Schema.optional(Schema.Array(TrackObjectSchema)) }))(input),
-  ),
-)
+export const PagingTrackObjectSchema = (() => {
+  const M0 = PagingObjectSchema
+  const M1 = Schema.Struct({ items: Schema.optionalKey(Schema.Array(TrackObjectSchema)) })
+  const isAll = (input: unknown): input is typeof M0.Type & typeof M1.Type =>
+    Schema.is(M0)(input) && Schema.is(M1)(input)
+  return Schema.Unknown.pipe(
+    Schema.decodeTo(Schema.declare(isAll), {
+      decode: SchemaGetter.transformEffect((input) =>
+        Effect.all([
+          Schema.decodeUnknownEffect(M0)(input),
+          Schema.decodeUnknownEffect(M1)(input),
+        ]).pipe(
+          Effect.mapError((error) => error.issue),
+          Effect.flatMap((values) => {
+            const merged = values.every(
+              (value) => typeof value === 'object' && value !== null && !Array.isArray(value),
+            )
+              ? Object.assign({}, ...values)
+              : values[0]
+            return isAll(merged)
+              ? Effect.succeed(merged)
+              : Effect.fail(new SchemaIssue.InvalidValue(undefined, merged))
+          }),
+        ),
+      ),
+      encode: SchemaGetter.passthrough({ strict: false }),
+    }),
+  )
+})()
 
 export type PagingTrackObjectSchema = Schema.Schema.Type<typeof PagingTrackObjectSchema>
 
-export const PagingPlaylistTrackObjectSchema = PagingObjectSchema.check(
-  Schema.makeFilter((input) =>
-    Schema.is(Schema.Struct({ items: Schema.optional(Schema.Array(PlaylistTrackObjectSchema)) }))(
-      input,
-    ),
-  ),
-)
+export const PagingPlaylistTrackObjectSchema = (() => {
+  const M0 = PagingObjectSchema
+  const M1 = Schema.Struct({ items: Schema.optionalKey(Schema.Array(PlaylistTrackObjectSchema)) })
+  const isAll = (input: unknown): input is typeof M0.Type & typeof M1.Type =>
+    Schema.is(M0)(input) && Schema.is(M1)(input)
+  return Schema.Unknown.pipe(
+    Schema.decodeTo(Schema.declare(isAll), {
+      decode: SchemaGetter.transformEffect((input) =>
+        Effect.all([
+          Schema.decodeUnknownEffect(M0)(input),
+          Schema.decodeUnknownEffect(M1)(input),
+        ]).pipe(
+          Effect.mapError((error) => error.issue),
+          Effect.flatMap((values) => {
+            const merged = values.every(
+              (value) => typeof value === 'object' && value !== null && !Array.isArray(value),
+            )
+              ? Object.assign({}, ...values)
+              : values[0]
+            return isAll(merged)
+              ? Effect.succeed(merged)
+              : Effect.fail(new SchemaIssue.InvalidValue(undefined, merged))
+          }),
+        ),
+      ),
+      encode: SchemaGetter.passthrough({ strict: false }),
+    }),
+  )
+})()
 
 export type PagingPlaylistTrackObjectSchema = Schema.Schema.Type<
   typeof PagingPlaylistTrackObjectSchema
 >
 
-export const PagingSimplifiedShowObjectSchema = PagingObjectSchema.check(
-  Schema.makeFilter((input) =>
-    Schema.is(Schema.Struct({ items: Schema.optional(Schema.Array(SimplifiedShowObjectSchema)) }))(
-      input,
-    ),
-  ),
-)
+export const PagingSimplifiedShowObjectSchema = (() => {
+  const M0 = PagingObjectSchema
+  const M1 = Schema.Struct({ items: Schema.optionalKey(Schema.Array(SimplifiedShowObjectSchema)) })
+  const isAll = (input: unknown): input is typeof M0.Type & typeof M1.Type =>
+    Schema.is(M0)(input) && Schema.is(M1)(input)
+  return Schema.Unknown.pipe(
+    Schema.decodeTo(Schema.declare(isAll), {
+      decode: SchemaGetter.transformEffect((input) =>
+        Effect.all([
+          Schema.decodeUnknownEffect(M0)(input),
+          Schema.decodeUnknownEffect(M1)(input),
+        ]).pipe(
+          Effect.mapError((error) => error.issue),
+          Effect.flatMap((values) => {
+            const merged = values.every(
+              (value) => typeof value === 'object' && value !== null && !Array.isArray(value),
+            )
+              ? Object.assign({}, ...values)
+              : values[0]
+            return isAll(merged)
+              ? Effect.succeed(merged)
+              : Effect.fail(new SchemaIssue.InvalidValue(undefined, merged))
+          }),
+        ),
+      ),
+      encode: SchemaGetter.passthrough({ strict: false }),
+    }),
+  )
+})()
 
 export type PagingSimplifiedShowObjectSchema = Schema.Schema.Type<
   typeof PagingSimplifiedShowObjectSchema
 >
 
 export const SavedShowObjectSchema = Schema.Struct({
-  added_at: Schema.optional(
+  added_at: Schema.optionalKey(
     Schema.String.check(
       Schema.isPattern(
         /^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z|([+-](?:[01]\d|2[0-3]):[0-5]\d)))$/,
@@ -2120,20 +2782,42 @@ export const SavedShowObjectSchema = Schema.Struct({
         'The date and time the show was saved.\nTimestamps are returned in ISO 8601 format as Coordinated Universal Time (UTC) with a zero offset: YYYY-MM-DDTHH:MM:SSZ.\nIf the time is imprecise (for example, the date/time of an album release), an additional field indicates the precision; see for example, release_date in an album object.\n',
     }),
   ),
-  show: Schema.optional(
+  show: Schema.optionalKey(
     SimplifiedShowObjectSchema.annotate({ description: 'Information about the show.' }),
   ),
 })
 
 export type SavedShowObjectSchema = Schema.Schema.Type<typeof SavedShowObjectSchema>
 
-export const PagingSavedShowObjectSchema = PagingObjectSchema.check(
-  Schema.makeFilter((input) =>
-    Schema.is(Schema.Struct({ items: Schema.optional(Schema.Array(SavedShowObjectSchema)) }))(
-      input,
-    ),
-  ),
-)
+export const PagingSavedShowObjectSchema = (() => {
+  const M0 = PagingObjectSchema
+  const M1 = Schema.Struct({ items: Schema.optionalKey(Schema.Array(SavedShowObjectSchema)) })
+  const isAll = (input: unknown): input is typeof M0.Type & typeof M1.Type =>
+    Schema.is(M0)(input) && Schema.is(M1)(input)
+  return Schema.Unknown.pipe(
+    Schema.decodeTo(Schema.declare(isAll), {
+      decode: SchemaGetter.transformEffect((input) =>
+        Effect.all([
+          Schema.decodeUnknownEffect(M0)(input),
+          Schema.decodeUnknownEffect(M1)(input),
+        ]).pipe(
+          Effect.mapError((error) => error.issue),
+          Effect.flatMap((values) => {
+            const merged = values.every(
+              (value) => typeof value === 'object' && value !== null && !Array.isArray(value),
+            )
+              ? Object.assign({}, ...values)
+              : values[0]
+            return isAll(merged)
+              ? Effect.succeed(merged)
+              : Effect.fail(new SchemaIssue.InvalidValue(undefined, merged))
+          }),
+        ),
+      ),
+      encode: SchemaGetter.passthrough({ strict: false }),
+    }),
+  )
+})()
 
 export type PagingSavedShowObjectSchema = Schema.Schema.Type<typeof PagingSavedShowObjectSchema>
 
@@ -2141,20 +2825,44 @@ export const SimplifiedEpisodeObjectSchema = EpisodeBaseSchema
 
 export type SimplifiedEpisodeObjectSchema = Schema.Schema.Type<typeof SimplifiedEpisodeObjectSchema>
 
-export const PagingSimplifiedEpisodeObjectSchema = PagingObjectSchema.check(
-  Schema.makeFilter((input) =>
-    Schema.is(
-      Schema.Struct({ items: Schema.optional(Schema.Array(SimplifiedEpisodeObjectSchema)) }),
-    )(input),
-  ),
-)
+export const PagingSimplifiedEpisodeObjectSchema = (() => {
+  const M0 = PagingObjectSchema
+  const M1 = Schema.Struct({
+    items: Schema.optionalKey(Schema.Array(SimplifiedEpisodeObjectSchema)),
+  })
+  const isAll = (input: unknown): input is typeof M0.Type & typeof M1.Type =>
+    Schema.is(M0)(input) && Schema.is(M1)(input)
+  return Schema.Unknown.pipe(
+    Schema.decodeTo(Schema.declare(isAll), {
+      decode: SchemaGetter.transformEffect((input) =>
+        Effect.all([
+          Schema.decodeUnknownEffect(M0)(input),
+          Schema.decodeUnknownEffect(M1)(input),
+        ]).pipe(
+          Effect.mapError((error) => error.issue),
+          Effect.flatMap((values) => {
+            const merged = values.every(
+              (value) => typeof value === 'object' && value !== null && !Array.isArray(value),
+            )
+              ? Object.assign({}, ...values)
+              : values[0]
+            return isAll(merged)
+              ? Effect.succeed(merged)
+              : Effect.fail(new SchemaIssue.InvalidValue(undefined, merged))
+          }),
+        ),
+      ),
+      encode: SchemaGetter.passthrough({ strict: false }),
+    }),
+  )
+})()
 
 export type PagingSimplifiedEpisodeObjectSchema = Schema.Schema.Type<
   typeof PagingSimplifiedEpisodeObjectSchema
 >
 
 export const SavedEpisodeObjectSchema = Schema.Struct({
-  added_at: Schema.optional(
+  added_at: Schema.optionalKey(
     Schema.String.check(
       Schema.isPattern(
         /^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z|([+-](?:[01]\d|2[0-3]):[0-5]\d)))$/,
@@ -2164,33 +2872,55 @@ export const SavedEpisodeObjectSchema = Schema.Struct({
         'The date and time the episode was saved.\nTimestamps are returned in ISO 8601 format as Coordinated Universal Time (UTC) with a zero offset: YYYY-MM-DDTHH:MM:SSZ.\n',
     }),
   ),
-  episode: Schema.optional(
+  episode: Schema.optionalKey(
     EpisodeObjectSchema.annotate({ description: 'Information about the episode.' }),
   ),
 })
 
 export type SavedEpisodeObjectSchema = Schema.Schema.Type<typeof SavedEpisodeObjectSchema>
 
-export const PagingSavedEpisodeObjectSchema = PagingObjectSchema.check(
-  Schema.makeFilter((input) =>
-    Schema.is(Schema.Struct({ items: Schema.optional(Schema.Array(SavedEpisodeObjectSchema)) }))(
-      input,
-    ),
-  ),
-)
+export const PagingSavedEpisodeObjectSchema = (() => {
+  const M0 = PagingObjectSchema
+  const M1 = Schema.Struct({ items: Schema.optionalKey(Schema.Array(SavedEpisodeObjectSchema)) })
+  const isAll = (input: unknown): input is typeof M0.Type & typeof M1.Type =>
+    Schema.is(M0)(input) && Schema.is(M1)(input)
+  return Schema.Unknown.pipe(
+    Schema.decodeTo(Schema.declare(isAll), {
+      decode: SchemaGetter.transformEffect((input) =>
+        Effect.all([
+          Schema.decodeUnknownEffect(M0)(input),
+          Schema.decodeUnknownEffect(M1)(input),
+        ]).pipe(
+          Effect.mapError((error) => error.issue),
+          Effect.flatMap((values) => {
+            const merged = values.every(
+              (value) => typeof value === 'object' && value !== null && !Array.isArray(value),
+            )
+              ? Object.assign({}, ...values)
+              : values[0]
+            return isAll(merged)
+              ? Effect.succeed(merged)
+              : Effect.fail(new SchemaIssue.InvalidValue(undefined, merged))
+          }),
+        ),
+      ),
+      encode: SchemaGetter.passthrough({ strict: false }),
+    }),
+  )
+})()
 
 export type PagingSavedEpisodeObjectSchema = Schema.Schema.Type<
   typeof PagingSavedEpisodeObjectSchema
 >
 
 export const AuthorObjectSchema = Schema.Struct({
-  name: Schema.optional(Schema.String.annotate({ description: 'The name of the author.\n' })),
+  name: Schema.optionalKey(Schema.String.annotate({ description: 'The name of the author.\n' })),
 })
 
 export type AuthorObjectSchema = Schema.Schema.Type<typeof AuthorObjectSchema>
 
 export const NarratorObjectSchema = Schema.Struct({
-  name: Schema.optional(Schema.String.annotate({ description: 'The name of the Narrator.\n' })),
+  name: Schema.optionalKey(Schema.String.annotate({ description: 'The name of the Narrator.\n' })),
 })
 
 export type NarratorObjectSchema = Schema.Schema.Type<typeof NarratorObjectSchema>
@@ -2214,7 +2944,7 @@ export const AudiobookBaseSchema = Schema.Struct({
   html_description: Schema.String.annotate({
     description: 'A description of the audiobook. This field may contain HTML tags.\n',
   }),
-  edition: Schema.optional(
+  edition: Schema.optionalKey(
     Schema.String.annotate({
       description: 'The edition of the audiobook.\n',
       jsonSchemaExamples: ['Unabridged'],
@@ -2268,23 +2998,71 @@ export type SimplifiedAudiobookObjectSchema = Schema.Schema.Type<
   typeof SimplifiedAudiobookObjectSchema
 >
 
-export const PagingSimplifiedAudiobookObjectSchema = PagingObjectSchema.check(
-  Schema.makeFilter((input) =>
-    Schema.is(
-      Schema.Struct({ items: Schema.optional(Schema.Array(SimplifiedAudiobookObjectSchema)) }),
-    )(input),
-  ),
-)
+export const PagingSimplifiedAudiobookObjectSchema = (() => {
+  const M0 = PagingObjectSchema
+  const M1 = Schema.Struct({
+    items: Schema.optionalKey(Schema.Array(SimplifiedAudiobookObjectSchema)),
+  })
+  const isAll = (input: unknown): input is typeof M0.Type & typeof M1.Type =>
+    Schema.is(M0)(input) && Schema.is(M1)(input)
+  return Schema.Unknown.pipe(
+    Schema.decodeTo(Schema.declare(isAll), {
+      decode: SchemaGetter.transformEffect((input) =>
+        Effect.all([
+          Schema.decodeUnknownEffect(M0)(input),
+          Schema.decodeUnknownEffect(M1)(input),
+        ]).pipe(
+          Effect.mapError((error) => error.issue),
+          Effect.flatMap((values) => {
+            const merged = values.every(
+              (value) => typeof value === 'object' && value !== null && !Array.isArray(value),
+            )
+              ? Object.assign({}, ...values)
+              : values[0]
+            return isAll(merged)
+              ? Effect.succeed(merged)
+              : Effect.fail(new SchemaIssue.InvalidValue(undefined, merged))
+          }),
+        ),
+      ),
+      encode: SchemaGetter.passthrough({ strict: false }),
+    }),
+  )
+})()
 
 export type PagingSimplifiedAudiobookObjectSchema = Schema.Schema.Type<
   typeof PagingSimplifiedAudiobookObjectSchema
 >
 
-export const PagingArtistObjectSchema = PagingObjectSchema.check(
-  Schema.makeFilter((input) =>
-    Schema.is(Schema.Struct({ items: Schema.optional(Schema.Array(ArtistObjectSchema)) }))(input),
-  ),
-)
+export const PagingArtistObjectSchema = (() => {
+  const M0 = PagingObjectSchema
+  const M1 = Schema.Struct({ items: Schema.optionalKey(Schema.Array(ArtistObjectSchema)) })
+  const isAll = (input: unknown): input is typeof M0.Type & typeof M1.Type =>
+    Schema.is(M0)(input) && Schema.is(M1)(input)
+  return Schema.Unknown.pipe(
+    Schema.decodeTo(Schema.declare(isAll), {
+      decode: SchemaGetter.transformEffect((input) =>
+        Effect.all([
+          Schema.decodeUnknownEffect(M0)(input),
+          Schema.decodeUnknownEffect(M1)(input),
+        ]).pipe(
+          Effect.mapError((error) => error.issue),
+          Effect.flatMap((values) => {
+            const merged = values.every(
+              (value) => typeof value === 'object' && value !== null && !Array.isArray(value),
+            )
+              ? Object.assign({}, ...values)
+              : values[0]
+            return isAll(merged)
+              ? Effect.succeed(merged)
+              : Effect.fail(new SchemaIssue.InvalidValue(undefined, merged))
+          }),
+        ),
+      ),
+      encode: SchemaGetter.passthrough({ strict: false }),
+    }),
+  )
+})()
 
 export type PagingArtistObjectSchema = Schema.Schema.Type<typeof PagingArtistObjectSchema>
 
@@ -2295,7 +3073,7 @@ export const ChapterBaseSchema = Schema.Struct({
     jsonSchemaExamples: ['https://p.scdn.co/mp3-preview/2f37da1d4221f40b9d1a98cd191f4d6f1646ad17'],
     jsonSchemaDeprecated: true,
   }),
-  available_markets: Schema.optional(
+  available_markets: Schema.optionalKey(
     Schema.Array(Schema.String).annotate({
       description:
         'A list of the countries in which the chapter can be played, identified by their [ISO 3166-1 alpha-2](http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) code.\n',
@@ -2365,7 +3143,7 @@ export const ChapterBaseSchema = Schema.Struct({
     description: 'The precision with which `release_date` value is known.\n',
     jsonSchemaExamples: ['day'],
   }),
-  resume_point: Schema.optional(
+  resume_point: Schema.optionalKey(
     ResumePointObjectSchema.annotate({
       description:
         "The user's most recent position in the chapter. Set if the supplied access token is a user token and has the scope 'user-read-playback-position'.\n",
@@ -2377,7 +3155,7 @@ export const ChapterBaseSchema = Schema.Struct({
       'The [Spotify URI](/documentation/web-api/concepts/spotify-uris-ids) for the chapter.\n',
     jsonSchemaExamples: ['spotify:episode:0zLhl3WsOCQHbe1BPTiHgr'],
   }),
-  restrictions: Schema.optional(
+  restrictions: Schema.optionalKey(
     ChapterRestrictionObjectSchema.annotate({
       description: 'Included in the response when a content restriction is applied.\n',
     }),
@@ -2390,48 +3168,72 @@ export const SimplifiedChapterObjectSchema = ChapterBaseSchema
 
 export type SimplifiedChapterObjectSchema = Schema.Schema.Type<typeof SimplifiedChapterObjectSchema>
 
-export const PagingSimplifiedChapterObjectSchema = PagingObjectSchema.check(
-  Schema.makeFilter((input) =>
-    Schema.is(
-      Schema.Struct({ items: Schema.optional(Schema.Array(SimplifiedChapterObjectSchema)) }),
-    )(input),
-  ),
-)
+export const PagingSimplifiedChapterObjectSchema = (() => {
+  const M0 = PagingObjectSchema
+  const M1 = Schema.Struct({
+    items: Schema.optionalKey(Schema.Array(SimplifiedChapterObjectSchema)),
+  })
+  const isAll = (input: unknown): input is typeof M0.Type & typeof M1.Type =>
+    Schema.is(M0)(input) && Schema.is(M1)(input)
+  return Schema.Unknown.pipe(
+    Schema.decodeTo(Schema.declare(isAll), {
+      decode: SchemaGetter.transformEffect((input) =>
+        Effect.all([
+          Schema.decodeUnknownEffect(M0)(input),
+          Schema.decodeUnknownEffect(M1)(input),
+        ]).pipe(
+          Effect.mapError((error) => error.issue),
+          Effect.flatMap((values) => {
+            const merged = values.every(
+              (value) => typeof value === 'object' && value !== null && !Array.isArray(value),
+            )
+              ? Object.assign({}, ...values)
+              : values[0]
+            return isAll(merged)
+              ? Effect.succeed(merged)
+              : Effect.fail(new SchemaIssue.InvalidValue(undefined, merged))
+          }),
+        ),
+      ),
+      encode: SchemaGetter.passthrough({ strict: false }),
+    }),
+  )
+})()
 
 export type PagingSimplifiedChapterObjectSchema = Schema.Schema.Type<
   typeof PagingSimplifiedChapterObjectSchema
 >
 
 export const RecommendationSeedObjectSchema = Schema.Struct({
-  afterFilteringSize: Schema.optional(
+  afterFilteringSize: Schema.optionalKey(
     Schema.Number.check(Schema.isInt()).annotate({
       description:
         'The number of tracks available after min\\_\\* and max\\_\\* filters have been applied.\n',
     }),
   ),
-  afterRelinkingSize: Schema.optional(
+  afterRelinkingSize: Schema.optionalKey(
     Schema.Number.check(Schema.isInt()).annotate({
       description: 'The number of tracks available after relinking for regional availability.\n',
     }),
   ),
-  href: Schema.optional(
+  href: Schema.optionalKey(
     Schema.String.annotate({
       description:
         'A link to the full track or artist data for this seed. For tracks this will be a link to a Track Object. For artists a link to an Artist Object. For genre seeds, this value will be `null`.\n',
     }),
   ),
-  id: Schema.optional(
+  id: Schema.optionalKey(
     Schema.String.annotate({
       description:
         'The id used to select this seed. This will be the same as the string used in the `seed_artists`, `seed_tracks` or `seed_genres` parameter.\n',
     }),
   ),
-  initialPoolSize: Schema.optional(
+  initialPoolSize: Schema.optionalKey(
     Schema.Number.check(Schema.isInt()).annotate({
       description: 'The number of recommended tracks available for this seed.\n',
     }),
   ),
-  type: Schema.optional(
+  type: Schema.optionalKey(
     Schema.String.annotate({
       description: 'The entity type of this seed. One of `artist`, `track` or `genre`.\n',
     }),
@@ -2454,73 +3256,75 @@ export const RecommendationsObjectSchema = Schema.Struct({
 export type RecommendationsObjectSchema = Schema.Schema.Type<typeof RecommendationsObjectSchema>
 
 export const PlaylistObjectSchema = Schema.Struct({
-  collaborative: Schema.optional(
+  collaborative: Schema.optionalKey(
     Schema.Boolean.annotate({
       description: '`true` if the owner allows other users to modify the playlist.\n',
     }),
   ),
-  description: Schema.optional(
+  description: Schema.optionalKey(
     Schema.NullOr(Schema.String).annotate({
       description:
         'The playlist description. _Only returned for modified, verified playlists, otherwise_ `null`.\n',
     }),
   ),
-  external_urls: Schema.optional(
+  external_urls: Schema.optionalKey(
     ExternalUrlObjectSchema.annotate({ description: 'Known external URLs for this playlist.\n' }),
   ),
-  href: Schema.optional(
+  href: Schema.optionalKey(
     Schema.String.annotate({
       description: 'A link to the Web API endpoint providing full details of the playlist.\n',
     }),
   ),
-  id: Schema.optional(
+  id: Schema.optionalKey(
     Schema.String.annotate({
       description:
         'The [Spotify ID](/documentation/web-api/concepts/spotify-uris-ids) for the playlist.\n',
     }),
   ),
-  images: Schema.optional(
+  images: Schema.optionalKey(
     Schema.Array(ImageObjectSchema).annotate({
       description:
         'Images for the playlist. The array may be empty or contain up to three images. The images are returned by size in descending order. See [Working with Playlists](/documentation/web-api/concepts/playlists). _**Note**: If returned, the source URL for the image (`url`) is temporary and will expire in less than a day._\n',
     }),
   ),
-  name: Schema.optional(Schema.String.annotate({ description: 'The name of the playlist.\n' })),
-  owner: Schema.optional(
+  name: Schema.optionalKey(Schema.String.annotate({ description: 'The name of the playlist.\n' })),
+  owner: Schema.optionalKey(
     PlaylistOwnerObjectSchema.annotate({ description: 'The user who owns the playlist\n' }),
   ),
-  public: Schema.optional(
+  public: Schema.optionalKey(
     Schema.Boolean.annotate({
       description:
         "The playlist's public/private status (if it is added to the user's profile): `true` the playlist is public, `false` the playlist is private, `null` the playlist status is not relevant. For more about public/private status, see [Working with Playlists](/documentation/web-api/concepts/playlists)\n",
     }),
   ),
-  snapshot_id: Schema.optional(
+  snapshot_id: Schema.optionalKey(
     Schema.String.annotate({
       description:
         'The version identifier for the current playlist. Can be supplied in other requests to target a specific playlist version\n',
     }),
   ),
-  items: Schema.optional(
+  items: Schema.optionalKey(
     PagingPlaylistTrackObjectSchema.annotate({
       description:
         'The items of the playlist. _**Note**: This field is only available for playlists owned by the current user or playlists the user is a collaborator of._\n',
     }),
   ),
-  tracks: Schema.optional(
+  tracks: Schema.optionalKey(
     PagingPlaylistTrackObjectSchema.annotate({
       description: '**Deprecated:** Use `items` instead. The tracks of the playlist.\n',
       jsonSchemaDeprecated: true,
     }),
   ),
-  type: Schema.optional(Schema.String.annotate({ description: 'The object type: "playlist"\n' })),
-  uri: Schema.optional(
+  type: Schema.optionalKey(
+    Schema.String.annotate({ description: 'The object type: "playlist"\n' }),
+  ),
+  uri: Schema.optionalKey(
     Schema.String.annotate({
       description:
         'The [Spotify URI](/documentation/web-api/concepts/spotify-uris-ids) for the playlist.\n',
     }),
   ),
-  followers: Schema.optional(
+  followers: Schema.optionalKey(
     FollowersObjectSchema.annotate({
       description: 'Information about the followers of the playlist.',
     }),
@@ -2549,53 +3353,119 @@ export const CategoryObjectSchema = Schema.Struct({
 
 export type CategoryObjectSchema = Schema.Schema.Type<typeof CategoryObjectSchema>
 
-export const ShowObjectSchema = ShowBaseSchema.check(
-  Schema.makeFilter((input) =>
-    Schema.is(
-      Schema.Struct({
-        episodes: PagingSimplifiedEpisodeObjectSchema.annotate({
-          description: 'The episodes of the show.\n',
-        }),
-      }),
-    )(input),
-  ),
-)
+export const ShowObjectSchema = (() => {
+  const M0 = ShowBaseSchema
+  const M1 = Schema.Struct({
+    episodes: PagingSimplifiedEpisodeObjectSchema.annotate({
+      description: 'The episodes of the show.\n',
+    }),
+  })
+  const isAll = (input: unknown): input is typeof M0.Type & typeof M1.Type =>
+    Schema.is(M0)(input) && Schema.is(M1)(input)
+  return Schema.Unknown.pipe(
+    Schema.decodeTo(Schema.declare(isAll), {
+      decode: SchemaGetter.transformEffect((input) =>
+        Effect.all([
+          Schema.decodeUnknownEffect(M0)(input),
+          Schema.decodeUnknownEffect(M1)(input),
+        ]).pipe(
+          Effect.mapError((error) => error.issue),
+          Effect.flatMap((values) => {
+            const merged = values.every(
+              (value) => typeof value === 'object' && value !== null && !Array.isArray(value),
+            )
+              ? Object.assign({}, ...values)
+              : values[0]
+            return isAll(merged)
+              ? Effect.succeed(merged)
+              : Effect.fail(new SchemaIssue.InvalidValue(undefined, merged))
+          }),
+        ),
+      ),
+      encode: SchemaGetter.passthrough({ strict: false }),
+    }),
+  )
+})()
 
 export type ShowObjectSchema = Schema.Schema.Type<typeof ShowObjectSchema>
 
-export const AudiobookObjectSchema = AudiobookBaseSchema.check(
-  Schema.makeFilter((input) =>
-    Schema.is(
-      Schema.Struct({
-        chapters: PagingSimplifiedChapterObjectSchema.annotate({
-          description: 'The chapters of the audiobook.\n',
-        }),
-      }),
-    )(input),
-  ),
-)
+export const AudiobookObjectSchema = (() => {
+  const M0 = AudiobookBaseSchema
+  const M1 = Schema.Struct({
+    chapters: PagingSimplifiedChapterObjectSchema.annotate({
+      description: 'The chapters of the audiobook.\n',
+    }),
+  })
+  const isAll = (input: unknown): input is typeof M0.Type & typeof M1.Type =>
+    Schema.is(M0)(input) && Schema.is(M1)(input)
+  return Schema.Unknown.pipe(
+    Schema.decodeTo(Schema.declare(isAll), {
+      decode: SchemaGetter.transformEffect((input) =>
+        Effect.all([
+          Schema.decodeUnknownEffect(M0)(input),
+          Schema.decodeUnknownEffect(M1)(input),
+        ]).pipe(
+          Effect.mapError((error) => error.issue),
+          Effect.flatMap((values) => {
+            const merged = values.every(
+              (value) => typeof value === 'object' && value !== null && !Array.isArray(value),
+            )
+              ? Object.assign({}, ...values)
+              : values[0]
+            return isAll(merged)
+              ? Effect.succeed(merged)
+              : Effect.fail(new SchemaIssue.InvalidValue(undefined, merged))
+          }),
+        ),
+      ),
+      encode: SchemaGetter.passthrough({ strict: false }),
+    }),
+  )
+})()
 
 export type AudiobookObjectSchema = Schema.Schema.Type<typeof AudiobookObjectSchema>
 
-export const ChapterObjectSchema = ChapterBaseSchema.check(
-  Schema.makeFilter((input) =>
-    Schema.is(
-      Schema.Struct({
-        audiobook: SimplifiedAudiobookObjectSchema.annotate({
-          description: 'The audiobook for which the chapter belongs.\n',
-        }),
-      }),
-    )(input),
-  ),
-)
+export const ChapterObjectSchema = (() => {
+  const M0 = ChapterBaseSchema
+  const M1 = Schema.Struct({
+    audiobook: SimplifiedAudiobookObjectSchema.annotate({
+      description: 'The audiobook for which the chapter belongs.\n',
+    }),
+  })
+  const isAll = (input: unknown): input is typeof M0.Type & typeof M1.Type =>
+    Schema.is(M0)(input) && Schema.is(M1)(input)
+  return Schema.Unknown.pipe(
+    Schema.decodeTo(Schema.declare(isAll), {
+      decode: SchemaGetter.transformEffect((input) =>
+        Effect.all([
+          Schema.decodeUnknownEffect(M0)(input),
+          Schema.decodeUnknownEffect(M1)(input),
+        ]).pipe(
+          Effect.mapError((error) => error.issue),
+          Effect.flatMap((values) => {
+            const merged = values.every(
+              (value) => typeof value === 'object' && value !== null && !Array.isArray(value),
+            )
+              ? Object.assign({}, ...values)
+              : values[0]
+            return isAll(merged)
+              ? Effect.succeed(merged)
+              : Effect.fail(new SchemaIssue.InvalidValue(undefined, merged))
+          }),
+        ),
+      ),
+      encode: SchemaGetter.passthrough({ strict: false }),
+    }),
+  )
+})()
 
 export type ChapterObjectSchema = Schema.Schema.Type<typeof ChapterObjectSchema>
 
 export const CurrentlyPlayingObjectSchema = Schema.Struct({
-  context: Schema.optional(
+  context: Schema.optionalKey(
     ContextObjectSchema.annotate({ description: 'A Context Object. Can be `null`.' }),
   ),
-  timestamp: Schema.optional(
+  timestamp: Schema.optionalKey(
     Schema.Union([
       Schema.BigInt,
       Schema.Number.check(Schema.isInt()),
@@ -2615,26 +3485,83 @@ export const CurrentlyPlayingObjectSchema = Schema.Struct({
       )
       .annotate({ description: 'Unix Millisecond Timestamp when data was fetched' }),
   ),
-  progress_ms: Schema.optional(
+  progress_ms: Schema.optionalKey(
     Schema.Number.check(Schema.isInt()).annotate({
       description: 'Progress into the currently playing track or episode. Can be `null`.',
     }),
   ),
-  is_playing: Schema.optional(
+  is_playing: Schema.optionalKey(
     Schema.Boolean.annotate({ description: 'If something is currently playing, return `true`.' }),
   ),
-  item: Schema.optional(
-    Schema.Union([TrackObjectSchema, EpisodeObjectSchema]).annotate({
-      description: 'The currently playing track or episode. Can be `null`.',
-    }),
+  item: Schema.optionalKey(
+    Schema.Union([
+      (() => {
+        const M0 = TrackObjectSchema
+        const M1 = Schema.Struct({ type: Schema.Literal('TrackObject') })
+        const isAll = (input: unknown): input is typeof M0.Type & typeof M1.Type =>
+          Schema.is(M0)(input) && Schema.is(M1)(input)
+        return Schema.Unknown.pipe(
+          Schema.decodeTo(Schema.declare(isAll), {
+            decode: SchemaGetter.transformEffect((input) =>
+              Effect.all([
+                Schema.decodeUnknownEffect(M0)(input),
+                Schema.decodeUnknownEffect(M1)(input),
+              ]).pipe(
+                Effect.mapError((error) => error.issue),
+                Effect.flatMap((values) => {
+                  const merged = values.every(
+                    (value) => typeof value === 'object' && value !== null && !Array.isArray(value),
+                  )
+                    ? Object.assign({}, ...values)
+                    : values[0]
+                  return isAll(merged)
+                    ? Effect.succeed(merged)
+                    : Effect.fail(new SchemaIssue.InvalidValue(undefined, merged))
+                }),
+              ),
+            ),
+            encode: SchemaGetter.passthrough({ strict: false }),
+          }),
+        )
+      })(),
+      (() => {
+        const M0 = EpisodeObjectSchema
+        const M1 = Schema.Struct({ type: Schema.Literal('EpisodeObject') })
+        const isAll = (input: unknown): input is typeof M0.Type & typeof M1.Type =>
+          Schema.is(M0)(input) && Schema.is(M1)(input)
+        return Schema.Unknown.pipe(
+          Schema.decodeTo(Schema.declare(isAll), {
+            decode: SchemaGetter.transformEffect((input) =>
+              Effect.all([
+                Schema.decodeUnknownEffect(M0)(input),
+                Schema.decodeUnknownEffect(M1)(input),
+              ]).pipe(
+                Effect.mapError((error) => error.issue),
+                Effect.flatMap((values) => {
+                  const merged = values.every(
+                    (value) => typeof value === 'object' && value !== null && !Array.isArray(value),
+                  )
+                    ? Object.assign({}, ...values)
+                    : values[0]
+                  return isAll(merged)
+                    ? Effect.succeed(merged)
+                    : Effect.fail(new SchemaIssue.InvalidValue(undefined, merged))
+                }),
+              ),
+            ),
+            encode: SchemaGetter.passthrough({ strict: false }),
+          }),
+        )
+      })(),
+    ]).annotate({ description: 'The currently playing track or episode. Can be `null`.' }),
   ),
-  currently_playing_type: Schema.optional(
+  currently_playing_type: Schema.optionalKey(
     Schema.String.annotate({
       description:
         'The object type of the currently playing item. Can be one of `track`, `episode`, `ad` or `unknown`.\n',
     }),
   ),
-  actions: Schema.optional(
+  actions: Schema.optionalKey(
     DisallowsObjectSchema.annotate({
       description:
         'Allows to update the user interface based on which playback actions are available within the current context.\n',
@@ -2645,7 +3572,7 @@ export const CurrentlyPlayingObjectSchema = Schema.Struct({
 export type CurrentlyPlayingObjectSchema = Schema.Schema.Type<typeof CurrentlyPlayingObjectSchema>
 
 export const SavedAudiobookObjectSchema = Schema.Struct({
-  added_at: Schema.optional(
+  added_at: Schema.optionalKey(
     Schema.String.check(
       Schema.isPattern(
         /^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z|([+-](?:[01]\d|2[0-3]):[0-5]\d)))$/,
@@ -2655,20 +3582,42 @@ export const SavedAudiobookObjectSchema = Schema.Struct({
         'The date and time the audiobook was saved\nTimestamps are returned in ISO 8601 format as Coordinated Universal Time (UTC) with a zero offset: YYYY-MM-DDTHH:MM:SSZ.\nIf the time is imprecise (for example, the date/time of an album release), an additional field indicates the precision; see for example, release_date in an album object.\n',
     }),
   ),
-  audiobook: Schema.optional(
+  audiobook: Schema.optionalKey(
     AudiobookObjectSchema.annotate({ description: 'Information about the audiobook.' }),
   ),
 })
 
 export type SavedAudiobookObjectSchema = Schema.Schema.Type<typeof SavedAudiobookObjectSchema>
 
-export const PagingSavedAudiobookObjectSchema = PagingObjectSchema.check(
-  Schema.makeFilter((input) =>
-    Schema.is(Schema.Struct({ items: Schema.optional(Schema.Array(SavedAudiobookObjectSchema)) }))(
-      input,
-    ),
-  ),
-)
+export const PagingSavedAudiobookObjectSchema = (() => {
+  const M0 = PagingObjectSchema
+  const M1 = Schema.Struct({ items: Schema.optionalKey(Schema.Array(SavedAudiobookObjectSchema)) })
+  const isAll = (input: unknown): input is typeof M0.Type & typeof M1.Type =>
+    Schema.is(M0)(input) && Schema.is(M1)(input)
+  return Schema.Unknown.pipe(
+    Schema.decodeTo(Schema.declare(isAll), {
+      decode: SchemaGetter.transformEffect((input) =>
+        Effect.all([
+          Schema.decodeUnknownEffect(M0)(input),
+          Schema.decodeUnknownEffect(M1)(input),
+        ]).pipe(
+          Effect.mapError((error) => error.issue),
+          Effect.flatMap((values) => {
+            const merged = values.every(
+              (value) => typeof value === 'object' && value !== null && !Array.isArray(value),
+            )
+              ? Object.assign({}, ...values)
+              : values[0]
+            return isAll(merged)
+              ? Effect.succeed(merged)
+              : Effect.fail(new SchemaIssue.InvalidValue(undefined, merged))
+          }),
+        ),
+      ),
+      encode: SchemaGetter.passthrough({ strict: false }),
+    }),
+  )
+})()
 
 export type PagingSavedAudiobookObjectSchema = Schema.Schema.Type<
   typeof PagingSavedAudiobookObjectSchema

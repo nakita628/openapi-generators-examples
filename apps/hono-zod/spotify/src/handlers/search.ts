@@ -31,22 +31,22 @@ export const searchHandler = new Hono().get(
           examples: ['ES'],
         })
         .exactOptional(),
-      limit: z.coerce
-        .number()
-        .int()
-        .min(1)
-        .max(10)
+      limit: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int().min(1).max(10),
+        )
         .default(5)
         .meta({
           description: 'The maximum number of results to return in each item type.\n',
           examples: [10],
         })
         .exactOptional(),
-      offset: z.coerce
-        .number()
-        .int()
-        .min(0)
-        .max(1000)
+      offset: z
+        .preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int().min(0).max(1000),
+        )
         .default(0)
         .meta({
           description:

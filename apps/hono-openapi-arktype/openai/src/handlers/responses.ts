@@ -93,7 +93,7 @@ export const responsesHandler = new Hono()
           /^(?:true|1|yes|on|y|enabled)$/i.test(data),
         ),
         'starting_after?': type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'include_obfuscation?': type(
@@ -178,7 +178,7 @@ export const responsesHandler = new Hono()
       'query',
       type({
         'limit?': type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'order?': "'asc' | 'desc'",
@@ -273,7 +273,7 @@ export const responsesHandler = new Hono()
           /^(?:true|1|yes|on|y|enabled)$/i.test(data),
         ),
         'starting_after?': type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'include_obfuscation?': type(
@@ -414,7 +414,7 @@ export const responsesHandler = new Hono()
       'query',
       type({
         'limit?': type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'order?': "'asc' | 'desc'",

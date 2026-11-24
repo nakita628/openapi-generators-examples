@@ -12,7 +12,8 @@ export const meHandler = new Hono()
           v.optional(
             v.pipe(
               v.string(),
-              v.transform(Number),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
               v.number(),
               v.safeInteger(),
               v.minValue(1),
@@ -26,7 +27,16 @@ export const meHandler = new Hono()
           v.metadata({ examples: [10] }),
         ),
         offset: v.pipe(
-          v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '0'),
+          v.optional(
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+            ),
+            '0',
+          ),
           v.description(
             'The index of the first item to return. Default: 0 (the first item). Use with limit to get the next set of items.\n',
           ),
@@ -100,7 +110,8 @@ export const meHandler = new Hono()
           v.optional(
             v.pipe(
               v.string(),
-              v.transform(Number),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
               v.number(),
               v.safeInteger(),
               v.minValue(1),
@@ -114,7 +125,16 @@ export const meHandler = new Hono()
           v.metadata({ examples: [10] }),
         ),
         offset: v.pipe(
-          v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '0'),
+          v.optional(
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+            ),
+            '0',
+          ),
           v.description(
             "'The index of the first playlist to return. Default:\n0 (the first object). Maximum offset: 100.000\\. Use with `limit` to get the\nnext set of playlists.'\n",
           ),
@@ -235,7 +255,8 @@ export const meHandler = new Hono()
           v.optional(
             v.pipe(
               v.string(),
-              v.transform(Number),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
               v.number(),
               v.safeInteger(),
               v.minValue(1),
@@ -249,7 +270,16 @@ export const meHandler = new Hono()
           v.metadata({ examples: [10] }),
         ),
         offset: v.pipe(
-          v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '0'),
+          v.optional(
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+            ),
+            '0',
+          ),
           v.description(
             'The index of the first item to return. Default: 0 (the first item). Use with limit to get the next set of items.\n',
           ),
@@ -366,7 +396,8 @@ export const meHandler = new Hono()
           v.optional(
             v.pipe(
               v.string(),
-              v.transform(Number),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
               v.number(),
               v.safeInteger(),
               v.minValue(1),
@@ -380,7 +411,16 @@ export const meHandler = new Hono()
           v.metadata({ examples: [10] }),
         ),
         offset: v.pipe(
-          v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '0'),
+          v.optional(
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+            ),
+            '0',
+          ),
           v.description(
             'The index of the first item to return. Default: 0 (the first item). Use with limit to get the next set of items.\n',
           ),
@@ -500,7 +540,8 @@ export const meHandler = new Hono()
           v.optional(
             v.pipe(
               v.string(),
-              v.transform(Number),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
               v.number(),
               v.safeInteger(),
               v.minValue(1),
@@ -514,7 +555,16 @@ export const meHandler = new Hono()
           v.metadata({ examples: [10] }),
         ),
         offset: v.pipe(
-          v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '0'),
+          v.optional(
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+            ),
+            '0',
+          ),
           v.description(
             'The index of the first item to return. Default: 0 (the first item). Use with limit to get the next set of items.\n',
           ),
@@ -607,7 +657,8 @@ export const meHandler = new Hono()
           v.optional(
             v.pipe(
               v.string(),
-              v.transform(Number),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
               v.number(),
               v.safeInteger(),
               v.minValue(1),
@@ -621,7 +672,16 @@ export const meHandler = new Hono()
           v.metadata({ examples: [10] }),
         ),
         offset: v.pipe(
-          v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '0'),
+          v.optional(
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+            ),
+            '0',
+          ),
           v.description(
             'The index of the first item to return. Default: 0 (the first item). Use with limit to get the next set of items.\n',
           ),
@@ -735,7 +795,8 @@ export const meHandler = new Hono()
           v.optional(
             v.pipe(
               v.string(),
-              v.transform(Number),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
               v.number(),
               v.safeInteger(),
               v.minValue(1),
@@ -1040,7 +1101,13 @@ export const meHandler = new Hono()
       'query',
       v.object({
         position_ms: v.pipe(
-          v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
+          v.pipe(
+            v.string(),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
+            v.number(),
+            v.safeInteger(),
+          ),
           v.description(
             'The position in milliseconds to seek to. Must be a\npositive number. Passing in a position that is greater than the length of\nthe track will cause the player to start playing the next song.\n',
           ),
@@ -1090,7 +1157,13 @@ export const meHandler = new Hono()
       'query',
       v.object({
         volume_percent: v.pipe(
-          v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
+          v.pipe(
+            v.string(),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
+            v.number(),
+            v.safeInteger(),
+          ),
           v.description('The volume to set. Must be a value from 0 to 100 inclusive.\n'),
           v.metadata({ examples: [50] }),
         ),
@@ -1145,7 +1218,8 @@ export const meHandler = new Hono()
           v.optional(
             v.pipe(
               v.string(),
-              v.transform(Number),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
               v.number(),
               v.safeInteger(),
               v.minValue(1),
@@ -1160,7 +1234,13 @@ export const meHandler = new Hono()
         ),
         after: v.optional(
           v.pipe(
-            v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+            ),
             v.description(
               'A Unix timestamp in milliseconds. Returns all items\nafter (but not including) this cursor position. If `after` is specified, `before`\nmust not be specified.\n',
             ),
@@ -1169,7 +1249,13 @@ export const meHandler = new Hono()
         ),
         before: v.optional(
           v.pipe(
-            v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+            ),
             v.description(
               'A Unix timestamp in milliseconds. Returns all items\nbefore (but not including) this cursor position. If `before` is specified,\n`after` must not be specified.\n',
             ),
@@ -1221,7 +1307,8 @@ export const meHandler = new Hono()
           v.optional(
             v.pipe(
               v.string(),
-              v.transform(Number),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
               v.number(),
               v.safeInteger(),
               v.minValue(1),
@@ -1235,7 +1322,16 @@ export const meHandler = new Hono()
           v.metadata({ examples: [10] }),
         ),
         offset: v.pipe(
-          v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '0'),
+          v.optional(
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+            ),
+            '0',
+          ),
           v.description(
             'The index of the first item to return. Default: 0 (the first item). Use with limit to get the next set of items.\n',
           ),
@@ -1261,7 +1357,8 @@ export const meHandler = new Hono()
           v.optional(
             v.pipe(
               v.string(),
-              v.transform(Number),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
               v.number(),
               v.safeInteger(),
               v.minValue(1),
@@ -1275,7 +1372,16 @@ export const meHandler = new Hono()
           v.metadata({ examples: [10] }),
         ),
         offset: v.pipe(
-          v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '0'),
+          v.optional(
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+            ),
+            '0',
+          ),
           v.description(
             'The index of the first item to return. Default: 0 (the first item). Use with limit to get the next set of items.\n',
           ),

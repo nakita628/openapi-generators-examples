@@ -106,7 +106,7 @@ export const vaultsHandler = new Hono()
             Schema.isLessThanOrEqualToBigInt(100n),
           ).pipe(Schema.withDecodingDefaultType(Effect.succeed(20n))),
           order: ListOrderParamSchema.pipe(Schema.withDecodingDefaultType(Effect.succeed('desc'))),
-          after: Schema.optional(
+          after: Schema.optionalKey(
             Schema.String.check(
               Schema.makeFilter((input) => [...input].length >= 0, {
                 expected: 'a string of at least 0 characters',
@@ -116,7 +116,7 @@ export const vaultsHandler = new Hono()
               }),
             ),
           ),
-          metadata: Schema.optional(
+          metadata: Schema.optionalKey(
             Schema.Record(
               Schema.String,
               Schema.String.check(
@@ -129,7 +129,7 @@ export const vaultsHandler = new Hono()
               ),
             ),
           ),
-          status: Schema.optional(
+          status: Schema.optionalKey(
             Schema.Union([
               VaultStatusParamSchema,
               Schema.Unknown.pipe(
@@ -616,7 +616,7 @@ export const vaultsHandler = new Hono()
             Schema.isLessThanOrEqualToBigInt(100n),
           ).pipe(Schema.withDecodingDefaultType(Effect.succeed(20n))),
           order: ListOrderParamSchema.pipe(Schema.withDecodingDefaultType(Effect.succeed('desc'))),
-          after: Schema.optional(
+          after: Schema.optionalKey(
             Schema.String.check(
               Schema.makeFilter((input) => [...input].length >= 0, {
                 expected: 'a string of at least 0 characters',
@@ -626,7 +626,7 @@ export const vaultsHandler = new Hono()
               }),
             ),
           ),
-          metadata: Schema.optional(
+          metadata: Schema.optionalKey(
             Schema.Record(
               Schema.String,
               Schema.String.check(
@@ -639,7 +639,7 @@ export const vaultsHandler = new Hono()
               ),
             ),
           ),
-          status: Schema.optional(
+          status: Schema.optionalKey(
             Schema.Union([
               VaultStatusParamSchema,
               Schema.Unknown.pipe(

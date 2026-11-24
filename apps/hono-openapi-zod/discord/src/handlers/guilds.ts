@@ -202,98 +202,417 @@ export const guildsHandler = new Hono()
         target_id: SnowflakeTypeSchema.exactOptional(),
         action_type: z
           .union([
-            z.coerce.number().pipe(z.literal(1)),
-            z.coerce.number().pipe(z.literal(10)),
-            z.coerce.number().pipe(z.literal(11)),
-            z.coerce.number().pipe(z.literal(12)),
-            z.coerce.number().pipe(z.literal(13)),
-            z.coerce.number().pipe(z.literal(14)),
-            z.coerce.number().pipe(z.literal(15)),
-            z.coerce.number().pipe(z.literal(16)).meta({ description: 'Channels were reordered' }),
-            z.coerce.number().pipe(z.literal(20)),
-            z.coerce.number().pipe(z.literal(21)),
-            z.coerce.number().pipe(z.literal(22)),
-            z.coerce.number().pipe(z.literal(23)),
-            z.coerce.number().pipe(z.literal(24)),
-            z.coerce.number().pipe(z.literal(25)),
-            z.coerce.number().pipe(z.literal(26)),
-            z.coerce.number().pipe(z.literal(27)),
-            z.coerce.number().pipe(z.literal(28)),
-            z.coerce.number().pipe(z.literal(30)),
-            z.coerce.number().pipe(z.literal(31)),
-            z.coerce.number().pipe(z.literal(32)),
-            z.coerce.number().pipe(z.literal(33)).meta({ description: 'Roles were reordered' }),
-            z.coerce.number().pipe(z.literal(40)),
-            z.coerce.number().pipe(z.literal(41)),
-            z.coerce.number().pipe(z.literal(42)),
-            z.coerce.number().pipe(z.literal(50)),
-            z.coerce.number().pipe(z.literal(51)),
-            z.coerce.number().pipe(z.literal(52)),
-            z.coerce.number().pipe(z.literal(60)),
-            z.coerce.number().pipe(z.literal(61)),
-            z.coerce.number().pipe(z.literal(62)),
-            z.coerce.number().pipe(z.literal(72)),
-            z.coerce.number().pipe(z.literal(73)),
-            z.coerce.number().pipe(z.literal(74)),
-            z.coerce.number().pipe(z.literal(75)),
-            z.coerce.number().pipe(z.literal(80)),
-            z.coerce.number().pipe(z.literal(81)),
-            z.coerce.number().pipe(z.literal(82)),
-            z.coerce.number().pipe(z.literal(83)),
-            z.coerce.number().pipe(z.literal(84)),
-            z.coerce.number().pipe(z.literal(85)),
-            z.coerce.number().pipe(z.literal(90)),
-            z.coerce.number().pipe(z.literal(91)),
-            z.coerce.number().pipe(z.literal(92)),
-            z.coerce.number().pipe(z.literal(100)),
-            z.coerce.number().pipe(z.literal(101)),
-            z.coerce.number().pipe(z.literal(102)),
-            z.coerce.number().pipe(z.literal(110)),
-            z.coerce.number().pipe(z.literal(111)),
-            z.coerce.number().pipe(z.literal(112)),
-            z.coerce.number().pipe(z.literal(121)),
-            z.coerce.number().pipe(z.literal(130)),
-            z.coerce.number().pipe(z.literal(131)),
-            z.coerce.number().pipe(z.literal(132)),
-            z.coerce.number().pipe(z.literal(140)),
-            z.coerce.number().pipe(z.literal(141)),
-            z.coerce.number().pipe(z.literal(142)),
-            z.coerce.number().pipe(z.literal(143)),
-            z.coerce.number().pipe(z.literal(144)),
-            z.coerce.number().pipe(z.literal(145)),
-            z.coerce.number().pipe(z.literal(146)),
-            z.coerce.number().pipe(z.literal(150)),
-            z.coerce.number().pipe(z.literal(151)),
-            z.coerce.number().pipe(z.literal(163)),
-            z.coerce.number().pipe(z.literal(164)),
-            z.coerce.number().pipe(z.literal(165)),
-            z.coerce.number().pipe(z.literal(166)),
-            z.coerce.number().pipe(z.literal(167)),
-            z.coerce.number().pipe(z.literal(171)),
-            z.coerce.number().pipe(z.literal(172)),
-            z.coerce.number().pipe(z.literal(180)),
-            z.coerce.number().pipe(z.literal(190)),
-            z.coerce.number().pipe(z.literal(191)),
-            z.coerce.number().pipe(z.literal(192)),
-            z.coerce.number().pipe(z.literal(193)),
-            z.coerce
-              .number()
-              .pipe(z.literal(200))
+            z.preprocess(
+              (val) =>
+                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+              z.literal(1),
+            ),
+            z.preprocess(
+              (val) =>
+                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+              z.literal(10),
+            ),
+            z.preprocess(
+              (val) =>
+                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+              z.literal(11),
+            ),
+            z.preprocess(
+              (val) =>
+                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+              z.literal(12),
+            ),
+            z.preprocess(
+              (val) =>
+                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+              z.literal(13),
+            ),
+            z.preprocess(
+              (val) =>
+                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+              z.literal(14),
+            ),
+            z.preprocess(
+              (val) =>
+                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+              z.literal(15),
+            ),
+            z
+              .preprocess(
+                (val) =>
+                  typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+                z.literal(16),
+              )
+              .meta({ description: 'Channels were reordered' }),
+            z.preprocess(
+              (val) =>
+                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+              z.literal(20),
+            ),
+            z.preprocess(
+              (val) =>
+                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+              z.literal(21),
+            ),
+            z.preprocess(
+              (val) =>
+                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+              z.literal(22),
+            ),
+            z.preprocess(
+              (val) =>
+                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+              z.literal(23),
+            ),
+            z.preprocess(
+              (val) =>
+                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+              z.literal(24),
+            ),
+            z.preprocess(
+              (val) =>
+                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+              z.literal(25),
+            ),
+            z.preprocess(
+              (val) =>
+                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+              z.literal(26),
+            ),
+            z.preprocess(
+              (val) =>
+                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+              z.literal(27),
+            ),
+            z.preprocess(
+              (val) =>
+                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+              z.literal(28),
+            ),
+            z.preprocess(
+              (val) =>
+                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+              z.literal(30),
+            ),
+            z.preprocess(
+              (val) =>
+                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+              z.literal(31),
+            ),
+            z.preprocess(
+              (val) =>
+                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+              z.literal(32),
+            ),
+            z
+              .preprocess(
+                (val) =>
+                  typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+                z.literal(33),
+              )
+              .meta({ description: 'Roles were reordered' }),
+            z.preprocess(
+              (val) =>
+                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+              z.literal(40),
+            ),
+            z.preprocess(
+              (val) =>
+                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+              z.literal(41),
+            ),
+            z.preprocess(
+              (val) =>
+                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+              z.literal(42),
+            ),
+            z.preprocess(
+              (val) =>
+                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+              z.literal(50),
+            ),
+            z.preprocess(
+              (val) =>
+                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+              z.literal(51),
+            ),
+            z.preprocess(
+              (val) =>
+                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+              z.literal(52),
+            ),
+            z.preprocess(
+              (val) =>
+                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+              z.literal(60),
+            ),
+            z.preprocess(
+              (val) =>
+                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+              z.literal(61),
+            ),
+            z.preprocess(
+              (val) =>
+                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+              z.literal(62),
+            ),
+            z.preprocess(
+              (val) =>
+                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+              z.literal(72),
+            ),
+            z.preprocess(
+              (val) =>
+                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+              z.literal(73),
+            ),
+            z.preprocess(
+              (val) =>
+                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+              z.literal(74),
+            ),
+            z.preprocess(
+              (val) =>
+                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+              z.literal(75),
+            ),
+            z.preprocess(
+              (val) =>
+                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+              z.literal(80),
+            ),
+            z.preprocess(
+              (val) =>
+                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+              z.literal(81),
+            ),
+            z.preprocess(
+              (val) =>
+                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+              z.literal(82),
+            ),
+            z.preprocess(
+              (val) =>
+                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+              z.literal(83),
+            ),
+            z.preprocess(
+              (val) =>
+                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+              z.literal(84),
+            ),
+            z.preprocess(
+              (val) =>
+                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+              z.literal(85),
+            ),
+            z.preprocess(
+              (val) =>
+                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+              z.literal(90),
+            ),
+            z.preprocess(
+              (val) =>
+                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+              z.literal(91),
+            ),
+            z.preprocess(
+              (val) =>
+                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+              z.literal(92),
+            ),
+            z.preprocess(
+              (val) =>
+                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+              z.literal(100),
+            ),
+            z.preprocess(
+              (val) =>
+                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+              z.literal(101),
+            ),
+            z.preprocess(
+              (val) =>
+                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+              z.literal(102),
+            ),
+            z.preprocess(
+              (val) =>
+                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+              z.literal(110),
+            ),
+            z.preprocess(
+              (val) =>
+                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+              z.literal(111),
+            ),
+            z.preprocess(
+              (val) =>
+                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+              z.literal(112),
+            ),
+            z.preprocess(
+              (val) =>
+                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+              z.literal(121),
+            ),
+            z.preprocess(
+              (val) =>
+                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+              z.literal(130),
+            ),
+            z.preprocess(
+              (val) =>
+                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+              z.literal(131),
+            ),
+            z.preprocess(
+              (val) =>
+                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+              z.literal(132),
+            ),
+            z.preprocess(
+              (val) =>
+                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+              z.literal(140),
+            ),
+            z.preprocess(
+              (val) =>
+                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+              z.literal(141),
+            ),
+            z.preprocess(
+              (val) =>
+                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+              z.literal(142),
+            ),
+            z.preprocess(
+              (val) =>
+                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+              z.literal(143),
+            ),
+            z.preprocess(
+              (val) =>
+                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+              z.literal(144),
+            ),
+            z.preprocess(
+              (val) =>
+                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+              z.literal(145),
+            ),
+            z.preprocess(
+              (val) =>
+                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+              z.literal(146),
+            ),
+            z.preprocess(
+              (val) =>
+                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+              z.literal(150),
+            ),
+            z.preprocess(
+              (val) =>
+                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+              z.literal(151),
+            ),
+            z.preprocess(
+              (val) =>
+                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+              z.literal(163),
+            ),
+            z.preprocess(
+              (val) =>
+                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+              z.literal(164),
+            ),
+            z.preprocess(
+              (val) =>
+                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+              z.literal(165),
+            ),
+            z.preprocess(
+              (val) =>
+                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+              z.literal(166),
+            ),
+            z.preprocess(
+              (val) =>
+                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+              z.literal(167),
+            ),
+            z.preprocess(
+              (val) =>
+                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+              z.literal(171),
+            ),
+            z.preprocess(
+              (val) =>
+                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+              z.literal(172),
+            ),
+            z.preprocess(
+              (val) =>
+                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+              z.literal(180),
+            ),
+            z.preprocess(
+              (val) =>
+                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+              z.literal(190),
+            ),
+            z.preprocess(
+              (val) =>
+                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+              z.literal(191),
+            ),
+            z.preprocess(
+              (val) =>
+                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+              z.literal(192),
+            ),
+            z.preprocess(
+              (val) =>
+                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+              z.literal(193),
+            ),
+            z
+              .preprocess(
+                (val) =>
+                  typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+                z.literal(200),
+              )
               .meta({ description: 'Scheduled event exception was created' }),
-            z.coerce
-              .number()
-              .pipe(z.literal(201))
+            z
+              .preprocess(
+                (val) =>
+                  typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+                z.literal(201),
+              )
               .meta({ description: 'Scheduled event exception was updated' }),
-            z.coerce
-              .number()
-              .pipe(z.literal(202))
+            z
+              .preprocess(
+                (val) =>
+                  typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+                z.literal(202),
+              )
               .meta({ description: 'Scheduled event exception was deleted' }),
-            z.coerce.number().pipe(z.literal(211)),
+            z.preprocess(
+              (val) =>
+                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+              z.literal(211),
+            ),
           ])
           .exactOptional(),
         before: SnowflakeTypeSchema.exactOptional(),
         after: SnowflakeTypeSchema.exactOptional(),
-        limit: z.coerce.number().int().min(1).max(100).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(1).max(100),
+          )
+          .exactOptional(),
       }),
     ),
     (c) => { throw new Error('Not implemented') },
@@ -323,7 +642,7 @@ export const guildsHandler = new Hono()
                       MLSpamRuleResponseSchema,
                       MentionSpamRuleResponseSchema,
                       UserProfileRuleResponseSchema,
-                      z.null().nullable(),
+                      z.null(),
                     ]),
                   )
                   .nullable(),
@@ -517,7 +836,13 @@ export const guildsHandler = new Hono()
     validator(
       'query',
       z.object({
-        limit: z.coerce.number().int().min(1).max(1000).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(1).max(1000),
+          )
+          .exactOptional(),
         before: SnowflakeTypeSchema.exactOptional(),
         after: SnowflakeTypeSchema.exactOptional(),
       }),
@@ -710,9 +1035,9 @@ export const guildsHandler = new Hono()
       'json',
       z.array(
         z.object({
-          id: z.xor([z.null().nullable(), SnowflakeTypeSchema]).exactOptional(),
+          id: z.xor([z.null(), SnowflakeTypeSchema]).exactOptional(),
           position: z.int32().min(0).nullable().exactOptional(),
-          parent_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]).exactOptional(),
+          parent_id: z.xor([z.null(), SnowflakeTypeSchema]).exactOptional(),
           lock_permissions: z.boolean().nullable().exactOptional(),
         }),
       ),
@@ -773,7 +1098,7 @@ export const guildsHandler = new Hono()
         name: z.string().min(2).max(32),
         image: z.string(),
         roles: z
-          .array(z.xor([z.null().nullable(), SnowflakeTypeSchema]))
+          .array(z.xor([z.null(), SnowflakeTypeSchema]))
           .max(1521)
           .refine((val) => new Set(val).size === val.length)
           .nullable()
@@ -856,7 +1181,7 @@ export const guildsHandler = new Hono()
       z.object({
         name: z.string().min(2).max(32).exactOptional(),
         roles: z
-          .array(z.xor([z.null().nullable(), SnowflakeTypeSchema]))
+          .array(z.xor([z.null(), SnowflakeTypeSchema]))
           .max(1521)
           .refine((val) => new Set(val).size === val.length)
           .nullable()
@@ -978,7 +1303,7 @@ export const guildsHandler = new Hono()
                       FriendInviteResponseSchema,
                       GroupDMInviteResponseSchema,
                       GuildInviteResponseSchema,
-                      z.null().nullable(),
+                      z.null(),
                     ]),
                   )
                   .nullable(),
@@ -1019,7 +1344,13 @@ export const guildsHandler = new Hono()
     validator(
       'query',
       z.object({
-        limit: z.coerce.number().int().min(1).max(1000).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(1).max(1000),
+          )
+          .exactOptional(),
         after: SnowflakeTypeSchema.exactOptional(),
       }),
     ),
@@ -1083,7 +1414,13 @@ export const guildsHandler = new Hono()
     validator(
       'query',
       z.object({
-        limit: z.coerce.number().int().min(1).max(1000).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(1).max(1000),
+          )
+          .exactOptional(),
         query: z.string().min(1).max(100),
       }),
     ),
@@ -1208,14 +1545,14 @@ export const guildsHandler = new Hono()
       z.object({
         nick: z.string().max(32).nullable().exactOptional(),
         roles: z
-          .array(z.xor([z.null().nullable(), SnowflakeTypeSchema]))
+          .array(z.xor([z.null(), SnowflakeTypeSchema]))
           .max(350)
           .refine((val) => new Set(val).size === val.length)
           .nullable()
           .exactOptional(),
         mute: z.boolean().nullable().exactOptional(),
         deaf: z.boolean().nullable().exactOptional(),
-        channel_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]).exactOptional(),
+        channel_id: z.xor([z.null(), SnowflakeTypeSchema]).exactOptional(),
         communication_disabled_until: z.iso.datetime({ offset: true }).nullable().exactOptional(),
         flags: z.int().nullable().exactOptional(),
       }),
@@ -1321,7 +1658,13 @@ export const guildsHandler = new Hono()
         sort_by: z.union([z.literal('relevance'), z.literal('timestamp')]).exactOptional(),
         sort_order: z.union([z.literal('asc'), z.literal('desc')]).exactOptional(),
         content: z.string().max(1024).exactOptional(),
-        slop: z.coerce.number().int().min(0).max(100).exactOptional(),
+        slop: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(0).max(100),
+          )
+          .exactOptional(),
         author_id: z
           .preprocess(
             (val) => (val === undefined || Array.isArray(val) ? val : [val]),
@@ -1388,8 +1731,20 @@ export const guildsHandler = new Hono()
         mention_everyone: z.stringbool().exactOptional(),
         min_id: SnowflakeTypeSchema.exactOptional(),
         max_id: SnowflakeTypeSchema.exactOptional(),
-        limit: z.coerce.number().int().min(1).max(25).exactOptional(),
-        offset: z.coerce.number().int().min(0).max(9975).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(1).max(25),
+          )
+          .exactOptional(),
+        offset: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(0).max(9975),
+          )
+          .exactOptional(),
         has: z
           .preprocess(
             (val) => (val === undefined || Array.isArray(val) ? val : [val]),
@@ -1672,7 +2027,13 @@ export const guildsHandler = new Hono()
     validator(
       'query',
       z.object({
-        days: z.coerce.number().int().min(1).max(30).exactOptional(),
+        days: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(1).max(30),
+          )
+          .exactOptional(),
         include_roles: z
           .union([
             z.string(),
@@ -1684,7 +2045,7 @@ export const guildsHandler = new Hono()
                     (val) => (val === 'null' ? null : val),
                     z
                       .union([
-                        z.preprocess((val) => (val === 'null' ? null : val), z.null().nullable()),
+                        z.preprocess((val) => (val === 'null' ? null : val), z.null()),
                         SnowflakeTypeSchema,
                       ])
                       .nullable(),
@@ -1790,7 +2151,13 @@ export const guildsHandler = new Hono()
             z.literal('APPROVED').meta({ description: 'Join request approved' }),
           ])
           .exactOptional(),
-        limit: z.coerce.number().int().min(1).max(100).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(1).max(100),
+          )
+          .exactOptional(),
         before: SnowflakeTypeSchema.exactOptional(),
         after: SnowflakeTypeSchema.exactOptional(),
       }),
@@ -2329,7 +2696,13 @@ export const guildsHandler = new Hono()
       'query',
       z.object({
         with_member: z.stringbool().exactOptional(),
-        limit: z.coerce.number().int().min(1).max(100).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(1).max(100),
+          )
+          .exactOptional(),
         before: SnowflakeTypeSchema.exactOptional(),
         after: SnowflakeTypeSchema.exactOptional(),
       }),
@@ -2415,7 +2788,13 @@ export const guildsHandler = new Hono()
       'query',
       z.object({
         with_member: z.stringbool().exactOptional(),
-        limit: z.coerce.number().int().min(1).max(100).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(1).max(100),
+          )
+          .exactOptional(),
         before: SnowflakeTypeSchema.exactOptional(),
         after: SnowflakeTypeSchema.exactOptional(),
       }),
@@ -3110,7 +3489,7 @@ export const guildsHandler = new Hono()
     validator(
       'json',
       z.object({
-        channel_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]).exactOptional(),
+        channel_id: z.xor([z.null(), SnowflakeTypeSchema]).exactOptional(),
         enabled: z.boolean().nullable().exactOptional(),
       }),
     ),

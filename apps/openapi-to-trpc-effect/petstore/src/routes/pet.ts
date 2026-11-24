@@ -1,5 +1,5 @@
 import { initTRPC, TRPCError } from '@trpc/server'
-import { Schema } from 'effect'
+import { Effect, Schema, SchemaTransformation } from 'effect'
 import { ApiResponseSchema, PetSchema } from '../components'
 
 const t = initTRPC.create()
@@ -92,8 +92,8 @@ export const petRouter = t.router({
                 maximum: 9223372036854775807n,
               }),
             ),
-          name: Schema.optional(Schema.String),
-          status: Schema.optional(Schema.String),
+          name: Schema.optionalKey(Schema.String),
+          status: Schema.optionalKey(Schema.String),
         }),
       ),
     )
@@ -155,7 +155,7 @@ export const petRouter = t.router({
                 maximum: 9223372036854775807n,
               }),
             ),
-          additionalMetadata: Schema.optional(Schema.String),
+          additionalMetadata: Schema.optionalKey(Schema.String),
         }),
       ),
     )

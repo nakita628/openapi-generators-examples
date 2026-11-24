@@ -198,7 +198,9 @@ export const audioHandler = new Hono()
         'response_format?': AudioResponseFormatSchema,
         'temperature?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(data)
+              ? Number(data)
+              : Number.NaN
             return Number.isFinite(value) ? value : ctx.error('a number')
           })
           .describe(
@@ -230,7 +232,7 @@ export const audioHandler = new Hono()
                   ),
                 type('unknown')
                   .pipe((data) => (data === 'null' ? null : data))
-                  .to('null | null'),
+                  .to('null'),
               ]) {
                 const out = branch(data)
                 if (!(out instanceof type.errors)) return out
@@ -253,7 +255,7 @@ export const audioHandler = new Hono()
                     ),
                     'prefix_padding_ms?': type('string')
                       .pipe((data, ctx) => {
-                        const value = Number(data)
+                        const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
                         return Number.isSafeInteger(value) ? value : ctx.error('an integer')
                       })
                       .describe(
@@ -261,7 +263,7 @@ export const audioHandler = new Hono()
                       ),
                     'silence_duration_ms?': type('string')
                       .pipe((data, ctx) => {
-                        const value = Number(data)
+                        const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
                         return Number.isSafeInteger(value) ? value : ctx.error('an integer')
                       })
                       .describe(
@@ -269,7 +271,9 @@ export const audioHandler = new Hono()
                       ),
                     'threshold?': type('string')
                       .pipe((data, ctx) => {
-                        const value = Number(data)
+                        const value = /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(data)
+                          ? Number(data)
+                          : Number.NaN
                         return Number.isFinite(value) ? value : ctx.error('a number')
                       })
                       .describe(
@@ -288,7 +292,7 @@ export const audioHandler = new Hono()
               ),
             type('unknown')
               .pipe((data) => (data === 'null' ? null : data))
-              .to('null | null'),
+              .to('null'),
           ]) {
             const out = branch(data)
             if (!(out instanceof type.errors)) return out
@@ -403,7 +407,9 @@ export const audioHandler = new Hono()
         ),
         'temperature?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(data)
+              ? Number(data)
+              : Number.NaN
             return Number.isFinite(value) ? value : ctx.error('a number')
           })
           .describe(
@@ -441,7 +447,7 @@ export const audioHandler = new Hono()
       type({
         'after?': 'string',
         'limit?': type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
       }),

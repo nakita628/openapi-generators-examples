@@ -3,8 +3,9 @@ import useSWRImmutable from 'swr/immutable'
 import type { Key, SWRConfiguration } from 'swr'
 import useSWRMutation from 'swr/mutation'
 import type { SWRMutationConfiguration } from 'swr/mutation'
-import type { WidgetResponse } from '../components/schemas'
-import { client } from '../lib'
+import type { Static } from 'elysia'
+import type { WidgetResponseSchema } from '../components/schemas'
+import { client, clientOrigin } from '../lib'
 
 export function getApplicationsKey() {
   return ['applications'] as const
@@ -16267,14 +16268,17 @@ export function usePatchGuildsGuildIdWidget<
   }
 }
 
-export function getGetGuildsGuildIdWidgetJsonKey(guild_id: string) {
-  return ['guilds', '/guilds/{guild_id}/widget.json', guild_id] as const
+export function getGetGuildsGuildIdWidgetJsonKey(params: string) {
+  return ['guilds', '/guilds/{guild_id}/widget.json', params] as const
 }
 
 export function useGetGuildsGuildIdWidgetJson<TError = unknown>(
-  guild_id: string,
+  params: string,
   options?: {
-    swr?: SWRConfiguration<WidgetResponse, TError> & { swrKey?: Key; enabled?: boolean }
+    swr?: SWRConfiguration<Static<typeof WidgetResponseSchema>, TError> & {
+      swrKey?: Key
+      enabled?: boolean
+    }
     options?: { headers?: Record<string, string> }
   },
 ) {
@@ -16283,17 +16287,18 @@ export function useGetGuildsGuildIdWidgetJson<TError = unknown>(
   const swrKey =
     enabled !== false
       ? customKey === undefined
-        ? getGetGuildsGuildIdWidgetJsonKey(guild_id)
+        ? getGetGuildsGuildIdWidgetJsonKey(params)
         : customKey
       : null
   return {
     swrKey,
-    ...useSWR<WidgetResponse, TError>(
+    ...useSWR<Static<typeof WidgetResponseSchema>, TError>(
       swrKey,
       async () => {
-        const res = await fetch(`/guilds/${encodeURIComponent(guild_id)}/widget.json`, {
-          headers: clientOptions?.headers,
-        })
+        const res = await fetch(
+          `${clientOrigin}/guilds/${encodeURIComponent(params)}/widget.json`,
+          { headers: clientOptions?.headers },
+        )
         if (!res.ok) throw await res.json()
         return JSON.parse(await res.text())
       },
@@ -16303,9 +16308,12 @@ export function useGetGuildsGuildIdWidgetJson<TError = unknown>(
 }
 
 export function useImmutableGetGuildsGuildIdWidgetJson<TError = unknown>(
-  guild_id: string,
+  params: string,
   options?: {
-    swr?: SWRConfiguration<WidgetResponse, TError> & { swrKey?: Key; enabled?: boolean }
+    swr?: SWRConfiguration<Static<typeof WidgetResponseSchema>, TError> & {
+      swrKey?: Key
+      enabled?: boolean
+    }
     options?: { headers?: Record<string, string> }
   },
 ) {
@@ -16314,17 +16322,18 @@ export function useImmutableGetGuildsGuildIdWidgetJson<TError = unknown>(
   const swrKey =
     enabled !== false
       ? customKey === undefined
-        ? getGetGuildsGuildIdWidgetJsonKey(guild_id)
+        ? getGetGuildsGuildIdWidgetJsonKey(params)
         : customKey
       : null
   return {
     swrKey,
-    ...useSWRImmutable<WidgetResponse, TError>(
+    ...useSWRImmutable<Static<typeof WidgetResponseSchema>, TError>(
       swrKey,
       async () => {
-        const res = await fetch(`/guilds/${encodeURIComponent(guild_id)}/widget.json`, {
-          headers: clientOptions?.headers,
-        })
+        const res = await fetch(
+          `${clientOrigin}/guilds/${encodeURIComponent(params)}/widget.json`,
+          { headers: clientOptions?.headers },
+        )
         if (!res.ok) throw await res.json()
         return JSON.parse(await res.text())
       },
@@ -16334,15 +16343,15 @@ export function useImmutableGetGuildsGuildIdWidgetJson<TError = unknown>(
 }
 
 export function getGetGuildsGuildIdWidgetPngKey(
-  guild_id: string,
+  params: string,
   options?: { headers?: Record<string, string>; query?: Record<string, unknown> },
 ) {
   const { headers: _a, ...keyArgs } = options ?? {}
-  return ['guilds', '/guilds/{guild_id}/widget.png', guild_id, keyArgs] as const
+  return ['guilds', '/guilds/{guild_id}/widget.png', params, keyArgs] as const
 }
 
 export function useGetGuildsGuildIdWidgetPng<TError = unknown>(
-  guild_id: string,
+  params: string,
   options?: {
     swr?: SWRConfiguration<void, TError> & { swrKey?: Key; enabled?: boolean }
     options?: { headers?: Record<string, string>; query?: Record<string, unknown> }
@@ -16353,7 +16362,7 @@ export function useGetGuildsGuildIdWidgetPng<TError = unknown>(
   const swrKey =
     enabled !== false
       ? customKey === undefined
-        ? getGetGuildsGuildIdWidgetPngKey(guild_id, clientOptions)
+        ? getGetGuildsGuildIdWidgetPngKey(params, clientOptions)
         : customKey
       : null
   return {
@@ -16373,7 +16382,7 @@ export function useGetGuildsGuildIdWidgetPng<TError = unknown>(
           }
         }
         const res = await fetch(
-          `/guilds/${encodeURIComponent(guild_id)}/widget.png${search.size ? `?${search}` : ''}`,
+          `${clientOrigin}/guilds/${encodeURIComponent(params)}/widget.png${search.size ? `?${search}` : ''}`,
           { headers: clientOptions?.headers },
         )
         if (!res.ok) throw await res.json()
@@ -16385,7 +16394,7 @@ export function useGetGuildsGuildIdWidgetPng<TError = unknown>(
 }
 
 export function useImmutableGetGuildsGuildIdWidgetPng<TError = unknown>(
-  guild_id: string,
+  params: string,
   options?: {
     swr?: SWRConfiguration<void, TError> & { swrKey?: Key; enabled?: boolean }
     options?: { headers?: Record<string, string>; query?: Record<string, unknown> }
@@ -16396,7 +16405,7 @@ export function useImmutableGetGuildsGuildIdWidgetPng<TError = unknown>(
   const swrKey =
     enabled !== false
       ? customKey === undefined
-        ? getGetGuildsGuildIdWidgetPngKey(guild_id, clientOptions)
+        ? getGetGuildsGuildIdWidgetPngKey(params, clientOptions)
         : customKey
       : null
   return {
@@ -16416,7 +16425,7 @@ export function useImmutableGetGuildsGuildIdWidgetPng<TError = unknown>(
           }
         }
         const res = await fetch(
-          `/guilds/${encodeURIComponent(guild_id)}/widget.png${search.size ? `?${search}` : ''}`,
+          `${clientOrigin}/guilds/${encodeURIComponent(params)}/widget.png${search.size ? `?${search}` : ''}`,
           { headers: clientOptions?.headers },
         )
         if (!res.ok) throw await res.json()

@@ -48,13 +48,13 @@ export const stageInstancesHandler = new Hono()
             }),
           ),
           channel_id: SnowflakeTypeSchema,
-          privacy_level: Schema.optional(
-            Schema.Union([Schema.NullOr(Schema.Null), StageInstancesPrivacyLevelsSchema]),
+          privacy_level: Schema.optionalKey(
+            Schema.Union([Schema.Null, StageInstancesPrivacyLevelsSchema]),
           ),
-          guild_scheduled_event_id: Schema.optional(
-            Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema]),
+          guild_scheduled_event_id: Schema.optionalKey(
+            Schema.Union([Schema.Null, SnowflakeTypeSchema]),
           ),
-          send_start_notification: Schema.optional(Schema.NullOr(Schema.Boolean)),
+          send_start_notification: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
         }),
       ),
     ),
@@ -150,7 +150,7 @@ export const stageInstancesHandler = new Hono()
       'json',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          topic: Schema.optional(
+          topic: Schema.optionalKey(
             Schema.String.check(
               Schema.makeFilter((input) => [...input].length >= 1, {
                 expected: 'a string of at least 1 character',
@@ -160,7 +160,7 @@ export const stageInstancesHandler = new Hono()
               }),
             ),
           ),
-          privacy_level: Schema.optional(StageInstancesPrivacyLevelsSchema),
+          privacy_level: Schema.optionalKey(StageInstancesPrivacyLevelsSchema),
         }),
       ),
     ),

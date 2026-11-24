@@ -1,5 +1,5 @@
 import { initTRPC, TRPCError } from '@trpc/server'
-import { Schema } from 'effect'
+import { Effect, Schema } from 'effect'
 import {
   CreateEvalCompletionsRunDataSourceSchema,
   CreateEvalJsonlRunDataSourceSchema,
@@ -21,7 +21,7 @@ export const evalsRouter = t.router({
     .input(
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          after: Schema.optional(Schema.String),
+          after: Schema.optionalKey(Schema.String),
           limit: Schema.Number.check(Schema.isInt()).pipe(
             Schema.withDecodingDefault(Effect.succeed(20)),
           ),
@@ -55,8 +55,10 @@ export const evalsRouter = t.router({
       Schema.toStandardSchemaV1(
         Schema.Struct({
           eval_id: Schema.String,
-          name: Schema.optional(Schema.String.annotate({ description: 'Rename the evaluation.' })),
-          metadata: Schema.optional(MetadataSchema),
+          name: Schema.optionalKey(
+            Schema.String.annotate({ description: 'Rename the evaluation.' }),
+          ),
+          metadata: Schema.optionalKey(MetadataSchema),
         }),
       ),
     )
@@ -83,14 +85,14 @@ export const evalsRouter = t.router({
       Schema.toStandardSchemaV1(
         Schema.Struct({
           eval_id: Schema.String,
-          after: Schema.optional(Schema.String),
+          after: Schema.optionalKey(Schema.String),
           limit: Schema.Number.check(Schema.isInt()).pipe(
             Schema.withDecodingDefault(Effect.succeed(20)),
           ),
           order: Schema.Literals(['asc', 'desc']).pipe(
             Schema.withDecodingDefault(Effect.succeed('asc')),
           ),
-          status: Schema.optional(
+          status: Schema.optionalKey(
             Schema.Literals(['queued', 'in_progress', 'completed', 'canceled', 'failed']),
           ),
         }),
@@ -105,8 +107,8 @@ export const evalsRouter = t.router({
       Schema.toStandardSchemaV1(
         Schema.Struct({
           eval_id: Schema.String,
-          name: Schema.optional(Schema.String.annotate({ description: 'The name of the run.' })),
-          metadata: Schema.optional(MetadataSchema),
+          name: Schema.optionalKey(Schema.String.annotate({ description: 'The name of the run.' })),
+          metadata: Schema.optionalKey(MetadataSchema),
           data_source: Schema.Union([
             CreateEvalJsonlRunDataSourceSchema,
             CreateEvalCompletionsRunDataSourceSchema,
@@ -134,11 +136,11 @@ export const evalsRouter = t.router({
     .output(
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          object: Schema.optional(
+          object: Schema.optionalKey(
             Schema.String.annotate({ jsonSchemaExamples: ['eval.run.deleted'] }),
           ),
-          deleted: Schema.optional(Schema.Boolean.annotate({ jsonSchemaExamples: [true] })),
-          run_id: Schema.optional(
+          deleted: Schema.optionalKey(Schema.Boolean.annotate({ jsonSchemaExamples: [true] })),
+          run_id: Schema.optionalKey(
             Schema.String.annotate({
               jsonSchemaExamples: ['evalrun_677469f564d48190807532a852da3afb'],
             }),
@@ -163,11 +165,11 @@ export const evalsRouter = t.router({
         Schema.Struct({
           eval_id: Schema.String,
           run_id: Schema.String,
-          after: Schema.optional(Schema.String),
+          after: Schema.optionalKey(Schema.String),
           limit: Schema.Number.check(Schema.isInt()).pipe(
             Schema.withDecodingDefault(Effect.succeed(20)),
           ),
-          status: Schema.optional(Schema.Literals(['fail', 'pass'])),
+          status: Schema.optionalKey(Schema.Literals(['fail', 'pass'])),
           order: Schema.Literals(['asc', 'desc']).pipe(
             Schema.withDecodingDefault(Effect.succeed('asc')),
           ),

@@ -1,6 +1,6 @@
 import { Hono } from 'hono'
 import { describeRoute, resolver, validator } from 'hono-openapi'
-import { Type } from 'typebox'
+import { Type, type StaticDecode, type StaticEncode, type TSchema } from 'typebox'
 import { Compile } from 'typebox/compile'
 import {
   ApplicationIdentityProviderAuthTypeSchema,
@@ -9,6 +9,31 @@ import {
   ClientErrorResponseResponse,
   ClientRatelimitedResponseResponse,
 } from '../components'
+
+const toStandardSchemaV1 = <T extends TSchema>(schema: T) => {
+  const validator = Compile(schema)
+  return Object.assign(validator, {
+    '~standard': {
+      version: 1 as const,
+      vendor: 'typebox',
+      validate: (value: unknown) =>
+        validator.Check(value)
+          ? { value: validator.Decode(value) }
+          : {
+              issues: validator.Errors(value).map((error) => ({
+                message: error.message,
+                path: error.instancePath
+                  .split('/')
+                  .slice(1)
+                  .map((key) => key.replaceAll('~1', '/').replaceAll('~0', '~')),
+              })),
+            },
+      types: undefined as
+        | { readonly input: StaticEncode<T>; readonly output: StaticDecode<T> }
+        | undefined,
+    },
+  })
+}
 
 export const partnerSdkHandler = new Hono()
   .put(
@@ -34,7 +59,7 @@ export const partnerSdkHandler = new Hono()
     }),
     validator(
       'param',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           user_id_1: SnowflakeTypeSchema,
           user_id_2: SnowflakeTypeSchema,
@@ -44,7 +69,7 @@ export const partnerSdkHandler = new Hono()
     ),
     validator(
       'json',
-      Compile(
+      toStandardSchemaV1(
         Type.Record(Type.String(), Type.String({ maxLength: 2000 }), {
           maxProperties: 5,
           description: 'The moderation metadata attached to the message',
@@ -53,7 +78,7 @@ export const partnerSdkHandler = new Hono()
     ),
     validator(
       'form',
-      Compile(
+      toStandardSchemaV1(
         Type.Record(Type.String(), Type.String({ maxLength: 2000 }), {
           maxProperties: 5,
           description: 'The moderation metadata attached to the message',
@@ -84,7 +109,7 @@ export const partnerSdkHandler = new Hono()
     }),
     validator(
       'json',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           client_id: SnowflakeTypeSchema,
           client_secret: Type.Optional(Type.Union([Type.String({ maxLength: 1024 }), Type.Null()])),
@@ -117,7 +142,9 @@ export const partnerSdkHandler = new Hono()
     }),
     validator(
       'json',
-      Compile(Type.Object({ external_user_id: Type.String({ minLength: 1, maxLength: 1024 }) })),
+      toStandardSchemaV1(
+        Type.Object({ external_user_id: Type.String({ minLength: 1, maxLength: 1024 }) }),
+      ),
     ),
     (c) => { throw new Error('Not implemented') },
   )
@@ -136,7 +163,9 @@ export const partnerSdkHandler = new Hono()
             'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
           },
           content: {
-            'application/json': { schema: resolver(Compile(ProvisionalTokenResponseSchema)) },
+            'application/json': {
+              schema: resolver(toStandardSchemaV1(ProvisionalTokenResponseSchema)),
+            },
           },
         },
         '429': ClientRatelimitedResponseResponse,
@@ -146,7 +175,7 @@ export const partnerSdkHandler = new Hono()
     }),
     validator(
       'json',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           client_id: SnowflakeTypeSchema,
           client_secret: Type.Optional(Type.Union([Type.String({ maxLength: 1024 }), Type.Null()])),
@@ -172,7 +201,9 @@ export const partnerSdkHandler = new Hono()
             'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
           },
           content: {
-            'application/json': { schema: resolver(Compile(ProvisionalTokenResponseSchema)) },
+            'application/json': {
+              schema: resolver(toStandardSchemaV1(ProvisionalTokenResponseSchema)),
+            },
           },
         },
         '429': ClientRatelimitedResponseResponse,
@@ -182,11 +213,9 @@ export const partnerSdkHandler = new Hono()
     }),
     validator(
       'json',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
-          provisional_user_id: Type.Optional(
-            Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
-          ),
+          provisional_user_id: Type.Optional(Type.Union([Type.Null(), SnowflakeTypeSchema])),
           external_user_id: Type.String({ minLength: 1, maxLength: 1024 }),
           preferred_global_name: Type.Optional(
             Type.Union([Type.String({ minLength: 1, maxLength: 32 }), Type.Null()]),

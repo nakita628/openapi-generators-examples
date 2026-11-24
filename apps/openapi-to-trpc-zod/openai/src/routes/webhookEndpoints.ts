@@ -17,9 +17,7 @@ export const webhookEndpointsRouter = t.router({
     .input(
       z.object({
         limit: z.int().min(1).max(100).exactOptional(),
-        after: z
-          .union([z.string().meta({ examples: ['whe_123'] }), z.null().nullable()])
-          .exactOptional(),
+        after: z.union([z.string().meta({ examples: ['whe_123'] }), z.null()]).exactOptional(),
       }),
     )
     .output(WebhookEndpointListResourceSchema)

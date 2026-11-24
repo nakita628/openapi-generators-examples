@@ -599,15 +599,26 @@ export const PlaylistTrackObjectSchema = Type.Object({
     }),
   ),
   item: Type.Optional(
-    Type.Union([TrackObjectSchema, EpisodeObjectSchema], {
-      description: 'Information about the track or episode.',
-    }),
+    Type.Union(
+      [
+        Type.Intersect([TrackObjectSchema, Type.Object({ type: Type.Literal('TrackObject') })]),
+        Type.Intersect([EpisodeObjectSchema, Type.Object({ type: Type.Literal('EpisodeObject') })]),
+      ],
+      { description: 'Information about the track or episode.' },
+    ),
   ),
   track: Type.Optional(
-    Type.Union([TrackObjectSchema, EpisodeObjectSchema], {
-      description: '**Deprecated:** Use `item` instead. Information about the track or episode.\n',
-      deprecated: true,
-    }),
+    Type.Union(
+      [
+        Type.Intersect([TrackObjectSchema, Type.Object({ type: Type.Literal('TrackObject') })]),
+        Type.Intersect([EpisodeObjectSchema, Type.Object({ type: Type.Literal('EpisodeObject') })]),
+      ],
+      {
+        description:
+          '**Deprecated:** Use `item` instead. Information about the track or episode.\n',
+        deprecated: true,
+      },
+    ),
   ),
 })
 
@@ -615,14 +626,22 @@ export type PlaylistTrackObject = Static<typeof PlaylistTrackObjectSchema>
 
 export const QueueObjectSchema = Type.Object({
   currently_playing: Type.Optional(
-    Type.Union([TrackObjectSchema, EpisodeObjectSchema], {
-      description: 'The currently playing track or episode. Can be `null`.',
-    }),
+    Type.Union(
+      [
+        Type.Intersect([TrackObjectSchema, Type.Object({ type: Type.Literal('TrackObject') })]),
+        Type.Intersect([EpisodeObjectSchema, Type.Object({ type: Type.Literal('EpisodeObject') })]),
+      ],
+      { description: 'The currently playing track or episode. Can be `null`.' },
+    ),
   ),
   queue: Type.Optional(
-    Type.Array(Type.Union([TrackObjectSchema, EpisodeObjectSchema]), {
-      description: 'The tracks or episodes in the queue. Can be empty.',
-    }),
+    Type.Array(
+      Type.Union([
+        Type.Intersect([TrackObjectSchema, Type.Object({ type: Type.Literal('TrackObject') })]),
+        Type.Intersect([EpisodeObjectSchema, Type.Object({ type: Type.Literal('EpisodeObject') })]),
+      ]),
+      { description: 'The tracks or episodes in the queue. Can be empty.' },
+    ),
   ),
 })
 
@@ -732,9 +751,13 @@ export const CurrentlyPlayingContextObjectSchema = Type.Object({
     Type.Boolean({ description: 'If something is currently playing, return `true`.' }),
   ),
   item: Type.Optional(
-    Type.Union([TrackObjectSchema, EpisodeObjectSchema], {
-      description: 'The currently playing track or episode. Can be `null`.',
-    }),
+    Type.Union(
+      [
+        Type.Intersect([TrackObjectSchema, Type.Object({ type: Type.Literal('TrackObject') })]),
+        Type.Intersect([EpisodeObjectSchema, Type.Object({ type: Type.Literal('EpisodeObject') })]),
+      ],
+      { description: 'The currently playing track or episode. Can be `null`.' },
+    ),
   ),
   currently_playing_type: Type.Optional(
     Type.String({
@@ -1567,6 +1590,7 @@ export const PagingObjectSchema = Type.Object({
     description: 'The total number of items available to return.\n',
     examples: [4],
   }),
+  items: Type.Unknown(),
 })
 
 export type PagingObject = Static<typeof PagingObjectSchema>
@@ -2208,9 +2232,13 @@ export const CurrentlyPlayingObjectSchema = Type.Object({
     Type.Boolean({ description: 'If something is currently playing, return `true`.' }),
   ),
   item: Type.Optional(
-    Type.Union([TrackObjectSchema, EpisodeObjectSchema], {
-      description: 'The currently playing track or episode. Can be `null`.',
-    }),
+    Type.Union(
+      [
+        Type.Intersect([TrackObjectSchema, Type.Object({ type: Type.Literal('TrackObject') })]),
+        Type.Intersect([EpisodeObjectSchema, Type.Object({ type: Type.Literal('EpisodeObject') })]),
+      ],
+      { description: 'The currently playing track or episode. Can be `null`.' },
+    ),
   ),
   currently_playing_type: Type.Optional(
     Type.String({
@@ -2258,13 +2286,23 @@ export const QueryMarketParamsSchema = Type.String({
   examples: ['ES'],
 })
 export const QueryLimitParamsSchema = Type.Optional(
-  Codec(Type.String({ default: '20' }))
-    .Decode((value) => Number.parseInt(value, 10))
+  Codec(
+    Type.Refine(
+      Type.Refine(
+        Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '20' }),
+        (value) => Number(value) >= 1,
+        () => 'must be >= 1',
+      ),
+      (value) => Number(value) <= 50,
+      () => 'must be <= 50',
+    ),
+  )
+    .Decode((value) => Number(value))
     .Encode((value) => String(value)),
 )
 export const QueryOffsetParamsSchema = Type.Optional(
-  Codec(Type.String({ default: '0' }))
-    .Decode((value) => Number.parseInt(value, 10))
+  Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '0' }))
+    .Decode((value) => Number(value))
     .Encode((value) => String(value)),
 )
 export const QueryAdditionalTypesParamsSchema = Type.String({

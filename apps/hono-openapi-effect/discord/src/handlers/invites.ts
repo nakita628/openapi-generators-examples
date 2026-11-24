@@ -61,7 +61,7 @@ export const invitesHandler = new Hono()
       'query',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          with_counts: Schema.optional(
+          with_counts: Schema.optionalKey(
             Schema.String.check(
               Schema.isPattern(/^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i),
             ).pipe(
@@ -74,9 +74,9 @@ export const invitesHandler = new Hono()
               ),
             ),
           ),
-          guild_scheduled_event_id: Schema.optional(SnowflakeTypeSchema),
-          target_channel_id: Schema.optional(SnowflakeTypeSchema),
-          target_message_id: Schema.optional(SnowflakeTypeSchema),
+          guild_scheduled_event_id: Schema.optionalKey(SnowflakeTypeSchema),
+          target_channel_id: Schema.optionalKey(SnowflakeTypeSchema),
+          target_message_id: Schema.optionalKey(SnowflakeTypeSchema),
         }),
       ),
     ),

@@ -1,8 +1,33 @@
 import { Hono } from 'hono'
 import { describeRoute, resolver, validator } from 'hono-openapi'
-import { Type, Codec } from 'typebox'
+import { Type, Codec, type StaticDecode, type StaticEncode, type TSchema } from 'typebox'
 import { Compile } from 'typebox/compile'
 import { PetSchema, ApiResponseSchema } from '../components'
+
+const toStandardSchemaV1 = <T extends TSchema>(schema: T) => {
+  const validator = Compile(schema)
+  return Object.assign(validator, {
+    '~standard': {
+      version: 1 as const,
+      vendor: 'typebox',
+      validate: (value: unknown) =>
+        validator.Check(value)
+          ? { value: validator.Decode(value) }
+          : {
+              issues: validator.Errors(value).map((error) => ({
+                message: error.message,
+                path: error.instancePath
+                  .split('/')
+                  .slice(1)
+                  .map((key) => key.replaceAll('~1', '/').replaceAll('~0', '~')),
+              })),
+            },
+      types: undefined as
+        | { readonly input: StaticEncode<T>; readonly output: StaticDecode<T> }
+        | undefined,
+    },
+  })
+}
 
 export const petHandler = new Hono()
   .put(
@@ -16,8 +41,8 @@ export const petHandler = new Hono()
         '200': {
           description: 'Successful operation',
           content: {
-            'application/json': { schema: resolver(Compile(PetSchema)) },
-            'application/xml': { schema: resolver(Compile(PetSchema)) },
+            'application/json': { schema: resolver(toStandardSchemaV1(PetSchema)) },
+            'application/xml': { schema: resolver(toStandardSchemaV1(PetSchema)) },
           },
         },
         '400': { description: 'Invalid ID supplied' },
@@ -27,22 +52,22 @@ export const petHandler = new Hono()
       },
       security: [{ petstore_auth: ['write:pets', 'read:pets'] }],
     }),
-    validator('json', Compile(PetSchema)),
+    validator('json', toStandardSchemaV1(PetSchema)),
     validator(
       'form',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           id: Type.Optional(
-            Codec(Type.String())
-              .Decode((value) => Number.parseInt(value, 10))
+            Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+              .Decode((value) => Number(value))
               .Encode((value) => String(value)),
           ),
           name: Type.String({ examples: ['doggie'] }),
           category: Type.Optional(
             Type.Object({
               id: Type.Optional(
-                Codec(Type.String())
-                  .Decode((value) => Number.parseInt(value, 10))
+                Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+                  .Decode((value) => Number(value))
                   .Encode((value) => String(value)),
               ),
               name: Type.Optional(Type.String({ examples: ['Dogs'] })),
@@ -53,8 +78,8 @@ export const petHandler = new Hono()
             Type.Array(
               Type.Object({
                 id: Type.Optional(
-                  Codec(Type.String())
-                    .Decode((value) => Number.parseInt(value, 10))
+                  Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+                    .Decode((value) => Number(value))
                     .Encode((value) => String(value)),
                 ),
                 name: Type.Optional(Type.String()),
@@ -82,8 +107,8 @@ export const petHandler = new Hono()
         '200': {
           description: 'Successful operation',
           content: {
-            'application/json': { schema: resolver(Compile(PetSchema)) },
-            'application/xml': { schema: resolver(Compile(PetSchema)) },
+            'application/json': { schema: resolver(toStandardSchemaV1(PetSchema)) },
+            'application/xml': { schema: resolver(toStandardSchemaV1(PetSchema)) },
           },
         },
         '400': { description: 'Invalid input' },
@@ -92,22 +117,22 @@ export const petHandler = new Hono()
       },
       security: [{ petstore_auth: ['write:pets', 'read:pets'] }],
     }),
-    validator('json', Compile(PetSchema)),
+    validator('json', toStandardSchemaV1(PetSchema)),
     validator(
       'form',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           id: Type.Optional(
-            Codec(Type.String())
-              .Decode((value) => Number.parseInt(value, 10))
+            Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+              .Decode((value) => Number(value))
               .Encode((value) => String(value)),
           ),
           name: Type.String({ examples: ['doggie'] }),
           category: Type.Optional(
             Type.Object({
               id: Type.Optional(
-                Codec(Type.String())
-                  .Decode((value) => Number.parseInt(value, 10))
+                Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+                  .Decode((value) => Number(value))
                   .Encode((value) => String(value)),
               ),
               name: Type.Optional(Type.String({ examples: ['Dogs'] })),
@@ -118,8 +143,8 @@ export const petHandler = new Hono()
             Type.Array(
               Type.Object({
                 id: Type.Optional(
-                  Codec(Type.String())
-                    .Decode((value) => Number.parseInt(value, 10))
+                  Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+                    .Decode((value) => Number(value))
                     .Encode((value) => String(value)),
                 ),
                 name: Type.Optional(Type.String()),
@@ -147,8 +172,8 @@ export const petHandler = new Hono()
         '200': {
           description: 'successful operation',
           content: {
-            'application/json': { schema: resolver(Compile(Type.Array(PetSchema))) },
-            'application/xml': { schema: resolver(Compile(Type.Array(PetSchema))) },
+            'application/json': { schema: resolver(toStandardSchemaV1(Type.Array(PetSchema))) },
+            'application/xml': { schema: resolver(toStandardSchemaV1(Type.Array(PetSchema))) },
           },
         },
         '400': { description: 'Invalid status value' },
@@ -158,7 +183,7 @@ export const petHandler = new Hono()
     }),
     validator(
       'query',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           status: Type.Optional(
             Type.Union([Type.Literal('available'), Type.Literal('pending'), Type.Literal('sold')], {
@@ -182,8 +207,8 @@ export const petHandler = new Hono()
         '200': {
           description: 'successful operation',
           content: {
-            'application/json': { schema: resolver(Compile(Type.Array(PetSchema))) },
-            'application/xml': { schema: resolver(Compile(Type.Array(PetSchema))) },
+            'application/json': { schema: resolver(toStandardSchemaV1(Type.Array(PetSchema))) },
+            'application/xml': { schema: resolver(toStandardSchemaV1(Type.Array(PetSchema))) },
           },
         },
         '400': { description: 'Invalid tag value' },
@@ -191,7 +216,7 @@ export const petHandler = new Hono()
       },
       security: [{ petstore_auth: ['write:pets', 'read:pets'] }],
     }),
-    validator('query', Compile(Type.Object({ tags: Type.Array(Type.String()) }))),
+    validator('query', toStandardSchemaV1(Type.Object({ tags: Type.Array(Type.String()) }))),
     (c) => { throw new Error('Not implemented') },
   )
   .get(
@@ -205,8 +230,8 @@ export const petHandler = new Hono()
         '200': {
           description: 'successful operation',
           content: {
-            'application/json': { schema: resolver(Compile(PetSchema)) },
-            'application/xml': { schema: resolver(Compile(PetSchema)) },
+            'application/json': { schema: resolver(toStandardSchemaV1(PetSchema)) },
+            'application/xml': { schema: resolver(toStandardSchemaV1(PetSchema)) },
           },
         },
         '400': { description: 'Invalid ID supplied' },
@@ -217,10 +242,10 @@ export const petHandler = new Hono()
     }),
     validator(
       'param',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
-          petId: Codec(Type.String())
-            .Decode((value) => Number.parseInt(value, 10))
+          petId: Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+            .Decode((value) => Number(value))
             .Encode((value) => String(value)),
         }),
       ),
@@ -238,8 +263,8 @@ export const petHandler = new Hono()
         '200': {
           description: 'successful operation',
           content: {
-            'application/json': { schema: resolver(Compile(PetSchema)) },
-            'application/xml': { schema: resolver(Compile(PetSchema)) },
+            'application/json': { schema: resolver(toStandardSchemaV1(PetSchema)) },
+            'application/xml': { schema: resolver(toStandardSchemaV1(PetSchema)) },
           },
         },
         '400': { description: 'Invalid input' },
@@ -249,17 +274,17 @@ export const petHandler = new Hono()
     }),
     validator(
       'param',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
-          petId: Codec(Type.String())
-            .Decode((value) => Number.parseInt(value, 10))
+          petId: Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+            .Decode((value) => Number(value))
             .Encode((value) => String(value)),
         }),
       ),
     ),
     validator(
       'query',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({ name: Type.Optional(Type.String()), status: Type.Optional(Type.String()) }),
       ),
     ),
@@ -281,15 +306,15 @@ export const petHandler = new Hono()
     }),
     validator(
       'param',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
-          petId: Codec(Type.String())
-            .Decode((value) => Number.parseInt(value, 10))
+          petId: Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+            .Decode((value) => Number(value))
             .Encode((value) => String(value)),
         }),
       ),
     ),
-    validator('header', Compile(Type.Object({ api_key: Type.Optional(Type.String()) }))),
+    validator('header', toStandardSchemaV1(Type.Object({ api_key: Type.Optional(Type.String()) }))),
     (c) => { throw new Error('Not implemented') },
   )
   .post(
@@ -302,7 +327,9 @@ export const petHandler = new Hono()
       responses: {
         '200': {
           description: 'successful operation',
-          content: { 'application/json': { schema: resolver(Compile(ApiResponseSchema)) } },
+          content: {
+            'application/json': { schema: resolver(toStandardSchemaV1(ApiResponseSchema)) },
+          },
         },
         '400': { description: 'No file uploaded' },
         '404': { description: 'Pet not found' },
@@ -312,14 +339,17 @@ export const petHandler = new Hono()
     }),
     validator(
       'param',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
-          petId: Codec(Type.String())
-            .Decode((value) => Number.parseInt(value, 10))
+          petId: Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+            .Decode((value) => Number(value))
             .Encode((value) => String(value)),
         }),
       ),
     ),
-    validator('query', Compile(Type.Object({ additionalMetadata: Type.Optional(Type.String()) }))),
+    validator(
+      'query',
+      toStandardSchemaV1(Type.Object({ additionalMetadata: Type.Optional(Type.String()) })),
+    ),
     (c) => { throw new Error('Not implemented') },
   )

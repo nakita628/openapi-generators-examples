@@ -8,7 +8,7 @@ export const marketsRouter = t.router({
     .output(
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          markets: Schema.optional(
+          markets: Schema.optionalKey(
             Schema.Array(Schema.String).annotate({ jsonSchemaExamples: [['CA', 'BR', 'IT']] }),
           ),
         }),

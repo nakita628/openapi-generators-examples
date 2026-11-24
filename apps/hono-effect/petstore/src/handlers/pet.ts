@@ -11,7 +11,7 @@ export const petHandler = new Hono()
       'form',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          id: Schema.optional(
+          id: Schema.optionalKey(
             Schema.BigIntFromString.check(
               Schema.isBetweenBigInt({
                 minimum: -9223372036854775808n,
@@ -20,9 +20,9 @@ export const petHandler = new Hono()
             ).annotate({ jsonSchemaExamples: [10] }),
           ),
           name: Schema.String.annotate({ jsonSchemaExamples: ['doggie'] }),
-          category: Schema.optional(
+          category: Schema.optionalKey(
             Schema.Struct({
-              id: Schema.optional(
+              id: Schema.optionalKey(
                 Schema.BigIntFromString.check(
                   Schema.isBetweenBigInt({
                     minimum: -9223372036854775808n,
@@ -30,7 +30,7 @@ export const petHandler = new Hono()
                   }),
                 ).annotate({ jsonSchemaExamples: [1] }),
               ),
-              name: Schema.optional(Schema.String.annotate({ jsonSchemaExamples: ['Dogs'] })),
+              name: Schema.optionalKey(Schema.String.annotate({ jsonSchemaExamples: ['Dogs'] })),
             }),
           ),
           photoUrls: Schema.Unknown.pipe(
@@ -43,7 +43,7 @@ export const petHandler = new Hono()
             ),
             Schema.decodeTo(Schema.Array(Schema.String)),
           ),
-          tags: Schema.optional(
+          tags: Schema.optionalKey(
             Schema.Unknown.pipe(
               Schema.decodeTo(
                 Schema.Unknown,
@@ -56,7 +56,7 @@ export const petHandler = new Hono()
               Schema.decodeTo(
                 Schema.Array(
                   Schema.Struct({
-                    id: Schema.optional(
+                    id: Schema.optionalKey(
                       Schema.BigIntFromString.check(
                         Schema.isBetweenBigInt({
                           minimum: -9223372036854775808n,
@@ -64,13 +64,13 @@ export const petHandler = new Hono()
                         }),
                       ),
                     ),
-                    name: Schema.optional(Schema.String),
+                    name: Schema.optionalKey(Schema.String),
                   }),
                 ),
               ),
             ),
           ),
-          status: Schema.optional(
+          status: Schema.optionalKey(
             Schema.Literals(['available', 'pending', 'sold']).annotate({
               description: 'pet status in the store',
             }),
@@ -87,7 +87,7 @@ export const petHandler = new Hono()
       'form',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          id: Schema.optional(
+          id: Schema.optionalKey(
             Schema.BigIntFromString.check(
               Schema.isBetweenBigInt({
                 minimum: -9223372036854775808n,
@@ -96,9 +96,9 @@ export const petHandler = new Hono()
             ).annotate({ jsonSchemaExamples: [10] }),
           ),
           name: Schema.String.annotate({ jsonSchemaExamples: ['doggie'] }),
-          category: Schema.optional(
+          category: Schema.optionalKey(
             Schema.Struct({
-              id: Schema.optional(
+              id: Schema.optionalKey(
                 Schema.BigIntFromString.check(
                   Schema.isBetweenBigInt({
                     minimum: -9223372036854775808n,
@@ -106,7 +106,7 @@ export const petHandler = new Hono()
                   }),
                 ).annotate({ jsonSchemaExamples: [1] }),
               ),
-              name: Schema.optional(Schema.String.annotate({ jsonSchemaExamples: ['Dogs'] })),
+              name: Schema.optionalKey(Schema.String.annotate({ jsonSchemaExamples: ['Dogs'] })),
             }),
           ),
           photoUrls: Schema.Unknown.pipe(
@@ -119,7 +119,7 @@ export const petHandler = new Hono()
             ),
             Schema.decodeTo(Schema.Array(Schema.String)),
           ),
-          tags: Schema.optional(
+          tags: Schema.optionalKey(
             Schema.Unknown.pipe(
               Schema.decodeTo(
                 Schema.Unknown,
@@ -132,7 +132,7 @@ export const petHandler = new Hono()
               Schema.decodeTo(
                 Schema.Array(
                   Schema.Struct({
-                    id: Schema.optional(
+                    id: Schema.optionalKey(
                       Schema.BigIntFromString.check(
                         Schema.isBetweenBigInt({
                           minimum: -9223372036854775808n,
@@ -140,13 +140,13 @@ export const petHandler = new Hono()
                         }),
                       ),
                     ),
-                    name: Schema.optional(Schema.String),
+                    name: Schema.optionalKey(Schema.String),
                   }),
                 ),
               ),
             ),
           ),
-          status: Schema.optional(
+          status: Schema.optionalKey(
             Schema.Literals(['available', 'pending', 'sold']).annotate({
               description: 'pet status in the store',
             }),
@@ -227,8 +227,8 @@ export const petHandler = new Hono()
       'query',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          name: Schema.optional(Schema.String),
-          status: Schema.optional(Schema.String),
+          name: Schema.optionalKey(Schema.String),
+          status: Schema.optionalKey(Schema.String),
         }),
       ),
     ),
@@ -251,7 +251,7 @@ export const petHandler = new Hono()
     ),
     sValidator(
       'header',
-      Schema.toStandardSchemaV1(Schema.Struct({ api_key: Schema.optional(Schema.String) })),
+      Schema.toStandardSchemaV1(Schema.Struct({ api_key: Schema.optionalKey(Schema.String) })),
     ),
     (c) => { throw new Error('Not implemented') },
   )
@@ -273,7 +273,7 @@ export const petHandler = new Hono()
     sValidator(
       'query',
       Schema.toStandardSchemaV1(
-        Schema.Struct({ additionalMetadata: Schema.optional(Schema.String) }),
+        Schema.Struct({ additionalMetadata: Schema.optionalKey(Schema.String) }),
       ),
     ),
     (c) => { throw new Error('Not implemented') },

@@ -52,7 +52,7 @@ export const organizationHandler = new Hono()
       'query',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          after: Schema.optional(
+          after: Schema.optionalKey(
             Schema.NullOr(Schema.String).annotate({
               description: 'Return keys with IDs that come after this ID in the pagination order.',
             }),
@@ -60,7 +60,17 @@ export const organizationHandler = new Hono()
           order: Schema.Literals(['asc', 'desc'])
             .pipe(Schema.withDecodingDefaultType(Effect.succeed('asc')))
             .annotate({ description: 'Order results by creation time, ascending or descending.' }),
-          limit: Schema.FiniteFromString.check(Schema.isInt())
+          limit: Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+            .pipe(
+              Schema.decodeTo(
+                Schema.Finite,
+                SchemaTransformation.transform({
+                  decode: (input) => Number(input),
+                  encode: (output) => String(output),
+                }),
+              ),
+            )
+            .check(Schema.isInt())
             .pipe(Schema.withDecodingDefaultType(Effect.succeed(20)))
             .annotate({ description: 'Maximum number of keys to return.' }),
         }),
@@ -75,7 +85,7 @@ export const organizationHandler = new Hono()
       Schema.toStandardSchemaV1(
         Schema.Struct({
           name: Schema.String.annotate({ jsonSchemaExamples: ['New Admin Key'] }),
-          expires_in_seconds: Schema.optional(
+          expires_in_seconds: Schema.optionalKey(
             Schema.Number.check(
               Schema.isInt(),
               Schema.isGreaterThanOrEqualTo(1),
@@ -121,35 +131,79 @@ export const organizationHandler = new Hono()
       'query',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          effective_at: Schema.optional(
+          effective_at: Schema.optionalKey(
             Schema.Struct({
-              gt: Schema.optional(
-                Schema.FiniteFromString.check(Schema.isInt()).annotate({
-                  description:
-                    'Return only events whose `effective_at` (Unix seconds) is greater than this value.',
-                }),
+              gt: Schema.optionalKey(
+                Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+                  .pipe(
+                    Schema.decodeTo(
+                      Schema.Finite,
+                      SchemaTransformation.transform({
+                        decode: (input) => Number(input),
+                        encode: (output) => String(output),
+                      }),
+                    ),
+                  )
+                  .check(Schema.isInt())
+                  .annotate({
+                    description:
+                      'Return only events whose `effective_at` (Unix seconds) is greater than this value.',
+                  }),
               ),
-              gte: Schema.optional(
-                Schema.FiniteFromString.check(Schema.isInt()).annotate({
-                  description:
-                    'Return only events whose `effective_at` (Unix seconds) is greater than or equal to this value.',
-                }),
+              gte: Schema.optionalKey(
+                Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+                  .pipe(
+                    Schema.decodeTo(
+                      Schema.Finite,
+                      SchemaTransformation.transform({
+                        decode: (input) => Number(input),
+                        encode: (output) => String(output),
+                      }),
+                    ),
+                  )
+                  .check(Schema.isInt())
+                  .annotate({
+                    description:
+                      'Return only events whose `effective_at` (Unix seconds) is greater than or equal to this value.',
+                  }),
               ),
-              lt: Schema.optional(
-                Schema.FiniteFromString.check(Schema.isInt()).annotate({
-                  description:
-                    'Return only events whose `effective_at` (Unix seconds) is less than this value.',
-                }),
+              lt: Schema.optionalKey(
+                Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+                  .pipe(
+                    Schema.decodeTo(
+                      Schema.Finite,
+                      SchemaTransformation.transform({
+                        decode: (input) => Number(input),
+                        encode: (output) => String(output),
+                      }),
+                    ),
+                  )
+                  .check(Schema.isInt())
+                  .annotate({
+                    description:
+                      'Return only events whose `effective_at` (Unix seconds) is less than this value.',
+                  }),
               ),
-              lte: Schema.optional(
-                Schema.FiniteFromString.check(Schema.isInt()).annotate({
-                  description:
-                    'Return only events whose `effective_at` (Unix seconds) is less than or equal to this value.',
-                }),
+              lte: Schema.optionalKey(
+                Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+                  .pipe(
+                    Schema.decodeTo(
+                      Schema.Finite,
+                      SchemaTransformation.transform({
+                        decode: (input) => Number(input),
+                        encode: (output) => String(output),
+                      }),
+                    ),
+                  )
+                  .check(Schema.isInt())
+                  .annotate({
+                    description:
+                      'Return only events whose `effective_at` (Unix seconds) is less than or equal to this value.',
+                  }),
               ),
             }),
           ),
-          'project_ids[]': Schema.optional(
+          'project_ids[]': Schema.optionalKey(
             Schema.Unknown.pipe(
               Schema.decodeTo(
                 Schema.Unknown,
@@ -162,7 +216,7 @@ export const organizationHandler = new Hono()
               Schema.decodeTo(Schema.Array(Schema.String)),
             ),
           ),
-          'event_types[]': Schema.optional(
+          'event_types[]': Schema.optionalKey(
             Schema.Unknown.pipe(
               Schema.decodeTo(
                 Schema.Unknown,
@@ -175,7 +229,7 @@ export const organizationHandler = new Hono()
               Schema.decodeTo(Schema.Array(AuditLogEventTypeSchema)),
             ),
           ),
-          'actor_ids[]': Schema.optional(
+          'actor_ids[]': Schema.optionalKey(
             Schema.Unknown.pipe(
               Schema.decodeTo(
                 Schema.Unknown,
@@ -188,7 +242,7 @@ export const organizationHandler = new Hono()
               Schema.decodeTo(Schema.Array(Schema.String)),
             ),
           ),
-          'actor_emails[]': Schema.optional(
+          'actor_emails[]': Schema.optionalKey(
             Schema.Unknown.pipe(
               Schema.decodeTo(
                 Schema.Unknown,
@@ -201,7 +255,7 @@ export const organizationHandler = new Hono()
               Schema.decodeTo(Schema.Array(Schema.String)),
             ),
           ),
-          'resource_ids[]': Schema.optional(
+          'resource_ids[]': Schema.optionalKey(
             Schema.Unknown.pipe(
               Schema.decodeTo(
                 Schema.Unknown,
@@ -227,11 +281,20 @@ export const organizationHandler = new Hono()
               ),
             )
             .pipe(Schema.withDecodingDefaultType(Effect.succeed(false))),
-          limit: Schema.FiniteFromString.check(Schema.isInt()).pipe(
-            Schema.withDecodingDefaultType(Effect.succeed(20)),
-          ),
-          after: Schema.optional(Schema.String),
-          before: Schema.optional(Schema.String),
+          limit: Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+            .pipe(
+              Schema.decodeTo(
+                Schema.Finite,
+                SchemaTransformation.transform({
+                  decode: (input) => Number(input),
+                  encode: (output) => String(output),
+                }),
+              ),
+            )
+            .check(Schema.isInt())
+            .pipe(Schema.withDecodingDefaultType(Effect.succeed(20))),
+          after: Schema.optionalKey(Schema.String),
+          before: Schema.optionalKey(Schema.String),
         }),
       ),
     ),
@@ -243,10 +306,19 @@ export const organizationHandler = new Hono()
       'query',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          limit: Schema.FiniteFromString.check(Schema.isInt()).pipe(
-            Schema.withDecodingDefaultType(Effect.succeed(20)),
-          ),
-          after: Schema.optional(Schema.String),
+          limit: Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+            .pipe(
+              Schema.decodeTo(
+                Schema.Finite,
+                SchemaTransformation.transform({
+                  decode: (input) => Number(input),
+                  encode: (output) => String(output),
+                }),
+              ),
+            )
+            .check(Schema.isInt())
+            .pipe(Schema.withDecodingDefaultType(Effect.succeed(20))),
+          after: Schema.optionalKey(Schema.String),
           order: Schema.Literals(['asc', 'desc']).pipe(
             Schema.withDecodingDefaultType(Effect.succeed('desc')),
           ),
@@ -280,7 +352,7 @@ export const organizationHandler = new Hono()
       'query',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          include: Schema.optional(
+          include: Schema.optionalKey(
             Schema.Unknown.pipe(
               Schema.decodeTo(
                 Schema.Unknown,
@@ -321,12 +393,34 @@ export const organizationHandler = new Hono()
       'query',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          start_time: Schema.FiniteFromString.check(Schema.isInt()),
-          end_time: Schema.optional(Schema.FiniteFromString.check(Schema.isInt())),
+          start_time: Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+            .pipe(
+              Schema.decodeTo(
+                Schema.Finite,
+                SchemaTransformation.transform({
+                  decode: (input) => Number(input),
+                  encode: (output) => String(output),
+                }),
+              ),
+            )
+            .check(Schema.isInt()),
+          end_time: Schema.optionalKey(
+            Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+              .pipe(
+                Schema.decodeTo(
+                  Schema.Finite,
+                  SchemaTransformation.transform({
+                    decode: (input) => Number(input),
+                    encode: (output) => String(output),
+                  }),
+                ),
+              )
+              .check(Schema.isInt()),
+          ),
           bucket_width: Schema.Literal('1d').pipe(
             Schema.withDecodingDefaultType(Effect.succeed('1d')),
           ),
-          project_ids: Schema.optional(
+          project_ids: Schema.optionalKey(
             Schema.Unknown.pipe(
               Schema.decodeTo(
                 Schema.Unknown,
@@ -339,7 +433,7 @@ export const organizationHandler = new Hono()
               Schema.decodeTo(Schema.Array(Schema.String)),
             ),
           ),
-          api_key_ids: Schema.optional(
+          api_key_ids: Schema.optionalKey(
             Schema.Unknown.pipe(
               Schema.decodeTo(
                 Schema.Unknown,
@@ -352,7 +446,7 @@ export const organizationHandler = new Hono()
               Schema.decodeTo(Schema.Array(Schema.String)),
             ),
           ),
-          line_items: Schema.optional(
+          line_items: Schema.optionalKey(
             Schema.Unknown.pipe(
               Schema.decodeTo(
                 Schema.Unknown,
@@ -365,7 +459,7 @@ export const organizationHandler = new Hono()
               Schema.decodeTo(Schema.Array(Schema.String)),
             ),
           ),
-          group_by: Schema.optional(
+          group_by: Schema.optionalKey(
             Schema.Unknown.pipe(
               Schema.decodeTo(
                 Schema.Unknown,
@@ -388,10 +482,19 @@ export const organizationHandler = new Hono()
               ),
             ),
           ),
-          limit: Schema.FiniteFromString.check(Schema.isInt()).pipe(
-            Schema.withDecodingDefaultType(Effect.succeed(7)),
-          ),
-          page: Schema.optional(Schema.String),
+          limit: Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+            .pipe(
+              Schema.decodeTo(
+                Schema.Finite,
+                SchemaTransformation.transform({
+                  decode: (input) => Number(input),
+                  encode: (output) => String(output),
+                }),
+              ),
+            )
+            .check(Schema.isInt())
+            .pipe(Schema.withDecodingDefaultType(Effect.succeed(7))),
+          page: Schema.optionalKey(Schema.String),
         }),
       ),
     ),
@@ -409,12 +512,23 @@ export const organizationHandler = new Hono()
       'query',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          limit: Schema.FiniteFromString.check(
-            Schema.isInt(),
-            Schema.isGreaterThanOrEqualTo(0),
-            Schema.isLessThanOrEqualTo(1000),
-          ).pipe(Schema.withDecodingDefaultType(Effect.succeed(100))),
-          after: Schema.optional(Schema.String),
+          limit: Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+            .pipe(
+              Schema.decodeTo(
+                Schema.Finite,
+                SchemaTransformation.transform({
+                  decode: (input) => Number(input),
+                  encode: (output) => String(output),
+                }),
+              ),
+            )
+            .check(
+              Schema.isInt(),
+              Schema.isGreaterThanOrEqualTo(0),
+              Schema.isLessThanOrEqualTo(1000),
+            )
+            .pipe(Schema.withDecodingDefaultType(Effect.succeed(100))),
+          after: Schema.optionalKey(Schema.String),
           order: Schema.Literals(['asc', 'desc']).pipe(
             Schema.withDecodingDefaultType(Effect.succeed('asc')),
           ),
@@ -451,15 +565,25 @@ export const organizationHandler = new Hono()
       'query',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          limit: Schema.optional(
-            Schema.FiniteFromString.check(
-              Schema.isInt(),
-              Schema.isGreaterThanOrEqualTo(0),
-              Schema.isLessThanOrEqualTo(1000),
-            ),
+          limit: Schema.optionalKey(
+            Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+              .pipe(
+                Schema.decodeTo(
+                  Schema.Finite,
+                  SchemaTransformation.transform({
+                    decode: (input) => Number(input),
+                    encode: (output) => String(output),
+                  }),
+                ),
+              )
+              .check(
+                Schema.isInt(),
+                Schema.isGreaterThanOrEqualTo(0),
+                Schema.isLessThanOrEqualTo(1000),
+              ),
           ),
-          after: Schema.optional(Schema.String),
-          order: Schema.optional(Schema.Literals(['asc', 'desc'])),
+          after: Schema.optionalKey(Schema.String),
+          order: Schema.optionalKey(Schema.Literals(['asc', 'desc'])),
         }),
       ),
     ),
@@ -494,12 +618,23 @@ export const organizationHandler = new Hono()
       'query',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          limit: Schema.FiniteFromString.check(
-            Schema.isInt(),
-            Schema.isGreaterThanOrEqualTo(0),
-            Schema.isLessThanOrEqualTo(1000),
-          ).pipe(Schema.withDecodingDefaultType(Effect.succeed(100))),
-          after: Schema.optional(Schema.String),
+          limit: Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+            .pipe(
+              Schema.decodeTo(
+                Schema.Finite,
+                SchemaTransformation.transform({
+                  decode: (input) => Number(input),
+                  encode: (output) => String(output),
+                }),
+              ),
+            )
+            .check(
+              Schema.isInt(),
+              Schema.isGreaterThanOrEqualTo(0),
+              Schema.isLessThanOrEqualTo(1000),
+            )
+            .pipe(Schema.withDecodingDefaultType(Effect.succeed(100))),
+          after: Schema.optionalKey(Schema.String),
           order: Schema.Literals(['asc', 'desc']).pipe(
             Schema.withDecodingDefaultType(Effect.succeed('desc')),
           ),
@@ -536,10 +671,19 @@ export const organizationHandler = new Hono()
       'query',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          limit: Schema.FiniteFromString.check(Schema.isInt()).pipe(
-            Schema.withDecodingDefaultType(Effect.succeed(20)),
-          ),
-          after: Schema.optional(Schema.String),
+          limit: Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+            .pipe(
+              Schema.decodeTo(
+                Schema.Finite,
+                SchemaTransformation.transform({
+                  decode: (input) => Number(input),
+                  encode: (output) => String(output),
+                }),
+              ),
+            )
+            .check(Schema.isInt())
+            .pipe(Schema.withDecodingDefaultType(Effect.succeed(20))),
+          after: Schema.optionalKey(Schema.String),
         }),
       ),
     ),
@@ -566,10 +710,19 @@ export const organizationHandler = new Hono()
       'query',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          limit: Schema.FiniteFromString.check(Schema.isInt()).pipe(
-            Schema.withDecodingDefaultType(Effect.succeed(20)),
-          ),
-          after: Schema.optional(Schema.String),
+          limit: Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+            .pipe(
+              Schema.decodeTo(
+                Schema.Finite,
+                SchemaTransformation.transform({
+                  decode: (input) => Number(input),
+                  encode: (output) => String(output),
+                }),
+              ),
+            )
+            .check(Schema.isInt())
+            .pipe(Schema.withDecodingDefaultType(Effect.succeed(20))),
+          after: Schema.optionalKey(Schema.String),
           include_archived: Schema.String.check(
             Schema.isPattern(/^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i),
           )
@@ -611,11 +764,20 @@ export const organizationHandler = new Hono()
       'query',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          limit: Schema.FiniteFromString.check(Schema.isInt()).pipe(
-            Schema.withDecodingDefaultType(Effect.succeed(20)),
-          ),
-          after: Schema.optional(Schema.String),
-          owner_project_access: Schema.optional(Schema.Literals(['active', 'inactive', 'any'])),
+          limit: Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+            .pipe(
+              Schema.decodeTo(
+                Schema.Finite,
+                SchemaTransformation.transform({
+                  decode: (input) => Number(input),
+                  encode: (output) => String(output),
+                }),
+              ),
+            )
+            .check(Schema.isInt())
+            .pipe(Schema.withDecodingDefaultType(Effect.succeed(20))),
+          after: Schema.optionalKey(Schema.String),
+          owner_project_access: Schema.optionalKey(Schema.Literals(['active', 'inactive', 'any'])),
         }),
       ),
     ),
@@ -664,10 +826,19 @@ export const organizationHandler = new Hono()
       'query',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          limit: Schema.FiniteFromString.check(Schema.isInt()).pipe(
-            Schema.withDecodingDefaultType(Effect.succeed(20)),
-          ),
-          after: Schema.optional(Schema.String),
+          limit: Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+            .pipe(
+              Schema.decodeTo(
+                Schema.Finite,
+                SchemaTransformation.transform({
+                  decode: (input) => Number(input),
+                  encode: (output) => String(output),
+                }),
+              ),
+            )
+            .check(Schema.isInt())
+            .pipe(Schema.withDecodingDefaultType(Effect.succeed(20))),
+          after: Schema.optionalKey(Schema.String),
           order: Schema.Literals(['asc', 'desc']).pipe(
             Schema.withDecodingDefaultType(Effect.succeed('desc')),
           ),
@@ -706,12 +877,23 @@ export const organizationHandler = new Hono()
       'query',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          limit: Schema.FiniteFromString.check(
-            Schema.isInt(),
-            Schema.isGreaterThanOrEqualTo(0),
-            Schema.isLessThanOrEqualTo(100),
-          ).pipe(Schema.withDecodingDefaultType(Effect.succeed(20))),
-          after: Schema.optional(Schema.String),
+          limit: Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+            .pipe(
+              Schema.decodeTo(
+                Schema.Finite,
+                SchemaTransformation.transform({
+                  decode: (input) => Number(input),
+                  encode: (output) => String(output),
+                }),
+              ),
+            )
+            .check(
+              Schema.isInt(),
+              Schema.isGreaterThanOrEqualTo(0),
+              Schema.isLessThanOrEqualTo(100),
+            )
+            .pipe(Schema.withDecodingDefaultType(Effect.succeed(20))),
+          after: Schema.optionalKey(Schema.String),
           order: Schema.Literals(['asc', 'desc']).pipe(
             Schema.withDecodingDefaultType(Effect.succeed('asc')),
           ),
@@ -790,11 +972,20 @@ export const organizationHandler = new Hono()
       'query',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          limit: Schema.FiniteFromString.check(Schema.isInt()).pipe(
-            Schema.withDecodingDefaultType(Effect.succeed(100)),
-          ),
-          after: Schema.optional(Schema.String),
-          before: Schema.optional(Schema.String),
+          limit: Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+            .pipe(
+              Schema.decodeTo(
+                Schema.Finite,
+                SchemaTransformation.transform({
+                  decode: (input) => Number(input),
+                  encode: (output) => String(output),
+                }),
+              ),
+            )
+            .check(Schema.isInt())
+            .pipe(Schema.withDecodingDefaultType(Effect.succeed(100))),
+          after: Schema.optionalKey(Schema.String),
+          before: Schema.optionalKey(Schema.String),
         }),
       ),
     ),
@@ -818,10 +1009,19 @@ export const organizationHandler = new Hono()
       'query',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          limit: Schema.FiniteFromString.check(Schema.isInt()).pipe(
-            Schema.withDecodingDefaultType(Effect.succeed(20)),
-          ),
-          after: Schema.optional(Schema.String),
+          limit: Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+            .pipe(
+              Schema.decodeTo(
+                Schema.Finite,
+                SchemaTransformation.transform({
+                  decode: (input) => Number(input),
+                  encode: (output) => String(output),
+                }),
+              ),
+            )
+            .check(Schema.isInt())
+            .pipe(Schema.withDecodingDefaultType(Effect.succeed(20))),
+          after: Schema.optionalKey(Schema.String),
         }),
       ),
     ),
@@ -871,18 +1071,28 @@ export const organizationHandler = new Hono()
       'query',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          limit: Schema.optional(
-            Schema.FiniteFromString.check(
-              Schema.isInt(),
-              Schema.isGreaterThanOrEqualTo(0),
-              Schema.isLessThanOrEqualTo(100),
-            ),
+          limit: Schema.optionalKey(
+            Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+              .pipe(
+                Schema.decodeTo(
+                  Schema.Finite,
+                  SchemaTransformation.transform({
+                    decode: (input) => Number(input),
+                    encode: (output) => String(output),
+                  }),
+                ),
+              )
+              .check(
+                Schema.isInt(),
+                Schema.isGreaterThanOrEqualTo(0),
+                Schema.isLessThanOrEqualTo(100),
+              ),
           ),
           order: Schema.Literals(['asc', 'desc']).pipe(
             Schema.withDecodingDefaultType(Effect.succeed('asc')),
           ),
-          after: Schema.optional(Schema.String),
-          before: Schema.optional(Schema.String),
+          after: Schema.optionalKey(Schema.String),
+          before: Schema.optionalKey(Schema.String),
         }),
       ),
     ),
@@ -932,10 +1142,19 @@ export const organizationHandler = new Hono()
       'query',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          limit: Schema.FiniteFromString.check(Schema.isInt()).pipe(
-            Schema.withDecodingDefaultType(Effect.succeed(20)),
-          ),
-          after: Schema.optional(Schema.String),
+          limit: Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+            .pipe(
+              Schema.decodeTo(
+                Schema.Finite,
+                SchemaTransformation.transform({
+                  decode: (input) => Number(input),
+                  encode: (output) => String(output),
+                }),
+              ),
+            )
+            .check(Schema.isInt())
+            .pipe(Schema.withDecodingDefaultType(Effect.succeed(20))),
+          after: Schema.optionalKey(Schema.String),
         }),
       ),
     ),
@@ -984,12 +1203,23 @@ export const organizationHandler = new Hono()
       'query',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          limit: Schema.FiniteFromString.check(
-            Schema.isInt(),
-            Schema.isGreaterThanOrEqualTo(0),
-            Schema.isLessThanOrEqualTo(1000),
-          ).pipe(Schema.withDecodingDefaultType(Effect.succeed(1000))),
-          after: Schema.optional(Schema.String),
+          limit: Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+            .pipe(
+              Schema.decodeTo(
+                Schema.Finite,
+                SchemaTransformation.transform({
+                  decode: (input) => Number(input),
+                  encode: (output) => String(output),
+                }),
+              ),
+            )
+            .check(
+              Schema.isInt(),
+              Schema.isGreaterThanOrEqualTo(0),
+              Schema.isLessThanOrEqualTo(1000),
+            )
+            .pipe(Schema.withDecodingDefaultType(Effect.succeed(1000))),
+          after: Schema.optionalKey(Schema.String),
           order: Schema.Literals(['asc', 'desc']).pipe(
             Schema.withDecodingDefaultType(Effect.succeed('asc')),
           ),
@@ -1025,18 +1255,28 @@ export const organizationHandler = new Hono()
       'query',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          limit: Schema.optional(
-            Schema.FiniteFromString.check(
-              Schema.isInt(),
-              Schema.isGreaterThanOrEqualTo(0),
-              Schema.isLessThanOrEqualTo(100),
-            ),
+          limit: Schema.optionalKey(
+            Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+              .pipe(
+                Schema.decodeTo(
+                  Schema.Finite,
+                  SchemaTransformation.transform({
+                    decode: (input) => Number(input),
+                    encode: (output) => String(output),
+                  }),
+                ),
+              )
+              .check(
+                Schema.isInt(),
+                Schema.isGreaterThanOrEqualTo(0),
+                Schema.isLessThanOrEqualTo(100),
+              ),
           ),
           order: Schema.Literals(['asc', 'desc']).pipe(
             Schema.withDecodingDefaultType(Effect.succeed('asc')),
           ),
-          after: Schema.optional(Schema.String),
-          before: Schema.optional(Schema.String),
+          after: Schema.optionalKey(Schema.String),
+          before: Schema.optionalKey(Schema.String),
         }),
       ),
     ),
@@ -1069,12 +1309,34 @@ export const organizationHandler = new Hono()
       'query',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          start_time: Schema.FiniteFromString.check(Schema.isInt()),
-          end_time: Schema.optional(Schema.FiniteFromString.check(Schema.isInt())),
+          start_time: Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+            .pipe(
+              Schema.decodeTo(
+                Schema.Finite,
+                SchemaTransformation.transform({
+                  decode: (input) => Number(input),
+                  encode: (output) => String(output),
+                }),
+              ),
+            )
+            .check(Schema.isInt()),
+          end_time: Schema.optionalKey(
+            Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+              .pipe(
+                Schema.decodeTo(
+                  Schema.Finite,
+                  SchemaTransformation.transform({
+                    decode: (input) => Number(input),
+                    encode: (output) => String(output),
+                  }),
+                ),
+              )
+              .check(Schema.isInt()),
+          ),
           bucket_width: Schema.Literals(['1m', '1h', '1d']).pipe(
             Schema.withDecodingDefaultType(Effect.succeed('1d')),
           ),
-          project_ids: Schema.optional(
+          project_ids: Schema.optionalKey(
             Schema.Unknown.pipe(
               Schema.decodeTo(
                 Schema.Unknown,
@@ -1087,7 +1349,7 @@ export const organizationHandler = new Hono()
               Schema.decodeTo(Schema.Array(Schema.String)),
             ),
           ),
-          user_ids: Schema.optional(
+          user_ids: Schema.optionalKey(
             Schema.Unknown.pipe(
               Schema.decodeTo(
                 Schema.Unknown,
@@ -1100,7 +1362,7 @@ export const organizationHandler = new Hono()
               Schema.decodeTo(Schema.Array(Schema.String)),
             ),
           ),
-          api_key_ids: Schema.optional(
+          api_key_ids: Schema.optionalKey(
             Schema.Unknown.pipe(
               Schema.decodeTo(
                 Schema.Unknown,
@@ -1113,7 +1375,7 @@ export const organizationHandler = new Hono()
               Schema.decodeTo(Schema.Array(Schema.String)),
             ),
           ),
-          models: Schema.optional(
+          models: Schema.optionalKey(
             Schema.Unknown.pipe(
               Schema.decodeTo(
                 Schema.Unknown,
@@ -1126,7 +1388,7 @@ export const organizationHandler = new Hono()
               Schema.decodeTo(Schema.Array(Schema.String)),
             ),
           ),
-          group_by: Schema.optional(
+          group_by: Schema.optionalKey(
             Schema.Unknown.pipe(
               Schema.decodeTo(
                 Schema.Unknown,
@@ -1141,8 +1403,20 @@ export const organizationHandler = new Hono()
               ),
             ),
           ),
-          limit: Schema.optional(Schema.FiniteFromString.check(Schema.isInt())),
-          page: Schema.optional(Schema.String),
+          limit: Schema.optionalKey(
+            Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+              .pipe(
+                Schema.decodeTo(
+                  Schema.Finite,
+                  SchemaTransformation.transform({
+                    decode: (input) => Number(input),
+                    encode: (output) => String(output),
+                  }),
+                ),
+              )
+              .check(Schema.isInt()),
+          ),
+          page: Schema.optionalKey(Schema.String),
         }),
       ),
     ),
@@ -1154,12 +1428,34 @@ export const organizationHandler = new Hono()
       'query',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          start_time: Schema.FiniteFromString.check(Schema.isInt()),
-          end_time: Schema.optional(Schema.FiniteFromString.check(Schema.isInt())),
+          start_time: Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+            .pipe(
+              Schema.decodeTo(
+                Schema.Finite,
+                SchemaTransformation.transform({
+                  decode: (input) => Number(input),
+                  encode: (output) => String(output),
+                }),
+              ),
+            )
+            .check(Schema.isInt()),
+          end_time: Schema.optionalKey(
+            Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+              .pipe(
+                Schema.decodeTo(
+                  Schema.Finite,
+                  SchemaTransformation.transform({
+                    decode: (input) => Number(input),
+                    encode: (output) => String(output),
+                  }),
+                ),
+              )
+              .check(Schema.isInt()),
+          ),
           bucket_width: Schema.Literals(['1m', '1h', '1d']).pipe(
             Schema.withDecodingDefaultType(Effect.succeed('1d')),
           ),
-          project_ids: Schema.optional(
+          project_ids: Schema.optionalKey(
             Schema.Unknown.pipe(
               Schema.decodeTo(
                 Schema.Unknown,
@@ -1172,7 +1468,7 @@ export const organizationHandler = new Hono()
               Schema.decodeTo(Schema.Array(Schema.String)),
             ),
           ),
-          user_ids: Schema.optional(
+          user_ids: Schema.optionalKey(
             Schema.Unknown.pipe(
               Schema.decodeTo(
                 Schema.Unknown,
@@ -1185,7 +1481,7 @@ export const organizationHandler = new Hono()
               Schema.decodeTo(Schema.Array(Schema.String)),
             ),
           ),
-          api_key_ids: Schema.optional(
+          api_key_ids: Schema.optionalKey(
             Schema.Unknown.pipe(
               Schema.decodeTo(
                 Schema.Unknown,
@@ -1198,7 +1494,7 @@ export const organizationHandler = new Hono()
               Schema.decodeTo(Schema.Array(Schema.String)),
             ),
           ),
-          models: Schema.optional(
+          models: Schema.optionalKey(
             Schema.Unknown.pipe(
               Schema.decodeTo(
                 Schema.Unknown,
@@ -1211,7 +1507,7 @@ export const organizationHandler = new Hono()
               Schema.decodeTo(Schema.Array(Schema.String)),
             ),
           ),
-          group_by: Schema.optional(
+          group_by: Schema.optionalKey(
             Schema.Unknown.pipe(
               Schema.decodeTo(
                 Schema.Unknown,
@@ -1226,8 +1522,20 @@ export const organizationHandler = new Hono()
               ),
             ),
           ),
-          limit: Schema.optional(Schema.FiniteFromString.check(Schema.isInt())),
-          page: Schema.optional(Schema.String),
+          limit: Schema.optionalKey(
+            Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+              .pipe(
+                Schema.decodeTo(
+                  Schema.Finite,
+                  SchemaTransformation.transform({
+                    decode: (input) => Number(input),
+                    encode: (output) => String(output),
+                  }),
+                ),
+              )
+              .check(Schema.isInt()),
+          ),
+          page: Schema.optionalKey(Schema.String),
         }),
       ),
     ),
@@ -1239,12 +1547,34 @@ export const organizationHandler = new Hono()
       'query',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          start_time: Schema.FiniteFromString.check(Schema.isInt()),
-          end_time: Schema.optional(Schema.FiniteFromString.check(Schema.isInt())),
+          start_time: Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+            .pipe(
+              Schema.decodeTo(
+                Schema.Finite,
+                SchemaTransformation.transform({
+                  decode: (input) => Number(input),
+                  encode: (output) => String(output),
+                }),
+              ),
+            )
+            .check(Schema.isInt()),
+          end_time: Schema.optionalKey(
+            Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+              .pipe(
+                Schema.decodeTo(
+                  Schema.Finite,
+                  SchemaTransformation.transform({
+                    decode: (input) => Number(input),
+                    encode: (output) => String(output),
+                  }),
+                ),
+              )
+              .check(Schema.isInt()),
+          ),
           bucket_width: Schema.Literals(['1m', '1h', '1d']).pipe(
             Schema.withDecodingDefaultType(Effect.succeed('1d')),
           ),
-          project_ids: Schema.optional(
+          project_ids: Schema.optionalKey(
             Schema.Unknown.pipe(
               Schema.decodeTo(
                 Schema.Unknown,
@@ -1257,7 +1587,7 @@ export const organizationHandler = new Hono()
               Schema.decodeTo(Schema.Array(Schema.String)),
             ),
           ),
-          group_by: Schema.optional(
+          group_by: Schema.optionalKey(
             Schema.Unknown.pipe(
               Schema.decodeTo(
                 Schema.Unknown,
@@ -1270,8 +1600,20 @@ export const organizationHandler = new Hono()
               Schema.decodeTo(Schema.Array(Schema.Literal('project_id'))),
             ),
           ),
-          limit: Schema.optional(Schema.FiniteFromString.check(Schema.isInt())),
-          page: Schema.optional(Schema.String),
+          limit: Schema.optionalKey(
+            Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+              .pipe(
+                Schema.decodeTo(
+                  Schema.Finite,
+                  SchemaTransformation.transform({
+                    decode: (input) => Number(input),
+                    encode: (output) => String(output),
+                  }),
+                ),
+              )
+              .check(Schema.isInt()),
+          ),
+          page: Schema.optionalKey(Schema.String),
         }),
       ),
     ),
@@ -1283,12 +1625,34 @@ export const organizationHandler = new Hono()
       'query',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          start_time: Schema.FiniteFromString.check(Schema.isInt()),
-          end_time: Schema.optional(Schema.FiniteFromString.check(Schema.isInt())),
+          start_time: Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+            .pipe(
+              Schema.decodeTo(
+                Schema.Finite,
+                SchemaTransformation.transform({
+                  decode: (input) => Number(input),
+                  encode: (output) => String(output),
+                }),
+              ),
+            )
+            .check(Schema.isInt()),
+          end_time: Schema.optionalKey(
+            Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+              .pipe(
+                Schema.decodeTo(
+                  Schema.Finite,
+                  SchemaTransformation.transform({
+                    decode: (input) => Number(input),
+                    encode: (output) => String(output),
+                  }),
+                ),
+              )
+              .check(Schema.isInt()),
+          ),
           bucket_width: Schema.Literals(['1m', '1h', '1d']).pipe(
             Schema.withDecodingDefaultType(Effect.succeed('1d')),
           ),
-          project_ids: Schema.optional(
+          project_ids: Schema.optionalKey(
             Schema.Unknown.pipe(
               Schema.decodeTo(
                 Schema.Unknown,
@@ -1301,7 +1665,7 @@ export const organizationHandler = new Hono()
               Schema.decodeTo(Schema.Array(Schema.String)),
             ),
           ),
-          user_ids: Schema.optional(
+          user_ids: Schema.optionalKey(
             Schema.Unknown.pipe(
               Schema.decodeTo(
                 Schema.Unknown,
@@ -1314,7 +1678,7 @@ export const organizationHandler = new Hono()
               Schema.decodeTo(Schema.Array(Schema.String)),
             ),
           ),
-          api_key_ids: Schema.optional(
+          api_key_ids: Schema.optionalKey(
             Schema.Unknown.pipe(
               Schema.decodeTo(
                 Schema.Unknown,
@@ -1327,7 +1691,7 @@ export const organizationHandler = new Hono()
               Schema.decodeTo(Schema.Array(Schema.String)),
             ),
           ),
-          models: Schema.optional(
+          models: Schema.optionalKey(
             Schema.Unknown.pipe(
               Schema.decodeTo(
                 Schema.Unknown,
@@ -1340,7 +1704,7 @@ export const organizationHandler = new Hono()
               Schema.decodeTo(Schema.Array(Schema.String)),
             ),
           ),
-          batch: Schema.optional(
+          batch: Schema.optionalKey(
             Schema.String.check(
               Schema.isPattern(/^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i),
             ).pipe(
@@ -1353,7 +1717,7 @@ export const organizationHandler = new Hono()
               ),
             ),
           ),
-          group_by: Schema.optional(
+          group_by: Schema.optionalKey(
             Schema.Unknown.pipe(
               Schema.decodeTo(
                 Schema.Unknown,
@@ -1378,8 +1742,20 @@ export const organizationHandler = new Hono()
               ),
             ),
           ),
-          limit: Schema.optional(Schema.FiniteFromString.check(Schema.isInt())),
-          page: Schema.optional(Schema.String),
+          limit: Schema.optionalKey(
+            Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+              .pipe(
+                Schema.decodeTo(
+                  Schema.Finite,
+                  SchemaTransformation.transform({
+                    decode: (input) => Number(input),
+                    encode: (output) => String(output),
+                  }),
+                ),
+              )
+              .check(Schema.isInt()),
+          ),
+          page: Schema.optionalKey(Schema.String),
         }),
       ),
     ),
@@ -1391,12 +1767,34 @@ export const organizationHandler = new Hono()
       'query',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          start_time: Schema.FiniteFromString.check(Schema.isInt()),
-          end_time: Schema.optional(Schema.FiniteFromString.check(Schema.isInt())),
+          start_time: Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+            .pipe(
+              Schema.decodeTo(
+                Schema.Finite,
+                SchemaTransformation.transform({
+                  decode: (input) => Number(input),
+                  encode: (output) => String(output),
+                }),
+              ),
+            )
+            .check(Schema.isInt()),
+          end_time: Schema.optionalKey(
+            Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+              .pipe(
+                Schema.decodeTo(
+                  Schema.Finite,
+                  SchemaTransformation.transform({
+                    decode: (input) => Number(input),
+                    encode: (output) => String(output),
+                  }),
+                ),
+              )
+              .check(Schema.isInt()),
+          ),
           bucket_width: Schema.Literals(['1m', '1h', '1d']).pipe(
             Schema.withDecodingDefaultType(Effect.succeed('1d')),
           ),
-          project_ids: Schema.optional(
+          project_ids: Schema.optionalKey(
             Schema.Unknown.pipe(
               Schema.decodeTo(
                 Schema.Unknown,
@@ -1409,7 +1807,7 @@ export const organizationHandler = new Hono()
               Schema.decodeTo(Schema.Array(Schema.String)),
             ),
           ),
-          user_ids: Schema.optional(
+          user_ids: Schema.optionalKey(
             Schema.Unknown.pipe(
               Schema.decodeTo(
                 Schema.Unknown,
@@ -1422,7 +1820,7 @@ export const organizationHandler = new Hono()
               Schema.decodeTo(Schema.Array(Schema.String)),
             ),
           ),
-          api_key_ids: Schema.optional(
+          api_key_ids: Schema.optionalKey(
             Schema.Unknown.pipe(
               Schema.decodeTo(
                 Schema.Unknown,
@@ -1435,7 +1833,7 @@ export const organizationHandler = new Hono()
               Schema.decodeTo(Schema.Array(Schema.String)),
             ),
           ),
-          models: Schema.optional(
+          models: Schema.optionalKey(
             Schema.Unknown.pipe(
               Schema.decodeTo(
                 Schema.Unknown,
@@ -1448,7 +1846,7 @@ export const organizationHandler = new Hono()
               Schema.decodeTo(Schema.Array(Schema.String)),
             ),
           ),
-          group_by: Schema.optional(
+          group_by: Schema.optionalKey(
             Schema.Unknown.pipe(
               Schema.decodeTo(
                 Schema.Unknown,
@@ -1463,8 +1861,20 @@ export const organizationHandler = new Hono()
               ),
             ),
           ),
-          limit: Schema.optional(Schema.FiniteFromString.check(Schema.isInt())),
-          page: Schema.optional(Schema.String),
+          limit: Schema.optionalKey(
+            Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+              .pipe(
+                Schema.decodeTo(
+                  Schema.Finite,
+                  SchemaTransformation.transform({
+                    decode: (input) => Number(input),
+                    encode: (output) => String(output),
+                  }),
+                ),
+              )
+              .check(Schema.isInt()),
+          ),
+          page: Schema.optionalKey(Schema.String),
         }),
       ),
     ),
@@ -1476,12 +1886,34 @@ export const organizationHandler = new Hono()
       'query',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          start_time: Schema.FiniteFromString.check(Schema.isInt()),
-          end_time: Schema.optional(Schema.FiniteFromString.check(Schema.isInt())),
+          start_time: Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+            .pipe(
+              Schema.decodeTo(
+                Schema.Finite,
+                SchemaTransformation.transform({
+                  decode: (input) => Number(input),
+                  encode: (output) => String(output),
+                }),
+              ),
+            )
+            .check(Schema.isInt()),
+          end_time: Schema.optionalKey(
+            Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+              .pipe(
+                Schema.decodeTo(
+                  Schema.Finite,
+                  SchemaTransformation.transform({
+                    decode: (input) => Number(input),
+                    encode: (output) => String(output),
+                  }),
+                ),
+              )
+              .check(Schema.isInt()),
+          ),
           bucket_width: Schema.Literals(['1m', '1h', '1d']).pipe(
             Schema.withDecodingDefaultType(Effect.succeed('1d')),
           ),
-          project_ids: Schema.optional(
+          project_ids: Schema.optionalKey(
             Schema.Unknown.pipe(
               Schema.decodeTo(
                 Schema.Unknown,
@@ -1494,7 +1926,7 @@ export const organizationHandler = new Hono()
               Schema.decodeTo(Schema.Array(Schema.String)),
             ),
           ),
-          user_ids: Schema.optional(
+          user_ids: Schema.optionalKey(
             Schema.Unknown.pipe(
               Schema.decodeTo(
                 Schema.Unknown,
@@ -1507,7 +1939,7 @@ export const organizationHandler = new Hono()
               Schema.decodeTo(Schema.Array(Schema.String)),
             ),
           ),
-          api_key_ids: Schema.optional(
+          api_key_ids: Schema.optionalKey(
             Schema.Unknown.pipe(
               Schema.decodeTo(
                 Schema.Unknown,
@@ -1520,7 +1952,7 @@ export const organizationHandler = new Hono()
               Schema.decodeTo(Schema.Array(Schema.String)),
             ),
           ),
-          vector_store_ids: Schema.optional(
+          vector_store_ids: Schema.optionalKey(
             Schema.Unknown.pipe(
               Schema.decodeTo(
                 Schema.Unknown,
@@ -1533,7 +1965,7 @@ export const organizationHandler = new Hono()
               Schema.decodeTo(Schema.Array(Schema.String)),
             ),
           ),
-          group_by: Schema.optional(
+          group_by: Schema.optionalKey(
             Schema.Unknown.pipe(
               Schema.decodeTo(
                 Schema.Unknown,
@@ -1550,8 +1982,20 @@ export const organizationHandler = new Hono()
               ),
             ),
           ),
-          limit: Schema.optional(Schema.FiniteFromString.check(Schema.isInt())),
-          page: Schema.optional(Schema.String),
+          limit: Schema.optionalKey(
+            Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+              .pipe(
+                Schema.decodeTo(
+                  Schema.Finite,
+                  SchemaTransformation.transform({
+                    decode: (input) => Number(input),
+                    encode: (output) => String(output),
+                  }),
+                ),
+              )
+              .check(Schema.isInt()),
+          ),
+          page: Schema.optionalKey(Schema.String),
         }),
       ),
     ),
@@ -1563,12 +2007,34 @@ export const organizationHandler = new Hono()
       'query',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          start_time: Schema.FiniteFromString.check(Schema.isInt()),
-          end_time: Schema.optional(Schema.FiniteFromString.check(Schema.isInt())),
+          start_time: Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+            .pipe(
+              Schema.decodeTo(
+                Schema.Finite,
+                SchemaTransformation.transform({
+                  decode: (input) => Number(input),
+                  encode: (output) => String(output),
+                }),
+              ),
+            )
+            .check(Schema.isInt()),
+          end_time: Schema.optionalKey(
+            Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+              .pipe(
+                Schema.decodeTo(
+                  Schema.Finite,
+                  SchemaTransformation.transform({
+                    decode: (input) => Number(input),
+                    encode: (output) => String(output),
+                  }),
+                ),
+              )
+              .check(Schema.isInt()),
+          ),
           bucket_width: Schema.Literals(['1m', '1h', '1d']).pipe(
             Schema.withDecodingDefaultType(Effect.succeed('1d')),
           ),
-          sources: Schema.optional(
+          sources: Schema.optionalKey(
             Schema.Unknown.pipe(
               Schema.decodeTo(
                 Schema.Unknown,
@@ -1585,7 +2051,7 @@ export const organizationHandler = new Hono()
               ),
             ),
           ),
-          sizes: Schema.optional(
+          sizes: Schema.optionalKey(
             Schema.Unknown.pipe(
               Schema.decodeTo(
                 Schema.Unknown,
@@ -1602,7 +2068,7 @@ export const organizationHandler = new Hono()
               ),
             ),
           ),
-          project_ids: Schema.optional(
+          project_ids: Schema.optionalKey(
             Schema.Unknown.pipe(
               Schema.decodeTo(
                 Schema.Unknown,
@@ -1615,7 +2081,7 @@ export const organizationHandler = new Hono()
               Schema.decodeTo(Schema.Array(Schema.String)),
             ),
           ),
-          user_ids: Schema.optional(
+          user_ids: Schema.optionalKey(
             Schema.Unknown.pipe(
               Schema.decodeTo(
                 Schema.Unknown,
@@ -1628,7 +2094,7 @@ export const organizationHandler = new Hono()
               Schema.decodeTo(Schema.Array(Schema.String)),
             ),
           ),
-          api_key_ids: Schema.optional(
+          api_key_ids: Schema.optionalKey(
             Schema.Unknown.pipe(
               Schema.decodeTo(
                 Schema.Unknown,
@@ -1641,7 +2107,7 @@ export const organizationHandler = new Hono()
               Schema.decodeTo(Schema.Array(Schema.String)),
             ),
           ),
-          models: Schema.optional(
+          models: Schema.optionalKey(
             Schema.Unknown.pipe(
               Schema.decodeTo(
                 Schema.Unknown,
@@ -1654,7 +2120,7 @@ export const organizationHandler = new Hono()
               Schema.decodeTo(Schema.Array(Schema.String)),
             ),
           ),
-          group_by: Schema.optional(
+          group_by: Schema.optionalKey(
             Schema.Unknown.pipe(
               Schema.decodeTo(
                 Schema.Unknown,
@@ -1678,8 +2144,20 @@ export const organizationHandler = new Hono()
               ),
             ),
           ),
-          limit: Schema.optional(Schema.FiniteFromString.check(Schema.isInt())),
-          page: Schema.optional(Schema.String),
+          limit: Schema.optionalKey(
+            Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+              .pipe(
+                Schema.decodeTo(
+                  Schema.Finite,
+                  SchemaTransformation.transform({
+                    decode: (input) => Number(input),
+                    encode: (output) => String(output),
+                  }),
+                ),
+              )
+              .check(Schema.isInt()),
+          ),
+          page: Schema.optionalKey(Schema.String),
         }),
       ),
     ),
@@ -1691,12 +2169,34 @@ export const organizationHandler = new Hono()
       'query',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          start_time: Schema.FiniteFromString.check(Schema.isInt()),
-          end_time: Schema.optional(Schema.FiniteFromString.check(Schema.isInt())),
+          start_time: Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+            .pipe(
+              Schema.decodeTo(
+                Schema.Finite,
+                SchemaTransformation.transform({
+                  decode: (input) => Number(input),
+                  encode: (output) => String(output),
+                }),
+              ),
+            )
+            .check(Schema.isInt()),
+          end_time: Schema.optionalKey(
+            Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+              .pipe(
+                Schema.decodeTo(
+                  Schema.Finite,
+                  SchemaTransformation.transform({
+                    decode: (input) => Number(input),
+                    encode: (output) => String(output),
+                  }),
+                ),
+              )
+              .check(Schema.isInt()),
+          ),
           bucket_width: Schema.Literals(['1m', '1h', '1d']).pipe(
             Schema.withDecodingDefaultType(Effect.succeed('1d')),
           ),
-          project_ids: Schema.optional(
+          project_ids: Schema.optionalKey(
             Schema.Unknown.pipe(
               Schema.decodeTo(
                 Schema.Unknown,
@@ -1709,7 +2209,7 @@ export const organizationHandler = new Hono()
               Schema.decodeTo(Schema.Array(Schema.String)),
             ),
           ),
-          user_ids: Schema.optional(
+          user_ids: Schema.optionalKey(
             Schema.Unknown.pipe(
               Schema.decodeTo(
                 Schema.Unknown,
@@ -1722,7 +2222,7 @@ export const organizationHandler = new Hono()
               Schema.decodeTo(Schema.Array(Schema.String)),
             ),
           ),
-          api_key_ids: Schema.optional(
+          api_key_ids: Schema.optionalKey(
             Schema.Unknown.pipe(
               Schema.decodeTo(
                 Schema.Unknown,
@@ -1735,7 +2235,7 @@ export const organizationHandler = new Hono()
               Schema.decodeTo(Schema.Array(Schema.String)),
             ),
           ),
-          models: Schema.optional(
+          models: Schema.optionalKey(
             Schema.Unknown.pipe(
               Schema.decodeTo(
                 Schema.Unknown,
@@ -1748,7 +2248,7 @@ export const organizationHandler = new Hono()
               Schema.decodeTo(Schema.Array(Schema.String)),
             ),
           ),
-          group_by: Schema.optional(
+          group_by: Schema.optionalKey(
             Schema.Unknown.pipe(
               Schema.decodeTo(
                 Schema.Unknown,
@@ -1763,8 +2263,20 @@ export const organizationHandler = new Hono()
               ),
             ),
           ),
-          limit: Schema.optional(Schema.FiniteFromString.check(Schema.isInt())),
-          page: Schema.optional(Schema.String),
+          limit: Schema.optionalKey(
+            Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+              .pipe(
+                Schema.decodeTo(
+                  Schema.Finite,
+                  SchemaTransformation.transform({
+                    decode: (input) => Number(input),
+                    encode: (output) => String(output),
+                  }),
+                ),
+              )
+              .check(Schema.isInt()),
+          ),
+          page: Schema.optionalKey(Schema.String),
         }),
       ),
     ),
@@ -1776,12 +2288,34 @@ export const organizationHandler = new Hono()
       'query',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          start_time: Schema.FiniteFromString.check(Schema.isInt()),
-          end_time: Schema.optional(Schema.FiniteFromString.check(Schema.isInt())),
+          start_time: Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+            .pipe(
+              Schema.decodeTo(
+                Schema.Finite,
+                SchemaTransformation.transform({
+                  decode: (input) => Number(input),
+                  encode: (output) => String(output),
+                }),
+              ),
+            )
+            .check(Schema.isInt()),
+          end_time: Schema.optionalKey(
+            Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+              .pipe(
+                Schema.decodeTo(
+                  Schema.Finite,
+                  SchemaTransformation.transform({
+                    decode: (input) => Number(input),
+                    encode: (output) => String(output),
+                  }),
+                ),
+              )
+              .check(Schema.isInt()),
+          ),
           bucket_width: Schema.Literals(['1m', '1h', '1d']).pipe(
             Schema.withDecodingDefaultType(Effect.succeed('1d')),
           ),
-          project_ids: Schema.optional(
+          project_ids: Schema.optionalKey(
             Schema.Unknown.pipe(
               Schema.decodeTo(
                 Schema.Unknown,
@@ -1794,7 +2328,7 @@ export const organizationHandler = new Hono()
               Schema.decodeTo(Schema.Array(Schema.String)),
             ),
           ),
-          group_by: Schema.optional(
+          group_by: Schema.optionalKey(
             Schema.Unknown.pipe(
               Schema.decodeTo(
                 Schema.Unknown,
@@ -1807,8 +2341,20 @@ export const organizationHandler = new Hono()
               Schema.decodeTo(Schema.Array(Schema.Literal('project_id'))),
             ),
           ),
-          limit: Schema.optional(Schema.FiniteFromString.check(Schema.isInt())),
-          page: Schema.optional(Schema.String),
+          limit: Schema.optionalKey(
+            Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+              .pipe(
+                Schema.decodeTo(
+                  Schema.Finite,
+                  SchemaTransformation.transform({
+                    decode: (input) => Number(input),
+                    encode: (output) => String(output),
+                  }),
+                ),
+              )
+              .check(Schema.isInt()),
+          ),
+          page: Schema.optionalKey(Schema.String),
         }),
       ),
     ),
@@ -1820,12 +2366,34 @@ export const organizationHandler = new Hono()
       'query',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          start_time: Schema.FiniteFromString.check(Schema.isInt()),
-          end_time: Schema.optional(Schema.FiniteFromString.check(Schema.isInt())),
+          start_time: Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+            .pipe(
+              Schema.decodeTo(
+                Schema.Finite,
+                SchemaTransformation.transform({
+                  decode: (input) => Number(input),
+                  encode: (output) => String(output),
+                }),
+              ),
+            )
+            .check(Schema.isInt()),
+          end_time: Schema.optionalKey(
+            Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+              .pipe(
+                Schema.decodeTo(
+                  Schema.Finite,
+                  SchemaTransformation.transform({
+                    decode: (input) => Number(input),
+                    encode: (output) => String(output),
+                  }),
+                ),
+              )
+              .check(Schema.isInt()),
+          ),
           bucket_width: Schema.Literals(['1m', '1h', '1d']).pipe(
             Schema.withDecodingDefaultType(Effect.succeed('1d')),
           ),
-          project_ids: Schema.optional(
+          project_ids: Schema.optionalKey(
             Schema.Unknown.pipe(
               Schema.decodeTo(
                 Schema.Unknown,
@@ -1838,7 +2406,7 @@ export const organizationHandler = new Hono()
               Schema.decodeTo(Schema.Array(Schema.String)),
             ),
           ),
-          user_ids: Schema.optional(
+          user_ids: Schema.optionalKey(
             Schema.Unknown.pipe(
               Schema.decodeTo(
                 Schema.Unknown,
@@ -1851,7 +2419,7 @@ export const organizationHandler = new Hono()
               Schema.decodeTo(Schema.Array(Schema.String)),
             ),
           ),
-          api_key_ids: Schema.optional(
+          api_key_ids: Schema.optionalKey(
             Schema.Unknown.pipe(
               Schema.decodeTo(
                 Schema.Unknown,
@@ -1864,7 +2432,7 @@ export const organizationHandler = new Hono()
               Schema.decodeTo(Schema.Array(Schema.String)),
             ),
           ),
-          models: Schema.optional(
+          models: Schema.optionalKey(
             Schema.Unknown.pipe(
               Schema.decodeTo(
                 Schema.Unknown,
@@ -1877,7 +2445,7 @@ export const organizationHandler = new Hono()
               Schema.decodeTo(Schema.Array(Schema.String)),
             ),
           ),
-          context_levels: Schema.optional(
+          context_levels: Schema.optionalKey(
             Schema.Unknown.pipe(
               Schema.decodeTo(
                 Schema.Unknown,
@@ -1890,7 +2458,7 @@ export const organizationHandler = new Hono()
               Schema.decodeTo(Schema.Array(Schema.Literals(['low', 'medium', 'high']))),
             ),
           ),
-          group_by: Schema.optional(
+          group_by: Schema.optionalKey(
             Schema.Unknown.pipe(
               Schema.decodeTo(
                 Schema.Unknown,
@@ -1914,8 +2482,20 @@ export const organizationHandler = new Hono()
               ),
             ),
           ),
-          limit: Schema.optional(Schema.FiniteFromString.check(Schema.isInt())),
-          page: Schema.optional(Schema.String),
+          limit: Schema.optionalKey(
+            Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+              .pipe(
+                Schema.decodeTo(
+                  Schema.Finite,
+                  SchemaTransformation.transform({
+                    decode: (input) => Number(input),
+                    encode: (output) => String(output),
+                  }),
+                ),
+              )
+              .check(Schema.isInt()),
+          ),
+          page: Schema.optionalKey(Schema.String),
         }),
       ),
     ),
@@ -1927,11 +2507,20 @@ export const organizationHandler = new Hono()
       'query',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          limit: Schema.FiniteFromString.check(Schema.isInt()).pipe(
-            Schema.withDecodingDefaultType(Effect.succeed(20)),
-          ),
-          after: Schema.optional(Schema.String),
-          emails: Schema.optional(
+          limit: Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+            .pipe(
+              Schema.decodeTo(
+                Schema.Finite,
+                SchemaTransformation.transform({
+                  decode: (input) => Number(input),
+                  encode: (output) => String(output),
+                }),
+              ),
+            )
+            .check(Schema.isInt())
+            .pipe(Schema.withDecodingDefaultType(Effect.succeed(20))),
+          after: Schema.optionalKey(Schema.String),
+          emails: Schema.optionalKey(
             Schema.Unknown.pipe(
               Schema.decodeTo(
                 Schema.Unknown,
@@ -1972,15 +2561,25 @@ export const organizationHandler = new Hono()
       'query',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          limit: Schema.optional(
-            Schema.FiniteFromString.check(
-              Schema.isInt(),
-              Schema.isGreaterThanOrEqualTo(0),
-              Schema.isLessThanOrEqualTo(1000),
-            ),
+          limit: Schema.optionalKey(
+            Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+              .pipe(
+                Schema.decodeTo(
+                  Schema.Finite,
+                  SchemaTransformation.transform({
+                    decode: (input) => Number(input),
+                    encode: (output) => String(output),
+                  }),
+                ),
+              )
+              .check(
+                Schema.isInt(),
+                Schema.isGreaterThanOrEqualTo(0),
+                Schema.isLessThanOrEqualTo(1000),
+              ),
           ),
-          after: Schema.optional(Schema.String),
-          order: Schema.optional(Schema.Literals(['asc', 'desc'])),
+          after: Schema.optionalKey(Schema.String),
+          order: Schema.optionalKey(Schema.Literals(['asc', 'desc'])),
         }),
       ),
     ),
@@ -2014,15 +2613,25 @@ export const organizationHandler = new Hono()
       'query',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          limit: Schema.optional(
-            Schema.FiniteFromString.check(
-              Schema.isInt(),
-              Schema.isGreaterThanOrEqualTo(0),
-              Schema.isLessThanOrEqualTo(100),
-            ),
+          limit: Schema.optionalKey(
+            Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+              .pipe(
+                Schema.decodeTo(
+                  Schema.Finite,
+                  SchemaTransformation.transform({
+                    decode: (input) => Number(input),
+                    encode: (output) => String(output),
+                  }),
+                ),
+              )
+              .check(
+                Schema.isInt(),
+                Schema.isGreaterThanOrEqualTo(0),
+                Schema.isLessThanOrEqualTo(100),
+              ),
           ),
-          order: Schema.optional(OrderEnumSchema),
-          after: Schema.optional(
+          order: Schema.optionalKey(OrderEnumSchema),
+          after: Schema.optionalKey(
             Schema.Union([
               Schema.String,
               Schema.Unknown.pipe(
@@ -2033,11 +2642,11 @@ export const organizationHandler = new Hono()
                     encode: (output) => output,
                   }),
                 ),
-                Schema.decodeTo(Schema.NullOr(Schema.Null)),
+                Schema.decodeTo(Schema.Null),
               ),
             ]),
           ),
-          purpose: Schema.optional(ExternalKeyPurposeSchema),
+          purpose: Schema.optionalKey(ExternalKeyPurposeSchema),
         }),
       ),
     ),
@@ -2078,18 +2687,28 @@ export const organizationHandler = new Hono()
       'query',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          limit: Schema.optional(
-            Schema.FiniteFromString.check(
-              Schema.isInt(),
-              Schema.isGreaterThanOrEqualTo(1),
-              Schema.isLessThanOrEqualTo(100),
-            ),
+          limit: Schema.optionalKey(
+            Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+              .pipe(
+                Schema.decodeTo(
+                  Schema.Finite,
+                  SchemaTransformation.transform({
+                    decode: (input) => Number(input),
+                    encode: (output) => String(output),
+                  }),
+                ),
+              )
+              .check(
+                Schema.isInt(),
+                Schema.isGreaterThanOrEqualTo(1),
+                Schema.isLessThanOrEqualTo(100),
+              ),
           ),
           order: Schema.Union([
             Schema.Literal('asc').pipe(Schema.withDecodingDefaultType(Effect.succeed('asc'))),
             Schema.Literal('desc').pipe(Schema.withDecodingDefaultType(Effect.succeed('desc'))),
           ]),
-          after: Schema.optional(
+          after: Schema.optionalKey(
             Schema.String.check(
               Schema.makeFilter((input) => [...input].length >= 1, {
                 expected: 'a string of at least 1 character',
@@ -2173,25 +2792,35 @@ export const organizationHandler = new Hono()
       'query',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          limit: Schema.optional(
-            Schema.FiniteFromString.check(
-              Schema.isInt(),
-              Schema.isGreaterThanOrEqualTo(1),
-              Schema.isLessThanOrEqualTo(100),
-            ),
+          limit: Schema.optionalKey(
+            Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+              .pipe(
+                Schema.decodeTo(
+                  Schema.Finite,
+                  SchemaTransformation.transform({
+                    decode: (input) => Number(input),
+                    encode: (output) => String(output),
+                  }),
+                ),
+              )
+              .check(
+                Schema.isInt(),
+                Schema.isGreaterThanOrEqualTo(1),
+                Schema.isLessThanOrEqualTo(100),
+              ),
           ),
           order: Schema.Union([
             Schema.Literal('asc').pipe(Schema.withDecodingDefaultType(Effect.succeed('asc'))),
             Schema.Literal('desc').pipe(Schema.withDecodingDefaultType(Effect.succeed('desc'))),
           ]),
-          after: Schema.optional(
+          after: Schema.optionalKey(
             Schema.String.check(
               Schema.makeFilter((input) => [...input].length >= 1, {
                 expected: 'a string of at least 1 character',
               }),
             ),
           ),
-          service_account_id: Schema.optional(
+          service_account_id: Schema.optionalKey(
             Schema.String.check(
               Schema.makeFilter((input) => [...input].length >= 1, {
                 expected: 'a string of at least 1 character',
@@ -2296,8 +2925,18 @@ export const organizationHandler = new Hono()
       'query',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          start_time: Schema.FiniteFromString.check(Schema.isInt()),
-          end_time: Schema.optional(
+          start_time: Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+            .pipe(
+              Schema.decodeTo(
+                Schema.Finite,
+                SchemaTransformation.transform({
+                  decode: (input) => Number(input),
+                  encode: (output) => String(output),
+                }),
+              ),
+            )
+            .check(Schema.isInt()),
+          end_time: Schema.optionalKey(
             Schema.Unknown.pipe(
               Schema.decodeTo(
                 Schema.Unknown,
@@ -2309,7 +2948,17 @@ export const organizationHandler = new Hono()
               Schema.decodeTo(
                 Schema.NullOr(
                   Schema.Union([
-                    Schema.FiniteFromString.check(Schema.isInt()),
+                    Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+                      .pipe(
+                        Schema.decodeTo(
+                          Schema.Finite,
+                          SchemaTransformation.transform({
+                            decode: (input) => Number(input),
+                            encode: (output) => String(output),
+                          }),
+                        ),
+                      )
+                      .check(Schema.isInt()),
                     Schema.Unknown.pipe(
                       Schema.decodeTo(
                         Schema.Unknown,
@@ -2318,14 +2967,14 @@ export const organizationHandler = new Hono()
                           encode: (output) => output,
                         }),
                       ),
-                      Schema.decodeTo(Schema.NullOr(Schema.Null)),
+                      Schema.decodeTo(Schema.Null),
                     ),
                   ]),
                 ),
               ),
             ),
           ),
-          bucket_width: Schema.optional(
+          bucket_width: Schema.optionalKey(
             Schema.Unknown.pipe(
               Schema.decodeTo(
                 Schema.Unknown,
@@ -2349,14 +2998,14 @@ export const organizationHandler = new Hono()
                           encode: (output) => output,
                         }),
                       ),
-                      Schema.decodeTo(Schema.NullOr(Schema.Null)),
+                      Schema.decodeTo(Schema.Null),
                     ),
                   ]),
                 ),
               ),
             ),
           ),
-          limit: Schema.optional(
+          limit: Schema.optionalKey(
             Schema.Unknown.pipe(
               Schema.decodeTo(
                 Schema.Unknown,
@@ -2368,7 +3017,17 @@ export const organizationHandler = new Hono()
               Schema.decodeTo(
                 Schema.NullOr(
                   Schema.Union([
-                    Schema.FiniteFromString.check(Schema.isInt()),
+                    Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+                      .pipe(
+                        Schema.decodeTo(
+                          Schema.Finite,
+                          SchemaTransformation.transform({
+                            decode: (input) => Number(input),
+                            encode: (output) => String(output),
+                          }),
+                        ),
+                      )
+                      .check(Schema.isInt()),
                     Schema.Unknown.pipe(
                       Schema.decodeTo(
                         Schema.Unknown,
@@ -2377,14 +3036,14 @@ export const organizationHandler = new Hono()
                           encode: (output) => output,
                         }),
                       ),
-                      Schema.decodeTo(Schema.NullOr(Schema.Null)),
+                      Schema.decodeTo(Schema.Null),
                     ),
                   ]),
                 ),
               ),
             ),
           ),
-          page: Schema.optional(
+          page: Schema.optionalKey(
             Schema.Union([
               Schema.String.annotate({
                 description:
@@ -2398,11 +3057,11 @@ export const organizationHandler = new Hono()
                     encode: (output) => output,
                   }),
                 ),
-                Schema.decodeTo(Schema.NullOr(Schema.Null)),
+                Schema.decodeTo(Schema.Null),
               ),
             ]),
           ),
-          project_ids: Schema.optional(
+          project_ids: Schema.optionalKey(
             Schema.Unknown.pipe(
               Schema.decodeTo(
                 Schema.Unknown,
@@ -2435,14 +3094,14 @@ export const organizationHandler = new Hono()
                           encode: (output) => output,
                         }),
                       ),
-                      Schema.decodeTo(Schema.NullOr(Schema.Null)),
+                      Schema.decodeTo(Schema.Null),
                     ),
                   ]),
                 ),
               ),
             ),
           ),
-          group_by: Schema.optional(
+          group_by: Schema.optionalKey(
             Schema.Unknown.pipe(
               Schema.decodeTo(
                 Schema.Unknown,
@@ -2478,14 +3137,14 @@ export const organizationHandler = new Hono()
                           encode: (output) => output,
                         }),
                       ),
-                      Schema.decodeTo(Schema.NullOr(Schema.Null)),
+                      Schema.decodeTo(Schema.Null),
                     ),
                   ]),
                 ),
               ),
             ),
           ),
-          user_ids: Schema.optional(
+          user_ids: Schema.optionalKey(
             Schema.Unknown.pipe(
               Schema.decodeTo(
                 Schema.Unknown,
@@ -2518,14 +3177,14 @@ export const organizationHandler = new Hono()
                           encode: (output) => output,
                         }),
                       ),
-                      Schema.decodeTo(Schema.NullOr(Schema.Null)),
+                      Schema.decodeTo(Schema.Null),
                     ),
                   ]),
                 ),
               ),
             ),
           ),
-          api_key_ids: Schema.optional(
+          api_key_ids: Schema.optionalKey(
             Schema.Unknown.pipe(
               Schema.decodeTo(
                 Schema.Unknown,
@@ -2558,14 +3217,14 @@ export const organizationHandler = new Hono()
                           encode: (output) => output,
                         }),
                       ),
-                      Schema.decodeTo(Schema.NullOr(Schema.Null)),
+                      Schema.decodeTo(Schema.Null),
                     ),
                   ]),
                 ),
               ),
             ),
           ),
-          models: Schema.optional(
+          models: Schema.optionalKey(
             Schema.Unknown.pipe(
               Schema.decodeTo(
                 Schema.Unknown,
@@ -2598,14 +3257,14 @@ export const organizationHandler = new Hono()
                           encode: (output) => output,
                         }),
                       ),
-                      Schema.decodeTo(Schema.NullOr(Schema.Null)),
+                      Schema.decodeTo(Schema.Null),
                     ),
                   ]),
                 ),
               ),
             ),
           ),
-          batch: Schema.optional(
+          batch: Schema.optionalKey(
             Schema.Unknown.pipe(
               Schema.decodeTo(
                 Schema.Unknown,
@@ -2636,7 +3295,7 @@ export const organizationHandler = new Hono()
                           encode: (output) => output,
                         }),
                       ),
-                      Schema.decodeTo(Schema.NullOr(Schema.Null)),
+                      Schema.decodeTo(Schema.Null),
                     ),
                   ]),
                 ),
@@ -2654,7 +3313,7 @@ export const organizationHandler = new Hono()
       'query',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          project_id: Schema.optional(
+          project_id: Schema.optionalKey(
             Schema.Union([
               Schema.String.annotate({ jsonSchemaExamples: ['proj_123'] }),
               Schema.Unknown.pipe(
@@ -2665,11 +3324,11 @@ export const organizationHandler = new Hono()
                     encode: (output) => output,
                   }),
                 ),
-                Schema.decodeTo(Schema.NullOr(Schema.Null)),
+                Schema.decodeTo(Schema.Null),
               ),
             ]),
           ),
-          after: Schema.optional(
+          after: Schema.optionalKey(
             Schema.Union([
               Schema.String.annotate({
                 description: 'Return external storage configurations after this ID.',
@@ -2682,17 +3341,27 @@ export const organizationHandler = new Hono()
                     encode: (output) => output,
                   }),
                 ),
-                Schema.decodeTo(Schema.NullOr(Schema.Null)),
+                Schema.decodeTo(Schema.Null),
               ),
             ]),
           ),
-          order: Schema.optional(ExternalStorageOrderSchema),
-          limit: Schema.optional(
-            Schema.FiniteFromString.check(
-              Schema.isInt(),
-              Schema.isGreaterThanOrEqualTo(1),
-              Schema.isLessThanOrEqualTo(100),
-            ),
+          order: Schema.optionalKey(ExternalStorageOrderSchema),
+          limit: Schema.optionalKey(
+            Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+              .pipe(
+                Schema.decodeTo(
+                  Schema.Finite,
+                  SchemaTransformation.transform({
+                    decode: (input) => Number(input),
+                    encode: (output) => String(output),
+                  }),
+                ),
+              )
+              .check(
+                Schema.isInt(),
+                Schema.isGreaterThanOrEqualTo(1),
+                Schema.isLessThanOrEqualTo(100),
+              ),
           ),
         }),
       ),

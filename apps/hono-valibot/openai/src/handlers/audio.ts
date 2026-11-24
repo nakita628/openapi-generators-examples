@@ -88,7 +88,16 @@ export const audioHandler = new Hono()
         ),
         response_format: v.optional(AudioResponseFormatSchema),
         temperature: v.pipe(
-          v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.finite()), '0'),
+          v.optional(
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.finite(),
+            ),
+            '0',
+          ),
           v.description(
             'The sampling temperature, between 0 and 1. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic. If set to 0, the model will use [log probability](https://en.wikipedia.org/wiki/Log_probability) to automatically increase the temperature until certain thresholds are hit.\n',
           ),
@@ -144,7 +153,7 @@ export const audioHandler = new Hono()
                 v.pipe(
                   v.unknown(),
                   v.transform((input) => (input === 'null' ? null : input)),
-                  v.nullable(v.null()),
+                  v.null(),
                 ),
               ]),
             ),
@@ -169,7 +178,13 @@ export const audioHandler = new Hono()
                   ),
                   prefix_padding_ms: v.pipe(
                     v.optional(
-                      v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
+                      v.pipe(
+                        v.string(),
+                        v.regex(/^-?(?:0|[1-9]\d*)$/),
+                        v.transform((input) => Number(input)),
+                        v.number(),
+                        v.safeInteger(),
+                      ),
                       '300',
                     ),
                     v.description(
@@ -178,7 +193,13 @@ export const audioHandler = new Hono()
                   ),
                   silence_duration_ms: v.pipe(
                     v.optional(
-                      v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
+                      v.pipe(
+                        v.string(),
+                        v.regex(/^-?(?:0|[1-9]\d*)$/),
+                        v.transform((input) => Number(input)),
+                        v.number(),
+                        v.safeInteger(),
+                      ),
                       '200',
                     ),
                     v.description(
@@ -187,7 +208,13 @@ export const audioHandler = new Hono()
                   ),
                   threshold: v.pipe(
                     v.optional(
-                      v.pipe(v.string(), v.transform(Number), v.number(), v.finite()),
+                      v.pipe(
+                        v.string(),
+                        v.regex(/^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/),
+                        v.transform((input) => Number(input)),
+                        v.number(),
+                        v.finite(),
+                      ),
                       '0.5',
                     ),
                     v.description(
@@ -203,7 +230,7 @@ export const audioHandler = new Hono()
             v.pipe(
               v.unknown(),
               v.transform((input) => (input === 'null' ? null : input)),
-              v.nullable(v.null()),
+              v.null(),
             ),
           ]),
         ),
@@ -274,7 +301,16 @@ export const audioHandler = new Hono()
           ),
         ),
         temperature: v.pipe(
-          v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.finite()), '0'),
+          v.optional(
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.finite(),
+            ),
+            '0',
+          ),
           v.description(
             'The sampling temperature, between 0 and 1. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic. If set to 0, the model will use [log probability](https://en.wikipedia.org/wiki/Log_probability) to automatically increase the temperature until certain thresholds are hit.\n',
           ),
@@ -290,7 +326,13 @@ export const audioHandler = new Hono()
       v.object({
         after: v.optional(v.string()),
         limit: v.optional(
-          v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
+          v.pipe(
+            v.string(),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
+            v.number(),
+            v.safeInteger(),
+          ),
           '20',
         ),
       }),

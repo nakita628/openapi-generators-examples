@@ -1,5 +1,5 @@
 import { initTRPC, TRPCError } from '@trpc/server'
-import { Schema } from 'effect'
+import { Schema, SchemaTransformation } from 'effect'
 import {
   ActionRowComponentForMessageRequestSchema,
   ApplicationIncomingWebhookResponseSchema,
@@ -132,7 +132,7 @@ export const channelsRouter = t.router({
               FriendInviteResponseSchema,
               GroupDMInviteResponseSchema,
               GuildInviteResponseSchema,
-              Schema.NullOr(Schema.Null),
+              Schema.Null,
             ]),
           ),
         ),
@@ -167,10 +167,10 @@ export const channelsRouter = t.router({
       Schema.toStandardSchemaV1(
         Schema.Struct({
           channel_id: SnowflakeTypeSchema,
-          around: Schema.optional(SnowflakeTypeSchema),
-          before: Schema.optional(SnowflakeTypeSchema),
-          after: Schema.optional(SnowflakeTypeSchema),
-          limit: Schema.optional(
+          around: Schema.optionalKey(SnowflakeTypeSchema),
+          before: Schema.optionalKey(SnowflakeTypeSchema),
+          after: Schema.optionalKey(SnowflakeTypeSchema),
+          limit: Schema.optionalKey(
             Schema.Number.check(
               Schema.isInt(),
               Schema.isGreaterThanOrEqualTo(1),
@@ -189,7 +189,7 @@ export const channelsRouter = t.router({
       Schema.toStandardSchemaV1(
         Schema.Struct({
           channel_id: SnowflakeTypeSchema,
-          content: Schema.optional(
+          content: Schema.optionalKey(
             Schema.NullOr(
               Schema.String.check(
                 Schema.makeFilter((input) => [...input].length <= 4000, {
@@ -198,16 +198,16 @@ export const channelsRouter = t.router({
               ),
             ),
           ),
-          embeds: Schema.optional(
+          embeds: Schema.optionalKey(
             Schema.NullOr(Schema.Array(RichEmbedSchema).check(Schema.isMaxLength(10))),
           ),
-          allowed_mentions: Schema.optional(
-            Schema.Union([Schema.NullOr(Schema.Null), MessageAllowedMentionsRequestSchema]),
+          allowed_mentions: Schema.optionalKey(
+            Schema.Union([Schema.Null, MessageAllowedMentionsRequestSchema]),
           ),
-          sticker_ids: Schema.optional(
+          sticker_ids: Schema.optionalKey(
             Schema.NullOr(Schema.Array(SnowflakeTypeSchema).check(Schema.isMaxLength(3))),
           ),
-          components: Schema.optional(
+          components: Schema.optionalKey(
             Schema.NullOr(
               Schema.Array(
                 Schema.Union([
@@ -222,22 +222,20 @@ export const channelsRouter = t.router({
               ).check(Schema.isMaxLength(40)),
             ),
           ),
-          flags: Schema.optional(Schema.NullOr(Schema.Number.check(Schema.isInt()))),
-          attachments: Schema.optional(
+          flags: Schema.optionalKey(Schema.NullOr(Schema.Number.check(Schema.isInt()))),
+          attachments: Schema.optionalKey(
             Schema.NullOr(
               Schema.Array(MessageAttachmentRequestSchema).check(Schema.isMaxLength(10)),
             ),
           ),
-          poll: Schema.optional(
-            Schema.Union([Schema.NullOr(Schema.Null), PollCreateRequestSchema]),
+          poll: Schema.optionalKey(Schema.Union([Schema.Null, PollCreateRequestSchema])),
+          shared_client_theme: Schema.optionalKey(
+            Schema.Union([Schema.Null, CustomClientThemeShareRequestSchema]),
           ),
-          shared_client_theme: Schema.optional(
-            Schema.Union([Schema.NullOr(Schema.Null), CustomClientThemeShareRequestSchema]),
+          message_reference: Schema.optionalKey(
+            Schema.Union([Schema.Null, MessageReferenceRequestSchema]),
           ),
-          message_reference: Schema.optional(
-            Schema.Union([Schema.NullOr(Schema.Null), MessageReferenceRequestSchema]),
-          ),
-          nonce: Schema.optional(
+          nonce: Schema.optionalKey(
             Schema.Union([
               Schema.Union([
                 Schema.BigInt,
@@ -258,19 +256,19 @@ export const channelsRouter = t.router({
                     minimum: -9223372036854775808n,
                     maximum: 9223372036854775807n,
                   }),
-                  Schema.isGreaterThanOrEqualToBigInt(-9223372036854776000n),
-                  Schema.isLessThanOrEqualToBigInt(9223372036854776000n),
+                  Schema.isGreaterThanOrEqualToBigInt(-9223372036854775808n),
+                  Schema.isLessThanOrEqualToBigInt(9223372036854775808n),
                 ),
               Schema.String.check(
                 Schema.makeFilter((input) => [...input].length <= 25, {
                   expected: 'a string of at most 25 characters',
                 }),
               ),
-              Schema.NullOr(Schema.Null),
+              Schema.Null,
             ]),
           ),
-          enforce_nonce: Schema.optional(Schema.NullOr(Schema.Boolean)),
-          tts: Schema.optional(Schema.NullOr(Schema.Boolean)),
+          enforce_nonce: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
+          tts: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
         }),
       ),
     )
@@ -299,14 +297,14 @@ export const channelsRouter = t.router({
       Schema.toStandardSchemaV1(
         Schema.Struct({
           channel_id: SnowflakeTypeSchema,
-          before: Schema.optional(
+          before: Schema.optionalKey(
             Schema.String.check(
               Schema.isPattern(
                 /^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z|([+-](?:[01]\d|2[0-3]):[0-5]\d)))$/,
               ),
             ),
           ),
-          limit: Schema.optional(
+          limit: Schema.optionalKey(
             Schema.Number.check(
               Schema.isInt(),
               Schema.isGreaterThanOrEqualTo(1),
@@ -363,7 +361,7 @@ export const channelsRouter = t.router({
         Schema.Struct({
           channel_id: SnowflakeTypeSchema,
           message_id: SnowflakeTypeSchema,
-          content: Schema.optional(
+          content: Schema.optionalKey(
             Schema.NullOr(
               Schema.String.check(
                 Schema.makeFilter((input) => [...input].length <= 4000, {
@@ -372,17 +370,17 @@ export const channelsRouter = t.router({
               ),
             ),
           ),
-          embeds: Schema.optional(
+          embeds: Schema.optionalKey(
             Schema.NullOr(Schema.Array(RichEmbedSchema).check(Schema.isMaxLength(10))),
           ),
-          flags: Schema.optional(Schema.NullOr(Schema.Number.check(Schema.isInt()))),
-          allowed_mentions: Schema.optional(
-            Schema.Union([Schema.NullOr(Schema.Null), MessageAllowedMentionsRequestSchema]),
+          flags: Schema.optionalKey(Schema.NullOr(Schema.Number.check(Schema.isInt()))),
+          allowed_mentions: Schema.optionalKey(
+            Schema.Union([Schema.Null, MessageAllowedMentionsRequestSchema]),
           ),
-          sticker_ids: Schema.optional(
+          sticker_ids: Schema.optionalKey(
             Schema.NullOr(Schema.Array(SnowflakeTypeSchema).check(Schema.isMaxLength(1521))),
           ),
-          components: Schema.optional(
+          components: Schema.optionalKey(
             Schema.NullOr(
               Schema.Array(
                 Schema.Union([
@@ -397,7 +395,7 @@ export const channelsRouter = t.router({
               ).check(Schema.isMaxLength(40)),
             ),
           ),
-          attachments: Schema.optional(
+          attachments: Schema.optionalKey(
             Schema.NullOr(
               Schema.Array(MessageAttachmentRequestSchema).check(Schema.isMaxLength(10)),
             ),
@@ -439,15 +437,15 @@ export const channelsRouter = t.router({
               expected: 'a string of at most 152133 characters',
             }),
           ),
-          after: Schema.optional(SnowflakeTypeSchema),
-          limit: Schema.optional(
+          after: Schema.optionalKey(SnowflakeTypeSchema),
+          limit: Schema.optionalKey(
             Schema.Number.check(
               Schema.isInt(),
               Schema.isGreaterThanOrEqualTo(1),
               Schema.isLessThanOrEqualTo(100),
             ),
           ),
-          type: Schema.optional(ReactionTypesSchema),
+          type: Schema.optionalKey(ReactionTypesSchema),
         }),
       ),
     )
@@ -538,10 +536,10 @@ export const channelsRouter = t.router({
               expected: 'a string of at most 100 characters',
             }),
           ),
-          auto_archive_duration: Schema.optional(
-            Schema.Union([Schema.NullOr(Schema.Null), ThreadAutoArchiveDurationSchema]),
+          auto_archive_duration: Schema.optionalKey(
+            Schema.Union([Schema.Null, ThreadAutoArchiveDurationSchema]),
           ),
-          rate_limit_per_user: Schema.optional(
+          rate_limit_per_user: Schema.optionalKey(
             Schema.NullOr(
               Schema.Number.check(
                 Schema.isInt32(),
@@ -563,7 +561,7 @@ export const channelsRouter = t.router({
         Schema.Struct({
           channel_id: SnowflakeTypeSchema,
           user_id: SnowflakeTypeSchema,
-          implicit: Schema.optional(Schema.Boolean),
+          implicit: Schema.optionalKey(Schema.Boolean),
         }),
       ),
     )
@@ -577,7 +575,7 @@ export const channelsRouter = t.router({
         Schema.Struct({
           channel_id: SnowflakeTypeSchema,
           role_id: SnowflakeTypeSchema,
-          implicit: Schema.optional(Schema.Boolean),
+          implicit: Schema.optionalKey(Schema.Boolean),
         }),
       ),
     )
@@ -591,11 +589,9 @@ export const channelsRouter = t.router({
         Schema.Struct({
           channel_id: SnowflakeTypeSchema,
           overwrite_id: SnowflakeTypeSchema,
-          type: Schema.optional(
-            Schema.Union([Schema.NullOr(Schema.Null), ChannelPermissionOverwritesSchema]),
-          ),
-          allow: Schema.optional(Schema.NullOr(Schema.Number.check(Schema.isInt()))),
-          deny: Schema.optional(Schema.NullOr(Schema.Number.check(Schema.isInt()))),
+          type: Schema.optionalKey(Schema.Union([Schema.Null, ChannelPermissionOverwritesSchema])),
+          allow: Schema.optionalKey(Schema.NullOr(Schema.Number.check(Schema.isInt()))),
+          deny: Schema.optionalKey(Schema.NullOr(Schema.Number.check(Schema.isInt()))),
         }),
       ),
     )
@@ -646,8 +642,8 @@ export const channelsRouter = t.router({
             Schema.isGreaterThanOrEqualTo(1),
             Schema.isLessThanOrEqualTo(10),
           ),
-          after: Schema.optional(SnowflakeTypeSchema),
-          limit: Schema.optional(
+          after: Schema.optionalKey(SnowflakeTypeSchema),
+          limit: Schema.optionalKey(
             Schema.Number.check(
               Schema.isInt(),
               Schema.isGreaterThanOrEqualTo(1),
@@ -677,7 +673,7 @@ export const channelsRouter = t.router({
         Schema.Struct({
           channel_id: SnowflakeTypeSchema,
           user_id: SnowflakeTypeSchema,
-          access_token: Schema.optional(
+          access_token: Schema.optionalKey(
             Schema.NullOr(
               Schema.String.check(
                 Schema.makeFilter((input) => [...input].length <= 152133, {
@@ -686,7 +682,7 @@ export const channelsRouter = t.router({
               ),
             ),
           ),
-          nick: Schema.optional(
+          nick: Schema.optionalKey(
             Schema.NullOr(
               Schema.String.check(
                 Schema.makeFilter((input) => [...input].length <= 152133, {
@@ -721,9 +717,7 @@ export const channelsRouter = t.router({
         Schema.Struct({
           channel_id: SnowflakeTypeSchema,
           sound_id: SnowflakeTypeSchema,
-          source_guild_id: Schema.optional(
-            Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema]),
-          ),
+          source_guild_id: Schema.optionalKey(Schema.Union([Schema.Null, SnowflakeTypeSchema])),
         }),
       ),
     )
@@ -735,15 +729,15 @@ export const channelsRouter = t.router({
       Schema.toStandardSchemaV1(
         Schema.Struct({
           channel_id: SnowflakeTypeSchema,
-          with_member: Schema.optional(Schema.Boolean),
-          limit: Schema.optional(
+          with_member: Schema.optionalKey(Schema.Boolean),
+          limit: Schema.optionalKey(
             Schema.Number.check(
               Schema.isInt(),
               Schema.isGreaterThanOrEqualTo(1),
               Schema.isLessThanOrEqualTo(100),
             ),
           ),
-          after: Schema.optional(SnowflakeTypeSchema),
+          after: Schema.optionalKey(SnowflakeTypeSchema),
         }),
       ),
     )
@@ -767,7 +761,7 @@ export const channelsRouter = t.router({
         Schema.Struct({
           channel_id: SnowflakeTypeSchema,
           user_id: SnowflakeTypeSchema,
-          with_member: Schema.optional(Schema.Boolean),
+          with_member: Schema.optionalKey(Schema.Boolean),
         }),
       ),
     )
@@ -814,14 +808,14 @@ export const channelsRouter = t.router({
       Schema.toStandardSchemaV1(
         Schema.Struct({
           channel_id: SnowflakeTypeSchema,
-          before: Schema.optional(
+          before: Schema.optionalKey(
             Schema.String.check(
               Schema.isPattern(
                 /^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z|([+-](?:[01]\d|2[0-3]):[0-5]\d)))$/,
               ),
             ),
           ),
-          limit: Schema.optional(
+          limit: Schema.optionalKey(
             Schema.Number.check(
               Schema.isInt(),
               Schema.isGreaterThanOrEqualTo(2),
@@ -840,14 +834,14 @@ export const channelsRouter = t.router({
       Schema.toStandardSchemaV1(
         Schema.Struct({
           channel_id: SnowflakeTypeSchema,
-          before: Schema.optional(
+          before: Schema.optionalKey(
             Schema.String.check(
               Schema.isPattern(
                 /^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z|([+-](?:[01]\d|2[0-3]):[0-5]\d)))$/,
               ),
             ),
           ),
-          limit: Schema.optional(
+          limit: Schema.optionalKey(
             Schema.Number.check(
               Schema.isInt(),
               Schema.isGreaterThanOrEqualTo(2),
@@ -866,40 +860,40 @@ export const channelsRouter = t.router({
       Schema.toStandardSchemaV1(
         Schema.Struct({
           channel_id: SnowflakeTypeSchema,
-          name: Schema.optional(
+          name: Schema.optionalKey(
             Schema.String.check(
               Schema.makeFilter((input) => [...input].length <= 100, {
                 expected: 'a string of at most 100 characters',
               }),
             ),
           ),
-          slop: Schema.optional(
+          slop: Schema.optionalKey(
             Schema.Number.check(
               Schema.isInt(),
               Schema.isGreaterThanOrEqualTo(0),
               Schema.isLessThanOrEqualTo(100),
             ),
           ),
-          min_id: Schema.optional(SnowflakeTypeSchema),
-          max_id: Schema.optional(SnowflakeTypeSchema),
-          tag: Schema.optional(
+          min_id: Schema.optionalKey(SnowflakeTypeSchema),
+          max_id: Schema.optionalKey(SnowflakeTypeSchema),
+          tag: Schema.optionalKey(
             Schema.Union([
               Schema.String,
               Schema.Array(SnowflakeTypeSchema).check(Schema.isMaxLength(20), Schema.isUnique()),
             ]),
           ),
-          tag_setting: Schema.optional(ThreadSearchTagSettingSchema),
-          archived: Schema.optional(Schema.Boolean),
-          sort_by: Schema.optional(ThreadSortingModeSchema),
-          sort_order: Schema.optional(SortingOrderSchema),
-          limit: Schema.optional(
+          tag_setting: Schema.optionalKey(ThreadSearchTagSettingSchema),
+          archived: Schema.optionalKey(Schema.Boolean),
+          sort_by: Schema.optionalKey(ThreadSortingModeSchema),
+          sort_order: Schema.optionalKey(SortingOrderSchema),
+          limit: Schema.optionalKey(
             Schema.Number.check(
               Schema.isInt(),
               Schema.isGreaterThanOrEqualTo(1),
               Schema.isLessThanOrEqualTo(25),
             ),
           ),
-          offset: Schema.optional(
+          offset: Schema.optionalKey(
             Schema.Number.check(
               Schema.isInt(),
               Schema.isGreaterThanOrEqualTo(0),
@@ -924,8 +918,8 @@ export const channelsRouter = t.router({
       Schema.toStandardSchemaV1(
         Schema.Struct({
           channel_id: SnowflakeTypeSchema,
-          before: Schema.optional(SnowflakeTypeSchema),
-          limit: Schema.optional(
+          before: Schema.optionalKey(SnowflakeTypeSchema),
+          limit: Schema.optionalKey(
             Schema.Number.check(
               Schema.isInt(),
               Schema.isGreaterThanOrEqualTo(2),
@@ -944,7 +938,7 @@ export const channelsRouter = t.router({
       Schema.toStandardSchemaV1(
         Schema.Struct({
           channel_id: SnowflakeTypeSchema,
-          status: Schema.optional(
+          status: Schema.optionalKey(
             Schema.NullOr(
               Schema.String.check(
                 Schema.makeFilter((input) => [...input].length <= 500, {
@@ -990,7 +984,7 @@ export const channelsRouter = t.router({
               expected: 'a string of at most 80 characters',
             }),
           ),
-          avatar: Schema.optional(Schema.NullOr(Schema.String)),
+          avatar: Schema.optionalKey(Schema.NullOr(Schema.String)),
         }),
       ),
     )

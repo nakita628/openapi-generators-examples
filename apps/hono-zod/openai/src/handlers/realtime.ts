@@ -102,9 +102,14 @@ export const realtimeHandler = new Hono()
                                 .literal('audio/pcm')
                                 .meta({ description: 'The audio format. Always `audio/pcm`.' })
                                 .exactOptional(),
-                              rate: z.coerce
-                                .number()
-                                .pipe(z.literal(24000))
+                              rate: z
+                                .preprocess(
+                                  (val) =>
+                                    typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                      ? Number(val)
+                                      : val,
+                                  z.literal(24000),
+                                )
                                 .meta({
                                   description: 'The sample rate of the audio. Always `24000`.',
                                 })
@@ -231,24 +236,45 @@ export const realtimeHandler = new Hono()
                                           description:
                                             'Type of turn detection, `server_vad` to turn on simple Server VAD.\n',
                                         }),
-                                      threshold: z.coerce
-                                        .number()
+                                      threshold: z
+                                        .preprocess(
+                                          (val) =>
+                                            typeof val === 'string' &&
+                                            /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(
+                                              val,
+                                            )
+                                              ? Number(val)
+                                              : val,
+                                          z.number(),
+                                        )
                                         .meta({
                                           description:
                                             'Used only for `server_vad` mode. Activation threshold for VAD (0.0 to 1.0), this defaults to 0.5. A\nhigher threshold will require louder audio to activate the model, and\nthus might perform better in noisy environments.\n',
                                         })
                                         .exactOptional(),
-                                      prefix_padding_ms: z.coerce
-                                        .number()
-                                        .int()
+                                      prefix_padding_ms: z
+                                        .preprocess(
+                                          (val) =>
+                                            typeof val === 'string' &&
+                                            /^-?(?:0|[1-9]\d*)$/.test(val)
+                                              ? Number(val)
+                                              : val,
+                                          z.number().int(),
+                                        )
                                         .meta({
                                           description:
                                             'Used only for `server_vad` mode. Amount of audio to include before the VAD detected speech (in\nmilliseconds). Defaults to 300ms.\n',
                                         })
                                         .exactOptional(),
-                                      silence_duration_ms: z.coerce
-                                        .number()
-                                        .int()
+                                      silence_duration_ms: z
+                                        .preprocess(
+                                          (val) =>
+                                            typeof val === 'string' &&
+                                            /^-?(?:0|[1-9]\d*)$/.test(val)
+                                              ? Number(val)
+                                              : val,
+                                          z.number().int(),
+                                        )
                                         .meta({
                                           description:
                                             'Used only for `server_vad` mode. Duration of silence to detect speech stop (in milliseconds). Defaults\nto 500ms. With shorter values the model will respond more quickly,\nbut may jump in on short pauses from the user.\n',
@@ -275,18 +301,22 @@ export const realtimeHandler = new Hono()
                                           (val) => (val === 'null' ? null : val),
                                           z
                                             .union([
-                                              z.coerce
-                                                .number()
-                                                .int()
-                                                .min(5000)
-                                                .max(30000)
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.number().int().min(5000).max(30000),
+                                                )
                                                 .meta({
                                                   description:
                                                     "Optional timeout after which a model response will be triggered automatically. This is\nuseful for situations in which a long pause from the user is unexpected, such as a phone\ncall. The model will effectively prompt the user to continue the conversation based\non the current context.\n\nThe timeout value will be applied after the last model response's audio has finished playing,\ni.e. it's set to the `response.done` time plus audio playback duration.\n\nAn `input_audio_buffer.timeout_triggered` event (plus events\nassociated with the Response) will be emitted when the timeout is reached.\nIdle timeout is currently only supported for `server_vad` mode.\n",
                                                 }),
                                               z.preprocess(
                                                 (val) => (val === 'null' ? null : val),
-                                                z.null().nullable(),
+                                                z.null(),
                                               ),
                                             ])
                                             .nullable(),
@@ -339,10 +369,7 @@ export const realtimeHandler = new Hono()
                                   description:
                                     'Configuration for turn detection, ether Server VAD or Semantic VAD. This can be set to `null` to turn off, in which case the client must manually trigger model response.\n\nServer VAD means that the model will detect the start and end of speech based on audio volume and respond at the end of user speech.\n\nSemantic VAD is more advanced and uses a turn detection model (in conjunction with VAD) to semantically estimate whether the user has finished speaking, then dynamically sets a timeout based on this probability. For example, if user audio trails off with "uhhm", the model will score a low probability of turn end and wait longer for the user to continue speaking. This can be useful for more natural conversations, but may have a higher latency.\n\nFor `gpt-realtime-whisper` transcription sessions, turn detection must be\nset to `null`; VAD is not supported.\n',
                                 }),
-                              z.preprocess(
-                                (val) => (val === 'null' ? null : val),
-                                z.null().nullable(),
-                              ),
+                              z.preprocess((val) => (val === 'null' ? null : val), z.null()),
                             ])
                             .nullable(),
                         )
@@ -359,9 +386,14 @@ export const realtimeHandler = new Hono()
                                 .literal('audio/pcm')
                                 .meta({ description: 'The audio format. Always `audio/pcm`.' })
                                 .exactOptional(),
-                              rate: z.coerce
-                                .number()
-                                .pipe(z.literal(24000))
+                              rate: z
+                                .preprocess(
+                                  (val) =>
+                                    typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                      ? Number(val)
+                                      : val,
+                                  z.literal(24000),
+                                )
                                 .meta({
                                   description: 'The sample rate of the audio. Always `24000`.',
                                 })
@@ -396,10 +428,15 @@ export const realtimeHandler = new Hono()
                             'The voice the model uses to respond. Supported built-in voices are\n`alloy`, `ash`, `ballad`, `coral`, `echo`, `sage`, `shimmer`, `verse`,\n`marin`, and `cedar`. You may also provide a custom voice object with\nan `id`, for example `{ "id": "voice_1234" }`. Voice cannot be changed\nduring the session once the model has responded with audio at least once.\nCustom voices must be created from audio samples. Voices created from text prompts are supported only in Live.\nWe recommend `marin` and `cedar` for best quality.\n',
                         })
                         .exactOptional(),
-                      speed: z.coerce
-                        .number()
-                        .min(0.25)
-                        .max(1.5)
+                      speed: z
+                        .preprocess(
+                          (val) =>
+                            typeof val === 'string' &&
+                            /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(val)
+                              ? Number(val)
+                              : val,
+                          z.number().min(0.25).max(1.5),
+                        )
                         .default(1)
                         .meta({
                           description:
@@ -455,8 +492,9 @@ export const realtimeHandler = new Hono()
                         .exactOptional(),
                     })
                     .meta({ description: 'Granular configuration for tracing.\n' }),
-                  z.preprocess((val) => (val === 'null' ? null : val), z.null().nullable()),
+                  z.preprocess((val) => (val === 'null' ? null : val), z.null()),
                 ])
+                .default(null)
                 .meta({
                   description:
                     'Realtime API can write session traces to the [Traces Dashboard](https://platform.openai.com/logs?api=traces). Set to null to disable tracing. Once\ntracing is enabled for a session, the configuration cannot be modified.\n\n`auto` will create a trace for the session with default values for the\nworkflow name, group id, and metadata.\n',
@@ -536,10 +574,7 @@ export const realtimeHandler = new Hono()
                                       description:
                                         'Optional HTTP headers to send to the MCP server. Use for authentication\nor other purposes.\n',
                                     }),
-                                  z.preprocess(
-                                    (val) => (val === 'null' ? null : val),
-                                    z.null().nullable(),
-                                  ),
+                                  z.preprocess((val) => (val === 'null' ? null : val), z.null()),
                                 ])
                                 .nullable(),
                             )
@@ -589,10 +624,7 @@ export const realtimeHandler = new Hono()
                                       description:
                                         'List of allowed tool names or a filter object.\n',
                                     }),
-                                  z.preprocess(
-                                    (val) => (val === 'null' ? null : val),
-                                    z.null().nullable(),
-                                  ),
+                                  z.preprocess((val) => (val === 'null' ? null : val), z.null()),
                                 ])
                                 .nullable(),
                             )
@@ -609,10 +641,7 @@ export const realtimeHandler = new Hono()
                                       z.array(CallableToolAllowedCallerSchema).min(1),
                                     )
                                     .meta({ description: 'The tool invocation context(s).' }),
-                                  z.preprocess(
-                                    (val) => (val === 'null' ? null : val),
-                                    z.null().nullable(),
-                                  ),
+                                  z.preprocess((val) => (val === 'null' ? null : val), z.null()),
                                 ])
                                 .nullable(),
                             )
@@ -690,10 +719,7 @@ export const realtimeHandler = new Hono()
                                   description:
                                     "Specify which of the MCP server's tools require approval.",
                                 }),
-                              z.preprocess(
-                                (val) => (val === 'null' ? null : val),
-                                z.null().nullable(),
-                              ),
+                              z.preprocess((val) => (val === 'null' ? null : val), z.null()),
                             ])
                             .exactOptional(),
                           defer_loading: z
@@ -730,7 +756,7 @@ export const realtimeHandler = new Hono()
                           z
                             .string()
                             .meta({ description: 'The name of the tool to call on the server.\n' }),
-                          z.preprocess((val) => (val === 'null' ? null : val), z.null().nullable()),
+                          z.preprocess((val) => (val === 'null' ? null : val), z.null()),
                         ])
                         .exactOptional(),
                     })
@@ -754,7 +780,14 @@ export const realtimeHandler = new Hono()
                 .exactOptional(),
               reasoning: RealtimeReasoningSchema.exactOptional(),
               max_output_tokens: z
-                .union([z.coerce.number().int(), z.literal('inf')])
+                .union([
+                  z.preprocess(
+                    (val) =>
+                      typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+                    z.number().int(),
+                  ),
+                  z.literal('inf'),
+                ])
                 .meta({
                   description:
                     'Maximum number of output tokens for a single assistant response,\ninclusive of tool calls. Provide an integer between 1 and 4096 to\nlimit output tokens, or `inf` for the maximum available tokens for a\ngiven model. Defaults to `inf`.\n',
@@ -773,20 +806,29 @@ export const realtimeHandler = new Hono()
                       type: z
                         .literal('retention_ratio')
                         .meta({ description: 'Use retention ratio truncation.' }),
-                      retention_ratio: z.coerce
-                        .number()
-                        .min(0)
-                        .max(1)
+                      retention_ratio: z
+                        .preprocess(
+                          (val) =>
+                            typeof val === 'string' &&
+                            /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(val)
+                              ? Number(val)
+                              : val,
+                          z.number().min(0).max(1),
+                        )
                         .meta({
                           description:
                             'Fraction of post-instruction conversation tokens to retain (`0.0` - `1.0`) when the conversation exceeds the input token limit. Setting this to `0.8` means that messages will be dropped until 80% of the maximum allowed tokens are used. This helps reduce the frequency of truncations and improve cache rates.\n',
                         }),
                       token_limits: z
                         .object({
-                          post_instructions: z.coerce
-                            .number()
-                            .int()
-                            .min(0)
+                          post_instructions: z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.number().int().min(0),
+                            )
                             .meta({
                               description:
                                 "Maximum tokens allowed in the conversation after instructions (which including tool definitions). For example, setting this to 5,000 would mean that truncation would occur when the conversation exceeds 5,000 tokens after instructions. This cannot be higher than the model's context window size minus the maximum output tokens.",
@@ -826,10 +868,7 @@ export const realtimeHandler = new Hono()
                               z
                                 .string()
                                 .meta({ description: 'Optional version of the prompt template.' }),
-                              z.preprocess(
-                                (val) => (val === 'null' ? null : val),
-                                z.null().nullable(),
-                              ),
+                              z.preprocess((val) => (val === 'null' ? null : val), z.null()),
                             ])
                             .exactOptional(),
                           variables: z
@@ -862,7 +901,7 @@ export const realtimeHandler = new Hono()
                                                   }),
                                                 z.preprocess(
                                                   (val) => (val === 'null' ? null : val),
-                                                  z.null().nullable(),
+                                                  z.null(),
                                                 ),
                                               ])
                                               .exactOptional(),
@@ -876,7 +915,7 @@ export const realtimeHandler = new Hono()
                                                   }),
                                                 z.preprocess(
                                                   (val) => (val === 'null' ? null : val),
-                                                  z.null().nullable(),
+                                                  z.null(),
                                                 ),
                                               ])
                                               .exactOptional(),
@@ -910,7 +949,7 @@ export const realtimeHandler = new Hono()
                                                   }),
                                                 z.preprocess(
                                                   (val) => (val === 'null' ? null : val),
-                                                  z.null().nullable(),
+                                                  z.null(),
                                                 ),
                                               ])
                                               .exactOptional(),
@@ -949,10 +988,7 @@ export const realtimeHandler = new Hono()
                                       description:
                                         'Optional map of values to substitute in for variables in your\nprompt. The substitution values can either be strings, or other\nResponse input types like images or files.\n',
                                     }),
-                                  z.preprocess(
-                                    (val) => (val === 'null' ? null : val),
-                                    z.null().nullable(),
-                                  ),
+                                  z.preprocess((val) => (val === 'null' ? null : val), z.null()),
                                 ])
                                 .nullable(),
                             )
@@ -962,7 +998,7 @@ export const realtimeHandler = new Hono()
                           description:
                             'Reference to a prompt template and its variables.\n[Learn more](https://developers.openai.com/api/docs/guides/text?api-mode=responses#version-prompts-in-code).\n',
                         }),
-                      z.preprocess((val) => (val === 'null' ? null : val), z.null().nullable()),
+                      z.preprocess((val) => (val === 'null' ? null : val), z.null()),
                     ])
                     .nullable(),
                 )

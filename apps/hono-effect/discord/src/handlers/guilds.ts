@@ -74,7 +74,7 @@ export const guildsHandler = new Hono()
       'query',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          with_counts: Schema.optional(
+          with_counts: Schema.optionalKey(
             Schema.String.check(
               Schema.isPattern(/^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i),
             ).pipe(
@@ -111,108 +111,893 @@ export const guildsHandler = new Hono()
       'query',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          user_id: Schema.optional(SnowflakeTypeSchema),
-          target_id: Schema.optional(SnowflakeTypeSchema),
-          action_type: Schema.optional(
+          user_id: Schema.optionalKey(SnowflakeTypeSchema),
+          target_id: Schema.optionalKey(SnowflakeTypeSchema),
+          action_type: Schema.optionalKey(
             Schema.Union([
-              Schema.FiniteFromString.pipe(Schema.decodeTo(Schema.Literal(1))),
-              Schema.FiniteFromString.pipe(Schema.decodeTo(Schema.Literal(10))),
-              Schema.FiniteFromString.pipe(Schema.decodeTo(Schema.Literal(11))),
-              Schema.FiniteFromString.pipe(Schema.decodeTo(Schema.Literal(12))),
-              Schema.FiniteFromString.pipe(Schema.decodeTo(Schema.Literal(13))),
-              Schema.FiniteFromString.pipe(Schema.decodeTo(Schema.Literal(14))),
-              Schema.FiniteFromString.pipe(Schema.decodeTo(Schema.Literal(15))),
-              Schema.FiniteFromString.pipe(Schema.decodeTo(Schema.Literal(16))).annotate({
-                description: 'Channels were reordered',
-              }),
-              Schema.FiniteFromString.pipe(Schema.decodeTo(Schema.Literal(20))),
-              Schema.FiniteFromString.pipe(Schema.decodeTo(Schema.Literal(21))),
-              Schema.FiniteFromString.pipe(Schema.decodeTo(Schema.Literal(22))),
-              Schema.FiniteFromString.pipe(Schema.decodeTo(Schema.Literal(23))),
-              Schema.FiniteFromString.pipe(Schema.decodeTo(Schema.Literal(24))),
-              Schema.FiniteFromString.pipe(Schema.decodeTo(Schema.Literal(25))),
-              Schema.FiniteFromString.pipe(Schema.decodeTo(Schema.Literal(26))),
-              Schema.FiniteFromString.pipe(Schema.decodeTo(Schema.Literal(27))),
-              Schema.FiniteFromString.pipe(Schema.decodeTo(Schema.Literal(28))),
-              Schema.FiniteFromString.pipe(Schema.decodeTo(Schema.Literal(30))),
-              Schema.FiniteFromString.pipe(Schema.decodeTo(Schema.Literal(31))),
-              Schema.FiniteFromString.pipe(Schema.decodeTo(Schema.Literal(32))),
-              Schema.FiniteFromString.pipe(Schema.decodeTo(Schema.Literal(33))).annotate({
-                description: 'Roles were reordered',
-              }),
-              Schema.FiniteFromString.pipe(Schema.decodeTo(Schema.Literal(40))),
-              Schema.FiniteFromString.pipe(Schema.decodeTo(Schema.Literal(41))),
-              Schema.FiniteFromString.pipe(Schema.decodeTo(Schema.Literal(42))),
-              Schema.FiniteFromString.pipe(Schema.decodeTo(Schema.Literal(50))),
-              Schema.FiniteFromString.pipe(Schema.decodeTo(Schema.Literal(51))),
-              Schema.FiniteFromString.pipe(Schema.decodeTo(Schema.Literal(52))),
-              Schema.FiniteFromString.pipe(Schema.decodeTo(Schema.Literal(60))),
-              Schema.FiniteFromString.pipe(Schema.decodeTo(Schema.Literal(61))),
-              Schema.FiniteFromString.pipe(Schema.decodeTo(Schema.Literal(62))),
-              Schema.FiniteFromString.pipe(Schema.decodeTo(Schema.Literal(72))),
-              Schema.FiniteFromString.pipe(Schema.decodeTo(Schema.Literal(73))),
-              Schema.FiniteFromString.pipe(Schema.decodeTo(Schema.Literal(74))),
-              Schema.FiniteFromString.pipe(Schema.decodeTo(Schema.Literal(75))),
-              Schema.FiniteFromString.pipe(Schema.decodeTo(Schema.Literal(80))),
-              Schema.FiniteFromString.pipe(Schema.decodeTo(Schema.Literal(81))),
-              Schema.FiniteFromString.pipe(Schema.decodeTo(Schema.Literal(82))),
-              Schema.FiniteFromString.pipe(Schema.decodeTo(Schema.Literal(83))),
-              Schema.FiniteFromString.pipe(Schema.decodeTo(Schema.Literal(84))),
-              Schema.FiniteFromString.pipe(Schema.decodeTo(Schema.Literal(85))),
-              Schema.FiniteFromString.pipe(Schema.decodeTo(Schema.Literal(90))),
-              Schema.FiniteFromString.pipe(Schema.decodeTo(Schema.Literal(91))),
-              Schema.FiniteFromString.pipe(Schema.decodeTo(Schema.Literal(92))),
-              Schema.FiniteFromString.pipe(Schema.decodeTo(Schema.Literal(100))),
-              Schema.FiniteFromString.pipe(Schema.decodeTo(Schema.Literal(101))),
-              Schema.FiniteFromString.pipe(Schema.decodeTo(Schema.Literal(102))),
-              Schema.FiniteFromString.pipe(Schema.decodeTo(Schema.Literal(110))),
-              Schema.FiniteFromString.pipe(Schema.decodeTo(Schema.Literal(111))),
-              Schema.FiniteFromString.pipe(Schema.decodeTo(Schema.Literal(112))),
-              Schema.FiniteFromString.pipe(Schema.decodeTo(Schema.Literal(121))),
-              Schema.FiniteFromString.pipe(Schema.decodeTo(Schema.Literal(130))),
-              Schema.FiniteFromString.pipe(Schema.decodeTo(Schema.Literal(131))),
-              Schema.FiniteFromString.pipe(Schema.decodeTo(Schema.Literal(132))),
-              Schema.FiniteFromString.pipe(Schema.decodeTo(Schema.Literal(140))),
-              Schema.FiniteFromString.pipe(Schema.decodeTo(Schema.Literal(141))),
-              Schema.FiniteFromString.pipe(Schema.decodeTo(Schema.Literal(142))),
-              Schema.FiniteFromString.pipe(Schema.decodeTo(Schema.Literal(143))),
-              Schema.FiniteFromString.pipe(Schema.decodeTo(Schema.Literal(144))),
-              Schema.FiniteFromString.pipe(Schema.decodeTo(Schema.Literal(145))),
-              Schema.FiniteFromString.pipe(Schema.decodeTo(Schema.Literal(146))),
-              Schema.FiniteFromString.pipe(Schema.decodeTo(Schema.Literal(150))),
-              Schema.FiniteFromString.pipe(Schema.decodeTo(Schema.Literal(151))),
-              Schema.FiniteFromString.pipe(Schema.decodeTo(Schema.Literal(163))),
-              Schema.FiniteFromString.pipe(Schema.decodeTo(Schema.Literal(164))),
-              Schema.FiniteFromString.pipe(Schema.decodeTo(Schema.Literal(165))),
-              Schema.FiniteFromString.pipe(Schema.decodeTo(Schema.Literal(166))),
-              Schema.FiniteFromString.pipe(Schema.decodeTo(Schema.Literal(167))),
-              Schema.FiniteFromString.pipe(Schema.decodeTo(Schema.Literal(171))),
-              Schema.FiniteFromString.pipe(Schema.decodeTo(Schema.Literal(172))),
-              Schema.FiniteFromString.pipe(Schema.decodeTo(Schema.Literal(180))),
-              Schema.FiniteFromString.pipe(Schema.decodeTo(Schema.Literal(190))),
-              Schema.FiniteFromString.pipe(Schema.decodeTo(Schema.Literal(191))),
-              Schema.FiniteFromString.pipe(Schema.decodeTo(Schema.Literal(192))),
-              Schema.FiniteFromString.pipe(Schema.decodeTo(Schema.Literal(193))),
-              Schema.FiniteFromString.pipe(Schema.decodeTo(Schema.Literal(200))).annotate({
-                description: 'Scheduled event exception was created',
-              }),
-              Schema.FiniteFromString.pipe(Schema.decodeTo(Schema.Literal(201))).annotate({
-                description: 'Scheduled event exception was updated',
-              }),
-              Schema.FiniteFromString.pipe(Schema.decodeTo(Schema.Literal(202))).annotate({
-                description: 'Scheduled event exception was deleted',
-              }),
-              Schema.FiniteFromString.pipe(Schema.decodeTo(Schema.Literal(211))),
+              Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+                .pipe(
+                  Schema.decodeTo(
+                    Schema.Finite,
+                    SchemaTransformation.transform({
+                      decode: (input) => Number(input),
+                      encode: (output) => String(output),
+                    }),
+                  ),
+                )
+                .pipe(Schema.decodeTo(Schema.Literal(1))),
+              Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+                .pipe(
+                  Schema.decodeTo(
+                    Schema.Finite,
+                    SchemaTransformation.transform({
+                      decode: (input) => Number(input),
+                      encode: (output) => String(output),
+                    }),
+                  ),
+                )
+                .pipe(Schema.decodeTo(Schema.Literal(10))),
+              Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+                .pipe(
+                  Schema.decodeTo(
+                    Schema.Finite,
+                    SchemaTransformation.transform({
+                      decode: (input) => Number(input),
+                      encode: (output) => String(output),
+                    }),
+                  ),
+                )
+                .pipe(Schema.decodeTo(Schema.Literal(11))),
+              Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+                .pipe(
+                  Schema.decodeTo(
+                    Schema.Finite,
+                    SchemaTransformation.transform({
+                      decode: (input) => Number(input),
+                      encode: (output) => String(output),
+                    }),
+                  ),
+                )
+                .pipe(Schema.decodeTo(Schema.Literal(12))),
+              Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+                .pipe(
+                  Schema.decodeTo(
+                    Schema.Finite,
+                    SchemaTransformation.transform({
+                      decode: (input) => Number(input),
+                      encode: (output) => String(output),
+                    }),
+                  ),
+                )
+                .pipe(Schema.decodeTo(Schema.Literal(13))),
+              Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+                .pipe(
+                  Schema.decodeTo(
+                    Schema.Finite,
+                    SchemaTransformation.transform({
+                      decode: (input) => Number(input),
+                      encode: (output) => String(output),
+                    }),
+                  ),
+                )
+                .pipe(Schema.decodeTo(Schema.Literal(14))),
+              Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+                .pipe(
+                  Schema.decodeTo(
+                    Schema.Finite,
+                    SchemaTransformation.transform({
+                      decode: (input) => Number(input),
+                      encode: (output) => String(output),
+                    }),
+                  ),
+                )
+                .pipe(Schema.decodeTo(Schema.Literal(15))),
+              Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+                .pipe(
+                  Schema.decodeTo(
+                    Schema.Finite,
+                    SchemaTransformation.transform({
+                      decode: (input) => Number(input),
+                      encode: (output) => String(output),
+                    }),
+                  ),
+                )
+                .pipe(Schema.decodeTo(Schema.Literal(16)))
+                .annotate({ description: 'Channels were reordered' }),
+              Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+                .pipe(
+                  Schema.decodeTo(
+                    Schema.Finite,
+                    SchemaTransformation.transform({
+                      decode: (input) => Number(input),
+                      encode: (output) => String(output),
+                    }),
+                  ),
+                )
+                .pipe(Schema.decodeTo(Schema.Literal(20))),
+              Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+                .pipe(
+                  Schema.decodeTo(
+                    Schema.Finite,
+                    SchemaTransformation.transform({
+                      decode: (input) => Number(input),
+                      encode: (output) => String(output),
+                    }),
+                  ),
+                )
+                .pipe(Schema.decodeTo(Schema.Literal(21))),
+              Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+                .pipe(
+                  Schema.decodeTo(
+                    Schema.Finite,
+                    SchemaTransformation.transform({
+                      decode: (input) => Number(input),
+                      encode: (output) => String(output),
+                    }),
+                  ),
+                )
+                .pipe(Schema.decodeTo(Schema.Literal(22))),
+              Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+                .pipe(
+                  Schema.decodeTo(
+                    Schema.Finite,
+                    SchemaTransformation.transform({
+                      decode: (input) => Number(input),
+                      encode: (output) => String(output),
+                    }),
+                  ),
+                )
+                .pipe(Schema.decodeTo(Schema.Literal(23))),
+              Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+                .pipe(
+                  Schema.decodeTo(
+                    Schema.Finite,
+                    SchemaTransformation.transform({
+                      decode: (input) => Number(input),
+                      encode: (output) => String(output),
+                    }),
+                  ),
+                )
+                .pipe(Schema.decodeTo(Schema.Literal(24))),
+              Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+                .pipe(
+                  Schema.decodeTo(
+                    Schema.Finite,
+                    SchemaTransformation.transform({
+                      decode: (input) => Number(input),
+                      encode: (output) => String(output),
+                    }),
+                  ),
+                )
+                .pipe(Schema.decodeTo(Schema.Literal(25))),
+              Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+                .pipe(
+                  Schema.decodeTo(
+                    Schema.Finite,
+                    SchemaTransformation.transform({
+                      decode: (input) => Number(input),
+                      encode: (output) => String(output),
+                    }),
+                  ),
+                )
+                .pipe(Schema.decodeTo(Schema.Literal(26))),
+              Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+                .pipe(
+                  Schema.decodeTo(
+                    Schema.Finite,
+                    SchemaTransformation.transform({
+                      decode: (input) => Number(input),
+                      encode: (output) => String(output),
+                    }),
+                  ),
+                )
+                .pipe(Schema.decodeTo(Schema.Literal(27))),
+              Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+                .pipe(
+                  Schema.decodeTo(
+                    Schema.Finite,
+                    SchemaTransformation.transform({
+                      decode: (input) => Number(input),
+                      encode: (output) => String(output),
+                    }),
+                  ),
+                )
+                .pipe(Schema.decodeTo(Schema.Literal(28))),
+              Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+                .pipe(
+                  Schema.decodeTo(
+                    Schema.Finite,
+                    SchemaTransformation.transform({
+                      decode: (input) => Number(input),
+                      encode: (output) => String(output),
+                    }),
+                  ),
+                )
+                .pipe(Schema.decodeTo(Schema.Literal(30))),
+              Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+                .pipe(
+                  Schema.decodeTo(
+                    Schema.Finite,
+                    SchemaTransformation.transform({
+                      decode: (input) => Number(input),
+                      encode: (output) => String(output),
+                    }),
+                  ),
+                )
+                .pipe(Schema.decodeTo(Schema.Literal(31))),
+              Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+                .pipe(
+                  Schema.decodeTo(
+                    Schema.Finite,
+                    SchemaTransformation.transform({
+                      decode: (input) => Number(input),
+                      encode: (output) => String(output),
+                    }),
+                  ),
+                )
+                .pipe(Schema.decodeTo(Schema.Literal(32))),
+              Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+                .pipe(
+                  Schema.decodeTo(
+                    Schema.Finite,
+                    SchemaTransformation.transform({
+                      decode: (input) => Number(input),
+                      encode: (output) => String(output),
+                    }),
+                  ),
+                )
+                .pipe(Schema.decodeTo(Schema.Literal(33)))
+                .annotate({ description: 'Roles were reordered' }),
+              Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+                .pipe(
+                  Schema.decodeTo(
+                    Schema.Finite,
+                    SchemaTransformation.transform({
+                      decode: (input) => Number(input),
+                      encode: (output) => String(output),
+                    }),
+                  ),
+                )
+                .pipe(Schema.decodeTo(Schema.Literal(40))),
+              Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+                .pipe(
+                  Schema.decodeTo(
+                    Schema.Finite,
+                    SchemaTransformation.transform({
+                      decode: (input) => Number(input),
+                      encode: (output) => String(output),
+                    }),
+                  ),
+                )
+                .pipe(Schema.decodeTo(Schema.Literal(41))),
+              Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+                .pipe(
+                  Schema.decodeTo(
+                    Schema.Finite,
+                    SchemaTransformation.transform({
+                      decode: (input) => Number(input),
+                      encode: (output) => String(output),
+                    }),
+                  ),
+                )
+                .pipe(Schema.decodeTo(Schema.Literal(42))),
+              Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+                .pipe(
+                  Schema.decodeTo(
+                    Schema.Finite,
+                    SchemaTransformation.transform({
+                      decode: (input) => Number(input),
+                      encode: (output) => String(output),
+                    }),
+                  ),
+                )
+                .pipe(Schema.decodeTo(Schema.Literal(50))),
+              Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+                .pipe(
+                  Schema.decodeTo(
+                    Schema.Finite,
+                    SchemaTransformation.transform({
+                      decode: (input) => Number(input),
+                      encode: (output) => String(output),
+                    }),
+                  ),
+                )
+                .pipe(Schema.decodeTo(Schema.Literal(51))),
+              Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+                .pipe(
+                  Schema.decodeTo(
+                    Schema.Finite,
+                    SchemaTransformation.transform({
+                      decode: (input) => Number(input),
+                      encode: (output) => String(output),
+                    }),
+                  ),
+                )
+                .pipe(Schema.decodeTo(Schema.Literal(52))),
+              Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+                .pipe(
+                  Schema.decodeTo(
+                    Schema.Finite,
+                    SchemaTransformation.transform({
+                      decode: (input) => Number(input),
+                      encode: (output) => String(output),
+                    }),
+                  ),
+                )
+                .pipe(Schema.decodeTo(Schema.Literal(60))),
+              Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+                .pipe(
+                  Schema.decodeTo(
+                    Schema.Finite,
+                    SchemaTransformation.transform({
+                      decode: (input) => Number(input),
+                      encode: (output) => String(output),
+                    }),
+                  ),
+                )
+                .pipe(Schema.decodeTo(Schema.Literal(61))),
+              Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+                .pipe(
+                  Schema.decodeTo(
+                    Schema.Finite,
+                    SchemaTransformation.transform({
+                      decode: (input) => Number(input),
+                      encode: (output) => String(output),
+                    }),
+                  ),
+                )
+                .pipe(Schema.decodeTo(Schema.Literal(62))),
+              Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+                .pipe(
+                  Schema.decodeTo(
+                    Schema.Finite,
+                    SchemaTransformation.transform({
+                      decode: (input) => Number(input),
+                      encode: (output) => String(output),
+                    }),
+                  ),
+                )
+                .pipe(Schema.decodeTo(Schema.Literal(72))),
+              Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+                .pipe(
+                  Schema.decodeTo(
+                    Schema.Finite,
+                    SchemaTransformation.transform({
+                      decode: (input) => Number(input),
+                      encode: (output) => String(output),
+                    }),
+                  ),
+                )
+                .pipe(Schema.decodeTo(Schema.Literal(73))),
+              Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+                .pipe(
+                  Schema.decodeTo(
+                    Schema.Finite,
+                    SchemaTransformation.transform({
+                      decode: (input) => Number(input),
+                      encode: (output) => String(output),
+                    }),
+                  ),
+                )
+                .pipe(Schema.decodeTo(Schema.Literal(74))),
+              Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+                .pipe(
+                  Schema.decodeTo(
+                    Schema.Finite,
+                    SchemaTransformation.transform({
+                      decode: (input) => Number(input),
+                      encode: (output) => String(output),
+                    }),
+                  ),
+                )
+                .pipe(Schema.decodeTo(Schema.Literal(75))),
+              Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+                .pipe(
+                  Schema.decodeTo(
+                    Schema.Finite,
+                    SchemaTransformation.transform({
+                      decode: (input) => Number(input),
+                      encode: (output) => String(output),
+                    }),
+                  ),
+                )
+                .pipe(Schema.decodeTo(Schema.Literal(80))),
+              Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+                .pipe(
+                  Schema.decodeTo(
+                    Schema.Finite,
+                    SchemaTransformation.transform({
+                      decode: (input) => Number(input),
+                      encode: (output) => String(output),
+                    }),
+                  ),
+                )
+                .pipe(Schema.decodeTo(Schema.Literal(81))),
+              Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+                .pipe(
+                  Schema.decodeTo(
+                    Schema.Finite,
+                    SchemaTransformation.transform({
+                      decode: (input) => Number(input),
+                      encode: (output) => String(output),
+                    }),
+                  ),
+                )
+                .pipe(Schema.decodeTo(Schema.Literal(82))),
+              Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+                .pipe(
+                  Schema.decodeTo(
+                    Schema.Finite,
+                    SchemaTransformation.transform({
+                      decode: (input) => Number(input),
+                      encode: (output) => String(output),
+                    }),
+                  ),
+                )
+                .pipe(Schema.decodeTo(Schema.Literal(83))),
+              Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+                .pipe(
+                  Schema.decodeTo(
+                    Schema.Finite,
+                    SchemaTransformation.transform({
+                      decode: (input) => Number(input),
+                      encode: (output) => String(output),
+                    }),
+                  ),
+                )
+                .pipe(Schema.decodeTo(Schema.Literal(84))),
+              Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+                .pipe(
+                  Schema.decodeTo(
+                    Schema.Finite,
+                    SchemaTransformation.transform({
+                      decode: (input) => Number(input),
+                      encode: (output) => String(output),
+                    }),
+                  ),
+                )
+                .pipe(Schema.decodeTo(Schema.Literal(85))),
+              Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+                .pipe(
+                  Schema.decodeTo(
+                    Schema.Finite,
+                    SchemaTransformation.transform({
+                      decode: (input) => Number(input),
+                      encode: (output) => String(output),
+                    }),
+                  ),
+                )
+                .pipe(Schema.decodeTo(Schema.Literal(90))),
+              Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+                .pipe(
+                  Schema.decodeTo(
+                    Schema.Finite,
+                    SchemaTransformation.transform({
+                      decode: (input) => Number(input),
+                      encode: (output) => String(output),
+                    }),
+                  ),
+                )
+                .pipe(Schema.decodeTo(Schema.Literal(91))),
+              Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+                .pipe(
+                  Schema.decodeTo(
+                    Schema.Finite,
+                    SchemaTransformation.transform({
+                      decode: (input) => Number(input),
+                      encode: (output) => String(output),
+                    }),
+                  ),
+                )
+                .pipe(Schema.decodeTo(Schema.Literal(92))),
+              Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+                .pipe(
+                  Schema.decodeTo(
+                    Schema.Finite,
+                    SchemaTransformation.transform({
+                      decode: (input) => Number(input),
+                      encode: (output) => String(output),
+                    }),
+                  ),
+                )
+                .pipe(Schema.decodeTo(Schema.Literal(100))),
+              Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+                .pipe(
+                  Schema.decodeTo(
+                    Schema.Finite,
+                    SchemaTransformation.transform({
+                      decode: (input) => Number(input),
+                      encode: (output) => String(output),
+                    }),
+                  ),
+                )
+                .pipe(Schema.decodeTo(Schema.Literal(101))),
+              Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+                .pipe(
+                  Schema.decodeTo(
+                    Schema.Finite,
+                    SchemaTransformation.transform({
+                      decode: (input) => Number(input),
+                      encode: (output) => String(output),
+                    }),
+                  ),
+                )
+                .pipe(Schema.decodeTo(Schema.Literal(102))),
+              Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+                .pipe(
+                  Schema.decodeTo(
+                    Schema.Finite,
+                    SchemaTransformation.transform({
+                      decode: (input) => Number(input),
+                      encode: (output) => String(output),
+                    }),
+                  ),
+                )
+                .pipe(Schema.decodeTo(Schema.Literal(110))),
+              Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+                .pipe(
+                  Schema.decodeTo(
+                    Schema.Finite,
+                    SchemaTransformation.transform({
+                      decode: (input) => Number(input),
+                      encode: (output) => String(output),
+                    }),
+                  ),
+                )
+                .pipe(Schema.decodeTo(Schema.Literal(111))),
+              Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+                .pipe(
+                  Schema.decodeTo(
+                    Schema.Finite,
+                    SchemaTransformation.transform({
+                      decode: (input) => Number(input),
+                      encode: (output) => String(output),
+                    }),
+                  ),
+                )
+                .pipe(Schema.decodeTo(Schema.Literal(112))),
+              Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+                .pipe(
+                  Schema.decodeTo(
+                    Schema.Finite,
+                    SchemaTransformation.transform({
+                      decode: (input) => Number(input),
+                      encode: (output) => String(output),
+                    }),
+                  ),
+                )
+                .pipe(Schema.decodeTo(Schema.Literal(121))),
+              Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+                .pipe(
+                  Schema.decodeTo(
+                    Schema.Finite,
+                    SchemaTransformation.transform({
+                      decode: (input) => Number(input),
+                      encode: (output) => String(output),
+                    }),
+                  ),
+                )
+                .pipe(Schema.decodeTo(Schema.Literal(130))),
+              Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+                .pipe(
+                  Schema.decodeTo(
+                    Schema.Finite,
+                    SchemaTransformation.transform({
+                      decode: (input) => Number(input),
+                      encode: (output) => String(output),
+                    }),
+                  ),
+                )
+                .pipe(Schema.decodeTo(Schema.Literal(131))),
+              Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+                .pipe(
+                  Schema.decodeTo(
+                    Schema.Finite,
+                    SchemaTransformation.transform({
+                      decode: (input) => Number(input),
+                      encode: (output) => String(output),
+                    }),
+                  ),
+                )
+                .pipe(Schema.decodeTo(Schema.Literal(132))),
+              Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+                .pipe(
+                  Schema.decodeTo(
+                    Schema.Finite,
+                    SchemaTransformation.transform({
+                      decode: (input) => Number(input),
+                      encode: (output) => String(output),
+                    }),
+                  ),
+                )
+                .pipe(Schema.decodeTo(Schema.Literal(140))),
+              Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+                .pipe(
+                  Schema.decodeTo(
+                    Schema.Finite,
+                    SchemaTransformation.transform({
+                      decode: (input) => Number(input),
+                      encode: (output) => String(output),
+                    }),
+                  ),
+                )
+                .pipe(Schema.decodeTo(Schema.Literal(141))),
+              Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+                .pipe(
+                  Schema.decodeTo(
+                    Schema.Finite,
+                    SchemaTransformation.transform({
+                      decode: (input) => Number(input),
+                      encode: (output) => String(output),
+                    }),
+                  ),
+                )
+                .pipe(Schema.decodeTo(Schema.Literal(142))),
+              Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+                .pipe(
+                  Schema.decodeTo(
+                    Schema.Finite,
+                    SchemaTransformation.transform({
+                      decode: (input) => Number(input),
+                      encode: (output) => String(output),
+                    }),
+                  ),
+                )
+                .pipe(Schema.decodeTo(Schema.Literal(143))),
+              Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+                .pipe(
+                  Schema.decodeTo(
+                    Schema.Finite,
+                    SchemaTransformation.transform({
+                      decode: (input) => Number(input),
+                      encode: (output) => String(output),
+                    }),
+                  ),
+                )
+                .pipe(Schema.decodeTo(Schema.Literal(144))),
+              Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+                .pipe(
+                  Schema.decodeTo(
+                    Schema.Finite,
+                    SchemaTransformation.transform({
+                      decode: (input) => Number(input),
+                      encode: (output) => String(output),
+                    }),
+                  ),
+                )
+                .pipe(Schema.decodeTo(Schema.Literal(145))),
+              Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+                .pipe(
+                  Schema.decodeTo(
+                    Schema.Finite,
+                    SchemaTransformation.transform({
+                      decode: (input) => Number(input),
+                      encode: (output) => String(output),
+                    }),
+                  ),
+                )
+                .pipe(Schema.decodeTo(Schema.Literal(146))),
+              Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+                .pipe(
+                  Schema.decodeTo(
+                    Schema.Finite,
+                    SchemaTransformation.transform({
+                      decode: (input) => Number(input),
+                      encode: (output) => String(output),
+                    }),
+                  ),
+                )
+                .pipe(Schema.decodeTo(Schema.Literal(150))),
+              Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+                .pipe(
+                  Schema.decodeTo(
+                    Schema.Finite,
+                    SchemaTransformation.transform({
+                      decode: (input) => Number(input),
+                      encode: (output) => String(output),
+                    }),
+                  ),
+                )
+                .pipe(Schema.decodeTo(Schema.Literal(151))),
+              Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+                .pipe(
+                  Schema.decodeTo(
+                    Schema.Finite,
+                    SchemaTransformation.transform({
+                      decode: (input) => Number(input),
+                      encode: (output) => String(output),
+                    }),
+                  ),
+                )
+                .pipe(Schema.decodeTo(Schema.Literal(163))),
+              Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+                .pipe(
+                  Schema.decodeTo(
+                    Schema.Finite,
+                    SchemaTransformation.transform({
+                      decode: (input) => Number(input),
+                      encode: (output) => String(output),
+                    }),
+                  ),
+                )
+                .pipe(Schema.decodeTo(Schema.Literal(164))),
+              Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+                .pipe(
+                  Schema.decodeTo(
+                    Schema.Finite,
+                    SchemaTransformation.transform({
+                      decode: (input) => Number(input),
+                      encode: (output) => String(output),
+                    }),
+                  ),
+                )
+                .pipe(Schema.decodeTo(Schema.Literal(165))),
+              Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+                .pipe(
+                  Schema.decodeTo(
+                    Schema.Finite,
+                    SchemaTransformation.transform({
+                      decode: (input) => Number(input),
+                      encode: (output) => String(output),
+                    }),
+                  ),
+                )
+                .pipe(Schema.decodeTo(Schema.Literal(166))),
+              Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+                .pipe(
+                  Schema.decodeTo(
+                    Schema.Finite,
+                    SchemaTransformation.transform({
+                      decode: (input) => Number(input),
+                      encode: (output) => String(output),
+                    }),
+                  ),
+                )
+                .pipe(Schema.decodeTo(Schema.Literal(167))),
+              Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+                .pipe(
+                  Schema.decodeTo(
+                    Schema.Finite,
+                    SchemaTransformation.transform({
+                      decode: (input) => Number(input),
+                      encode: (output) => String(output),
+                    }),
+                  ),
+                )
+                .pipe(Schema.decodeTo(Schema.Literal(171))),
+              Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+                .pipe(
+                  Schema.decodeTo(
+                    Schema.Finite,
+                    SchemaTransformation.transform({
+                      decode: (input) => Number(input),
+                      encode: (output) => String(output),
+                    }),
+                  ),
+                )
+                .pipe(Schema.decodeTo(Schema.Literal(172))),
+              Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+                .pipe(
+                  Schema.decodeTo(
+                    Schema.Finite,
+                    SchemaTransformation.transform({
+                      decode: (input) => Number(input),
+                      encode: (output) => String(output),
+                    }),
+                  ),
+                )
+                .pipe(Schema.decodeTo(Schema.Literal(180))),
+              Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+                .pipe(
+                  Schema.decodeTo(
+                    Schema.Finite,
+                    SchemaTransformation.transform({
+                      decode: (input) => Number(input),
+                      encode: (output) => String(output),
+                    }),
+                  ),
+                )
+                .pipe(Schema.decodeTo(Schema.Literal(190))),
+              Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+                .pipe(
+                  Schema.decodeTo(
+                    Schema.Finite,
+                    SchemaTransformation.transform({
+                      decode: (input) => Number(input),
+                      encode: (output) => String(output),
+                    }),
+                  ),
+                )
+                .pipe(Schema.decodeTo(Schema.Literal(191))),
+              Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+                .pipe(
+                  Schema.decodeTo(
+                    Schema.Finite,
+                    SchemaTransformation.transform({
+                      decode: (input) => Number(input),
+                      encode: (output) => String(output),
+                    }),
+                  ),
+                )
+                .pipe(Schema.decodeTo(Schema.Literal(192))),
+              Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+                .pipe(
+                  Schema.decodeTo(
+                    Schema.Finite,
+                    SchemaTransformation.transform({
+                      decode: (input) => Number(input),
+                      encode: (output) => String(output),
+                    }),
+                  ),
+                )
+                .pipe(Schema.decodeTo(Schema.Literal(193))),
+              Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+                .pipe(
+                  Schema.decodeTo(
+                    Schema.Finite,
+                    SchemaTransformation.transform({
+                      decode: (input) => Number(input),
+                      encode: (output) => String(output),
+                    }),
+                  ),
+                )
+                .pipe(Schema.decodeTo(Schema.Literal(200)))
+                .annotate({ description: 'Scheduled event exception was created' }),
+              Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+                .pipe(
+                  Schema.decodeTo(
+                    Schema.Finite,
+                    SchemaTransformation.transform({
+                      decode: (input) => Number(input),
+                      encode: (output) => String(output),
+                    }),
+                  ),
+                )
+                .pipe(Schema.decodeTo(Schema.Literal(201)))
+                .annotate({ description: 'Scheduled event exception was updated' }),
+              Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+                .pipe(
+                  Schema.decodeTo(
+                    Schema.Finite,
+                    SchemaTransformation.transform({
+                      decode: (input) => Number(input),
+                      encode: (output) => String(output),
+                    }),
+                  ),
+                )
+                .pipe(Schema.decodeTo(Schema.Literal(202)))
+                .annotate({ description: 'Scheduled event exception was deleted' }),
+              Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+                .pipe(
+                  Schema.decodeTo(
+                    Schema.Finite,
+                    SchemaTransformation.transform({
+                      decode: (input) => Number(input),
+                      encode: (output) => String(output),
+                    }),
+                  ),
+                )
+                .pipe(Schema.decodeTo(Schema.Literal(211))),
             ]),
           ),
-          before: Schema.optional(SnowflakeTypeSchema),
-          after: Schema.optional(SnowflakeTypeSchema),
-          limit: Schema.optional(
-            Schema.FiniteFromString.check(
-              Schema.isInt(),
-              Schema.isGreaterThanOrEqualTo(1),
-              Schema.isLessThanOrEqualTo(100),
-            ),
+          before: Schema.optionalKey(SnowflakeTypeSchema),
+          after: Schema.optionalKey(SnowflakeTypeSchema),
+          limit: Schema.optionalKey(
+            Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+              .pipe(
+                Schema.decodeTo(
+                  Schema.Finite,
+                  SchemaTransformation.transform({
+                    decode: (input) => Number(input),
+                    encode: (output) => String(output),
+                  }),
+                ),
+              )
+              .check(
+                Schema.isInt(),
+                Schema.isGreaterThanOrEqualTo(1),
+                Schema.isLessThanOrEqualTo(100),
+              ),
           ),
         }),
       ),
@@ -299,15 +1084,25 @@ export const guildsHandler = new Hono()
       'query',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          limit: Schema.optional(
-            Schema.FiniteFromString.check(
-              Schema.isInt(),
-              Schema.isGreaterThanOrEqualTo(1),
-              Schema.isLessThanOrEqualTo(1000),
-            ),
+          limit: Schema.optionalKey(
+            Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+              .pipe(
+                Schema.decodeTo(
+                  Schema.Finite,
+                  SchemaTransformation.transform({
+                    decode: (input) => Number(input),
+                    encode: (output) => String(output),
+                  }),
+                ),
+              )
+              .check(
+                Schema.isInt(),
+                Schema.isGreaterThanOrEqualTo(1),
+                Schema.isLessThanOrEqualTo(1000),
+              ),
           ),
-          before: Schema.optional(SnowflakeTypeSchema),
-          after: Schema.optional(SnowflakeTypeSchema),
+          before: Schema.optionalKey(SnowflakeTypeSchema),
+          after: Schema.optionalKey(SnowflakeTypeSchema),
         }),
       ),
     ),
@@ -382,16 +1177,14 @@ export const guildsHandler = new Hono()
       Schema.toStandardSchemaV1(
         Schema.Array(
           Schema.Struct({
-            id: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema])),
-            position: Schema.optional(
+            id: Schema.optionalKey(Schema.Union([Schema.Null, SnowflakeTypeSchema])),
+            position: Schema.optionalKey(
               Schema.NullOr(
                 Schema.Number.check(Schema.isInt32(), Schema.isGreaterThanOrEqualTo(0)),
               ),
             ),
-            parent_id: Schema.optional(
-              Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema]),
-            ),
-            lock_permissions: Schema.optional(Schema.NullOr(Schema.Boolean)),
+            parent_id: Schema.optionalKey(Schema.Union([Schema.Null, SnowflakeTypeSchema])),
+            lock_permissions: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
           }),
         ),
       ),
@@ -425,9 +1218,9 @@ export const guildsHandler = new Hono()
             }),
           ),
           image: Schema.String,
-          roles: Schema.optional(
+          roles: Schema.optionalKey(
             Schema.NullOr(
-              Schema.Array(Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema])).check(
+              Schema.Array(Schema.Union([Schema.Null, SnowflakeTypeSchema])).check(
                 Schema.isMaxLength(1521),
                 Schema.isUnique(),
               ),
@@ -470,7 +1263,7 @@ export const guildsHandler = new Hono()
       'json',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          name: Schema.optional(
+          name: Schema.optionalKey(
             Schema.String.check(
               Schema.makeFilter((input) => [...input].length >= 2, {
                 expected: 'a string of at least 2 characters',
@@ -480,9 +1273,9 @@ export const guildsHandler = new Hono()
               }),
             ),
           ),
-          roles: Schema.optional(
+          roles: Schema.optionalKey(
             Schema.NullOr(
-              Schema.Array(Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema])).check(
+              Schema.Array(Schema.Union([Schema.Null, SnowflakeTypeSchema])).check(
                 Schema.isMaxLength(1521),
                 Schema.isUnique(),
               ),
@@ -538,14 +1331,24 @@ export const guildsHandler = new Hono()
       'query',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          limit: Schema.optional(
-            Schema.FiniteFromString.check(
-              Schema.isInt(),
-              Schema.isGreaterThanOrEqualTo(1),
-              Schema.isLessThanOrEqualTo(1000),
-            ),
+          limit: Schema.optionalKey(
+            Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+              .pipe(
+                Schema.decodeTo(
+                  Schema.Finite,
+                  SchemaTransformation.transform({
+                    decode: (input) => Number(input),
+                    encode: (output) => String(output),
+                  }),
+                ),
+              )
+              .check(
+                Schema.isInt(),
+                Schema.isGreaterThanOrEqualTo(1),
+                Schema.isLessThanOrEqualTo(1000),
+              ),
           ),
-          after: Schema.optional(SnowflakeTypeSchema),
+          after: Schema.optionalKey(SnowflakeTypeSchema),
         }),
       ),
     ),
@@ -561,7 +1364,7 @@ export const guildsHandler = new Hono()
       'json',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          nick: Schema.optional(
+          nick: Schema.optionalKey(
             Schema.NullOr(
               Schema.String.check(
                 Schema.makeFilter((input) => [...input].length <= 32, {
@@ -570,8 +1373,8 @@ export const guildsHandler = new Hono()
               ),
             ),
           ),
-          avatar: Schema.optional(Schema.NullOr(Schema.String)),
-          bio: Schema.optional(
+          avatar: Schema.optionalKey(Schema.NullOr(Schema.String)),
+          bio: Schema.optionalKey(
             Schema.NullOr(
               Schema.String.check(
                 Schema.makeFilter((input) => [...input].length <= 300, {
@@ -580,7 +1383,7 @@ export const guildsHandler = new Hono()
               ),
             ),
           ),
-          banner: Schema.optional(Schema.NullOr(Schema.String)),
+          banner: Schema.optionalKey(Schema.NullOr(Schema.String)),
         }),
       ),
     ),
@@ -596,12 +1399,22 @@ export const guildsHandler = new Hono()
       'query',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          limit: Schema.optional(
-            Schema.FiniteFromString.check(
-              Schema.isInt(),
-              Schema.isGreaterThanOrEqualTo(1),
-              Schema.isLessThanOrEqualTo(1000),
-            ),
+          limit: Schema.optionalKey(
+            Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+              .pipe(
+                Schema.decodeTo(
+                  Schema.Finite,
+                  SchemaTransformation.transform({
+                    decode: (input) => Number(input),
+                    encode: (output) => String(output),
+                  }),
+                ),
+              )
+              .check(
+                Schema.isInt(),
+                Schema.isGreaterThanOrEqualTo(1),
+                Schema.isLessThanOrEqualTo(1000),
+              ),
           ),
           query: Schema.String.check(
             Schema.makeFilter((input) => [...input].length >= 1, {
@@ -659,7 +1472,7 @@ export const guildsHandler = new Hono()
       'json',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          nick: Schema.optional(
+          nick: Schema.optionalKey(
             Schema.NullOr(
               Schema.String.check(
                 Schema.makeFilter((input) => [...input].length <= 32, {
@@ -668,20 +1481,18 @@ export const guildsHandler = new Hono()
               ),
             ),
           ),
-          roles: Schema.optional(
+          roles: Schema.optionalKey(
             Schema.NullOr(
-              Schema.Array(Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema])).check(
+              Schema.Array(Schema.Union([Schema.Null, SnowflakeTypeSchema])).check(
                 Schema.isMaxLength(350),
                 Schema.isUnique(),
               ),
             ),
           ),
-          mute: Schema.optional(Schema.NullOr(Schema.Boolean)),
-          deaf: Schema.optional(Schema.NullOr(Schema.Boolean)),
-          channel_id: Schema.optional(
-            Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema]),
-          ),
-          communication_disabled_until: Schema.optional(
+          mute: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
+          deaf: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
+          channel_id: Schema.optionalKey(Schema.Union([Schema.Null, SnowflakeTypeSchema])),
+          communication_disabled_until: Schema.optionalKey(
             Schema.NullOr(
               Schema.String.check(
                 Schema.isPattern(
@@ -690,7 +1501,7 @@ export const guildsHandler = new Hono()
               ),
             ),
           ),
-          flags: Schema.optional(Schema.NullOr(Schema.Number.check(Schema.isInt()))),
+          flags: Schema.optionalKey(Schema.NullOr(Schema.Number.check(Schema.isInt()))),
         }),
       ),
     ),
@@ -734,23 +1545,33 @@ export const guildsHandler = new Hono()
       'query',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          sort_by: Schema.optional(SortingModeSchema),
-          sort_order: Schema.optional(SortingOrderSchema),
-          content: Schema.optional(
+          sort_by: Schema.optionalKey(SortingModeSchema),
+          sort_order: Schema.optionalKey(SortingOrderSchema),
+          content: Schema.optionalKey(
             Schema.String.check(
               Schema.makeFilter((input) => [...input].length <= 1024, {
                 expected: 'a string of at most 1024 characters',
               }),
             ),
           ),
-          slop: Schema.optional(
-            Schema.FiniteFromString.check(
-              Schema.isInt(),
-              Schema.isGreaterThanOrEqualTo(0),
-              Schema.isLessThanOrEqualTo(100),
-            ),
+          slop: Schema.optionalKey(
+            Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+              .pipe(
+                Schema.decodeTo(
+                  Schema.Finite,
+                  SchemaTransformation.transform({
+                    decode: (input) => Number(input),
+                    encode: (output) => String(output),
+                  }),
+                ),
+              )
+              .check(
+                Schema.isInt(),
+                Schema.isGreaterThanOrEqualTo(0),
+                Schema.isLessThanOrEqualTo(100),
+              ),
           ),
-          author_id: Schema.optional(
+          author_id: Schema.optionalKey(
             Schema.Unknown.pipe(
               Schema.decodeTo(
                 Schema.Unknown,
@@ -765,7 +1586,7 @@ export const guildsHandler = new Hono()
               ),
             ),
           ),
-          author_type: Schema.optional(
+          author_type: Schema.optionalKey(
             Schema.Unknown.pipe(
               Schema.decodeTo(
                 Schema.Unknown,
@@ -780,7 +1601,7 @@ export const guildsHandler = new Hono()
               ),
             ),
           ),
-          mentions: Schema.optional(
+          mentions: Schema.optionalKey(
             Schema.Unknown.pipe(
               Schema.decodeTo(
                 Schema.Unknown,
@@ -795,7 +1616,7 @@ export const guildsHandler = new Hono()
               ),
             ),
           ),
-          mentions_role_id: Schema.optional(
+          mentions_role_id: Schema.optionalKey(
             Schema.Unknown.pipe(
               Schema.decodeTo(
                 Schema.Unknown,
@@ -810,7 +1631,7 @@ export const guildsHandler = new Hono()
               ),
             ),
           ),
-          replied_to_user_id: Schema.optional(
+          replied_to_user_id: Schema.optionalKey(
             Schema.Unknown.pipe(
               Schema.decodeTo(
                 Schema.Unknown,
@@ -825,7 +1646,7 @@ export const guildsHandler = new Hono()
               ),
             ),
           ),
-          replied_to_message_id: Schema.optional(
+          replied_to_message_id: Schema.optionalKey(
             Schema.Unknown.pipe(
               Schema.decodeTo(
                 Schema.Unknown,
@@ -840,7 +1661,7 @@ export const guildsHandler = new Hono()
               ),
             ),
           ),
-          mention_everyone: Schema.optional(
+          mention_everyone: Schema.optionalKey(
             Schema.String.check(
               Schema.isPattern(/^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i),
             ).pipe(
@@ -853,23 +1674,43 @@ export const guildsHandler = new Hono()
               ),
             ),
           ),
-          min_id: Schema.optional(SnowflakeTypeSchema),
-          max_id: Schema.optional(SnowflakeTypeSchema),
-          limit: Schema.optional(
-            Schema.FiniteFromString.check(
-              Schema.isInt(),
-              Schema.isGreaterThanOrEqualTo(1),
-              Schema.isLessThanOrEqualTo(25),
-            ),
+          min_id: Schema.optionalKey(SnowflakeTypeSchema),
+          max_id: Schema.optionalKey(SnowflakeTypeSchema),
+          limit: Schema.optionalKey(
+            Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+              .pipe(
+                Schema.decodeTo(
+                  Schema.Finite,
+                  SchemaTransformation.transform({
+                    decode: (input) => Number(input),
+                    encode: (output) => String(output),
+                  }),
+                ),
+              )
+              .check(
+                Schema.isInt(),
+                Schema.isGreaterThanOrEqualTo(1),
+                Schema.isLessThanOrEqualTo(25),
+              ),
           ),
-          offset: Schema.optional(
-            Schema.FiniteFromString.check(
-              Schema.isInt(),
-              Schema.isGreaterThanOrEqualTo(0),
-              Schema.isLessThanOrEqualTo(9975),
-            ),
+          offset: Schema.optionalKey(
+            Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+              .pipe(
+                Schema.decodeTo(
+                  Schema.Finite,
+                  SchemaTransformation.transform({
+                    decode: (input) => Number(input),
+                    encode: (output) => String(output),
+                  }),
+                ),
+              )
+              .check(
+                Schema.isInt(),
+                Schema.isGreaterThanOrEqualTo(0),
+                Schema.isLessThanOrEqualTo(9975),
+              ),
           ),
-          has: Schema.optional(
+          has: Schema.optionalKey(
             Schema.Unknown.pipe(
               Schema.decodeTo(
                 Schema.Unknown,
@@ -884,7 +1725,7 @@ export const guildsHandler = new Hono()
               ),
             ),
           ),
-          link_hostname: Schema.optional(
+          link_hostname: Schema.optionalKey(
             Schema.Unknown.pipe(
               Schema.decodeTo(
                 Schema.Unknown,
@@ -905,7 +1746,7 @@ export const guildsHandler = new Hono()
               ),
             ),
           ),
-          embed_provider: Schema.optional(
+          embed_provider: Schema.optionalKey(
             Schema.Unknown.pipe(
               Schema.decodeTo(
                 Schema.Unknown,
@@ -926,7 +1767,7 @@ export const guildsHandler = new Hono()
               ),
             ),
           ),
-          embed_type: Schema.optional(
+          embed_type: Schema.optionalKey(
             Schema.Unknown.pipe(
               Schema.decodeTo(
                 Schema.Unknown,
@@ -944,7 +1785,7 @@ export const guildsHandler = new Hono()
               ),
             ),
           ),
-          attachment_extension: Schema.optional(
+          attachment_extension: Schema.optionalKey(
             Schema.Unknown.pipe(
               Schema.decodeTo(
                 Schema.Unknown,
@@ -965,7 +1806,7 @@ export const guildsHandler = new Hono()
               ),
             ),
           ),
-          attachment_filename: Schema.optional(
+          attachment_filename: Schema.optionalKey(
             Schema.Unknown.pipe(
               Schema.decodeTo(
                 Schema.Unknown,
@@ -986,7 +1827,7 @@ export const guildsHandler = new Hono()
               ),
             ),
           ),
-          pinned: Schema.optional(
+          pinned: Schema.optionalKey(
             Schema.String.check(
               Schema.isPattern(/^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i),
             ).pipe(
@@ -999,7 +1840,7 @@ export const guildsHandler = new Hono()
               ),
             ),
           ),
-          include_nsfw: Schema.optional(
+          include_nsfw: Schema.optionalKey(
             Schema.String.check(
               Schema.isPattern(/^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i),
             ).pipe(
@@ -1012,7 +1853,7 @@ export const guildsHandler = new Hono()
               ),
             ),
           ),
-          channel_id: Schema.optional(
+          channel_id: Schema.optionalKey(
             Schema.Unknown.pipe(
               Schema.decodeTo(
                 Schema.Unknown,
@@ -1095,14 +1936,24 @@ export const guildsHandler = new Hono()
       'query',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          days: Schema.optional(
-            Schema.FiniteFromString.check(
-              Schema.isInt(),
-              Schema.isGreaterThanOrEqualTo(1),
-              Schema.isLessThanOrEqualTo(30),
-            ),
+          days: Schema.optionalKey(
+            Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+              .pipe(
+                Schema.decodeTo(
+                  Schema.Finite,
+                  SchemaTransformation.transform({
+                    decode: (input) => Number(input),
+                    encode: (output) => String(output),
+                  }),
+                ),
+              )
+              .check(
+                Schema.isInt(),
+                Schema.isGreaterThanOrEqualTo(1),
+                Schema.isLessThanOrEqualTo(30),
+              ),
           ),
-          include_roles: Schema.optional(
+          include_roles: Schema.optionalKey(
             Schema.Union([
               Schema.String,
               Schema.Unknown.pipe(
@@ -1135,7 +1986,7 @@ export const guildsHandler = new Hono()
                                   encode: (output) => output,
                                 }),
                               ),
-                              Schema.decodeTo(Schema.NullOr(Schema.Null)),
+                              Schema.decodeTo(Schema.Null),
                             ),
                             SnowflakeTypeSchema,
                           ]),
@@ -1179,16 +2030,26 @@ export const guildsHandler = new Hono()
       'query',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          status: Schema.optional(GuildJoinRequestApplicationStatusSchema),
-          limit: Schema.optional(
-            Schema.FiniteFromString.check(
-              Schema.isInt(),
-              Schema.isGreaterThanOrEqualTo(1),
-              Schema.isLessThanOrEqualTo(100),
-            ),
+          status: Schema.optionalKey(GuildJoinRequestApplicationStatusSchema),
+          limit: Schema.optionalKey(
+            Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+              .pipe(
+                Schema.decodeTo(
+                  Schema.Finite,
+                  SchemaTransformation.transform({
+                    decode: (input) => Number(input),
+                    encode: (output) => String(output),
+                  }),
+                ),
+              )
+              .check(
+                Schema.isInt(),
+                Schema.isGreaterThanOrEqualTo(1),
+                Schema.isLessThanOrEqualTo(100),
+              ),
           ),
-          before: Schema.optional(SnowflakeTypeSchema),
-          after: Schema.optional(SnowflakeTypeSchema),
+          before: Schema.optionalKey(SnowflakeTypeSchema),
+          after: Schema.optionalKey(SnowflakeTypeSchema),
         }),
       ),
     ),
@@ -1206,12 +2067,12 @@ export const guildsHandler = new Hono()
       'json',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          action: Schema.optional(
+          action: Schema.optionalKey(
             GuildJoinRequestApplicationStatusSchema.annotate({
               description: 'Whether to approve or reject the join request',
             }),
           ),
-          rejection_reason: Schema.optional(
+          rejection_reason: Schema.optionalKey(
             Schema.NullOr(
               Schema.String.check(
                 Schema.makeFilter((input) => [...input].length <= 160, {
@@ -1300,7 +2161,7 @@ export const guildsHandler = new Hono()
       'query',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          with_user_count: Schema.optional(
+          with_user_count: Schema.optionalKey(
             Schema.String.check(
               Schema.isPattern(/^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i),
             ).pipe(
@@ -1351,7 +2212,7 @@ export const guildsHandler = new Hono()
       'query',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          with_user_count: Schema.optional(
+          with_user_count: Schema.optionalKey(
             Schema.String.check(
               Schema.isPattern(/^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i),
             ).pipe(
@@ -1466,7 +2327,7 @@ export const guildsHandler = new Hono()
       'query',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          with_member: Schema.optional(
+          with_member: Schema.optionalKey(
             Schema.String.check(
               Schema.isPattern(/^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i),
             ).pipe(
@@ -1479,15 +2340,25 @@ export const guildsHandler = new Hono()
               ),
             ),
           ),
-          limit: Schema.optional(
-            Schema.FiniteFromString.check(
-              Schema.isInt(),
-              Schema.isGreaterThanOrEqualTo(1),
-              Schema.isLessThanOrEqualTo(100),
-            ),
+          limit: Schema.optionalKey(
+            Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+              .pipe(
+                Schema.decodeTo(
+                  Schema.Finite,
+                  SchemaTransformation.transform({
+                    decode: (input) => Number(input),
+                    encode: (output) => String(output),
+                  }),
+                ),
+              )
+              .check(
+                Schema.isInt(),
+                Schema.isGreaterThanOrEqualTo(1),
+                Schema.isLessThanOrEqualTo(100),
+              ),
           ),
-          before: Schema.optional(SnowflakeTypeSchema),
-          after: Schema.optional(SnowflakeTypeSchema),
+          before: Schema.optionalKey(SnowflakeTypeSchema),
+          after: Schema.optionalKey(SnowflakeTypeSchema),
         }),
       ),
     ),
@@ -1508,7 +2379,7 @@ export const guildsHandler = new Hono()
       'query',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          guild_scheduled_event_exception_ids: Schema.optional(
+          guild_scheduled_event_exception_ids: Schema.optionalKey(
             Schema.Unknown.pipe(
               Schema.decodeTo(
                 Schema.Unknown,
@@ -1542,7 +2413,7 @@ export const guildsHandler = new Hono()
       'query',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          with_member: Schema.optional(
+          with_member: Schema.optionalKey(
             Schema.String.check(
               Schema.isPattern(/^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i),
             ).pipe(
@@ -1555,15 +2426,25 @@ export const guildsHandler = new Hono()
               ),
             ),
           ),
-          limit: Schema.optional(
-            Schema.FiniteFromString.check(
-              Schema.isInt(),
-              Schema.isGreaterThanOrEqualTo(1),
-              Schema.isLessThanOrEqualTo(100),
-            ),
+          limit: Schema.optionalKey(
+            Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+              .pipe(
+                Schema.decodeTo(
+                  Schema.Finite,
+                  SchemaTransformation.transform({
+                    decode: (input) => Number(input),
+                    encode: (output) => String(output),
+                  }),
+                ),
+              )
+              .check(
+                Schema.isInt(),
+                Schema.isGreaterThanOrEqualTo(1),
+                Schema.isLessThanOrEqualTo(100),
+              ),
           ),
-          before: Schema.optional(SnowflakeTypeSchema),
-          after: Schema.optional(SnowflakeTypeSchema),
+          before: Schema.optionalKey(SnowflakeTypeSchema),
+          after: Schema.optionalKey(SnowflakeTypeSchema),
         }),
       ),
     ),
@@ -1651,7 +2532,7 @@ export const guildsHandler = new Hono()
               expected: 'a string of at most 200 characters',
             }),
           ),
-          description: Schema.optional(
+          description: Schema.optionalKey(
             Schema.NullOr(
               Schema.String.check(
                 Schema.makeFilter((input) => [...input].length <= 100, {
@@ -1698,7 +2579,7 @@ export const guildsHandler = new Hono()
       'json',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          name: Schema.optional(
+          name: Schema.optionalKey(
             Schema.String.check(
               Schema.makeFilter((input) => [...input].length >= 2, {
                 expected: 'a string of at least 2 characters',
@@ -1708,7 +2589,7 @@ export const guildsHandler = new Hono()
               }),
             ),
           ),
-          tags: Schema.optional(
+          tags: Schema.optionalKey(
             Schema.String.check(
               Schema.makeFilter((input) => [...input].length >= 1, {
                 expected: 'a string of at least 1 character',
@@ -1718,7 +2599,7 @@ export const guildsHandler = new Hono()
               }),
             ),
           ),
-          description: Schema.optional(
+          description: Schema.optionalKey(
             Schema.NullOr(
               Schema.String.check(
                 Schema.makeFilter((input) => [...input].length <= 100, {
@@ -1758,7 +2639,7 @@ export const guildsHandler = new Hono()
               expected: 'a string of at most 100 characters',
             }),
           ),
-          description: Schema.optional(
+          description: Schema.optionalKey(
             Schema.NullOr(
               Schema.String.check(
                 Schema.makeFilter((input) => [...input].length <= 120, {
@@ -1825,7 +2706,7 @@ export const guildsHandler = new Hono()
       'json',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          name: Schema.optional(
+          name: Schema.optionalKey(
             Schema.String.check(
               Schema.makeFilter((input) => [...input].length >= 1, {
                 expected: 'a string of at least 1 character',
@@ -1835,7 +2716,7 @@ export const guildsHandler = new Hono()
               }),
             ),
           ),
-          description: Schema.optional(
+          description: Schema.optionalKey(
             Schema.NullOr(
               Schema.String.check(
                 Schema.makeFilter((input) => [...input].length <= 120, {
@@ -1946,10 +2827,8 @@ export const guildsHandler = new Hono()
       'json',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          channel_id: Schema.optional(
-            Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema]),
-          ),
-          enabled: Schema.optional(Schema.NullOr(Schema.Boolean)),
+          channel_id: Schema.optionalKey(Schema.Union([Schema.Null, SnowflakeTypeSchema])),
+          enabled: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
         }),
       ),
     ),
@@ -1971,7 +2850,9 @@ export const guildsHandler = new Hono()
     ),
     sValidator(
       'query',
-      Schema.toStandardSchemaV1(Schema.Struct({ style: Schema.optional(WidgetImageStylesSchema) })),
+      Schema.toStandardSchemaV1(
+        Schema.Struct({ style: Schema.optionalKey(WidgetImageStylesSchema) }),
+      ),
     ),
     (c) => { throw new Error('Not implemented') },
   )

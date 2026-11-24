@@ -83,7 +83,7 @@ export const threadsRouter = t.router({
                 "A set of resources that are made available to the assistant's tools in this thread. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.\n",
               ),
             ),
-            v.nullable(v.null()),
+            v.null(),
           ]),
         ),
         metadata: v.optional(MetadataSchema),
@@ -165,7 +165,7 @@ export const threadsRouter = t.router({
                 'A list of files attached to the message, and the tools they should be added to.',
               ),
             ),
-            v.nullable(v.null()),
+            v.null(),
           ]),
         ),
         metadata: v.optional(MetadataSchema),
@@ -228,7 +228,7 @@ export const threadsRouter = t.router({
         ),
         model: v.optional(
           v.pipe(
-            v.union([v.string(), AssistantSupportedModelsSchema, v.nullable(v.null())]),
+            v.union([v.string(), AssistantSupportedModelsSchema, v.null()]),
             v.description(
               'The ID of the [Model](https://developers.openai.com/api/reference/resources/models) to be used to execute this run. If a value is provided here, it will override the model associated with the assistant. If not, the model associated with the assistant will be used.',
             ),
@@ -411,7 +411,7 @@ export const threadsRouter = t.router({
                 'If `true`, returns a stream of events that happen during the Run as server-sent events, terminating when the Run enters a terminal state with a `data: [DONE]` message.\n',
               ),
             ),
-            v.nullable(v.null()),
+            v.null(),
           ]),
         ),
       }),

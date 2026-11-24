@@ -39,7 +39,7 @@ export const liveRouter = t.router({
       Schema.toStandardSchemaV1(
         Schema.Struct({
           session_id: Schema.String,
-          session: Schema.optional(
+          session: Schema.optionalKey(
             LiveMediaSessionForkParamsSchema.annotate({
               description:
                 "Optional configuration overrides for the new Live session. Omit this object or send an empty object to inherit the stored session's settings.",

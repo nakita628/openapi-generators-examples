@@ -9,13 +9,23 @@ export const meHandler = new Hono()
       'query',
       Type.Object({
         limit: Type.Optional(
-          Codec(Type.String({ default: '20' }))
-            .Decode((value) => Number.parseInt(value, 10))
+          Codec(
+            Type.Refine(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '20' }),
+                (value) => Number(value) >= 1,
+                () => 'must be >= 1',
+              ),
+              (value) => Number(value) <= 50,
+              () => 'must be <= 50',
+            ),
+          )
+            .Decode((value) => Number(value))
             .Encode((value) => String(value)),
         ),
         offset: Type.Optional(
-          Codec(Type.String({ default: '0' }))
-            .Decode((value) => Number.parseInt(value, 10))
+          Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '0' }))
+            .Decode((value) => Number(value))
             .Encode((value) => String(value)),
         ),
       }),
@@ -71,13 +81,23 @@ export const meHandler = new Hono()
       'query',
       Type.Object({
         limit: Type.Optional(
-          Codec(Type.String({ default: '20' }))
-            .Decode((value) => Number.parseInt(value, 10))
+          Codec(
+            Type.Refine(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '20' }),
+                (value) => Number(value) >= 1,
+                () => 'must be >= 1',
+              ),
+              (value) => Number(value) <= 50,
+              () => 'must be <= 50',
+            ),
+          )
+            .Decode((value) => Number(value))
             .Encode((value) => String(value)),
         ),
         offset: Type.Optional(
-          Codec(Type.String({ default: '0' }))
-            .Decode((value) => Number.parseInt(value, 10))
+          Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '0' }))
+            .Decode((value) => Number(value))
             .Encode((value) => String(value)),
         ),
       }),
@@ -172,13 +192,23 @@ export const meHandler = new Hono()
       'query',
       Type.Object({
         limit: Type.Optional(
-          Codec(Type.String({ default: '20' }))
-            .Decode((value) => Number.parseInt(value, 10))
+          Codec(
+            Type.Refine(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '20' }),
+                (value) => Number(value) >= 1,
+                () => 'must be >= 1',
+              ),
+              (value) => Number(value) <= 50,
+              () => 'must be <= 50',
+            ),
+          )
+            .Decode((value) => Number(value))
             .Encode((value) => String(value)),
         ),
         offset: Type.Optional(
-          Codec(Type.String({ default: '0' }))
-            .Decode((value) => Number.parseInt(value, 10))
+          Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '0' }))
+            .Decode((value) => Number(value))
             .Encode((value) => String(value)),
         ),
         market: Type.Optional(
@@ -269,13 +299,23 @@ export const meHandler = new Hono()
           }),
         ),
         limit: Type.Optional(
-          Codec(Type.String({ default: '20' }))
-            .Decode((value) => Number.parseInt(value, 10))
+          Codec(
+            Type.Refine(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '20' }),
+                (value) => Number(value) >= 1,
+                () => 'must be >= 1',
+              ),
+              (value) => Number(value) <= 50,
+              () => 'must be <= 50',
+            ),
+          )
+            .Decode((value) => Number(value))
             .Encode((value) => String(value)),
         ),
         offset: Type.Optional(
-          Codec(Type.String({ default: '0' }))
-            .Decode((value) => Number.parseInt(value, 10))
+          Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '0' }))
+            .Decode((value) => Number(value))
             .Encode((value) => String(value)),
         ),
       }),
@@ -366,13 +406,23 @@ export const meHandler = new Hono()
           }),
         ),
         limit: Type.Optional(
-          Codec(Type.String({ default: '20' }))
-            .Decode((value) => Number.parseInt(value, 10))
+          Codec(
+            Type.Refine(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '20' }),
+                (value) => Number(value) >= 1,
+                () => 'must be >= 1',
+              ),
+              (value) => Number(value) <= 50,
+              () => 'must be <= 50',
+            ),
+          )
+            .Decode((value) => Number(value))
             .Encode((value) => String(value)),
         ),
         offset: Type.Optional(
-          Codec(Type.String({ default: '0' }))
-            .Decode((value) => Number.parseInt(value, 10))
+          Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '0' }))
+            .Decode((value) => Number(value))
             .Encode((value) => String(value)),
         ),
       }),
@@ -447,13 +497,23 @@ export const meHandler = new Hono()
       'query',
       Type.Object({
         limit: Type.Optional(
-          Codec(Type.String({ default: '20' }))
-            .Decode((value) => Number.parseInt(value, 10))
+          Codec(
+            Type.Refine(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '20' }),
+                (value) => Number(value) >= 1,
+                () => 'must be >= 1',
+              ),
+              (value) => Number(value) <= 50,
+              () => 'must be <= 50',
+            ),
+          )
+            .Decode((value) => Number(value))
             .Encode((value) => String(value)),
         ),
         offset: Type.Optional(
-          Codec(Type.String({ default: '0' }))
-            .Decode((value) => Number.parseInt(value, 10))
+          Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '0' }))
+            .Decode((value) => Number(value))
             .Encode((value) => String(value)),
         ),
       }),
@@ -547,8 +607,18 @@ export const meHandler = new Hono()
           }),
         ),
         limit: Type.Optional(
-          Codec(Type.String({ default: '20' }))
-            .Decode((value) => Number.parseInt(value, 10))
+          Codec(
+            Type.Refine(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '20' }),
+                (value) => Number(value) >= 1,
+                () => 'must be >= 1',
+              ),
+              (value) => Number(value) <= 50,
+              () => 'must be <= 50',
+            ),
+          )
+            .Decode((value) => Number(value))
             .Encode((value) => String(value)),
         ),
       }),
@@ -805,8 +875,8 @@ export const meHandler = new Hono()
     tbValidator(
       'query',
       Type.Object({
-        position_ms: Codec(Type.String())
-          .Decode((value) => Number.parseInt(value, 10))
+        position_ms: Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+          .Decode((value) => Number(value))
           .Encode((value) => String(value)),
         device_id: Type.Optional(
           Type.String({
@@ -845,8 +915,8 @@ export const meHandler = new Hono()
     tbValidator(
       'query',
       Type.Object({
-        volume_percent: Codec(Type.String())
-          .Decode((value) => Number.parseInt(value, 10))
+        volume_percent: Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+          .Decode((value) => Number(value))
           .Encode((value) => String(value)),
         device_id: Type.Optional(
           Type.String({
@@ -864,8 +934,10 @@ export const meHandler = new Hono()
     tbValidator(
       'query',
       Type.Object({
-        state: Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-          .Decode((value) => value === 'true')
+        state: Codec(
+          Type.String({ pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i }),
+        )
+          .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
           .Encode((value) => (value ? 'true' : 'false')),
         device_id: Type.Optional(
           Type.String({
@@ -884,18 +956,28 @@ export const meHandler = new Hono()
       'query',
       Type.Object({
         limit: Type.Optional(
-          Codec(Type.String({ default: '20' }))
-            .Decode((value) => Number.parseInt(value, 10))
+          Codec(
+            Type.Refine(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '20' }),
+                (value) => Number(value) >= 1,
+                () => 'must be >= 1',
+              ),
+              (value) => Number(value) <= 50,
+              () => 'must be <= 50',
+            ),
+          )
+            .Decode((value) => Number(value))
             .Encode((value) => String(value)),
         ),
         after: Type.Optional(
-          Codec(Type.String())
-            .Decode((value) => Number.parseInt(value, 10))
+          Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+            .Decode((value) => Number(value))
             .Encode((value) => String(value)),
         ),
         before: Type.Optional(
-          Codec(Type.String())
-            .Decode((value) => Number.parseInt(value, 10))
+          Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+            .Decode((value) => Number(value))
             .Encode((value) => String(value)),
         ),
       }),
@@ -938,13 +1020,23 @@ export const meHandler = new Hono()
           }),
         ),
         limit: Type.Optional(
-          Codec(Type.String({ default: '20' }))
-            .Decode((value) => Number.parseInt(value, 10))
+          Codec(
+            Type.Refine(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '20' }),
+                (value) => Number(value) >= 1,
+                () => 'must be >= 1',
+              ),
+              (value) => Number(value) <= 50,
+              () => 'must be <= 50',
+            ),
+          )
+            .Decode((value) => Number(value))
             .Encode((value) => String(value)),
         ),
         offset: Type.Optional(
-          Codec(Type.String({ default: '0' }))
-            .Decode((value) => Number.parseInt(value, 10))
+          Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '0' }))
+            .Decode((value) => Number(value))
             .Encode((value) => String(value)),
         ),
       }),
@@ -965,13 +1057,23 @@ export const meHandler = new Hono()
           }),
         ),
         limit: Type.Optional(
-          Codec(Type.String({ default: '20' }))
-            .Decode((value) => Number.parseInt(value, 10))
+          Codec(
+            Type.Refine(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '20' }),
+                (value) => Number(value) >= 1,
+                () => 'must be >= 1',
+              ),
+              (value) => Number(value) <= 50,
+              () => 'must be <= 50',
+            ),
+          )
+            .Decode((value) => Number(value))
             .Encode((value) => String(value)),
         ),
         offset: Type.Optional(
-          Codec(Type.String({ default: '0' }))
-            .Decode((value) => Number.parseInt(value, 10))
+          Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '0' }))
+            .Decode((value) => Number(value))
             .Encode((value) => String(value)),
         ),
       }),

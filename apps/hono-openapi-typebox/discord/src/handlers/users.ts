@@ -1,6 +1,6 @@
 import { Hono } from 'hono'
 import { describeRoute, resolver, validator } from 'hono-openapi'
-import { Type, Codec } from 'typebox'
+import { Type, Codec, type StaticDecode, type StaticEncode, type TSchema } from 'typebox'
 import { Compile } from 'typebox/compile'
 import {
   ApplicationUserRoleConnectionResponseSchema,
@@ -20,6 +20,31 @@ import {
   ClientRatelimitedResponseResponse,
 } from '../components'
 
+const toStandardSchemaV1 = <T extends TSchema>(schema: T) => {
+  const validator = Compile(schema)
+  return Object.assign(validator, {
+    '~standard': {
+      version: 1 as const,
+      vendor: 'typebox',
+      validate: (value: unknown) =>
+        validator.Check(value)
+          ? { value: validator.Decode(value) }
+          : {
+              issues: validator.Errors(value).map((error) => ({
+                message: error.message,
+                path: error.instancePath
+                  .split('/')
+                  .slice(1)
+                  .map((key) => key.replaceAll('~1', '/').replaceAll('~0', '~')),
+              })),
+            },
+      types: undefined as
+        | { readonly input: StaticEncode<T>; readonly output: StaticDecode<T> }
+        | undefined,
+    },
+  })
+}
+
 export const usersHandler = new Hono()
   .get(
     '/users/@me',
@@ -35,7 +60,9 @@ export const usersHandler = new Hono()
             'X-RateLimit-Reset-After': { $ref: '#/components/headers/X-RateLimit-Reset-After' },
             'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
           },
-          content: { 'application/json': { schema: resolver(Compile(UserPIIResponseSchema)) } },
+          content: {
+            'application/json': { schema: resolver(toStandardSchemaV1(UserPIIResponseSchema)) },
+          },
         },
         '429': ClientRatelimitedResponseResponse,
         '4XX': ClientErrorResponseResponse,
@@ -58,14 +85,16 @@ export const usersHandler = new Hono()
             'X-RateLimit-Reset-After': { $ref: '#/components/headers/X-RateLimit-Reset-After' },
             'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
           },
-          content: { 'application/json': { schema: resolver(Compile(UserPIIResponseSchema)) } },
+          content: {
+            'application/json': { schema: resolver(toStandardSchemaV1(UserPIIResponseSchema)) },
+          },
         },
         '429': ClientRatelimitedResponseResponse,
         '4XX': ClientErrorResponseResponse,
       },
       security: [{ BotToken: [] }],
     }),
-    validator('json', Compile(BotAccountPatchRequestSchema)),
+    validator('json', toStandardSchemaV1(BotAccountPatchRequestSchema)),
     (c) => { throw new Error('Not implemented') },
   )
   .get(
@@ -84,7 +113,7 @@ export const usersHandler = new Hono()
           },
           content: {
             'application/json': {
-              schema: resolver(Compile(Type.Array(EntitlementResponseSchema))),
+              schema: resolver(toStandardSchemaV1(Type.Array(EntitlementResponseSchema))),
             },
           },
         },
@@ -132,23 +161,25 @@ export const usersHandler = new Hono()
         },
       ],
     }),
-    validator('param', Compile(Type.Object({ application_id: SnowflakeTypeSchema }))),
+    validator('param', toStandardSchemaV1(Type.Object({ application_id: SnowflakeTypeSchema }))),
     validator(
       'query',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           sku_ids: Type.Optional(
             Type.Union([
               Type.String(),
-              Type.Array(
-                Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
-                { maxItems: 100, uniqueItems: true },
-              ),
+              Type.Array(Type.Union([Type.Null(), SnowflakeTypeSchema]), {
+                maxItems: 100,
+                uniqueItems: true,
+              }),
             ]),
           ),
           exclude_consumed: Type.Optional(
-            Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-              .Decode((value) => value === 'true')
+            Codec(
+              Type.String({ pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i }),
+            )
+              .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
               .Encode((value) => (value ? 'true' : 'false')),
           ),
         }),
@@ -172,7 +203,7 @@ export const usersHandler = new Hono()
           },
           content: {
             'application/json': {
-              schema: resolver(Compile(ApplicationUserRoleConnectionResponseSchema)),
+              schema: resolver(toStandardSchemaV1(ApplicationUserRoleConnectionResponseSchema)),
             },
           },
         },
@@ -181,7 +212,7 @@ export const usersHandler = new Hono()
       },
       security: [{ OAuth2: ['role_connections.write'] }],
     }),
-    validator('param', Compile(Type.Object({ application_id: SnowflakeTypeSchema }))),
+    validator('param', toStandardSchemaV1(Type.Object({ application_id: SnowflakeTypeSchema }))),
     (c) => { throw new Error('Not implemented') },
   )
   .put(
@@ -200,7 +231,7 @@ export const usersHandler = new Hono()
           },
           content: {
             'application/json': {
-              schema: resolver(Compile(ApplicationUserRoleConnectionResponseSchema)),
+              schema: resolver(toStandardSchemaV1(ApplicationUserRoleConnectionResponseSchema)),
             },
           },
         },
@@ -209,8 +240,8 @@ export const usersHandler = new Hono()
       },
       security: [{ OAuth2: ['role_connections.write'] }],
     }),
-    validator('param', Compile(Type.Object({ application_id: SnowflakeTypeSchema }))),
-    validator('json', Compile(UpdateApplicationUserRoleConnectionRequestSchema)),
+    validator('param', toStandardSchemaV1(Type.Object({ application_id: SnowflakeTypeSchema }))),
+    validator('json', toStandardSchemaV1(UpdateApplicationUserRoleConnectionRequestSchema)),
     (c) => { throw new Error('Not implemented') },
   )
   .delete(
@@ -233,7 +264,7 @@ export const usersHandler = new Hono()
       },
       security: [{ OAuth2: ['role_connections.write'] }],
     }),
-    validator('param', Compile(Type.Object({ application_id: SnowflakeTypeSchema }))),
+    validator('param', toStandardSchemaV1(Type.Object({ application_id: SnowflakeTypeSchema }))),
     (c) => { throw new Error('Not implemented') },
   )
   .post(
@@ -253,7 +284,7 @@ export const usersHandler = new Hono()
           content: {
             'application/json': {
               schema: resolver(
-                Compile(
+                toStandardSchemaV1(
                   Type.Union([PrivateChannelResponseSchema, PrivateGroupChannelResponseSchema]),
                 ),
               ),
@@ -265,7 +296,7 @@ export const usersHandler = new Hono()
       },
       security: [{ BotToken: [] }],
     }),
-    validator('json', Compile(CreatePrivateChannelRequestSchema)),
+    validator('json', toStandardSchemaV1(CreatePrivateChannelRequestSchema)),
     (c) => { throw new Error('Not implemented') },
   )
   .get(
@@ -285,7 +316,9 @@ export const usersHandler = new Hono()
           content: {
             'application/json': {
               schema: resolver(
-                Compile(Type.Union([Type.Array(ConnectedAccountResponseSchema), Type.Null()])),
+                toStandardSchemaV1(
+                  Type.Union([Type.Array(ConnectedAccountResponseSchema), Type.Null()]),
+                ),
               ),
             },
           },
@@ -314,7 +347,7 @@ export const usersHandler = new Hono()
           content: {
             'application/json': {
               schema: resolver(
-                Compile(Type.Union([Type.Array(MyGuildResponseSchema), Type.Null()])),
+                toStandardSchemaV1(Type.Union([Type.Array(MyGuildResponseSchema), Type.Null()])),
               ),
             },
           },
@@ -326,23 +359,41 @@ export const usersHandler = new Hono()
     }),
     validator(
       'query',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           before: Type.Optional(SnowflakeTypeSchema),
           after: Type.Optional(SnowflakeTypeSchema),
           limit: Type.Optional(
-            Codec(Type.String())
-              .Decode((value) => Number.parseInt(value, 10))
+            Codec(
+              Type.Refine(
+                Type.Refine(
+                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                  (value) => Number(value) >= 1,
+                  () => 'must be >= 1',
+                ),
+                (value) => Number(value) <= 200,
+                () => 'must be <= 200',
+              ),
+            )
+              .Decode((value) => Number(value))
               .Encode((value) => String(value)),
           ),
           shard: Type.Optional(
-            Codec(Type.String())
-              .Decode((value) => Number.parseInt(value, 10))
+            Codec(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                (value) => Number(value) >= 0,
+                () => 'must be >= 0',
+              ),
+            )
+              .Decode((value) => Number(value))
               .Encode((value) => String(value)),
           ),
           with_counts: Type.Optional(
-            Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-              .Decode((value) => value === 'true')
+            Codec(
+              Type.String({ pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i }),
+            )
+              .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
               .Encode((value) => (value ? 'true' : 'false')),
           ),
         }),
@@ -370,7 +421,7 @@ export const usersHandler = new Hono()
       },
       security: [{ BotToken: [] }],
     }),
-    validator('param', Compile(Type.Object({ guild_id: SnowflakeTypeSchema }))),
+    validator('param', toStandardSchemaV1(Type.Object({ guild_id: SnowflakeTypeSchema }))),
     (c) => { throw new Error('Not implemented') },
   )
   .get(
@@ -388,7 +439,9 @@ export const usersHandler = new Hono()
             'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
           },
           content: {
-            'application/json': { schema: resolver(Compile(PrivateGuildMemberResponseSchema)) },
+            'application/json': {
+              schema: resolver(toStandardSchemaV1(PrivateGuildMemberResponseSchema)),
+            },
           },
         },
         '429': ClientRatelimitedResponseResponse,
@@ -396,7 +449,7 @@ export const usersHandler = new Hono()
       },
       security: [{ OAuth2: ['guilds.members.read'] }],
     }),
-    validator('param', Compile(Type.Object({ guild_id: SnowflakeTypeSchema }))),
+    validator('param', toStandardSchemaV1(Type.Object({ guild_id: SnowflakeTypeSchema }))),
     (c) => { throw new Error('Not implemented') },
   )
   .get(
@@ -413,13 +466,15 @@ export const usersHandler = new Hono()
             'X-RateLimit-Reset-After': { $ref: '#/components/headers/X-RateLimit-Reset-After' },
             'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
           },
-          content: { 'application/json': { schema: resolver(Compile(UserResponseSchema)) } },
+          content: {
+            'application/json': { schema: resolver(toStandardSchemaV1(UserResponseSchema)) },
+          },
         },
         '429': ClientRatelimitedResponseResponse,
         '4XX': ClientErrorResponseResponse,
       },
       security: [{ BotToken: [] }],
     }),
-    validator('param', Compile(Type.Object({ user_id: SnowflakeTypeSchema }))),
+    validator('param', toStandardSchemaV1(Type.Object({ user_id: SnowflakeTypeSchema }))),
     (c) => { throw new Error('Not implemented') },
   )

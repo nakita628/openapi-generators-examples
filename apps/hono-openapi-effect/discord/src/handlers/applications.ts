@@ -291,7 +291,7 @@ export const applicationsHandler = new Hono()
       'query',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          with_localizations: Schema.optional(
+          with_localizations: Schema.optionalKey(
             Schema.String.check(
               Schema.isPattern(/^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i),
             ).pipe(
@@ -668,7 +668,7 @@ export const applicationsHandler = new Hono()
       'json',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          name: Schema.optional(
+          name: Schema.optionalKey(
             Schema.String.check(
               Schema.makeFilter((input) => [...input].length >= 2, {
                 expected: 'a string of at least 2 characters',
@@ -716,8 +716,8 @@ export const applicationsHandler = new Hono()
       'query',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          user_id: Schema.optional(SnowflakeTypeSchema),
-          sku_ids: Schema.optional(
+          user_id: Schema.optionalKey(SnowflakeTypeSchema),
+          sku_ids: Schema.optionalKey(
             Schema.Union([
               Schema.String,
               Schema.Unknown.pipe(
@@ -750,7 +750,7 @@ export const applicationsHandler = new Hono()
                                   encode: (output) => output,
                                 }),
                               ),
-                              Schema.decodeTo(Schema.NullOr(Schema.Null)),
+                              Schema.decodeTo(Schema.Null),
                             ),
                             SnowflakeTypeSchema,
                           ]),
@@ -762,17 +762,27 @@ export const applicationsHandler = new Hono()
               ),
             ]),
           ),
-          guild_id: Schema.optional(SnowflakeTypeSchema),
-          before: Schema.optional(SnowflakeTypeSchema),
-          after: Schema.optional(SnowflakeTypeSchema),
-          limit: Schema.optional(
-            Schema.FiniteFromString.check(
-              Schema.isInt(),
-              Schema.isGreaterThanOrEqualTo(1),
-              Schema.isLessThanOrEqualTo(100),
-            ),
+          guild_id: Schema.optionalKey(SnowflakeTypeSchema),
+          before: Schema.optionalKey(SnowflakeTypeSchema),
+          after: Schema.optionalKey(SnowflakeTypeSchema),
+          limit: Schema.optionalKey(
+            Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+              .pipe(
+                Schema.decodeTo(
+                  Schema.Finite,
+                  SchemaTransformation.transform({
+                    decode: (input) => Number(input),
+                    encode: (output) => String(output),
+                  }),
+                ),
+              )
+              .check(
+                Schema.isInt(),
+                Schema.isGreaterThanOrEqualTo(1),
+                Schema.isLessThanOrEqualTo(100),
+              ),
           ),
-          exclude_ended: Schema.optional(
+          exclude_ended: Schema.optionalKey(
             Schema.String.check(
               Schema.isPattern(/^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i),
             ).pipe(
@@ -785,7 +795,7 @@ export const applicationsHandler = new Hono()
               ),
             ),
           ),
-          exclude_deleted: Schema.optional(
+          exclude_deleted: Schema.optionalKey(
             Schema.String.check(
               Schema.isPattern(/^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i),
             ).pipe(
@@ -798,7 +808,7 @@ export const applicationsHandler = new Hono()
               ),
             ),
           ),
-          only_active: Schema.optional(
+          only_active: Schema.optionalKey(
             Schema.String.check(
               Schema.isPattern(/^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i),
             ).pipe(
@@ -976,7 +986,7 @@ export const applicationsHandler = new Hono()
       'query',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          with_localizations: Schema.optional(
+          with_localizations: Schema.optionalKey(
             Schema.String.check(
               Schema.isPattern(/^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i),
             ).pipe(
@@ -1306,7 +1316,7 @@ export const applicationsHandler = new Hono()
       'json',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          permissions: Schema.optional(
+          permissions: Schema.optionalKey(
             Schema.NullOr(
               Schema.Array(ApplicationCommandPermissionSchema).check(Schema.isMaxLength(100)),
             ),

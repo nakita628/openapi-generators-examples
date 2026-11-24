@@ -1,5 +1,5 @@
 import { initTRPC, TRPCError } from '@trpc/server'
-import { Schema } from 'effect'
+import { Effect, Schema } from 'effect'
 import {
   AudioTranscriptionSchema,
   MCPToolSchema,
@@ -43,7 +43,7 @@ export const realtimeRouter = t.router({
               description:
                 'The set of modalities the model can respond with. It defaults to `["audio"]`, indicating\nthat the model will respond with audio plus a transcript. `["text"]` can be used to make\nthe model respond with text only. It is not possible to request both `text` and `audio` at the same time.\n',
             }),
-          model: Schema.optional(
+          model: Schema.optionalKey(
             Schema.Union([
               Schema.String,
               Schema.Literals([
@@ -72,27 +72,27 @@ export const realtimeRouter = t.router({
               jsonSchemaExamples: ['gpt-realtime-2.1'],
             }),
           ),
-          instructions: Schema.optional(
+          instructions: Schema.optionalKey(
             Schema.String.annotate({
               description:
                 'The default system instructions (i.e. system message) prepended to model calls. This field allows the client to guide the model on desired responses. The model can be instructed on response content and format, (e.g. "be extremely succinct", "act friendly", "here are examples of good responses") and on audio behavior (e.g. "talk quickly", "inject emotion into your voice", "laugh frequently"). The instructions are not guaranteed to be followed by the model, but they provide guidance to the model on the desired behavior.\n\nNote that the server sets default instructions which will be used if this field is not set and are visible in the `session.created` event at the start of the session.\n',
             }),
           ),
           audio: Schema.Struct({
-            input: Schema.optional(
+            input: Schema.optionalKey(
               Schema.Struct({
-                format: Schema.optional(
+                format: Schema.optionalKey(
                   RealtimeAudioFormatsSchema.annotate({
                     description: 'The format of the input audio.',
                   }),
                 ),
-                transcription: Schema.optional(
+                transcription: Schema.optionalKey(
                   AudioTranscriptionSchema.annotate({
                     description:
                       'Configuration for input audio transcription, defaults to off and can be set to `null` to turn off once on. Input audio transcription is not native to the model, since the model consumes audio directly. Transcription runs asynchronously through [the /audio/transcriptions endpoint](https://developers.openai.com/api/reference/resources/audio/subresources/transcriptions/methods/create) and should be treated as guidance of input audio content rather than precisely what the model heard. The client can optionally set the language and prompt for transcription, these offer additional guidance to the transcription service.\n',
                   }),
                 ),
-                noise_reduction: Schema.optional(
+                noise_reduction: Schema.optionalKey(
                   Schema.Unknown.check(
                     Schema.makeFilter(
                       (input) =>
@@ -106,11 +106,11 @@ export const realtimeRouter = t.router({
                       'When you supply a `noise_reduction` object, you must set `type` to `near_field` or `far_field`.\nSet `noise_reduction` to `null` to turn off input audio noise reduction.\nNoise reduction filters audio added to the input audio buffer before it is sent to VAD and the model.\nFiltering the audio can improve VAD and turn detection accuracy (reducing false positives) and model performance by improving perception of the input audio.\n',
                   }),
                 ),
-                turn_detection: Schema.optional(RealtimeTurnDetectionSchema),
+                turn_detection: Schema.optionalKey(RealtimeTurnDetectionSchema),
               }),
             ),
             output: Schema.Struct({
-              format: Schema.optional(
+              format: Schema.optionalKey(
                 RealtimeAudioFormatsSchema.annotate({
                   description: 'The format of the output audio.',
                 }),
@@ -132,7 +132,7 @@ export const realtimeRouter = t.router({
                 }),
             }),
           }).annotate({ description: 'Configuration for input and output audio.\n' }),
-          include: Schema.optional(
+          include: Schema.optionalKey(
             Schema.Array(Schema.Literal('item.input_audio_transcription.logprobs')).annotate({
               description:
                 'Additional fields to include in server outputs.\n\n`item.input_audio_transcription.logprobs`: Include logprobs for input audio transcription.\n',
@@ -146,31 +146,33 @@ export const realtimeRouter = t.router({
                   'Enables tracing and sets default values for tracing configuration options. Always `auto`.\n',
               }),
             Schema.Struct({
-              workflow_name: Schema.optional(
+              workflow_name: Schema.optionalKey(
                 Schema.String.annotate({
                   description:
                     'The name of the workflow to attach to this trace. This is used to\nname the trace in the Traces Dashboard.\n',
                 }),
               ),
-              group_id: Schema.optional(
+              group_id: Schema.optionalKey(
                 Schema.String.annotate({
                   description:
                     'The group id to attach to this trace to enable filtering and\ngrouping in the Traces Dashboard.\n',
                 }),
               ),
-              metadata: Schema.optional(
+              metadata: Schema.optionalKey(
                 Schema.Struct({}).annotate({
                   description:
                     'The arbitrary metadata to attach to this trace to enable\nfiltering in the Traces Dashboard.\n',
                 }),
               ),
             }).annotate({ description: 'Granular configuration for tracing.\n' }),
-            Schema.NullOr(Schema.Null),
-          ]).annotate({
-            description:
-              'Realtime API can write session traces to the [Traces Dashboard](https://platform.openai.com/logs?api=traces). Set to null to disable tracing. Once\ntracing is enabled for a session, the configuration cannot be modified.\n\n`auto` will create a trace for the session with default values for the\nworkflow name, group id, and metadata.\n',
-          }),
-          tools: Schema.optional(
+            Schema.Null,
+          ])
+            .pipe(Schema.withDecodingDefault(Effect.succeed(null)))
+            .annotate({
+              description:
+                'Realtime API can write session traces to the [Traces Dashboard](https://platform.openai.com/logs?api=traces). Set to null to disable tracing. Once\ntracing is enabled for a session, the configuration cannot be modified.\n\n`auto` will create a trace for the session with default values for the\nworkflow name, group id, and metadata.\n',
+            }),
+          tools: Schema.optionalKey(
             Schema.Array(Schema.Union([RealtimeFunctionToolSchema, MCPToolSchema])).annotate({
               description: 'Tools available to the model.',
             }),
@@ -185,21 +187,21 @@ export const realtimeRouter = t.router({
               description:
                 'How the model chooses tools. Provide one of the string modes or force a specific\nfunction/MCP tool.\n',
             }),
-          parallel_tool_calls: Schema.optional(
+          parallel_tool_calls: Schema.optionalKey(
             Schema.Boolean.annotate({
               description:
                 'Whether the model may call multiple tools in parallel. Only supported by\nreasoning Realtime models such as `gpt-realtime-2`.\n',
             }),
           ),
-          reasoning: Schema.optional(RealtimeReasoningSchema),
-          max_output_tokens: Schema.optional(
+          reasoning: Schema.optionalKey(RealtimeReasoningSchema),
+          max_output_tokens: Schema.optionalKey(
             Schema.Union([Schema.Number.check(Schema.isInt()), Schema.Literal('inf')]).annotate({
               description:
                 'Maximum number of output tokens for a single assistant response,\ninclusive of tool calls. Provide an integer between 1 and 4096 to\nlimit output tokens, or `inf` for the maximum available tokens for a\ngiven model. Defaults to `inf`.\n',
             }),
           ),
-          truncation: Schema.optional(RealtimeTruncationSchema),
-          prompt: Schema.optional(PromptSchema),
+          truncation: Schema.optionalKey(RealtimeTruncationSchema),
+          prompt: Schema.optionalKey(PromptSchema),
         }),
       ),
     )
@@ -232,7 +234,7 @@ export const realtimeRouter = t.router({
       Schema.toStandardSchemaV1(
         Schema.Struct({
           call_id: Schema.String,
-          status_code: Schema.optional(
+          status_code: Schema.optionalKey(
             Schema.Number.check(Schema.isInt()).annotate({
               description:
                 'SIP response code to send back to the caller. Defaults to `603` (Decline)\nwhen omitted.',

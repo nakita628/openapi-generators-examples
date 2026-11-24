@@ -111,7 +111,7 @@ export const responsesHandler = new Hono()
       'query',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          include: Schema.optional(
+          include: Schema.optionalKey(
             Schema.Unknown.pipe(
               Schema.decodeTo(
                 Schema.Unknown,
@@ -124,7 +124,7 @@ export const responsesHandler = new Hono()
               Schema.decodeTo(Schema.Array(IncludeEnumSchema)),
             ),
           ),
-          stream: Schema.optional(
+          stream: Schema.optionalKey(
             Schema.String.check(
               Schema.isPattern(/^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i),
             ).pipe(
@@ -137,8 +137,20 @@ export const responsesHandler = new Hono()
               ),
             ),
           ),
-          starting_after: Schema.optional(Schema.FiniteFromString.check(Schema.isInt())),
-          include_obfuscation: Schema.optional(
+          starting_after: Schema.optionalKey(
+            Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+              .pipe(
+                Schema.decodeTo(
+                  Schema.Finite,
+                  SchemaTransformation.transform({
+                    decode: (input) => Number(input),
+                    encode: (output) => String(output),
+                  }),
+                ),
+              )
+              .check(Schema.isInt()),
+          ),
+          include_obfuscation: Schema.optionalKey(
             Schema.String.check(
               Schema.isPattern(/^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i),
             ).pipe(
@@ -275,12 +287,21 @@ export const responsesHandler = new Hono()
       'query',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          limit: Schema.FiniteFromString.check(Schema.isInt()).pipe(
-            Schema.withDecodingDefaultType(Effect.succeed(20)),
-          ),
-          order: Schema.optional(Schema.Literals(['asc', 'desc'])),
-          after: Schema.optional(Schema.String),
-          include: Schema.optional(
+          limit: Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+            .pipe(
+              Schema.decodeTo(
+                Schema.Finite,
+                SchemaTransformation.transform({
+                  decode: (input) => Number(input),
+                  encode: (output) => String(output),
+                }),
+              ),
+            )
+            .check(Schema.isInt())
+            .pipe(Schema.withDecodingDefaultType(Effect.succeed(20))),
+          order: Schema.optionalKey(Schema.Literals(['asc', 'desc'])),
+          after: Schema.optionalKey(Schema.String),
+          include: Schema.optionalKey(
             Schema.Unknown.pipe(
               Schema.decodeTo(
                 Schema.Unknown,
@@ -404,7 +425,7 @@ export const responsesHandler = new Hono()
       'query',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          include: Schema.optional(
+          include: Schema.optionalKey(
             Schema.Unknown.pipe(
               Schema.decodeTo(
                 Schema.Unknown,
@@ -417,7 +438,7 @@ export const responsesHandler = new Hono()
               Schema.decodeTo(Schema.Array(BetaIncludeEnumSchema)),
             ),
           ),
-          stream: Schema.optional(
+          stream: Schema.optionalKey(
             Schema.String.check(
               Schema.isPattern(/^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i),
             ).pipe(
@@ -430,8 +451,20 @@ export const responsesHandler = new Hono()
               ),
             ),
           ),
-          starting_after: Schema.optional(Schema.FiniteFromString.check(Schema.isInt())),
-          include_obfuscation: Schema.optional(
+          starting_after: Schema.optionalKey(
+            Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+              .pipe(
+                Schema.decodeTo(
+                  Schema.Finite,
+                  SchemaTransformation.transform({
+                    decode: (input) => Number(input),
+                    encode: (output) => String(output),
+                  }),
+                ),
+              )
+              .check(Schema.isInt()),
+          ),
+          include_obfuscation: Schema.optionalKey(
             Schema.String.check(
               Schema.isPattern(/^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i),
             ).pipe(
@@ -451,7 +484,7 @@ export const responsesHandler = new Hono()
       'header',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          'openai-beta': Schema.optional(
+          'openai-beta': Schema.optionalKey(
             Schema.Unknown.pipe(
               Schema.decodeTo(
                 Schema.Unknown,
@@ -520,7 +553,7 @@ export const responsesHandler = new Hono()
       'header',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          'openai-beta': Schema.optional(
+          'openai-beta': Schema.optionalKey(
             Schema.Unknown.pipe(
               Schema.decodeTo(
                 Schema.Unknown,
@@ -578,7 +611,7 @@ export const responsesHandler = new Hono()
       'header',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          'openai-beta': Schema.optional(
+          'openai-beta': Schema.optionalKey(
             Schema.Unknown.pipe(
               Schema.decodeTo(
                 Schema.Unknown,
@@ -629,7 +662,7 @@ export const responsesHandler = new Hono()
       'header',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          'openai-beta': Schema.optional(
+          'openai-beta': Schema.optionalKey(
             Schema.Unknown.pipe(
               Schema.decodeTo(
                 Schema.Unknown,
@@ -680,12 +713,21 @@ export const responsesHandler = new Hono()
       'query',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          limit: Schema.FiniteFromString.check(Schema.isInt()).pipe(
-            Schema.withDecodingDefaultType(Effect.succeed(20)),
-          ),
-          order: Schema.optional(Schema.Literals(['asc', 'desc'])),
-          after: Schema.optional(Schema.String),
-          include: Schema.optional(
+          limit: Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+            .pipe(
+              Schema.decodeTo(
+                Schema.Finite,
+                SchemaTransformation.transform({
+                  decode: (input) => Number(input),
+                  encode: (output) => String(output),
+                }),
+              ),
+            )
+            .check(Schema.isInt())
+            .pipe(Schema.withDecodingDefaultType(Effect.succeed(20))),
+          order: Schema.optionalKey(Schema.Literals(['asc', 'desc'])),
+          after: Schema.optionalKey(Schema.String),
+          include: Schema.optionalKey(
             Schema.Unknown.pipe(
               Schema.decodeTo(
                 Schema.Unknown,
@@ -705,7 +747,7 @@ export const responsesHandler = new Hono()
       'header',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          'openai-beta': Schema.optional(
+          'openai-beta': Schema.optionalKey(
             Schema.Unknown.pipe(
               Schema.decodeTo(
                 Schema.Unknown,
@@ -756,7 +798,7 @@ export const responsesHandler = new Hono()
       'header',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          'openai-beta': Schema.optional(
+          'openai-beta': Schema.optionalKey(
             Schema.Unknown.pipe(
               Schema.decodeTo(
                 Schema.Unknown,

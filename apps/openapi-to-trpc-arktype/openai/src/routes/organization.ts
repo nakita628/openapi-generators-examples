@@ -427,13 +427,13 @@ export const organizationRouter = t.router({
     .input(
       type({
         project_id: 'string',
-        'name?': type('string | null | null').describe(
+        'name?': type('string | null').describe(
           'The updated name of the project, this name appears in reports.',
         ),
-        'external_key_id?': type('string | null | null').describe(
+        'external_key_id?': type('string | null').describe(
           'External key ID to associate with the project.',
         ),
-        'geography?': type('string | null | null').describe(
+        'geography?': type('string | null').describe(
           'Geography for the project.\nDeprecated: use `residency` when creating a project to configure data residency. This field is retained for backward compatibility.',
         ),
       }),
@@ -594,19 +594,19 @@ export const organizationRouter = t.router({
       type({
         project_id: 'string',
         'file_search?': type(HostedToolPermissionUpdateSchema)
-          .or('null | null')
+          .or('null')
           .describe('The file search permission update.'),
         'web_search?': type(HostedToolPermissionUpdateSchema)
-          .or('null | null')
+          .or('null')
           .describe('The web search permission update.'),
         'image_generation?': type(HostedToolPermissionUpdateSchema)
-          .or('null | null')
+          .or('null')
           .describe('The image generation permission update.'),
         'mcp?': type(HostedToolPermissionUpdateSchema)
-          .or('null | null')
+          .or('null')
           .describe('The MCP permission update.'),
         'code_interpreter?': type(HostedToolPermissionUpdateSchema)
-          .or('null | null')
+          .or('null')
           .describe('The code interpreter permission update.'),
       }),
     )
@@ -695,9 +695,9 @@ export const organizationRouter = t.router({
           type('boolean').describe(
             'Create the service account without default roles or an API key.',
           ),
-        ).or('null | null'),
+        ).or('null'),
         'expires_in_seconds?': type(
-          'number.integer >= 1 & number.integer <= 31536000 | null | null',
+          'number.integer >= 1 & number.integer <= 31536000 | null',
         ).describe(
           'Number of seconds until the initial API key expires. If omitted or null, the key does not expire unless the effective organization or project policy requires an expiration. When a policy sets a maximum lifetime, this value must be provided and must not exceed that limit. A non-null value cannot be used when `create_service_account_only` is true.',
         ),
@@ -805,8 +805,8 @@ export const organizationRouter = t.router({
     .input(
       type({
         project_id: 'string',
-        'user_id?': type('string | null | null').describe('The ID of the user.'),
-        'email?': type('string | null | null').describe('Email of the user to add.'),
+        'user_id?': type('string | null').describe('The ID of the user.'),
+        'email?': type('string | null').describe('Email of the user to add.'),
         role: type('string').describe('`owner` or `member`'),
       }),
     )
@@ -825,7 +825,7 @@ export const organizationRouter = t.router({
       type({
         project_id: 'string',
         user_id: 'string',
-        'role?': type('string | null | null').describe('`owner` or `member`'),
+        'role?': type('string | null').describe('`owner` or `member`'),
       }),
     )
     .output(ProjectUserSchema)
@@ -866,11 +866,11 @@ export const organizationRouter = t.router({
     .input(
       type({
         role_id: 'string',
-        'permissions?': type('string[] | null | null').describe(
+        'permissions?': type('string[] | null').describe(
           'Updated set of permissions for the role.',
         ),
-        'description?': type('string | null | null').describe('New description for the role.'),
-        'role_name?': type('string | null | null').describe('New name for the role.'),
+        'description?': type('string | null').describe('New description for the role.'),
+        'role_name?': type('string | null').describe('New name for the role.'),
       }),
     )
     .output(RoleSchema)
@@ -1138,10 +1138,10 @@ export const organizationRouter = t.router({
     .input(
       type({
         user_id: 'string',
-        'role?': type('string | null | null').describe('`owner` or `reader`'),
-        'role_id?': type('string | null | null').describe('Role ID to assign to the user.'),
-        'technical_level?': type('string | null | null').describe('Technical level metadata.'),
-        'developer_persona?': type('string | null | null').describe('Developer persona metadata.'),
+        'role?': type('string | null').describe('`owner` or `reader`'),
+        'role_id?': type('string | null').describe('Role ID to assign to the user.'),
+        'technical_level?': type('string | null').describe('Technical level metadata.'),
+        'developer_persona?': type('string | null').describe('Developer persona metadata.'),
       }),
     )
     .output(UserSchema)
@@ -1195,7 +1195,7 @@ export const organizationRouter = t.router({
       type({
         'limit?': 'number.integer >= 0 & number.integer <= 100',
         'order?': OrderEnumSchema,
-        'after?': 'string | null | null',
+        'after?': 'string | null',
         'purpose?': ExternalKeyPurposeSchema,
       }),
     )
@@ -1277,7 +1277,7 @@ export const organizationRouter = t.router({
         'verification?': type(DiscoveryVerificationParamSchema).or(
           UploadedJwksVerificationParamSchema,
         ),
-        'description?': 'string | null | null',
+        'description?': 'string | null',
         'attribute_transformations?': type(type(TransformationParamSchema).array()).and(
           type('unknown[] <= 20'),
         ),
@@ -1369,8 +1369,8 @@ export const organizationRouter = t.router({
           workload_identity_federation_rule_id: type('string').narrow(
             (data, ctx) => [...data].length >= 1 || ctx.mustBe('at least 1 character'),
           ),
-          'name?': 'string | null | null',
-          'description?': 'string | null | null',
+          'name?': 'string | null',
+          'description?': 'string | null',
           'attribute_matchers?': type({ '[string]': 'string | boolean | number.integer | number' }),
           'permissions?': type(DefaultPermissionsParamSchema).or(RestrictedPermissionsParamSchema),
           'enabled?': 'boolean',
@@ -1400,20 +1400,20 @@ export const organizationRouter = t.router({
     .input(
       type({
         start_time: 'number.integer',
-        'end_time?': 'number.integer | null | null',
+        'end_time?': 'number.integer | null',
         'bucket_width?': type(
           DecisionsUsageBucketWidthSchema.describe(
             'Width of each time bucket in response. Currently `1m`, `1h` and `1d` are supported, default to `1d`.',
           ),
-        ).or('null | null'),
-        'limit?': 'number.integer | null | null',
+        ).or('null'),
+        'limit?': 'number.integer | null',
         'page?': type(
           type('string').describe(
             'A cursor for use in pagination. Corresponding to the `next_page` field from the previous response.',
           ),
-        ).or('null | null'),
+        ).or('null'),
         'project_ids?': type(type('string[]').describe('Return only usage for these projects.')).or(
-          'null | null',
+          'null',
         ),
         'group_by?': type(
           type(DecisionsUsageGroupBySchema)
@@ -1421,17 +1421,17 @@ export const organizationRouter = t.router({
             .describe(
               'Group the usage data by the specified fields. Support fields include `project_id`, `user_id`, `api_key_id`, `model`, `batch`, `service_tier`, `api_source` or any combination of them. When grouped by `api_source`, results use `agents_api` for attributed Agents API activity and `unlabeled` for all other activity. Without source grouping, `api_source` is null.',
             ),
-        ).or('null | null'),
+        ).or('null'),
         'user_ids?': type(type('string[]').describe('Return only usage for these users.')).or(
-          'null | null',
+          'null',
         ),
         'api_key_ids?': type(type('string[]').describe('Return only usage for these API keys.')).or(
-          'null | null',
+          'null',
         ),
         'models?': type(type('string[]').describe('Return only usage for these models.')).or(
-          'null | null',
+          'null',
         ),
-        'batch?': 'boolean | null | null',
+        'batch?': 'boolean | null',
       }),
     )
     .output(PublicDecisionsUsageResponseResourceSchema)
@@ -1441,10 +1441,10 @@ export const organizationRouter = t.router({
   getOrganizationExternalStorage: t.procedure
     .input(
       type({
-        'project_id?': 'string | null | null',
+        'project_id?': 'string | null',
         'after?': type(
           type('string').describe('Return external storage configurations after this ID.'),
-        ).or('null | null'),
+        ).or('null'),
         'order?': ExternalStorageOrderSchema,
         'limit?': 'number.integer >= 1 & number.integer <= 100',
       }),
@@ -1514,7 +1514,7 @@ export const organizationRouter = t.router({
           SpendLimitEmailNotificationChannelParamsSchema.describe(
             'Configure email notifications when the spend limit is reached. Leave this out to keep the current settings, or send null to reset to owner-only notifications.',
           ),
-        ).or('null | null'),
+        ).or('null'),
       }),
     )
     .output(ProjectSpendLimitResourceSchema)
@@ -1564,7 +1564,7 @@ export const organizationRouter = t.router({
           type('number.integer >= 1 & number.integer <= 31536000').describe(
             'Number of seconds until the API key expires.',
           ),
-        ).or('null | null'),
+        ).or('null'),
       }),
     )
     .output(ServiceAccountApiKeyBodySchema)

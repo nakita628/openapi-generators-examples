@@ -10,7 +10,14 @@ export const evalsHandler = new Hono()
       'query',
       z.object({
         after: z.string().exactOptional(),
-        limit: z.coerce.number().int().default(20).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
+          .default(20)
+          .exactOptional(),
         order: z.enum(['asc', 'desc']).default('asc').exactOptional(),
         order_by: z.enum(['created_at', 'updated_at']).default('created_at').exactOptional(),
       }),
@@ -39,7 +46,14 @@ export const evalsHandler = new Hono()
       'query',
       z.object({
         after: z.string().exactOptional(),
-        limit: z.coerce.number().int().default(20).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
+          .default(20)
+          .exactOptional(),
         order: z.enum(['asc', 'desc']).default('asc').exactOptional(),
         status: z
           .enum(['queued', 'in_progress', 'completed', 'canceled', 'failed'])
@@ -76,7 +90,14 @@ export const evalsHandler = new Hono()
       'query',
       z.object({
         after: z.string().exactOptional(),
-        limit: z.coerce.number().int().default(20).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
+          .default(20)
+          .exactOptional(),
         status: z.enum(['fail', 'pass']).exactOptional(),
         order: z.enum(['asc', 'desc']).default('asc').exactOptional(),
       }),

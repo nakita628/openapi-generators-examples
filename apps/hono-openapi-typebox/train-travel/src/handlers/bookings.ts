@@ -1,6 +1,6 @@
 import { Hono } from 'hono'
 import { describeRoute, resolver, validator } from 'hono-openapi'
-import { Type } from 'typebox'
+import { Type, type StaticDecode, type StaticEncode, type TSchema } from 'typebox'
 import { Compile } from 'typebox/compile'
 import {
   LinksSelfSchema,
@@ -18,6 +18,31 @@ import {
   UnauthorizedResponse,
 } from '../components'
 
+const toStandardSchemaV1 = <T extends TSchema>(schema: T) => {
+  const validator = Compile(schema)
+  return Object.assign(validator, {
+    '~standard': {
+      version: 1 as const,
+      vendor: 'typebox',
+      validate: (value: unknown) =>
+        validator.Check(value)
+          ? { value: validator.Decode(value) }
+          : {
+              issues: validator.Errors(value).map((error) => ({
+                message: error.message,
+                path: error.instancePath
+                  .split('/')
+                  .slice(1)
+                  .map((key) => key.replaceAll('~1', '/').replaceAll('~0', '~')),
+              })),
+            },
+      types: undefined as
+        | { readonly input: StaticEncode<T>; readonly output: StaticDecode<T> }
+        | undefined,
+    },
+  })
+}
+
 export const bookingsHandler = new Hono()
   .get(
     '/bookings',
@@ -33,7 +58,7 @@ export const bookingsHandler = new Hono()
           content: {
             'application/json': {
               schema: resolver(
-                Compile(
+                toStandardSchemaV1(
                   Type.Intersect([
                     WrapperCollectionSchema,
                     Type.Object({ data: Type.Optional(Type.Array(BookingSchema)) }),
@@ -70,7 +95,7 @@ export const bookingsHandler = new Hono()
             },
             'application/xml': {
               schema: resolver(
-                Compile(
+                toStandardSchemaV1(
                   Type.Intersect([
                     WrapperCollectionSchema,
                     Type.Object({ data: Type.Optional(Type.Array(BookingSchema)) }),
@@ -109,7 +134,7 @@ export const bookingsHandler = new Hono()
           content: {
             'application/json': {
               schema: resolver(
-                Compile(
+                toStandardSchemaV1(
                   Type.Intersect([
                     BookingSchema,
                     Type.Object({ links: Type.Optional(LinksSelfSchema) }),
@@ -129,7 +154,7 @@ export const bookingsHandler = new Hono()
             },
             'application/xml': {
               schema: resolver(
-                Compile(
+                toStandardSchemaV1(
                   Type.Intersect([
                     BookingSchema,
                     Type.Object({ links: Type.Optional(LinksSelfSchema) }),
@@ -147,7 +172,7 @@ export const bookingsHandler = new Hono()
         '500': InternalServerErrorResponse,
       },
     }),
-    validator('json', Compile(BookingSchema)),
+    validator('json', toStandardSchemaV1(BookingSchema)),
     (c) => { throw new Error('Not implemented') },
   )
   .get(
@@ -164,7 +189,7 @@ export const bookingsHandler = new Hono()
           content: {
             'application/json': {
               schema: resolver(
-                Compile(
+                toStandardSchemaV1(
                   Type.Intersect([
                     BookingSchema,
                     Type.Object({ links: Type.Optional(LinksSelfSchema) }),
@@ -184,7 +209,7 @@ export const bookingsHandler = new Hono()
             },
             'application/xml': {
               schema: resolver(
-                Compile(
+                toStandardSchemaV1(
                   Type.Intersect([
                     BookingSchema,
                     Type.Object({ links: Type.Optional(LinksSelfSchema) }),
@@ -202,7 +227,10 @@ export const bookingsHandler = new Hono()
         '500': InternalServerErrorResponse,
       },
     }),
-    validator('param', Compile(Type.Object({ bookingId: Type.String({ format: 'uuid' }) }))),
+    validator(
+      'param',
+      toStandardSchemaV1(Type.Object({ bookingId: Type.String({ format: 'uuid' }) })),
+    ),
     (c) => { throw new Error('Not implemented') },
   )
   .delete(
@@ -223,7 +251,10 @@ export const bookingsHandler = new Hono()
         '500': InternalServerErrorResponse,
       },
     }),
-    validator('param', Compile(Type.Object({ bookingId: Type.String({ format: 'uuid' }) }))),
+    validator(
+      'param',
+      toStandardSchemaV1(Type.Object({ bookingId: Type.String({ format: 'uuid' }) })),
+    ),
     (c) => { throw new Error('Not implemented') },
   )
   .post(
@@ -241,7 +272,7 @@ export const bookingsHandler = new Hono()
           content: {
             'application/json': {
               schema: resolver(
-                Compile(
+                toStandardSchemaV1(
                   Type.Intersect([
                     BookingPaymentSchema,
                     Type.Object({ links: Type.Optional(LinksBookingSchema) }),
@@ -305,7 +336,10 @@ export const bookingsHandler = new Hono()
         '500': InternalServerErrorResponse,
       },
     }),
-    validator('param', Compile(Type.Object({ bookingId: Type.String({ format: 'uuid' }) }))),
-    validator('json', Compile(BookingPaymentSchema)),
+    validator(
+      'param',
+      toStandardSchemaV1(Type.Object({ bookingId: Type.String({ format: 'uuid' }) })),
+    ),
+    validator('json', toStandardSchemaV1(BookingPaymentSchema)),
     (c) => { throw new Error('Not implemented') },
   )

@@ -53,14 +53,24 @@ export const webhookEndpointsHandler = new Hono()
       'query',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          limit: Schema.optional(
-            Schema.FiniteFromString.check(
-              Schema.isInt(),
-              Schema.isGreaterThanOrEqualTo(1),
-              Schema.isLessThanOrEqualTo(100),
-            ),
+          limit: Schema.optionalKey(
+            Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+              .pipe(
+                Schema.decodeTo(
+                  Schema.Finite,
+                  SchemaTransformation.transform({
+                    decode: (input) => Number(input),
+                    encode: (output) => String(output),
+                  }),
+                ),
+              )
+              .check(
+                Schema.isInt(),
+                Schema.isGreaterThanOrEqualTo(1),
+                Schema.isLessThanOrEqualTo(100),
+              ),
           ),
-          after: Schema.optional(
+          after: Schema.optionalKey(
             Schema.Union([
               Schema.String.annotate({ jsonSchemaExamples: ['whe_123'] }),
               Schema.Unknown.pipe(
@@ -71,7 +81,7 @@ export const webhookEndpointsHandler = new Hono()
                     encode: (output) => output,
                   }),
                 ),
-                Schema.decodeTo(Schema.NullOr(Schema.Null)),
+                Schema.decodeTo(Schema.Null),
               ),
             ]),
           ),

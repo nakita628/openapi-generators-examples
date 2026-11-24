@@ -67,7 +67,8 @@ export const imagesHandler = new Hono()
               v.nullable(
                 v.pipe(
                   v.string(),
-                  v.transform(Number),
+                  v.regex(/^-?(?:0|[1-9]\d*)$/),
+                  v.transform((input) => Number(input)),
                   v.number(),
                   v.safeInteger(),
                   v.minValue(2),
@@ -88,7 +89,8 @@ export const imagesHandler = new Hono()
               v.nullable(
                 v.pipe(
                   v.string(),
-                  v.transform(Number),
+                  v.regex(/^-?(?:0|[1-9]\d*)$/),
+                  v.transform((input) => Number(input)),
                   v.number(),
                   v.safeInteger(),
                   v.minValue(20),
@@ -147,7 +149,7 @@ export const imagesHandler = new Hono()
               v.pipe(
                 v.unknown(),
                 v.transform((input) => (input === 'null' ? null : input)),
-                v.nullable(v.null()),
+                v.null(),
               ),
             ]),
             'auto',
@@ -189,7 +191,8 @@ export const imagesHandler = new Hono()
               v.nullable(
                 v.pipe(
                   v.string(),
-                  v.transform(Number),
+                  v.regex(/^-?(?:0|[1-9]\d*)$/),
+                  v.transform((input) => Number(input)),
                   v.number(),
                   v.safeInteger(),
                   v.minValue(1),
@@ -210,7 +213,7 @@ export const imagesHandler = new Hono()
               v.pipe(
                 v.unknown(),
                 v.transform((input) => (input === 'null' ? null : input)),
-                v.nullable(v.null()),
+                v.null(),
               ),
             ]),
             'auto',
@@ -222,7 +225,7 @@ export const imagesHandler = new Hono()
         ),
         response_format: v.optional(
           v.pipe(
-            v.nullable(v.union([v.literal('url'), v.literal('b64_json'), v.null()])),
+            v.nullable(v.picklist(['url', 'b64_json'])),
             v.description(
               'Legacy response format parameter for retired image models. Unsupported for GPT image models, which always return base64-encoded images.',
             ),
@@ -240,7 +243,7 @@ export const imagesHandler = new Hono()
                   v.pipe(
                     v.unknown(),
                     v.transform((input) => (input === 'null' ? null : input)),
-                    v.nullable(v.null()),
+                    v.null(),
                   ),
                 ]),
               ),
@@ -276,7 +279,7 @@ export const imagesHandler = new Hono()
                             v.pipe(
                               v.unknown(),
                               v.transform((input) => (input === 'null' ? null : input)),
-                              v.nullable(v.null()),
+                              v.null(),
                             ),
                           ]),
                         ),
@@ -286,7 +289,7 @@ export const imagesHandler = new Hono()
                   v.pipe(
                     v.unknown(),
                     v.transform((input) => (input === 'null' ? null : input)),
-                    v.nullable(v.null()),
+                    v.null(),
                   ),
                 ]),
               ),
@@ -301,7 +304,15 @@ export const imagesHandler = new Hono()
             v.pipe(
               v.unknown(),
               v.transform((input) => (input === 'null' ? null : input)),
-              v.nullable(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger())),
+              v.nullable(
+                v.pipe(
+                  v.string(),
+                  v.regex(/^-?(?:0|[1-9]\d*)$/),
+                  v.transform((input) => Number(input)),
+                  v.number(),
+                  v.safeInteger(),
+                ),
+              ),
             ),
             '100',
           ),
@@ -338,7 +349,7 @@ export const imagesHandler = new Hono()
                 v.pipe(
                   v.unknown(),
                   v.transform((input) => (input === 'null' ? null : input)),
-                  v.nullable(v.null()),
+                  v.null(),
                 ),
               ]),
             ),
@@ -374,7 +385,8 @@ export const imagesHandler = new Hono()
                   v.optional(
                     v.pipe(
                       v.string(),
-                      v.transform(Number),
+                      v.regex(/^-?(?:0|[1-9]\d*)$/),
+                      v.transform((input) => Number(input)),
                       v.number(),
                       v.safeInteger(),
                       v.minValue(0),
@@ -390,7 +402,7 @@ export const imagesHandler = new Hono()
                 v.pipe(
                   v.unknown(),
                   v.transform((input) => (input === 'null' ? null : input)),
-                  v.nullable(v.null()),
+                  v.null(),
                 ),
               ]),
             ),
@@ -403,7 +415,7 @@ export const imagesHandler = new Hono()
               v.pipe(
                 v.unknown(),
                 v.transform((input) => (input === 'null' ? null : input)),
-                v.nullable(v.null()),
+                v.null(),
               ),
             ]),
             'auto',
@@ -526,7 +538,7 @@ export const imagesHandler = new Hono()
                 v.pipe(
                   v.unknown(),
                   v.transform((input) => (input === 'null' ? null : input)),
-                  v.nullable(v.null()),
+                  v.null(),
                 ),
               ]),
               'dall-e-2',
@@ -544,7 +556,8 @@ export const imagesHandler = new Hono()
                 v.nullable(
                   v.pipe(
                     v.string(),
-                    v.transform(Number),
+                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                    v.transform((input) => Number(input)),
                     v.number(),
                     v.safeInteger(),
                     v.minValue(1),
@@ -558,27 +571,14 @@ export const imagesHandler = new Hono()
             v.metadata({ examples: [1] }),
           ),
           response_format: v.pipe(
-            v.optional(
-              v.nullable(v.union([v.literal('url'), v.literal('b64_json'), v.null()])),
-              'url',
-            ),
+            v.optional(v.nullable(v.picklist(['url', 'b64_json'])), 'url'),
             v.description(
               'The format in which the generated images are returned. Must be one of `url` or `b64_json`. URLs are only valid for 60 minutes after the image has been generated.',
             ),
             v.metadata({ examples: ['url'] }),
           ),
           size: v.pipe(
-            v.optional(
-              v.nullable(
-                v.union([
-                  v.literal('256x256'),
-                  v.literal('512x512'),
-                  v.literal('1024x1024'),
-                  v.null(),
-                ]),
-              ),
-              '1024x1024',
-            ),
+            v.optional(v.nullable(v.picklist(['256x256', '512x512', '1024x1024'])), '1024x1024'),
             v.description(
               'The size of the generated images. Must be one of `256x256`, `512x512`, or `1024x1024`.',
             ),

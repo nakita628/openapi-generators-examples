@@ -20,7 +20,7 @@ export const AdminApiKeySchema = v.pipe(
     ),
     name: v.optional(
       v.pipe(
-        v.union([v.string(), v.nullable(v.null())]),
+        v.union([v.string(), v.null()]),
         v.description('The name of the API key'),
         v.metadata({ examples: ['Administration Key'] }),
       ),
@@ -41,7 +41,7 @@ export const AdminApiKeySchema = v.pipe(
         v.description('The Unix timestamp (in seconds) of when the API key expires'),
         v.metadata({ examples: [1714063533] }),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
     last_used_at: v.optional(
       v.union([
@@ -50,7 +50,7 @@ export const AdminApiKeySchema = v.pipe(
           v.description('The Unix timestamp (in seconds) of when the API key was last used'),
           v.metadata({ examples: [1711471534] }),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     owner: v.partial(
@@ -116,10 +116,10 @@ export const ApiKeyListSchema = v.object({
   data: v.array(AdminApiKeySchema),
   has_more: v.pipe(v.boolean(), v.metadata({ examples: [false] })),
   first_id: v.optional(
-    v.pipe(v.union([v.string(), v.nullable(v.null())]), v.metadata({ examples: ['key_abc'] })),
+    v.pipe(v.union([v.string(), v.null()]), v.metadata({ examples: ['key_abc'] })),
   ),
   last_id: v.optional(
-    v.pipe(v.union([v.string(), v.nullable(v.null())]), v.metadata({ examples: ['key_xyz'] })),
+    v.pipe(v.union([v.string(), v.null()]), v.metadata({ examples: ['key_xyz'] })),
   ),
 })
 
@@ -138,34 +138,31 @@ export const AssignedRoleDetailsSchema = v.pipe(
       v.boolean(),
       v.description('Whether the role is predefined by OpenAI.'),
     ),
-    description: v.pipe(
-      v.union([v.string(), v.nullable(v.null())]),
-      v.description('Description of the role.'),
-    ),
+    description: v.pipe(v.union([v.string(), v.null()]), v.description('Description of the role.')),
     created_at: v.pipe(
-      v.union([v.pipe(v.number(), v.integer()), v.nullable(v.null())]),
+      v.union([v.pipe(v.number(), v.integer()), v.null()]),
       v.description('When the role was created.'),
     ),
     updated_at: v.pipe(
-      v.union([v.pipe(v.number(), v.integer()), v.nullable(v.null())]),
+      v.union([v.pipe(v.number(), v.integer()), v.null()]),
       v.description('When the role was last updated.'),
     ),
     created_by: v.pipe(
-      v.union([v.string(), v.nullable(v.null())]),
+      v.union([v.string(), v.null()]),
       v.description('Identifier of the actor who created the role.'),
     ),
     created_by_user_obj: v.pipe(
-      v.union([v.any(), v.nullable(v.null())]),
+      v.union([v.any(), v.null()]),
       v.description('User details for the actor that created the role, when available.'),
     ),
     metadata: v.pipe(
-      v.union([v.any(), v.nullable(v.null())]),
+      v.union([v.any(), v.null()]),
       v.description('Arbitrary metadata stored on the role.'),
     ),
     assignment_sources: v.pipe(
       v.union([
         v.array(v.object({ principal_id: v.string(), principal_type: v.string() })),
-        v.nullable(v.null()),
+        v.null(),
       ]),
       v.description('Principals from which the role assignment is inherited, when available.'),
     ),
@@ -270,7 +267,7 @@ export const FunctionObjectSchema = v.object({
           'Whether to enable strict schema adherence when generating the function call. If set to true, the model will follow the exact schema defined in the `parameters` field. Only a subset of JSON Schema is supported when `strict` is `true`. Learn more about Structured Outputs in the [function calling guide](https://developers.openai.com/api/docs/guides/function-calling).',
         ),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   ),
 })
@@ -291,7 +288,7 @@ export const MetadataSchema = v.union([
       'Set of 16 key-value pairs that can be attached to an object. This can be\nuseful for storing additional information about the object in a structured\nformat, and querying for objects via API or the dashboard.\n\nKeys are strings with a maximum length of 64 characters. Values are strings\nwith a maximum length of 512 characters.\n',
     ),
   ),
-  v.nullable(v.null()),
+  v.null(),
 ])
 
 export type Metadata = v.InferOutput<typeof MetadataSchema>
@@ -364,7 +361,7 @@ export const ResponseFormatJsonSchemaSchema = v.pipe(
                 'Whether to enable strict schema adherence when generating the output.\nIf set to true, the model will always follow the exact schema defined\nin the `schema` field. Only a subset of JSON Schema is supported when\n`strict` is `true`. To learn more, read the [Structured Outputs\nguide](https://developers.openai.com/api/docs/guides/structured-outputs).\n',
               ),
             ),
-            v.nullable(v.null()),
+            v.null(),
           ]),
         ),
       }),
@@ -413,14 +410,14 @@ export const AssistantObjectSchema = v.pipe(
         v.pipe(v.string(), v.maxCodePoints(256)),
         v.description('The name of the assistant. The maximum length is 256 characters.\n'),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
     description: v.union([
       v.pipe(
         v.pipe(v.string(), v.maxCodePoints(512)),
         v.description('The description of the assistant. The maximum length is 512 characters.\n'),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
     model: v.pipe(
       v.string(),
@@ -435,7 +432,7 @@ export const AssistantObjectSchema = v.pipe(
           'The system instructions that the assistant uses. The maximum length is 256,000 characters.\n',
         ),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
     tools: v.pipe(
       v.optional(
@@ -484,7 +481,7 @@ export const AssistantObjectSchema = v.pipe(
             "A set of resources that are used by the assistant's tools. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.\n",
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     metadata: MetadataSchema,
@@ -497,7 +494,7 @@ export const AssistantObjectSchema = v.pipe(
           ),
           v.metadata({ examples: [1] }),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     top_p: v.optional(
@@ -509,12 +506,10 @@ export const AssistantObjectSchema = v.pipe(
           ),
           v.metadata({ examples: [1] }),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
-    response_format: v.optional(
-      v.union([AssistantsApiResponseFormatOptionSchema, v.nullable(v.null())]),
-    ),
+    response_format: v.optional(v.union([AssistantsApiResponseFormatOptionSchema, v.null()])),
   }),
   v.description('Represents an `assistant` that can call the model and use tools.'),
   v.metadata({ deprecated: true }),
@@ -564,7 +559,7 @@ export const ThreadObjectSchema = v.pipe(
           "A set of resources that are made available to the assistant's tools in this thread. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.\n",
         ),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
     metadata: MetadataSchema,
   }),
@@ -642,7 +637,7 @@ export const RunCompletionUsageSchema = v.union([
       'Usage statistics related to the run. This value will be `null` if the run is not in a terminal state (i.e. `in_progress`, `queued`, etc.).',
     ),
   ),
-  v.nullable(v.null()),
+  v.null(),
 ])
 
 export type RunCompletionUsage = v.InferOutput<typeof RunCompletionUsageSchema>
@@ -663,7 +658,7 @@ export const TruncationObjectSchema = v.pipe(
             'The number of most recent messages from the thread when constructing the context for the run.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
   }),
@@ -890,10 +885,10 @@ export const RunObjectSchema = v.pipe(
         'The maximum number of completion tokens specified to have been used over the course of the run.\n',
       ),
     ),
-    truncation_strategy: v.union([TruncationObjectSchema, v.nullable(v.null())]),
-    tool_choice: v.union([AssistantsApiToolChoiceOptionSchema, v.nullable(v.null())]),
+    truncation_strategy: v.union([TruncationObjectSchema, v.null()]),
+    tool_choice: v.union([AssistantsApiToolChoiceOptionSchema, v.null()]),
     parallel_tool_calls: ParallelToolCallsSchema,
-    response_format: v.union([AssistantsApiResponseFormatOptionSchema, v.nullable(v.null())]),
+    response_format: v.union([AssistantsApiResponseFormatOptionSchema, v.null()]),
   }),
   v.description(
     'Represents an execution run on a [thread](https://developers.openai.com/api/docs/assistants/migration).',
@@ -1141,7 +1136,7 @@ export const RunStepDetailsToolCallsFunctionObjectSchema = v.object({
             'The output of the function. This will be `null` if the outputs have not been [submitted](https://developers.openai.com/api/docs/assistants/migration) yet.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     }),
     v.description('The definition of the function that was called.'),
@@ -1195,7 +1190,7 @@ export const RunStepCompletionUsageSchema = v.union([
       "Usage statistics related to the run step. This value will be `null` while the run step's status is `in_progress`.",
     ),
   ),
-  v.nullable(v.null()),
+  v.null(),
 ])
 
 export type RunStepCompletionUsage = v.InferOutput<typeof RunStepCompletionUsageSchema>
@@ -1261,7 +1256,7 @@ export const RunStepObjectSchema = v.pipe(
           'The last error associated with this run step. Will be `null` if there are no errors.',
         ),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
     expired_at: v.union([
       v.pipe(
@@ -1270,28 +1265,28 @@ export const RunStepObjectSchema = v.pipe(
           'The Unix timestamp (in seconds) for when the run step expired. A step is considered expired if the parent run is expired.',
         ),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
     cancelled_at: v.union([
       v.pipe(
         v.pipe(v.number(), v.integer()),
         v.description('The Unix timestamp (in seconds) for when the run step was cancelled.'),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
     failed_at: v.union([
       v.pipe(
         v.pipe(v.number(), v.integer()),
         v.description('The Unix timestamp (in seconds) for when the run step failed.'),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
     completed_at: v.union([
       v.pipe(
         v.pipe(v.number(), v.integer()),
         v.description('The Unix timestamp (in seconds) for when the run step completed.'),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
     metadata: MetadataSchema,
     usage: RunStepCompletionUsageSchema,
@@ -1456,7 +1451,7 @@ export const RunStepDeltaStepDetailsToolCallsFunctionObjectSchema = v.object({
                 'The output of the function. This will be `null` if the outputs have not been [submitted](https://developers.openai.com/api/docs/assistants/migration) yet.',
               ),
             ),
-            v.nullable(v.null()),
+            v.null(),
           ]),
         }),
       ),
@@ -1751,14 +1746,14 @@ export const MessageObjectSchema = v.pipe(
         }),
         v.description('On an incomplete message, details about why the message is incomplete.'),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
     completed_at: v.union([
       v.pipe(
         v.pipe(v.number(), v.integer()),
         v.description('The Unix timestamp (in seconds) for when the message was completed.'),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
     incomplete_at: v.union([
       v.pipe(
@@ -1767,7 +1762,7 @@ export const MessageObjectSchema = v.pipe(
           'The Unix timestamp (in seconds) for when the message was marked as incomplete.',
         ),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
     role: v.pipe(
       v.picklist(['user', 'assistant']),
@@ -1791,7 +1786,7 @@ export const MessageObjectSchema = v.pipe(
           'If applicable, the ID of the [assistant](https://developers.openai.com/api/docs/assistants/migration) that authored this message.',
         ),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
     run_id: v.union([
       v.pipe(
@@ -1800,7 +1795,7 @@ export const MessageObjectSchema = v.pipe(
           'The ID of the [run](https://developers.openai.com/api/docs/assistants/migration) associated with the creation of this message. Value is `null` when messages are created manually using the create message or create thread endpoints.',
         ),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
     attachments: v.union([
       v.pipe(
@@ -1822,7 +1817,7 @@ export const MessageObjectSchema = v.pipe(
         ),
         v.description('A list of files attached to the message, and the tools they were added to.'),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
     metadata: MetadataSchema,
   }),
@@ -2116,7 +2111,7 @@ export const MisalignmentErrorDetailsResourceSchema = v.partial(
         ),
         v.check((input) => !v.safeParse(v.any(), input).success),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
     error_type: v.pipe(
       MisalignmentErrorTypeSchema,
@@ -2138,9 +2133,9 @@ export type MisalignmentErrorDetailsResource = v.InferOutput<
 >
 
 export const ErrorSchema = v.object({
-  code: v.union([v.string(), v.nullable(v.null())]),
+  code: v.union([v.string(), v.null()]),
   message: v.string(),
-  param: v.union([v.string(), v.nullable(v.null())]),
+  param: v.union([v.string(), v.null()]),
   type: v.string(),
   misalignment: v.optional(MisalignmentErrorDetailsResourceSchema),
 })
@@ -2608,10 +2603,22 @@ export type OciExternalStorageProviderResponse = v.InferOutput<
 >
 
 export const ProviderSchema = v.union([
-  AwsExternalStorageProviderResponseSchema,
-  AzureExternalStorageProviderResponseSchema,
-  GcpExternalStorageProviderResponseSchema,
-  OciExternalStorageProviderResponseSchema,
+  v.intersect([
+    AwsExternalStorageProviderResponseSchema,
+    v.object({ type: v.literal('AwsExternalStorageProviderResponse') }),
+  ]),
+  v.intersect([
+    AzureExternalStorageProviderResponseSchema,
+    v.object({ type: v.literal('AzureExternalStorageProviderResponse') }),
+  ]),
+  v.intersect([
+    GcpExternalStorageProviderResponseSchema,
+    v.object({ type: v.literal('GcpExternalStorageProviderResponse') }),
+  ]),
+  v.intersect([
+    OciExternalStorageProviderResponseSchema,
+    v.object({ type: v.literal('OciExternalStorageProviderResponse') }),
+  ]),
 ])
 
 export type Provider = v.InferOutput<typeof ProviderSchema>
@@ -2637,7 +2644,7 @@ export const AuditLogSchema = v.pipe(
         ),
       ),
     ),
-    actor: v.optional(v.union([AuditLogActorSchema, v.nullable(v.null())])),
+    actor: v.optional(v.union([AuditLogActorSchema, v.null()])),
     'api_key.created': v.optional(
       v.pipe(
         v.partial(
@@ -3712,14 +3719,14 @@ export const BatchErrorSchema = v.partial(
         v.string(),
         v.description('The name of the parameter that caused the error, if applicable.'),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
     line: v.union([
       v.pipe(
         v.pipe(v.number(), v.integer()),
         v.description('The line number of the input file where the error occurred, if applicable.'),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   }),
 )
@@ -3942,10 +3949,7 @@ export const CertificateSchema = v.pipe(
       v.string(),
       v.description('The identifier, which can be referenced in API endpoints'),
     ),
-    name: v.pipe(
-      v.union([v.string(), v.nullable(v.null())]),
-      v.description('The name of the certificate.'),
-    ),
+    name: v.pipe(v.union([v.string(), v.null()]), v.description('The name of the certificate.')),
     created_at: v.pipe(
       v.pipe(v.number(), v.integer()),
       v.description('The Unix timestamp (in seconds) of when the certificate was uploaded.'),
@@ -4113,7 +4117,16 @@ export type ChatCompletionMessageCustomToolCall = v.InferOutput<
 
 export const ChatCompletionMessageToolCallsSchema = v.pipe(
   v.array(
-    v.union([ChatCompletionMessageToolCallSchema, ChatCompletionMessageCustomToolCallSchema]),
+    v.union([
+      v.intersect([
+        ChatCompletionMessageToolCallSchema,
+        v.object({ type: v.literal('ChatCompletionMessageToolCall') }),
+      ]),
+      v.intersect([
+        ChatCompletionMessageCustomToolCallSchema,
+        v.object({ type: v.literal('ChatCompletionMessageCustomToolCall') }),
+      ]),
+    ]),
   ),
   v.description('The tool calls generated by the model, such as function calls.'),
 )
@@ -4124,17 +4137,14 @@ export type ChatCompletionMessageToolCalls = v.InferOutput<
 
 export const ChatCompletionResponseMessageSchema = v.pipe(
   v.object({
-    content: v.union([
-      v.pipe(v.string(), v.description('The contents of the message.')),
-      v.nullable(v.null()),
-    ]),
+    content: v.union([v.pipe(v.string(), v.description('The contents of the message.')), v.null()]),
     refusal: v.optional(
       v.union([
         v.pipe(v.string(), v.description('The refusal message generated by the model.')),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
-    tool_calls: v.optional(v.union([ChatCompletionMessageToolCallsSchema, v.nullable(v.null())])),
+    tool_calls: v.optional(v.union([ChatCompletionMessageToolCallsSchema, v.null()])),
     annotations: v.optional(
       v.pipe(
         v.array(
@@ -4221,7 +4231,7 @@ export const ChatCompletionResponseMessageSchema = v.pipe(
             'If the audio output modality is requested, this object contains data\nabout the audio response from the model. [Learn more](https://developers.openai.com/api/docs/guides/audio).\n',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
   }),
@@ -4247,7 +4257,7 @@ export const ChatCompletionTokenLogprobSchema = v.object({
         'A list of integers representing the UTF-8 bytes representation of the token. Useful in instances where characters are represented by multiple tokens and their byte representations must be combined to generate the correct text representation. Can be `null` if there is no bytes representation for the token.',
       ),
     ),
-    v.nullable(v.null()),
+    v.null(),
   ]),
   top_logprobs: v.pipe(
     v.array(
@@ -4266,7 +4276,7 @@ export const ChatCompletionTokenLogprobSchema = v.object({
               'A list of integers representing the UTF-8 bytes representation of the token. Useful in instances where characters are represented by multiple tokens and their byte representations must be combined to generate the correct text representation. Can be `null` if there is no bytes representation for the token.',
             ),
           ),
-          v.nullable(v.null()),
+          v.null(),
         ]),
       }),
     ),
@@ -4285,7 +4295,7 @@ export const ServiceTierSchema = v.union([
       "Specifies the processing type used for serving the request.\n  - If set to 'auto', then the request will be processed with the service tier configured in the Project settings. Unless otherwise configured, the Project will use 'default'.\n  - If set to 'default', then the request will be processed with the standard pricing and performance for the selected model.\n  - If set to '[flex](https://developers.openai.com/api/docs/guides/flex-processing)', then the request will be processed with the Flex Processing service tier.\n  - To opt-in to [Fast mode](https://developers.openai.com/api/docs/guides/fast-mode) at the request level, include the `service_tier=fast` or `service_tier=priority` parameter for Responses or Chat Completions. The response will show `service_tier=priority` regardless of if you specify `service_tier=fast` or `priority` in your request.\n  - When not set, the default behavior is 'auto'.\n\n  When the `service_tier` parameter is set, the response body will include the `service_tier` value based on the processing mode actually used to serve the request. This response value may be different from the value set in the parameter.\n",
     ),
   ),
-  v.nullable(v.null()),
+  v.null(),
 ])
 
 export type ServiceTier = v.InferOutput<typeof ServiceTierSchema>
@@ -4446,11 +4456,29 @@ export type ChatCompletionModerationError = v.InferOutput<
 export const ChatCompletionModerationSchema = v.pipe(
   v.object({
     input: v.pipe(
-      v.union([ChatCompletionModerationResultsSchema, ChatCompletionModerationErrorSchema]),
+      v.union([
+        v.intersect([
+          ChatCompletionModerationResultsSchema,
+          v.object({ type: v.literal('ChatCompletionModerationResults') }),
+        ]),
+        v.intersect([
+          ChatCompletionModerationErrorSchema,
+          v.object({ type: v.literal('ChatCompletionModerationError') }),
+        ]),
+      ]),
       v.description('Moderation for the request input.'),
     ),
     output: v.pipe(
-      v.union([ChatCompletionModerationResultsSchema, ChatCompletionModerationErrorSchema]),
+      v.union([
+        v.intersect([
+          ChatCompletionModerationResultsSchema,
+          v.object({ type: v.literal('ChatCompletionModerationResults') }),
+        ]),
+        v.intersect([
+          ChatCompletionModerationErrorSchema,
+          v.object({ type: v.literal('ChatCompletionModerationError') }),
+        ]),
+      ]),
       v.description('Moderation for the generated output.'),
     ),
   }),
@@ -4486,7 +4514,7 @@ export const CreateChatCompletionResponseSchema = v.pipe(
                       'A list of message content tokens with log probability information.',
                     ),
                   ),
-                  v.nullable(v.null()),
+                  v.null(),
                 ]),
                 refusal: v.union([
                   v.pipe(
@@ -4495,12 +4523,12 @@ export const CreateChatCompletionResponseSchema = v.pipe(
                       'A list of message refusal tokens with log probability information.',
                     ),
                   ),
-                  v.nullable(v.null()),
+                  v.null(),
                 ]),
               }),
               v.description('Log probability information for the choice.'),
             ),
-            v.nullable(v.null()),
+            v.null(),
           ]),
         }),
       ),
@@ -4537,7 +4565,7 @@ export const CreateChatCompletionResponseSchema = v.pipe(
             'Moderation results for the request input and generated output, if moderated\ncompletions were requested.\n',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
   }),
@@ -4587,44 +4615,41 @@ export const ChatCompletionMessageListSchema = v.pipe(
         v.object({
           id: v.string(),
           role: v.picklist(['user', 'assistant', 'tool', 'system', 'function', 'developer']),
-          content: v.union([v.string(), v.nullable(v.null())]),
+          content: v.union([v.string(), v.null()]),
           content_parts: v.union([
             v.array(
               v.object({
                 type: v.picklist(['text', 'image_url', 'input_audio', 'file']),
-                text: v.optional(v.union([v.string(), v.nullable(v.null())])),
+                text: v.optional(v.union([v.string(), v.null()])),
                 image_url: v.optional(
                   v.union([
                     v.object({
                       url: v.string(),
-                      detail: v.optional(v.union([v.string(), v.nullable(v.null())])),
+                      detail: v.optional(v.union([v.string(), v.null()])),
                     }),
-                    v.nullable(v.null()),
+                    v.null(),
                   ]),
                 ),
                 input_audio: v.optional(
-                  v.union([
-                    v.object({ data: v.string(), format: v.string() }),
-                    v.nullable(v.null()),
-                  ]),
+                  v.union([v.object({ data: v.string(), format: v.string() }), v.null()]),
                 ),
                 file: v.optional(
                   v.union([
                     v.partial(
                       v.object({
-                        file_data: v.union([v.string(), v.nullable(v.null())]),
-                        filename: v.union([v.string(), v.nullable(v.null())]),
-                        file_id: v.union([v.string(), v.nullable(v.null())]),
+                        file_data: v.union([v.string(), v.null()]),
+                        filename: v.union([v.string(), v.null()]),
+                        file_id: v.union([v.string(), v.null()]),
                       }),
                     ),
-                    v.nullable(v.null()),
+                    v.null(),
                   ]),
                 ),
               }),
             ),
-            v.nullable(v.null()),
+            v.null(),
           ]),
-          name: v.optional(v.union([v.string(), v.nullable(v.null())])),
+          name: v.optional(v.union([v.string(), v.null()])),
         }),
       ),
       v.description('An array of chat completion message objects.\n'),
@@ -4682,7 +4707,7 @@ export const ChatCompletionModalitiesSchema = v.union([
       'Output types that you would like the model to generate for this request.\nMost models are capable of generating text, which is the default:\n\n`["text"]`\n\nThe `gpt-4o-audio-preview` model can also be used to [generate audio](https://developers.openai.com/api/docs/guides/audio). To\nrequest that this model generate both text and audio responses, you can\nuse:\n\n`["text", "audio"]`\n',
     ),
   ),
-  v.nullable(v.null()),
+  v.null(),
 ])
 
 export type ChatCompletionModalities = v.InferOutput<typeof ChatCompletionModalitiesSchema>
@@ -4770,8 +4795,14 @@ export type ChatCompletionRequestMessageContentPartRefusal = v.InferOutput<
 >
 
 export const ChatCompletionRequestAssistantMessageContentPartSchema = v.union([
-  ChatCompletionRequestMessageContentPartTextSchema,
-  ChatCompletionRequestMessageContentPartRefusalSchema,
+  v.intersect([
+    ChatCompletionRequestMessageContentPartTextSchema,
+    v.object({ type: v.literal('ChatCompletionRequestMessageContentPartText') }),
+  ]),
+  v.intersect([
+    ChatCompletionRequestMessageContentPartRefusalSchema,
+    v.object({ type: v.literal('ChatCompletionRequestMessageContentPartRefusal') }),
+  ]),
 ])
 
 export type ChatCompletionRequestAssistantMessageContentPart = v.InferOutput<
@@ -4799,13 +4830,13 @@ export const ChatCompletionRequestAssistantMessageSchema = v.pipe(
             'The contents of the assistant message. Required unless `tool_calls` or `function_call` is specified.\n',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     refusal: v.optional(
       v.union([
         v.pipe(v.string(), v.description('The refusal message by the assistant.')),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     role: v.pipe(
@@ -4833,7 +4864,7 @@ export const ChatCompletionRequestAssistantMessageSchema = v.pipe(
             'Data about a previous audio response from the model.\n[Learn more](https://developers.openai.com/api/docs/guides/audio).\n',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     tool_calls: v.optional(ChatCompletionMessageToolCallsSchema),
@@ -4854,7 +4885,7 @@ export const ChatCompletionRequestAssistantMessageSchema = v.pipe(
           ),
           v.metadata({ deprecated: true }),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
   }),
@@ -4909,7 +4940,7 @@ export const ChatCompletionRequestFunctionMessageSchema = v.pipe(
     ),
     content: v.union([
       v.pipe(v.string(), v.description('The contents of the function message.')),
-      v.nullable(v.null()),
+      v.null(),
     ]),
     name: v.pipe(v.string(), v.description('The name of the function to call.')),
   }),
@@ -5127,12 +5158,30 @@ export type ChatCompletionRequestToolMessage = v.InferOutput<
 >
 
 export const ChatCompletionRequestMessageSchema = v.union([
-  ChatCompletionRequestDeveloperMessageSchema,
-  ChatCompletionRequestSystemMessageSchema,
-  ChatCompletionRequestUserMessageSchema,
-  ChatCompletionRequestAssistantMessageSchema,
-  ChatCompletionRequestToolMessageSchema,
-  ChatCompletionRequestFunctionMessageSchema,
+  v.intersect([
+    ChatCompletionRequestDeveloperMessageSchema,
+    v.object({ role: v.literal('ChatCompletionRequestDeveloperMessage') }),
+  ]),
+  v.intersect([
+    ChatCompletionRequestSystemMessageSchema,
+    v.object({ role: v.literal('ChatCompletionRequestSystemMessage') }),
+  ]),
+  v.intersect([
+    ChatCompletionRequestUserMessageSchema,
+    v.object({ role: v.literal('ChatCompletionRequestUserMessage') }),
+  ]),
+  v.intersect([
+    ChatCompletionRequestAssistantMessageSchema,
+    v.object({ role: v.literal('ChatCompletionRequestAssistantMessage') }),
+  ]),
+  v.intersect([
+    ChatCompletionRequestToolMessageSchema,
+    v.object({ role: v.literal('ChatCompletionRequestToolMessage') }),
+  ]),
+  v.intersect([
+    ChatCompletionRequestFunctionMessageSchema,
+    v.object({ role: v.literal('ChatCompletionRequestFunctionMessage') }),
+  ]),
 ])
 
 export type ChatCompletionRequestMessage = v.InferOutput<typeof ChatCompletionRequestMessageSchema>
@@ -5164,7 +5213,7 @@ export const ChatCompletionStreamOptionsSchema = v.union([
     ),
     v.description('Options for streaming response. Only set this when you set `stream: true`.\n'),
   ),
-  v.nullable(v.null()),
+  v.null(),
 ])
 
 export type ChatCompletionStreamOptions = v.InferOutput<typeof ChatCompletionStreamOptionsSchema>
@@ -5197,7 +5246,7 @@ export const ChatCompletionStreamResponseDeltaSchema = v.pipe(
       ),
       content: v.union([
         v.pipe(v.string(), v.description('The contents of the chunk message.')),
-        v.nullable(v.null()),
+        v.null(),
       ]),
       function_call: v.pipe(
         v.partial(
@@ -5223,7 +5272,7 @@ export const ChatCompletionStreamResponseDeltaSchema = v.pipe(
       ),
       refusal: v.union([
         v.pipe(v.string(), v.description('The refusal message generated by the model.')),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     }),
   ),
@@ -5300,7 +5349,16 @@ export type StaticChunkingStrategyRequestParam = v.InferOutput<
 >
 
 export const ChunkingStrategyRequestParamSchema = v.pipe(
-  v.union([AutoChunkingStrategyRequestParamSchema, StaticChunkingStrategyRequestParamSchema]),
+  v.union([
+    v.intersect([
+      AutoChunkingStrategyRequestParamSchema,
+      v.object({ type: v.literal('AutoChunkingStrategyRequestParam') }),
+    ]),
+    v.intersect([
+      StaticChunkingStrategyRequestParamSchema,
+      v.object({ type: v.literal('StaticChunkingStrategyRequestParam') }),
+    ]),
+  ]),
   v.description(
     'The chunking strategy used to chunk the file(s). If not set, will use the `auto` strategy.',
   ),
@@ -5412,14 +5470,20 @@ export const AutoCodeInterpreterToolParamSchema = v.pipe(
           ContainerMemoryLimitSchema,
           v.description('The memory limit for the code interpreter container.'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     network_policy: v.optional(
       v.pipe(
         v.union([
-          ContainerNetworkPolicyDisabledParamSchema,
-          ContainerNetworkPolicyAllowlistParamSchema,
+          v.intersect([
+            ContainerNetworkPolicyDisabledParamSchema,
+            v.object({ type: v.literal('ContainerNetworkPolicyDisabledParam') }),
+          ]),
+          v.intersect([
+            ContainerNetworkPolicyAllowlistParamSchema,
+            v.object({ type: v.literal('ContainerNetworkPolicyAllowlistParam') }),
+          ]),
         ]),
         v.description('Network access policy for the container.'),
       ),
@@ -5457,7 +5521,7 @@ export const CodeInterpreterToolSchema = v.pipe(
           v.pipe(v.array(CallableToolAllowedCallerSchema), v.minLength(1)),
           v.description('The tool invocation context(s).'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
   }),
@@ -5516,16 +5580,27 @@ export const CodeInterpreterToolCallSchema = v.pipe(
     ),
     code: v.union([
       v.pipe(v.string(), v.description('The code to run, or null if not available.\n')),
-      v.nullable(v.null()),
+      v.null(),
     ]),
     outputs: v.union([
       v.pipe(
-        v.array(v.union([CodeInterpreterOutputLogsSchema, CodeInterpreterOutputImageSchema])),
+        v.array(
+          v.union([
+            v.intersect([
+              CodeInterpreterOutputLogsSchema,
+              v.object({ type: v.literal('CodeInterpreterOutputLogs') }),
+            ]),
+            v.intersect([
+              CodeInterpreterOutputImageSchema,
+              v.object({ type: v.literal('CodeInterpreterOutputImage') }),
+            ]),
+          ]),
+        ),
         v.description(
           'The outputs generated by the code interpreter, such as logs or images.\nCan be null if no outputs are available.\n',
         ),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   }),
   v.description('A tool call to run code.\n'),
@@ -5579,7 +5654,15 @@ export const CompoundFilterSchema: v.GenericSchema<CompoundFilterType> = v.pipe(
   v.strictObject({
     type: v.pipe(v.picklist(['and', 'or']), v.description('Type of operation: `and` or `or`.')),
     filters: v.pipe(
-      v.array(v.union([ComparisonFilterSchema, v.lazy(() => CompoundFilterSchema)])),
+      v.array(
+        v.union([
+          v.intersect([ComparisonFilterSchema, v.object({ type: v.literal('ComparisonFilter') })]),
+          v.intersect([
+            v.lazy(() => CompoundFilterSchema),
+            v.object({ type: v.literal('CompoundFilter') }),
+          ]),
+        ]),
+      ),
       v.description(
         'Array of filters to combine. Items can be `ComparisonFilter` or `CompoundFilter`.',
       ),
@@ -5619,7 +5702,7 @@ export const ClickParamSchema = v.pipe(
     keys: v.optional(
       v.union([
         v.pipe(v.array(v.string()), v.description('The keys being held while clicking.')),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
   }),
@@ -5646,7 +5729,7 @@ export const DoubleClickActionSchema = v.pipe(
     ),
     keys: v.union([
       v.pipe(v.array(v.string()), v.description('The keys being held while double-clicking.')),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   }),
   v.description('A double click action.'),
@@ -5681,7 +5764,7 @@ export const DragParamSchema = v.pipe(
     keys: v.optional(
       v.union([
         v.pipe(v.array(v.string()), v.description('The keys being held while dragging the mouse.')),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
   }),
@@ -5725,7 +5808,7 @@ export const MoveParamSchema = v.pipe(
     keys: v.optional(
       v.union([
         v.pipe(v.array(v.string()), v.description('The keys being held while moving the mouse.')),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
   }),
@@ -5775,7 +5858,7 @@ export const ScrollParamSchema = v.pipe(
     keys: v.optional(
       v.union([
         v.pipe(v.array(v.string()), v.description('The keys being held while scrolling.')),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
   }),
@@ -5814,15 +5897,15 @@ export const WaitParamSchema = v.pipe(
 export type WaitParam = v.InferOutput<typeof WaitParamSchema>
 
 export const ComputerActionSchema = v.union([
-  ClickParamSchema,
-  DoubleClickActionSchema,
-  DragParamSchema,
-  KeyPressActionSchema,
-  MoveParamSchema,
-  ScreenshotParamSchema,
-  ScrollParamSchema,
-  TypeParamSchema,
-  WaitParamSchema,
+  v.intersect([ClickParamSchema, v.object({ type: v.literal('ClickParam') })]),
+  v.intersect([DoubleClickActionSchema, v.object({ type: v.literal('DoubleClickAction') })]),
+  v.intersect([DragParamSchema, v.object({ type: v.literal('DragParam') })]),
+  v.intersect([KeyPressActionSchema, v.object({ type: v.literal('KeyPressAction') })]),
+  v.intersect([MoveParamSchema, v.object({ type: v.literal('MoveParam') })]),
+  v.intersect([ScreenshotParamSchema, v.object({ type: v.literal('ScreenshotParam') })]),
+  v.intersect([ScrollParamSchema, v.object({ type: v.literal('ScrollParam') })]),
+  v.intersect([TypeParamSchema, v.object({ type: v.literal('TypeParam') })]),
+  v.intersect([WaitParamSchema, v.object({ type: v.literal('WaitParam') })]),
 ])
 
 export type ComputerAction = v.InferOutput<typeof ComputerActionSchema>
@@ -5865,13 +5948,13 @@ export const ComputerCallSafetyCheckParamSchema = v.pipe(
     code: v.optional(
       v.union([
         v.pipe(v.string(), v.description('The type of the pending safety check.')),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     message: v.optional(
       v.union([
         v.pipe(v.string(), v.description('Details about the pending safety check.')),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
   }),
@@ -5951,17 +6034,20 @@ export type ComputerCallOutputStatus = v.InferOutput<typeof ComputerCallOutputSt
 
 export const ComputerToolCallOutputResourceSchema = v.intersect([
   ComputerToolCallOutputSchema,
-  v.object({
-    status: v.pipe(
-      ComputerCallOutputStatusSchema,
-      v.description(
-        'The status of the message input. One of `in_progress`, `completed`, or\n`incomplete`. Populated when input items are returned via API.\n',
+  v.pipe(
+    v.looseObject({
+      status: v.pipe(
+        ComputerCallOutputStatusSchema,
+        v.description(
+          'The status of the message input. One of `in_progress`, `completed`, or\n`incomplete`. Populated when input items are returned via API.\n',
+        ),
       ),
-    ),
-    created_by: v.optional(
-      v.pipe(v.string(), v.description('The identifier of the actor that created the item.\n')),
-    ),
-  }),
+      created_by: v.optional(
+        v.pipe(v.string(), v.description('The identifier of the actor that created the item.\n')),
+      ),
+    }),
+    v.check((input) => ['id'].every((key) => key in input)),
+  ),
 ])
 
 export type ComputerToolCallOutputResource = v.InferOutput<
@@ -6118,13 +6204,13 @@ export const InputImageContentSchema = v.pipe(
             'The URL of the image to be sent to the model. A fully qualified URL or base64 encoded image in a data URL.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     file_id: v.optional(
       v.union([
         v.pipe(v.string(), v.description('The ID of the file to be sent to the model.')),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     detail: v.pipe(
@@ -6155,7 +6241,7 @@ export const InputFileContentSchema = v.pipe(
     file_id: v.optional(
       v.union([
         v.pipe(v.string(), v.description('The ID of the file to be sent to the model.')),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     filename: v.optional(
@@ -6186,9 +6272,9 @@ export const InputFileContentSchema = v.pipe(
 export type InputFileContent = v.InferOutput<typeof InputFileContentSchema>
 
 export const InputContentSchema = v.union([
-  InputTextContentSchema,
-  InputImageContentSchema,
-  InputFileContentSchema,
+  v.intersect([InputTextContentSchema, v.object({ type: v.literal('InputTextContent') })]),
+  v.intersect([InputImageContentSchema, v.object({ type: v.literal('InputImageContent') })]),
+  v.intersect([InputFileContentSchema, v.object({ type: v.literal('InputFileContent') })]),
 ])
 
 export type InputContent = v.InferOutput<typeof InputContentSchema>
@@ -6279,10 +6365,13 @@ export type FilePath = v.InferOutput<typeof FilePathSchema>
 
 export const AnnotationSchema = v.pipe(
   v.union([
-    FileCitationBodySchema,
-    UrlCitationBodySchema,
-    ContainerFileCitationBodySchema,
-    FilePathSchema,
+    v.intersect([FileCitationBodySchema, v.object({ type: v.literal('FileCitationBody') })]),
+    v.intersect([UrlCitationBodySchema, v.object({ type: v.literal('UrlCitationBody') })]),
+    v.intersect([
+      ContainerFileCitationBodySchema,
+      v.object({ type: v.literal('ContainerFileCitationBody') }),
+    ]),
+    v.intersect([FilePathSchema, v.object({ type: v.literal('FilePath') })]),
   ]),
   v.description('An annotation that applies to a span of output text.'),
 )
@@ -6357,9 +6446,9 @@ export const ReasoningTextContentSchema = v.pipe(
 export type ReasoningTextContent = v.InferOutput<typeof ReasoningTextContentSchema>
 
 export const OutputContentSchema = v.union([
-  OutputTextContentSchema,
-  RefusalContentSchema,
-  ReasoningTextContentSchema,
+  v.intersect([OutputTextContentSchema, v.object({ type: v.literal('OutputTextContent') })]),
+  v.intersect([RefusalContentSchema, v.object({ type: v.literal('RefusalContent') })]),
+  v.intersect([ReasoningTextContentSchema, v.object({ type: v.literal('ReasoningTextContent') })]),
 ])
 
 export type OutputContent = v.InferOutput<typeof OutputContentSchema>
@@ -6421,14 +6510,14 @@ export const ComputerScreenshotContentSchema = v.pipe(
     ),
     image_url: v.union([
       v.pipe(v.pipe(v.string(), v.url()), v.description('The URL of the screenshot image.')),
-      v.nullable(v.null()),
+      v.null(),
     ]),
     file_id: v.union([
       v.pipe(
         v.string(),
         v.description('The identifier of an uploaded file that contains the screenshot.'),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
     detail: v.pipe(
       ImageDetailSchema,
@@ -6470,15 +6559,36 @@ export const MessageSchema = v.pipe(
       v.array(
         v.pipe(
           v.union([
-            InputTextContentSchema,
-            OutputTextContentSchema,
-            TextContentSchema,
-            SummaryTextContentSchema,
-            ReasoningTextContentSchema,
-            RefusalContentSchema,
-            InputImageContentSchema,
-            ComputerScreenshotContentSchema,
-            InputFileContentSchema,
+            v.intersect([
+              InputTextContentSchema,
+              v.object({ type: v.literal('InputTextContent') }),
+            ]),
+            v.intersect([
+              OutputTextContentSchema,
+              v.object({ type: v.literal('OutputTextContent') }),
+            ]),
+            v.intersect([TextContentSchema, v.object({ type: v.literal('TextContent') })]),
+            v.intersect([
+              SummaryTextContentSchema,
+              v.object({ type: v.literal('SummaryTextContent') }),
+            ]),
+            v.intersect([
+              ReasoningTextContentSchema,
+              v.object({ type: v.literal('ReasoningTextContent') }),
+            ]),
+            v.intersect([RefusalContentSchema, v.object({ type: v.literal('RefusalContent') })]),
+            v.intersect([
+              InputImageContentSchema,
+              v.object({ type: v.literal('InputImageContent') }),
+            ]),
+            v.intersect([
+              ComputerScreenshotContentSchema,
+              v.object({ type: v.literal('ComputerScreenshotContent') }),
+            ]),
+            v.intersect([
+              InputFileContentSchema,
+              v.object({ type: v.literal('InputFileContent') }),
+            ]),
           ]),
           v.description('A content part that makes up an input or output item.'),
         ),
@@ -6493,7 +6603,7 @@ export const MessageSchema = v.pipe(
             'Labels an `assistant` message as intermediate commentary (`commentary`) or the final answer (`final_answer`). For models like `gpt-5.3-codex` and beyond, when sending follow-up requests, preserve and resend phase on all assistant messages — dropping it can degrade performance. Not used for user messages.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
   }),
@@ -6519,7 +6629,16 @@ export const ProgramToolCallCallerSchema = v.object({
 export type ProgramToolCallCaller = v.InferOutput<typeof ProgramToolCallCallerSchema>
 
 export const ToolCallCallerSchema = v.pipe(
-  v.union([DirectToolCallCallerSchema, ProgramToolCallCallerSchema]),
+  v.union([
+    v.intersect([
+      DirectToolCallCallerSchema,
+      v.object({ type: v.literal('DirectToolCallCaller') }),
+    ]),
+    v.intersect([
+      ProgramToolCallCallerSchema,
+      v.object({ type: v.literal('ProgramToolCallCaller') }),
+    ]),
+  ]),
   v.description('The execution context that produced this tool call.'),
 )
 
@@ -6536,7 +6655,7 @@ export const FunctionToolCallSchema = v.pipe(
       v.string(),
       v.description('The unique ID of the function tool call generated by the model.\n'),
     ),
-    caller: v.optional(v.union([ToolCallCallerSchema, v.nullable(v.null())])),
+    caller: v.optional(v.union([ToolCallCallerSchema, v.null()])),
     namespace: v.optional(
       v.pipe(v.string(), v.description('The namespace of the function to run.\n')),
     ),
@@ -6609,16 +6728,25 @@ export const ProgramToolCallCallerParamSchema = v.object({
 export type ProgramToolCallCallerParam = v.InferOutput<typeof ProgramToolCallCallerParamSchema>
 
 export const ToolCallCallerParamSchema = v.pipe(
-  v.union([DirectToolCallCallerParamSchema, ProgramToolCallCallerParamSchema]),
+  v.union([
+    v.intersect([
+      DirectToolCallCallerParamSchema,
+      v.object({ type: v.literal('DirectToolCallCallerParam') }),
+    ]),
+    v.intersect([
+      ProgramToolCallCallerParamSchema,
+      v.object({ type: v.literal('ProgramToolCallCallerParam') }),
+    ]),
+  ]),
   v.description('The execution context that produced this tool call.'),
 )
 
 export type ToolCallCallerParam = v.InferOutput<typeof ToolCallCallerParamSchema>
 
 export const FunctionAndCustomToolCallOutputSchema = v.union([
-  InputTextContentSchema,
-  InputImageContentSchema,
-  InputFileContentSchema,
+  v.intersect([InputTextContentSchema, v.object({ type: v.literal('InputTextContent') })]),
+  v.intersect([InputImageContentSchema, v.object({ type: v.literal('InputImageContent') })]),
+  v.intersect([InputFileContentSchema, v.object({ type: v.literal('InputFileContent') })]),
 ])
 
 export type FunctionAndCustomToolCallOutput = v.InferOutput<
@@ -6651,7 +6779,7 @@ export const FunctionToolCallOutputSchema = v.pipe(
     namespace: v.optional(
       v.pipe(v.string(), v.description('The namespace of the tool that produced the output.\n')),
     ),
-    caller: v.optional(v.union([ToolCallCallerParamSchema, v.nullable(v.null())])),
+    caller: v.optional(v.union([ToolCallCallerParamSchema, v.null()])),
     output: v.pipe(
       v.union([
         v.pipe(v.string(), v.description('A string of the output of the function call.\n')),
@@ -6716,7 +6844,7 @@ export const VectorStoreFileAttributesSchema = v.union([
       'Set of 16 key-value pairs that can be attached to an object. This can be\nuseful for storing additional information about the object in a structured\nformat, and querying for objects via API or the dashboard. Keys are strings\nwith a maximum length of 64 characters. Values are strings with a maximum\nlength of 512 characters, booleans, or numbers.\n',
     ),
   ),
-  v.nullable(v.null()),
+  v.null(),
 ])
 
 export type VectorStoreFileAttributes = v.InferOutput<typeof VectorStoreFileAttributesSchema>
@@ -6761,7 +6889,7 @@ export const FileSearchToolCallSchema = v.pipe(
           ),
           v.description('The results of the file search tool call.\n'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
   }),
@@ -6819,7 +6947,7 @@ export const WebSearchActionOpenPageSchema = v.pipe(
     type: v.pipe(v.literal('open_page'), v.description('The action type.\n')),
     url: v.optional(
       v.pipe(
-        v.union([v.pipe(v.string(), v.url()), v.nullable(v.null())]),
+        v.union([v.pipe(v.string(), v.url()), v.null()]),
         v.description('The URL opened by the model.\n'),
       ),
     ),
@@ -6834,7 +6962,7 @@ export const WebSearchActionFindSchema = v.pipe(
     type: v.pipe(v.literal('find_in_page'), v.description('The action type.\n')),
     url: v.optional(
       v.pipe(
-        v.union([v.pipe(v.string(), v.url()), v.nullable(v.null())]),
+        v.union([v.pipe(v.string(), v.url()), v.null()]),
         v.description('The URL of the page searched for the pattern, when available.\n'),
       ),
     ),
@@ -6862,9 +6990,18 @@ export const WebSearchToolCallSchema = v.pipe(
     action: v.optional(
       v.pipe(
         v.union([
-          WebSearchActionSearchSchema,
-          WebSearchActionOpenPageSchema,
-          WebSearchActionFindSchema,
+          v.intersect([
+            WebSearchActionSearchSchema,
+            v.object({ type: v.literal('WebSearchActionSearch') }),
+          ]),
+          v.intersect([
+            WebSearchActionOpenPageSchema,
+            v.object({ type: v.literal('WebSearchActionOpenPage') }),
+          ]),
+          v.intersect([
+            WebSearchActionFindSchema,
+            v.object({ type: v.literal('WebSearchActionFind') }),
+          ]),
         ]),
         v.description(
           'An object describing the specific action taken in this web search call.\nIncludes details on how the model used the web (search, open_page, find_in_page).\n',
@@ -6895,13 +7032,10 @@ export type ImageGenToolCallModerationDetails = v.InferOutput<
 >
 
 export const ImageGenToolCallErrorSchema = v.object({
-  code: v.union([v.pipe(v.string(), v.description('The error code.')), v.nullable(v.null())]),
+  code: v.union([v.pipe(v.string(), v.description('The error code.')), v.null()]),
   type: v.pipe(v.string(), v.description('The error type.')),
   message: v.pipe(v.string(), v.description('A description of the error.')),
-  param: v.union([
-    v.pipe(v.string(), v.description('The related request parameter.')),
-    v.nullable(v.null()),
-  ]),
+  param: v.union([v.pipe(v.string(), v.description('The related request parameter.')), v.null()]),
   moderation_details: v.optional(
     v.pipe(
       ImageGenToolCallModerationDetailsSchema,
@@ -6947,7 +7081,7 @@ export const ImageGenToolCallSchema = v.pipe(
     ),
     result: v.union([
       v.pipe(v.string(), v.description('The generated image encoded in base64.')),
-      v.nullable(v.null()),
+      v.null(),
     ]),
     error: v.optional(
       v.pipe(
@@ -6961,7 +7095,7 @@ export const ImageGenToolCallSchema = v.pipe(
           v.union([v.string(), v.picklist(['1024x1024', '1024x1536', '1536x1024'])]),
           v.description('The image dimensions as a `WIDTHxHEIGHT` string, for example `1536x864`.'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     quality: v.optional(
@@ -6972,25 +7106,25 @@ export const ImageGenToolCallSchema = v.pipe(
             'The quality of the image generated by the image generation tool call. One of `low`, `medium`, `high`, `xhigh`, `max`, or `auto`.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     action: v.optional(
       v.union([
         v.pipe(ImageGenActionEnumSchema, v.description('The action used for image generation.')),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     background: v.optional(
       v.union([
         v.pipe(ImageBackgroundSchema, v.description('The background setting used for generation.')),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     output_format: v.optional(
       v.union([
         v.pipe(ImageOutputFormatSchema, v.description('The output format used for generation.')),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     svg_usage: v.optional(SvgUsageSchema),
@@ -7000,7 +7134,7 @@ export const ImageGenToolCallSchema = v.pipe(
           v.string(),
           v.description('The prompt that was used after any model prompt rewriting.'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
   }),
@@ -7024,7 +7158,7 @@ export const ToolSearchCallSchema = v.object({
       v.string(),
       v.description('The unique ID of the tool search call generated by the model.'),
     ),
-    v.nullable(v.null()),
+    v.null(),
   ]),
   execution: v.pipe(
     ToolSearchExecutionTypeSchema,
@@ -7058,7 +7192,7 @@ export const FunctionToolSchema = v.pipe(
             'A description of the function. Used by the model to determine whether or not to call the function.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     parameters: v.union([
@@ -7066,7 +7200,7 @@ export const FunctionToolSchema = v.pipe(
         v.record(v.string(), v.any()),
         v.description('A JSON schema object describing the parameters of the function.'),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
     output_schema: v.optional(
       v.union([
@@ -7076,7 +7210,7 @@ export const FunctionToolSchema = v.pipe(
             'A JSON schema object describing the JSON value encoded in string outputs for this function.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     strict: v.union([
@@ -7084,7 +7218,7 @@ export const FunctionToolSchema = v.pipe(
         v.boolean(),
         v.description('Whether strict parameter validation is enforced for this function tool.'),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
     defer_loading: v.optional(
       v.pipe(
@@ -7098,7 +7232,7 @@ export const FunctionToolSchema = v.pipe(
           v.array(CallableToolAllowedCallerSchema),
           v.description('The tool invocation context(s).'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
   }),
@@ -7175,7 +7309,7 @@ export const FileSearchToolSchema = v.pipe(
       v.pipe(RankingOptionsSchema, v.description('Ranking options for search.')),
     ),
     filters: v.optional(
-      v.union([v.pipe(FiltersSchema, v.description('A filter to apply.')), v.nullable(v.null())]),
+      v.union([v.pipe(FiltersSchema, v.description('A filter to apply.')), v.null()]),
     ),
   }),
   v.description(
@@ -7250,7 +7384,7 @@ export const WebSearchApproximateLocationSchema = v.union([
               'The two-letter [ISO country code](https://en.wikipedia.org/wiki/ISO_3166-1) of the user, e.g. `US`.',
             ),
           ),
-          v.nullable(v.null()),
+          v.null(),
         ]),
       ),
       region: v.optional(
@@ -7259,7 +7393,7 @@ export const WebSearchApproximateLocationSchema = v.union([
             v.string(),
             v.description('Free text input for the region of the user, e.g. `California`.'),
           ),
-          v.nullable(v.null()),
+          v.null(),
         ]),
       ),
       city: v.optional(
@@ -7268,7 +7402,7 @@ export const WebSearchApproximateLocationSchema = v.union([
             v.string(),
             v.description('Free text input for the city of the user, e.g. `San Francisco`.'),
           ),
-          v.nullable(v.null()),
+          v.null(),
         ]),
       ),
       timezone: v.optional(
@@ -7279,13 +7413,13 @@ export const WebSearchApproximateLocationSchema = v.union([
               'The [IANA timezone](https://timeapi.io/documentation/iana-timezones) of the user, e.g. `America/Los_Angeles`.',
             ),
           ),
-          v.nullable(v.null()),
+          v.null(),
         ]),
       ),
     }),
     v.description('The approximate location of the user.\n'),
   ),
-  v.nullable(v.null()),
+  v.null(),
 ])
 
 export type WebSearchApproximateLocation = v.InferOutput<typeof WebSearchApproximateLocationSchema>
@@ -7319,13 +7453,13 @@ export const WebSearchToolSchema = v.pipe(
                     'Allowed domains for the search. If not provided, all domains are allowed.\nSubdomains of the provided domains are allowed as well.\n\nExample: `["pubmed.ncbi.nlm.nih.gov"]`\n',
                   ),
                 ),
-                v.nullable(v.null()),
+                v.null(),
               ]),
             }),
           ),
           v.description('Filters for the search.\n'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     user_location: v.optional(
@@ -7430,7 +7564,7 @@ export const MCPToolSchema = v.pipe(
             'Optional HTTP headers to send to the MCP server. Use for authentication\nor other purposes.\n',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     allowed_tools: v.optional(
@@ -7442,7 +7576,7 @@ export const MCPToolSchema = v.pipe(
           ]),
           v.description('List of allowed tool names or a filter object.\n'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     allowed_callers: v.optional(
@@ -7451,7 +7585,7 @@ export const MCPToolSchema = v.pipe(
           v.pipe(v.array(CallableToolAllowedCallerSchema), v.minLength(1)),
           v.description('The tool invocation context(s).'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     require_approval: v.optional(
@@ -7478,7 +7612,7 @@ export const MCPToolSchema = v.pipe(
           ),
           v.description("Specify which of the MCP server's tools require approval."),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     defer_loading: v.optional(
@@ -7546,7 +7680,7 @@ export const SvgParamSchema = v.partial(
           "Reasoning effort for SVG authoring. When omitted, uses the author model's default in both Images and Responses.",
         ),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   }),
 )
@@ -7656,7 +7790,7 @@ export const ImageGenToolSchema = v.pipe(
         'Set the background of the generated image. One of `transparent`, `opaque`,\nor `auto`. `gpt-image-2.5-sunburst` and `gpt-image-2.5-flare`, including\ntheir `2026-09-08` snapshots, support `opaque` and `transparent`\nbackgrounds. Transparent backgrounds are available for supported GPT Image\nmodels. For `gpt-image-2` and `gpt-image-2-2026-04-21`, this support is in\npreview. When using `transparent`, set the output format to `png` or `webp`.\nDefault: `auto`.\n',
       ),
     ),
-    input_fidelity: v.optional(v.union([InputFidelitySchema, v.nullable(v.null())])),
+    input_fidelity: v.optional(v.union([InputFidelitySchema, v.null()])),
     input_image_mask: v.optional(
       v.pipe(
         v.partial(
@@ -7769,14 +7903,20 @@ export const ContainerAutoParamSchema = v.object({
   memory_limit: v.optional(
     v.union([
       v.pipe(ContainerMemoryLimitSchema, v.description('The memory limit for the container.')),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   ),
   network_policy: v.optional(
     v.pipe(
       v.union([
-        ContainerNetworkPolicyDisabledParamSchema,
-        ContainerNetworkPolicyAllowlistParamSchema,
+        v.intersect([
+          ContainerNetworkPolicyDisabledParamSchema,
+          v.object({ type: v.literal('ContainerNetworkPolicyDisabledParam') }),
+        ]),
+        v.intersect([
+          ContainerNetworkPolicyAllowlistParamSchema,
+          v.object({ type: v.literal('ContainerNetworkPolicyAllowlistParam') }),
+        ]),
       ]),
       v.description('Network access policy for the container.'),
     ),
@@ -7784,7 +7924,18 @@ export const ContainerAutoParamSchema = v.object({
   skills: v.optional(
     v.pipe(
       v.pipe(
-        v.array(v.union([SkillReferenceParamSchema, InlineSkillParamSchema])),
+        v.array(
+          v.union([
+            v.intersect([
+              SkillReferenceParamSchema,
+              v.object({ type: v.literal('SkillReferenceParam') }),
+            ]),
+            v.intersect([
+              InlineSkillParamSchema,
+              v.object({ type: v.literal('InlineSkillParam') }),
+            ]),
+          ]),
+        ),
         v.maxLength(200),
       ),
       v.description(
@@ -7842,11 +7993,20 @@ export const FunctionShellToolParamSchema = v.pipe(
     environment: v.optional(
       v.union([
         v.union([
-          ContainerAutoParamSchema,
-          LocalEnvironmentParamSchema,
-          ContainerReferenceParamSchema,
+          v.intersect([
+            ContainerAutoParamSchema,
+            v.object({ type: v.literal('ContainerAutoParam') }),
+          ]),
+          v.intersect([
+            LocalEnvironmentParamSchema,
+            v.object({ type: v.literal('LocalEnvironmentParam') }),
+          ]),
+          v.intersect([
+            ContainerReferenceParamSchema,
+            v.object({ type: v.literal('ContainerReferenceParam') }),
+          ]),
         ]),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     allowed_callers: v.optional(
@@ -7855,7 +8015,7 @@ export const FunctionShellToolParamSchema = v.pipe(
           v.pipe(v.array(CallableToolAllowedCallerSchema), v.minLength(1)),
           v.description('The tool invocation context(s).'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
   }),
@@ -7923,7 +8083,16 @@ export const CustomToolParamSchema = v.pipe(
     ),
     format: v.optional(
       v.pipe(
-        v.union([CustomTextFormatParamSchema, CustomGrammarFormatParamSchema]),
+        v.union([
+          v.intersect([
+            CustomTextFormatParamSchema,
+            v.object({ type: v.literal('CustomTextFormatParam') }),
+          ]),
+          v.intersect([
+            CustomGrammarFormatParamSchema,
+            v.object({ type: v.literal('CustomGrammarFormatParam') }),
+          ]),
+        ]),
         v.description('The input format for the custom tool. Default is unconstrained text.'),
       ),
     ),
@@ -7939,7 +8108,7 @@ export const CustomToolParamSchema = v.pipe(
           v.pipe(v.array(CallableToolAllowedCallerSchema), v.minLength(1)),
           v.description('The tool invocation context(s).'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
   }),
@@ -7956,8 +8125,8 @@ export type EmptyModelParam = v.InferOutput<typeof EmptyModelParamSchema>
 
 export const FunctionToolParamSchema = v.object({
   name: v.pipe(v.string(), v.regex(/^[a-zA-Z0-9_-]+$/), v.minCodePoints(1), v.maxCodePoints(128)),
-  description: v.optional(v.union([v.string(), v.nullable(v.null())])),
-  parameters: v.optional(v.union([EmptyModelParamSchema, v.nullable(v.null())])),
+  description: v.optional(v.union([v.string(), v.null()])),
+  parameters: v.optional(v.union([EmptyModelParamSchema, v.null()])),
   strict: v.optional(
     v.union([
       v.pipe(
@@ -7966,7 +8135,7 @@ export const FunctionToolParamSchema = v.object({
           'Whether to enforce strict parameter validation. If omitted, Responses attempts to use strict validation when the schema is compatible, and falls back to non-strict validation otherwise.',
         ),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   ),
   type: v.optional(v.literal('function'), 'function'),
@@ -7986,7 +8155,7 @@ export const FunctionToolParamSchema = v.object({
           'A JSON Schema describing the JSON value encoded in string outputs for this function tool. This does not describe content-array outputs.',
         ),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   ),
   defer_loading: v.optional(
@@ -8001,7 +8170,7 @@ export const FunctionToolParamSchema = v.object({
         v.pipe(v.array(CallableToolAllowedCallerSchema), v.minLength(1)),
         v.description('The tool invocation context(s).'),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   ),
 })
@@ -8026,7 +8195,16 @@ export const NamespaceToolParamSchema = v.pipe(
       v.pipe(
         v.array(
           v.pipe(
-            v.union([FunctionToolParamSchema, CustomToolParamSchema]),
+            v.union([
+              v.intersect([
+                FunctionToolParamSchema,
+                v.object({ type: v.literal('FunctionToolParam') }),
+              ]),
+              v.intersect([
+                CustomToolParamSchema,
+                v.object({ type: v.literal('CustomToolParam') }),
+              ]),
+            ]),
             v.description('A function or custom tool that belongs to a namespace.'),
           ),
         ),
@@ -8058,7 +8236,7 @@ export const ToolSearchToolParamSchema = v.pipe(
           v.string(),
           v.description('Description shown to the model for a client-executed tool search tool.'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     parameters: v.optional(
@@ -8067,7 +8245,7 @@ export const ToolSearchToolParamSchema = v.pipe(
           EmptyModelParamSchema,
           v.description('Parameter schema for a client-executed tool search tool.'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
   }),
@@ -8089,7 +8267,7 @@ export const ApproximateLocationSchema = v.object({
           'The two-letter [ISO country code](https://en.wikipedia.org/wiki/ISO_3166-1) of the user, e.g. `US`.',
         ),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   ),
   region: v.optional(
@@ -8098,7 +8276,7 @@ export const ApproximateLocationSchema = v.object({
         v.string(),
         v.description('Free text input for the region of the user, e.g. `California`.'),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   ),
   city: v.optional(
@@ -8107,7 +8285,7 @@ export const ApproximateLocationSchema = v.object({
         v.string(),
         v.description('Free text input for the city of the user, e.g. `San Francisco`.'),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   ),
   timezone: v.optional(
@@ -8118,7 +8296,7 @@ export const ApproximateLocationSchema = v.object({
           'The [IANA timezone](https://timeapi.io/documentation/iana-timezones) of the user, e.g. `America/Los_Angeles`.',
         ),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   ),
 })
@@ -8152,7 +8330,7 @@ export const WebSearchPreviewToolSchema = v.pipe(
             'The approximate location of the user. If omitted or null, defaults to the United States. To avoid this fallback, pass `{"type": "approximate"}` without location fields. To localize results, provide the relevant location fields.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     search_context_size: v.optional(
@@ -8184,7 +8362,7 @@ export const ApplyPatchToolParamSchema = v.pipe(
           v.pipe(v.array(CallableToolAllowedCallerSchema), v.minLength(1)),
           v.description('The tool invocation context(s).'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
   }),
@@ -8195,22 +8373,34 @@ export type ApplyPatchToolParam = v.InferOutput<typeof ApplyPatchToolParamSchema
 
 export const ToolSchema = v.pipe(
   v.union([
-    FunctionToolSchema,
-    FileSearchToolSchema,
-    ComputerToolSchema,
-    ComputerUsePreviewToolSchema,
-    WebSearchToolSchema,
-    MCPToolSchema,
-    CodeInterpreterToolSchema,
-    ProgrammaticToolCallingParamSchema,
-    ImageGenToolSchema,
-    LocalShellToolParamSchema,
-    FunctionShellToolParamSchema,
-    CustomToolParamSchema,
-    NamespaceToolParamSchema,
-    ToolSearchToolParamSchema,
-    WebSearchPreviewToolSchema,
-    ApplyPatchToolParamSchema,
+    v.intersect([FunctionToolSchema, v.object({ type: v.literal('FunctionTool') })]),
+    v.intersect([FileSearchToolSchema, v.object({ type: v.literal('FileSearchTool') })]),
+    v.intersect([ComputerToolSchema, v.object({ type: v.literal('ComputerTool') })]),
+    v.intersect([
+      ComputerUsePreviewToolSchema,
+      v.object({ type: v.literal('ComputerUsePreviewTool') }),
+    ]),
+    v.intersect([WebSearchToolSchema, v.object({ type: v.literal('WebSearchTool') })]),
+    v.intersect([MCPToolSchema, v.object({ type: v.literal('MCPTool') })]),
+    v.intersect([CodeInterpreterToolSchema, v.object({ type: v.literal('CodeInterpreterTool') })]),
+    v.intersect([
+      ProgrammaticToolCallingParamSchema,
+      v.object({ type: v.literal('ProgrammaticToolCallingParam') }),
+    ]),
+    v.intersect([ImageGenToolSchema, v.object({ type: v.literal('ImageGenTool') })]),
+    v.intersect([LocalShellToolParamSchema, v.object({ type: v.literal('LocalShellToolParam') })]),
+    v.intersect([
+      FunctionShellToolParamSchema,
+      v.object({ type: v.literal('FunctionShellToolParam') }),
+    ]),
+    v.intersect([CustomToolParamSchema, v.object({ type: v.literal('CustomToolParam') })]),
+    v.intersect([NamespaceToolParamSchema, v.object({ type: v.literal('NamespaceToolParam') })]),
+    v.intersect([ToolSearchToolParamSchema, v.object({ type: v.literal('ToolSearchToolParam') })]),
+    v.intersect([
+      WebSearchPreviewToolSchema,
+      v.object({ type: v.literal('WebSearchPreviewTool') }),
+    ]),
+    v.intersect([ApplyPatchToolParamSchema, v.object({ type: v.literal('ApplyPatchToolParam') })]),
   ]),
   v.description('A tool that can be used to generate a response.\n'),
 )
@@ -8228,7 +8418,7 @@ export const ToolSearchOutputSchema = v.object({
       v.string(),
       v.description('The unique ID of the tool search call generated by the model.'),
     ),
-    v.nullable(v.null()),
+    v.null(),
   ]),
   execution: v.pipe(
     ToolSearchExecutionTypeSchema,
@@ -8271,7 +8461,7 @@ export const ReasoningEffortSchema = v.union([
       'Constrains effort on reasoning for reasoning models. Currently supported\nvalues are `none`, `minimal`, `low`, `medium`, `high`, `xhigh`, and `max`.\nReducing reasoning effort can result in faster responses and fewer tokens\nused on reasoning in a response. Not all reasoning models support every\nvalue. See the\n[reasoning guide](https://developers.openai.com/api/docs/guides/reasoning)\nfor model-specific support.\n',
     ),
   ),
-  v.nullable(v.null()),
+  v.null(),
 ])
 
 export type ReasoningEffort = v.InferOutput<typeof ReasoningEffortSchema>
@@ -8305,7 +8495,7 @@ export const TextResponseFormatJsonSchemaSchema = v.pipe(
             'Whether to enable strict schema adherence when generating the output.\nIf set to true, the model will always follow the exact schema defined\nin the `schema` field. Only a subset of JSON Schema is supported when\n`strict` is `true`. To learn more, read the [Structured Outputs\nguide](https://developers.openai.com/api/docs/guides/structured-outputs).\n',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
   }),
@@ -8346,7 +8536,16 @@ export const ResponseConfigurationUpdateSchema = v.pipe(
       v.pipe(
         v.object({
           format: v.pipe(
-            v.union([ResponseFormatTextSchema, TextResponseFormatJsonSchemaSchema]),
+            v.union([
+              v.intersect([
+                ResponseFormatTextSchema,
+                v.object({ type: v.literal('ResponseFormatText') }),
+              ]),
+              v.intersect([
+                TextResponseFormatJsonSchemaSchema,
+                v.object({ type: v.literal('TextResponseFormatJsonSchema') }),
+              ]),
+            ]),
             v.description(
               'Use a JSON schema for structured output or text to return to plain text.',
             ),
@@ -8378,7 +8577,7 @@ export const ReasoningItemSchema = v.pipe(
             'The encrypted content of the reasoning item. This is populated by default\nfor reasoning items returned by `POST /v1/responses` and WebSocket\n`response.create` requests.\n\nWhen streaming, use the completed reasoning item and its\n`encrypted_content` from the `response.output_item.done` event in\nsubsequent requests. The `encrypted_content` in\n`response.output_item.added` may be incomplete. This is especially\nimportant when `store` is `false` or when using Zero Data Retention.\n',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     summary: v.pipe(
@@ -8478,13 +8677,13 @@ export const LocalShellExecActionSchema = v.pipe(
           v.pipe(v.number(), v.integer()),
           v.description('Optional timeout in milliseconds for the command.'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     working_directory: v.optional(
       v.union([
         v.pipe(v.string(), v.description('Optional working directory to run the command in.')),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     env: v.pipe(
@@ -8494,7 +8693,7 @@ export const LocalShellExecActionSchema = v.pipe(
     user: v.optional(
       v.union([
         v.pipe(v.string(), v.description('Optional user to run the command as.')),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
   }),
@@ -8526,33 +8725,36 @@ export const LocalShellToolCallSchema = v.pipe(
 export type LocalShellToolCall = v.InferOutput<typeof LocalShellToolCallSchema>
 
 export const LocalShellToolCallOutputSchema = v.pipe(
-  v.object({
-    type: v.pipe(
-      v.literal('local_shell_call_output'),
-      v.description(
-        'The type of the local shell tool call output. Always `local_shell_call_output`.\n',
-      ),
-    ),
-    id: v.pipe(
-      v.string(),
-      v.description('The unique ID of the local shell tool call generated by the model.\n'),
-    ),
-    output: v.pipe(
-      v.string(),
-      v.description('A JSON string of the output of the local shell tool call.\n'),
-    ),
-    status: v.optional(
-      v.union([
-        v.pipe(
-          v.picklist(['in_progress', 'completed', 'incomplete']),
-          v.description(
-            'The status of the item. One of `in_progress`, `completed`, or `incomplete`.\n',
-          ),
+  v.pipe(
+    v.looseObject({
+      type: v.pipe(
+        v.literal('local_shell_call_output'),
+        v.description(
+          'The type of the local shell tool call output. Always `local_shell_call_output`.\n',
         ),
-        v.nullable(v.null()),
-      ]),
-    ),
-  }),
+      ),
+      id: v.pipe(
+        v.string(),
+        v.description('The unique ID of the local shell tool call generated by the model.\n'),
+      ),
+      output: v.pipe(
+        v.string(),
+        v.description('A JSON string of the output of the local shell tool call.\n'),
+      ),
+      status: v.optional(
+        v.union([
+          v.pipe(
+            v.picklist(['in_progress', 'completed', 'incomplete']),
+            v.description(
+              'The status of the item. One of `in_progress`, `completed`, or `incomplete`.\n',
+            ),
+          ),
+          v.null(),
+        ]),
+      ),
+    }),
+    v.check((input) => ['call_id'].every((key) => key in input)),
+  ),
   v.description('The output of a local shell tool call.\n'),
 )
 
@@ -8566,14 +8768,14 @@ export const FunctionShellActionSchema = v.pipe(
         v.pipe(v.number(), v.integer()),
         v.description('Optional timeout in milliseconds for the commands.'),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
     max_output_length: v.union([
       v.pipe(
         v.pipe(v.number(), v.integer()),
         v.description('Optional maximum number of characters to return from each command.'),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   }),
   v.description('Execute a shell command.'),
@@ -8632,7 +8834,7 @@ export const FunctionShellCallSchema = v.pipe(
           ToolCallCallerSchema,
           v.description('The execution context that produced this tool call.'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     action: v.pipe(
@@ -8646,8 +8848,17 @@ export const FunctionShellCallSchema = v.pipe(
       ),
     ),
     environment: v.union([
-      v.union([LocalEnvironmentResourceSchema, ContainerReferenceResourceSchema]),
-      v.nullable(v.null()),
+      v.union([
+        v.intersect([
+          LocalEnvironmentResourceSchema,
+          v.object({ type: v.literal('LocalEnvironmentResource') }),
+        ]),
+        v.intersect([
+          ContainerReferenceResourceSchema,
+          v.object({ type: v.literal('ContainerReferenceResource') }),
+        ]),
+      ]),
+      v.null(),
     ]),
     created_by: v.optional(
       v.pipe(v.string(), v.description('The ID of the entity that created this tool call.')),
@@ -8706,8 +8917,14 @@ export const FunctionShellCallOutputContentSchema = v.pipe(
     stderr: v.pipe(v.string(), v.description('The standard error output that was captured.')),
     outcome: v.pipe(
       v.union([
-        FunctionShellCallOutputTimeoutOutcomeSchema,
-        FunctionShellCallOutputExitOutcomeSchema,
+        v.intersect([
+          FunctionShellCallOutputTimeoutOutcomeSchema,
+          v.object({ type: v.literal('FunctionShellCallOutputTimeoutOutcome') }),
+        ]),
+        v.intersect([
+          FunctionShellCallOutputExitOutcomeSchema,
+          v.object({ type: v.literal('FunctionShellCallOutputExitOutcome') }),
+        ]),
       ]),
       v.description(
         'Represents either an exit outcome (with an exit code) or a timeout outcome for a shell call output chunk.',
@@ -8746,7 +8963,7 @@ export const FunctionShellCallOutputSchema = v.pipe(
           ToolCallCallerSchema,
           v.description('The execution context that produced this tool call.'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     status: v.pipe(
@@ -8766,7 +8983,7 @@ export const FunctionShellCallOutputSchema = v.pipe(
           'The maximum length of the shell command output. This is generated by the model and should be passed back with the raw output.',
         ),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
     created_by: v.optional(
       v.pipe(v.string(), v.description('The identifier of the actor that created the item.')),
@@ -8850,7 +9067,7 @@ export const ApplyPatchToolCallSchema = v.pipe(
           ToolCallCallerSchema,
           v.description('The execution context that produced this tool call.'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     status: v.pipe(
@@ -8861,9 +9078,18 @@ export const ApplyPatchToolCallSchema = v.pipe(
     ),
     operation: v.pipe(
       v.union([
-        ApplyPatchCreateFileOperationSchema,
-        ApplyPatchDeleteFileOperationSchema,
-        ApplyPatchUpdateFileOperationSchema,
+        v.intersect([
+          ApplyPatchCreateFileOperationSchema,
+          v.object({ type: v.literal('ApplyPatchCreateFileOperation') }),
+        ]),
+        v.intersect([
+          ApplyPatchDeleteFileOperationSchema,
+          v.object({ type: v.literal('ApplyPatchDeleteFileOperation') }),
+        ]),
+        v.intersect([
+          ApplyPatchUpdateFileOperationSchema,
+          v.object({ type: v.literal('ApplyPatchUpdateFileOperation') }),
+        ]),
       ]),
       v.description(
         'One of the create_file, delete_file, or update_file operations applied via apply_patch.',
@@ -8904,7 +9130,7 @@ export const ApplyPatchToolCallOutputSchema = v.pipe(
           ToolCallCallerSchema,
           v.description('The execution context that produced this tool call.'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     status: v.pipe(
@@ -8919,7 +9145,7 @@ export const ApplyPatchToolCallOutputSchema = v.pipe(
           v.string(),
           v.description('Optional textual output returned by the apply patch tool.'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     created_by: v.optional(
@@ -8935,10 +9161,7 @@ export const MCPListToolsToolSchema = v.pipe(
   v.object({
     name: v.pipe(v.string(), v.description('The name of the tool.\n')),
     description: v.optional(
-      v.union([
-        v.pipe(v.string(), v.description('The description of the tool.\n')),
-        v.nullable(v.null()),
-      ]),
+      v.union([v.pipe(v.string(), v.description('The description of the tool.\n')), v.null()]),
     ),
     input_schema: v.pipe(
       v.object({}),
@@ -8947,7 +9170,7 @@ export const MCPListToolsToolSchema = v.pipe(
     annotations: v.optional(
       v.union([
         v.pipe(v.object({}), v.description('Additional annotations about the tool.\n')),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
   }),
@@ -8971,7 +9194,7 @@ export const MCPListToolsSchema = v.pipe(
     error: v.optional(
       v.union([
         v.pipe(v.string(), v.description('Error message if the server could not list tools.\n')),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
   }),
@@ -9000,24 +9223,27 @@ export const MCPApprovalRequestSchema = v.pipe(
 export type MCPApprovalRequest = v.InferOutput<typeof MCPApprovalRequestSchema>
 
 export const MCPApprovalResponseResourceSchema = v.pipe(
-  v.object({
-    type: v.pipe(
-      v.literal('mcp_approval_response'),
-      v.description('The type of the item. Always `mcp_approval_response`.\n'),
-    ),
-    id: v.pipe(v.string(), v.description('The unique ID of the approval response\n')),
-    approval_request_id: v.pipe(
-      v.string(),
-      v.description('The ID of the approval request being answered.\n'),
-    ),
-    approve: v.pipe(v.boolean(), v.description('Whether the request was approved.\n')),
-    reason: v.optional(
-      v.union([
-        v.pipe(v.string(), v.description('Optional reason for the decision.\n')),
-        v.nullable(v.null()),
-      ]),
-    ),
-  }),
+  v.pipe(
+    v.looseObject({
+      type: v.pipe(
+        v.literal('mcp_approval_response'),
+        v.description('The type of the item. Always `mcp_approval_response`.\n'),
+      ),
+      id: v.pipe(v.string(), v.description('The unique ID of the approval response\n')),
+      approval_request_id: v.pipe(
+        v.string(),
+        v.description('The ID of the approval request being answered.\n'),
+      ),
+      approve: v.pipe(v.boolean(), v.description('Whether the request was approved.\n')),
+      reason: v.optional(
+        v.union([
+          v.pipe(v.string(), v.description('Optional reason for the decision.\n')),
+          v.null(),
+        ]),
+      ),
+    }),
+    v.check((input) => ['request_id'].every((key) => key in input)),
+  ),
   v.description('A response to an MCP approval request.\n'),
 )
 
@@ -9047,9 +9273,12 @@ export const HTTPErrorSchema = v.object({
 export type HTTPError = v.InferOutput<typeof HTTPErrorSchema>
 
 export const MCPToolCallErrorSchema = v.union([
-  MCPProtocolErrorSchema,
-  MCPToolExecutionErrorSchema,
-  HTTPErrorSchema,
+  v.intersect([MCPProtocolErrorSchema, v.object({ type: v.literal('MCPProtocolError') })]),
+  v.intersect([
+    MCPToolExecutionErrorSchema,
+    v.object({ type: v.literal('MCPToolExecutionError') }),
+  ]),
+  v.intersect([HTTPErrorSchema, v.object({ type: v.literal('HTTPError') })]),
 ])
 
 export type MCPToolCallError = v.InferOutput<typeof MCPToolCallErrorSchema>
@@ -9081,14 +9310,11 @@ export const MCPToolCallSchema = v.pipe(
       v.description('A JSON string of the arguments passed to the tool.\n'),
     ),
     output: v.optional(
-      v.union([
-        v.pipe(v.string(), v.description('The output from the tool call.\n')),
-        v.nullable(v.null()),
-      ]),
+      v.union([v.pipe(v.string(), v.description('The output from the tool call.\n')), v.null()]),
     ),
     error: v.optional(
       v.pipe(
-        v.union([MCPToolCallErrorSchema, v.nullable(v.null())]),
+        v.union([MCPToolCallErrorSchema, v.null()]),
         v.description('The error from the tool call, if any.'),
       ),
     ),
@@ -9108,7 +9334,7 @@ export const MCPToolCallSchema = v.pipe(
             'Unique identifier for the MCP tool call approval request.\nInclude this value in a subsequent `mcp_approval_response` input to approve or reject the corresponding tool call.\n',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
   }),
@@ -9133,7 +9359,7 @@ export const CustomToolCallSchema = v.pipe(
       v.string(),
       v.description('An identifier used to map this custom tool call to a tool call output.\n'),
     ),
-    caller: v.optional(v.union([ToolCallCallerSchema, v.nullable(v.null())])),
+    caller: v.optional(v.union([ToolCallCallerSchema, v.null()])),
     namespace: v.optional(
       v.pipe(v.string(), v.description('The namespace of the custom tool being called.\n')),
     ),
@@ -9169,7 +9395,7 @@ export const CustomToolCallOutputSchema = v.pipe(
         'The call ID, used to map this custom tool call output to a custom tool call.\n',
       ),
     ),
-    caller: v.optional(v.union([ToolCallCallerParamSchema, v.nullable(v.null())])),
+    caller: v.optional(v.union([ToolCallCallerParamSchema, v.null()])),
     output: v.pipe(
       v.union([
         v.pipe(v.string(), v.description('A string of the output of the custom tool call.\n')),
@@ -9190,35 +9416,65 @@ export type CustomToolCallOutput = v.InferOutput<typeof CustomToolCallOutputSche
 
 export const ConversationItemSchema = v.pipe(
   v.union([
-    MessageSchema,
-    FunctionToolCallResourceSchema,
-    FunctionToolCallOutputResourceSchema,
-    FileSearchToolCallSchema,
-    WebSearchToolCallSchema,
-    ImageGenToolCallSchema,
-    ComputerToolCallSchema,
-    ComputerToolCallOutputResourceSchema,
-    ToolSearchCallSchema,
-    ToolSearchOutputSchema,
-    AdditionalToolsSchema,
-    ResponseConfigurationUpdateSchema,
-    ReasoningItemSchema,
-    ProgramSchema,
-    ProgramOutputSchema,
-    CompactionBodySchema,
-    CodeInterpreterToolCallSchema,
-    LocalShellToolCallSchema,
-    LocalShellToolCallOutputSchema,
-    FunctionShellCallSchema,
-    FunctionShellCallOutputSchema,
-    ApplyPatchToolCallSchema,
-    ApplyPatchToolCallOutputSchema,
-    MCPListToolsSchema,
-    MCPApprovalRequestSchema,
-    MCPApprovalResponseResourceSchema,
-    MCPToolCallSchema,
-    CustomToolCallSchema,
-    CustomToolCallOutputSchema,
+    v.intersect([MessageSchema, v.object({ type: v.literal('Message') })]),
+    v.intersect([
+      FunctionToolCallResourceSchema,
+      v.object({ type: v.literal('FunctionToolCallResource') }),
+    ]),
+    v.intersect([
+      FunctionToolCallOutputResourceSchema,
+      v.object({ type: v.literal('FunctionToolCallOutputResource') }),
+    ]),
+    v.intersect([FileSearchToolCallSchema, v.object({ type: v.literal('FileSearchToolCall') })]),
+    v.intersect([WebSearchToolCallSchema, v.object({ type: v.literal('WebSearchToolCall') })]),
+    v.intersect([ImageGenToolCallSchema, v.object({ type: v.literal('ImageGenToolCall') })]),
+    v.intersect([ComputerToolCallSchema, v.object({ type: v.literal('ComputerToolCall') })]),
+    v.intersect([
+      ComputerToolCallOutputResourceSchema,
+      v.object({ type: v.literal('ComputerToolCallOutputResource') }),
+    ]),
+    v.intersect([ToolSearchCallSchema, v.object({ type: v.literal('ToolSearchCall') })]),
+    v.intersect([ToolSearchOutputSchema, v.object({ type: v.literal('ToolSearchOutput') })]),
+    v.intersect([AdditionalToolsSchema, v.object({ type: v.literal('AdditionalTools') })]),
+    v.intersect([
+      ResponseConfigurationUpdateSchema,
+      v.object({ type: v.literal('ResponseConfigurationUpdate') }),
+    ]),
+    v.intersect([ReasoningItemSchema, v.object({ type: v.literal('ReasoningItem') })]),
+    v.intersect([ProgramSchema, v.object({ type: v.literal('Program') })]),
+    v.intersect([ProgramOutputSchema, v.object({ type: v.literal('ProgramOutput') })]),
+    v.intersect([CompactionBodySchema, v.object({ type: v.literal('CompactionBody') })]),
+    v.intersect([
+      CodeInterpreterToolCallSchema,
+      v.object({ type: v.literal('CodeInterpreterToolCall') }),
+    ]),
+    v.intersect([LocalShellToolCallSchema, v.object({ type: v.literal('LocalShellToolCall') })]),
+    v.intersect([
+      LocalShellToolCallOutputSchema,
+      v.object({ type: v.literal('LocalShellToolCallOutput') }),
+    ]),
+    v.intersect([FunctionShellCallSchema, v.object({ type: v.literal('FunctionShellCall') })]),
+    v.intersect([
+      FunctionShellCallOutputSchema,
+      v.object({ type: v.literal('FunctionShellCallOutput') }),
+    ]),
+    v.intersect([ApplyPatchToolCallSchema, v.object({ type: v.literal('ApplyPatchToolCall') })]),
+    v.intersect([
+      ApplyPatchToolCallOutputSchema,
+      v.object({ type: v.literal('ApplyPatchToolCallOutput') }),
+    ]),
+    v.intersect([MCPListToolsSchema, v.object({ type: v.literal('MCPListTools') })]),
+    v.intersect([MCPApprovalRequestSchema, v.object({ type: v.literal('MCPApprovalRequest') })]),
+    v.intersect([
+      MCPApprovalResponseResourceSchema,
+      v.object({ type: v.literal('MCPApprovalResponseResource') }),
+    ]),
+    v.intersect([MCPToolCallSchema, v.object({ type: v.literal('MCPToolCall') })]),
+    v.intersect([CustomToolCallSchema, v.object({ type: v.literal('CustomToolCall') })]),
+    v.intersect([
+      CustomToolCallOutputSchema,
+      v.object({ type: v.literal('CustomToolCallOutput') }),
+    ]),
   ]),
   v.description(
     'A single item within a conversation. The set of possible types are the same as the `output` type of a [Response object](https://developers.openai.com/api/reference/resources/responses#%28resource%29%20responses%20%3E%20%28model%29%20response%20%3E%20%28schema%29%20%3E%20%28property%29%20output).',
@@ -9272,7 +9528,7 @@ export const CostsResultSchema = v.pipe(
   v.object({
     api_source: v.optional(
       v.pipe(
-        v.union([v.picklist(['agents_api', 'unlabeled']), v.nullable(v.null())]),
+        v.union([v.picklist(['agents_api', 'unlabeled']), v.null()]),
         v.description(
           'When grouped by `api_source`, `agents_api` identifies attributed Agents API activity and `unlabeled` includes all records without published source attribution, including historical and unknown origins. Unlabeled does not imply direct API usage. Without source grouping, this field is null.',
         ),
@@ -9298,7 +9554,7 @@ export const CostsResultSchema = v.pipe(
             'When `group_by=line_item`, this field provides the line item of the grouped costs result.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     project_id: v.optional(
@@ -9309,7 +9565,7 @@ export const CostsResultSchema = v.pipe(
             'When `group_by=project_id`, this field provides the project ID of the grouped costs result.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     user_id: v.optional(
@@ -9320,7 +9576,7 @@ export const CostsResultSchema = v.pipe(
             'When `group_by=user_id`, this field provides the user ID of the grouped costs result.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     api_key_id: v.optional(
@@ -9331,7 +9587,7 @@ export const CostsResultSchema = v.pipe(
             'When `group_by=api_key_id`, this field provides the API Key ID of the grouped costs result.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     quantity: v.optional(
@@ -9342,7 +9598,7 @@ export const CostsResultSchema = v.pipe(
             'When `group_by=line_item`, this field provides the quantity of the grouped costs result.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     quantity_unit: v.optional(
@@ -9359,7 +9615,7 @@ export const CostsResultSchema = v.pipe(
             'images',
             'characters',
           ]),
-          v.nullable(v.null()),
+          v.null(),
         ]),
         v.description(
           'The unit of the `quantity` value. If no single supported unit applies to the result, this field is `null`.',
@@ -9386,7 +9642,7 @@ export const CreateAssistantRequestSchema = v.strictObject({
         v.pipe(v.string(), v.maxCodePoints(256)),
         v.description('The name of the assistant. The maximum length is 256 characters.\n'),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   ),
   description: v.optional(
@@ -9395,7 +9651,7 @@ export const CreateAssistantRequestSchema = v.strictObject({
         v.pipe(v.string(), v.maxCodePoints(512)),
         v.description('The description of the assistant. The maximum length is 512 characters.\n'),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   ),
   instructions: v.optional(
@@ -9406,7 +9662,7 @@ export const CreateAssistantRequestSchema = v.strictObject({
           'The system instructions that the assistant uses. The maximum length is 256,000 characters.\n',
         ),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   ),
   reasoning_effort: v.optional(ReasoningEffortSchema),
@@ -9448,7 +9704,7 @@ export const CreateAssistantRequestSchema = v.strictObject({
           "A set of resources that are used by the assistant's tools. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.\n",
         ),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   ),
   metadata: v.optional(MetadataSchema),
@@ -9461,7 +9717,7 @@ export const CreateAssistantRequestSchema = v.strictObject({
         ),
         v.metadata({ examples: [1] }),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   ),
   top_p: v.optional(
@@ -9473,12 +9729,10 @@ export const CreateAssistantRequestSchema = v.strictObject({
         ),
         v.metadata({ examples: [1] }),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   ),
-  response_format: v.optional(
-    v.union([AssistantsApiResponseFormatOptionSchema, v.nullable(v.null())]),
-  ),
+  response_format: v.optional(v.union([AssistantsApiResponseFormatOptionSchema, v.null()])),
 })
 
 export type CreateAssistantRequest = v.InferOutput<typeof CreateAssistantRequestSchema>
@@ -9527,7 +9781,7 @@ export const ModelResponsePropertiesSchema = v.partial(
           'An integer between 0 and 20 specifying the maximum number of most likely\ntokens to return at each token position, each with an associated log\nprobability. In some cases, the number of returned tokens may be fewer than\nrequested.\n',
         ),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
     temperature: v.union([
       v.pipe(
@@ -9537,7 +9791,7 @@ export const ModelResponsePropertiesSchema = v.partial(
         ),
         v.metadata({ examples: [1] }),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
     top_p: v.union([
       v.pipe(
@@ -9547,7 +9801,7 @@ export const ModelResponsePropertiesSchema = v.partial(
         ),
         v.metadata({ examples: [1] }),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
     user: v.pipe(
       v.nullable(v.string()),
@@ -9564,7 +9818,7 @@ export const ModelResponsePropertiesSchema = v.partial(
         ),
         v.metadata({ examples: ['safety-identifier-1234'] }),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
     prompt_cache_key: v.union([
       v.pipe(
@@ -9574,7 +9828,7 @@ export const ModelResponsePropertiesSchema = v.partial(
         ),
         v.metadata({ examples: ['prompt-cache-key-1234'] }),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
     prompt_cache_retention: v.pipe(
       v.union([
@@ -9584,7 +9838,7 @@ export const ModelResponsePropertiesSchema = v.partial(
             "Deprecated. Use `prompt_cache_options.ttl` instead.\n\nThe retention policy for the prompt cache. Set to `24h` to enable extended prompt caching, which keeps cached prefixes active for longer, up to a maximum of 24 hours. [Learn more](https://developers.openai.com/api/docs/guides/prompt-caching#prompt-cache-retention).\nThis field expresses a maximum retention policy, while\n`prompt_cache_options.ttl` expresses a minimum cache lifetime. The two\nfields are independent and do not interact.\nFor `gpt-5.5`, `gpt-5.5-pro`, and future models, only `24h` is supported.\n\nFor older models that support both `in_memory` and `24h`, the default depends on your organization's data retention policy:\n  - Organizations without ZDR enabled default to `24h`.\n  - Organizations with ZDR enabled default to `in_memory` when `prompt_cache_retention` is not specified.\n",
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
       v.metadata({ deprecated: true }),
     ),
@@ -9753,7 +10007,7 @@ export const ResponseModalitiesSchema = v.union([
       'Output types that you would like the model to generate.\nMost models are capable of generating text, which is the default:\n\n`["text"]`\n\nThe `gpt-4o-audio-preview` model can also be used to\n[generate audio](https://developers.openai.com/api/docs/guides/audio). To request that this model generate\nboth text and audio responses, you can use:\n\n`["text", "audio"]`\n',
     ),
   ),
-  v.nullable(v.null()),
+  v.null(),
 ])
 
 export type ResponseModalities = v.InferOutput<typeof ResponseModalitiesSchema>
@@ -9765,7 +10019,7 @@ export const VerbositySchema = v.union([
       "Constrains the verbosity of the model's response. Lower values will result in\nmore concise responses, while higher values will result in more verbose responses.\nCurrently supported values are `low`, `medium`, and `high`. The default is\n`medium`.\n",
     ),
   ),
-  v.nullable(v.null()),
+  v.null(),
 ])
 
 export type Verbosity = v.InferOutput<typeof VerbositySchema>
@@ -9868,14 +10122,14 @@ export const ModerationPolicyParamSchema = v.pipe(
           ModerationConfigParamSchema,
           v.description('The moderation policy for the response input.'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
       output: v.union([
         v.pipe(
           ModerationConfigParamSchema,
           v.description('The moderation policy for the response output.'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     }),
   ),
@@ -9898,7 +10152,7 @@ export const ModerationParamSchema = v.pipe(
           ModerationPolicyParamSchema,
           v.description('The policy to apply to moderated response input and output.'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
   }),
@@ -9908,15 +10162,18 @@ export const ModerationParamSchema = v.pipe(
 export type ModerationParam = v.InferOutput<typeof ModerationParamSchema>
 
 export const StopConfigurationSchema = v.pipe(
-  v.union([
-    v.pipe(v.optional(v.string(), '<|endoftext|>'), v.metadata({ examples: ['\n'] })),
-    v.pipe(
-      v.array(v.pipe(v.string(), v.metadata({ examples: ['["\\n"]'] }))),
-      v.minLength(1),
-      v.maxLength(4),
-    ),
-    v.nullable(v.null()),
-  ]),
+  v.optional(
+    v.union([
+      v.pipe(v.optional(v.string(), '<|endoftext|>'), v.metadata({ examples: ['\n'] })),
+      v.pipe(
+        v.array(v.pipe(v.string(), v.metadata({ examples: ['["\\n"]'] }))),
+        v.minLength(1),
+        v.maxLength(4),
+      ),
+      v.null(),
+    ]),
+    null,
+  ),
   v.description(
     'Not supported with reasoning models `o3` and `o4-mini`.\n\nUp to 4 sequences where the API will stop generating further tokens. The\nreturned text will not contain the stop sequence.\n',
   ),
@@ -10100,9 +10357,18 @@ export const CreateChatCompletionRequestSchema = v.intersect([
     response_format: v.optional(
       v.pipe(
         v.union([
-          ResponseFormatTextSchema,
-          ResponseFormatJsonSchemaSchema,
-          ResponseFormatJsonObjectSchema,
+          v.intersect([
+            ResponseFormatTextSchema,
+            v.object({ type: v.literal('ResponseFormatText') }),
+          ]),
+          v.intersect([
+            ResponseFormatJsonSchemaSchema,
+            v.object({ type: v.literal('ResponseFormatJsonSchema') }),
+          ]),
+          v.intersect([
+            ResponseFormatJsonObjectSchema,
+            v.object({ type: v.literal('ResponseFormatJsonObject') }),
+          ]),
         ]),
         v.description(
           'An object specifying the format that the model must output.\n\nSetting to `{ "type": "json_schema", "json_schema": {...} }` enables\nStructured Outputs which ensures the model will match your supplied JSON\nschema. Learn more in the [Structured Outputs\nguide](https://developers.openai.com/api/docs/guides/structured-outputs).\n\nSetting to `{ "type": "json_object" }` enables the older JSON mode, which\nensures the message the model generates is valid JSON. Using `json_schema`\nis preferred for models that support it.\n',
@@ -10146,7 +10412,7 @@ export const CreateChatCompletionRequestSchema = v.intersect([
             'Configuration for running moderation on the request input and generated output.\n',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     stream: v.pipe(
@@ -10186,7 +10452,7 @@ export const CreateChatCompletionRequestSchema = v.intersect([
     ),
     prediction: v.optional(
       v.pipe(
-        v.union([PredictionContentSchema, v.nullable(v.null())]),
+        v.union([PredictionContentSchema, v.null()]),
         v.description(
           'Configuration for a [Predicted Output](https://developers.openai.com/api/docs/guides/predicted-outputs),\nwhich can greatly improve response times when large parts of the model\nresponse are known ahead of time. This is most common when you are\nregenerating a file with only minor changes to most of the content.\n',
         ),
@@ -10204,8 +10470,8 @@ export const CreateChatCompletionRequestSchema = v.intersect([
             v.transform((input) => BigInt(input)),
             v.minValue(-9223372036854775808n),
             v.maxValue(9223372036854775807n),
-            v.minValue(-9223372036854776000n),
-            v.maxValue(9223372036854776000n),
+            v.minValue(-9223372036854775808n),
+            v.maxValue(9223372036854775808n),
           ),
         ),
         v.description(
@@ -10290,14 +10556,7 @@ export const CreateChatCompletionStreamResponseSchema = v.pipe(
           finish_reason: v.optional(
             v.pipe(
               v.nullable(
-                v.union([
-                  v.literal('stop'),
-                  v.literal('length'),
-                  v.literal('tool_calls'),
-                  v.literal('content_filter'),
-                  v.literal('function_call'),
-                  v.null(),
-                ]),
+                v.picklist(['stop', 'length', 'tool_calls', 'content_filter', 'function_call']),
               ),
               v.description(
                 'The reason the model stopped generating tokens. This will be `stop` if the model hit a natural stop point or a provided stop sequence,\n`length` if the maximum number of tokens specified in the request was reached,\n`content_filter` if content was omitted due to a flag from our content filters,\n`tool_calls` if the model called a tool, or `function_call` (deprecated) if the model called a function.\nOmitted from the final audio update containing only `delta.audio.expires_at`.\n',
@@ -10345,7 +10604,7 @@ export const CreateChatCompletionStreamResponseSchema = v.pipe(
     ),
     usage: v.optional(
       v.pipe(
-        v.union([CompletionUsageSchema, v.nullable(v.null())]),
+        v.union([CompletionUsageSchema, v.null()]),
         v.description(
           'An optional field that will only be present when you set\n`stream_options: {"include_usage": true}` in your request. When present, it\ncontains a null value **except for the last chunk** which contains the\ntoken usage statistics for the entire request.\n\n**NOTE:** If the stream is interrupted or cancelled, you may not\nreceive the final usage chunk which contains the total token usage for\nthe request.\n',
         ),
@@ -10359,7 +10618,7 @@ export const CreateChatCompletionStreamResponseSchema = v.pipe(
             'Moderation results for the request input and generated output. Present\non the moderation chunk when moderated completions are requested.\n',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
   }),
@@ -10417,7 +10676,7 @@ export const CreateCompletionRequestSchema = v.object({
           ),
           v.metadata({ examples: ['[[1212, 318, 257, 1332, 13]]'] }),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
       '<|endoftext|>',
     ),
@@ -10541,7 +10800,7 @@ export const CreateCompletionResponseSchema = v.pipe(
       v.array(
         v.object({
           finish_reason: v.pipe(
-            v.union([v.picklist(['stop', 'length', 'content_filter']), v.nullable(v.null())]),
+            v.union([v.picklist(['stop', 'length', 'content_filter']), v.null()]),
             v.description(
               'The reason the model stopped generating tokens. This will be `stop` if the model hit a natural stop point or a provided stop sequence,\n`length` if the maximum number of tokens specified in the request was reached,\nor `content_filter` if content was omitted due to a flag from our content filters. The value is null while a streamed completion is unfinished.\n',
             ),
@@ -10556,7 +10815,7 @@ export const CreateCompletionResponseSchema = v.pipe(
                 top_logprobs: v.array(v.record(v.string(), v.number())),
               }),
             ),
-            v.nullable(v.null()),
+            v.null(),
           ]),
           text: v.string(),
         }),
@@ -10610,7 +10869,15 @@ export const CreateContainerBodySchema = v.object({
   ),
   skills: v.optional(
     v.pipe(
-      v.array(v.union([SkillReferenceParamSchema, InlineSkillParamSchema])),
+      v.array(
+        v.union([
+          v.intersect([
+            SkillReferenceParamSchema,
+            v.object({ type: v.literal('SkillReferenceParam') }),
+          ]),
+          v.intersect([InlineSkillParamSchema, v.object({ type: v.literal('InlineSkillParam') })]),
+        ]),
+      ),
       v.description('An optional list of skills referenced by id or inline data.'),
     ),
   ),
@@ -10623,8 +10890,14 @@ export const CreateContainerBodySchema = v.object({
   network_policy: v.optional(
     v.pipe(
       v.union([
-        ContainerNetworkPolicyDisabledParamSchema,
-        ContainerNetworkPolicyAllowlistParamSchema,
+        v.intersect([
+          ContainerNetworkPolicyDisabledParamSchema,
+          v.object({ type: v.literal('ContainerNetworkPolicyDisabledParam') }),
+        ]),
+        v.intersect([
+          ContainerNetworkPolicyAllowlistParamSchema,
+          v.object({ type: v.literal('ContainerNetworkPolicyAllowlistParam') }),
+        ]),
       ]),
       v.description('Network access policy for the container.'),
     ),
@@ -10806,7 +11079,7 @@ export const EasyInputMessageSchema = v.pipe(
         'Text, image, or audio input to the model, used to generate a response.\nCan also contain previous assistant responses.\n',
       ),
     ),
-    phase: v.optional(v.union([MessagePhaseSchema, v.nullable(v.null())])),
+    phase: v.optional(v.union([MessagePhaseSchema, v.null()])),
     type: v.optional(
       v.pipe(
         v.literal('message'),
@@ -10973,7 +11246,7 @@ export const EvalStoredCompletionsSourceSchema = v.pipe(
           v.string(),
           v.description("An optional model to filter by (e.g., 'gpt-4.1-mini-2025-04-14')."),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     created_after: v.optional(
@@ -10982,7 +11255,7 @@ export const EvalStoredCompletionsSourceSchema = v.pipe(
           v.pipe(v.number(), v.integer()),
           v.description('An optional Unix timestamp to filter items created after this time.'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     created_before: v.optional(
@@ -10991,7 +11264,7 @@ export const EvalStoredCompletionsSourceSchema = v.pipe(
           v.pipe(v.number(), v.integer()),
           v.description('An optional Unix timestamp to filter items created before this time.'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     limit: v.optional(
@@ -11000,7 +11273,7 @@ export const EvalStoredCompletionsSourceSchema = v.pipe(
           v.pipe(v.number(), v.integer()),
           v.description('An optional maximum number of items to return.'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
   }),
@@ -11370,7 +11643,7 @@ export const GraderScoreModelSchema = v.pipe(
                 v.pipe(v.number(), v.integer()),
                 v.description('A seed value to initialize the randomness, during sampling.\n'),
               ),
-              v.nullable(v.null()),
+              v.null(),
             ]),
             top_p: v.union([
               v.pipe(
@@ -11380,14 +11653,14 @@ export const GraderScoreModelSchema = v.pipe(
                 ),
                 v.metadata({ examples: [1] }),
               ),
-              v.nullable(v.null()),
+              v.null(),
             ]),
             temperature: v.union([
               v.pipe(
                 v.number(),
                 v.description('A higher temperature increases randomness in the outputs.\n'),
               ),
-              v.nullable(v.null()),
+              v.null(),
             ]),
             max_completions_tokens: v.union([
               v.pipe(
@@ -11396,7 +11669,7 @@ export const GraderScoreModelSchema = v.pipe(
                   'The maximum number of tokens the grader model may generate in its response.\n',
                 ),
               ),
-              v.nullable(v.null()),
+              v.null(),
             ]),
             reasoning_effort: ReasoningEffortSchema,
           }),
@@ -11466,9 +11739,15 @@ export type CreateEvalRequest = v.InferOutput<typeof CreateEvalRequestSchema>
 
 export const TextResponseFormatConfigurationSchema = v.pipe(
   v.union([
-    ResponseFormatTextSchema,
-    TextResponseFormatJsonSchemaSchema,
-    ResponseFormatJsonObjectSchema,
+    v.intersect([ResponseFormatTextSchema, v.object({ type: v.literal('ResponseFormatText') })]),
+    v.intersect([
+      TextResponseFormatJsonSchemaSchema,
+      v.object({ type: v.literal('TextResponseFormatJsonSchema') }),
+    ]),
+    v.intersect([
+      ResponseFormatJsonObjectSchema,
+      v.object({ type: v.literal('ResponseFormatJsonObject') }),
+    ]),
   ]),
   v.description(
     'An object specifying the format that the model must output.\n\nConfiguring `{ "type": "json_schema" }` enables Structured Outputs,\nwhich ensures the model will match your supplied JSON schema. Learn more in the\n[Structured Outputs guide](https://developers.openai.com/api/docs/guides/structured-outputs).\n\nThe default format is `{ "type": "text" }` with no additional options.\n\n**Not recommended for gpt-4o and newer models:**\n\nSetting to `{ "type": "json_object" }` enables the older JSON mode, which\nensures the message the model generates is valid JSON. Using `json_schema`\nis preferred for models that support it.\n',
@@ -11493,7 +11772,7 @@ export const EvalResponsesSourceSchema = v.pipe(
             'Metadata filter for the responses. This is a query parameter used to select responses.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     model: v.optional(
@@ -11504,7 +11783,7 @@ export const EvalResponsesSourceSchema = v.pipe(
             'The name of the model to find responses for. This is a query parameter used to select responses.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     instructions_search: v.optional(
@@ -11515,7 +11794,7 @@ export const EvalResponsesSourceSchema = v.pipe(
             "Optional string to search the 'instructions' field. This is a query parameter used to select responses.",
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     created_after: v.optional(
@@ -11526,7 +11805,7 @@ export const EvalResponsesSourceSchema = v.pipe(
             'Only include items created after this timestamp (inclusive). This is a query parameter used to select responses.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     created_before: v.optional(
@@ -11537,7 +11816,7 @@ export const EvalResponsesSourceSchema = v.pipe(
             'Only include items created before this timestamp (inclusive). This is a query parameter used to select responses.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     reasoning_effort: v.optional(
@@ -11548,7 +11827,7 @@ export const EvalResponsesSourceSchema = v.pipe(
             'Optional reasoning effort parameter. This is a query parameter used to select responses.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     temperature: v.optional(
@@ -11559,7 +11838,7 @@ export const EvalResponsesSourceSchema = v.pipe(
             'Sampling temperature. This is a query parameter used to select responses.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     top_p: v.optional(
@@ -11570,7 +11849,7 @@ export const EvalResponsesSourceSchema = v.pipe(
             'Nucleus sampling parameter. This is a query parameter used to select responses.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     users: v.optional(
@@ -11581,7 +11860,7 @@ export const EvalResponsesSourceSchema = v.pipe(
             'List of user identifiers. This is a query parameter used to select responses.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     tools: v.optional(
@@ -11590,7 +11869,7 @@ export const EvalResponsesSourceSchema = v.pipe(
           v.array(v.string()),
           v.description('List of tool names. This is a query parameter used to select responses.'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
   }),
@@ -11923,11 +12202,11 @@ export const GraderMultiSchema = v.pipe(
     graders: v.record(
       v.string(),
       v.union([
-        GraderStringCheckSchema,
-        GraderTextSimilaritySchema,
-        GraderPythonSchema,
-        GraderScoreModelSchema,
-        GraderLabelModelSchema,
+        v.intersect([GraderStringCheckSchema, v.object({ type: v.literal('string_check') })]),
+        v.intersect([GraderTextSimilaritySchema, v.object({ type: v.literal('text_similarity') })]),
+        v.intersect([GraderPythonSchema, v.object({ type: v.literal('python') })]),
+        v.intersect([GraderScoreModelSchema, v.object({ type: v.literal('score_model') })]),
+        v.intersect([GraderLabelModelSchema, v.object({ type: v.literal('label_model') })]),
       ]),
     ),
     calculate_output: v.pipe(
@@ -12232,7 +12511,7 @@ export const FrameDurationMsSchema = v.pipe(
 export type FrameDurationMs = v.InferOutput<typeof FrameDurationMsSchema>
 
 export const ComplexitySchema = v.pipe(
-  v.nullable(v.union([v.literal('low'), v.literal('medium'), v.literal('high'), v.null()])),
+  v.nullable(v.picklist(['low', 'medium', 'high'])),
   v.description(
     "Computation spent planning the image, independently of rendering quality. Uses the image model's configured default when omitted. For SVG output, controls the reference image, independently of the SVG author's reasoning.",
   ),
@@ -12261,7 +12540,7 @@ export const PartialImagesSchema = v.union([
     ),
     v.metadata({ examples: [1] }),
   ),
-  v.nullable(v.null()),
+  v.null(),
 ])
 
 export type PartialImages = v.InferOutput<typeof PartialImagesSchema>
@@ -12300,10 +12579,7 @@ export const CreateImageEditRequestSchema = v.object({
     ),
   ),
   background: v.pipe(
-    v.optional(
-      v.union([v.picklist(['transparent', 'opaque', 'auto']), v.nullable(v.null())]),
-      'auto',
-    ),
+    v.optional(v.union([v.picklist(['transparent', 'opaque', 'auto']), v.null()]), 'auto'),
     v.description(
       'Set the background of the generated image(s). This parameter is only supported for\nthe GPT image models. Must be one of `transparent`, `opaque`, or `auto` (default\nvalue). When `auto` is used, the model will automatically determine the best\nbackground for the image.\n\n`gpt-image-2.5-sunburst` and `gpt-image-2.5-flare`, including their `2026-09-08`\nsnapshots, support `opaque` and `transparent` backgrounds. Transparent backgrounds\nare available for supported GPT Image models. For `gpt-image-2` and\n`gpt-image-2-2026-04-21`, this support is in preview. When using `transparent`,\nset the output format to `png` or `webp`.\n',
     ),
@@ -12343,7 +12619,7 @@ export const CreateImageEditRequestSchema = v.object({
       v.union([
         v.string(),
         v.picklist(['1024x1024', '1536x1024', '1024x1536', 'auto', '256x256', '512x512']),
-        v.nullable(v.null()),
+        v.null(),
       ]),
       'auto',
     ),
@@ -12354,7 +12630,7 @@ export const CreateImageEditRequestSchema = v.object({
   ),
   response_format: v.optional(
     v.pipe(
-      v.nullable(v.union([v.literal('url'), v.literal('b64_json'), v.null()])),
+      v.nullable(v.picklist(['url', 'b64_json'])),
       v.description(
         'Legacy response format parameter for retired image models. Unsupported for GPT image models, which always return base64-encoded images.',
       ),
@@ -12362,7 +12638,7 @@ export const CreateImageEditRequestSchema = v.object({
     ),
   ),
   output_format: v.pipe(
-    v.optional(v.union([ImagesApiOutputFormatSchema, v.nullable(v.null())]), 'png'),
+    v.optional(v.union([ImagesApiOutputFormatSchema, v.null()]), 'png'),
     v.description(
       'The format in which the generated images are returned. This parameter is\nonly supported for the GPT image models.\nThe default value is `png`.\nSVG output requires a supported image model and project access.\n',
     ),
@@ -12370,7 +12646,7 @@ export const CreateImageEditRequestSchema = v.object({
   ),
   svg: v.optional(
     v.pipe(
-      v.union([SvgParamSchema, v.nullable(v.null())]),
+      v.union([SvgParamSchema, v.null()]),
       v.description(
         'Selects the author model and reasoning effort for `output_format=svg`. Supply `svg.model` when SVG model selection is enabled. Otherwise, omit this object. SVG output requires `n=1` and cannot use streaming, partial images, or output compression. Use multipart fields such as `svg[model]`.',
       ),
@@ -12401,7 +12677,7 @@ export const CreateImageEditRequestSchema = v.object({
       v.metadata({ examples: ['user-1234'], deprecated: true }),
     ),
   ),
-  input_fidelity: v.optional(v.union([InputFidelitySchema, v.nullable(v.null())])),
+  input_fidelity: v.optional(v.union([InputFidelitySchema, v.null()])),
   stream: v.pipe(
     v.optional(v.nullable(v.boolean()), false),
     v.description(
@@ -12414,7 +12690,7 @@ export const CreateImageEditRequestSchema = v.object({
     v.optional(
       v.union([
         v.picklist(['low', 'medium', 'high', 'xhigh', 'max', 'auto', 'standard']),
-        v.nullable(v.null()),
+        v.null(),
       ]),
       'auto',
     ),
@@ -12442,7 +12718,7 @@ export const SvgSchema = v.pipe(
             v.partial(
               v.object({
                 effort: v.pipe(
-                  v.union([ReasoningEffortEnumSchema, v.nullable(v.null())]),
+                  v.union([ReasoningEffortEnumSchema, v.null()]),
                   v.description(
                     "Controls how much effort the SVG author spends on reasoning. Uses the author model's default when omitted or null.",
                   ),
@@ -12510,7 +12786,7 @@ export const CreateImageRequestSchema = v.object({
     v.optional(
       v.union([
         v.picklist(['low', 'medium', 'high', 'xhigh', 'max', 'auto', 'standard', 'hd']),
-        v.nullable(v.null()),
+        v.null(),
       ]),
       'auto',
     ),
@@ -12521,7 +12797,7 @@ export const CreateImageRequestSchema = v.object({
   ),
   response_format: v.optional(
     v.pipe(
-      v.nullable(v.union([v.literal('url'), v.literal('b64_json'), v.null()])),
+      v.nullable(v.picklist(['url', 'b64_json'])),
       v.description(
         'Legacy response format parameter for retired image models. Unsupported for GPT image models, which always return base64-encoded images.',
       ),
@@ -12529,7 +12805,7 @@ export const CreateImageRequestSchema = v.object({
     ),
   ),
   output_format: v.pipe(
-    v.optional(v.union([ImagesApiOutputFormatSchema, v.nullable(v.null())]), 'png'),
+    v.optional(v.union([ImagesApiOutputFormatSchema, v.null()]), 'png'),
     v.description(
       'The format in which the generated images are returned. This parameter is only supported for the GPT image models.',
     ),
@@ -12564,7 +12840,7 @@ export const CreateImageRequestSchema = v.object({
           '1792x1024',
           '1024x1792',
         ]),
-        v.nullable(v.null()),
+        v.null(),
       ]),
       'auto',
     ),
@@ -12574,17 +12850,14 @@ export const CreateImageRequestSchema = v.object({
     v.metadata({ examples: ['1024x1024'] }),
   ),
   moderation: v.pipe(
-    v.optional(v.union([v.picklist(['low', 'auto']), v.nullable(v.null())]), 'auto'),
+    v.optional(v.union([v.picklist(['low', 'auto']), v.null()]), 'auto'),
     v.description(
       'Control the content-moderation level for images generated by the GPT image models. Must be either `low` for less restrictive filtering or `auto` (default value).',
     ),
     v.metadata({ examples: ['low'] }),
   ),
   background: v.pipe(
-    v.optional(
-      v.union([v.picklist(['transparent', 'opaque', 'auto']), v.nullable(v.null())]),
-      'auto',
-    ),
+    v.optional(v.union([v.picklist(['transparent', 'opaque', 'auto']), v.null()]), 'auto'),
     v.description(
       'Set the background of the generated image(s). This parameter is only supported for\nthe GPT image models. Must be one of `transparent`, `opaque`, or `auto` (default\nvalue). When `auto` is used, the model will automatically determine the best\nbackground for the image.\n\n`gpt-image-2.5-sunburst` and `gpt-image-2.5-flare`, including their `2026-09-08`\nsnapshots, support `opaque` and `transparent` backgrounds. Transparent backgrounds\nare available for supported GPT Image models. For `gpt-image-2` and\n`gpt-image-2-2026-04-21`, this support is in preview. When using `transparent`,\nset the output format to `png` or `webp`.\n',
     ),
@@ -12592,7 +12865,7 @@ export const CreateImageRequestSchema = v.object({
   ),
   style: v.optional(
     v.pipe(
-      v.nullable(v.union([v.literal('vivid'), v.literal('natural'), v.null()])),
+      v.nullable(v.picklist(['vivid', 'natural'])),
       v.description(
         'Legacy style parameter for retired image models. Unsupported for GPT image models; describe the desired style in the prompt instead.',
       ),
@@ -12630,7 +12903,7 @@ export const CreateImageVariationRequestSchema = v.pipe(
       ),
     ),
     model: v.pipe(
-      v.optional(v.union([v.string(), v.literal('dall-e-2'), v.nullable(v.null())]), 'dall-e-2'),
+      v.optional(v.union([v.string(), v.literal('dall-e-2'), v.null()]), 'dall-e-2'),
       v.description(
         'The legacy model used by the retired image variations endpoint. This endpoint no longer accepts requests.',
       ),
@@ -12642,19 +12915,14 @@ export const CreateImageVariationRequestSchema = v.pipe(
       v.metadata({ examples: [1] }),
     ),
     response_format: v.pipe(
-      v.optional(v.nullable(v.union([v.literal('url'), v.literal('b64_json'), v.null()])), 'url'),
+      v.optional(v.nullable(v.picklist(['url', 'b64_json'])), 'url'),
       v.description(
         'The format in which the generated images are returned. Must be one of `url` or `b64_json`. URLs are only valid for 60 minutes after the image has been generated.',
       ),
       v.metadata({ examples: ['url'] }),
     ),
     size: v.pipe(
-      v.optional(
-        v.nullable(
-          v.union([v.literal('256x256'), v.literal('512x512'), v.literal('1024x1024'), v.null()]),
-        ),
-        '1024x1024',
-      ),
+      v.optional(v.nullable(v.picklist(['256x256', '512x512', '1024x1024'])), '1024x1024'),
       v.description(
         'The size of the generated images. Must be one of `256x256`, `512x512`, or `1024x1024`.',
       ),
@@ -12736,7 +13004,7 @@ export const CreateMessageRequestSchema = v.strictObject({
           'A list of files attached to the message, and the tools they should be added to.',
         ),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   ),
   metadata: v.optional(MetadataSchema),
@@ -12869,7 +13137,7 @@ export const CreateModerationResponseSchema = v.pipe(
                     'Content that includes instructions or advice that facilitate the planning or execution of wrongdoing, or that gives advice or instruction on how to commit illicit acts. For example, "how to shoplift" would fit this category.',
                   ),
                 ),
-                v.nullable(v.null()),
+                v.null(),
               ]),
               'illicit/violent': v.union([
                 v.pipe(
@@ -12878,7 +13146,7 @@ export const CreateModerationResponseSchema = v.pipe(
                     'Content that includes instructions or advice that facilitate the planning or execution of wrongdoing that also includes violence, or that gives advice or instruction on the procurement of any weapon.',
                   ),
                 ),
-                v.nullable(v.null()),
+                v.null(),
               ]),
               'self-harm': v.pipe(
                 v.boolean(),
@@ -13180,7 +13448,7 @@ export const ToolChoiceMCPSchema = v.pipe(
     name: v.optional(
       v.union([
         v.pipe(v.string(), v.description('The name of the tool to call on the server.\n')),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
   }),
@@ -13273,7 +13541,7 @@ export const ResponsePromptVariablesSchema = v.union([
       'Optional map of values to substitute in for variables in your\nprompt. The substitution values can either be strings, or other\nResponse input types like images or files.\n',
     ),
   ),
-  v.nullable(v.null()),
+  v.null(),
 ])
 
 export type ResponsePromptVariables = v.InferOutput<typeof ResponsePromptVariablesSchema>
@@ -13285,7 +13553,7 @@ export const PromptSchema = v.union([
       version: v.optional(
         v.union([
           v.pipe(v.string(), v.description('Optional version of the prompt template.')),
-          v.nullable(v.null()),
+          v.null(),
         ]),
       ),
       variables: v.optional(ResponsePromptVariablesSchema),
@@ -13294,7 +13562,7 @@ export const PromptSchema = v.union([
       'Reference to a prompt template and its variables.\n[Learn more](https://developers.openai.com/api/docs/guides/text?api-mode=responses#version-prompts-in-code).\n',
     ),
   ),
-  v.nullable(v.null()),
+  v.null(),
 ])
 
 export type Prompt = v.InferOutput<typeof PromptSchema>
@@ -13308,7 +13576,7 @@ export const ResponsePropertiesSchema = v.partial(
           'The unique ID of the previous response to the model. Use this to\ncreate multi-turn conversations. Learn more about\n[conversation state](https://developers.openai.com/api/docs/guides/conversation-state). Cannot be used in conjunction with `conversation`.\n',
         ),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
     model: v.pipe(
       ModelIdsResponsesSchema,
@@ -13323,7 +13591,7 @@ export const ResponsePropertiesSchema = v.partial(
           'Whether to run the model response in the background.\n[Learn more](https://developers.openai.com/api/docs/guides/background).\n',
         ),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
     max_tool_calls: v.union([
       v.pipe(
@@ -13332,7 +13600,7 @@ export const ResponsePropertiesSchema = v.partial(
           'The maximum number of total calls to built-in tools that can be processed in a response. This maximum number applies across all built-in tool calls, not per individual tool. Any further attempts to call a tool by the model will be ignored.\n',
         ),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
     text: ResponseTextParamSchema,
     tools: ToolsArraySchema,
@@ -13416,7 +13684,7 @@ export const ResponsePromptCacheOptionsParamSchema = v.pipe(
           ),
           v.metadata({ examples: ['resp_123'] }),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     }),
   ),
@@ -13439,7 +13707,7 @@ export const ServiceTierResponsesSchema = v.union([
       "Specifies the processing type used for serving the request.\n  - If set to 'auto', then the request will be processed with the service tier configured in the Project settings. Unless otherwise configured, the Project will use 'default'.\n  - If set to 'default', then the request will be processed with the standard pricing and performance for the selected model.\n  - If set to '[flex](https://developers.openai.com/api/docs/guides/flex-processing)', then the request will be processed with the Flex Processing service tier.\n  - To opt-in to [Fast mode](https://developers.openai.com/api/docs/guides/fast-mode) at the request level, include the `service_tier=fast` or `service_tier=priority` parameter for Responses or Chat Completions. The response will show `service_tier=priority` regardless of if you specify `service_tier=fast` or `priority` in your request.\n  - If set to 'ultrafast', then the request will be processed with the access-controlled Ultrafast Processing service tier. This tier is currently available for `gpt-5.6-sol`; a response served through it will show `service_tier=ultrafast`.\n  - When not set, the default behavior is 'auto'.\n\n  When the `service_tier` parameter is set, the response body will include the `service_tier` value based on the processing mode actually used to serve the request. This response value may be different from the value set in the parameter.\n",
     ),
   ),
-  v.nullable(v.null()),
+  v.null(),
 ])
 
 export type ServiceTierResponses = v.InferOutput<typeof ServiceTierResponsesSchema>
@@ -13465,7 +13733,7 @@ export const ReasoningSchema = v.pipe(
             "A summary of the reasoning performed by the model. This can be\nuseful for debugging and understanding the model's reasoning process.\nOne of `auto`, `concise`, or `detailed`.\n\n`concise` is supported for `computer-use-preview` models and all reasoning models after `gpt-5`.\n",
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
       context: v.union([
         v.pipe(
@@ -13474,7 +13742,7 @@ export const ReasoningSchema = v.pipe(
             'Controls which reasoning items are rendered back to the model on later turns.\nIf omitted or set to `auto`, the model determines the context mode. The\n`gpt-5.6` model family defaults to `all_turns`; earlier models default to\n`current_turn`.\n\nWhen returned on a response, this is the effective reasoning context mode\nused for the response.\n',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
       generate_summary: v.union([
         v.pipe(
@@ -13484,7 +13752,7 @@ export const ReasoningSchema = v.pipe(
           ),
           v.metadata({ deprecated: true }),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     }),
   ),
@@ -13524,7 +13792,10 @@ export const InputMessageSchema = v.pipe(
 
 export type InputMessage = v.InferOutput<typeof InputMessageSchema>
 
-export const OutputMessageContentSchema = v.union([OutputTextContentSchema, RefusalContentSchema])
+export const OutputMessageContentSchema = v.union([
+  v.intersect([OutputTextContentSchema, v.object({ type: v.literal('OutputTextContent') })]),
+  v.intersect([RefusalContentSchema, v.object({ type: v.literal('RefusalContent') })]),
+])
 
 export type OutputMessageContent = v.InferOutput<typeof OutputMessageContentSchema>
 
@@ -13543,7 +13814,7 @@ export const OutputMessageSchema = v.pipe(
       v.array(OutputMessageContentSchema),
       v.description('The content of the output message.\n'),
     ),
-    phase: v.optional(v.union([MessagePhaseSchema, v.nullable(v.null())])),
+    phase: v.optional(v.union([MessagePhaseSchema, v.null()])),
     status: v.pipe(
       v.picklist(['in_progress', 'completed', 'incomplete']),
       v.description(
@@ -13569,7 +13840,7 @@ export const ComputerCallOutputItemParamSchema = v.pipe(
           v.description('The ID of the computer tool call output.'),
           v.metadata({ examples: ['cuo_123'] }),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     call_id: v.pipe(
@@ -13589,7 +13860,7 @@ export const ComputerCallOutputItemParamSchema = v.pipe(
             'The safety checks reported by the API that have been acknowledged by the developer.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     status: v.optional(
@@ -13600,7 +13871,7 @@ export const ComputerCallOutputItemParamSchema = v.pipe(
             'The status of the message input. One of `in_progress`, `completed`, or `incomplete`. Populated when input items are returned via API.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
   }),
@@ -13619,9 +13890,7 @@ export const InputTextContentParamSchema = v.pipe(
       v.pipe(v.string(), v.maxCodePoints(10485760)),
       v.description('The text input to the model.'),
     ),
-    prompt_cache_breakpoint: v.optional(
-      v.union([PromptCacheBreakpointParamSchema, v.nullable(v.null())]),
-    ),
+    prompt_cache_breakpoint: v.optional(v.union([PromptCacheBreakpointParamSchema, v.null()])),
   }),
   v.description('A text input to the model.'),
 )
@@ -13646,7 +13915,7 @@ export const InputImageContentParamAutoParamSchema = v.pipe(
             'The URL of the image to be sent to the model. A fully qualified URL or base64 encoded image in a data URL.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     file_id: v.optional(
@@ -13656,7 +13925,7 @@ export const InputImageContentParamAutoParamSchema = v.pipe(
           v.description('The ID of the file to be sent to the model.'),
           v.metadata({ examples: ['file-123'] }),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     detail: v.optional(
@@ -13667,12 +13936,10 @@ export const InputImageContentParamAutoParamSchema = v.pipe(
             'The detail level of the image to be sent to the model. One of `high`, `low`, `auto`, or `original`. Defaults to `auto`.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
-    prompt_cache_breakpoint: v.optional(
-      v.union([PromptCacheBreakpointParamSchema, v.nullable(v.null())]),
-    ),
+    prompt_cache_breakpoint: v.optional(v.union([PromptCacheBreakpointParamSchema, v.null()])),
   }),
   v.description(
     'An image input to the model. Learn about [image inputs](https://developers.openai.com/api/docs/guides/images-vision)',
@@ -13700,13 +13967,13 @@ export const InputFileContentParamSchema = v.pipe(
           v.description('The ID of the file to be sent to the model.'),
           v.metadata({ examples: ['file-123'] }),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     filename: v.optional(
       v.union([
         v.pipe(v.string(), v.description('The name of the file to be sent to the model.')),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     file_data: v.optional(
@@ -13715,7 +13982,7 @@ export const InputFileContentParamSchema = v.pipe(
           v.pipe(v.string(), v.maxCodePoints(73400320)),
           v.description('The base64-encoded data of the file to be sent to the model.'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     file_url: v.optional(
@@ -13724,7 +13991,7 @@ export const InputFileContentParamSchema = v.pipe(
           v.pipe(v.string(), v.url()),
           v.description('The URL of the file to be sent to the model.'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     detail: v.optional(
@@ -13735,9 +14002,7 @@ export const InputFileContentParamSchema = v.pipe(
         ),
       ),
     ),
-    prompt_cache_breakpoint: v.optional(
-      v.union([PromptCacheBreakpointParamSchema, v.nullable(v.null())]),
-    ),
+    prompt_cache_breakpoint: v.optional(v.union([PromptCacheBreakpointParamSchema, v.null()])),
   }),
   v.description('A file input to the model.'),
 )
@@ -13755,7 +14020,7 @@ export const FunctionCallOutputItemParamSchema = v.pipe(
           ),
           v.metadata({ examples: ['fc_123'] }),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     call_id: v.optional(
@@ -13764,7 +14029,7 @@ export const FunctionCallOutputItemParamSchema = v.pipe(
           v.pipe(v.string(), v.minCodePoints(1), v.maxCodePoints(64)),
           v.description('The unique ID of the function tool call generated by the model.'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     type: v.pipe(
@@ -13781,9 +14046,18 @@ export const FunctionCallOutputItemParamSchema = v.pipe(
           v.array(
             v.pipe(
               v.union([
-                InputTextContentParamSchema,
-                InputImageContentParamAutoParamSchema,
-                InputFileContentParamSchema,
+                v.intersect([
+                  InputTextContentParamSchema,
+                  v.object({ type: v.literal('InputTextContentParam') }),
+                ]),
+                v.intersect([
+                  InputImageContentParamAutoParamSchema,
+                  v.object({ type: v.literal('InputImageContentParamAutoParam') }),
+                ]),
+                v.intersect([
+                  InputFileContentParamSchema,
+                  v.object({ type: v.literal('InputFileContentParam') }),
+                ]),
               ]),
               v.description('A piece of message content, such as text, an image, or a file.'),
             ),
@@ -13801,7 +14075,7 @@ export const FunctionCallOutputItemParamSchema = v.pipe(
           v.pipe(v.string(), v.minCodePoints(1), v.maxCodePoints(128)),
           v.description('The name of the tool that produced the output.'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     namespace: v.optional(
@@ -13810,7 +14084,7 @@ export const FunctionCallOutputItemParamSchema = v.pipe(
           v.pipe(v.string(), v.regex(/^[a-zA-Z0-9_-]+$/), v.minCodePoints(1), v.maxCodePoints(128)),
           v.description('The namespace of the tool that produced the output.'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     caller: v.optional(
@@ -13819,7 +14093,7 @@ export const FunctionCallOutputItemParamSchema = v.pipe(
           ToolCallCallerParamSchema,
           v.description('The execution context that produced this tool call.'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     status: v.optional(
@@ -13830,7 +14104,7 @@ export const FunctionCallOutputItemParamSchema = v.pipe(
             'The status of the item. One of `in_progress`, `completed`, or `incomplete`. Populated when items are returned via API.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
   }),
@@ -13847,7 +14121,7 @@ export const ToolSearchCallItemParamSchema = v.object({
         v.description('The unique ID of this tool search call.'),
         v.metadata({ examples: ['tsc_123'] }),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   ),
   call_id: v.optional(
@@ -13856,7 +14130,7 @@ export const ToolSearchCallItemParamSchema = v.object({
         v.pipe(v.string(), v.minCodePoints(1), v.maxCodePoints(64)),
         v.description('The unique ID of the tool search call generated by the model.'),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   ),
   type: v.pipe(
@@ -13876,7 +14150,7 @@ export const ToolSearchCallItemParamSchema = v.object({
   status: v.optional(
     v.union([
       v.pipe(FunctionCallItemStatusSchema, v.description('The status of the tool search call.')),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   ),
 })
@@ -13893,8 +14167,8 @@ export const ToolSearchOutputFunctionToolParamSchema = v.object({
     ),
     v.description('The name of the loaded function tool.'),
   ),
-  description: v.optional(v.union([v.string(), v.nullable(v.null())])),
-  parameters: v.optional(v.union([EmptyModelParamSchema, v.nullable(v.null())])),
+  description: v.optional(v.union([v.string(), v.null()])),
+  parameters: v.optional(v.union([EmptyModelParamSchema, v.null()])),
   strict: v.optional(
     v.union([
       v.pipe(
@@ -13903,7 +14177,7 @@ export const ToolSearchOutputFunctionToolParamSchema = v.object({
           'Whether to enforce strict parameter validation. If omitted, Responses attempts to use strict validation when the schema is compatible, and falls back to non-strict validation otherwise.',
         ),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   ),
   type: v.optional(v.literal('function'), 'function'),
@@ -13923,7 +14197,7 @@ export const ToolSearchOutputFunctionToolParamSchema = v.object({
           'A JSON Schema describing the JSON value encoded in string outputs for this function tool. This does not describe content-array outputs.',
         ),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   ),
   defer_loading: v.optional(
@@ -13938,7 +14212,7 @@ export const ToolSearchOutputFunctionToolParamSchema = v.object({
         v.pipe(v.array(CallableToolAllowedCallerSchema), v.minLength(1)),
         v.description('The tool invocation context(s).'),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   ),
 })
@@ -13965,7 +14239,16 @@ export const ToolSearchOutputNamespaceToolParamSchema = v.pipe(
       v.pipe(
         v.array(
           v.pipe(
-            v.union([ToolSearchOutputFunctionToolParamSchema, CustomToolParamSchema]),
+            v.union([
+              v.intersect([
+                ToolSearchOutputFunctionToolParamSchema,
+                v.object({ type: v.literal('ToolSearchOutputFunctionToolParam') }),
+              ]),
+              v.intersect([
+                CustomToolParamSchema,
+                v.object({ type: v.literal('CustomToolParam') }),
+              ]),
+            ]),
             v.description('A function or custom tool loaded into a namespace by tool search.'),
           ),
         ),
@@ -13983,22 +14266,37 @@ export type ToolSearchOutputNamespaceToolParam = v.InferOutput<
 
 export const ToolSearchOutputToolSchema = v.pipe(
   v.union([
-    FunctionToolSchema,
-    FileSearchToolSchema,
-    ComputerToolSchema,
-    ComputerUsePreviewToolSchema,
-    WebSearchToolSchema,
-    MCPToolSchema,
-    CodeInterpreterToolSchema,
-    ProgrammaticToolCallingParamSchema,
-    ImageGenToolSchema,
-    LocalShellToolParamSchema,
-    FunctionShellToolParamSchema,
-    CustomToolParamSchema,
-    ToolSearchOutputNamespaceToolParamSchema,
-    ToolSearchToolParamSchema,
-    WebSearchPreviewToolSchema,
-    ApplyPatchToolParamSchema,
+    v.intersect([FunctionToolSchema, v.object({ type: v.literal('FunctionTool') })]),
+    v.intersect([FileSearchToolSchema, v.object({ type: v.literal('FileSearchTool') })]),
+    v.intersect([ComputerToolSchema, v.object({ type: v.literal('ComputerTool') })]),
+    v.intersect([
+      ComputerUsePreviewToolSchema,
+      v.object({ type: v.literal('ComputerUsePreviewTool') }),
+    ]),
+    v.intersect([WebSearchToolSchema, v.object({ type: v.literal('WebSearchTool') })]),
+    v.intersect([MCPToolSchema, v.object({ type: v.literal('MCPTool') })]),
+    v.intersect([CodeInterpreterToolSchema, v.object({ type: v.literal('CodeInterpreterTool') })]),
+    v.intersect([
+      ProgrammaticToolCallingParamSchema,
+      v.object({ type: v.literal('ProgrammaticToolCallingParam') }),
+    ]),
+    v.intersect([ImageGenToolSchema, v.object({ type: v.literal('ImageGenTool') })]),
+    v.intersect([LocalShellToolParamSchema, v.object({ type: v.literal('LocalShellToolParam') })]),
+    v.intersect([
+      FunctionShellToolParamSchema,
+      v.object({ type: v.literal('FunctionShellToolParam') }),
+    ]),
+    v.intersect([CustomToolParamSchema, v.object({ type: v.literal('CustomToolParam') })]),
+    v.intersect([
+      ToolSearchOutputNamespaceToolParamSchema,
+      v.object({ type: v.literal('ToolSearchOutputNamespaceToolParam') }),
+    ]),
+    v.intersect([ToolSearchToolParamSchema, v.object({ type: v.literal('ToolSearchToolParam') })]),
+    v.intersect([
+      WebSearchPreviewToolSchema,
+      v.object({ type: v.literal('WebSearchPreviewTool') }),
+    ]),
+    v.intersect([ApplyPatchToolParamSchema, v.object({ type: v.literal('ApplyPatchToolParam') })]),
   ]),
   v.description('A tool definition returned by a tool search output.\n'),
 )
@@ -14013,7 +14311,7 @@ export const ToolSearchOutputItemParamSchema = v.object({
         v.description('The unique ID of this tool search output.'),
         v.metadata({ examples: ['tso_123'] }),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   ),
   call_id: v.optional(
@@ -14022,7 +14320,7 @@ export const ToolSearchOutputItemParamSchema = v.object({
         v.pipe(v.string(), v.minCodePoints(1), v.maxCodePoints(64)),
         v.description('The unique ID of the tool search call generated by the model.'),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   ),
   type: v.pipe(
@@ -14042,7 +14340,7 @@ export const ToolSearchOutputItemParamSchema = v.object({
   status: v.optional(
     v.union([
       v.pipe(FunctionCallItemStatusSchema, v.description('The status of the tool search output.')),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   ),
 })
@@ -14057,7 +14355,7 @@ export const AdditionalToolsItemParamSchema = v.object({
         v.description('The unique ID of this additional tools item.'),
         v.metadata({ examples: ['at_123'] }),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   ),
   type: v.pipe(
@@ -14085,7 +14383,7 @@ export const ResponseConfigurationUpdateItemParamSchema = v.pipe(
           v.description('The unique ID of the configuration update item.'),
           v.metadata({ examples: ['cnfu_123'] }),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     type: v.pipe(
@@ -14111,7 +14409,16 @@ export const ResponseConfigurationUpdateItemParamSchema = v.pipe(
       v.pipe(
         v.object({
           format: v.pipe(
-            v.union([ResponseFormatTextSchema, TextResponseFormatJsonSchemaSchema]),
+            v.union([
+              v.intersect([
+                ResponseFormatTextSchema,
+                v.object({ type: v.literal('ResponseFormatText') }),
+              ]),
+              v.intersect([
+                TextResponseFormatJsonSchemaSchema,
+                v.object({ type: v.literal('TextResponseFormatJsonSchema') }),
+              ]),
+            ]),
             v.description(
               'Use a JSON schema for structured output or text to return to plain text.',
             ),
@@ -14139,7 +14446,7 @@ export const CompactionSummaryItemParamSchema = v.pipe(
           v.description('The ID of the compaction item.'),
           v.metadata({ examples: ['cmp_123'] }),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     type: v.pipe(
@@ -14172,7 +14479,7 @@ export const FunctionShellActionParamSchema = v.pipe(
             'Maximum wall-clock time in milliseconds to allow the shell commands to run.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     max_output_length: v.optional(
@@ -14183,7 +14490,7 @@ export const FunctionShellActionParamSchema = v.pipe(
             'Maximum number of UTF-8 characters to capture from combined stdout and stderr output.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
   }),
@@ -14210,7 +14517,7 @@ export const FunctionShellCallItemParamSchema = v.pipe(
           ),
           v.metadata({ examples: ['sh_123'] }),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     call_id: v.pipe(
@@ -14223,7 +14530,7 @@ export const FunctionShellCallItemParamSchema = v.pipe(
           ToolCallCallerParamSchema,
           v.description('The execution context that produced this tool call.'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     type: v.pipe(
@@ -14242,16 +14549,25 @@ export const FunctionShellCallItemParamSchema = v.pipe(
             'The status of the shell call. One of `in_progress`, `completed`, or `incomplete`.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     environment: v.optional(
       v.union([
         v.pipe(
-          v.union([LocalEnvironmentParamSchema, ContainerReferenceParamSchema]),
+          v.union([
+            v.intersect([
+              LocalEnvironmentParamSchema,
+              v.object({ type: v.literal('LocalEnvironmentParam') }),
+            ]),
+            v.intersect([
+              ContainerReferenceParamSchema,
+              v.object({ type: v.literal('ContainerReferenceParam') }),
+            ]),
+          ]),
           v.description('The environment to execute the shell commands in.'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
   }),
@@ -14294,8 +14610,14 @@ export type FunctionShellCallOutputExitOutcomeParam = v.InferOutput<
 
 export const FunctionShellCallOutputOutcomeParamSchema = v.pipe(
   v.union([
-    FunctionShellCallOutputTimeoutOutcomeParamSchema,
-    FunctionShellCallOutputExitOutcomeParamSchema,
+    v.intersect([
+      FunctionShellCallOutputTimeoutOutcomeParamSchema,
+      v.object({ type: v.literal('FunctionShellCallOutputTimeoutOutcomeParam') }),
+    ]),
+    v.intersect([
+      FunctionShellCallOutputExitOutcomeParamSchema,
+      v.object({ type: v.literal('FunctionShellCallOutputExitOutcomeParam') }),
+    ]),
   ]),
   v.description('The exit or timeout outcome associated with this shell call.'),
 )
@@ -14337,7 +14659,7 @@ export const FunctionShellCallOutputItemParamSchema = v.pipe(
           ),
           v.metadata({ examples: ['sho_123'] }),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     call_id: v.pipe(
@@ -14350,7 +14672,7 @@ export const FunctionShellCallOutputItemParamSchema = v.pipe(
           ToolCallCallerParamSchema,
           v.description('The execution context that produced this tool call.'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     type: v.pipe(
@@ -14369,7 +14691,7 @@ export const FunctionShellCallOutputItemParamSchema = v.pipe(
           FunctionShellCallItemStatusSchema,
           v.description('The status of the shell call output.'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     max_output_length: v.optional(
@@ -14380,7 +14702,7 @@ export const FunctionShellCallOutputItemParamSchema = v.pipe(
             "The maximum number of UTF-8 characters captured for this shell call's combined output.",
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
   }),
@@ -14462,9 +14784,18 @@ export type ApplyPatchUpdateFileOperationParam = v.InferOutput<
 
 export const ApplyPatchOperationParamSchema = v.pipe(
   v.union([
-    ApplyPatchCreateFileOperationParamSchema,
-    ApplyPatchDeleteFileOperationParamSchema,
-    ApplyPatchUpdateFileOperationParamSchema,
+    v.intersect([
+      ApplyPatchCreateFileOperationParamSchema,
+      v.object({ type: v.literal('ApplyPatchCreateFileOperationParam') }),
+    ]),
+    v.intersect([
+      ApplyPatchDeleteFileOperationParamSchema,
+      v.object({ type: v.literal('ApplyPatchDeleteFileOperationParam') }),
+    ]),
+    v.intersect([
+      ApplyPatchUpdateFileOperationParamSchema,
+      v.object({ type: v.literal('ApplyPatchUpdateFileOperationParam') }),
+    ]),
   ]),
   v.description(
     'One of the create_file, delete_file, or update_file operations supplied to the apply_patch tool.',
@@ -14488,7 +14819,7 @@ export const ApplyPatchToolCallItemParamSchema = v.pipe(
           ),
           v.metadata({ examples: ['apc_123'] }),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     call_id: v.pipe(
@@ -14501,7 +14832,7 @@ export const ApplyPatchToolCallItemParamSchema = v.pipe(
           ToolCallCallerParamSchema,
           v.description('The execution context that produced this tool call.'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     status: v.pipe(
@@ -14548,7 +14879,7 @@ export const ApplyPatchToolCallOutputItemParamSchema = v.pipe(
           ),
           v.metadata({ examples: ['apco_123'] }),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     call_id: v.pipe(
@@ -14561,7 +14892,7 @@ export const ApplyPatchToolCallOutputItemParamSchema = v.pipe(
           ToolCallCallerParamSchema,
           v.description('The execution context that produced this tool call.'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     status: v.pipe(
@@ -14578,7 +14909,7 @@ export const ApplyPatchToolCallOutputItemParamSchema = v.pipe(
             'Optional human-readable log text from the apply patch tool (e.g., patch results or errors).',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
   }),
@@ -14590,29 +14921,32 @@ export type ApplyPatchToolCallOutputItemParam = v.InferOutput<
 >
 
 export const MCPApprovalResponseSchema = v.pipe(
-  v.object({
-    type: v.pipe(
-      v.literal('mcp_approval_response'),
-      v.description('The type of the item. Always `mcp_approval_response`.\n'),
-    ),
-    id: v.optional(
-      v.union([
-        v.pipe(v.string(), v.description('The unique ID of the approval response\n')),
-        v.nullable(v.null()),
-      ]),
-    ),
-    approval_request_id: v.pipe(
-      v.string(),
-      v.description('The ID of the approval request being answered.\n'),
-    ),
-    approve: v.pipe(v.boolean(), v.description('Whether the request was approved.\n')),
-    reason: v.optional(
-      v.union([
-        v.pipe(v.string(), v.description('Optional reason for the decision.\n')),
-        v.nullable(v.null()),
-      ]),
-    ),
-  }),
+  v.pipe(
+    v.looseObject({
+      type: v.pipe(
+        v.literal('mcp_approval_response'),
+        v.description('The type of the item. Always `mcp_approval_response`.\n'),
+      ),
+      id: v.optional(
+        v.union([
+          v.pipe(v.string(), v.description('The unique ID of the approval response\n')),
+          v.null(),
+        ]),
+      ),
+      approval_request_id: v.pipe(
+        v.string(),
+        v.description('The ID of the approval request being answered.\n'),
+      ),
+      approve: v.pipe(v.boolean(), v.description('Whether the request was approved.\n')),
+      reason: v.optional(
+        v.union([
+          v.pipe(v.string(), v.description('Optional reason for the decision.\n')),
+          v.null(),
+        ]),
+      ),
+    }),
+    v.check((input) => ['request_id'].every((key) => key in input)),
+  ),
   v.description('A response to an MCP approval request.\n'),
 )
 
@@ -14620,34 +14954,76 @@ export type MCPApprovalResponse = v.InferOutput<typeof MCPApprovalResponseSchema
 
 export const ItemSchema = v.pipe(
   v.union([
-    InputMessageSchema,
-    OutputMessageSchema,
-    FileSearchToolCallSchema,
-    ComputerToolCallSchema,
-    ComputerCallOutputItemParamSchema,
-    WebSearchToolCallSchema,
-    FunctionToolCallSchema,
-    FunctionCallOutputItemParamSchema,
-    ToolSearchCallItemParamSchema,
-    ToolSearchOutputItemParamSchema,
-    AdditionalToolsItemParamSchema,
-    ResponseConfigurationUpdateItemParamSchema,
-    ReasoningItemSchema,
-    CompactionSummaryItemParamSchema,
-    ImageGenToolCallSchema,
-    CodeInterpreterToolCallSchema,
-    LocalShellToolCallSchema,
-    LocalShellToolCallOutputSchema,
-    FunctionShellCallItemParamSchema,
-    FunctionShellCallOutputItemParamSchema,
-    ApplyPatchToolCallItemParamSchema,
-    ApplyPatchToolCallOutputItemParamSchema,
-    MCPListToolsSchema,
-    MCPApprovalRequestSchema,
-    MCPApprovalResponseSchema,
-    MCPToolCallSchema,
-    CustomToolCallOutputSchema,
-    CustomToolCallSchema,
+    v.intersect([InputMessageSchema, v.object({ type: v.literal('InputMessage') })]),
+    v.intersect([OutputMessageSchema, v.object({ type: v.literal('OutputMessage') })]),
+    v.intersect([FileSearchToolCallSchema, v.object({ type: v.literal('FileSearchToolCall') })]),
+    v.intersect([ComputerToolCallSchema, v.object({ type: v.literal('ComputerToolCall') })]),
+    v.intersect([
+      ComputerCallOutputItemParamSchema,
+      v.object({ type: v.literal('ComputerCallOutputItemParam') }),
+    ]),
+    v.intersect([WebSearchToolCallSchema, v.object({ type: v.literal('WebSearchToolCall') })]),
+    v.intersect([FunctionToolCallSchema, v.object({ type: v.literal('FunctionToolCall') })]),
+    v.intersect([
+      FunctionCallOutputItemParamSchema,
+      v.object({ type: v.literal('FunctionCallOutputItemParam') }),
+    ]),
+    v.intersect([
+      ToolSearchCallItemParamSchema,
+      v.object({ type: v.literal('ToolSearchCallItemParam') }),
+    ]),
+    v.intersect([
+      ToolSearchOutputItemParamSchema,
+      v.object({ type: v.literal('ToolSearchOutputItemParam') }),
+    ]),
+    v.intersect([
+      AdditionalToolsItemParamSchema,
+      v.object({ type: v.literal('AdditionalToolsItemParam') }),
+    ]),
+    v.intersect([
+      ResponseConfigurationUpdateItemParamSchema,
+      v.object({ type: v.literal('ResponseConfigurationUpdateItemParam') }),
+    ]),
+    v.intersect([ReasoningItemSchema, v.object({ type: v.literal('ReasoningItem') })]),
+    v.intersect([
+      CompactionSummaryItemParamSchema,
+      v.object({ type: v.literal('CompactionSummaryItemParam') }),
+    ]),
+    v.intersect([ImageGenToolCallSchema, v.object({ type: v.literal('ImageGenToolCall') })]),
+    v.intersect([
+      CodeInterpreterToolCallSchema,
+      v.object({ type: v.literal('CodeInterpreterToolCall') }),
+    ]),
+    v.intersect([LocalShellToolCallSchema, v.object({ type: v.literal('LocalShellToolCall') })]),
+    v.intersect([
+      LocalShellToolCallOutputSchema,
+      v.object({ type: v.literal('LocalShellToolCallOutput') }),
+    ]),
+    v.intersect([
+      FunctionShellCallItemParamSchema,
+      v.object({ type: v.literal('FunctionShellCallItemParam') }),
+    ]),
+    v.intersect([
+      FunctionShellCallOutputItemParamSchema,
+      v.object({ type: v.literal('FunctionShellCallOutputItemParam') }),
+    ]),
+    v.intersect([
+      ApplyPatchToolCallItemParamSchema,
+      v.object({ type: v.literal('ApplyPatchToolCallItemParam') }),
+    ]),
+    v.intersect([
+      ApplyPatchToolCallOutputItemParamSchema,
+      v.object({ type: v.literal('ApplyPatchToolCallOutputItemParam') }),
+    ]),
+    v.intersect([MCPListToolsSchema, v.object({ type: v.literal('MCPListTools') })]),
+    v.intersect([MCPApprovalRequestSchema, v.object({ type: v.literal('MCPApprovalRequest') })]),
+    v.intersect([MCPApprovalResponseSchema, v.object({ type: v.literal('MCPApprovalResponse') })]),
+    v.intersect([MCPToolCallSchema, v.object({ type: v.literal('MCPToolCall') })]),
+    v.intersect([
+      CustomToolCallOutputSchema,
+      v.object({ type: v.literal('CustomToolCallOutput') }),
+    ]),
+    v.intersect([CustomToolCallSchema, v.object({ type: v.literal('CustomToolCall') })]),
   ]),
   v.description('Content item used to generate a response.\n'),
 )
@@ -14663,7 +15039,7 @@ export const CompactionTriggerItemParamSchema = v.pipe(
           v.description('The unique ID of this compaction trigger.'),
           v.metadata({ examples: ['msg_123'] }),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     type: v.pipe(
@@ -14684,7 +15060,7 @@ export const ItemReferenceParamSchema = v.pipe(
           v.optional(v.literal('item_reference'), 'item_reference'),
           v.description('The type of item to reference. Always `item_reference`.'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     id: v.pipe(v.string(), v.description('The ID of the item to reference.')),
@@ -14751,17 +15127,26 @@ export const ProgramOutputItemParamSchema = v.object({
 export type ProgramOutputItemParam = v.InferOutput<typeof ProgramOutputItemParamSchema>
 
 export const InputItemSchema = v.union([
-  EasyInputMessageSchema,
-  v.pipe(
-    ItemSchema,
-    v.description(
-      'An item representing part of the context for the response to be\ngenerated by the model. Can contain text, images, and audio inputs,\nas well as previous assistant responses and tool call outputs.\n',
+  v.intersect([EasyInputMessageSchema, v.object({ type: v.literal('EasyInputMessage') })]),
+  v.intersect([
+    v.pipe(
+      ItemSchema,
+      v.description(
+        'An item representing part of the context for the response to be\ngenerated by the model. Can contain text, images, and audio inputs,\nas well as previous assistant responses and tool call outputs.\n',
+      ),
     ),
-  ),
-  CompactionTriggerItemParamSchema,
-  ItemReferenceParamSchema,
-  ProgramItemParamSchema,
-  ProgramOutputItemParamSchema,
+    v.object({ type: v.literal('Item') }),
+  ]),
+  v.intersect([
+    CompactionTriggerItemParamSchema,
+    v.object({ type: v.literal('CompactionTriggerItemParam') }),
+  ]),
+  v.intersect([ItemReferenceParamSchema, v.object({ type: v.literal('ItemReferenceParam') })]),
+  v.intersect([ProgramItemParamSchema, v.object({ type: v.literal('ProgramItemParam') })]),
+  v.intersect([
+    ProgramOutputItemParamSchema,
+    v.object({ type: v.literal('ProgramOutputItemParam') }),
+  ]),
 ])
 
 export type InputItem = v.InferOutput<typeof InputItemSchema>
@@ -14848,7 +15233,7 @@ export const ResponseStreamOptionsSchema = v.union([
     ),
     v.description('Options for streaming responses. Only set this when you set `stream: true`.\n'),
   ),
-  v.nullable(v.null()),
+  v.null(),
 ])
 
 export type ResponseStreamOptions = v.InferOutput<typeof ResponseStreamOptionsSchema>
@@ -14864,7 +15249,7 @@ export const ContextManagementParamSchema = v.object({
         v.pipe(v.number(), v.integer(), v.minValue(1000)),
         v.description('Token threshold at which compaction should be triggered for this entry.'),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   ),
 })
@@ -14888,11 +15273,11 @@ export const CreateResponseSchema = v.intersect([
               "The truncation strategy to use for the model response.\n- `auto`: If the input to this Response exceeds\n  the model's context window size, the model will truncate the\n  response to fit the context window by dropping items from the beginning of the conversation.\n  On some models, trimming can begin earlier because the API subtracts the model's\n  maximum output allowance from its input limit, even if you set a lower `max_output_tokens`.\n- `disabled` (default): If the input size will exceed the context window\n  size for a model, the request will fail with a 400 error.\n",
             ),
           ),
-          v.nullable(v.null()),
+          v.null(),
         ]),
         v.metadata({ deprecated: true }),
       ),
-      reasoning: v.union([ReasoningSchema, v.nullable(v.null())]),
+      reasoning: v.union([ReasoningSchema, v.null()]),
       input: InputParamSchema,
       include: v.union([
         v.pipe(
@@ -14901,14 +15286,14 @@ export const CreateResponseSchema = v.intersect([
             'Specify additional output data to include in the model response. Currently supported values are:\n- `web_search_call.action.sources`: Include the sources of the web search tool call.\n- `code_interpreter_call.outputs`: Includes the outputs of python code execution in code interpreter tool call items.\n- `computer_call_output.output.image_url`: Include image urls from the computer call output.\n- `file_search_call.results`: Include the search results of the file search tool call.\n- `message.input_image.image_url`: Include image urls from the input message.\n- `message.output_text.logprobs`: Include logprobs with assistant messages.\n- `reasoning.encrypted_content`: Includes an encrypted version of reasoning tokens in reasoning item outputs. This enables reasoning items to be used in multi-turn conversations when using the Responses API statelessly (like when the `store` parameter is set to `false`, or when an organization is enrolled in the zero data retention program).',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
       parallel_tool_calls: v.union([
         v.pipe(
           v.optional(v.boolean(), true),
           v.description('Whether to allow the model to run tool calls in parallel.\n'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
       store: v.union([
         v.pipe(
@@ -14917,7 +15302,7 @@ export const CreateResponseSchema = v.intersect([
             'Whether to store the generated model response for later retrieval via\nAPI.\nDefaults to true when omitted.\nIf set to true, response data will be stored for at least 30 days, subject to the [data retention exceptions](https://developers.openai.com/api/docs/guides/your-data#v1responses).\n',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
       instructions: v.union([
         v.pipe(
@@ -14926,7 +15311,7 @@ export const CreateResponseSchema = v.intersect([
             "A system (or developer) message inserted into the model's context.\n\nWhen using along with `previous_response_id`, the instructions from a previous\nresponse will not be carried over to the next response. This makes it simple\nto swap out system (or developer) messages in new responses.\n",
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
       moderation: v.union([
         v.pipe(
@@ -14935,7 +15320,7 @@ export const CreateResponseSchema = v.intersect([
             'Configuration for running moderation on the input and output of this response.\n',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
       background_options: v.pipe(
         BackgroundOptionsParamSchema,
@@ -14950,17 +15335,17 @@ export const CreateResponseSchema = v.intersect([
             'If set to true, the model response data will be streamed to the client\nas it is generated using [server-sent events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events#Event_stream_format).\nSee the [Streaming section below](https://developers.openai.com/api/reference/resources/responses/streaming-events)\nfor more information.\n',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
       stream_options: ResponseStreamOptionsSchema,
-      conversation: v.union([ConversationParamSchema, v.nullable(v.null())]),
+      conversation: v.union([ConversationParamSchema, v.null()]),
       context_management: v.union([
         v.pipe(
           v.pipe(v.array(ContextManagementParamSchema), v.minLength(1)),
           v.description('Context management configuration for this request.\n'),
           v.metadata({ examples: [[{ type: 'compaction', compact_threshold: 1000 }]] }),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
       max_output_tokens: v.union([
         v.pipe(
@@ -14969,7 +15354,7 @@ export const CreateResponseSchema = v.intersect([
             'An upper bound for the number of tokens that can be generated for a response, including visible output tokens and [reasoning tokens](https://developers.openai.com/api/docs/guides/reasoning).\n',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     }),
   ),
@@ -14986,7 +15371,7 @@ export const CreateRunRequestSchema = v.strictObject({
   ),
   model: v.optional(
     v.pipe(
-      v.union([v.string(), AssistantSupportedModelsSchema, v.nullable(v.null())]),
+      v.union([v.string(), AssistantSupportedModelsSchema, v.null()]),
       v.description(
         'The ID of the [Model](https://developers.openai.com/api/reference/resources/models) to be used to execute this run. If a value is provided here, it will override the model associated with the assistant. If not, the model associated with the assistant will be used.',
       ),
@@ -15207,7 +15592,7 @@ export const SpendAlertNotificationChannelSchema = v.pipe(
     ),
     subject_prefix: v.optional(
       v.pipe(
-        v.union([v.string(), v.nullable(v.null())]),
+        v.union([v.string(), v.null()]),
         v.description('Optional subject prefix for alert emails.'),
       ),
     ),
@@ -15265,7 +15650,7 @@ export const CreateThreadRequestSchema = v.pipe(
             "A set of resources that are made available to the assistant's tools in this thread. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.\n",
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
       metadata: MetadataSchema,
     }),
@@ -15329,7 +15714,7 @@ export const CreateThreadAndRunRequestSchema = v.strictObject({
           'gpt-3.5-turbo-0125',
           'gpt-3.5-turbo-16k-0613',
         ]),
-        v.nullable(v.null()),
+        v.null(),
       ]),
       v.description(
         'The ID of the [Model](https://developers.openai.com/api/reference/resources/models) to be used to execute this run. If a value is provided here, it will override the model associated with the assistant. If not, the model associated with the assistant will be used.',
@@ -15558,7 +15943,7 @@ export const CreateTranscriptionRequestSchema = v.strictObject({
           'If set to true, the model response data will be streamed to the client\nas it is generated using [server-sent events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events#Event_stream_format).\nSee the [Streaming section of the Speech-to-Text guide](https://developers.openai.com/api/docs/guides/speech-to-text?lang=curl#streaming)\nfor more information.\n\nNote: Streaming is not supported for the `whisper-1` model and will be ignored.\n',
         ),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   ),
   chunking_strategy: v.optional(
@@ -15577,7 +15962,7 @@ export const CreateTranscriptionRequestSchema = v.strictObject({
           'Controls how the audio is cut into chunks. When set to `"auto"`, the server first normalizes loudness and then uses voice activity detection (VAD) to choose boundaries. `server_vad` object can be provided to tweak VAD detection parameters manually. If unset, the audio is transcribed as a single block. Required when using `gpt-4o-transcribe-diarize` for inputs longer than 30 seconds. ',
         ),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   ),
   known_speaker_names: v.optional(
@@ -15693,7 +16078,16 @@ export const CreateTranscriptionResponseDiarizedJsonSchema = v.pipe(
     ),
     usage: v.optional(
       v.pipe(
-        v.union([TranscriptTextUsageTokensSchema, TranscriptTextUsageDurationSchema]),
+        v.union([
+          v.intersect([
+            TranscriptTextUsageTokensSchema,
+            v.object({ type: v.literal('TranscriptTextUsageTokens') }),
+          ]),
+          v.intersect([
+            TranscriptTextUsageDurationSchema,
+            v.object({ type: v.literal('TranscriptTextUsageDuration') }),
+          ]),
+        ]),
         v.description('Token or duration usage statistics for the request.'),
       ),
     ),
@@ -16183,8 +16577,8 @@ export const CreateVoicePromptRequestSchema = v.pipe(
 export type CreateVoicePromptRequest = v.InferOutput<typeof CreateVoicePromptRequestSchema>
 
 export const CreateVoiceRequestSchema = v.union([
-  CreateVoiceFromConsentRequestSchema,
-  CreateVoicePromptRequestSchema,
+  v.intersect([CreateVoiceFromConsentRequestSchema, v.object({ type: v.literal('audio_sample') })]),
+  v.intersect([CreateVoicePromptRequestSchema, v.object({ type: v.literal('prompt') })]),
 ])
 
 export type CreateVoiceRequest = v.InferOutput<typeof CreateVoiceRequestSchema>
@@ -16373,7 +16767,7 @@ export const EditImageBodyJsonParamSchema = v.pipe(
             'gpt-image-1-mini',
             'chatgpt-image-latest',
           ]),
-          v.nullable(v.null()),
+          v.null(),
         ]),
         'gpt-image-2.6-sunburst',
       ),
@@ -16403,10 +16797,7 @@ export const EditImageBodyJsonParamSchema = v.pipe(
     ),
     n: v.pipe(
       v.optional(
-        v.union([
-          v.pipe(v.number(), v.integer(), v.minValue(1), v.maxValue(10)),
-          v.nullable(v.null()),
-        ]),
+        v.union([v.pipe(v.number(), v.integer(), v.minValue(1), v.maxValue(10)), v.null()]),
         1,
       ),
       v.description('The number of edited images to generate.'),
@@ -16414,10 +16805,7 @@ export const EditImageBodyJsonParamSchema = v.pipe(
     ),
     quality: v.pipe(
       v.optional(
-        v.union([
-          v.picklist(['low', 'medium', 'high', 'xhigh', 'max', 'auto']),
-          v.nullable(v.null()),
-        ]),
+        v.union([v.picklist(['low', 'medium', 'high', 'xhigh', 'max', 'auto']), v.null()]),
         'auto',
       ),
       v.description(
@@ -16427,7 +16815,7 @@ export const EditImageBodyJsonParamSchema = v.pipe(
     ),
     input_fidelity: v.optional(
       v.pipe(
-        v.union([v.picklist(['high', 'low']), v.nullable(v.null())]),
+        v.union([v.picklist(['high', 'low']), v.null()]),
         v.description(
           'Control how much effort the model will exert to match the style and features, especially facial features, of input images. Supports `high` and `low` on `gpt-image-1.5`; `gpt-image-1-mini` supports only `low`. For `gpt-image-2`, omit this parameter. Defaults to `low` on supported models.',
         ),
@@ -16438,7 +16826,7 @@ export const EditImageBodyJsonParamSchema = v.pipe(
         v.union([
           v.string(),
           v.picklist(['auto', '1024x1024', '1536x1024', '1024x1536']),
-          v.nullable(v.null()),
+          v.null(),
         ]),
         'auto',
       ),
@@ -16466,7 +16854,7 @@ export const EditImageBodyJsonParamSchema = v.pipe(
       ),
     ),
     output_format: v.pipe(
-      v.optional(v.union([ImagesApiOutputFormatSchema, v.nullable(v.null())]), 'png'),
+      v.optional(v.union([ImagesApiOutputFormatSchema, v.null()]), 'png'),
       v.description(
         'Output image format. Supported for GPT image models. SVG output requires a supported image model and project access.',
       ),
@@ -16474,7 +16862,7 @@ export const EditImageBodyJsonParamSchema = v.pipe(
     ),
     svg: v.optional(
       v.pipe(
-        v.union([SvgParamSchema, v.nullable(v.null())]),
+        v.union([SvgParamSchema, v.null()]),
         v.description(
           'Selects the author model and reasoning effort for `output_format=svg`. Supply `svg.model` when SVG model selection is enabled. Otherwise, omit this object. SVG output requires `n=1` and cannot use streaming, partial images, or output compression.',
         ),
@@ -16482,31 +16870,25 @@ export const EditImageBodyJsonParamSchema = v.pipe(
     ),
     output_compression: v.optional(
       v.pipe(
-        v.union([
-          v.pipe(v.number(), v.integer(), v.minValue(0), v.maxValue(100)),
-          v.nullable(v.null()),
-        ]),
+        v.union([v.pipe(v.number(), v.integer(), v.minValue(0), v.maxValue(100)), v.null()]),
         v.description('Compression level for `jpeg` or `webp` output.'),
         v.metadata({ examples: [100] }),
       ),
     ),
     moderation: v.pipe(
-      v.optional(v.union([v.picklist(['low', 'auto']), v.nullable(v.null())]), 'auto'),
+      v.optional(v.union([v.picklist(['low', 'auto']), v.null()]), 'auto'),
       v.description('Moderation level for GPT image models.'),
       v.metadata({ examples: ['auto'] }),
     ),
     background: v.pipe(
-      v.optional(
-        v.union([v.picklist(['transparent', 'opaque', 'auto']), v.nullable(v.null())]),
-        'auto',
-      ),
+      v.optional(v.union([v.picklist(['transparent', 'opaque', 'auto']), v.null()]), 'auto'),
       v.description(
         'Set the background of the generated image output. `gpt-image-2.5-sunburst` and `gpt-image-2.5-flare`, including their `2026-09-08` snapshots, support `opaque` and `transparent` backgrounds. Transparent backgrounds are available for supported GPT Image models. For `gpt-image-2` and `gpt-image-2-2026-04-21`, this support is in preview. When using `transparent`, set the output format to `png` or `webp`.',
       ),
       v.metadata({ examples: ['transparent'] }),
     ),
     stream: v.pipe(
-      v.optional(v.union([v.boolean(), v.nullable(v.null())]), false),
+      v.optional(v.union([v.boolean(), v.null()]), false),
       v.description('Stream partial image results as events.'),
       v.metadata({ examples: [false] }),
     ),
@@ -16785,7 +17167,7 @@ export const EvalRunSchema = v.pipe(
       v.description("Information about the run's data source."),
     ),
     metadata: MetadataSchema,
-    error: v.union([EvalApiErrorSchema, v.nullable(v.null())]),
+    error: v.union([EvalApiErrorSchema, v.null()]),
   }),
   v.description('A schema representing an evaluation run.\n'),
 )
@@ -16827,7 +17209,7 @@ export const EvalRunOutputItemResultSchema = v.pipe(
     passed: v.pipe(v.boolean(), v.description('Whether the grader considered the output a pass.')),
     sample: v.optional(
       v.pipe(
-        v.union([v.any(), v.nullable(v.null())]),
+        v.union([v.any(), v.null()]),
         v.description('Optional sample or intermediate data produced by the grader.'),
       ),
     ),
@@ -16920,7 +17302,7 @@ export const EvalRunOutputItemSchema = v.pipe(
           }),
           v.description('Token usage details for the sample.'),
         ),
-        error: v.union([EvalApiErrorSchema, v.nullable(v.null())]),
+        error: v.union([EvalApiErrorSchema, v.null()]),
         temperature: v.pipe(v.number(), v.description('The sampling temperature used.')),
         max_completion_tokens: v.pipe(
           v.pipe(v.number(), v.integer()),
@@ -17035,7 +17417,7 @@ export const FineTuningIntegrationSchema = v.object({
               'A display name to set for the run. If not set, we will use the Job ID as the name.\n',
             ),
           ),
-          v.nullable(v.null()),
+          v.null(),
         ]),
       ),
       entity: v.optional(
@@ -17046,7 +17428,7 @@ export const FineTuningIntegrationSchema = v.object({
               'The entity to use for the run. This allows you to set the team or username of the WandB user that you would\nlike associated with the run. If not set, the default entity for the registered WandB API key is used.\n',
             ),
           ),
-          v.nullable(v.null()),
+          v.null(),
         ]),
       ),
       tags: v.optional(
@@ -17089,14 +17471,14 @@ export const FineTuningJobSchema = v.pipe(
                   'The parameter that was invalid, usually `training_file` or `validation_file`. This field will be null if the failure was not parameter-specific.',
                 ),
               ),
-              v.nullable(v.null()),
+              v.null(),
             ]),
           }),
           v.description(
             'For fine-tuning jobs that have `failed`, this will contain more information on the cause of the failure.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
         v.object({}),
       ]),
       fine_tuned_model: v.union([
@@ -17106,7 +17488,7 @@ export const FineTuningJobSchema = v.pipe(
             'The name of the fine-tuned model that is being created. The value will be null if the fine-tuning job is still running.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
       finished_at: v.union([
         v.pipe(
@@ -17115,7 +17497,7 @@ export const FineTuningJobSchema = v.pipe(
             'The Unix timestamp (in seconds) for when the fine-tuning job was finished. The value will be null if the fine-tuning job is still running.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
       hyperparameters: v.optional(
         v.pipe(
@@ -17135,7 +17517,7 @@ export const FineTuningJobSchema = v.pipe(
                       'Number of examples in each batch. A larger batch size means that model parameters\nare updated less frequently, but with lower variance.\n',
                     ),
                   ),
-                  v.nullable(v.null()),
+                  v.null(),
                 ]),
               ),
               learning_rate_multiplier: v.pipe(
@@ -17200,7 +17582,7 @@ export const FineTuningJobSchema = v.pipe(
             'The total number of billable tokens processed by this fine-tuning job. The value will be null if the fine-tuning job is still running.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
       training_file: v.pipe(
         v.string(),
@@ -17215,7 +17597,7 @@ export const FineTuningJobSchema = v.pipe(
             'The file ID used for validation. You can retrieve the validation results with the [Files API](https://developers.openai.com/api/reference/resources/files/methods/content).',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
       integrations: v.optional(
         v.union([
@@ -17223,7 +17605,7 @@ export const FineTuningJobSchema = v.pipe(
             v.pipe(v.array(v.union([FineTuningIntegrationSchema])), v.maxLength(5)),
             v.description('A list of integrations to enable for this fine-tuning job.'),
           ),
-          v.nullable(v.null()),
+          v.null(),
         ]),
       ),
       seed: v.pipe(
@@ -17238,10 +17620,10 @@ export const FineTuningJobSchema = v.pipe(
               'The Unix timestamp (in seconds) for when the fine-tuning job is estimated to finish. The value will be null if the fine-tuning job is not running.',
             ),
           ),
-          v.nullable(v.null()),
+          v.null(),
         ]),
       ),
-      method: v.optional(v.union([FineTuneMethodSchema, v.nullable(v.null())])),
+      method: v.optional(v.union([FineTuneMethodSchema, v.null()])),
       metadata: v.optional(MetadataSchema),
     }),
     v.check(
@@ -17398,7 +17780,7 @@ export const GroupListResourceSchema = v.pipe(
       v.description('Whether additional groups are available when paginating.'),
     ),
     next: v.pipe(
-      v.union([v.string(), v.nullable(v.null())]),
+      v.union([v.string(), v.null()]),
       v.description(
         'Cursor to fetch the next page of results, or `null` if there are no more results.',
       ),
@@ -17414,15 +17796,15 @@ export const GroupMemberUserSchema = v.pipe(
     id: v.pipe(v.string(), v.description('Identifier for the user.')),
     name: v.pipe(v.string(), v.description('Display name of the user.')),
     email: v.pipe(
-      v.union([v.string(), v.nullable(v.null())]),
+      v.union([v.string(), v.null()]),
       v.description('Email address of the user, or `null` for users without an email.'),
     ),
     picture: v.pipe(
-      v.union([v.string(), v.nullable(v.null())]),
+      v.union([v.string(), v.null()]),
       v.description("URL of the user's profile picture, if available."),
     ),
     is_service_account: v.pipe(
-      v.union([v.boolean(), v.nullable(v.null())]),
+      v.union([v.boolean(), v.null()]),
       v.description('Whether the user is a service account.'),
     ),
     user_type: v.pipe(v.picklist(['user', 'tenant_user']), v.description('The type of user.')),
@@ -17458,7 +17840,7 @@ export const RoleSchema = v.pipe(
     id: v.pipe(v.string(), v.description('Identifier for the role.')),
     name: v.pipe(v.string(), v.description('Unique name for the role.')),
     description: v.pipe(
-      v.union([v.string(), v.nullable(v.null())]),
+      v.union([v.string(), v.null()]),
       v.description('Optional description of the role.'),
     ),
     permissions: v.pipe(v.array(v.string()), v.description('Permissions granted by the role.')),
@@ -17496,10 +17878,7 @@ export const GroupUserSchema = v.pipe(
       v.description('The identifier, which can be referenced in API endpoints'),
     ),
     name: v.pipe(v.string(), v.description('The name of the user.')),
-    email: v.pipe(
-      v.union([v.string(), v.nullable(v.null())]),
-      v.description('The email address of the user.'),
-    ),
+    email: v.pipe(v.union([v.string(), v.null()]), v.description('The email address of the user.')),
   }),
   v.description('Represents an individual user returned when inspecting group membership.'),
 )
@@ -17908,7 +18287,12 @@ export type ImagesResponse = v.InferOutput<typeof ImagesResponseSchema>
 
 export const InputMessageResourceSchema = v.intersect([
   InputMessageSchema,
-  v.object({ id: v.pipe(v.string(), v.description('The unique ID of the message input.\n')) }),
+  v.pipe(
+    v.looseObject({
+      id: v.pipe(v.string(), v.description('The unique ID of the message input.\n')),
+    }),
+    v.check((input) => ['type'].every((key) => key in input)),
+  ),
 ])
 
 export type InputMessageResource = v.InferOutput<typeof InputMessageResourceSchema>
@@ -17938,13 +18322,13 @@ export const InviteSchema = v.pipe(
     ),
     expires_at: v.optional(
       v.pipe(
-        v.union([v.pipe(v.number(), v.integer()), v.nullable(v.null())]),
+        v.union([v.pipe(v.number(), v.integer()), v.null()]),
         v.description('The Unix timestamp (in seconds) of when the invite expires.'),
       ),
     ),
     accepted_at: v.optional(
       v.pipe(
-        v.union([v.pipe(v.number(), v.integer()), v.nullable(v.null())]),
+        v.union([v.pipe(v.number(), v.integer()), v.null()]),
         v.description('The Unix timestamp (in seconds) of when the invite was accepted.'),
       ),
     ),
@@ -17979,13 +18363,13 @@ export const InviteListResponseSchema = v.object({
   data: v.array(InviteSchema),
   first_id: v.optional(
     v.pipe(
-      v.union([v.string(), v.nullable(v.null())]),
+      v.union([v.string(), v.null()]),
       v.description('The first `invite_id` in the retrieved `list`'),
     ),
   ),
   last_id: v.optional(
     v.pipe(
-      v.union([v.string(), v.nullable(v.null())]),
+      v.union([v.string(), v.null()]),
       v.description('The last `invite_id` in the retrieved `list`'),
     ),
   ),
@@ -18034,36 +18418,72 @@ export type InviteRequest = v.InferOutput<typeof InviteRequestSchema>
 
 export const ItemResourceSchema = v.pipe(
   v.union([
-    InputMessageResourceSchema,
-    OutputMessageSchema,
-    FileSearchToolCallSchema,
-    ComputerToolCallSchema,
-    ComputerToolCallOutputResourceSchema,
-    WebSearchToolCallSchema,
-    FunctionToolCallResourceSchema,
-    FunctionToolCallOutputResourceSchema,
-    ToolSearchCallSchema,
-    ToolSearchOutputSchema,
-    AdditionalToolsSchema,
-    ResponseConfigurationUpdateSchema,
-    ReasoningItemSchema,
-    ProgramSchema,
-    ProgramOutputSchema,
-    CompactionBodySchema,
-    ImageGenToolCallSchema,
-    CodeInterpreterToolCallSchema,
-    LocalShellToolCallSchema,
-    LocalShellToolCallOutputSchema,
-    FunctionShellCallSchema,
-    FunctionShellCallOutputSchema,
-    ApplyPatchToolCallSchema,
-    ApplyPatchToolCallOutputSchema,
-    MCPListToolsSchema,
-    MCPApprovalRequestSchema,
-    MCPApprovalResponseResourceSchema,
-    MCPToolCallSchema,
-    CustomToolCallResourceSchema,
-    CustomToolCallOutputResourceSchema,
+    v.intersect([
+      InputMessageResourceSchema,
+      v.object({ type: v.literal('InputMessageResource') }),
+    ]),
+    v.intersect([OutputMessageSchema, v.object({ type: v.literal('OutputMessage') })]),
+    v.intersect([FileSearchToolCallSchema, v.object({ type: v.literal('FileSearchToolCall') })]),
+    v.intersect([ComputerToolCallSchema, v.object({ type: v.literal('ComputerToolCall') })]),
+    v.intersect([
+      ComputerToolCallOutputResourceSchema,
+      v.object({ type: v.literal('ComputerToolCallOutputResource') }),
+    ]),
+    v.intersect([WebSearchToolCallSchema, v.object({ type: v.literal('WebSearchToolCall') })]),
+    v.intersect([
+      FunctionToolCallResourceSchema,
+      v.object({ type: v.literal('FunctionToolCallResource') }),
+    ]),
+    v.intersect([
+      FunctionToolCallOutputResourceSchema,
+      v.object({ type: v.literal('FunctionToolCallOutputResource') }),
+    ]),
+    v.intersect([ToolSearchCallSchema, v.object({ type: v.literal('ToolSearchCall') })]),
+    v.intersect([ToolSearchOutputSchema, v.object({ type: v.literal('ToolSearchOutput') })]),
+    v.intersect([AdditionalToolsSchema, v.object({ type: v.literal('AdditionalTools') })]),
+    v.intersect([
+      ResponseConfigurationUpdateSchema,
+      v.object({ type: v.literal('ResponseConfigurationUpdate') }),
+    ]),
+    v.intersect([ReasoningItemSchema, v.object({ type: v.literal('ReasoningItem') })]),
+    v.intersect([ProgramSchema, v.object({ type: v.literal('Program') })]),
+    v.intersect([ProgramOutputSchema, v.object({ type: v.literal('ProgramOutput') })]),
+    v.intersect([CompactionBodySchema, v.object({ type: v.literal('CompactionBody') })]),
+    v.intersect([ImageGenToolCallSchema, v.object({ type: v.literal('ImageGenToolCall') })]),
+    v.intersect([
+      CodeInterpreterToolCallSchema,
+      v.object({ type: v.literal('CodeInterpreterToolCall') }),
+    ]),
+    v.intersect([LocalShellToolCallSchema, v.object({ type: v.literal('LocalShellToolCall') })]),
+    v.intersect([
+      LocalShellToolCallOutputSchema,
+      v.object({ type: v.literal('LocalShellToolCallOutput') }),
+    ]),
+    v.intersect([FunctionShellCallSchema, v.object({ type: v.literal('FunctionShellCall') })]),
+    v.intersect([
+      FunctionShellCallOutputSchema,
+      v.object({ type: v.literal('FunctionShellCallOutput') }),
+    ]),
+    v.intersect([ApplyPatchToolCallSchema, v.object({ type: v.literal('ApplyPatchToolCall') })]),
+    v.intersect([
+      ApplyPatchToolCallOutputSchema,
+      v.object({ type: v.literal('ApplyPatchToolCallOutput') }),
+    ]),
+    v.intersect([MCPListToolsSchema, v.object({ type: v.literal('MCPListTools') })]),
+    v.intersect([MCPApprovalRequestSchema, v.object({ type: v.literal('MCPApprovalRequest') })]),
+    v.intersect([
+      MCPApprovalResponseResourceSchema,
+      v.object({ type: v.literal('MCPApprovalResponseResource') }),
+    ]),
+    v.intersect([MCPToolCallSchema, v.object({ type: v.literal('MCPToolCall') })]),
+    v.intersect([
+      CustomToolCallResourceSchema,
+      v.object({ type: v.literal('CustomToolCallResource') }),
+    ]),
+    v.intersect([
+      CustomToolCallOutputResourceSchema,
+      v.object({ type: v.literal('CustomToolCallOutputResource') }),
+    ]),
   ]),
   v.description('Content item used to generate a response.\n'),
 )
@@ -18084,16 +18504,10 @@ export const ListAuditLogsResponseSchema = v.object({
   object: v.literal('list'),
   data: v.array(AuditLogSchema),
   first_id: v.optional(
-    v.pipe(
-      v.union([v.string(), v.nullable(v.null())]),
-      v.metadata({ examples: ['audit_log-defb456h8dks'] }),
-    ),
+    v.pipe(v.union([v.string(), v.null()]), v.metadata({ examples: ['audit_log-defb456h8dks'] })),
   ),
   last_id: v.optional(
-    v.pipe(
-      v.union([v.string(), v.nullable(v.null())]),
-      v.metadata({ examples: ['audit_log-hnbkd8s93s'] }),
-    ),
+    v.pipe(v.union([v.string(), v.null()]), v.metadata({ examples: ['audit_log-hnbkd8s93s'] })),
   ),
   has_more: v.boolean(),
 })
@@ -18120,10 +18534,7 @@ export const OrganizationCertificateSchema = v.pipe(
       v.string(),
       v.description('The identifier, which can be referenced in API endpoints'),
     ),
-    name: v.pipe(
-      v.union([v.string(), v.nullable(v.null())]),
-      v.description('The name of the certificate.'),
-    ),
+    name: v.pipe(v.union([v.string(), v.null()]), v.description('The name of the certificate.')),
     created_at: v.pipe(
       v.pipe(v.number(), v.integer()),
       v.description('The Unix timestamp (in seconds) of when the certificate was uploaded.'),
@@ -18152,14 +18563,8 @@ export type OrganizationCertificate = v.InferOutput<typeof OrganizationCertifica
 
 export const ListCertificatesResponseSchema = v.object({
   data: v.array(OrganizationCertificateSchema),
-  first_id: v.pipe(
-    v.union([v.string(), v.nullable(v.null())]),
-    v.metadata({ examples: ['cert_abc'] }),
-  ),
-  last_id: v.pipe(
-    v.union([v.string(), v.nullable(v.null())]),
-    v.metadata({ examples: ['cert_abc'] }),
-  ),
+  first_id: v.pipe(v.union([v.string(), v.null()]), v.metadata({ examples: ['cert_abc'] })),
+  last_id: v.pipe(v.union([v.string(), v.null()]), v.metadata({ examples: ['cert_abc'] })),
   has_more: v.boolean(),
   object: v.literal('list'),
 })
@@ -18242,8 +18647,8 @@ export type ListFilesResponse = v.InferOutput<typeof ListFilesResponseSchema>
 export const ListFineTuningCheckpointPermissionResponseSchema = v.object({
   data: v.array(FineTuningCheckpointPermissionSchema),
   object: v.literal('list'),
-  first_id: v.optional(v.union([v.string(), v.nullable(v.null())])),
-  last_id: v.optional(v.union([v.string(), v.nullable(v.null())])),
+  first_id: v.optional(v.union([v.string(), v.null()])),
+  last_id: v.optional(v.union([v.string(), v.null()])),
   has_more: v.boolean(),
 })
 
@@ -18254,8 +18659,8 @@ export type ListFineTuningCheckpointPermissionResponse = v.InferOutput<
 export const ListFineTuningJobCheckpointsResponseSchema = v.object({
   data: v.array(FineTuningJobCheckpointSchema),
   object: v.literal('list'),
-  first_id: v.optional(v.union([v.string(), v.nullable(v.null())])),
-  last_id: v.optional(v.union([v.string(), v.nullable(v.null())])),
+  first_id: v.optional(v.union([v.string(), v.null()])),
+  last_id: v.optional(v.union([v.string(), v.null()])),
   has_more: v.boolean(),
 })
 
@@ -18304,7 +18709,7 @@ export const ModelSchema = v.pipe(
               /^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))$/,
             ),
           ),
-          v.nullable(v.null()),
+          v.null(),
         ]),
         v.description('The date when the model will shut down, or null if not announced.'),
       ),
@@ -18342,10 +18747,7 @@ export const OrganizationProjectCertificateSchema = v.pipe(
       v.string(),
       v.description('The identifier, which can be referenced in API endpoints'),
     ),
-    name: v.pipe(
-      v.union([v.string(), v.nullable(v.null())]),
-      v.description('The name of the certificate.'),
-    ),
+    name: v.pipe(v.union([v.string(), v.null()]), v.description('The name of the certificate.')),
     created_at: v.pipe(
       v.pipe(v.number(), v.integer()),
       v.description('The Unix timestamp (in seconds) of when the certificate was uploaded.'),
@@ -18376,14 +18778,8 @@ export type OrganizationProjectCertificate = v.InferOutput<
 
 export const ListProjectCertificatesResponseSchema = v.object({
   data: v.array(OrganizationProjectCertificateSchema),
-  first_id: v.pipe(
-    v.union([v.string(), v.nullable(v.null())]),
-    v.metadata({ examples: ['cert_abc'] }),
-  ),
-  last_id: v.pipe(
-    v.union([v.string(), v.nullable(v.null())]),
-    v.metadata({ examples: ['cert_abc'] }),
-  ),
+  first_id: v.pipe(v.union([v.string(), v.null()]), v.metadata({ examples: ['cert_abc'] })),
+  last_id: v.pipe(v.union([v.string(), v.null()]), v.metadata({ examples: ['cert_abc'] })),
   has_more: v.boolean(),
   object: v.literal('list'),
 })
@@ -18477,7 +18873,7 @@ export const VectorStoreFileObjectSchema = v.pipe(
           'The last error associated with this vector store file. Will be `null` if there are no errors.',
         ),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
     chunking_strategy: v.optional(
       v.pipe(
@@ -18556,7 +18952,7 @@ export const VectorStoreObjectSchema = v.pipe(
           v.pipe(v.number(), v.integer()),
           v.description('The Unix timestamp (in seconds) for when the vector store will expire.'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     last_active_at: v.union([
@@ -18564,7 +18960,7 @@ export const VectorStoreObjectSchema = v.pipe(
         v.pipe(v.number(), v.integer()),
         v.description('The Unix timestamp (in seconds) for when the vector store was last active.'),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
     metadata: MetadataSchema,
   }),
@@ -18602,7 +18998,7 @@ export const SafetyIdentifierSchema = v.union([
       'A stable identifier for your end user, used for safety monitoring and abuse detection.',
     ),
   ),
-  v.nullable(v.null()),
+  v.null(),
 ])
 
 export type SafetyIdentifier = v.InferOutput<typeof SafetyIdentifierSchema>
@@ -18614,7 +19010,7 @@ export const InstructionsSchema = v.union([
       'Frontend instructions for voice, conversation, interruptions, and when to delegate. Start with the [Live prompting guide](https://developers.openai.com/api/docs/guides/live-prompting); put business rules and tool workflows in a separate [backend prompt](https://developers.openai.com/api/docs/guides/live-delegation#start-with-your-existing-backend-prompt). Limited to 16,384 client-supplied tokens. Omitted or blank instructions use server defaults. Immutable after startup.',
     ),
   ),
-  v.nullable(v.null()),
+  v.null(),
 ])
 
 export type Instructions = v.InferOutput<typeof InstructionsSchema>
@@ -18757,7 +19153,7 @@ export const LiveDelegationReasoningInputParamSchema = v.pipe(
             'How much reasoning effort the delegated Responses model should use. Supported values depend on the backend model.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
       summary: v.union([
         v.pipe(
@@ -18766,7 +19162,7 @@ export const LiveDelegationReasoningInputParamSchema = v.pipe(
             'The reasoning summary to request from the delegated Responses model, when supported.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     }),
   ),
@@ -18791,7 +19187,7 @@ export const LiveDelegationTextInputParamSchema = v.pipe(
             'The amount of detail in text generated by the Responses backend. This does not configure the Live model’s spoken delivery.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     }),
   ),
@@ -18818,7 +19214,7 @@ export const LiveFunctionToolInputParamSchema = v.pipe(
             'What the function does and when the delegated Responses model should call it.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     parameters: v.optional(
@@ -18827,7 +19223,7 @@ export const LiveFunctionToolInputParamSchema = v.pipe(
           v.record(v.string(), v.any()),
           v.description('A JSON Schema object describing the arguments accepted by the function.'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     strict: v.optional(
@@ -18838,7 +19234,7 @@ export const LiveFunctionToolInputParamSchema = v.pipe(
             'Whether the delegated Responses model must follow the function’s parameter schema exactly.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
   }),
@@ -18922,7 +19318,7 @@ export const LiveSkillReferenceParamSchema = v.object({
           "Optional skill version. Use a positive integer or 'latest'. Omit for default.",
         ),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   ),
 })
@@ -18972,39 +19368,56 @@ export const LiveHostedShellContainerAutoParamSchema = v.object({
         v.pipe(v.array(v.string()), v.maxLength(50)),
         v.description('An optional list of uploaded files to make available to your code.'),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   ),
   memory_limit: v.optional(
     v.union([
       v.pipe(LiveContainerMemoryLimitSchema, v.description('The memory limit for the container.')),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   ),
   network_policy: v.optional(
     v.union([
       v.pipe(
         v.union([
-          LiveContainerNetworkPolicyDisabledParamSchema,
-          LiveHostedShellNetworkPolicyAllowlistParamSchema,
+          v.intersect([
+            LiveContainerNetworkPolicyDisabledParamSchema,
+            v.object({ type: v.literal('LiveContainerNetworkPolicyDisabledParam') }),
+          ]),
+          v.intersect([
+            LiveHostedShellNetworkPolicyAllowlistParamSchema,
+            v.object({ type: v.literal('LiveHostedShellNetworkPolicyAllowlistParam') }),
+          ]),
         ]),
         v.description('Network access policy for the container.'),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   ),
   skills: v.optional(
     v.union([
       v.pipe(
         v.pipe(
-          v.array(v.union([LiveSkillReferenceParamSchema, LiveInlineSkillParamSchema])),
+          v.array(
+            v.union([
+              v.intersect([
+                LiveSkillReferenceParamSchema,
+                v.object({ type: v.literal('LiveSkillReferenceParam') }),
+              ]),
+              v.intersect([
+                LiveInlineSkillParamSchema,
+                v.object({ type: v.literal('LiveInlineSkillParam') }),
+              ]),
+            ]),
+          ),
           v.maxLength(200),
         ),
         v.description(
           'An optional list of skills referenced by id or inline data. Across all inline skills in this list, decoded ZIP data must total at most 50 MiB and Base64 text must total at most 70,254,592 characters, including line breaks. Skill references do not count toward these limits.',
         ),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   ),
 })
@@ -19042,7 +19455,7 @@ export const LiveLocalEnvironmentParamSchema = v.object({
         v.pipe(v.array(LiveLocalSkillParamSchema), v.maxLength(200)),
         v.description('An optional list of skills.'),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   ),
 })
@@ -19055,11 +19468,20 @@ export const LiveHostedShellToolInputParamSchema = v.pipe(
     environment: v.optional(
       v.union([
         v.union([
-          LiveHostedShellContainerAutoParamSchema,
-          LiveContainerReferenceParamSchema,
-          LiveLocalEnvironmentParamSchema,
+          v.intersect([
+            LiveHostedShellContainerAutoParamSchema,
+            v.object({ type: v.literal('LiveHostedShellContainerAutoParam') }),
+          ]),
+          v.intersect([
+            LiveContainerReferenceParamSchema,
+            v.object({ type: v.literal('LiveContainerReferenceParam') }),
+          ]),
+          v.intersect([
+            LiveLocalEnvironmentParamSchema,
+            v.object({ type: v.literal('LiveLocalEnvironmentParam') }),
+          ]),
         ]),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
   }),
@@ -19084,14 +19506,14 @@ export const LiveMCPToolFilterParamSchema = v.partial(
   v.object({
     tool_names: v.union([
       v.pipe(v.array(v.string()), v.description('A list of tool names to match against.')),
-      v.nullable(v.null()),
+      v.null(),
     ]),
     read_only: v.union([
       v.pipe(
         v.boolean(),
         v.description('Whether to allow only read-only tools for matching entries.'),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   }),
 )
@@ -19105,14 +19527,14 @@ export const LiveMCPRequireApprovalFilterParamSchema = v.partial(
         LiveMCPToolFilterParamSchema,
         v.description('A filter that forces approval for matching tools.'),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
     never: v.union([
       v.pipe(
         LiveMCPToolFilterParamSchema,
         v.description('A filter that skips approval for matching tools.'),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   }),
 )
@@ -19147,7 +19569,7 @@ export const LiveMCPToolInputParamSchema = v.object({
         v.pipe(v.string(), v.url()),
         v.description('The URL of the MCP server to connect to.'),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   ),
   server_description: v.optional(
@@ -19156,7 +19578,7 @@ export const LiveMCPToolInputParamSchema = v.object({
         v.string(),
         v.description('An optional human-readable description of the MCP server.'),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   ),
   authorization: v.optional(
@@ -19168,7 +19590,7 @@ export const LiveMCPToolInputParamSchema = v.object({
             'The authorization token to use when connecting to the MCP server or connector.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
       v.description('This value is omitted from returned Live session data.'),
       v.metadata({ writeOnly: true }),
@@ -19181,7 +19603,7 @@ export const LiveMCPToolInputParamSchema = v.object({
           v.record(v.string(), v.string()),
           v.description('Optional HTTP headers to send when connecting to the MCP server.'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
       v.description('This value is omitted from returned Live session data.'),
       v.metadata({ writeOnly: true }),
@@ -19193,7 +19615,7 @@ export const LiveMCPToolInputParamSchema = v.object({
         v.union([v.array(v.string()), LiveMCPToolFilterParamSchema]),
         v.description('A list of MCP tool names that are allowed for this server.'),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   ),
   require_approval: v.optional(
@@ -19208,7 +19630,7 @@ export const LiveMCPToolInputParamSchema = v.object({
         ]),
         v.description('Controls which MCP tools require explicit user approval before execution.'),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   ),
   connector_id: v.optional(
@@ -19220,7 +19642,7 @@ export const LiveMCPToolInputParamSchema = v.object({
         ),
         v.metadata({ deprecated: true }),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   ),
   tunnel_id: v.optional(
@@ -19229,7 +19651,7 @@ export const LiveMCPToolInputParamSchema = v.object({
         v.pipe(v.string(), v.regex(/^tunnel_[a-z0-9]{32}$/)),
         v.description('The Secure MCP Tunnel ID to use instead of a direct server URL.'),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   ),
   allowed_callers: v.optional(
@@ -19238,7 +19660,7 @@ export const LiveMCPToolInputParamSchema = v.object({
         v.pipe(v.array(LiveCallableToolAllowedCallerSchema), v.minLength(1)),
         v.description('The tool invocation context(s).'),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   ),
   defer_loading: v.optional(
@@ -19247,7 +19669,7 @@ export const LiveMCPToolInputParamSchema = v.object({
         v.boolean(),
         v.description('Whether this MCP tool should be deferred and discovered via tool search.'),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   ),
 })
@@ -19320,7 +19742,7 @@ export const LiveMCPToolChoiceParamSchema = v.object({
           'The name of the MCP tool to call. If omitted, the server may choose a default.',
         ),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   ),
 })
@@ -19445,18 +19867,54 @@ export const LiveAllowedToolsChoiceParamSchema = v.object({
     v.pipe(
       v.array(
         v.union([
-          LiveFunctionToolChoiceParamSchema,
-          LiveMCPToolChoiceParamSchema,
-          LiveSpecificFileSearchParamSchema,
-          LiveSpecificWebSearchParamSchema,
-          LiveSpecificWebSearchPreviewParamSchema,
-          LiveSpecificImageGenParamSchema,
-          LiveSpecificComputerParamSchema,
-          LiveSpecificCodeInterpreterParamSchema,
-          LiveSpecificProgrammaticToolCallingParamSchema,
-          LiveSpecificFunctionShellParamSchema,
-          LiveSpecificCustomToolParamSchema,
-          LiveSpecificApplyPatchParamSchema,
+          v.intersect([
+            LiveFunctionToolChoiceParamSchema,
+            v.object({ type: v.literal('LiveFunctionToolChoiceParam') }),
+          ]),
+          v.intersect([
+            LiveMCPToolChoiceParamSchema,
+            v.object({ type: v.literal('LiveMCPToolChoiceParam') }),
+          ]),
+          v.intersect([
+            LiveSpecificFileSearchParamSchema,
+            v.object({ type: v.literal('LiveSpecificFileSearchParam') }),
+          ]),
+          v.intersect([
+            LiveSpecificWebSearchParamSchema,
+            v.object({ type: v.literal('LiveSpecificWebSearchParam') }),
+          ]),
+          v.intersect([
+            LiveSpecificWebSearchPreviewParamSchema,
+            v.object({ type: v.literal('LiveSpecificWebSearchPreviewParam') }),
+          ]),
+          v.intersect([
+            LiveSpecificImageGenParamSchema,
+            v.object({ type: v.literal('LiveSpecificImageGenParam') }),
+          ]),
+          v.intersect([
+            LiveSpecificComputerParamSchema,
+            v.object({ type: v.literal('LiveSpecificComputerParam') }),
+          ]),
+          v.intersect([
+            LiveSpecificCodeInterpreterParamSchema,
+            v.object({ type: v.literal('LiveSpecificCodeInterpreterParam') }),
+          ]),
+          v.intersect([
+            LiveSpecificProgrammaticToolCallingParamSchema,
+            v.object({ type: v.literal('LiveSpecificProgrammaticToolCallingParam') }),
+          ]),
+          v.intersect([
+            LiveSpecificFunctionShellParamSchema,
+            v.object({ type: v.literal('LiveSpecificFunctionShellParam') }),
+          ]),
+          v.intersect([
+            LiveSpecificCustomToolParamSchema,
+            v.object({ type: v.literal('LiveSpecificCustomToolParam') }),
+          ]),
+          v.intersect([
+            LiveSpecificApplyPatchParamSchema,
+            v.object({ type: v.literal('LiveSpecificApplyPatchParam') }),
+          ]),
         ]),
       ),
       v.minLength(1),
@@ -19470,7 +19928,7 @@ export const LiveAllowedToolsChoiceParamSchema = v.object({
         LiveToolChoiceValueEnumSchema,
         v.description('How to select a tool from the allowed set.'),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   ),
 })
@@ -19491,7 +19949,7 @@ export const LiveResponsesDelegationSettingsInputParamSchema = v.pipe(
             'Instructions for the delegated Responses model, separate from Live instructions. See [backend prompting](https://developers.openai.com/api/docs/guides/live-delegation#start-with-your-existing-backend-prompt).',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     max_output_tokens: v.optional(
@@ -19500,7 +19958,7 @@ export const LiveResponsesDelegationSettingsInputParamSchema = v.pipe(
           v.pipe(v.number(), v.integer(), v.minValue(16)),
           v.description('Maximum number of output tokens for each delegated response.'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     service_tier: v.optional(
@@ -19509,7 +19967,7 @@ export const LiveResponsesDelegationSettingsInputParamSchema = v.pipe(
           LiveResponsesServiceTierSchema,
           v.description('Service tier for delegated Responses requests.'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     reasoning: v.optional(
@@ -19518,7 +19976,7 @@ export const LiveResponsesDelegationSettingsInputParamSchema = v.pipe(
           LiveDelegationReasoningInputParamSchema,
           v.description('Reasoning settings passed to each delegated Responses request.'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     text: v.optional(
@@ -19527,26 +19985,65 @@ export const LiveResponsesDelegationSettingsInputParamSchema = v.pipe(
           LiveDelegationTextInputParamSchema,
           v.description('Text generation settings passed to each delegated Responses request.'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     tools: v.optional(
       v.pipe(
         v.array(
           v.union([
-            LiveFunctionToolInputParamSchema,
-            LiveWebSearchToolInputParamSchema,
-            LiveFileSearchToolInputParamSchema,
-            LiveCodeInterpreterToolInputParamSchema,
-            LiveHostedShellToolInputParamSchema,
-            LiveImageGenerationToolInputParamSchema,
-            LiveMCPToolInputParamSchema,
-            LiveCustomToolInputParamSchema,
-            LiveNamespaceToolInputParamSchema,
-            LiveToolSearchToolInputParamSchema,
-            LiveProgrammaticToolInputParamSchema,
-            LiveComputerToolInputParamSchema,
-            LiveApplyPatchToolInputParamSchema,
+            v.intersect([
+              LiveFunctionToolInputParamSchema,
+              v.object({ type: v.literal('LiveFunctionToolInputParam') }),
+            ]),
+            v.intersect([
+              LiveWebSearchToolInputParamSchema,
+              v.object({ type: v.literal('LiveWebSearchToolInputParam') }),
+            ]),
+            v.intersect([
+              LiveFileSearchToolInputParamSchema,
+              v.object({ type: v.literal('LiveFileSearchToolInputParam') }),
+            ]),
+            v.intersect([
+              LiveCodeInterpreterToolInputParamSchema,
+              v.object({ type: v.literal('LiveCodeInterpreterToolInputParam') }),
+            ]),
+            v.intersect([
+              LiveHostedShellToolInputParamSchema,
+              v.object({ type: v.literal('LiveHostedShellToolInputParam') }),
+            ]),
+            v.intersect([
+              LiveImageGenerationToolInputParamSchema,
+              v.object({ type: v.literal('LiveImageGenerationToolInputParam') }),
+            ]),
+            v.intersect([
+              LiveMCPToolInputParamSchema,
+              v.object({ type: v.literal('LiveMCPToolInputParam') }),
+            ]),
+            v.intersect([
+              LiveCustomToolInputParamSchema,
+              v.object({ type: v.literal('LiveCustomToolInputParam') }),
+            ]),
+            v.intersect([
+              LiveNamespaceToolInputParamSchema,
+              v.object({ type: v.literal('LiveNamespaceToolInputParam') }),
+            ]),
+            v.intersect([
+              LiveToolSearchToolInputParamSchema,
+              v.object({ type: v.literal('LiveToolSearchToolInputParam') }),
+            ]),
+            v.intersect([
+              LiveProgrammaticToolInputParamSchema,
+              v.object({ type: v.literal('LiveProgrammaticToolInputParam') }),
+            ]),
+            v.intersect([
+              LiveComputerToolInputParamSchema,
+              v.object({ type: v.literal('LiveComputerToolInputParam') }),
+            ]),
+            v.intersect([
+              LiveApplyPatchToolInputParamSchema,
+              v.object({ type: v.literal('LiveApplyPatchToolInputParam') }),
+            ]),
           ]),
         ),
         v.description(
@@ -19559,18 +20056,54 @@ export const LiveResponsesDelegationSettingsInputParamSchema = v.pipe(
         v.union([
           LiveToolChoiceEnumSchema,
           v.union([
-            LiveFunctionToolChoiceParamSchema,
-            LiveMCPToolChoiceParamSchema,
-            LiveSpecificFileSearchParamSchema,
-            LiveSpecificWebSearchParamSchema,
-            LiveSpecificWebSearchPreviewParamSchema,
-            LiveSpecificImageGenParamSchema,
-            LiveSpecificComputerParamSchema,
-            LiveSpecificCodeInterpreterParamSchema,
-            LiveSpecificProgrammaticToolCallingParamSchema,
-            LiveSpecificFunctionShellParamSchema,
-            LiveSpecificCustomToolParamSchema,
-            LiveSpecificApplyPatchParamSchema,
+            v.intersect([
+              LiveFunctionToolChoiceParamSchema,
+              v.object({ type: v.literal('LiveFunctionToolChoiceParam') }),
+            ]),
+            v.intersect([
+              LiveMCPToolChoiceParamSchema,
+              v.object({ type: v.literal('LiveMCPToolChoiceParam') }),
+            ]),
+            v.intersect([
+              LiveSpecificFileSearchParamSchema,
+              v.object({ type: v.literal('LiveSpecificFileSearchParam') }),
+            ]),
+            v.intersect([
+              LiveSpecificWebSearchParamSchema,
+              v.object({ type: v.literal('LiveSpecificWebSearchParam') }),
+            ]),
+            v.intersect([
+              LiveSpecificWebSearchPreviewParamSchema,
+              v.object({ type: v.literal('LiveSpecificWebSearchPreviewParam') }),
+            ]),
+            v.intersect([
+              LiveSpecificImageGenParamSchema,
+              v.object({ type: v.literal('LiveSpecificImageGenParam') }),
+            ]),
+            v.intersect([
+              LiveSpecificComputerParamSchema,
+              v.object({ type: v.literal('LiveSpecificComputerParam') }),
+            ]),
+            v.intersect([
+              LiveSpecificCodeInterpreterParamSchema,
+              v.object({ type: v.literal('LiveSpecificCodeInterpreterParam') }),
+            ]),
+            v.intersect([
+              LiveSpecificProgrammaticToolCallingParamSchema,
+              v.object({ type: v.literal('LiveSpecificProgrammaticToolCallingParam') }),
+            ]),
+            v.intersect([
+              LiveSpecificFunctionShellParamSchema,
+              v.object({ type: v.literal('LiveSpecificFunctionShellParam') }),
+            ]),
+            v.intersect([
+              LiveSpecificCustomToolParamSchema,
+              v.object({ type: v.literal('LiveSpecificCustomToolParam') }),
+            ]),
+            v.intersect([
+              LiveSpecificApplyPatchParamSchema,
+              v.object({ type: v.literal('LiveSpecificApplyPatchParam') }),
+            ]),
           ]),
           LiveAllowedToolsChoiceParamSchema,
         ]),
@@ -19587,7 +20120,7 @@ export const LiveResponsesDelegationSettingsInputParamSchema = v.pipe(
             'Whether the delegated Responses model may request multiple tool calls in a single response.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
   }),
@@ -19656,7 +20189,7 @@ export const LiveDecisionInputImageParamSchema = v.object({
           'The detail level of the image to be sent to the model. One of `high`, `low`, `auto`, or `original`. Defaults to `auto`.',
         ),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   ),
 })
@@ -19689,9 +20222,18 @@ export const LiveDecisionChoiceQuestionParamSchema = v.object({
     v.pipe(
       v.array(
         v.union([
-          LiveDecisionInputTextParamSchema,
-          LiveDecisionInputImageParamSchema,
-          LiveDecisionInputJsonParamSchema,
+          v.intersect([
+            LiveDecisionInputTextParamSchema,
+            v.object({ type: v.literal('LiveDecisionInputTextParam') }),
+          ]),
+          v.intersect([
+            LiveDecisionInputImageParamSchema,
+            v.object({ type: v.literal('LiveDecisionInputImageParam') }),
+          ]),
+          v.intersect([
+            LiveDecisionInputJsonParamSchema,
+            v.object({ type: v.literal('LiveDecisionInputJsonParam') }),
+          ]),
         ]),
       ),
       v.minLength(1),
@@ -19712,9 +20254,18 @@ export const LiveDecisionPredicateQuestionParamSchema = v.object({
     v.pipe(
       v.array(
         v.union([
-          LiveDecisionInputTextParamSchema,
-          LiveDecisionInputImageParamSchema,
-          LiveDecisionInputJsonParamSchema,
+          v.intersect([
+            LiveDecisionInputTextParamSchema,
+            v.object({ type: v.literal('LiveDecisionInputTextParam') }),
+          ]),
+          v.intersect([
+            LiveDecisionInputImageParamSchema,
+            v.object({ type: v.literal('LiveDecisionInputImageParam') }),
+          ]),
+          v.intersect([
+            LiveDecisionInputJsonParamSchema,
+            v.object({ type: v.literal('LiveDecisionInputJsonParam') }),
+          ]),
         ]),
       ),
       v.minLength(1),
@@ -19741,9 +20292,18 @@ export const LiveDecisionScoreQuestionParamSchema = v.object({
     v.pipe(
       v.array(
         v.union([
-          LiveDecisionInputTextParamSchema,
-          LiveDecisionInputImageParamSchema,
-          LiveDecisionInputJsonParamSchema,
+          v.intersect([
+            LiveDecisionInputTextParamSchema,
+            v.object({ type: v.literal('LiveDecisionInputTextParam') }),
+          ]),
+          v.intersect([
+            LiveDecisionInputImageParamSchema,
+            v.object({ type: v.literal('LiveDecisionInputImageParam') }),
+          ]),
+          v.intersect([
+            LiveDecisionInputJsonParamSchema,
+            v.object({ type: v.literal('LiveDecisionInputJsonParam') }),
+          ]),
         ]),
       ),
       v.minLength(1),
@@ -19757,9 +20317,18 @@ export type LiveDecisionScoreQuestionParam = v.InferOutput<
 >
 
 export const LiveDecisionQuestionSchema = v.union([
-  LiveDecisionChoiceQuestionParamSchema,
-  LiveDecisionPredicateQuestionParamSchema,
-  LiveDecisionScoreQuestionParamSchema,
+  v.intersect([
+    LiveDecisionChoiceQuestionParamSchema,
+    v.object({ type: v.literal('LiveDecisionChoiceQuestionParam') }),
+  ]),
+  v.intersect([
+    LiveDecisionPredicateQuestionParamSchema,
+    v.object({ type: v.literal('LiveDecisionPredicateQuestionParam') }),
+  ]),
+  v.intersect([
+    LiveDecisionScoreQuestionParamSchema,
+    v.object({ type: v.literal('LiveDecisionScoreQuestionParam') }),
+  ]),
 ])
 
 export type LiveDecisionQuestion = v.InferOutput<typeof LiveDecisionQuestionSchema>
@@ -19794,15 +20363,24 @@ export type LiveDecisionsDelegationParam = v.InferOutput<typeof LiveDecisionsDel
 export const DelegationSchema = v.union([
   v.pipe(
     v.union([
-      LiveClientDelegationParamSchema,
-      LiveResponsesDelegationParamSchema,
-      LiveDecisionsDelegationParamSchema,
+      v.intersect([
+        LiveClientDelegationParamSchema,
+        v.object({ type: v.literal('LiveClientDelegationParam') }),
+      ]),
+      v.intersect([
+        LiveResponsesDelegationParamSchema,
+        v.object({ type: v.literal('LiveResponsesDelegationParam') }),
+      ]),
+      v.intersect([
+        LiveDecisionsDelegationParamSchema,
+        v.object({ type: v.literal('LiveDecisionsDelegationParam') }),
+      ]),
     ]),
     v.description(
       'Who handles tasks delegated by the Live model. Omitted or null selects your application; use `responses` or `decisions` to delegate to the corresponding API.',
     ),
   ),
-  v.nullable(v.null()),
+  v.null(),
 ])
 
 export type Delegation = v.InferOutput<typeof DelegationSchema>
@@ -19890,7 +20468,7 @@ export const LiveInitialDeveloperMessageItemParamSchema = v.pipe(
             'An optional identifier for the supplied history message. Live uses the message’s role and text to initialize the conversation.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     type: v.pipe(
@@ -19905,7 +20483,7 @@ export const LiveInitialDeveloperMessageItemParamSchema = v.pipe(
             'The supplied message’s status. Live uses its text as history and does not resume an incomplete message.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     role: v.pipe(
@@ -19936,7 +20514,7 @@ export const LiveInitialUserMessageItemParamSchema = v.pipe(
             'An optional identifier for the supplied history message. Live uses the message’s role and text to initialize the conversation.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     type: v.pipe(
@@ -19951,7 +20529,7 @@ export const LiveInitialUserMessageItemParamSchema = v.pipe(
             'The supplied message’s status. Live uses its text as history and does not resume an incomplete message.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     role: v.pipe(
@@ -20024,7 +20602,7 @@ export const LiveInitialAssistantMessageItemParamSchema = v.pipe(
             'An optional identifier for the supplied history message. Live uses the message’s role and text to initialize the conversation.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     type: v.pipe(
@@ -20039,7 +20617,7 @@ export const LiveInitialAssistantMessageItemParamSchema = v.pipe(
             'The supplied message’s status. Live uses its text as history and does not resume an incomplete message.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     role: v.pipe(
@@ -20050,8 +20628,14 @@ export const LiveInitialAssistantMessageItemParamSchema = v.pipe(
       v.pipe(
         v.array(
           v.union([
-            LiveInitialTextContentPartParamSchema,
-            LiveInitialOutputTextContentPartParamSchema,
+            v.intersect([
+              LiveInitialTextContentPartParamSchema,
+              v.object({ type: v.literal('LiveInitialTextContentPartParam') }),
+            ]),
+            v.intersect([
+              LiveInitialOutputTextContentPartParamSchema,
+              v.object({ type: v.literal('LiveInitialOutputTextContentPartParam') }),
+            ]),
           ]),
         ),
         v.length(1),
@@ -20070,9 +20654,18 @@ export type LiveInitialAssistantMessageItemParam = v.InferOutput<
 
 export const LiveInitialItemSchema = v.pipe(
   v.union([
-    LiveInitialDeveloperMessageItemParamSchema,
-    LiveInitialUserMessageItemParamSchema,
-    LiveInitialAssistantMessageItemParamSchema,
+    v.intersect([
+      LiveInitialDeveloperMessageItemParamSchema,
+      v.object({ role: v.literal('LiveInitialDeveloperMessageItemParam') }),
+    ]),
+    v.intersect([
+      LiveInitialUserMessageItemParamSchema,
+      v.object({ role: v.literal('LiveInitialUserMessageItemParam') }),
+    ]),
+    v.intersect([
+      LiveInitialAssistantMessageItemParamSchema,
+      v.object({ role: v.literal('LiveInitialAssistantMessageItemParam') }),
+    ]),
   ]),
   v.description(
     'A developer, user, or assistant message supplied as text history before the Live session starts.',
@@ -20231,9 +20824,18 @@ export type LiveSessionAudioFormatPCMAParam = v.InferOutput<
 
 export const LiveAudioFormatSchema = v.pipe(
   v.union([
-    LiveSessionAudioFormatPCMParamSchema,
-    LiveSessionAudioFormatPCMUParamSchema,
-    LiveSessionAudioFormatPCMAParamSchema,
+    v.intersect([
+      LiveSessionAudioFormatPCMParamSchema,
+      v.object({ type: v.literal('LiveSessionAudioFormatPCMParam') }),
+    ]),
+    v.intersect([
+      LiveSessionAudioFormatPCMUParamSchema,
+      v.object({ type: v.literal('LiveSessionAudioFormatPCMUParam') }),
+    ]),
+    v.intersect([
+      LiveSessionAudioFormatPCMAParamSchema,
+      v.object({ type: v.literal('LiveSessionAudioFormatPCMAParam') }),
+    ]),
   ]),
   v.description(
     'Audio encoding and sample rate for audio sent and received over a Live WebSocket connection. WebRTC and SIP negotiate their media format separately.',
@@ -20355,7 +20957,7 @@ export const LiveSessionCreateParamsSchema = v.pipe(
             'A stable identifier for your end user, used for safety monitoring and abuse detection.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     instructions: v.optional(
@@ -20366,7 +20968,7 @@ export const LiveSessionCreateParamsSchema = v.pipe(
             'Frontend instructions for voice, conversation, interruptions, and when to delegate. Start with the [Live prompting guide](https://developers.openai.com/api/docs/guides/live-prompting); put business rules and tool workflows in a separate [backend prompt](https://developers.openai.com/api/docs/guides/live-delegation#start-with-your-existing-backend-prompt). Limited to 16,384 client-supplied tokens. Omitted or blank instructions use server defaults. Immutable after startup.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     input: v.optional(
@@ -20389,15 +20991,24 @@ export const LiveSessionCreateParamsSchema = v.pipe(
       v.union([
         v.pipe(
           v.union([
-            LiveClientDelegationParamSchema,
-            LiveResponsesDelegationParamSchema,
-            LiveDecisionsDelegationParamSchema,
+            v.intersect([
+              LiveClientDelegationParamSchema,
+              v.object({ type: v.literal('LiveClientDelegationParam') }),
+            ]),
+            v.intersect([
+              LiveResponsesDelegationParamSchema,
+              v.object({ type: v.literal('LiveResponsesDelegationParam') }),
+            ]),
+            v.intersect([
+              LiveDecisionsDelegationParamSchema,
+              v.object({ type: v.literal('LiveDecisionsDelegationParam') }),
+            ]),
           ]),
           v.description(
             'Who handles tasks delegated by the Live model. Omitted or null selects your application; use `responses` or `decisions` to delegate to the corresponding API.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     triggers: v.optional(
@@ -20442,7 +21053,7 @@ export const LiveSessionStartEventSchema = v.pipe(
             "Optional client identifier for correlating this command with a server event's client_event_id or error.client_event_id.",
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     type: v.pipe(
@@ -20494,52 +21105,91 @@ export const LiveResponsesDelegationSettingsUpdateInputParamSchema = v.pipe(
             'Instructions for the delegated Responses model, separate from Live instructions. See [backend prompting](https://developers.openai.com/api/docs/guides/live-delegation#start-with-your-existing-backend-prompt).',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
       max_output_tokens: v.union([
         v.pipe(
           v.pipe(v.number(), v.integer(), v.minValue(16)),
           v.description('Maximum number of output tokens for each delegated response.'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
       service_tier: v.union([
         v.pipe(
           LiveResponsesServiceTierSchema,
           v.description('Service tier for delegated Responses requests.'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
       reasoning: v.union([
         v.pipe(
           LiveDelegationReasoningInputParamSchema,
           v.description('Reasoning settings passed to each delegated Responses request.'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
       text: v.union([
         v.pipe(
           LiveDelegationTextInputParamSchema,
           v.description('Text generation settings passed to each delegated Responses request.'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
       tools: v.pipe(
         v.array(
           v.union([
-            LiveFunctionToolInputParamSchema,
-            LiveWebSearchToolInputParamSchema,
-            LiveFileSearchToolInputParamSchema,
-            LiveCodeInterpreterToolInputParamSchema,
-            LiveHostedShellToolInputParamSchema,
-            LiveImageGenerationToolInputParamSchema,
-            LiveMCPToolInputParamSchema,
-            LiveCustomToolInputParamSchema,
-            LiveNamespaceToolInputParamSchema,
-            LiveToolSearchToolInputParamSchema,
-            LiveProgrammaticToolInputParamSchema,
-            LiveComputerToolInputParamSchema,
-            LiveApplyPatchToolInputParamSchema,
+            v.intersect([
+              LiveFunctionToolInputParamSchema,
+              v.object({ type: v.literal('LiveFunctionToolInputParam') }),
+            ]),
+            v.intersect([
+              LiveWebSearchToolInputParamSchema,
+              v.object({ type: v.literal('LiveWebSearchToolInputParam') }),
+            ]),
+            v.intersect([
+              LiveFileSearchToolInputParamSchema,
+              v.object({ type: v.literal('LiveFileSearchToolInputParam') }),
+            ]),
+            v.intersect([
+              LiveCodeInterpreterToolInputParamSchema,
+              v.object({ type: v.literal('LiveCodeInterpreterToolInputParam') }),
+            ]),
+            v.intersect([
+              LiveHostedShellToolInputParamSchema,
+              v.object({ type: v.literal('LiveHostedShellToolInputParam') }),
+            ]),
+            v.intersect([
+              LiveImageGenerationToolInputParamSchema,
+              v.object({ type: v.literal('LiveImageGenerationToolInputParam') }),
+            ]),
+            v.intersect([
+              LiveMCPToolInputParamSchema,
+              v.object({ type: v.literal('LiveMCPToolInputParam') }),
+            ]),
+            v.intersect([
+              LiveCustomToolInputParamSchema,
+              v.object({ type: v.literal('LiveCustomToolInputParam') }),
+            ]),
+            v.intersect([
+              LiveNamespaceToolInputParamSchema,
+              v.object({ type: v.literal('LiveNamespaceToolInputParam') }),
+            ]),
+            v.intersect([
+              LiveToolSearchToolInputParamSchema,
+              v.object({ type: v.literal('LiveToolSearchToolInputParam') }),
+            ]),
+            v.intersect([
+              LiveProgrammaticToolInputParamSchema,
+              v.object({ type: v.literal('LiveProgrammaticToolInputParam') }),
+            ]),
+            v.intersect([
+              LiveComputerToolInputParamSchema,
+              v.object({ type: v.literal('LiveComputerToolInputParam') }),
+            ]),
+            v.intersect([
+              LiveApplyPatchToolInputParamSchema,
+              v.object({ type: v.literal('LiveApplyPatchToolInputParam') }),
+            ]),
           ]),
         ),
         v.description(
@@ -20550,18 +21200,54 @@ export const LiveResponsesDelegationSettingsUpdateInputParamSchema = v.pipe(
         v.union([
           LiveToolChoiceEnumSchema,
           v.union([
-            LiveFunctionToolChoiceParamSchema,
-            LiveMCPToolChoiceParamSchema,
-            LiveSpecificFileSearchParamSchema,
-            LiveSpecificWebSearchParamSchema,
-            LiveSpecificWebSearchPreviewParamSchema,
-            LiveSpecificImageGenParamSchema,
-            LiveSpecificComputerParamSchema,
-            LiveSpecificCodeInterpreterParamSchema,
-            LiveSpecificProgrammaticToolCallingParamSchema,
-            LiveSpecificFunctionShellParamSchema,
-            LiveSpecificCustomToolParamSchema,
-            LiveSpecificApplyPatchParamSchema,
+            v.intersect([
+              LiveFunctionToolChoiceParamSchema,
+              v.object({ type: v.literal('LiveFunctionToolChoiceParam') }),
+            ]),
+            v.intersect([
+              LiveMCPToolChoiceParamSchema,
+              v.object({ type: v.literal('LiveMCPToolChoiceParam') }),
+            ]),
+            v.intersect([
+              LiveSpecificFileSearchParamSchema,
+              v.object({ type: v.literal('LiveSpecificFileSearchParam') }),
+            ]),
+            v.intersect([
+              LiveSpecificWebSearchParamSchema,
+              v.object({ type: v.literal('LiveSpecificWebSearchParam') }),
+            ]),
+            v.intersect([
+              LiveSpecificWebSearchPreviewParamSchema,
+              v.object({ type: v.literal('LiveSpecificWebSearchPreviewParam') }),
+            ]),
+            v.intersect([
+              LiveSpecificImageGenParamSchema,
+              v.object({ type: v.literal('LiveSpecificImageGenParam') }),
+            ]),
+            v.intersect([
+              LiveSpecificComputerParamSchema,
+              v.object({ type: v.literal('LiveSpecificComputerParam') }),
+            ]),
+            v.intersect([
+              LiveSpecificCodeInterpreterParamSchema,
+              v.object({ type: v.literal('LiveSpecificCodeInterpreterParam') }),
+            ]),
+            v.intersect([
+              LiveSpecificProgrammaticToolCallingParamSchema,
+              v.object({ type: v.literal('LiveSpecificProgrammaticToolCallingParam') }),
+            ]),
+            v.intersect([
+              LiveSpecificFunctionShellParamSchema,
+              v.object({ type: v.literal('LiveSpecificFunctionShellParam') }),
+            ]),
+            v.intersect([
+              LiveSpecificCustomToolParamSchema,
+              v.object({ type: v.literal('LiveSpecificCustomToolParam') }),
+            ]),
+            v.intersect([
+              LiveSpecificApplyPatchParamSchema,
+              v.object({ type: v.literal('LiveSpecificApplyPatchParam') }),
+            ]),
           ]),
           LiveAllowedToolsChoiceParamSchema,
         ]),
@@ -20576,7 +21262,7 @@ export const LiveResponsesDelegationSettingsUpdateInputParamSchema = v.pipe(
             'Whether the delegated Responses model may request multiple tool calls in a single response.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     }),
   ),
@@ -20660,15 +21346,24 @@ export const LiveSessionUpdateParamsSchema = v.pipe(
       delegation: v.union([
         v.pipe(
           v.union([
-            LiveClientDelegationParamSchema,
-            LiveResponsesDelegationUpdateParamSchema,
-            LiveDecisionsDelegationUpdateParamSchema,
+            v.intersect([
+              LiveClientDelegationParamSchema,
+              v.object({ type: v.literal('LiveClientDelegationParam') }),
+            ]),
+            v.intersect([
+              LiveResponsesDelegationUpdateParamSchema,
+              v.object({ type: v.literal('LiveResponsesDelegationUpdateParam') }),
+            ]),
+            v.intersect([
+              LiveDecisionsDelegationUpdateParamSchema,
+              v.object({ type: v.literal('LiveDecisionsDelegationUpdateParam') }),
+            ]),
           ]),
           v.description(
             'Delegation settings to update. The delegation type must match the current session; omitted settings retain their values.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
       triggers: v.pipe(
         v.pipe(v.array(LiveDecisionTriggerInputParamSchema), v.maxLength(2)),
@@ -20693,7 +21388,7 @@ export const LiveSessionUpdateParamSchema = v.pipe(
             "Optional client identifier for correlating this command with a server event's client_event_id or error.client_event_id.",
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     type: v.pipe(
@@ -20741,7 +21436,7 @@ export const LiveInputAudioAppendEventSchema = v.pipe(
             "Optional client identifier for correlating this command with a server event's client_event_id or error.client_event_id.",
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     type: v.pipe(
@@ -20775,7 +21470,7 @@ export const LiveInputAudioMuteParamSchema = v.pipe(
             "Optional client identifier for correlating this command with a server event's client_event_id or error.client_event_id.",
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     type: v.pipe(
@@ -20801,7 +21496,7 @@ export const LiveInputAudioUnmuteParamSchema = v.pipe(
             "Optional client identifier for correlating this command with a server event's client_event_id or error.client_event_id.",
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     type: v.pipe(
@@ -20827,7 +21522,7 @@ export const LiveOutputAudioFixturePlayParamSchema = v.pipe(
             "Optional client identifier for correlating this command with a server event's client_event_id or error.client_event_id.",
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     type: v.optional(
@@ -20865,7 +21560,7 @@ export const LiveInstructionsAppendParamSchema = v.pipe(
             "Optional client identifier for correlating this command with a server event's client_event_id or error.client_event_id.",
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     type: v.pipe(
@@ -20879,7 +21574,7 @@ export const LiveInstructionsAppendParamSchema = v.pipe(
           'Required, nullable. Set null for general session context, or use the ID from session.delegation.created for an existing client delegation. Non-null IDs are not accepted with Responses delegation.',
         ),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
     content: v.pipe(
       v.string(),
@@ -20915,7 +21610,7 @@ export const LiveThinkingAppendParamSchema = v.pipe(
             "Optional client identifier for correlating this command with a server event's client_event_id or error.client_event_id.",
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     type: v.pipe(
@@ -20929,7 +21624,7 @@ export const LiveThinkingAppendParamSchema = v.pipe(
           'Required, nullable. Set null for general session context, or use the ID from session.delegation.created for an existing client delegation. Non-null IDs are not accepted with Responses delegation.',
         ),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
     content: v.pipe(
       v.string(),
@@ -20965,7 +21660,7 @@ export const LiveCommentaryAppendParamSchema = v.pipe(
             "Optional client identifier for correlating this command with a server event's client_event_id or error.client_event_id.",
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     type: v.pipe(
@@ -20979,7 +21674,7 @@ export const LiveCommentaryAppendParamSchema = v.pipe(
           'Required, nullable. Set null for general session context, or use the ID from session.delegation.created for an existing client delegation. Non-null IDs are not accepted with Responses delegation.',
         ),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
     content: v.pipe(
       v.string(),
@@ -21044,7 +21739,7 @@ export const LiveDecisionUserInputImageParamSchema = v.object({
           'The detail level of the image to be sent to the model. One of `high`, `low`, `auto`, or `original`. Defaults to `auto`.',
         ),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   ),
 })
@@ -21055,10 +21750,7 @@ export type LiveDecisionUserInputImageParam = v.InferOutput<
 
 export const LiveDecisionUserMessageParamSchema = v.object({
   id: v.optional(
-    v.union([
-      v.pipe(v.string(), v.description('The unique ID of this message item.')),
-      v.nullable(v.null()),
-    ]),
+    v.union([v.pipe(v.string(), v.description('The unique ID of this message item.')), v.null()]),
   ),
   type: v.optional(v.literal('message'), 'message'),
   role: v.pipe(
@@ -21072,9 +21764,18 @@ export const LiveDecisionUserMessageParamSchema = v.object({
     ),
     v.array(
       v.union([
-        LiveDecisionUserInputTextParamSchema,
-        LiveDecisionUserInputImageParamSchema,
-        LiveDecisionInputJsonParamSchema,
+        v.intersect([
+          LiveDecisionUserInputTextParamSchema,
+          v.object({ type: v.literal('LiveDecisionUserInputTextParam') }),
+        ]),
+        v.intersect([
+          LiveDecisionUserInputImageParamSchema,
+          v.object({ type: v.literal('LiveDecisionUserInputImageParam') }),
+        ]),
+        v.intersect([
+          LiveDecisionInputJsonParamSchema,
+          v.object({ type: v.literal('LiveDecisionInputJsonParam') }),
+        ]),
       ]),
     ),
   ]),
@@ -21084,10 +21785,7 @@ export type LiveDecisionUserMessageParam = v.InferOutput<typeof LiveDecisionUser
 
 export const LiveDecisionDeveloperMessageParamSchema = v.object({
   id: v.optional(
-    v.union([
-      v.pipe(v.string(), v.description('The unique ID of this message item.')),
-      v.nullable(v.null()),
-    ]),
+    v.union([v.pipe(v.string(), v.description('The unique ID of this message item.')), v.null()]),
   ),
   type: v.optional(v.literal('message'), 'message'),
   role: v.optional(v.literal('developer'), 'developer'),
@@ -21106,10 +21804,7 @@ export type LiveDecisionDeveloperMessageParam = v.InferOutput<
 
 export const LiveDecisionSystemMessageParamSchema = v.object({
   id: v.optional(
-    v.union([
-      v.pipe(v.string(), v.description('The unique ID of this message item.')),
-      v.nullable(v.null()),
-    ]),
+    v.union([v.pipe(v.string(), v.description('The unique ID of this message item.')), v.null()]),
   ),
   type: v.optional(v.literal('message'), 'message'),
   role: v.optional(v.literal('system'), 'system'),
@@ -21149,10 +21844,7 @@ export type LiveMessagePhase = v.InferOutput<typeof LiveMessagePhaseSchema>
 
 export const LiveDecisionAssistantMessageParamSchema = v.object({
   id: v.optional(
-    v.union([
-      v.pipe(v.string(), v.description('The unique ID of this message item.')),
-      v.nullable(v.null()),
-    ]),
+    v.union([v.pipe(v.string(), v.description('The unique ID of this message item.')), v.null()]),
   ),
   type: v.optional(v.literal('message'), 'message'),
   role: v.optional(v.literal('assistant'), 'assistant'),
@@ -21161,7 +21853,18 @@ export const LiveDecisionAssistantMessageParamSchema = v.object({
       v.pipe(v.string(), v.maxCodePoints(10485760)),
       v.description('The text input to the model.'),
     ),
-    v.array(v.union([LiveDecisionOutputTextParamSchema, LiveDecisionRefusalParamSchema])),
+    v.array(
+      v.union([
+        v.intersect([
+          LiveDecisionOutputTextParamSchema,
+          v.object({ type: v.literal('LiveDecisionOutputTextParam') }),
+        ]),
+        v.intersect([
+          LiveDecisionRefusalParamSchema,
+          v.object({ type: v.literal('LiveDecisionRefusalParam') }),
+        ]),
+      ]),
+    ),
   ]),
   phase: v.optional(
     v.union([
@@ -21171,7 +21874,7 @@ export const LiveDecisionAssistantMessageParamSchema = v.object({
           'Labels an `assistant` message as intermediate commentary (`commentary`) or the final answer (`final_answer`). For models like `gpt-5.3-codex` and beyond, when sending follow-up requests, preserve and resend phase on all assistant messages — dropping it can degrade performance. Not used for user messages.',
         ),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   ),
 })
@@ -21190,16 +21893,13 @@ export type LiveFunctionCallItemStatus = v.InferOutput<typeof LiveFunctionCallIt
 
 export const LiveDecisionFunctionCallParamSchema = v.object({
   id: v.optional(
-    v.union([
-      v.pipe(v.string(), v.description('The local Decision item ID.')),
-      v.nullable(v.null()),
-    ]),
+    v.union([v.pipe(v.string(), v.description('The local Decision item ID.')), v.null()]),
   ),
   call_id: v.pipe(
     v.pipe(v.string(), v.minCodePoints(1), v.maxCodePoints(64)),
     v.description('The unique ID of the function tool call generated by the model.'),
   ),
-  status: v.optional(v.union([LiveFunctionCallItemStatusSchema, v.nullable(v.null())])),
+  status: v.optional(v.union([LiveFunctionCallItemStatusSchema, v.null()])),
   type: v.pipe(
     v.optional(v.literal('function_call'), 'function_call'),
     v.description('The item type. Always `function_call`.'),
@@ -21211,7 +21911,7 @@ export const LiveDecisionFunctionCallParamSchema = v.object({
         v.pipe(v.string(), v.regex(/^[a-zA-Z0-9_-]+$/), v.minCodePoints(1), v.maxCodePoints(128)),
         v.description('The namespace of the function to call.'),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   ),
   arguments: v.pipe(v.string(), v.description('The function arguments as a JSON string.')),
@@ -21223,16 +21923,13 @@ export type LiveDecisionFunctionCallParam = v.InferOutput<
 
 export const LiveDecisionFunctionCallOutputParamSchema = v.object({
   id: v.optional(
-    v.union([
-      v.pipe(v.string(), v.description('The local Decision item ID.')),
-      v.nullable(v.null()),
-    ]),
+    v.union([v.pipe(v.string(), v.description('The local Decision item ID.')), v.null()]),
   ),
   call_id: v.pipe(
     v.pipe(v.string(), v.minCodePoints(1), v.maxCodePoints(64)),
     v.description('The unique ID of the function tool call generated by the model.'),
   ),
-  status: v.optional(v.union([LiveFunctionCallItemStatusSchema, v.nullable(v.null())])),
+  status: v.optional(v.union([LiveFunctionCallItemStatusSchema, v.null()])),
   type: v.pipe(
     v.optional(v.literal('function_call_output'), 'function_call_output'),
     v.description('The type of the function tool call output. Always `function_call_output`.'),
@@ -21242,7 +21939,18 @@ export const LiveDecisionFunctionCallOutputParamSchema = v.object({
       v.pipe(v.string(), v.maxCodePoints(10485760)),
       v.description('The text input to the model.'),
     ),
-    v.array(v.union([LiveDecisionInputTextParamSchema, LiveDecisionInputImageParamSchema])),
+    v.array(
+      v.union([
+        v.intersect([
+          LiveDecisionInputTextParamSchema,
+          v.object({ type: v.literal('LiveDecisionInputTextParam') }),
+        ]),
+        v.intersect([
+          LiveDecisionInputImageParamSchema,
+          v.object({ type: v.literal('LiveDecisionInputImageParam') }),
+        ]),
+      ]),
+    ),
   ]),
 })
 
@@ -21252,16 +21960,13 @@ export type LiveDecisionFunctionCallOutputParam = v.InferOutput<
 
 export const LiveDecisionCustomToolCallParamSchema = v.object({
   id: v.optional(
-    v.union([
-      v.pipe(v.string(), v.description('The local Decision item ID.')),
-      v.nullable(v.null()),
-    ]),
+    v.union([v.pipe(v.string(), v.description('The local Decision item ID.')), v.null()]),
   ),
   call_id: v.pipe(
     v.pipe(v.string(), v.minCodePoints(1), v.maxCodePoints(64)),
     v.description('The unique ID of the function tool call generated by the model.'),
   ),
-  status: v.optional(v.union([LiveFunctionCallItemStatusSchema, v.nullable(v.null())])),
+  status: v.optional(v.union([LiveFunctionCallItemStatusSchema, v.null()])),
   type: v.pipe(
     v.optional(v.literal('custom_tool_call'), 'custom_tool_call'),
     v.description('The item type. Always `custom_tool_call`.'),
@@ -21276,7 +21981,7 @@ export const LiveDecisionCustomToolCallParamSchema = v.object({
         v.pipe(v.string(), v.regex(/^[a-zA-Z0-9_-]+$/), v.minCodePoints(1), v.maxCodePoints(64)),
         v.description('The namespace of the function to call.'),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   ),
   input: v.pipe(v.string(), v.description('The input to the custom tool call.')),
@@ -21288,23 +21993,31 @@ export type LiveDecisionCustomToolCallParam = v.InferOutput<
 
 export const LiveDecisionCustomToolCallOutputParamSchema = v.object({
   id: v.optional(
-    v.union([
-      v.pipe(v.string(), v.description('The local Decision item ID.')),
-      v.nullable(v.null()),
-    ]),
+    v.union([v.pipe(v.string(), v.description('The local Decision item ID.')), v.null()]),
   ),
   call_id: v.pipe(
     v.pipe(v.string(), v.minCodePoints(1), v.maxCodePoints(64)),
     v.description('The unique ID of the function tool call generated by the model.'),
   ),
-  status: v.optional(v.union([LiveFunctionCallItemStatusSchema, v.nullable(v.null())])),
+  status: v.optional(v.union([LiveFunctionCallItemStatusSchema, v.null()])),
   type: v.optional(v.literal('custom_tool_call_output'), 'custom_tool_call_output'),
   output: v.union([
     v.pipe(
       v.pipe(v.string(), v.maxCodePoints(10485760)),
       v.description('The text input to the model.'),
     ),
-    v.array(v.union([LiveDecisionInputTextParamSchema, LiveDecisionInputImageParamSchema])),
+    v.array(
+      v.union([
+        v.intersect([
+          LiveDecisionInputTextParamSchema,
+          v.object({ type: v.literal('LiveDecisionInputTextParam') }),
+        ]),
+        v.intersect([
+          LiveDecisionInputImageParamSchema,
+          v.object({ type: v.literal('LiveDecisionInputImageParam') }),
+        ]),
+      ]),
+    ),
   ]),
 })
 
@@ -21314,15 +22027,39 @@ export type LiveDecisionCustomToolCallOutputParam = v.InferOutput<
 
 export const LiveDecisionInputItemParamSchema = v.union([
   v.union([
-    LiveDecisionUserMessageParamSchema,
-    LiveDecisionDeveloperMessageParamSchema,
-    LiveDecisionSystemMessageParamSchema,
-    LiveDecisionAssistantMessageParamSchema,
+    v.intersect([
+      LiveDecisionUserMessageParamSchema,
+      v.object({ role: v.literal('LiveDecisionUserMessageParam') }),
+    ]),
+    v.intersect([
+      LiveDecisionDeveloperMessageParamSchema,
+      v.object({ role: v.literal('LiveDecisionDeveloperMessageParam') }),
+    ]),
+    v.intersect([
+      LiveDecisionSystemMessageParamSchema,
+      v.object({ role: v.literal('LiveDecisionSystemMessageParam') }),
+    ]),
+    v.intersect([
+      LiveDecisionAssistantMessageParamSchema,
+      v.object({ role: v.literal('LiveDecisionAssistantMessageParam') }),
+    ]),
   ]),
-  LiveDecisionFunctionCallParamSchema,
-  LiveDecisionFunctionCallOutputParamSchema,
-  LiveDecisionCustomToolCallParamSchema,
-  LiveDecisionCustomToolCallOutputParamSchema,
+  v.intersect([
+    LiveDecisionFunctionCallParamSchema,
+    v.object({ type: v.literal('LiveDecisionFunctionCallParam') }),
+  ]),
+  v.intersect([
+    LiveDecisionFunctionCallOutputParamSchema,
+    v.object({ type: v.literal('LiveDecisionFunctionCallOutputParam') }),
+  ]),
+  v.intersect([
+    LiveDecisionCustomToolCallParamSchema,
+    v.object({ type: v.literal('LiveDecisionCustomToolCallParam') }),
+  ]),
+  v.intersect([
+    LiveDecisionCustomToolCallOutputParamSchema,
+    v.object({ type: v.literal('LiveDecisionCustomToolCallOutputParam') }),
+  ]),
 ])
 
 export type LiveDecisionInputItemParam = v.InferOutput<typeof LiveDecisionInputItemParamSchema>
@@ -21337,7 +22074,7 @@ export const LiveDecisionItemCreateParamSchema = v.pipe(
             "Optional client identifier for correlating this command with a server event's client_event_id or error.client_event_id.",
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     type: v.optional(v.literal('decision.item.create'), 'decision.item.create'),
@@ -21373,7 +22110,7 @@ export const LiveDecisionItemDeleteParamSchema = v.pipe(
             "Optional client identifier for correlating this command with a server event's client_event_id or error.client_event_id.",
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     type: v.optional(v.literal('decision.item.delete'), 'decision.item.delete'),
@@ -21401,7 +22138,7 @@ export const LiveResponseItemCreateParamSchema = v.pipe(
             "Optional client identifier for correlating this command with a server event's client_event_id or error.client_event_id.",
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     type: v.pipe(
@@ -21445,7 +22182,7 @@ export const LiveResponseCreateParamSchema = v.pipe(
             "Optional client identifier for correlating this command with a server event's client_event_id or error.client_event_id.",
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     type: v.pipe(
@@ -21471,7 +22208,7 @@ export const LiveSessionCloseParamSchema = v.pipe(
             "Optional client identifier for correlating this command with a server event's client_event_id or error.client_event_id.",
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     type: v.pipe(
@@ -21489,21 +22226,66 @@ export type LiveSessionCloseParam = v.InferOutput<typeof LiveSessionCloseParamSc
 
 export const LiveClientEventSchema = v.pipe(
   v.union([
-    LiveSessionStartEventSchema,
-    LiveSessionUpdateParamSchema,
-    LiveInputAudioAppendEventSchema,
-    LiveInputAudioMuteParamSchema,
-    LiveInputAudioUnmuteParamSchema,
-    LiveOutputAudioFixturePlayParamSchema,
-    LiveInstructionsAppendParamSchema,
-    LiveThinkingAppendParamSchema,
-    LiveCommentaryAppendParamSchema,
-    LiveDecisionCreateParamSchema,
-    LiveDecisionItemCreateParamSchema,
-    LiveDecisionItemDeleteParamSchema,
-    LiveResponseItemCreateParamSchema,
-    LiveResponseCreateParamSchema,
-    LiveSessionCloseParamSchema,
+    v.intersect([
+      LiveSessionStartEventSchema,
+      v.object({ type: v.literal('LiveSessionStartEvent') }),
+    ]),
+    v.intersect([
+      LiveSessionUpdateParamSchema,
+      v.object({ type: v.literal('LiveSessionUpdateParam') }),
+    ]),
+    v.intersect([
+      LiveInputAudioAppendEventSchema,
+      v.object({ type: v.literal('LiveInputAudioAppendEvent') }),
+    ]),
+    v.intersect([
+      LiveInputAudioMuteParamSchema,
+      v.object({ type: v.literal('LiveInputAudioMuteParam') }),
+    ]),
+    v.intersect([
+      LiveInputAudioUnmuteParamSchema,
+      v.object({ type: v.literal('LiveInputAudioUnmuteParam') }),
+    ]),
+    v.intersect([
+      LiveOutputAudioFixturePlayParamSchema,
+      v.object({ type: v.literal('LiveOutputAudioFixturePlayParam') }),
+    ]),
+    v.intersect([
+      LiveInstructionsAppendParamSchema,
+      v.object({ type: v.literal('LiveInstructionsAppendParam') }),
+    ]),
+    v.intersect([
+      LiveThinkingAppendParamSchema,
+      v.object({ type: v.literal('LiveThinkingAppendParam') }),
+    ]),
+    v.intersect([
+      LiveCommentaryAppendParamSchema,
+      v.object({ type: v.literal('LiveCommentaryAppendParam') }),
+    ]),
+    v.intersect([
+      LiveDecisionCreateParamSchema,
+      v.object({ type: v.literal('LiveDecisionCreateParam') }),
+    ]),
+    v.intersect([
+      LiveDecisionItemCreateParamSchema,
+      v.object({ type: v.literal('LiveDecisionItemCreateParam') }),
+    ]),
+    v.intersect([
+      LiveDecisionItemDeleteParamSchema,
+      v.object({ type: v.literal('LiveDecisionItemDeleteParam') }),
+    ]),
+    v.intersect([
+      LiveResponseItemCreateParamSchema,
+      v.object({ type: v.literal('LiveResponseItemCreateParam') }),
+    ]),
+    v.intersect([
+      LiveResponseCreateParamSchema,
+      v.object({ type: v.literal('LiveResponseCreateParam') }),
+    ]),
+    v.intersect([
+      LiveSessionCloseParamSchema,
+      v.object({ type: v.literal('LiveSessionCloseParam') }),
+    ]),
   ]),
   v.description(
     'Client events for Live. Initialize a primary WebSocket with session.start and wait for session.started. WebRTC creation already starts the session. Audio append is primary WebSocket-only. See the [Live prompting guide](https://developers.openai.com/api/docs/guides/live-prompting) before writing frontend instructions and delegation policies.',
@@ -21544,7 +22326,7 @@ export type LiveSpeechWakePolicyParam = v.InferOutput<typeof LiveSpeechWakePolic
 export const IdleTimeoutSSchema = v.pipe(
   v.pipe(v.number(), v.integer(), v.minValue(5), v.maxValue(60)),
   v.description(
-    'Whole seconds of inactivity after which a Live WebRTC session with a speech wake policy pauses inference. The connection and conversation history are retained. Omit to keep inference active after the first wake until the session ends.',
+    'Whole seconds of inactivity after which a Live WebRTC or SIP session with a speech wake policy pauses inference. The connection and conversation history are retained. Omit to keep inference active after the first wake until the session ends.',
   ),
 )
 
@@ -21705,7 +22487,7 @@ export const LiveForkSessionStartEventSchema = v.pipe(
             "Optional client identifier for correlating this command with a server event's client_event_id or error.client_event_id.",
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     type: v.pipe(
@@ -21729,21 +22511,66 @@ export type LiveForkSessionStartEvent = v.InferOutput<typeof LiveForkSessionStar
 
 export const LiveForkClientEventSchema = v.pipe(
   v.union([
-    LiveForkSessionStartEventSchema,
-    LiveSessionUpdateParamSchema,
-    LiveInputAudioAppendEventSchema,
-    LiveInputAudioMuteParamSchema,
-    LiveInputAudioUnmuteParamSchema,
-    LiveOutputAudioFixturePlayParamSchema,
-    LiveInstructionsAppendParamSchema,
-    LiveThinkingAppendParamSchema,
-    LiveCommentaryAppendParamSchema,
-    LiveDecisionCreateParamSchema,
-    LiveDecisionItemCreateParamSchema,
-    LiveDecisionItemDeleteParamSchema,
-    LiveResponseItemCreateParamSchema,
-    LiveResponseCreateParamSchema,
-    LiveSessionCloseParamSchema,
+    v.intersect([
+      LiveForkSessionStartEventSchema,
+      v.object({ type: v.literal('LiveForkSessionStartEvent') }),
+    ]),
+    v.intersect([
+      LiveSessionUpdateParamSchema,
+      v.object({ type: v.literal('LiveSessionUpdateParam') }),
+    ]),
+    v.intersect([
+      LiveInputAudioAppendEventSchema,
+      v.object({ type: v.literal('LiveInputAudioAppendEvent') }),
+    ]),
+    v.intersect([
+      LiveInputAudioMuteParamSchema,
+      v.object({ type: v.literal('LiveInputAudioMuteParam') }),
+    ]),
+    v.intersect([
+      LiveInputAudioUnmuteParamSchema,
+      v.object({ type: v.literal('LiveInputAudioUnmuteParam') }),
+    ]),
+    v.intersect([
+      LiveOutputAudioFixturePlayParamSchema,
+      v.object({ type: v.literal('LiveOutputAudioFixturePlayParam') }),
+    ]),
+    v.intersect([
+      LiveInstructionsAppendParamSchema,
+      v.object({ type: v.literal('LiveInstructionsAppendParam') }),
+    ]),
+    v.intersect([
+      LiveThinkingAppendParamSchema,
+      v.object({ type: v.literal('LiveThinkingAppendParam') }),
+    ]),
+    v.intersect([
+      LiveCommentaryAppendParamSchema,
+      v.object({ type: v.literal('LiveCommentaryAppendParam') }),
+    ]),
+    v.intersect([
+      LiveDecisionCreateParamSchema,
+      v.object({ type: v.literal('LiveDecisionCreateParam') }),
+    ]),
+    v.intersect([
+      LiveDecisionItemCreateParamSchema,
+      v.object({ type: v.literal('LiveDecisionItemCreateParam') }),
+    ]),
+    v.intersect([
+      LiveDecisionItemDeleteParamSchema,
+      v.object({ type: v.literal('LiveDecisionItemDeleteParam') }),
+    ]),
+    v.intersect([
+      LiveResponseItemCreateParamSchema,
+      v.object({ type: v.literal('LiveResponseItemCreateParam') }),
+    ]),
+    v.intersect([
+      LiveResponseCreateParamSchema,
+      v.object({ type: v.literal('LiveResponseCreateParam') }),
+    ]),
+    v.intersect([
+      LiveSessionCloseParamSchema,
+      v.object({ type: v.literal('LiveSessionCloseParam') }),
+    ]),
   ]),
   v.description(
     'Client events for a Live fork WebSocket. First send session.start with an overrides object (which may be empty), then wait for session.started before sending other commands. The model and conversation are inherited from the stored session.',
@@ -21822,7 +22649,7 @@ export const LiveSessionResourceParamSchema = v.pipe(
             'A stable identifier for your end user, used for safety monitoring and abuse detection.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     instructions: v.optional(
@@ -21833,7 +22660,7 @@ export const LiveSessionResourceParamSchema = v.pipe(
             'Frontend instructions for voice, conversation, interruptions, and when to delegate. Start with the [Live prompting guide](https://developers.openai.com/api/docs/guides/live-prompting); put business rules and tool workflows in a separate [backend prompt](https://developers.openai.com/api/docs/guides/live-delegation#start-with-your-existing-backend-prompt). Limited to 16,384 client-supplied tokens. Omitted or blank instructions use server defaults. Immutable after startup.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     input: v.optional(
@@ -21856,15 +22683,24 @@ export const LiveSessionResourceParamSchema = v.pipe(
       v.union([
         v.pipe(
           v.union([
-            LiveClientDelegationParamSchema,
-            LiveResponsesDelegationParamSchema,
-            LiveDecisionsDelegationParamSchema,
+            v.intersect([
+              LiveClientDelegationParamSchema,
+              v.object({ type: v.literal('LiveClientDelegationParam') }),
+            ]),
+            v.intersect([
+              LiveResponsesDelegationParamSchema,
+              v.object({ type: v.literal('LiveResponsesDelegationParam') }),
+            ]),
+            v.intersect([
+              LiveDecisionsDelegationParamSchema,
+              v.object({ type: v.literal('LiveDecisionsDelegationParam') }),
+            ]),
           ]),
           v.description(
             'Who handles tasks delegated by the Live model. Omitted or null selects your application; use `responses` or `decisions` to delegate to the corresponding API.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     triggers: v.optional(
@@ -22660,10 +23496,10 @@ export type AnswerResourceRefusal = v.InferOutput<typeof AnswerResourceRefusalSc
 
 export const AnswerResourceSchema = v.pipe(
   v.union([
-    AnswerResourcePredicateSchema,
-    AnswerResourceChoiceSchema,
-    AnswerResourceScoreSchema,
-    AnswerResourceRefusalSchema,
+    v.intersect([AnswerResourcePredicateSchema, v.object({ type: v.literal('predicate') })]),
+    v.intersect([AnswerResourceChoiceSchema, v.object({ type: v.literal('choice') })]),
+    v.intersect([AnswerResourceScoreSchema, v.object({ type: v.literal('score') })]),
+    v.intersect([AnswerResourceRefusalSchema, v.object({ type: v.literal('refusal') })]),
   ]),
   v.description('A completed question always includes its name, including null when unnamed.'),
 )
@@ -22769,21 +23605,21 @@ export const LiveDecisionEventSchema = v.pipe(
         v.string(),
         v.description('The Live delegation ID, or null for a transcript trigger.'),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
     trigger_id: v.union([
       v.pipe(
         v.string(),
         v.description('The Live-assigned ID of this trigger firing, or null for a delegation.'),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
     source_event_type: v.union([
       v.union([
         v.optional(v.literal('session.input_transcript.delta'), 'session.input_transcript.delta'),
         v.optional(v.literal('session.output_transcript.delta'), 'session.output_transcript.delta'),
       ]),
-      v.nullable(v.null()),
+      v.null(),
     ]),
     source_event_id: v.union([
       v.pipe(
@@ -22792,7 +23628,7 @@ export const LiveDecisionEventSchema = v.pipe(
           'The event_id of the transcript delta that fired this trigger, or null for a delegation.',
         ),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
     event: LiveDecisionCompletedSchema,
   }),
@@ -22843,9 +23679,18 @@ export const LiveDecisionStoredUserMessageParamSchema = v.object({
     ),
     v.array(
       v.union([
-        LiveDecisionUserInputTextParamSchema,
-        LiveDecisionUserInputImageParamSchema,
-        LiveDecisionInputJsonParamSchema,
+        v.intersect([
+          LiveDecisionUserInputTextParamSchema,
+          v.object({ type: v.literal('LiveDecisionUserInputTextParam') }),
+        ]),
+        v.intersect([
+          LiveDecisionUserInputImageParamSchema,
+          v.object({ type: v.literal('LiveDecisionUserInputImageParam') }),
+        ]),
+        v.intersect([
+          LiveDecisionInputJsonParamSchema,
+          v.object({ type: v.literal('LiveDecisionInputJsonParam') }),
+        ]),
       ]),
     ),
   ]),
@@ -22898,7 +23743,18 @@ export const LiveDecisionStoredAssistantMessageParamSchema = v.object({
       v.pipe(v.string(), v.maxCodePoints(10485760)),
       v.description('The text input to the model.'),
     ),
-    v.array(v.union([LiveDecisionOutputTextParamSchema, LiveDecisionRefusalParamSchema])),
+    v.array(
+      v.union([
+        v.intersect([
+          LiveDecisionOutputTextParamSchema,
+          v.object({ type: v.literal('LiveDecisionOutputTextParam') }),
+        ]),
+        v.intersect([
+          LiveDecisionRefusalParamSchema,
+          v.object({ type: v.literal('LiveDecisionRefusalParam') }),
+        ]),
+      ]),
+    ),
   ]),
   phase: v.optional(
     v.union([
@@ -22908,7 +23764,7 @@ export const LiveDecisionStoredAssistantMessageParamSchema = v.object({
           'Labels an `assistant` message as intermediate commentary (`commentary`) or the final answer (`final_answer`). For models like `gpt-5.3-codex` and beyond, when sending follow-up requests, preserve and resend phase on all assistant messages — dropping it can degrade performance. Not used for user messages.',
         ),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   ),
 })
@@ -22923,7 +23779,7 @@ export const LiveDecisionStoredFunctionCallParamSchema = v.object({
     v.pipe(v.string(), v.minCodePoints(1), v.maxCodePoints(64)),
     v.description('The unique ID of the function tool call generated by the model.'),
   ),
-  status: v.optional(v.union([LiveFunctionCallItemStatusSchema, v.nullable(v.null())])),
+  status: v.optional(v.union([LiveFunctionCallItemStatusSchema, v.null()])),
   type: v.pipe(
     v.optional(v.literal('function_call'), 'function_call'),
     v.description('The item type. Always `function_call`.'),
@@ -22935,7 +23791,7 @@ export const LiveDecisionStoredFunctionCallParamSchema = v.object({
         v.pipe(v.string(), v.regex(/^[a-zA-Z0-9_-]+$/), v.minCodePoints(1), v.maxCodePoints(128)),
         v.description('The namespace of the function to call.'),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   ),
   arguments: v.pipe(v.string(), v.description('The function arguments as a JSON string.')),
@@ -22951,7 +23807,7 @@ export const LiveDecisionStoredFunctionCallOutputParamSchema = v.object({
     v.pipe(v.string(), v.minCodePoints(1), v.maxCodePoints(64)),
     v.description('The unique ID of the function tool call generated by the model.'),
   ),
-  status: v.optional(v.union([LiveFunctionCallItemStatusSchema, v.nullable(v.null())])),
+  status: v.optional(v.union([LiveFunctionCallItemStatusSchema, v.null()])),
   type: v.pipe(
     v.optional(v.literal('function_call_output'), 'function_call_output'),
     v.description('The type of the function tool call output. Always `function_call_output`.'),
@@ -22961,7 +23817,18 @@ export const LiveDecisionStoredFunctionCallOutputParamSchema = v.object({
       v.pipe(v.string(), v.maxCodePoints(10485760)),
       v.description('The text input to the model.'),
     ),
-    v.array(v.union([LiveDecisionInputTextParamSchema, LiveDecisionInputImageParamSchema])),
+    v.array(
+      v.union([
+        v.intersect([
+          LiveDecisionInputTextParamSchema,
+          v.object({ type: v.literal('LiveDecisionInputTextParam') }),
+        ]),
+        v.intersect([
+          LiveDecisionInputImageParamSchema,
+          v.object({ type: v.literal('LiveDecisionInputImageParam') }),
+        ]),
+      ]),
+    ),
   ]),
 })
 
@@ -22975,7 +23842,7 @@ export const LiveDecisionStoredCustomToolCallParamSchema = v.object({
     v.pipe(v.string(), v.minCodePoints(1), v.maxCodePoints(64)),
     v.description('The unique ID of the function tool call generated by the model.'),
   ),
-  status: v.optional(v.union([LiveFunctionCallItemStatusSchema, v.nullable(v.null())])),
+  status: v.optional(v.union([LiveFunctionCallItemStatusSchema, v.null()])),
   type: v.pipe(
     v.optional(v.literal('custom_tool_call'), 'custom_tool_call'),
     v.description('The item type. Always `custom_tool_call`.'),
@@ -22990,7 +23857,7 @@ export const LiveDecisionStoredCustomToolCallParamSchema = v.object({
         v.pipe(v.string(), v.regex(/^[a-zA-Z0-9_-]+$/), v.minCodePoints(1), v.maxCodePoints(64)),
         v.description('The namespace of the function to call.'),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   ),
   input: v.pipe(v.string(), v.description('The input to the custom tool call.')),
@@ -23006,14 +23873,25 @@ export const LiveDecisionStoredCustomToolCallOutputParamSchema = v.object({
     v.pipe(v.string(), v.minCodePoints(1), v.maxCodePoints(64)),
     v.description('The unique ID of the function tool call generated by the model.'),
   ),
-  status: v.optional(v.union([LiveFunctionCallItemStatusSchema, v.nullable(v.null())])),
+  status: v.optional(v.union([LiveFunctionCallItemStatusSchema, v.null()])),
   type: v.optional(v.literal('custom_tool_call_output'), 'custom_tool_call_output'),
   output: v.union([
     v.pipe(
       v.pipe(v.string(), v.maxCodePoints(10485760)),
       v.description('The text input to the model.'),
     ),
-    v.array(v.union([LiveDecisionInputTextParamSchema, LiveDecisionInputImageParamSchema])),
+    v.array(
+      v.union([
+        v.intersect([
+          LiveDecisionInputTextParamSchema,
+          v.object({ type: v.literal('LiveDecisionInputTextParam') }),
+        ]),
+        v.intersect([
+          LiveDecisionInputImageParamSchema,
+          v.object({ type: v.literal('LiveDecisionInputImageParam') }),
+        ]),
+      ]),
+    ),
   ]),
 })
 
@@ -23023,15 +23901,39 @@ export type LiveDecisionStoredCustomToolCallOutputParam = v.InferOutput<
 
 export const LiveDecisionStoredInputItemParamSchema = v.union([
   v.union([
-    LiveDecisionStoredUserMessageParamSchema,
-    LiveDecisionStoredDeveloperMessageParamSchema,
-    LiveDecisionStoredSystemMessageParamSchema,
-    LiveDecisionStoredAssistantMessageParamSchema,
+    v.intersect([
+      LiveDecisionStoredUserMessageParamSchema,
+      v.object({ role: v.literal('LiveDecisionStoredUserMessageParam') }),
+    ]),
+    v.intersect([
+      LiveDecisionStoredDeveloperMessageParamSchema,
+      v.object({ role: v.literal('LiveDecisionStoredDeveloperMessageParam') }),
+    ]),
+    v.intersect([
+      LiveDecisionStoredSystemMessageParamSchema,
+      v.object({ role: v.literal('LiveDecisionStoredSystemMessageParam') }),
+    ]),
+    v.intersect([
+      LiveDecisionStoredAssistantMessageParamSchema,
+      v.object({ role: v.literal('LiveDecisionStoredAssistantMessageParam') }),
+    ]),
   ]),
-  LiveDecisionStoredFunctionCallParamSchema,
-  LiveDecisionStoredFunctionCallOutputParamSchema,
-  LiveDecisionStoredCustomToolCallParamSchema,
-  LiveDecisionStoredCustomToolCallOutputParamSchema,
+  v.intersect([
+    LiveDecisionStoredFunctionCallParamSchema,
+    v.object({ type: v.literal('LiveDecisionStoredFunctionCallParam') }),
+  ]),
+  v.intersect([
+    LiveDecisionStoredFunctionCallOutputParamSchema,
+    v.object({ type: v.literal('LiveDecisionStoredFunctionCallOutputParam') }),
+  ]),
+  v.intersect([
+    LiveDecisionStoredCustomToolCallParamSchema,
+    v.object({ type: v.literal('LiveDecisionStoredCustomToolCallParam') }),
+  ]),
+  v.intersect([
+    LiveDecisionStoredCustomToolCallOutputParamSchema,
+    v.object({ type: v.literal('LiveDecisionStoredCustomToolCallOutputParam') }),
+  ]),
 ])
 
 export type LiveDecisionStoredInputItemParam = v.InferOutput<
@@ -23124,7 +24026,7 @@ export const LiveResponseEventSchema = v.pipe(
             'The Live delegation associated with the nested Responses event. May be null or omitted when the event cannot be correlated with a delegation.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     event: v.pipe(
@@ -23541,35 +24443,89 @@ export type LiveTransportFailed = v.InferOutput<typeof LiveTransportFailedSchema
 
 export const LiveServerEvent2Schema = v.pipe(
   v.union([
-    LiveSessionStartedSchema,
-    LiveSessionUpdatedSchema,
-    LiveSessionResumedSchema,
-    LiveSessionPausedSchema,
-    LiveInputAudioMutedSchema,
-    LiveInputAudioUnmutedSchema,
-    LiveOutputAudioFixturePlayingSchema,
-    LiveOutputAudioFixturePlayedSchema,
-    LiveInstructionsAppendedSchema,
-    LiveThinkingAppendedSchema,
-    LiveCommentaryAppendedSchema,
-    LiveInputAudioAppendSchema,
-    LiveOutputAudioDeltaSchema,
-    LiveInputTranscriptDeltaSchema,
-    LiveOutputTranscriptDeltaSchema,
-    LiveDelegationCreatedSchema,
-    LiveDecisionEventSchema,
-    LiveDecisionItemCreatedSchema,
-    LiveDecisionItemDeletedSchema,
-    LiveResponseEventSchema,
-    LiveSessionUsageUpdatedSchema,
-    LiveSessionClosedSchema,
-    LiveErrorEventSchema,
-    LiveInfoEventSchema,
-    LiveTransportDTMFReceivedSchema,
-    LiveTransportDTMFSentSchema,
-    LiveTransportRingingSchema,
-    LiveTransportAnsweredSchema,
-    LiveTransportFailedSchema,
+    v.intersect([LiveSessionStartedSchema, v.object({ type: v.literal('LiveSessionStarted') })]),
+    v.intersect([LiveSessionUpdatedSchema, v.object({ type: v.literal('LiveSessionUpdated') })]),
+    v.intersect([LiveSessionResumedSchema, v.object({ type: v.literal('LiveSessionResumed') })]),
+    v.intersect([LiveSessionPausedSchema, v.object({ type: v.literal('LiveSessionPaused') })]),
+    v.intersect([LiveInputAudioMutedSchema, v.object({ type: v.literal('LiveInputAudioMuted') })]),
+    v.intersect([
+      LiveInputAudioUnmutedSchema,
+      v.object({ type: v.literal('LiveInputAudioUnmuted') }),
+    ]),
+    v.intersect([
+      LiveOutputAudioFixturePlayingSchema,
+      v.object({ type: v.literal('LiveOutputAudioFixturePlaying') }),
+    ]),
+    v.intersect([
+      LiveOutputAudioFixturePlayedSchema,
+      v.object({ type: v.literal('LiveOutputAudioFixturePlayed') }),
+    ]),
+    v.intersect([
+      LiveInstructionsAppendedSchema,
+      v.object({ type: v.literal('LiveInstructionsAppended') }),
+    ]),
+    v.intersect([
+      LiveThinkingAppendedSchema,
+      v.object({ type: v.literal('LiveThinkingAppended') }),
+    ]),
+    v.intersect([
+      LiveCommentaryAppendedSchema,
+      v.object({ type: v.literal('LiveCommentaryAppended') }),
+    ]),
+    v.intersect([
+      LiveInputAudioAppendSchema,
+      v.object({ type: v.literal('LiveInputAudioAppend') }),
+    ]),
+    v.intersect([
+      LiveOutputAudioDeltaSchema,
+      v.object({ type: v.literal('LiveOutputAudioDelta') }),
+    ]),
+    v.intersect([
+      LiveInputTranscriptDeltaSchema,
+      v.object({ type: v.literal('LiveInputTranscriptDelta') }),
+    ]),
+    v.intersect([
+      LiveOutputTranscriptDeltaSchema,
+      v.object({ type: v.literal('LiveOutputTranscriptDelta') }),
+    ]),
+    v.intersect([
+      LiveDelegationCreatedSchema,
+      v.object({ type: v.literal('LiveDelegationCreated') }),
+    ]),
+    v.intersect([LiveDecisionEventSchema, v.object({ type: v.literal('LiveDecisionEvent') })]),
+    v.intersect([
+      LiveDecisionItemCreatedSchema,
+      v.object({ type: v.literal('LiveDecisionItemCreated') }),
+    ]),
+    v.intersect([
+      LiveDecisionItemDeletedSchema,
+      v.object({ type: v.literal('LiveDecisionItemDeleted') }),
+    ]),
+    v.intersect([LiveResponseEventSchema, v.object({ type: v.literal('LiveResponseEvent') })]),
+    v.intersect([
+      LiveSessionUsageUpdatedSchema,
+      v.object({ type: v.literal('LiveSessionUsageUpdated') }),
+    ]),
+    v.intersect([LiveSessionClosedSchema, v.object({ type: v.literal('LiveSessionClosed') })]),
+    v.intersect([LiveErrorEventSchema, v.object({ type: v.literal('LiveErrorEvent') })]),
+    v.intersect([LiveInfoEventSchema, v.object({ type: v.literal('LiveInfoEvent') })]),
+    v.intersect([
+      LiveTransportDTMFReceivedSchema,
+      v.object({ type: v.literal('LiveTransportDTMFReceived') }),
+    ]),
+    v.intersect([
+      LiveTransportDTMFSentSchema,
+      v.object({ type: v.literal('LiveTransportDTMFSent') }),
+    ]),
+    v.intersect([
+      LiveTransportRingingSchema,
+      v.object({ type: v.literal('LiveTransportRinging') }),
+    ]),
+    v.intersect([
+      LiveTransportAnsweredSchema,
+      v.object({ type: v.literal('LiveTransportAnswered') }),
+    ]),
+    v.intersect([LiveTransportFailedSchema, v.object({ type: v.literal('LiveTransportFailed') })]),
   ]),
   v.description('An event sent by the Live API on a primary WebSocket or sideband connection.'),
 )
@@ -23664,7 +24620,13 @@ export const LiveSessionCreateRequestSchema = v.pipe(
       v.description('Startup configuration for the Live session.'),
     ),
     transport: v.pipe(
-      v.union([LiveWebRTCTransportSchema, LiveSIPTransportSchema]),
+      v.union([
+        v.intersect([
+          LiveWebRTCTransportSchema,
+          v.object({ type: v.literal('LiveWebRTCTransport') }),
+        ]),
+        v.intersect([LiveSIPTransportSchema, v.object({ type: v.literal('LiveSIPTransport') })]),
+      ]),
       v.description(
         'WebRTC transport with an SDP offer, or SIP transport with a destination and per-call trunk credentials.',
       ),
@@ -23698,7 +24660,10 @@ export const LiveSessionCreateResponseSchema = v.pipe(
     session: SessionSchema,
     transport: v.pipe(
       v.union([
-        LiveWebRTCTransportSchema,
+        v.intersect([
+          LiveWebRTCTransportSchema,
+          v.object({ type: v.literal('LiveWebRTCTransport') }),
+        ]),
         v.pipe(
           v.object({
             type: v.pipe(
@@ -23731,7 +24696,7 @@ export const LiveTransportDTMFSendParamSchema = v.pipe(
             "Optional client identifier for correlating this command with a server event's client_event_id or error.client_event_id.",
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     type: v.optional(v.literal('transport.dtmf.send'), 'transport.dtmf.send'),
@@ -23750,20 +24715,62 @@ export type LiveTransportDTMFSendParam = v.InferOutput<typeof LiveTransportDTMFS
 
 export const LiveSidebandClientEventSchema = v.pipe(
   v.union([
-    LiveSessionUpdateParamSchema,
-    LiveInputAudioMuteParamSchema,
-    LiveInputAudioUnmuteParamSchema,
-    LiveOutputAudioFixturePlayParamSchema,
-    LiveTransportDTMFSendParamSchema,
-    LiveInstructionsAppendParamSchema,
-    LiveThinkingAppendParamSchema,
-    LiveCommentaryAppendParamSchema,
-    LiveDecisionCreateParamSchema,
-    LiveDecisionItemCreateParamSchema,
-    LiveDecisionItemDeleteParamSchema,
-    LiveResponseItemCreateParamSchema,
-    LiveResponseCreateParamSchema,
-    LiveSessionCloseParamSchema,
+    v.intersect([
+      LiveSessionUpdateParamSchema,
+      v.object({ type: v.literal('LiveSessionUpdateParam') }),
+    ]),
+    v.intersect([
+      LiveInputAudioMuteParamSchema,
+      v.object({ type: v.literal('LiveInputAudioMuteParam') }),
+    ]),
+    v.intersect([
+      LiveInputAudioUnmuteParamSchema,
+      v.object({ type: v.literal('LiveInputAudioUnmuteParam') }),
+    ]),
+    v.intersect([
+      LiveOutputAudioFixturePlayParamSchema,
+      v.object({ type: v.literal('LiveOutputAudioFixturePlayParam') }),
+    ]),
+    v.intersect([
+      LiveTransportDTMFSendParamSchema,
+      v.object({ type: v.literal('LiveTransportDTMFSendParam') }),
+    ]),
+    v.intersect([
+      LiveInstructionsAppendParamSchema,
+      v.object({ type: v.literal('LiveInstructionsAppendParam') }),
+    ]),
+    v.intersect([
+      LiveThinkingAppendParamSchema,
+      v.object({ type: v.literal('LiveThinkingAppendParam') }),
+    ]),
+    v.intersect([
+      LiveCommentaryAppendParamSchema,
+      v.object({ type: v.literal('LiveCommentaryAppendParam') }),
+    ]),
+    v.intersect([
+      LiveDecisionCreateParamSchema,
+      v.object({ type: v.literal('LiveDecisionCreateParam') }),
+    ]),
+    v.intersect([
+      LiveDecisionItemCreateParamSchema,
+      v.object({ type: v.literal('LiveDecisionItemCreateParam') }),
+    ]),
+    v.intersect([
+      LiveDecisionItemDeleteParamSchema,
+      v.object({ type: v.literal('LiveDecisionItemDeleteParam') }),
+    ]),
+    v.intersect([
+      LiveResponseItemCreateParamSchema,
+      v.object({ type: v.literal('LiveResponseItemCreateParam') }),
+    ]),
+    v.intersect([
+      LiveResponseCreateParamSchema,
+      v.object({ type: v.literal('LiveResponseCreateParam') }),
+    ]),
+    v.intersect([
+      LiveSessionCloseParamSchema,
+      v.object({ type: v.literal('LiveSessionCloseParam') }),
+    ]),
   ]),
   v.description(
     'Client events accepted by an attached Live sideband WebSocket. The session has already started. Send input audio over the primary connection.',
@@ -23804,33 +24811,81 @@ export type LiveSidebandPathParams = v.InferOutput<typeof LiveSidebandPathParams
 
 export const LiveSidebandServerEventSchema = v.pipe(
   v.union([
-    LiveTransportRingingSchema,
-    LiveTransportAnsweredSchema,
-    LiveTransportFailedSchema,
-    LiveTransportDTMFReceivedSchema,
-    LiveTransportDTMFSentSchema,
-    LiveSessionStartedSchema,
-    LiveSessionUpdatedSchema,
-    LiveSessionResumedSchema,
-    LiveSessionPausedSchema,
-    LiveInputAudioMutedSchema,
-    LiveInputAudioUnmutedSchema,
-    LiveOutputAudioFixturePlayingSchema,
-    LiveOutputAudioFixturePlayedSchema,
-    LiveInstructionsAppendedSchema,
-    LiveThinkingAppendedSchema,
-    LiveCommentaryAppendedSchema,
-    LiveInputTranscriptDeltaSchema,
-    LiveOutputTranscriptDeltaSchema,
-    LiveDelegationCreatedSchema,
-    LiveDecisionEventSchema,
-    LiveDecisionItemCreatedSchema,
-    LiveDecisionItemDeletedSchema,
-    LiveResponseEventSchema,
-    LiveSessionUsageUpdatedSchema,
-    LiveSessionClosedSchema,
-    LiveErrorEventSchema,
-    LiveInfoEventSchema,
+    v.intersect([
+      LiveTransportRingingSchema,
+      v.object({ type: v.literal('LiveTransportRinging') }),
+    ]),
+    v.intersect([
+      LiveTransportAnsweredSchema,
+      v.object({ type: v.literal('LiveTransportAnswered') }),
+    ]),
+    v.intersect([LiveTransportFailedSchema, v.object({ type: v.literal('LiveTransportFailed') })]),
+    v.intersect([
+      LiveTransportDTMFReceivedSchema,
+      v.object({ type: v.literal('LiveTransportDTMFReceived') }),
+    ]),
+    v.intersect([
+      LiveTransportDTMFSentSchema,
+      v.object({ type: v.literal('LiveTransportDTMFSent') }),
+    ]),
+    v.intersect([LiveSessionStartedSchema, v.object({ type: v.literal('LiveSessionStarted') })]),
+    v.intersect([LiveSessionUpdatedSchema, v.object({ type: v.literal('LiveSessionUpdated') })]),
+    v.intersect([LiveSessionResumedSchema, v.object({ type: v.literal('LiveSessionResumed') })]),
+    v.intersect([LiveSessionPausedSchema, v.object({ type: v.literal('LiveSessionPaused') })]),
+    v.intersect([LiveInputAudioMutedSchema, v.object({ type: v.literal('LiveInputAudioMuted') })]),
+    v.intersect([
+      LiveInputAudioUnmutedSchema,
+      v.object({ type: v.literal('LiveInputAudioUnmuted') }),
+    ]),
+    v.intersect([
+      LiveOutputAudioFixturePlayingSchema,
+      v.object({ type: v.literal('LiveOutputAudioFixturePlaying') }),
+    ]),
+    v.intersect([
+      LiveOutputAudioFixturePlayedSchema,
+      v.object({ type: v.literal('LiveOutputAudioFixturePlayed') }),
+    ]),
+    v.intersect([
+      LiveInstructionsAppendedSchema,
+      v.object({ type: v.literal('LiveInstructionsAppended') }),
+    ]),
+    v.intersect([
+      LiveThinkingAppendedSchema,
+      v.object({ type: v.literal('LiveThinkingAppended') }),
+    ]),
+    v.intersect([
+      LiveCommentaryAppendedSchema,
+      v.object({ type: v.literal('LiveCommentaryAppended') }),
+    ]),
+    v.intersect([
+      LiveInputTranscriptDeltaSchema,
+      v.object({ type: v.literal('LiveInputTranscriptDelta') }),
+    ]),
+    v.intersect([
+      LiveOutputTranscriptDeltaSchema,
+      v.object({ type: v.literal('LiveOutputTranscriptDelta') }),
+    ]),
+    v.intersect([
+      LiveDelegationCreatedSchema,
+      v.object({ type: v.literal('LiveDelegationCreated') }),
+    ]),
+    v.intersect([LiveDecisionEventSchema, v.object({ type: v.literal('LiveDecisionEvent') })]),
+    v.intersect([
+      LiveDecisionItemCreatedSchema,
+      v.object({ type: v.literal('LiveDecisionItemCreated') }),
+    ]),
+    v.intersect([
+      LiveDecisionItemDeletedSchema,
+      v.object({ type: v.literal('LiveDecisionItemDeleted') }),
+    ]),
+    v.intersect([LiveResponseEventSchema, v.object({ type: v.literal('LiveResponseEvent') })]),
+    v.intersect([
+      LiveSessionUsageUpdatedSchema,
+      v.object({ type: v.literal('LiveSessionUsageUpdated') }),
+    ]),
+    v.intersect([LiveSessionClosedSchema, v.object({ type: v.literal('LiveSessionClosed') })]),
+    v.intersect([LiveErrorEventSchema, v.object({ type: v.literal('LiveErrorEvent') })]),
+    v.intersect([LiveInfoEventSchema, v.object({ type: v.literal('LiveInfoEvent') })]),
   ]),
   v.description(
     'Server events received by an attached Live sideband WebSocket. Audio deltas are delivered over the primary connection.',
@@ -23861,7 +24916,7 @@ export const ModelIdsSchema = v.union([ModelIdsSharedSchema, ModelIdsResponsesSc
 export type ModelIds = v.InferOutput<typeof ModelIdsSchema>
 
 export const ModelIdsCompactionSchema = v.pipe(
-  v.union([ModelIdsResponsesSchema, v.string(), v.nullable(v.null())]),
+  v.union([ModelIdsResponsesSchema, v.string(), v.null()]),
   v.description(
     'Model ID used to generate the response, like `gpt-6.2-astra`. OpenAI offers a wide range of models with different capabilities, performance characteristics, and price points. Refer to the [model guide](https://developers.openai.com/api/docs/models) to browse and compare available models.',
   ),
@@ -23885,7 +24940,7 @@ export const ModifyAssistantRequestSchema = v.strictObject({
         v.pipe(v.string(), v.maxCodePoints(256)),
         v.description('The name of the assistant. The maximum length is 256 characters.\n'),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   ),
   description: v.optional(
@@ -23894,7 +24949,7 @@ export const ModifyAssistantRequestSchema = v.strictObject({
         v.pipe(v.string(), v.maxCodePoints(512)),
         v.description('The description of the assistant. The maximum length is 512 characters.\n'),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   ),
   instructions: v.optional(
@@ -23905,7 +24960,7 @@ export const ModifyAssistantRequestSchema = v.strictObject({
           'The system instructions that the assistant uses. The maximum length is 256,000 characters.\n',
         ),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   ),
   tools: v.pipe(
@@ -23955,7 +25010,7 @@ export const ModifyAssistantRequestSchema = v.strictObject({
           "A set of resources that are used by the assistant's tools. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.\n",
         ),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   ),
   metadata: v.optional(MetadataSchema),
@@ -23968,7 +25023,7 @@ export const ModifyAssistantRequestSchema = v.strictObject({
         ),
         v.metadata({ examples: [1] }),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   ),
   top_p: v.optional(
@@ -23980,12 +25035,10 @@ export const ModifyAssistantRequestSchema = v.strictObject({
         ),
         v.metadata({ examples: [1] }),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   ),
-  response_format: v.optional(
-    v.union([AssistantsApiResponseFormatOptionSchema, v.nullable(v.null())]),
-  ),
+  response_format: v.optional(v.union([AssistantsApiResponseFormatOptionSchema, v.null()])),
 })
 
 export type ModifyAssistantRequest = v.InferOutput<typeof ModifyAssistantRequestSchema>
@@ -24034,7 +25087,7 @@ export const ModifyThreadRequestSchema = v.partial(
           "A set of resources that are made available to the assistant's tools in this thread. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.\n",
         ),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
     metadata: MetadataSchema,
   }),
@@ -24170,11 +25223,11 @@ export const OrganizationSpendAlertListResourceSchema = v.pipe(
       v.description('Spend alerts returned in the current page.'),
     ),
     first_id: v.pipe(
-      v.union([v.string(), v.nullable(v.null())]),
+      v.union([v.string(), v.null()]),
       v.description('The ID of the first spend alert in this page.'),
     ),
     last_id: v.pipe(
-      v.union([v.string(), v.nullable(v.null())]),
+      v.union([v.string(), v.null()]),
       v.description('The ID of the last spend alert in this page.'),
     ),
     has_more: v.pipe(
@@ -24207,34 +25260,58 @@ export const OutputAudioSchema = v.pipe(
 export type OutputAudio = v.InferOutput<typeof OutputAudioSchema>
 
 export const OutputItemSchema = v.union([
-  OutputMessageSchema,
-  FileSearchToolCallSchema,
-  FunctionToolCallSchema,
-  FunctionToolCallOutputResourceSchema,
-  WebSearchToolCallSchema,
-  ComputerToolCallSchema,
-  ComputerToolCallOutputResourceSchema,
-  ReasoningItemSchema,
-  ProgramSchema,
-  ProgramOutputSchema,
-  ToolSearchCallSchema,
-  ToolSearchOutputSchema,
-  AdditionalToolsSchema,
-  CompactionBodySchema,
-  ImageGenToolCallSchema,
-  CodeInterpreterToolCallSchema,
-  LocalShellToolCallSchema,
-  LocalShellToolCallOutputSchema,
-  FunctionShellCallSchema,
-  FunctionShellCallOutputSchema,
-  ApplyPatchToolCallSchema,
-  ApplyPatchToolCallOutputSchema,
-  MCPToolCallSchema,
-  MCPListToolsSchema,
-  MCPApprovalRequestSchema,
-  MCPApprovalResponseResourceSchema,
-  CustomToolCallSchema,
-  CustomToolCallOutputResourceSchema,
+  v.intersect([OutputMessageSchema, v.object({ type: v.literal('OutputMessage') })]),
+  v.intersect([FileSearchToolCallSchema, v.object({ type: v.literal('FileSearchToolCall') })]),
+  v.intersect([FunctionToolCallSchema, v.object({ type: v.literal('FunctionToolCall') })]),
+  v.intersect([
+    FunctionToolCallOutputResourceSchema,
+    v.object({ type: v.literal('FunctionToolCallOutputResource') }),
+  ]),
+  v.intersect([WebSearchToolCallSchema, v.object({ type: v.literal('WebSearchToolCall') })]),
+  v.intersect([ComputerToolCallSchema, v.object({ type: v.literal('ComputerToolCall') })]),
+  v.intersect([
+    ComputerToolCallOutputResourceSchema,
+    v.object({ type: v.literal('ComputerToolCallOutputResource') }),
+  ]),
+  v.intersect([ReasoningItemSchema, v.object({ type: v.literal('ReasoningItem') })]),
+  v.intersect([ProgramSchema, v.object({ type: v.literal('Program') })]),
+  v.intersect([ProgramOutputSchema, v.object({ type: v.literal('ProgramOutput') })]),
+  v.intersect([ToolSearchCallSchema, v.object({ type: v.literal('ToolSearchCall') })]),
+  v.intersect([ToolSearchOutputSchema, v.object({ type: v.literal('ToolSearchOutput') })]),
+  v.intersect([AdditionalToolsSchema, v.object({ type: v.literal('AdditionalTools') })]),
+  v.intersect([CompactionBodySchema, v.object({ type: v.literal('CompactionBody') })]),
+  v.intersect([ImageGenToolCallSchema, v.object({ type: v.literal('ImageGenToolCall') })]),
+  v.intersect([
+    CodeInterpreterToolCallSchema,
+    v.object({ type: v.literal('CodeInterpreterToolCall') }),
+  ]),
+  v.intersect([LocalShellToolCallSchema, v.object({ type: v.literal('LocalShellToolCall') })]),
+  v.intersect([
+    LocalShellToolCallOutputSchema,
+    v.object({ type: v.literal('LocalShellToolCallOutput') }),
+  ]),
+  v.intersect([FunctionShellCallSchema, v.object({ type: v.literal('FunctionShellCall') })]),
+  v.intersect([
+    FunctionShellCallOutputSchema,
+    v.object({ type: v.literal('FunctionShellCallOutput') }),
+  ]),
+  v.intersect([ApplyPatchToolCallSchema, v.object({ type: v.literal('ApplyPatchToolCall') })]),
+  v.intersect([
+    ApplyPatchToolCallOutputSchema,
+    v.object({ type: v.literal('ApplyPatchToolCallOutput') }),
+  ]),
+  v.intersect([MCPToolCallSchema, v.object({ type: v.literal('MCPToolCall') })]),
+  v.intersect([MCPListToolsSchema, v.object({ type: v.literal('MCPListTools') })]),
+  v.intersect([MCPApprovalRequestSchema, v.object({ type: v.literal('MCPApprovalRequest') })]),
+  v.intersect([
+    MCPApprovalResponseResourceSchema,
+    v.object({ type: v.literal('MCPApprovalResponseResource') }),
+  ]),
+  v.intersect([CustomToolCallSchema, v.object({ type: v.literal('CustomToolCall') })]),
+  v.intersect([
+    CustomToolCallOutputResourceSchema,
+    v.object({ type: v.literal('CustomToolCallOutputResource') }),
+  ]),
 ])
 
 export type OutputItem = v.InferOutput<typeof OutputItemSchema>
@@ -24283,7 +25360,7 @@ export const ProjectSchema = v.pipe(
     ),
     name: v.optional(
       v.pipe(
-        v.union([v.string(), v.nullable(v.null())]),
+        v.union([v.string(), v.null()]),
         v.description('The name of the project. This appears in reporting.'),
       ),
     ),
@@ -24299,15 +25376,15 @@ export const ProjectSchema = v.pipe(
             'The Unix timestamp (in seconds) of when the project was archived or `null`.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     status: v.optional(
-      v.pipe(v.union([v.string(), v.nullable(v.null())]), v.description('`active` or `archived`')),
+      v.pipe(v.union([v.string(), v.null()]), v.description('`active` or `archived`')),
     ),
     external_key_id: v.optional(
       v.pipe(
-        v.union([v.string(), v.nullable(v.null())]),
+        v.union([v.string(), v.null()]),
         v.description('The external key associated with the project.'),
       ),
     ),
@@ -24376,14 +25453,14 @@ export const ProjectApiKeySchema = v.pipe(
     ),
     expires_at: v.optional(
       v.pipe(
-        v.union([v.pipe(v.number(), v.integer()), v.nullable(v.null())]),
+        v.union([v.pipe(v.number(), v.integer()), v.null()]),
         v.description(
           'The Unix timestamp (in seconds) when the API key expires, or null if it does not expire.',
         ),
       ),
     ),
     last_used_at: v.pipe(
-      v.union([v.pipe(v.number(), v.integer()), v.nullable(v.null())]),
+      v.union([v.pipe(v.number(), v.integer()), v.null()]),
       v.description('The Unix timestamp (in seconds) of when the API key was last used.'),
     ),
     id: v.pipe(
@@ -24421,8 +25498,8 @@ export type ProjectApiKeyDeleteResponse = v.InferOutput<typeof ProjectApiKeyDele
 export const ProjectApiKeyListResponseSchema = v.object({
   object: v.literal('list'),
   data: v.array(ProjectApiKeySchema),
-  first_id: v.optional(v.union([v.string(), v.nullable(v.null())])),
-  last_id: v.optional(v.union([v.string(), v.nullable(v.null())])),
+  first_id: v.optional(v.union([v.string(), v.null()])),
+  last_id: v.optional(v.union([v.string(), v.null()])),
   has_more: v.boolean(),
 })
 
@@ -24435,7 +25512,7 @@ export const ProjectCreateRequestSchema = v.object({
   ),
   geography: v.optional(
     v.pipe(
-      v.union([v.string(), v.nullable(v.null())]),
+      v.union([v.string(), v.null()]),
       v.description(
         'Create the project with the specified data residency region. Your organization must have access to Data residency functionality in order to use. See [data residency controls](https://developers.openai.com/api/docs/guides/your-data#data-residency-controls) to review the functionality and limitations of setting this field.\nDeprecated: use `residency` instead. Do not provide both `geography` and `residency`.',
       ),
@@ -24444,7 +25521,7 @@ export const ProjectCreateRequestSchema = v.object({
   ),
   residency: v.optional(
     v.pipe(
-      v.union([PublicProjectResidencySchema, v.nullable(v.null())]),
+      v.union([PublicProjectResidencySchema, v.null()]),
       v.description(
         'Create the project with the specified residency configuration. Your organization must have access to the requested residency configuration in order to use it. See [data residency controls](https://developers.openai.com/api/docs/guides/your-data#data-residency-controls) to review the functionality and limitations of setting this field.',
       ),
@@ -24452,7 +25529,7 @@ export const ProjectCreateRequestSchema = v.object({
   ),
   external_key_id: v.optional(
     v.pipe(
-      v.union([v.string(), v.nullable(v.null())]),
+      v.union([v.string(), v.null()]),
       v.description('External key ID to associate with the project.'),
     ),
   ),
@@ -24534,7 +25611,7 @@ export const ProjectGroupListResourceSchema = v.pipe(
       v.description('Whether additional project group memberships are available.'),
     ),
     next: v.pipe(
-      v.union([v.string(), v.nullable(v.null())]),
+      v.union([v.string(), v.null()]),
       v.description(
         'Cursor to fetch the next page of results, or `null` when there are no more results.',
       ),
@@ -24561,23 +25638,23 @@ export type ProjectHostedToolPermissions = v.InferOutput<typeof ProjectHostedToo
 export const ProjectHostedToolPermissionsUpdateRequestSchema = v.partial(
   v.object({
     file_search: v.pipe(
-      v.union([HostedToolPermissionUpdateSchema, v.nullable(v.null())]),
+      v.union([HostedToolPermissionUpdateSchema, v.null()]),
       v.description('The file search permission update.'),
     ),
     web_search: v.pipe(
-      v.union([HostedToolPermissionUpdateSchema, v.nullable(v.null())]),
+      v.union([HostedToolPermissionUpdateSchema, v.null()]),
       v.description('The web search permission update.'),
     ),
     image_generation: v.pipe(
-      v.union([HostedToolPermissionUpdateSchema, v.nullable(v.null())]),
+      v.union([HostedToolPermissionUpdateSchema, v.null()]),
       v.description('The image generation permission update.'),
     ),
     mcp: v.pipe(
-      v.union([HostedToolPermissionUpdateSchema, v.nullable(v.null())]),
+      v.union([HostedToolPermissionUpdateSchema, v.null()]),
       v.description('The MCP permission update.'),
     ),
     code_interpreter: v.pipe(
-      v.union([HostedToolPermissionUpdateSchema, v.nullable(v.null())]),
+      v.union([HostedToolPermissionUpdateSchema, v.null()]),
       v.description('The code interpreter permission update.'),
     ),
   }),
@@ -24590,8 +25667,8 @@ export type ProjectHostedToolPermissionsUpdateRequest = v.InferOutput<
 export const ProjectListResponseSchema = v.object({
   object: v.literal('list'),
   data: v.array(ProjectSchema),
-  first_id: v.optional(v.union([v.string(), v.nullable(v.null())])),
-  last_id: v.optional(v.union([v.string(), v.nullable(v.null())])),
+  first_id: v.optional(v.union([v.string(), v.null()])),
+  last_id: v.optional(v.union([v.string(), v.null()])),
   has_more: v.boolean(),
 })
 
@@ -24702,8 +25779,8 @@ export type ProjectRateLimit = v.InferOutput<typeof ProjectRateLimitSchema>
 export const ProjectRateLimitListResponseSchema = v.object({
   object: v.literal('list'),
   data: v.array(ProjectRateLimitSchema),
-  first_id: v.optional(v.union([v.string(), v.nullable(v.null())])),
-  last_id: v.optional(v.union([v.string(), v.nullable(v.null())])),
+  first_id: v.optional(v.union([v.string(), v.null()])),
+  last_id: v.optional(v.union([v.string(), v.null()])),
   has_more: v.boolean(),
 })
 
@@ -24779,7 +25856,7 @@ export const ProjectServiceAccountApiKeySchema = v.object({
   created_at: v.pipe(v.number(), v.integer()),
   expires_at: v.optional(
     v.pipe(
-      v.union([v.pipe(v.number(), v.integer()), v.nullable(v.null())]),
+      v.union([v.pipe(v.number(), v.integer()), v.null()]),
       v.description(
         'The Unix timestamp (in seconds) when the API key expires, or null if it does not expire.',
       ),
@@ -24798,15 +25875,12 @@ export const ProjectServiceAccountCreateRequestSchema = v.object({
         v.boolean(),
         v.description('Create the service account without default roles or an API key.'),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   ),
   expires_in_seconds: v.optional(
     v.pipe(
-      v.union([
-        v.pipe(v.number(), v.integer(), v.minValue(1), v.maxValue(31536000)),
-        v.nullable(v.null()),
-      ]),
+      v.union([v.pipe(v.number(), v.integer(), v.minValue(1), v.maxValue(31536000)), v.null()]),
       v.description(
         'Number of seconds until the initial API key expires. If omitted or null, the key does not expire unless the effective organization or project policy requires an expiration. When a policy sets a maximum lifetime, this value must be provided and must not exceed that limit. A non-null value cannot be used when `create_service_account_only` is true.',
       ),
@@ -24829,7 +25903,7 @@ export const ProjectServiceAccountCreateResponseSchema = v.object({
     ),
   ),
   created_at: v.pipe(v.number(), v.integer()),
-  api_key: v.union([ProjectServiceAccountApiKeySchema, v.nullable(v.null())]),
+  api_key: v.union([ProjectServiceAccountApiKeySchema, v.null()]),
 })
 
 export type ProjectServiceAccountCreateResponse = v.InferOutput<
@@ -24849,8 +25923,8 @@ export type ProjectServiceAccountDeleteResponse = v.InferOutput<
 export const ProjectServiceAccountListResponseSchema = v.object({
   object: v.literal('list'),
   data: v.array(ProjectServiceAccountSchema),
-  first_id: v.optional(v.union([v.string(), v.nullable(v.null())])),
-  last_id: v.optional(v.union([v.string(), v.nullable(v.null())])),
+  first_id: v.optional(v.union([v.string(), v.null()])),
+  last_id: v.optional(v.union([v.string(), v.null()])),
   has_more: v.boolean(),
 })
 
@@ -24908,11 +25982,11 @@ export const ProjectSpendAlertListResourceSchema = v.pipe(
       v.description('Spend alerts returned in the current page.'),
     ),
     first_id: v.pipe(
-      v.union([v.string(), v.nullable(v.null())]),
+      v.union([v.string(), v.null()]),
       v.description('The ID of the first spend alert in this page.'),
     ),
     last_id: v.pipe(
-      v.union([v.string(), v.nullable(v.null())]),
+      v.union([v.string(), v.null()]),
       v.description('The ID of the last spend alert in this page.'),
     ),
     has_more: v.pipe(
@@ -24930,15 +26004,15 @@ export type ProjectSpendAlertListResource = v.InferOutput<
 export const ProjectUpdateRequestSchema = v.partial(
   v.object({
     name: v.pipe(
-      v.union([v.string(), v.nullable(v.null())]),
+      v.union([v.string(), v.null()]),
       v.description('The updated name of the project, this name appears in reports.'),
     ),
     external_key_id: v.pipe(
-      v.union([v.string(), v.nullable(v.null())]),
+      v.union([v.string(), v.null()]),
       v.description('External key ID to associate with the project.'),
     ),
     geography: v.pipe(
-      v.union([v.string(), v.nullable(v.null())]),
+      v.union([v.string(), v.null()]),
       v.description(
         'Geography for the project.\nDeprecated: use `residency` when creating a project to configure data residency. This field is retained for backward compatibility.',
       ),
@@ -24960,13 +26034,10 @@ export const ProjectUserSchema = v.pipe(
       v.description('The identifier, which can be referenced in API endpoints'),
     ),
     name: v.optional(
-      v.pipe(v.union([v.string(), v.nullable(v.null())]), v.description('The name of the user')),
+      v.pipe(v.union([v.string(), v.null()]), v.description('The name of the user')),
     ),
     email: v.optional(
-      v.pipe(
-        v.union([v.string(), v.nullable(v.null())]),
-        v.description('The email address of the user'),
-      ),
+      v.pipe(v.union([v.string(), v.null()]), v.description('The email address of the user')),
     ),
     role: v.pipe(v.string(), v.description('`owner` or `member`')),
     added_at: v.pipe(
@@ -24981,10 +26052,10 @@ export type ProjectUser = v.InferOutput<typeof ProjectUserSchema>
 
 export const ProjectUserCreateRequestSchema = v.object({
   user_id: v.optional(
-    v.pipe(v.union([v.string(), v.nullable(v.null())]), v.description('The ID of the user.')),
+    v.pipe(v.union([v.string(), v.null()]), v.description('The ID of the user.')),
   ),
   email: v.optional(
-    v.pipe(v.union([v.string(), v.nullable(v.null())]), v.description('Email of the user to add.')),
+    v.pipe(v.union([v.string(), v.null()]), v.description('Email of the user to add.')),
   ),
   role: v.pipe(v.string(), v.description('`owner` or `member`')),
 })
@@ -25002,17 +26073,15 @@ export type ProjectUserDeleteResponse = v.InferOutput<typeof ProjectUserDeleteRe
 export const ProjectUserListResponseSchema = v.object({
   object: v.string(),
   data: v.array(ProjectUserSchema),
-  first_id: v.optional(v.union([v.string(), v.nullable(v.null())])),
-  last_id: v.optional(v.union([v.string(), v.nullable(v.null())])),
+  first_id: v.optional(v.union([v.string(), v.null()])),
+  last_id: v.optional(v.union([v.string(), v.null()])),
   has_more: v.boolean(),
 })
 
 export type ProjectUserListResponse = v.InferOutput<typeof ProjectUserListResponseSchema>
 
 export const ProjectUserUpdateRequestSchema = v.partial(
-  v.object({
-    role: v.pipe(v.union([v.string(), v.nullable(v.null())]), v.description('`owner` or `member`')),
-  }),
+  v.object({ role: v.pipe(v.union([v.string(), v.null()]), v.description('`owner` or `member`')) }),
 )
 
 export type ProjectUserUpdateRequest = v.InferOutput<typeof ProjectUserUpdateRequestSchema>
@@ -25031,10 +26100,7 @@ export const PublicCreateOrganizationRoleBodySchema = v.pipe(
     role_name: v.pipe(v.string(), v.description('Unique name for the role.')),
     permissions: v.pipe(v.array(v.string()), v.description('Permissions to grant to the role.')),
     description: v.optional(
-      v.pipe(
-        v.union([v.string(), v.nullable(v.null())]),
-        v.description('Optional description of the role.'),
-      ),
+      v.pipe(v.union([v.string(), v.null()]), v.description('Optional description of the role.')),
     ),
   }),
   v.description('Request payload for creating a custom role.'),
@@ -25053,7 +26119,7 @@ export const PublicRoleListResourceSchema = v.pipe(
       v.description('Whether more roles are available when paginating.'),
     ),
     next: v.pipe(
-      v.union([v.string(), v.nullable(v.null())]),
+      v.union([v.string(), v.null()]),
       v.description(
         'Cursor to fetch the next page of results, or `null` when there are no additional roles.',
       ),
@@ -25068,17 +26134,14 @@ export const PublicUpdateOrganizationRoleBodySchema = v.pipe(
   v.partial(
     v.object({
       permissions: v.pipe(
-        v.union([v.array(v.string()), v.nullable(v.null())]),
+        v.union([v.array(v.string()), v.null()]),
         v.description('Updated set of permissions for the role.'),
       ),
       description: v.pipe(
-        v.union([v.string(), v.nullable(v.null())]),
+        v.union([v.string(), v.null()]),
         v.description('New description for the role.'),
       ),
-      role_name: v.pipe(
-        v.union([v.string(), v.nullable(v.null())]),
-        v.description('New name for the role.'),
-      ),
+      role_name: v.pipe(v.union([v.string(), v.null()]), v.description('New name for the role.')),
     }),
   ),
   v.description('Request payload for updating an existing role.'),
@@ -25431,10 +26494,7 @@ export const RealtimeMCPApprovalResponseSchema = v.pipe(
     ),
     approve: v.pipe(v.boolean(), v.description('Whether the request was approved.')),
     reason: v.optional(
-      v.union([
-        v.pipe(v.string(), v.description('Optional reason for the decision.')),
-        v.nullable(v.null()),
-      ]),
+      v.union([v.pipe(v.string(), v.description('Optional reason for the decision.')), v.null()]),
     ),
   }),
   v.description('A Realtime item responding to an MCP approval request.\n'),
@@ -25501,14 +26561,11 @@ export const RealtimeMCPToolCallSchema = v.pipe(
     approval_request_id: v.optional(
       v.union([
         v.pipe(v.string(), v.description('The ID of an associated approval request, if any.')),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     output: v.optional(
-      v.union([
-        v.pipe(v.string(), v.description('The output from the tool call.')),
-        v.nullable(v.null()),
-      ]),
+      v.union([v.pipe(v.string(), v.description('The output from the tool call.')), v.null()]),
     ),
     error: v.optional(
       v.union([
@@ -25520,7 +26577,7 @@ export const RealtimeMCPToolCallSchema = v.pipe(
           ]),
           v.description('The error from the tool call, if any.'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
   }),
@@ -26526,7 +27583,7 @@ export const RealtimeBetaServerEventConversationItemCreatedSchema = v.pipe(
             'The ID of the preceding item in the Conversation context, allows the\nclient to understand the order of the conversation. Can be `null` if the\nitem has no predecessor.\n',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     item: RealtimeConversationItemSchema,
@@ -26590,7 +27647,7 @@ export const RealtimeBetaServerEventConversationItemInputAudioTranscriptionCompl
           v.array(LogProbPropertiesSchema),
           v.description('The log probabilities of the transcription.'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     usage: v.pipe(
@@ -26628,7 +27685,7 @@ export const RealtimeBetaServerEventConversationItemInputAudioTranscriptionDelta
           v.array(LogProbPropertiesSchema),
           v.description('The log probabilities of the transcription.'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
   }),
@@ -26764,13 +27821,13 @@ export const RealtimeBetaServerEventErrorSchema = v.pipe(
           v.description('The type of error (e.g., "invalid_request_error", "server_error").\n'),
         ),
         code: v.optional(
-          v.union([v.pipe(v.string(), v.description('Error code, if any.')), v.nullable(v.null())]),
+          v.union([v.pipe(v.string(), v.description('Error code, if any.')), v.null()]),
         ),
         message: v.pipe(v.string(), v.description('A human-readable error message.')),
         param: v.optional(
           v.union([
             v.pipe(v.string(), v.description('Parameter related to the error, if any.')),
-            v.nullable(v.null()),
+            v.null(),
           ]),
         ),
         event_id: v.optional(
@@ -26781,7 +27838,7 @@ export const RealtimeBetaServerEventErrorSchema = v.pipe(
                 'The event_id of the client event that caused the error, if applicable.\n',
               ),
             ),
-            v.nullable(v.null()),
+            v.null(),
           ]),
         ),
       }),
@@ -26827,7 +27884,7 @@ export const RealtimeBetaServerEventInputAudioBufferCommittedSchema = v.pipe(
             'The ID of the preceding item after which the new item will be inserted.\nCan be `null` if the item has no predecessor.\n',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     item_id: v.pipe(
@@ -27294,7 +28351,7 @@ export const RealtimeBetaServerEventResponseMCPCallArgumentsDeltaSchema = v.pipe
     obfuscation: v.optional(
       v.union([
         v.pipe(v.string(), v.description('If present, indicates the delta text was obfuscated.')),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
   }),
@@ -27544,7 +28601,7 @@ export const RealtimeTurnDetectionSchema = v.union([
                   "Optional timeout after which a model response will be triggered automatically. This is\nuseful for situations in which a long pause from the user is unexpected, such as a phone\ncall. The model will effectively prompt the user to continue the conversation based\non the current context.\n\nThe timeout value will be applied after the last model response's audio has finished playing,\ni.e. it's set to the `response.done` time plus audio playback duration.\n\nAn `input_audio_buffer.timeout_triggered` event (plus events\nassociated with the Response) will be emitted when the timeout is reached.\nIdle timeout is currently only supported for `server_vad` mode.\n",
                 ),
               ),
-              v.nullable(v.null()),
+              v.null(),
             ]),
           ),
         }),
@@ -27586,7 +28643,7 @@ export const RealtimeTurnDetectionSchema = v.union([
       'Configuration for turn detection, ether Server VAD or Semantic VAD. This can be set to `null` to turn off, in which case the client must manually trigger model response.\n\nServer VAD means that the model will detect the start and end of speech based on audio volume and respond at the end of user speech.\n\nSemantic VAD is more advanced and uses a turn detection model (in conjunction with VAD) to semantically estimate whether the user has finished speaking, then dynamically sets a timeout based on this probability. For example, if user audio trails off with "uhhm", the model will score a low probability of turn end and wait longer for the user to continue speaking. This can be useful for more natural conversations, but may have a higher latency.\n\nFor `gpt-realtime-whisper` transcription sessions, turn detection must be\nset to `null`; VAD is not supported.\n',
     ),
   ),
-  v.nullable(v.null()),
+  v.null(),
 ])
 
 export type RealtimeTurnDetection = v.InferOutput<typeof RealtimeTurnDetectionSchema>
@@ -27693,7 +28750,7 @@ export const RealtimeSessionSchema = v.pipe(
             'Configuration for input audio transcription, defaults to off and can be set to `null` to turn off once on. Input audio transcription is not native to the model, since the model consumes audio directly. Transcription runs asynchronously through [the /audio/transcriptions endpoint](https://developers.openai.com/api/reference/resources/audio/subresources/transcriptions/methods/create) and should be treated as guidance of input audio content rather than precisely what the model heard. The client can optionally set the language and prompt for transcription, these offer additional guidance to the transcription service.\n',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     turn_detection: v.optional(RealtimeTurnDetectionSchema),
@@ -27755,7 +28812,7 @@ export const RealtimeSessionSchema = v.pipe(
             'Configuration options for tracing. Set to null to disable tracing. Once\ntracing is enabled for a session, the configuration cannot be modified.\n\n`auto` will create a trace for the session with default values for the\nworkflow name, group id, and metadata.\n',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     tools: v.optional(
@@ -27790,7 +28847,7 @@ export const RealtimeSessionSchema = v.pipe(
         v.description('Expiration timestamp for the session, in seconds since epoch.'),
       ),
     ),
-    prompt: v.optional(v.union([PromptSchema, v.nullable(v.null())])),
+    prompt: v.optional(v.union([PromptSchema, v.null()])),
     include: v.optional(
       v.union([
         v.pipe(
@@ -27799,7 +28856,7 @@ export const RealtimeSessionSchema = v.pipe(
             'Additional fields to include in server outputs.\n- `item.input_audio_transcription.logprobs`: Include logprobs for input audio transcription.\n',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
   }),
@@ -28105,8 +29162,8 @@ export const RealtimeSessionCreateRequestGASchema = v.pipe(
         ),
       ),
     ),
-    tracing: v.optional(
-      v.pipe(
+    tracing: v.pipe(
+      v.optional(
         v.union([
           v.pipe(
             v.optional(v.literal('auto'), 'auto'),
@@ -28139,11 +29196,12 @@ export const RealtimeSessionCreateRequestGASchema = v.pipe(
             ),
             v.description('Granular configuration for tracing.\n'),
           ),
-          v.nullable(v.null()),
+          v.null(),
         ]),
-        v.description(
-          'Realtime API can write session traces to the [Traces Dashboard](https://platform.openai.com/logs?api=traces). Set to null to disable tracing. Once\ntracing is enabled for a session, the configuration cannot be modified.\n\n`auto` will create a trace for the session with default values for the\nworkflow name, group id, and metadata.\n',
-        ),
+        null,
+      ),
+      v.description(
+        'Realtime API can write session traces to the [Traces Dashboard](https://platform.openai.com/logs?api=traces). Set to null to disable tracing. Once\ntracing is enabled for a session, the configuration cannot be modified.\n\n`auto` will create a trace for the session with default values for the\nworkflow name, group id, and metadata.\n',
       ),
     ),
     tools: v.optional(
@@ -28495,10 +29553,7 @@ export const RealtimeResponseInputMessageFieldsSchema = v.pipe(
     ),
     type: v.literal('message'),
     status: v.pipe(
-      v.optional(
-        v.nullable(v.union([v.literal('completed'), v.literal('incomplete'), v.null()])),
-        'completed',
-      ),
+      v.optional(v.nullable(v.picklist(['completed', 'incomplete'])), 'completed'),
       v.description('Optional input status. Omission or null defaults to completed.'),
     ),
     role: v.string(),
@@ -28568,10 +29623,7 @@ export const RealtimeResponseInputImageSchema = v.strictObject({
     v.pipe(v.string(), v.url(), v.regex(/^data:image\/[^;,]+;base64,.+/)),
     v.description('A base64 data URL with an image MIME type; use PNG or JPEG.'),
   ),
-  detail: v.optional(
-    v.nullable(v.union([v.literal('low'), v.literal('high'), v.literal('auto'), v.null()])),
-    'auto',
-  ),
+  detail: v.optional(v.nullable(v.picklist(['low', 'high', 'auto'])), 'auto'),
 })
 
 export type RealtimeResponseInputImage = v.InferOutput<typeof RealtimeResponseInputImageSchema>
@@ -28646,10 +29698,7 @@ export const RealtimeResponseInputFunctionCallSchema = v.pipe(
       ),
     ),
     type: v.literal('function_call'),
-    status: v.optional(
-      v.nullable(v.union([v.literal('completed'), v.literal('incomplete'), v.null()])),
-      'completed',
-    ),
+    status: v.optional(v.nullable(v.picklist(['completed', 'incomplete'])), 'completed'),
     call_id: v.pipe(
       v.string(),
       v.regex(/^[a-zA-Z0-9_-]+$/),
@@ -28678,10 +29727,7 @@ export const RealtimeResponseInputFunctionCallOutputSchema = v.pipe(
       ),
     ),
     type: v.literal('function_call_output'),
-    status: v.optional(
-      v.nullable(v.union([v.literal('completed'), v.literal('incomplete'), v.null()])),
-      'completed',
-    ),
+    status: v.optional(v.nullable(v.picklist(['completed', 'incomplete'])), 'completed'),
     call_id: v.pipe(
       v.string(),
       v.regex(/^[a-zA-Z0-9_-]+$/),
@@ -29233,7 +30279,7 @@ export const RealtimeSessionCreateResponseGASchema = v.pipe(
               ),
               transcription: v.optional(
                 v.pipe(
-                  v.union([AudioTranscriptionResponseSchema, v.nullable(v.null())]),
+                  v.union([AudioTranscriptionResponseSchema, v.null()]),
                   v.description(
                     'Configuration for input audio transcription, defaults to off and can be set to `null` to turn off once on. Input audio transcription is not native to the model, since the model consumes audio directly. Transcription runs asynchronously through [the /audio/transcriptions endpoint](https://developers.openai.com/api/reference/resources/audio/subresources/transcriptions/methods/create) and should be treated as guidance of input audio content rather than precisely what the model heard. The client can optionally set the language and prompt for transcription, these offer additional guidance to the transcription service.\n',
                   ),
@@ -29330,7 +30376,7 @@ export const RealtimeSessionCreateResponseGASchema = v.pipe(
             'Realtime API can write session traces to the [Traces Dashboard](https://platform.openai.com/logs?api=traces). Set to null to disable tracing. Once\ntracing is enabled for a session, the configuration cannot be modified.\n\n`auto` will create a trace for the session with default values for the\nworkflow name, group id, and metadata.\n',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     tools: v.optional(
@@ -29403,7 +30449,7 @@ export const RealtimeTranscriptionSessionCreateResponseGASchema = v.pipe(
               v.object({
                 format: RealtimeAudioFormatsSchema,
                 transcription: v.pipe(
-                  v.union([AudioTranscriptionResponseSchema, v.nullable(v.null())]),
+                  v.union([AudioTranscriptionResponseSchema, v.null()]),
                   v.description('Configuration of the transcription model.\n'),
                 ),
                 noise_reduction: v.pipe(
@@ -29452,7 +30498,7 @@ export const RealtimeTranscriptionSessionCreateResponseGASchema = v.pipe(
                         'Configuration for turn detection. Can be set to `null` to turn off. Server\nVAD means that the model will detect the start and end of speech based on\naudio volume and respond at the end of user speech. For `gpt-realtime-whisper`, this must be `null`; VAD is not supported.\n',
                       ),
                     ),
-                    v.nullable(v.null()),
+                    v.null(),
                   ]),
                   v.description(
                     'Configuration for turn detection. For `gpt-realtime-whisper`, this must be `null`; VAD is not supported.\n',
@@ -29482,8 +30528,14 @@ export const RealtimeCreateClientSecretResponseSchema = v.pipe(
     ),
     session: v.pipe(
       v.union([
-        RealtimeSessionCreateResponseGASchema,
-        RealtimeTranscriptionSessionCreateResponseGASchema,
+        v.intersect([
+          RealtimeSessionCreateResponseGASchema,
+          v.object({ type: v.literal('realtime') }),
+        ]),
+        v.intersect([
+          RealtimeTranscriptionSessionCreateResponseGASchema,
+          v.object({ type: v.literal('transcription') }),
+        ]),
       ]),
       v.description('The session configuration for either a realtime or transcription session.\n'),
     ),
@@ -29735,7 +30787,7 @@ export const RealtimeServerEventConversationItemCreatedSchema = v.pipe(
             'The ID of the preceding item in the Conversation context, allows the\nclient to understand the order of the conversation. Can be `null` if the\nitem has no predecessor.\n',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     item: RealtimeConversationItemSchema,
@@ -29799,7 +30851,7 @@ export const RealtimeServerEventConversationItemInputAudioTranscriptionCompleted
           v.array(LogProbPropertiesSchema),
           v.description('The log probabilities of the transcription.'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     usage: v.pipe(
@@ -29844,7 +30896,7 @@ export const RealtimeServerEventConversationItemInputAudioTranscriptionDeltaSche
             'The log probabilities of the transcription. These can be enabled by configuring the session with `"include": ["item.input_audio_transcription.logprobs"]`. Each entry in the array corresponds a log probability of which token would be selected for this chunk of transcription. This can help to identify if it was possible there were multiple valid options for a given chunk of transcription.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
   }),
@@ -29950,13 +31002,13 @@ export const RealtimeServerEventErrorSchema = v.pipe(
           v.description('The type of error (e.g., "invalid_request_error", "server_error").\n'),
         ),
         code: v.optional(
-          v.union([v.pipe(v.string(), v.description('Error code, if any.')), v.nullable(v.null())]),
+          v.union([v.pipe(v.string(), v.description('Error code, if any.')), v.null()]),
         ),
         message: v.pipe(v.string(), v.description('A human-readable error message.')),
         param: v.optional(
           v.union([
             v.pipe(v.string(), v.description('Parameter related to the error, if any.')),
-            v.nullable(v.null()),
+            v.null(),
           ]),
         ),
         event_id: v.optional(
@@ -29967,7 +31019,7 @@ export const RealtimeServerEventErrorSchema = v.pipe(
                 'The event_id of the client event that caused the error, if applicable.\n',
               ),
             ),
-            v.nullable(v.null()),
+            v.null(),
           ]),
         ),
       }),
@@ -30013,7 +31065,7 @@ export const RealtimeServerEventInputAudioBufferCommittedSchema = v.pipe(
             'The ID of the preceding item after which the new item will be inserted.\nCan be `null` if the item has no predecessor.\n',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     item_id: v.pipe(
@@ -30666,7 +31718,7 @@ export const RealtimeServerEventConversationItemAddedSchema = v.pipe(
             'The ID of the item that precedes this one, if any. This is used to\nmaintain ordering when items are inserted.\n',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     item: RealtimeConversationItemSchema,
@@ -30695,7 +31747,7 @@ export const RealtimeServerEventConversationItemDoneSchema = v.pipe(
             'The ID of the item that precedes this one, if any. This is used to\nmaintain ordering when items are inserted.\n',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     item: RealtimeConversationItemSchema,
@@ -30834,7 +31886,7 @@ export const RealtimeServerEventResponseMCPCallArgumentsDeltaSchema = v.pipe(
     obfuscation: v.optional(
       v.union([
         v.pipe(v.string(), v.description('If present, indicates the delta text was obfuscated.')),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
   }),
@@ -31195,7 +32247,7 @@ export const RealtimeTranslationSessionUpdateRequestSchema = v.pipe(
                       'Optional source-language transcription. When configured, the server emits\n`session.input_transcript.delta` events. Translation itself still runs from\nthe input audio stream.\n',
                     ),
                   ),
-                  v.nullable(v.null()),
+                  v.null(),
                 ]),
                 noise_reduction: v.union([
                   v.pipe(
@@ -31205,7 +32257,7 @@ export const RealtimeTranslationSessionUpdateRequestSchema = v.pipe(
                     }),
                     v.description('Optional input noise reduction. Set to `null` to disable it.\n'),
                   ),
-                  v.nullable(v.null()),
+                  v.null(),
                 ]),
               }),
             ),
@@ -31344,7 +32396,7 @@ export const RealtimeTranslationSessionCreateRequestSchema = v.pipe(
                       'Optional source-language transcription. When configured, the server emits\n`session.input_transcript.delta` events. Translation itself still runs from\nthe input audio stream.\n',
                     ),
                   ),
-                  v.nullable(v.null()),
+                  v.null(),
                 ]),
                 noise_reduction: v.union([
                   v.pipe(
@@ -31354,7 +32406,7 @@ export const RealtimeTranslationSessionCreateRequestSchema = v.pipe(
                     }),
                     v.description('Optional input noise reduction. Set to `null` to disable it.\n'),
                   ),
-                  v.nullable(v.null()),
+                  v.null(),
                 ]),
               }),
             ),
@@ -31466,7 +32518,7 @@ export const RealtimeTranslationSessionSchema = v.pipe(
                     'Optional source-language transcription. When configured, the server emits\n`session.input_transcript.delta` events. Translation itself still runs from\nthe input audio stream.\n',
                   ),
                 ),
-                v.nullable(v.null()),
+                v.null(),
               ]),
               noise_reduction: v.union([
                 v.pipe(
@@ -31476,7 +32528,7 @@ export const RealtimeTranslationSessionSchema = v.pipe(
                   }),
                   v.description('Optional input noise reduction.\n'),
                 ),
-                v.nullable(v.null()),
+                v.null(),
               ]),
             }),
           ),
@@ -31599,7 +32651,7 @@ export const RealtimeTranslationServerEventSessionInputTranscriptDeltaSchema = v
             'Timing metadata for stream alignment, derived from the translation frame\nwhen available. It advances in 200 ms increments, but multiple transcript\ndeltas may share the same `elapsed_ms`. Treat it as alignment metadata,\nnot a unique transcript-delta identifier.\n',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
   }),
@@ -31631,7 +32683,7 @@ export const RealtimeTranslationServerEventSessionOutputTranscriptDeltaSchema = 
             'Timing metadata for stream alignment, derived from the translation frame\nwhen available. It advances in 200 ms increments, but multiple transcript\ndeltas may share the same `elapsed_ms`. Treat it as alignment metadata,\nnot a unique transcript-delta identifier.\n',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
   }),
@@ -31669,7 +32721,7 @@ export const RealtimeTranslationServerEventSessionOutputAudioDeltaSchema = v.pip
             'Timing metadata for stream alignment, derived from the translation frame\nwhen available. Treat `elapsed_ms` as alignment metadata, not a unique\nevent identifier.\n',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
   }),
@@ -31757,13 +32809,13 @@ export const ResponseErrorSchema = v.union([
     v.object({
       type: v.optional(
         v.pipe(
-          v.union([v.string(), v.nullable(v.null())]),
+          v.union([v.string(), v.null()]),
           v.description('The original error type, or null if it was not recorded.'),
         ),
       ),
       param: v.optional(
         v.pipe(
-          v.union([v.string(), v.nullable(v.null())]),
+          v.union([v.string(), v.null()]),
           v.description(
             'The request parameter associated with the error, or null if none was recorded.',
           ),
@@ -31775,7 +32827,7 @@ export const ResponseErrorSchema = v.union([
     }),
     v.description('An error object returned when the model fails to generate a Response.\n'),
   ),
-  v.nullable(v.null()),
+  v.null(),
 ])
 
 export type ResponseError = v.InferOutput<typeof ResponseErrorSchema>
@@ -31936,7 +32988,7 @@ export const PromptCacheOptionsSchema = v.pipe(
           v.string(),
           v.description('The response ID supplied as the prompt cache diagnostics comparison.'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
   }),
@@ -32011,10 +33063,22 @@ export type PromptCacheUnavailableDiagnosticsBody = v.InferOutput<
 
 export const PromptCacheDiagnosticsSchema = v.pipe(
   v.union([
-    PromptCacheMissDiagnosticsBodySchema,
-    PromptCacheHitDiagnosticsBodySchema,
-    PromptCacheComparisonResponseNotFoundDiagnosticsBodySchema,
-    PromptCacheUnavailableDiagnosticsBodySchema,
+    v.intersect([
+      PromptCacheMissDiagnosticsBodySchema,
+      v.object({ type: v.literal('PromptCacheMissDiagnosticsBody') }),
+    ]),
+    v.intersect([
+      PromptCacheHitDiagnosticsBodySchema,
+      v.object({ type: v.literal('PromptCacheHitDiagnosticsBody') }),
+    ]),
+    v.intersect([
+      PromptCacheComparisonResponseNotFoundDiagnosticsBodySchema,
+      v.object({ type: v.literal('PromptCacheComparisonResponseNotFoundDiagnosticsBody') }),
+    ]),
+    v.intersect([
+      PromptCacheUnavailableDiagnosticsBodySchema,
+      v.object({ type: v.literal('PromptCacheUnavailableDiagnosticsBody') }),
+    ]),
   ]),
   v.description('Prompt cache diagnostics requested for this response.'),
 )
@@ -32038,11 +33102,29 @@ export type ModerationErrorBody = v.InferOutput<typeof ModerationErrorBodySchema
 export const ModerationSchema = v.pipe(
   v.object({
     input: v.pipe(
-      v.union([ModerationResultBodySchema, ModerationErrorBodySchema]),
+      v.union([
+        v.intersect([
+          ModerationResultBodySchema,
+          v.object({ type: v.literal('ModerationResultBody') }),
+        ]),
+        v.intersect([
+          ModerationErrorBodySchema,
+          v.object({ type: v.literal('ModerationErrorBody') }),
+        ]),
+      ]),
       v.description('Moderation for the response input.'),
     ),
     output: v.pipe(
-      v.union([ModerationResultBodySchema, ModerationErrorBodySchema]),
+      v.union([
+        v.intersect([
+          ModerationResultBodySchema,
+          v.object({ type: v.literal('ModerationResultBody') }),
+        ]),
+        v.intersect([
+          ModerationErrorBodySchema,
+          v.object({ type: v.literal('ModerationErrorBody') }),
+        ]),
+      ]),
       v.description('Moderation for the response output.'),
     ),
   }),
@@ -32069,151 +33151,158 @@ export const ResponseSchema = v.pipe(
   v.intersect([
     ModelResponsePropertiesSchema,
     ResponsePropertiesSchema,
-    v.object({
-      image: v.optional(ResolvedImageOptionsSchema),
-      service_tier: v.optional(ServiceTierResponsesSchema),
-      truncation: v.optional(
-        v.union([
-          v.pipe(
-            v.optional(v.picklist(['auto', 'disabled']), 'disabled'),
-            v.description(
-              "The truncation strategy to use for the model response.\n- `auto`: If the input to this Response exceeds\n  the model's context window size, the model will truncate the\n  response to fit the context window by dropping items from the beginning of the conversation.\n  On some models, trimming can begin earlier because the API subtracts the model's\n  maximum output allowance from its input limit, even if you set a lower `max_output_tokens`.\n- `disabled` (default): If the input size will exceed the context window\n  size for a model, the request will fail with a 400 error.\n",
+    v.pipe(
+      v.looseObject({
+        image: v.optional(ResolvedImageOptionsSchema),
+        service_tier: v.optional(ServiceTierResponsesSchema),
+        truncation: v.optional(
+          v.union([
+            v.pipe(
+              v.optional(v.picklist(['auto', 'disabled']), 'disabled'),
+              v.description(
+                "The truncation strategy to use for the model response.\n- `auto`: If the input to this Response exceeds\n  the model's context window size, the model will truncate the\n  response to fit the context window by dropping items from the beginning of the conversation.\n  On some models, trimming can begin earlier because the API subtracts the model's\n  maximum output allowance from its input limit, even if you set a lower `max_output_tokens`.\n- `disabled` (default): If the input size will exceed the context window\n  size for a model, the request will fail with a 400 error.\n",
+              ),
             ),
-          ),
-          v.nullable(v.null()),
-        ]),
-      ),
-      id: v.pipe(v.string(), v.description('Unique identifier for this Response.\n')),
-      object: v.pipe(
-        v.literal('response'),
-        v.description('The object type of this resource - always set to `response`.\n'),
-      ),
-      status: v.optional(
-        v.pipe(
-          v.picklist(['completed', 'failed', 'in_progress', 'cancelled', 'queued', 'incomplete']),
-          v.description(
-            'The status of the response generation. One of `completed`, `failed`,\n`in_progress`, `cancelled`, `queued`, or `incomplete`.\n',
+            v.null(),
+          ]),
+        ),
+        id: v.pipe(v.string(), v.description('Unique identifier for this Response.\n')),
+        object: v.pipe(
+          v.literal('response'),
+          v.description('The object type of this resource - always set to `response`.\n'),
+        ),
+        status: v.optional(
+          v.pipe(
+            v.picklist(['completed', 'failed', 'in_progress', 'cancelled', 'queued', 'incomplete']),
+            v.description(
+              'The status of the response generation. One of `completed`, `failed`,\n`in_progress`, `cancelled`, `queued`, or `incomplete`.\n',
+            ),
           ),
         ),
-      ),
-      access_programs: v.union([AccessProgramsBodySchema, v.nullable(v.null())]),
-      created_at: v.pipe(
-        v.number(),
-        v.description('Unix timestamp (in seconds) of when this Response was created.\n'),
-      ),
-      completed_at: v.optional(
-        v.union([
-          v.pipe(
-            v.number(),
-            v.description(
-              'Unix timestamp (in seconds) of when this Response was completed.\nOnly present when the status is `completed`.\n',
+        access_programs: v.union([AccessProgramsBodySchema, v.null()]),
+        created_at: v.pipe(
+          v.number(),
+          v.description('Unix timestamp (in seconds) of when this Response was created.\n'),
+        ),
+        completed_at: v.optional(
+          v.union([
+            v.pipe(
+              v.number(),
+              v.description(
+                'Unix timestamp (in seconds) of when this Response was completed.\nOnly present when the status is `completed`.\n',
+              ),
             ),
+            v.null(),
+          ]),
+        ),
+        error: ResponseErrorSchema,
+        incomplete_details: v.union([
+          v.pipe(
+            v.partial(
+              v.object({
+                reason: v.pipe(
+                  v.picklist(['max_output_tokens', 'max_messages', 'content_filter', 'steered']),
+                  v.description(
+                    'The reason why the response is incomplete. `steered` means\nthe response stopped at a safe output boundary after a\nWebSocket `response.steer` event. The server can then create\na successor response automatically with the queued input.\n',
+                  ),
+                ),
+              }),
+            ),
+            v.description('Details about why the response is incomplete.\n'),
           ),
-          v.nullable(v.null()),
+          v.null(),
         ]),
-      ),
-      error: ResponseErrorSchema,
-      incomplete_details: v.union([
-        v.pipe(
-          v.partial(
-            v.object({
-              reason: v.pipe(
-                v.picklist(['max_output_tokens', 'max_messages', 'content_filter', 'steered']),
+        input_transformations: v.optional(
+          v.pipe(
+            v.array(ReasoningInputTransformationSchema),
+            v.description('Reasoning inputs withheld from the model, in input order.'),
+          ),
+        ),
+        output: v.pipe(
+          v.array(OutputItemSchema),
+          v.description(
+            "An array of content items generated by the model.\n\n- The length and order of items in the `output` array is dependent\n  on the model's response.\n- Rather than accessing the first item in the `output` array and\n  assuming it's an `assistant` message with the content generated by\n  the model, you might consider using the `output_text` property where\n  supported in SDKs.\n",
+          ),
+        ),
+        reasoning: v.optional(v.union([ReasoningSchema, v.null()])),
+        instructions: v.union([
+          v.pipe(
+            v.union([
+              v.pipe(
+                v.string(),
                 v.description(
-                  'The reason why the response is incomplete. `steered` means\nthe response stopped at a safe output boundary after a\nWebSocket `response.steer` event. The server can then create\na successor response automatically with the queued input.\n',
+                  'A text input to the model, equivalent to a text input with the\n`developer` role.\n',
                 ),
               ),
-            }),
+              v.pipe(
+                v.array(InputItemSchema),
+                v.description(
+                  'A list of one or many input items to the model, containing\ndifferent content types.\n',
+                ),
+              ),
+            ]),
+            v.description(
+              "A system (or developer) message inserted into the model's context.\n\nWhen using along with `previous_response_id`, the instructions from a previous\nresponse will not be carried over to the next response. This makes it simple\nto swap out system (or developer) messages in new responses.\n",
+            ),
           ),
-          v.description('Details about why the response is incomplete.\n'),
-        ),
-        v.nullable(v.null()),
-      ]),
-      input_transformations: v.optional(
-        v.pipe(
-          v.array(ReasoningInputTransformationSchema),
-          v.description('Reasoning inputs withheld from the model, in input order.'),
-        ),
-      ),
-      output: v.pipe(
-        v.array(OutputItemSchema),
-        v.description(
-          "An array of content items generated by the model.\n\n- The length and order of items in the `output` array is dependent\n  on the model's response.\n- Rather than accessing the first item in the `output` array and\n  assuming it's an `assistant` message with the content generated by\n  the model, you might consider using the `output_text` property where\n  supported in SDKs.\n",
-        ),
-      ),
-      reasoning: v.optional(v.union([ReasoningSchema, v.nullable(v.null())])),
-      instructions: v.union([
-        v.pipe(
+          v.null(),
+        ]),
+        output_text: v.optional(
           v.union([
             v.pipe(
               v.string(),
               v.description(
-                'A text input to the model, equivalent to a text input with the\n`developer` role.\n',
+                'SDK-only convenience property that contains the aggregated text output\nfrom all `output_text` items in the `output` array, if any are present.\nSupported in the Python and JavaScript SDKs.\n',
               ),
             ),
-            v.pipe(
-              v.array(InputItemSchema),
-              v.description(
-                'A list of one or many input items to the model, containing\ndifferent content types.\n',
-              ),
-            ),
+            v.null(),
           ]),
-          v.description(
-            "A system (or developer) message inserted into the model's context.\n\nWhen using along with `previous_response_id`, the instructions from a previous\nresponse will not be carried over to the next response. This makes it simple\nto swap out system (or developer) messages in new responses.\n",
+        ),
+        usage: v.optional(v.union([ResponseUsageSchema, v.null()])),
+        tool_usage: v.optional(
+          v.pipe(
+            ResponseToolUsageSchema,
+            v.description(
+              'Usage reported by hosted tools, separate from base model `usage`. The field\ncan be omitted when tool usage is unavailable. When present, tool families\nwith no recorded usage have zero counts.\n\n`image_gen` sums available token counts across image generation calls.\nCalls with missing or incomplete usage records may be skipped. Output\ntoken details and cached input counts can be omitted. An omitted cache\ncount means cache usage is unknown.\n\n`web_search.num_requests` counts billable searches. Discounted searches\nand actions such as opening a page are excluded. Use billing records to\nreconcile final charges.\n',
+            ),
           ),
         ),
-        v.nullable(v.null()),
-      ]),
-      output_text: v.optional(
-        v.union([
-          v.pipe(
-            v.string(),
-            v.description(
-              'SDK-only convenience property that contains the aggregated text output\nfrom all `output_text` items in the `output` array, if any are present.\nSupported in the Python and JavaScript SDKs.\n',
+        prompt_cache_options: v.optional(PromptCacheOptionsSchema),
+        prompt_cache_diagnostics: v.optional(PromptCacheDiagnosticsSchema),
+        moderation: v.optional(
+          v.union([
+            v.pipe(
+              ModerationSchema,
+              v.description(
+                'Moderation results for the response input and output, if moderated completions were requested.\n',
+              ),
             ),
-          ),
-          v.nullable(v.null()),
-        ]),
-      ),
-      usage: v.optional(v.union([ResponseUsageSchema, v.nullable(v.null())])),
-      tool_usage: v.optional(
-        v.pipe(
-          ResponseToolUsageSchema,
-          v.description(
-            'Usage reported by hosted tools, separate from base model `usage`. The field\ncan be omitted when tool usage is unavailable. When present, tool families\nwith no recorded usage have zero counts.\n\n`image_gen` sums available token counts across image generation calls.\nCalls with missing or incomplete usage records may be skipped. Output\ntoken details and cached input counts can be omitted. An omitted cache\ncount means cache usage is unknown.\n\n`web_search.num_requests` counts billable searches. Discounted searches\nand actions such as opening a page are excluded. Use billing records to\nreconcile final charges.\n',
-          ),
+            v.null(),
+          ]),
+        ),
+        parallel_tool_calls: v.pipe(
+          v.optional(v.boolean(), true),
+          v.description('Whether to allow the model to run tool calls in parallel.\n'),
+        ),
+        conversation: v.optional(v.union([ResponseConversationSchema, v.null()])),
+        max_output_tokens: v.optional(
+          v.union([
+            v.pipe(
+              v.pipe(v.number(), v.integer()),
+              v.description(
+                'An upper bound for the number of tokens that can be generated for a response, including visible output tokens and [reasoning tokens](https://developers.openai.com/api/docs/guides/reasoning).\n',
+              ),
+            ),
+            v.null(),
+          ]),
+        ),
+      }),
+      v.check((input) =>
+        ['model', 'tools', 'metadata', 'tool_choice', 'temperature', 'top_p'].every(
+          (key) => key in input,
         ),
       ),
-      prompt_cache_options: v.optional(PromptCacheOptionsSchema),
-      prompt_cache_diagnostics: v.optional(PromptCacheDiagnosticsSchema),
-      moderation: v.optional(
-        v.union([
-          v.pipe(
-            ModerationSchema,
-            v.description(
-              'Moderation results for the response input and output, if moderated completions were requested.\n',
-            ),
-          ),
-          v.nullable(v.null()),
-        ]),
-      ),
-      parallel_tool_calls: v.pipe(
-        v.optional(v.boolean(), true),
-        v.description('Whether to allow the model to run tool calls in parallel.\n'),
-      ),
-      conversation: v.optional(v.union([ResponseConversationSchema, v.nullable(v.null())])),
-      max_output_tokens: v.optional(
-        v.union([
-          v.pipe(
-            v.pipe(v.number(), v.integer()),
-            v.description(
-              'An upper bound for the number of tokens that can be generated for a response, including visible output tokens and [reasoning tokens](https://developers.openai.com/api/docs/guides/reasoning).\n',
-            ),
-          ),
-          v.nullable(v.null()),
-        ]),
-      ),
-    }),
+    ),
   ]),
   v.metadata({
     examples: [
@@ -32299,33 +33388,39 @@ export const ResponseAudioDeltaEventSchema = v.pipe(
 export type ResponseAudioDeltaEvent = v.InferOutput<typeof ResponseAudioDeltaEventSchema>
 
 export const ResponseAudioDoneEventSchema = v.pipe(
-  v.object({
-    type: v.pipe(
-      v.literal('response.audio.done'),
-      v.description('The type of the event. Always `response.audio.done`.\n'),
-    ),
-    sequence_number: v.pipe(
-      v.pipe(v.number(), v.integer()),
-      v.description('The sequence number of the delta.\n'),
-    ),
-  }),
+  v.pipe(
+    v.looseObject({
+      type: v.pipe(
+        v.literal('response.audio.done'),
+        v.description('The type of the event. Always `response.audio.done`.\n'),
+      ),
+      sequence_number: v.pipe(
+        v.pipe(v.number(), v.integer()),
+        v.description('The sequence number of the delta.\n'),
+      ),
+    }),
+    v.check((input) => ['response_id'].every((key) => key in input)),
+  ),
   v.description('Emitted when the audio response is complete.'),
 )
 
 export type ResponseAudioDoneEvent = v.InferOutput<typeof ResponseAudioDoneEventSchema>
 
 export const ResponseAudioTranscriptDeltaEventSchema = v.pipe(
-  v.object({
-    type: v.pipe(
-      v.literal('response.audio.transcript.delta'),
-      v.description('The type of the event. Always `response.audio.transcript.delta`.\n'),
-    ),
-    delta: v.pipe(v.string(), v.description('The partial transcript of the audio response.\n')),
-    sequence_number: v.pipe(
-      v.pipe(v.number(), v.integer()),
-      v.description('The sequence number of this event.'),
-    ),
-  }),
+  v.pipe(
+    v.looseObject({
+      type: v.pipe(
+        v.literal('response.audio.transcript.delta'),
+        v.description('The type of the event. Always `response.audio.transcript.delta`.\n'),
+      ),
+      delta: v.pipe(v.string(), v.description('The partial transcript of the audio response.\n')),
+      sequence_number: v.pipe(
+        v.pipe(v.number(), v.integer()),
+        v.description('The sequence number of this event.'),
+      ),
+    }),
+    v.check((input) => ['response_id'].every((key) => key in input)),
+  ),
   v.description('Emitted when there is a partial transcript of audio.'),
 )
 
@@ -32334,16 +33429,19 @@ export type ResponseAudioTranscriptDeltaEvent = v.InferOutput<
 >
 
 export const ResponseAudioTranscriptDoneEventSchema = v.pipe(
-  v.object({
-    type: v.pipe(
-      v.literal('response.audio.transcript.done'),
-      v.description('The type of the event. Always `response.audio.transcript.done`.\n'),
-    ),
-    sequence_number: v.pipe(
-      v.pipe(v.number(), v.integer()),
-      v.description('The sequence number of this event.'),
-    ),
-  }),
+  v.pipe(
+    v.looseObject({
+      type: v.pipe(
+        v.literal('response.audio.transcript.done'),
+        v.description('The type of the event. Always `response.audio.transcript.done`.\n'),
+      ),
+      sequence_number: v.pipe(
+        v.pipe(v.number(), v.integer()),
+        v.description('The sequence number of this event.'),
+      ),
+    }),
+    v.check((input) => ['response_id'].every((key) => key in input)),
+  ),
   v.description('Emitted when the full audio transcript is completed.'),
 )
 
@@ -32687,12 +33785,9 @@ export type ResponseCustomToolCallInputDoneEvent = v.InferOutput<
 export const ResponseErrorEventSchema = v.pipe(
   v.object({
     type: v.pipe(v.literal('error'), v.description('The type of the event. Always `error`.\n')),
-    code: v.union([v.pipe(v.string(), v.description('The error code.\n')), v.nullable(v.null())]),
+    code: v.union([v.pipe(v.string(), v.description('The error code.\n')), v.null()]),
     message: v.pipe(v.string(), v.description('The error message.\n')),
-    param: v.union([
-      v.pipe(v.string(), v.description('The error parameter.\n')),
-      v.nullable(v.null()),
-    ]),
+    param: v.union([v.pipe(v.string(), v.description('The error parameter.\n')), v.null()]),
     sequence_number: v.pipe(
       v.pipe(v.number(), v.integer()),
       v.description('The sequence number of this event.'),
@@ -33372,7 +34467,7 @@ export const ResponseOutputTextAnnotationAddedEventSchema = v.pipe(
       v.description('The sequence number of this event.'),
     ),
     annotation: v.pipe(
-      v.union([AnnotationSchema, v.nullable(v.null())]),
+      v.union([AnnotationSchema, v.null()]),
       v.description('The annotation object being added. (See annotation schema for details.)'),
     ),
   }),
@@ -33737,7 +34832,7 @@ export const UserMessageItemParamSchema = v.object({
         v.description('The unique ID of this message item.'),
         v.metadata({ examples: ['msg_123'] }),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   ),
   type: v.pipe(
@@ -33753,9 +34848,18 @@ export const UserMessageItemParamSchema = v.object({
       v.array(
         v.pipe(
           v.union([
-            InputTextContentParamSchema,
-            InputImageContentParamAutoParamSchema,
-            InputFileContentParamSchema,
+            v.intersect([
+              InputTextContentParamSchema,
+              v.object({ type: v.literal('InputTextContentParam') }),
+            ]),
+            v.intersect([
+              InputImageContentParamAutoParamSchema,
+              v.object({ type: v.literal('InputImageContentParamAutoParam') }),
+            ]),
+            v.intersect([
+              InputFileContentParamSchema,
+              v.object({ type: v.literal('InputFileContentParam') }),
+            ]),
           ]),
           v.description('A piece of message content, such as text, an image, or a file.'),
         ),
@@ -33768,10 +34872,7 @@ export const UserMessageItemParamSchema = v.object({
     v.description('The message content, as an array of content parts.'),
   ),
   status: v.optional(
-    v.union([
-      v.pipe(v.string(), v.description('The status of the message item.')),
-      v.nullable(v.null()),
-    ]),
+    v.union([v.pipe(v.string(), v.description('The status of the message item.')), v.null()]),
   ),
 })
 
@@ -34377,7 +35478,7 @@ export const ErrorPayloadSchema = v.pipe(
     type: v.pipe(v.string(), v.description('The error type that was emitted.')),
     code: v.union([
       v.pipe(v.string(), v.description('The error code that was emitted, if any.')),
-      v.nullable(v.null()),
+      v.null(),
     ]),
     message: v.pipe(
       v.string(),
@@ -34388,7 +35489,7 @@ export const ErrorPayloadSchema = v.pipe(
         v.string(),
         v.description('The parameter name that was associated with the error, if any.'),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
     headers: v.optional(
       v.pipe(
@@ -35541,7 +36642,7 @@ export const RoleListResourceSchema = v.pipe(
       v.description('Whether additional assignments are available when paginating.'),
     ),
     next: v.pipe(
-      v.union([v.string(), v.nullable(v.null())]),
+      v.union([v.string(), v.null()]),
       v.description(
         'Cursor to fetch the next page of results, or `null` when there are no more assignments.',
       ),
@@ -35594,13 +36695,13 @@ export const RunGraderResponseSchema = v.object({
       invalid_variable_error: v.boolean(),
       other_error: v.boolean(),
       python_grader_server_error: v.boolean(),
-      python_grader_server_error_type: v.union([v.string(), v.nullable(v.null())]),
+      python_grader_server_error_type: v.union([v.string(), v.null()]),
       python_grader_runtime_error: v.boolean(),
-      python_grader_runtime_error_details: v.union([v.string(), v.nullable(v.null())]),
+      python_grader_runtime_error_details: v.union([v.string(), v.null()]),
       model_grader_server_error: v.boolean(),
       model_grader_refusal_error: v.boolean(),
       model_grader_parse_error: v.boolean(),
-      model_grader_server_error_details: v.union([v.string(), v.nullable(v.null())]),
+      model_grader_server_error_details: v.union([v.string(), v.null()]),
     }),
     execution_time: v.number(),
     scores: v.record(v.string(), v.any()),
@@ -35608,14 +36709,12 @@ export const RunGraderResponseSchema = v.object({
       v.object({
         prompt_tokens: v.pipe(v.number(), v.integer()),
         total_tokens: v.pipe(v.number(), v.integer()),
-        completion_tokens: v.optional(
-          v.union([v.pipe(v.number(), v.integer()), v.nullable(v.null())]),
-        ),
-        cached_tokens: v.optional(v.union([v.pipe(v.number(), v.integer()), v.nullable(v.null())])),
+        completion_tokens: v.optional(v.union([v.pipe(v.number(), v.integer()), v.null()])),
+        cached_tokens: v.optional(v.union([v.pipe(v.number(), v.integer()), v.null()])),
       }),
-      v.nullable(v.null()),
+      v.null(),
     ]),
-    sampled_model_name: v.union([v.string(), v.nullable(v.null())]),
+    sampled_model_name: v.union([v.string(), v.null()]),
   }),
   sub_rewards: v.record(v.string(), v.any()),
   model_grader_token_usage_per_model: v.record(v.string(), v.any()),
@@ -35651,7 +36750,7 @@ export const SubmitToolOutputsRunRequestSchema = v.strictObject({
           'If `true`, returns a stream of events that happen during the Run as server-sent events, terminating when the Run enters a terminal state with a `data: [DONE]` message.\n',
         ),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   ),
 })
@@ -35814,7 +36913,7 @@ export const UploadSchema = v.pipe(
     ),
     file: v.optional(
       v.pipe(
-        v.union([OpenAIFileSchema, v.nullable(v.null())]),
+        v.union([OpenAIFileSchema, v.null()]),
         v.description('The ready File object after the Upload is completed.'),
       ),
     ),
@@ -35874,7 +36973,7 @@ export const UsageAudioSpeechesResultSchema = v.pipe(
             'When `group_by=project_id`, this field provides the project ID of the grouped usage result.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     user_id: v.optional(
@@ -35885,7 +36984,7 @@ export const UsageAudioSpeechesResultSchema = v.pipe(
             'When `group_by=user_id`, this field provides the user ID of the grouped usage result.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     api_key_id: v.optional(
@@ -35896,7 +36995,7 @@ export const UsageAudioSpeechesResultSchema = v.pipe(
             'When `group_by=api_key_id`, this field provides the API key ID of the grouped usage result.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     model: v.optional(
@@ -35907,7 +37006,7 @@ export const UsageAudioSpeechesResultSchema = v.pipe(
             'When `group_by=model`, this field provides the model name of the grouped usage result.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
   }),
@@ -35944,7 +37043,7 @@ export const UsageAudioTranscriptionsResultSchema = v.pipe(
             'When `group_by=project_id`, this field provides the project ID of the grouped usage result.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     user_id: v.optional(
@@ -35955,7 +37054,7 @@ export const UsageAudioTranscriptionsResultSchema = v.pipe(
             'When `group_by=user_id`, this field provides the user ID of the grouped usage result.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     api_key_id: v.optional(
@@ -35966,7 +37065,7 @@ export const UsageAudioTranscriptionsResultSchema = v.pipe(
             'When `group_by=api_key_id`, this field provides the API key ID of the grouped usage result.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     model: v.optional(
@@ -35977,7 +37076,7 @@ export const UsageAudioTranscriptionsResultSchema = v.pipe(
             'When `group_by=model`, this field provides the model name of the grouped usage result.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
   }),
@@ -36003,7 +37102,7 @@ export const UsageCodeInterpreterSessionsResultSchema = v.pipe(
             'When `group_by=project_id`, this field provides the project ID of the grouped usage result.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
   }),
@@ -36020,7 +37119,7 @@ export const UsageCompletionsResultSchema = v.pipe(
   v.object({
     api_source: v.optional(
       v.pipe(
-        v.union([v.picklist(['agents_api', 'unlabeled']), v.nullable(v.null())]),
+        v.union([v.picklist(['agents_api', 'unlabeled']), v.null()]),
         v.description(
           'When grouped by `api_source`, `agents_api` identifies attributed Agents API activity and `unlabeled` includes all records without published source attribution, including historical and unknown origins. Unlabeled does not imply direct API usage. Without source grouping, this field is null.',
         ),
@@ -36057,7 +37156,7 @@ export const UsageCompletionsResultSchema = v.pipe(
             'The aggregated number of input tokens written to the cache with a 30-minute retention period. May be absent or null for older responses.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     input_cache_write_12h_tokens: v.optional(
@@ -36150,7 +37249,7 @@ export const UsageCompletionsResultSchema = v.pipe(
             'When `group_by=project_id`, this field provides the project ID of the grouped usage result.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     user_id: v.optional(
@@ -36161,7 +37260,7 @@ export const UsageCompletionsResultSchema = v.pipe(
             'When `group_by=user_id`, this field provides the user ID of the grouped usage result.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     api_key_id: v.optional(
@@ -36172,7 +37271,7 @@ export const UsageCompletionsResultSchema = v.pipe(
             'When `group_by=api_key_id`, this field provides the API key ID of the grouped usage result.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     model: v.optional(
@@ -36183,7 +37282,7 @@ export const UsageCompletionsResultSchema = v.pipe(
             'When `group_by=model`, this field provides the model name of the grouped usage result.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     batch: v.optional(
@@ -36194,7 +37293,7 @@ export const UsageCompletionsResultSchema = v.pipe(
             'When `group_by=batch`, this field tells whether the grouped usage result is batch or not.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     service_tier: v.optional(
@@ -36205,7 +37304,7 @@ export const UsageCompletionsResultSchema = v.pipe(
             'When `group_by=service_tier`, this field provides the service tier of the grouped usage result.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
   }),
@@ -36233,7 +37332,7 @@ export const UsageEmbeddingsResultSchema = v.pipe(
             'When `group_by=project_id`, this field provides the project ID of the grouped usage result.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     user_id: v.optional(
@@ -36244,7 +37343,7 @@ export const UsageEmbeddingsResultSchema = v.pipe(
             'When `group_by=user_id`, this field provides the user ID of the grouped usage result.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     api_key_id: v.optional(
@@ -36255,7 +37354,7 @@ export const UsageEmbeddingsResultSchema = v.pipe(
             'When `group_by=api_key_id`, this field provides the API key ID of the grouped usage result.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     model: v.optional(
@@ -36266,7 +37365,7 @@ export const UsageEmbeddingsResultSchema = v.pipe(
             'When `group_by=model`, this field provides the model name of the grouped usage result.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
   }),
@@ -36290,7 +37389,7 @@ export const UsageFileSearchCallsResultSchema = v.pipe(
             'When `group_by=project_id`, this field provides the project ID of the grouped usage result.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     user_id: v.optional(
@@ -36301,7 +37400,7 @@ export const UsageFileSearchCallsResultSchema = v.pipe(
             'When `group_by=user_id`, this field provides the user ID of the grouped usage result.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     api_key_id: v.optional(
@@ -36312,7 +37411,7 @@ export const UsageFileSearchCallsResultSchema = v.pipe(
             'When `group_by=api_key_id`, this field provides the API key ID of the grouped usage result.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     vector_store_id: v.optional(
@@ -36323,7 +37422,7 @@ export const UsageFileSearchCallsResultSchema = v.pipe(
             'When `group_by=vector_store_id`, this field provides the vector store ID of the grouped usage result.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
   }),
@@ -36351,7 +37450,7 @@ export const UsageImagesResultSchema = v.pipe(
             'When `group_by=source`, this field provides the source of the grouped usage result, possible values are `image.generation`, `image.edit`, `image.variation`.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     size: v.optional(
@@ -36362,7 +37461,7 @@ export const UsageImagesResultSchema = v.pipe(
             'When `group_by=size`, this field provides the image size of the grouped usage result.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     project_id: v.optional(
@@ -36373,7 +37472,7 @@ export const UsageImagesResultSchema = v.pipe(
             'When `group_by=project_id`, this field provides the project ID of the grouped usage result.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     user_id: v.optional(
@@ -36384,7 +37483,7 @@ export const UsageImagesResultSchema = v.pipe(
             'When `group_by=user_id`, this field provides the user ID of the grouped usage result.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     api_key_id: v.optional(
@@ -36395,7 +37494,7 @@ export const UsageImagesResultSchema = v.pipe(
             'When `group_by=api_key_id`, this field provides the API key ID of the grouped usage result.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     model: v.optional(
@@ -36406,7 +37505,7 @@ export const UsageImagesResultSchema = v.pipe(
             'When `group_by=model`, this field provides the model name of the grouped usage result.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
   }),
@@ -36434,7 +37533,7 @@ export const UsageModerationsResultSchema = v.pipe(
             'When `group_by=project_id`, this field provides the project ID of the grouped usage result.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     user_id: v.optional(
@@ -36445,7 +37544,7 @@ export const UsageModerationsResultSchema = v.pipe(
             'When `group_by=user_id`, this field provides the user ID of the grouped usage result.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     api_key_id: v.optional(
@@ -36456,7 +37555,7 @@ export const UsageModerationsResultSchema = v.pipe(
             'When `group_by=api_key_id`, this field provides the API key ID of the grouped usage result.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     model: v.optional(
@@ -36467,7 +37566,7 @@ export const UsageModerationsResultSchema = v.pipe(
             'When `group_by=model`, this field provides the model name of the grouped usage result.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
   }),
@@ -36491,7 +37590,7 @@ export const UsageVectorStoresResultSchema = v.pipe(
             'When `group_by=project_id`, this field provides the project ID of the grouped usage result.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
   }),
@@ -36504,7 +37603,7 @@ export const UsageWebSearchCallsResultSchema = v.pipe(
   v.object({
     api_source: v.optional(
       v.pipe(
-        v.union([v.picklist(['agents_api', 'unlabeled']), v.nullable(v.null())]),
+        v.union([v.picklist(['agents_api', 'unlabeled']), v.null()]),
         v.description(
           'When grouped by `api_source`, `agents_api` identifies attributed Agents API activity and `unlabeled` includes all records without published source attribution, including historical and unknown origins. Unlabeled does not imply direct API usage. Without source grouping, this field is null.',
         ),
@@ -36527,7 +37626,7 @@ export const UsageWebSearchCallsResultSchema = v.pipe(
             'When `group_by=project_id`, this field provides the project ID of the grouped usage result.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     user_id: v.optional(
@@ -36538,7 +37637,7 @@ export const UsageWebSearchCallsResultSchema = v.pipe(
             'When `group_by=user_id`, this field provides the user ID of the grouped usage result.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     api_key_id: v.optional(
@@ -36549,7 +37648,7 @@ export const UsageWebSearchCallsResultSchema = v.pipe(
             'When `group_by=api_key_id`, this field provides the API key ID of the grouped usage result.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     model: v.optional(
@@ -36560,7 +37659,7 @@ export const UsageWebSearchCallsResultSchema = v.pipe(
             'When `group_by=model`, this field provides the model name of the grouped usage result.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     context_level: v.optional(
@@ -36571,7 +37670,7 @@ export const UsageWebSearchCallsResultSchema = v.pipe(
             'When `group_by=context_level`, this field provides the search context size of the grouped usage result.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
   }),
@@ -36586,17 +37685,44 @@ export const UsageTimeBucketSchema = v.object({
   end_time: v.pipe(v.number(), v.integer()),
   results: v.array(
     v.union([
-      UsageCompletionsResultSchema,
-      UsageEmbeddingsResultSchema,
-      UsageModerationsResultSchema,
-      UsageImagesResultSchema,
-      UsageAudioSpeechesResultSchema,
-      UsageAudioTranscriptionsResultSchema,
-      UsageVectorStoresResultSchema,
-      UsageCodeInterpreterSessionsResultSchema,
-      UsageFileSearchCallsResultSchema,
-      UsageWebSearchCallsResultSchema,
-      CostsResultSchema,
+      v.intersect([
+        UsageCompletionsResultSchema,
+        v.object({ object: v.literal('UsageCompletionsResult') }),
+      ]),
+      v.intersect([
+        UsageEmbeddingsResultSchema,
+        v.object({ object: v.literal('UsageEmbeddingsResult') }),
+      ]),
+      v.intersect([
+        UsageModerationsResultSchema,
+        v.object({ object: v.literal('UsageModerationsResult') }),
+      ]),
+      v.intersect([UsageImagesResultSchema, v.object({ object: v.literal('UsageImagesResult') })]),
+      v.intersect([
+        UsageAudioSpeechesResultSchema,
+        v.object({ object: v.literal('UsageAudioSpeechesResult') }),
+      ]),
+      v.intersect([
+        UsageAudioTranscriptionsResultSchema,
+        v.object({ object: v.literal('UsageAudioTranscriptionsResult') }),
+      ]),
+      v.intersect([
+        UsageVectorStoresResultSchema,
+        v.object({ object: v.literal('UsageVectorStoresResult') }),
+      ]),
+      v.intersect([
+        UsageCodeInterpreterSessionsResultSchema,
+        v.object({ object: v.literal('UsageCodeInterpreterSessionsResult') }),
+      ]),
+      v.intersect([
+        UsageFileSearchCallsResultSchema,
+        v.object({ object: v.literal('UsageFileSearchCallsResult') }),
+      ]),
+      v.intersect([
+        UsageWebSearchCallsResultSchema,
+        v.object({ object: v.literal('UsageWebSearchCallsResult') }),
+      ]),
+      v.intersect([CostsResultSchema, v.object({ object: v.literal('CostsResult') })]),
     ]),
   ),
 })
@@ -36607,7 +37733,7 @@ export const UsageResponseSchema = v.object({
   object: v.literal('page'),
   data: v.array(UsageTimeBucketSchema),
   has_more: v.boolean(),
-  next_page: v.union([v.string(), v.nullable(v.null())]),
+  next_page: v.union([v.string(), v.null()]),
 })
 
 export type UsageResponse = v.InferOutput<typeof UsageResponseSchema>
@@ -36623,17 +37749,12 @@ export const UserSchema = v.pipe(
       v.description('The identifier, which can be referenced in API endpoints'),
     ),
     name: v.optional(
-      v.pipe(v.union([v.string(), v.nullable(v.null())]), v.description('The name of the user')),
+      v.pipe(v.union([v.string(), v.null()]), v.description('The name of the user')),
     ),
     email: v.optional(
-      v.pipe(
-        v.union([v.string(), v.nullable(v.null())]),
-        v.description('The email address of the user'),
-      ),
+      v.pipe(v.union([v.string(), v.null()]), v.description('The email address of the user')),
     ),
-    role: v.optional(
-      v.pipe(v.union([v.string(), v.nullable(v.null())]), v.description('`owner` or `reader`')),
-    ),
+    role: v.optional(v.pipe(v.union([v.string(), v.null()]), v.description('`owner` or `reader`'))),
     added_at: v.pipe(
       v.pipe(v.number(), v.integer()),
       v.description('The Unix timestamp (in seconds) of when the user was added.'),
@@ -36652,12 +37773,12 @@ export const UserSchema = v.pipe(
         v.object({
           object: v.literal('user'),
           id: v.string(),
-          email: v.optional(v.union([v.string(), v.nullable(v.null())])),
-          name: v.optional(v.union([v.string(), v.nullable(v.null())])),
-          picture: v.optional(v.union([v.string(), v.nullable(v.null())])),
-          enabled: v.optional(v.union([v.boolean(), v.nullable(v.null())])),
-          banned: v.optional(v.union([v.boolean(), v.nullable(v.null())])),
-          banned_at: v.optional(v.union([v.pipe(v.number(), v.integer()), v.nullable(v.null())])),
+          email: v.optional(v.union([v.string(), v.null()])),
+          name: v.optional(v.union([v.string(), v.null()])),
+          picture: v.optional(v.union([v.string(), v.null()])),
+          enabled: v.optional(v.union([v.boolean(), v.null()])),
+          banned: v.optional(v.union([v.boolean(), v.null()])),
+          banned_at: v.optional(v.union([v.pipe(v.number(), v.integer()), v.null()])),
         }),
         v.description('Nested user details.'),
       ),
@@ -36667,7 +37788,7 @@ export const UserSchema = v.pipe(
     ),
     is_scale_tier_authorized_purchaser: v.optional(
       v.pipe(
-        v.union([v.boolean(), v.nullable(v.null())]),
+        v.union([v.boolean(), v.null()]),
         v.description('Whether the user is an authorized purchaser for Scale Tier.'),
       ),
     ),
@@ -36676,19 +37797,19 @@ export const UserSchema = v.pipe(
     ),
     api_key_last_used_at: v.optional(
       v.pipe(
-        v.union([v.pipe(v.number(), v.integer()), v.nullable(v.null())]),
+        v.union([v.pipe(v.number(), v.integer()), v.null()]),
         v.description("The Unix timestamp (in seconds) of the user's last API key usage."),
       ),
     ),
     technical_level: v.optional(
       v.pipe(
-        v.union([v.string(), v.nullable(v.null())]),
+        v.union([v.string(), v.null()]),
         v.description('The technical level metadata for the user.'),
       ),
     ),
     developer_persona: v.optional(
       v.pipe(
-        v.union([v.string(), v.nullable(v.null())]),
+        v.union([v.string(), v.null()]),
         v.description('The developer persona metadata for the user.'),
       ),
     ),
@@ -36700,14 +37821,14 @@ export const UserSchema = v.pipe(
             data: v.array(
               v.partial(
                 v.object({
-                  id: v.union([v.string(), v.nullable(v.null())]),
-                  name: v.union([v.string(), v.nullable(v.null())]),
-                  role: v.union([v.string(), v.nullable(v.null())]),
+                  id: v.union([v.string(), v.null()]),
+                  name: v.union([v.string(), v.null()]),
+                  role: v.union([v.string(), v.null()]),
                 }),
               ),
             ),
           }),
-          v.nullable(v.null()),
+          v.null(),
         ]),
         v.description('Projects associated with the user, if included.'),
       ),
@@ -36735,7 +37856,7 @@ export const UserListResourceSchema = v.pipe(
       v.description('Whether more users are available when paginating.'),
     ),
     next: v.pipe(
-      v.union([v.string(), v.nullable(v.null())]),
+      v.union([v.string(), v.null()]),
       v.description(
         'Cursor to fetch the next page of results, or `null` when no further users are available.',
       ),
@@ -36749,8 +37870,8 @@ export type UserListResource = v.InferOutput<typeof UserListResourceSchema>
 export const UserListResponseSchema = v.object({
   object: v.literal('list'),
   data: v.array(UserSchema),
-  first_id: v.optional(v.union([v.string(), v.nullable(v.null())])),
-  last_id: v.optional(v.union([v.string(), v.nullable(v.null())])),
+  first_id: v.optional(v.union([v.string(), v.null()])),
+  last_id: v.optional(v.union([v.string(), v.null()])),
   has_more: v.boolean(),
 })
 
@@ -36769,17 +37890,17 @@ export type UserRoleAssignment = v.InferOutput<typeof UserRoleAssignmentSchema>
 
 export const UserRoleUpdateRequestSchema = v.partial(
   v.object({
-    role: v.pipe(v.union([v.string(), v.nullable(v.null())]), v.description('`owner` or `reader`')),
+    role: v.pipe(v.union([v.string(), v.null()]), v.description('`owner` or `reader`')),
     role_id: v.pipe(
-      v.union([v.string(), v.nullable(v.null())]),
+      v.union([v.string(), v.null()]),
       v.description('Role ID to assign to the user.'),
     ),
     technical_level: v.pipe(
-      v.union([v.string(), v.nullable(v.null())]),
+      v.union([v.string(), v.null()]),
       v.description('Technical level metadata.'),
     ),
     developer_persona: v.pipe(
-      v.union([v.string(), v.nullable(v.null())]),
+      v.union([v.string(), v.null()]),
       v.description('Developer persona metadata.'),
     ),
   }),
@@ -36895,7 +38016,7 @@ export const VectorStoreFileContentResponseSchema = v.pipe(
     ),
     next_page: v.union([
       v.pipe(v.string(), v.description('The token for the next page, if any.')),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   }),
   v.description('Represents the parsed content of a vector store file.'),
@@ -36985,7 +38106,7 @@ export const VectorStoreSearchResultsPageSchema = v.strictObject({
   has_more: v.pipe(v.boolean(), v.description('Indicates if there are more results to fetch.')),
   next_page: v.union([
     v.pipe(v.string(), v.description('The token for the next page, if any.')),
-    v.nullable(v.null()),
+    v.null(),
   ]),
 })
 
@@ -37035,8 +38156,8 @@ export type VoiceConsentResource = v.InferOutput<typeof VoiceConsentResourceSche
 export const VoiceConsentListResourceSchema = v.strictObject({
   object: v.literal('list'),
   data: v.array(VoiceConsentResourceSchema),
-  first_id: v.optional(v.union([v.string(), v.nullable(v.null())])),
-  last_id: v.optional(v.union([v.string(), v.nullable(v.null())])),
+  first_id: v.optional(v.union([v.string(), v.null()])),
+  last_id: v.optional(v.union([v.string(), v.null()])),
   has_more: v.boolean(),
 })
 
@@ -38154,7 +39275,7 @@ export const CreateConversationBodySchema = v.partial(
           'Set of 16 key-value pairs that can be attached to an object. This can be         useful for storing additional information about the object in a structured         format, and querying for objects via API or the dashboard.\n        Keys are strings with a maximum length of 64 characters. Values are strings         with a maximum length of 512 characters.',
         ),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
     items: v.union([
       v.pipe(
@@ -38163,7 +39284,7 @@ export const CreateConversationBodySchema = v.partial(
           'Initial items to include in the conversation context. You may add up to 20 items at a time.',
         ),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   }),
 )
@@ -38194,7 +39315,7 @@ export const SafetyCaseResourceSchema = v.object({
   object: v.optional(v.literal('safety.case'), 'safety.case'),
   created_at: v.pipe(v.number(), v.integer()),
   entity_identifier: v.string(),
-  reason: v.union([v.string(), v.nullable(v.null())]),
+  reason: v.union([v.string(), v.null()]),
   notice: SafetyCaseNoticeSchema,
 })
 
@@ -38230,7 +39351,7 @@ export const SafetyAlertResourceSchema = v.object({
         'A customer-safe description derived from error_type, or null for zero data retention requests.',
       ),
     ),
-    v.nullable(v.null()),
+    v.null(),
   ]),
   detailed_explanation: v.optional(
     v.union([
@@ -38240,7 +39361,7 @@ export const SafetyAlertResourceSchema = v.object({
           'A generated explanation, temporarily available for eligible zero data retention alerts. Omitted when unavailable.',
         ),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   ),
 })
@@ -38291,8 +39412,8 @@ export type ExternalKeyResource = v.InferOutput<typeof ExternalKeyResourceSchema
 export const ListExternalKeysResourceSchema = v.object({
   object: v.optional(v.literal('list'), 'list'),
   data: v.array(ExternalKeyResourceSchema),
-  first_id: v.union([v.string(), v.nullable(v.null())]),
-  last_id: v.union([v.string(), v.nullable(v.null())]),
+  first_id: v.union([v.string(), v.null()]),
+  last_id: v.union([v.string(), v.null()]),
   has_more: v.boolean(),
 })
 
@@ -38430,10 +39551,13 @@ export const OciExternalKeyParamsSchema = v.object({
 export type OciExternalKeyParams = v.InferOutput<typeof OciExternalKeyParamsSchema>
 
 export const V1OrganizationExternalKeysPostRequestSchema = v.union([
-  AwsExternalKeyParamsSchema,
-  GcpExternalKeyParamsSchema,
-  AzureExternalKeyParamsSchema,
-  OciExternalKeyParamsSchema,
+  v.intersect([AwsExternalKeyParamsSchema, v.object({ type: v.literal('AwsExternalKeyParams') })]),
+  v.intersect([GcpExternalKeyParamsSchema, v.object({ type: v.literal('GcpExternalKeyParams') })]),
+  v.intersect([
+    AzureExternalKeyParamsSchema,
+    v.object({ type: v.literal('AzureExternalKeyParams') }),
+  ]),
+  v.intersect([OciExternalKeyParamsSchema, v.object({ type: v.literal('OciExternalKeyParams') })]),
 ])
 
 export type V1OrganizationExternalKeysPostRequest = v.InferOutput<
@@ -38446,7 +39570,7 @@ export type ValidateExternalKeyResource = v.InferOutput<typeof ValidateExternalK
 
 export const DiscoveryVerificationSchema = v.object({
   type: v.optional(v.literal('discovery'), 'discovery'),
-  discovery_url: v.union([v.string(), v.nullable(v.null())]),
+  discovery_url: v.union([v.string(), v.null()]),
 })
 
 export type DiscoveryVerification = v.InferOutput<typeof DiscoveryVerificationSchema>
@@ -38473,7 +39597,7 @@ export const PlatformProviderSchema = v.object({
   issuer: v.string(),
   audience: v.string(),
   verification: v.union([DiscoveryVerificationSchema, UploadedJwksVerificationSchema]),
-  description: v.union([v.string(), v.nullable(v.null())]),
+  description: v.union([v.string(), v.null()]),
   attribute_transformations: v.array(TransformationSchema),
   enabled: v.boolean(),
   created_at: v.pipe(v.number(), v.integer()),
@@ -38485,8 +39609,8 @@ export type PlatformProvider = v.InferOutput<typeof PlatformProviderSchema>
 export const PlatformProviderListResourceSchema = v.object({
   object: v.optional(v.literal('list'), 'list'),
   data: v.array(PlatformProviderSchema),
-  first_id: v.union([v.string(), v.nullable(v.null())]),
-  last_id: v.union([v.string(), v.nullable(v.null())]),
+  first_id: v.union([v.string(), v.null()]),
+  last_id: v.union([v.string(), v.null()]),
   has_more: v.boolean(),
 })
 
@@ -38494,7 +39618,7 @@ export type PlatformProviderListResource = v.InferOutput<typeof PlatformProvider
 
 export const DiscoveryVerificationParamSchema = v.object({
   type: v.optional(v.literal('discovery'), 'discovery'),
-  discovery_url: v.union([v.string(), v.nullable(v.null())]),
+  discovery_url: v.union([v.string(), v.null()]),
 })
 
 export type DiscoveryVerificationParam = v.InferOutput<typeof DiscoveryVerificationParamSchema>
@@ -38540,7 +39664,7 @@ export const UpdatePlatformWorkloadIdentityProviderBodySchema = v.partial(
     issuer: v.pipe(v.string(), v.minCodePoints(1)),
     audience: v.pipe(v.string(), v.minCodePoints(1)),
     verification: v.union([DiscoveryVerificationParamSchema, UploadedJwksVerificationParamSchema]),
-    description: v.union([v.string(), v.nullable(v.null())]),
+    description: v.union([v.string(), v.null()]),
     attribute_transformations: v.pipe(v.array(TransformationParamSchema), v.maxLength(20)),
     enabled: v.boolean(),
   }),
@@ -38585,8 +39709,8 @@ export const PlatformFederationRuleSchema = v.object({
   workload_identity_provider_id: v.string(),
   project_id: v.string(),
   service_account_id: v.string(),
-  name: v.union([v.string(), v.nullable(v.null())]),
-  description: v.union([v.string(), v.nullable(v.null())]),
+  name: v.union([v.string(), v.null()]),
+  description: v.union([v.string(), v.null()]),
   attribute_matchers: v.record(
     v.string(),
     v.union([v.string(), v.boolean(), v.union([v.pipe(v.number(), v.integer()), v.number()])]),
@@ -38602,8 +39726,8 @@ export type PlatformFederationRule = v.InferOutput<typeof PlatformFederationRule
 export const PlatformFederationRuleListResourceSchema = v.object({
   object: v.optional(v.literal('list'), 'list'),
   data: v.array(PlatformFederationRuleSchema),
-  first_id: v.union([v.string(), v.nullable(v.null())]),
-  last_id: v.union([v.string(), v.nullable(v.null())]),
+  first_id: v.union([v.string(), v.null()]),
+  last_id: v.union([v.string(), v.null()]),
   has_more: v.boolean(),
 })
 
@@ -38645,8 +39769,8 @@ export type CreatePlatformWorkloadIdentityFederationRuleBody = v.InferOutput<
 
 export const UpdatePlatformWorkloadIdentityFederationRuleBodySchema = v.partial(
   v.object({
-    name: v.union([v.string(), v.nullable(v.null())]),
-    description: v.union([v.string(), v.nullable(v.null())]),
+    name: v.union([v.string(), v.null()]),
+    description: v.union([v.string(), v.null()]),
     attribute_matchers: v.record(
       v.string(),
       v.union([v.string(), v.boolean(), v.union([v.pipe(v.number(), v.integer()), v.number()])]),
@@ -38703,7 +39827,7 @@ export const DecisionsUsageResultSchema = v.pipe(
             'When grouped by `api_source`, `agents_api` identifies attributed Agents API activity and `unlabeled` includes all records without published source attribution, including historical and unknown origins. Unlabeled does not imply direct API usage. Without source grouping, this field is null.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     object: v.optional(
@@ -38724,7 +39848,7 @@ export const DecisionsUsageResultSchema = v.pipe(
             'The aggregated number of cached input tokens used across text, audio, and image inputs. For customers subscribed to Scale Tier, this includes Scale Tier tokens.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     input_cache_write_tokens: v.optional(
@@ -38735,7 +39859,7 @@ export const DecisionsUsageResultSchema = v.pipe(
             'The aggregated number of input tokens written to the cache across 30-minute and 12-hour retention periods.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     input_cache_write_30m_tokens: v.optional(
@@ -38746,7 +39870,7 @@ export const DecisionsUsageResultSchema = v.pipe(
             'The aggregated number of input tokens written to the cache with a 30-minute retention period.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     input_cache_write_12h_tokens: v.optional(
@@ -38757,7 +39881,7 @@ export const DecisionsUsageResultSchema = v.pipe(
             'The aggregated number of input tokens written to the cache with a 12-hour retention period.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     input_uncached_tokens: v.optional(
@@ -38768,7 +39892,7 @@ export const DecisionsUsageResultSchema = v.pipe(
             'The aggregated number of uncached input tokens used across text, audio, and image inputs, excluding cache-write tokens.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     output_tokens: v.pipe(
@@ -38785,7 +39909,7 @@ export const DecisionsUsageResultSchema = v.pipe(
             'The aggregated number of uncached text input tokens used, excluding cache-write tokens.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     output_text_tokens: v.optional(
@@ -38794,7 +39918,7 @@ export const DecisionsUsageResultSchema = v.pipe(
           v.pipe(v.number(), v.integer()),
           v.description('The aggregated number of text output tokens used.'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     input_cached_text_tokens: v.optional(
@@ -38803,7 +39927,7 @@ export const DecisionsUsageResultSchema = v.pipe(
           v.pipe(v.number(), v.integer()),
           v.description('The aggregated number of cached text input tokens used.'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     input_audio_tokens: v.optional(
@@ -38812,7 +39936,7 @@ export const DecisionsUsageResultSchema = v.pipe(
           v.pipe(v.number(), v.integer()),
           v.description('The aggregated number of uncached audio input tokens used.'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     input_cached_audio_tokens: v.optional(
@@ -38821,7 +39945,7 @@ export const DecisionsUsageResultSchema = v.pipe(
           v.pipe(v.number(), v.integer()),
           v.description('The aggregated number of cached audio input tokens used.'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     output_audio_tokens: v.optional(
@@ -38830,7 +39954,7 @@ export const DecisionsUsageResultSchema = v.pipe(
           v.pipe(v.number(), v.integer()),
           v.description('The aggregated number of audio output tokens used.'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     input_image_tokens: v.optional(
@@ -38839,7 +39963,7 @@ export const DecisionsUsageResultSchema = v.pipe(
           v.pipe(v.number(), v.integer()),
           v.description('The aggregated number of uncached image input tokens used.'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     input_cached_image_tokens: v.optional(
@@ -38848,7 +39972,7 @@ export const DecisionsUsageResultSchema = v.pipe(
           v.pipe(v.number(), v.integer()),
           v.description('The aggregated number of cached image input tokens used.'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     output_image_tokens: v.optional(
@@ -38857,7 +39981,7 @@ export const DecisionsUsageResultSchema = v.pipe(
           v.pipe(v.number(), v.integer()),
           v.description('The aggregated number of image output tokens used.'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     num_model_requests: v.pipe(
@@ -38872,7 +39996,7 @@ export const DecisionsUsageResultSchema = v.pipe(
             'When `group_by=project_id`, this field provides the project ID of the grouped usage result.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     user_id: v.optional(
@@ -38883,7 +40007,7 @@ export const DecisionsUsageResultSchema = v.pipe(
             'When `group_by=user_id`, this field provides the user ID of the grouped usage result.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     api_key_id: v.optional(
@@ -38894,7 +40018,7 @@ export const DecisionsUsageResultSchema = v.pipe(
             'When `group_by=api_key_id`, this field provides the API key ID of the grouped usage result.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     model: v.optional(
@@ -38905,7 +40029,7 @@ export const DecisionsUsageResultSchema = v.pipe(
             'When `group_by=model`, this field provides the model name of the grouped usage result.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     batch: v.optional(
@@ -38916,7 +40040,7 @@ export const DecisionsUsageResultSchema = v.pipe(
             'When `group_by=batch`, this field tells whether the grouped usage result is batch or not.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     service_tier: v.optional(
@@ -38927,7 +40051,7 @@ export const DecisionsUsageResultSchema = v.pipe(
             'When `group_by=service_tier`, this field provides the service tier of the grouped usage result.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
   }),
@@ -38948,7 +40072,7 @@ export type DecisionsUsageBucket = v.InferOutput<typeof DecisionsUsageBucketSche
 export const PublicDecisionsUsageResponseResourceSchema = v.object({
   object: v.optional(v.literal('page'), 'page'),
   has_more: v.boolean(),
-  next_page: v.union([v.string(), v.nullable(v.null())]),
+  next_page: v.union([v.string(), v.null()]),
   data: v.array(DecisionsUsageBucketSchema),
 })
 
@@ -38957,9 +40081,9 @@ export type PublicDecisionsUsageResponseResource = v.InferOutput<
 >
 
 export const DecisionsUsageErrorDetailsSchema = v.object({
-  code: v.union([v.string(), v.nullable(v.null())]),
+  code: v.union([v.string(), v.null()]),
   message: v.string(),
-  param: v.union([v.string(), v.nullable(v.null())]),
+  param: v.union([v.string(), v.null()]),
   type: v.string(),
 })
 
@@ -39003,10 +40127,22 @@ export const ExternalStorageResponseSchema = v.object({
   id: v.string(),
   project_id: v.string(),
   provider: v.union([
-    AwsExternalStorageProviderResponseSchema,
-    AzureExternalStorageProviderResponseSchema,
-    GcpExternalStorageProviderResponseSchema,
-    OciExternalStorageProviderResponseSchema,
+    v.intersect([
+      AwsExternalStorageProviderResponseSchema,
+      v.object({ type: v.literal('AwsExternalStorageProviderResponse') }),
+    ]),
+    v.intersect([
+      AzureExternalStorageProviderResponseSchema,
+      v.object({ type: v.literal('AzureExternalStorageProviderResponse') }),
+    ]),
+    v.intersect([
+      GcpExternalStorageProviderResponseSchema,
+      v.object({ type: v.literal('GcpExternalStorageProviderResponse') }),
+    ]),
+    v.intersect([
+      OciExternalStorageProviderResponseSchema,
+      v.object({ type: v.literal('OciExternalStorageProviderResponse') }),
+    ]),
   ]),
   geography: v.string(),
   status: ExternalStorageStatusSchema,
@@ -39018,8 +40154,8 @@ export type ExternalStorageResponse = v.InferOutput<typeof ExternalStorageRespon
 export const ExternalStorageListResourceSchema = v.object({
   object: v.optional(v.literal('list'), 'list'),
   data: v.array(ExternalStorageResponseSchema),
-  first_id: v.union([v.string(), v.nullable(v.null())]),
-  last_id: v.union([v.string(), v.nullable(v.null())]),
+  first_id: v.union([v.string(), v.null()]),
+  last_id: v.union([v.string(), v.null()]),
   has_more: v.boolean(),
 })
 
@@ -39074,10 +40210,22 @@ export type OciExternalStorageProviderParams = v.InferOutput<
 export const CreateExternalStorageBodySchema = v.object({
   project_id: v.pipe(v.string(), v.metadata({ examples: ['proj_123'] })),
   provider: v.union([
-    AwsExternalStorageProviderParamsSchema,
-    AzureExternalStorageProviderParamsSchema,
-    GcpExternalStorageProviderParamsSchema,
-    OciExternalStorageProviderParamsSchema,
+    v.intersect([
+      AwsExternalStorageProviderParamsSchema,
+      v.object({ type: v.literal('AwsExternalStorageProviderParams') }),
+    ]),
+    v.intersect([
+      AzureExternalStorageProviderParamsSchema,
+      v.object({ type: v.literal('AzureExternalStorageProviderParams') }),
+    ]),
+    v.intersect([
+      GcpExternalStorageProviderParamsSchema,
+      v.object({ type: v.literal('GcpExternalStorageProviderParams') }),
+    ]),
+    v.intersect([
+      OciExternalStorageProviderParamsSchema,
+      v.object({ type: v.literal('OciExternalStorageProviderParams') }),
+    ]),
   ]),
 })
 
@@ -39126,7 +40274,7 @@ export type SpendLimitEnforcement = v.InferOutput<typeof SpendLimitEnforcementSc
 export const EmailNotificationChannelSchema = v.object({
   type: v.optional(v.literal('email'), 'email'),
   recipients: v.array(v.string()),
-  subject_prefix: v.optional(v.union([v.string(), v.nullable(v.null())])),
+  subject_prefix: v.optional(v.union([v.string(), v.null()])),
 })
 
 export type EmailNotificationChannel = v.InferOutput<typeof EmailNotificationChannelSchema>
@@ -39186,7 +40334,7 @@ export const SpendLimitEmailNotificationChannelParamsSchema = v.pipe(
             'Email subject prefix. Omit to keep it unchanged; send null or an empty string to clear it.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
   }),
@@ -39223,7 +40371,7 @@ export const UpdateOrganizationSpendLimitBodySchema = v.pipe(
             'Configure email notifications when the spend limit is reached. Leave this out to keep the current settings, or send null to reset to owner-only notifications.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
   }),
@@ -39307,7 +40455,7 @@ export const UpdateProjectSpendLimitBodySchema = v.pipe(
             'Configure email notifications when the spend limit is reached. Leave this out to keep the current settings, or send null to reset to owner-only notifications.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
   }),
@@ -39376,7 +40524,7 @@ export const CreateProjectServiceAccountApiKeyBodySchema = v.pipe(
           v.pipe(v.number(), v.integer(), v.minValue(1), v.maxValue(31536000)),
           v.description('Number of seconds until the API key expires.'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     }),
   ),
@@ -39411,7 +40559,7 @@ export const ServiceAccountApiKeyBodySchema = v.object({
           'The Unix timestamp (in seconds) when the API key expires, or null if it does not expire.',
         ),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   ),
   id: v.pipe(v.string(), v.description('The identifier of the API key.')),
@@ -39464,14 +40612,14 @@ export const C2PAProvenanceResultSchema = v.object({
   ),
   issuer: v.union([
     v.pipe(v.string(), v.description('The C2PA manifest issuer, when available.')),
-    v.nullable(v.null()),
+    v.null(),
   ]),
   model: v.union([
     v.pipe(
       v.string(),
       v.description('The OpenAI model recorded by the provenance signal, when available.'),
     ),
-    v.nullable(v.null()),
+    v.null(),
   ]),
   generated_at: v.union([
     v.pipe(
@@ -39480,7 +40628,7 @@ export const C2PAProvenanceResultSchema = v.object({
         'The UTC RFC 3339 timestamp recorded by the provenance signal for when the asset was generated, when available.',
       ),
     ),
-    v.nullable(v.null()),
+    v.null(),
   ]),
 })
 
@@ -39502,7 +40650,7 @@ export const SynthIDProvenanceResultSchema = v.object({
       v.string(),
       v.description('The OpenAI model recorded by the provenance signal, when available.'),
     ),
-    v.nullable(v.null()),
+    v.null(),
   ]),
   generated_at: v.union([
     v.pipe(
@@ -39511,7 +40659,7 @@ export const SynthIDProvenanceResultSchema = v.object({
         'The UTC RFC 3339 timestamp recorded by the provenance signal for when the asset was generated, when available.',
       ),
     ),
-    v.nullable(v.null()),
+    v.null(),
   ]),
 })
 
@@ -39527,7 +40675,18 @@ export const ProvenanceResourceSchema = v.object({
     v.description('The Unix timestamp, in seconds, when the provenance check was created.'),
   ),
   results: v.pipe(
-    v.array(v.union([C2PAProvenanceResultSchema, SynthIDProvenanceResultSchema])),
+    v.array(
+      v.union([
+        v.intersect([
+          C2PAProvenanceResultSchema,
+          v.object({ type: v.literal('C2PAProvenanceResult') }),
+        ]),
+        v.intersect([
+          SynthIDProvenanceResultSchema,
+          v.object({ type: v.literal('SynthIDProvenanceResult') }),
+        ]),
+      ]),
+    ),
     v.description(
       'The provenance results that apply to the uploaded file. Image results include C2PA and SynthID; audio results include SynthID.',
     ),
@@ -39566,7 +40725,7 @@ export const Error2Schema = v.pipe(
           v.string(),
           v.description('The original error type, or null if it was not recorded.'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     param: v.optional(
@@ -39577,7 +40736,7 @@ export const Error2Schema = v.pipe(
             'The request parameter associated with the error, or null if none was recorded.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     message: v.pipe(
@@ -39624,18 +40783,18 @@ export const VideoResourceSchema = v.pipe(
         v.pipe(v.number(), v.integer()),
         v.description('Unix timestamp (seconds) for when the job completed, if finished.'),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
     expires_at: v.union([
       v.pipe(
         v.pipe(v.number(), v.integer()),
         v.description('Unix timestamp (seconds) for when the downloadable assets expire, if set.'),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
     prompt: v.union([
       v.pipe(v.string(), v.description('The prompt that was used to generate the video.')),
-      v.nullable(v.null()),
+      v.null(),
     ]),
     size: v.pipe(VideoSizeSchema, v.description('The resolution of the generated video.')),
     seconds: v.pipe(
@@ -39646,14 +40805,14 @@ export const VideoResourceSchema = v.pipe(
     ),
     remixed_from_video_id: v.union([
       v.pipe(v.string(), v.description('Identifier of the source video if this video is a remix.')),
-      v.nullable(v.null()),
+      v.null(),
     ]),
     error: v.union([
       v.pipe(
         Error2Schema,
         v.description('Error payload that explains why generation failed, if applicable.'),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   }),
   v.description('Structured information describing a generated video job.'),
@@ -39669,11 +40828,11 @@ export const VideoListResourceSchema = v.object({
   data: v.pipe(v.array(VideoResourceSchema), v.description('A list of items')),
   first_id: v.union([
     v.pipe(v.string(), v.description('The ID of the first item in the list.')),
-    v.nullable(v.null()),
+    v.null(),
   ]),
   last_id: v.union([
     v.pipe(v.string(), v.description('The ID of the last item in the list.')),
-    v.nullable(v.null()),
+    v.null(),
   ]),
   has_more: v.pipe(v.boolean(), v.description('Whether there are more items available.')),
 })
@@ -39808,12 +40967,9 @@ export type CreateVideoCharacterBody = v.InferOutput<typeof CreateVideoCharacter
 export const VideoCharacterResourceSchema = v.object({
   id: v.union([
     v.pipe(v.string(), v.description('Identifier for the character creation cameo.')),
-    v.nullable(v.null()),
+    v.null(),
   ]),
-  name: v.union([
-    v.pipe(v.string(), v.description('Display name for the character.')),
-    v.nullable(v.null()),
-  ]),
+  name: v.union([v.pipe(v.string(), v.description('Display name for the character.')), v.null()]),
   created_at: v.pipe(
     v.pipe(v.number(), v.integer()),
     v.description('Unix timestamp (in seconds) when the character was created.'),
@@ -39966,7 +41122,7 @@ export const TokenCountsBodySchema = v.partial(
           'Model ID used to generate the response, like `gpt-4o` or `o3`. OpenAI offers a wide range of models with different capabilities, performance characteristics, and price points. Refer to the [model guide](https://developers.openai.com/api/docs/models) to browse and compare available models.',
         ),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
     input: v.union([
       v.pipe(
@@ -39986,7 +41142,7 @@ export const TokenCountsBodySchema = v.partial(
         ]),
         v.description('Text, image, or file inputs to the model, used to generate a response'),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
     previous_response_id: v.union([
       v.pipe(
@@ -39996,7 +41152,7 @@ export const TokenCountsBodySchema = v.partial(
         ),
         v.metadata({ examples: ['resp_123'] }),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
     tools: v.union([
       v.pipe(
@@ -40005,9 +41161,9 @@ export const TokenCountsBodySchema = v.partial(
           'An array of tools the model may call while generating a response. You can specify which tool to use by setting the `tool_choice` parameter.',
         ),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
-    text: v.union([ResponseTextParamSchema, v.nullable(v.null())]),
+    text: v.union([ResponseTextParamSchema, v.null()]),
     reasoning: v.union([
       v.pipe(
         ReasoningSchema,
@@ -40015,7 +41171,7 @@ export const TokenCountsBodySchema = v.partial(
           '**gpt-5 and o-series models only** Configuration options for [reasoning models](https://developers.openai.com/api/docs/guides/reasoning).',
         ),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
     truncation: v.pipe(
       TruncationEnumSchema,
@@ -40031,7 +41187,7 @@ export const TokenCountsBodySchema = v.partial(
           "A system (or developer) message inserted into the model's context.\nWhen used along with `previous_response_id`, the instructions from a previous response will not be carried over to the next response. This makes it simple to swap out system (or developer) messages in new responses.",
         ),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
     personality: v.pipe(
       PersonalityEnumSchema,
@@ -40039,20 +41195,20 @@ export const TokenCountsBodySchema = v.partial(
         "A model-owned style preset to apply to this request. Omit this parameter to use the model's default style. Supported values may expand over time. Values must be at most 64 characters.",
       ),
     ),
-    conversation: v.union([ConversationParamSchema, v.nullable(v.null())]),
+    conversation: v.union([ConversationParamSchema, v.null()]),
     tool_choice: v.union([
       v.pipe(
         ToolChoiceParamSchema,
         v.description('Controls which tool the model should use, if any.'),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
     parallel_tool_calls: v.union([
       v.pipe(
         v.boolean(),
         v.description('Whether to allow the model to run tool calls in parallel.'),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   }),
 )
@@ -40098,7 +41254,7 @@ export const CompactResponseMethodPublicBodySchema = v.object({
         ]),
         v.description('Text, image, or file inputs to the model, used to generate a response'),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   ),
   previous_response_id: v.optional(
@@ -40110,7 +41266,7 @@ export const CompactResponseMethodPublicBodySchema = v.object({
         ),
         v.metadata({ examples: ['resp_123'] }),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   ),
   instructions: v.optional(
@@ -40122,7 +41278,16 @@ export const CompactResponseMethodPublicBodySchema = v.object({
         ),
         v.metadata({ deprecated: true }),
       ),
-      v.nullable(v.null()),
+      v.null(),
+    ]),
+  ),
+  safety_identifier: v.optional(
+    v.union([
+      v.pipe(
+        v.pipe(v.string(), v.maxCodePoints(128)),
+        v.description('A stable identifier used for safety monitoring and abuse detection.'),
+      ),
+      v.null(),
     ]),
   ),
   image: v.optional(v.pipe(ImageOptionsParamSchema, v.description('Request level image options.'))),
@@ -40132,7 +41297,7 @@ export const CompactResponseMethodPublicBodySchema = v.object({
         v.pipe(v.string(), v.maxCodePoints(64)),
         v.description('A key to use when reading from or writing to the prompt cache.'),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   ),
   prompt_cache_retention: v.optional(
@@ -40142,10 +41307,10 @@ export const CompactResponseMethodPublicBodySchema = v.object({
         v.description('How long to retain a prompt cache entry created by this request.'),
         v.metadata({ deprecated: true }),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   ),
-  prompt_cache_options: v.optional(v.union([PromptCacheOptionsParamSchema, v.nullable(v.null())])),
+  prompt_cache_options: v.optional(v.union([PromptCacheOptionsParamSchema, v.null()])),
   service_tier: v.optional(
     v.union([
       v.pipe(
@@ -40154,7 +41319,7 @@ export const CompactResponseMethodPublicBodySchema = v.object({
           "Specifies the processing type used for serving the request.   - If set to 'auto', then the request will be processed with the service tier configured in the Project settings. Unless otherwise configured, the Project will use 'default'.   - If set to 'default', then the request will be processed with the standard pricing and performance for the selected model.   - If set to '[flex](https://developers.openai.com/api/docs/guides/flex-processing)', then the request will be processed with the Flex Processing service tier.   - To opt-in to [Fast mode](https://developers.openai.com/api/docs/guides/fast-mode) at the request level, include the `service_tier=fast` or `service_tier=priority` parameter for Responses or Chat Completions. For models with a dedicated Fast tier, either value resolves to `service_tier=fast`; for other models, either value resolves to `service_tier=priority`.   - When not set, the default behavior is 'auto'.\n  When the `service_tier` parameter is set, the response body will include the `service_tier` value based on the processing mode actually used to serve the request. This response value may be different from the value set in the parameter.",
         ),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   ),
 })
@@ -40165,34 +41330,61 @@ export type CompactResponseMethodPublicBody = v.InferOutput<
 
 export const ItemFieldSchema = v.pipe(
   v.union([
-    MessageSchema,
-    ProgramSchema,
-    ProgramOutputSchema,
-    FunctionToolCallSchema,
-    ToolSearchCallSchema,
-    ToolSearchOutputSchema,
-    AdditionalToolsSchema,
-    FunctionToolCallOutputSchema,
-    FileSearchToolCallSchema,
-    WebSearchToolCallSchema,
-    ImageGenToolCallSchema,
-    ComputerToolCallSchema,
-    ComputerToolCallOutputResourceSchema,
-    ReasoningItemSchema,
-    CompactionBodySchema,
-    CodeInterpreterToolCallSchema,
-    v.pipe(LocalShellToolCallSchema, v.metadata({ deprecated: true })),
-    v.pipe(LocalShellToolCallOutputSchema, v.metadata({ deprecated: true })),
-    FunctionShellCallSchema,
-    FunctionShellCallOutputSchema,
-    ApplyPatchToolCallSchema,
-    ApplyPatchToolCallOutputSchema,
-    MCPListToolsSchema,
-    MCPApprovalRequestSchema,
-    MCPApprovalResponseResourceSchema,
-    MCPToolCallSchema,
-    CustomToolCallSchema,
-    CustomToolCallOutputSchema,
+    v.intersect([MessageSchema, v.object({ type: v.literal('Message') })]),
+    v.intersect([ProgramSchema, v.object({ type: v.literal('Program') })]),
+    v.intersect([ProgramOutputSchema, v.object({ type: v.literal('ProgramOutput') })]),
+    v.intersect([FunctionToolCallSchema, v.object({ type: v.literal('FunctionToolCall') })]),
+    v.intersect([ToolSearchCallSchema, v.object({ type: v.literal('ToolSearchCall') })]),
+    v.intersect([ToolSearchOutputSchema, v.object({ type: v.literal('ToolSearchOutput') })]),
+    v.intersect([AdditionalToolsSchema, v.object({ type: v.literal('AdditionalTools') })]),
+    v.intersect([
+      FunctionToolCallOutputSchema,
+      v.object({ type: v.literal('FunctionToolCallOutput') }),
+    ]),
+    v.intersect([FileSearchToolCallSchema, v.object({ type: v.literal('FileSearchToolCall') })]),
+    v.intersect([WebSearchToolCallSchema, v.object({ type: v.literal('WebSearchToolCall') })]),
+    v.intersect([ImageGenToolCallSchema, v.object({ type: v.literal('ImageGenToolCall') })]),
+    v.intersect([ComputerToolCallSchema, v.object({ type: v.literal('ComputerToolCall') })]),
+    v.intersect([
+      ComputerToolCallOutputResourceSchema,
+      v.object({ type: v.literal('ComputerToolCallOutputResource') }),
+    ]),
+    v.intersect([ReasoningItemSchema, v.object({ type: v.literal('ReasoningItem') })]),
+    v.intersect([CompactionBodySchema, v.object({ type: v.literal('CompactionBody') })]),
+    v.intersect([
+      CodeInterpreterToolCallSchema,
+      v.object({ type: v.literal('CodeInterpreterToolCall') }),
+    ]),
+    v.intersect([
+      v.pipe(LocalShellToolCallSchema, v.metadata({ deprecated: true })),
+      v.object({ type: v.literal('LocalShellToolCall') }),
+    ]),
+    v.intersect([
+      v.pipe(LocalShellToolCallOutputSchema, v.metadata({ deprecated: true })),
+      v.object({ type: v.literal('LocalShellToolCallOutput') }),
+    ]),
+    v.intersect([FunctionShellCallSchema, v.object({ type: v.literal('FunctionShellCall') })]),
+    v.intersect([
+      FunctionShellCallOutputSchema,
+      v.object({ type: v.literal('FunctionShellCallOutput') }),
+    ]),
+    v.intersect([ApplyPatchToolCallSchema, v.object({ type: v.literal('ApplyPatchToolCall') })]),
+    v.intersect([
+      ApplyPatchToolCallOutputSchema,
+      v.object({ type: v.literal('ApplyPatchToolCallOutput') }),
+    ]),
+    v.intersect([MCPListToolsSchema, v.object({ type: v.literal('MCPListTools') })]),
+    v.intersect([MCPApprovalRequestSchema, v.object({ type: v.literal('MCPApprovalRequest') })]),
+    v.intersect([
+      MCPApprovalResponseResourceSchema,
+      v.object({ type: v.literal('MCPApprovalResponseResource') }),
+    ]),
+    v.intersect([MCPToolCallSchema, v.object({ type: v.literal('MCPToolCall') })]),
+    v.intersect([CustomToolCallSchema, v.object({ type: v.literal('CustomToolCall') })]),
+    v.intersect([
+      CustomToolCallOutputSchema,
+      v.object({ type: v.literal('CustomToolCallOutput') }),
+    ]),
   ]),
   v.description(
     'An item representing a message, tool call, tool output, reasoning, or other response element.',
@@ -40209,10 +41401,24 @@ export const CompactResourceSchema = v.pipe(
       v.optional(v.literal('response.compaction'), 'response.compaction'),
       v.description('The object type. Always `response.compaction`.'),
     ),
+    safety_identifier: v.optional(
+      v.union([
+        v.pipe(
+          v.string(),
+          v.description(
+            'A stable identifier that was used for safety monitoring and abuse detection.',
+          ),
+        ),
+        v.null(),
+      ]),
+    ),
     output: v.pipe(v.array(ItemFieldSchema), v.description('The compacted list of output items.')),
     created_at: v.pipe(
       v.pipe(v.number(), v.integer()),
       v.description('Unix timestamp (in seconds) when the compacted conversation was created.'),
+    ),
+    service_tier: v.optional(
+      v.pipe(v.string(), v.description('The service tier used for compaction, when reported.')),
     ),
     usage: v.pipe(
       ResponseUsageSchema,
@@ -40226,6 +41432,7 @@ export const CompactResourceSchema = v.pipe(
       {
         id: 'resp_001',
         object: 'response.compaction',
+        safety_identifier: 'compact-review-example-001',
         image: { context_compression: 'disabled' },
         output: [
           {
@@ -40289,11 +41496,11 @@ export const SkillListResourceSchema = v.object({
   data: v.pipe(v.array(SkillResourceSchema), v.description('A list of items')),
   first_id: v.union([
     v.pipe(v.string(), v.description('The ID of the first item in the list.')),
-    v.nullable(v.null()),
+    v.null(),
   ]),
   last_id: v.union([
     v.pipe(v.string(), v.description('The ID of the last item in the list.')),
-    v.nullable(v.null()),
+    v.null(),
   ]),
   has_more: v.pipe(v.boolean(), v.description('Whether there are more items available.')),
 })
@@ -40363,11 +41570,11 @@ export const SkillVersionListResourceSchema = v.object({
   data: v.pipe(v.array(SkillVersionResourceSchema), v.description('A list of items')),
   first_id: v.union([
     v.pipe(v.string(), v.description('The ID of the first item in the list.')),
-    v.nullable(v.null()),
+    v.null(),
   ]),
   last_id: v.union([
     v.pipe(v.string(), v.description('The ID of the last item in the list.')),
-    v.nullable(v.null()),
+    v.null(),
   ]),
   has_more: v.pipe(v.boolean(), v.description('Whether there are more items available.')),
 })
@@ -40420,25 +41627,19 @@ export const ChatkitWorkflowSchema = v.pipe(
           'Specific workflow version used for the session. Defaults to null when using the latest deployment.',
         ),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
     state_variables: v.union([
       v.pipe(
         v.record(
           v.string(),
-          v.union([
-            v.string(),
-            v.pipe(v.number(), v.integer()),
-            v.boolean(),
-            v.number(),
-            v.nullable(v.null()),
-          ]),
+          v.union([v.string(), v.pipe(v.number(), v.integer()), v.boolean(), v.number(), v.null()]),
         ),
         v.description(
           'State variable key-value pairs applied when invoking the workflow. Defaults to null when no overrides were provided.',
         ),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
     tracing: v.pipe(
       ChatkitWorkflowTracingSchema,
@@ -40485,14 +41686,14 @@ export const ChatSessionFileUploadSchema = v.pipe(
     ),
     max_file_size: v.union([
       v.pipe(v.pipe(v.number(), v.integer()), v.description('Maximum upload size in megabytes.')),
-      v.nullable(v.null()),
+      v.null(),
     ]),
     max_files: v.union([
       v.pipe(
         v.pipe(v.number(), v.integer()),
         v.description('Maximum number of uploads allowed during the session.'),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   }),
   v.description('Upload permissions and limits applied to the session.'),
@@ -40513,7 +41714,7 @@ export const ChatSessionHistorySchema = v.pipe(
           'Number of prior threads surfaced in history views. Defaults to null when all history is retained.',
         ),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   }),
   v.description('History retention preferences returned for the session.'),
@@ -40865,7 +42066,7 @@ export const AttachmentSchema = v.pipe(
         v.pipe(v.string(), v.url()),
         v.description('Preview URL for rendering the attachment inline.'),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   }),
   v.description('Attachment metadata included on thread items.'),
@@ -40889,7 +42090,7 @@ export const InferenceOptionsSchema = v.pipe(
           'Preferred tool to invoke. Defaults to null when ChatKit should auto-select.',
         ),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
     model: v.union([
       v.pipe(
@@ -40898,7 +42099,7 @@ export const InferenceOptionsSchema = v.pipe(
           'Model name that generated the response. Defaults to null when using the session default.',
         ),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   }),
   v.description('Model and tool overrides applied when generating the assistant response.'),
@@ -40922,7 +42123,16 @@ export const UserMessageItemSchema = v.pipe(
     content: v.pipe(
       v.array(
         v.pipe(
-          v.union([UserMessageInputTextSchema, UserMessageQuotedTextSchema]),
+          v.union([
+            v.intersect([
+              UserMessageInputTextSchema,
+              v.object({ type: v.literal('UserMessageInputText') }),
+            ]),
+            v.intersect([
+              UserMessageQuotedTextSchema,
+              v.object({ type: v.literal('UserMessageQuotedText') }),
+            ]),
+          ]),
           v.description('Content blocks that comprise a user message.'),
         ),
       ),
@@ -40937,7 +42147,7 @@ export const UserMessageItemSchema = v.pipe(
         InferenceOptionsSchema,
         v.description('Inference overrides applied to the message. Defaults to null when unset.'),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   }),
   v.description('User-authored messages within a thread.'),
@@ -41010,7 +42220,10 @@ export const ResponseOutputTextSchema = v.pipe(
     annotations: v.pipe(
       v.array(
         v.pipe(
-          v.union([FileAnnotationSchema, UrlAnnotationSchema]),
+          v.union([
+            v.intersect([FileAnnotationSchema, v.object({ type: v.literal('FileAnnotation') })]),
+            v.intersect([UrlAnnotationSchema, v.object({ type: v.literal('UrlAnnotation') })]),
+          ]),
           v.description('Annotation object describing a cited source.'),
         ),
       ),
@@ -41108,7 +42321,7 @@ export const ClientToolCallItemSchema = v.pipe(
           'JSON-encoded output captured from the tool. Defaults to null while execution is in progress.',
         ),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   }),
   v.description('Record of a client side tool invocation initiated by the assistant.'),
@@ -41142,14 +42355,14 @@ export const TaskItemSchema = v.pipe(
         v.string(),
         v.description('Optional heading for the task. Defaults to null when not provided.'),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
     summary: v.union([
       v.pipe(
         v.string(),
         v.description('Optional summary that describes the task. Defaults to null when omitted.'),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   }),
   v.description('Task emitted by the workflow to show progress and status updates.'),
@@ -41165,7 +42378,7 @@ export const TaskGroupTaskSchema = v.pipe(
         v.string(),
         v.description('Optional heading for the grouped task. Defaults to null when not provided.'),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
     summary: v.union([
       v.pipe(
@@ -41174,7 +42387,7 @@ export const TaskGroupTaskSchema = v.pipe(
           'Optional summary that describes the grouped task. Defaults to null when omitted.',
         ),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   }),
   v.description('Task entry that appears within a TaskGroup.'),
@@ -41206,12 +42419,12 @@ export const TaskGroupItemSchema = v.pipe(
 export type TaskGroupItem = v.InferOutput<typeof TaskGroupItemSchema>
 
 export const ThreadItemSchema = v.union([
-  UserMessageItemSchema,
-  AssistantMessageItemSchema,
-  WidgetMessageItemSchema,
-  ClientToolCallItemSchema,
-  TaskItemSchema,
-  TaskGroupItemSchema,
+  v.intersect([UserMessageItemSchema, v.object({ type: v.literal('UserMessageItem') })]),
+  v.intersect([AssistantMessageItemSchema, v.object({ type: v.literal('AssistantMessageItem') })]),
+  v.intersect([WidgetMessageItemSchema, v.object({ type: v.literal('WidgetMessageItem') })]),
+  v.intersect([ClientToolCallItemSchema, v.object({ type: v.literal('ClientToolCallItem') })]),
+  v.intersect([TaskItemSchema, v.object({ type: v.literal('TaskItem') })]),
+  v.intersect([TaskGroupItemSchema, v.object({ type: v.literal('TaskGroupItem') })]),
 ])
 
 export type ThreadItem = v.InferOutput<typeof ThreadItemSchema>
@@ -41225,11 +42438,11 @@ export const ThreadItemListResourceSchema = v.pipe(
     data: v.pipe(v.array(ThreadItemSchema), v.description('A list of items')),
     first_id: v.union([
       v.pipe(v.string(), v.description('The ID of the first item in the list.')),
-      v.nullable(v.null()),
+      v.null(),
     ]),
     last_id: v.union([
       v.pipe(v.string(), v.description('The ID of the last item in the list.')),
-      v.nullable(v.null()),
+      v.null(),
     ]),
     has_more: v.pipe(v.boolean(), v.description('Whether there are more items available.')),
   }),
@@ -41263,7 +42476,7 @@ export const LockedStatusSchema = v.pipe(
           'Reason that the thread was locked. Defaults to null when no reason is recorded.',
         ),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   }),
   v.description('Indicates that a thread is locked and cannot accept new input.'),
@@ -41284,7 +42497,7 @@ export const ClosedStatusSchema = v.pipe(
           'Reason that the thread was closed. Defaults to null when no reason is recorded.',
         ),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   }),
   v.description('Indicates that a thread has been closed.'),
@@ -41310,10 +42523,14 @@ export const ThreadResourceSchema = v.pipe(
           'Optional human-readable title for the thread. Defaults to null when no title has been generated.',
         ),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
     status: v.pipe(
-      v.union([ActiveStatusSchema, LockedStatusSchema, ClosedStatusSchema]),
+      v.union([
+        v.intersect([ActiveStatusSchema, v.object({ type: v.literal('ActiveStatus') })]),
+        v.intersect([LockedStatusSchema, v.object({ type: v.literal('LockedStatus') })]),
+        v.intersect([ClosedStatusSchema, v.object({ type: v.literal('ClosedStatus') })]),
+      ]),
       v.description(
         'Current status for the thread. Defaults to `active` for newly created threads.',
       ),
@@ -41363,11 +42580,11 @@ export const ThreadListResourceSchema = v.pipe(
     data: v.pipe(v.array(ThreadResourceSchema), v.description('A list of items')),
     first_id: v.union([
       v.pipe(v.string(), v.description('The ID of the first item in the list.')),
-      v.nullable(v.null()),
+      v.null(),
     ]),
     last_id: v.union([
       v.pipe(v.string(), v.description('The ID of the last item in the list.')),
-      v.nullable(v.null()),
+      v.null(),
     ]),
     has_more: v.pipe(v.boolean(), v.description('Whether there are more items available.')),
   }),
@@ -41416,7 +42633,7 @@ export const DecisionInputImageSchema = v.pipe(
       ),
     ),
     detail: v.pipe(
-      v.optional(v.union([ImageDetailParamSchema, v.nullable(v.null())]), 'auto'),
+      v.optional(v.union([ImageDetailParamSchema, v.null()]), 'auto'),
       v.description(
         "The image detail level, using the selected model's image profile. Defaults to auto.",
       ),
@@ -41449,11 +42666,8 @@ export const DecisionInputJsonSchema = v.pipe(
   v.strictObject({
     type: v.optional(v.literal('input_json'), 'input_json'),
     data: v.union([
-      v.record(v.string(), v.union([v.any(), v.nullable(v.null())])),
-      v.pipe(
-        v.array(v.record(v.string(), v.union([v.any(), v.nullable(v.null())]))),
-        v.minLength(0),
-      ),
+      v.record(v.string(), v.union([v.any(), v.null()])),
+      v.pipe(v.array(v.record(v.string(), v.union([v.any(), v.null()]))), v.minLength(0)),
     ]),
   }),
   v.description(
@@ -41464,7 +42678,13 @@ export const DecisionInputJsonSchema = v.pipe(
 export type DecisionInputJson = v.InferOutput<typeof DecisionInputJsonSchema>
 
 export const DecisionInputContentPartsSchema = v.pipe(
-  v.array(v.union([DecisionInputTextSchema, DecisionInputImageSchema, DecisionInputJsonSchema])),
+  v.array(
+    v.union([
+      v.intersect([DecisionInputTextSchema, v.object({ type: v.literal('input_text') })]),
+      v.intersect([DecisionInputImageSchema, v.object({ type: v.literal('input_image') })]),
+      v.intersect([DecisionInputJsonSchema, v.object({ type: v.literal('input_json') })]),
+    ]),
+  ),
   v.minLength(0),
   v.maxLength(16384),
 )
@@ -41553,7 +42773,12 @@ export const DecisionInputRefusalSchema = v.strictObject({
 export type DecisionInputRefusal = v.InferOutput<typeof DecisionInputRefusalSchema>
 
 export const DecisionInputAssistantContentPartsSchema = v.pipe(
-  v.array(v.union([DecisionInputOutputTextSchema, DecisionInputRefusalSchema])),
+  v.array(
+    v.union([
+      v.intersect([DecisionInputOutputTextSchema, v.object({ type: v.literal('output_text') })]),
+      v.intersect([DecisionInputRefusalSchema, v.object({ type: v.literal('refusal') })]),
+    ]),
+  ),
   v.minLength(0),
   v.maxLength(16384),
 )
@@ -41584,7 +42809,7 @@ export const DecisionInputAssistantMessageSchema = v.pipe(
     content: DecisionInputAssistantContentSchema,
     phase: v.optional(
       v.pipe(
-        v.union([MessagePhaseParamSchema, v.nullable(v.null())]),
+        v.union([MessagePhaseParamSchema, v.null()]),
         v.description('The phase of an assistant message.'),
       ),
     ),
@@ -41598,10 +42823,10 @@ export type DecisionInputAssistantMessage = v.InferOutput<
 >
 
 export const DecisionInputMessageSchema = v.union([
-  DecisionInputUserMessageSchema,
-  DecisionInputDeveloperMessageSchema,
-  DecisionInputSystemMessageSchema,
-  DecisionInputAssistantMessageSchema,
+  v.intersect([DecisionInputUserMessageSchema, v.object({ role: v.literal('user') })]),
+  v.intersect([DecisionInputDeveloperMessageSchema, v.object({ role: v.literal('developer') })]),
+  v.intersect([DecisionInputSystemMessageSchema, v.object({ role: v.literal('system') })]),
+  v.intersect([DecisionInputAssistantMessageSchema, v.object({ role: v.literal('assistant') })]),
 ])
 
 export type DecisionInputMessage = v.InferOutput<typeof DecisionInputMessageSchema>
@@ -41620,14 +42845,19 @@ export const DecisionInputFunctionCallSchema = v.strictObject({
   ),
   name: v.pipe(v.string(), v.regex(/^[a-zA-Z0-9_.-]+$/), v.minCodePoints(1), v.maxCodePoints(128)),
   arguments: v.pipe(v.string(), v.minCodePoints(0), v.maxCodePoints(1048576)),
-  status: v.optional(v.union([FunctionCallStatusParamSchema, v.nullable(v.null())])),
+  status: v.optional(v.union([FunctionCallStatusParamSchema, v.null()])),
   type: v.optional(v.literal('function_call'), 'function_call'),
 })
 
 export type DecisionInputFunctionCall = v.InferOutput<typeof DecisionInputFunctionCallSchema>
 
 export const DecisionInputToolOutputContentPartsSchema = v.pipe(
-  v.array(v.union([DecisionInputTextSchema, DecisionInputImageSchema])),
+  v.array(
+    v.union([
+      v.intersect([DecisionInputTextSchema, v.object({ type: v.literal('input_text') })]),
+      v.intersect([DecisionInputImageSchema, v.object({ type: v.literal('input_image') })]),
+    ]),
+  ),
   v.minLength(0),
   v.maxLength(16384),
 )
@@ -41652,7 +42882,7 @@ export const DecisionInputFunctionCallOutputSchema = v.strictObject({
   id: v.optional(v.nullable(v.pipe(v.string(), v.minCodePoints(0), v.maxCodePoints(1048576)))),
   call_id: v.pipe(v.string(), v.minCodePoints(1), v.maxCodePoints(64)),
   output: DecisionInputToolOutputContentSchema,
-  status: v.optional(v.union([FunctionCallStatusParamSchema, v.nullable(v.null())])),
+  status: v.optional(v.union([FunctionCallStatusParamSchema, v.null()])),
   type: v.optional(v.literal('function_call_output'), 'function_call_output'),
 })
 
@@ -41670,7 +42900,7 @@ export const DecisionInputCustomToolCallSchema = v.strictObject({
   ),
   name: v.pipe(v.string(), v.regex(/^[a-zA-Z0-9_-]+$/), v.minCodePoints(1), v.maxCodePoints(64)),
   input: v.pipe(v.string(), v.minCodePoints(0), v.maxCodePoints(1048576)),
-  status: v.optional(v.union([FunctionCallStatusParamSchema, v.nullable(v.null())])),
+  status: v.optional(v.union([FunctionCallStatusParamSchema, v.null()])),
   type: v.optional(v.literal('custom_tool_call'), 'custom_tool_call'),
 })
 
@@ -41680,7 +42910,7 @@ export const DecisionInputCustomToolCallOutputSchema = v.strictObject({
   id: v.optional(v.nullable(v.pipe(v.string(), v.minCodePoints(0), v.maxCodePoints(1048576)))),
   call_id: v.pipe(v.string(), v.minCodePoints(1), v.maxCodePoints(64)),
   output: DecisionInputToolOutputContentSchema,
-  status: v.optional(v.union([FunctionCallStatusParamSchema, v.nullable(v.null())])),
+  status: v.optional(v.union([FunctionCallStatusParamSchema, v.null()])),
   type: v.optional(v.literal('custom_tool_call_output'), 'custom_tool_call_output'),
 })
 
@@ -41694,11 +42924,23 @@ export const DecisionInputSchema = v.pipe(
     v.pipe(
       v.array(
         v.union([
-          DecisionInputMessageSchema,
-          DecisionInputFunctionCallSchema,
-          DecisionInputFunctionCallOutputSchema,
-          DecisionInputCustomToolCallSchema,
-          DecisionInputCustomToolCallOutputSchema,
+          v.intersect([DecisionInputMessageSchema, v.object({ type: v.literal('message') })]),
+          v.intersect([
+            DecisionInputFunctionCallSchema,
+            v.object({ type: v.literal('function_call') }),
+          ]),
+          v.intersect([
+            DecisionInputFunctionCallOutputSchema,
+            v.object({ type: v.literal('function_call_output') }),
+          ]),
+          v.intersect([
+            DecisionInputCustomToolCallSchema,
+            v.object({ type: v.literal('custom_tool_call') }),
+          ]),
+          v.intersect([
+            DecisionInputCustomToolCallOutputSchema,
+            v.object({ type: v.literal('custom_tool_call_output') }),
+          ]),
         ]),
       ),
       v.minLength(0),
@@ -41733,7 +42975,7 @@ export const DecisionQuestionInputImageSchema = v.pipe(
       ),
     ),
     detail: v.pipe(
-      v.optional(v.union([ImageDetailParamSchema, v.nullable(v.null())]), 'auto'),
+      v.optional(v.union([ImageDetailParamSchema, v.null()]), 'auto'),
       v.description(
         "The image detail level, using the selected model's image profile. Defaults to auto.",
       ),
@@ -41749,9 +42991,9 @@ export type DecisionQuestionInputImage = v.InferOutput<typeof DecisionQuestionIn
 
 export const DecisionQuestionInputPartSchema = v.pipe(
   v.union([
-    DecisionQuestionInputTextSchema,
-    DecisionQuestionInputImageSchema,
-    DecisionInputJsonSchema,
+    v.intersect([DecisionQuestionInputTextSchema, v.object({ type: v.literal('input_text') })]),
+    v.intersect([DecisionQuestionInputImageSchema, v.object({ type: v.literal('input_image') })]),
+    v.intersect([DecisionInputJsonSchema, v.object({ type: v.literal('input_json') })]),
   ]),
   v.description('A text, image, or JSON content part in a question instruction.'),
 )
@@ -41836,7 +43078,11 @@ export const QuestionParamScoreSchema = v.pipe(
 export type QuestionParamScore = v.InferOutput<typeof QuestionParamScoreSchema>
 
 export const QuestionParamSchema = v.pipe(
-  v.union([QuestionParamPredicateSchema, QuestionParamChoiceSchema, QuestionParamScoreSchema]),
+  v.union([
+    v.intersect([QuestionParamPredicateSchema, v.object({ type: v.literal('predicate') })]),
+    v.intersect([QuestionParamChoiceSchema, v.object({ type: v.literal('choice') })]),
+    v.intersect([QuestionParamScoreSchema, v.object({ type: v.literal('score') })]),
+  ]),
   v.description("A question about the request's input, with an optional correlation name."),
 )
 
@@ -41880,7 +43126,7 @@ export const DecisionRequestSchema = v.strictObject({
           ),
           mode: v.optional(
             v.pipe(
-              v.nullable(v.union([v.literal('implicit'), v.literal('explicit'), v.null()])),
+              v.nullable(v.picklist(['implicit', 'explicit'])),
               v.description(
                 'Controls whether OpenAI automatically creates an implicit cache breakpoint. Defaults to `implicit`. With `implicit`, OpenAI creates one implicit breakpoint and writes up to the latest three explicit breakpoints in the request. With `explicit`, OpenAI does not create an implicit breakpoint and writes up to the latest four explicit breakpoints. If there are no explicit breakpoints, the request does not use prompt caching.',
               ),
@@ -41921,13 +43167,13 @@ export type ReasoningSummaryResource = v.InferOutput<typeof ReasoningSummaryReso
 export const ReasoningResourceSchema = v.pipe(
   v.strictObject({
     effort: v.pipe(
-      v.union([ReasoningEffortResourceSchema, v.nullable(v.null())]),
+      v.union([ReasoningEffortResourceSchema, v.null()]),
       v.description(
         'The requested reasoning effort, or `null` when the model selects its own default.',
       ),
     ),
     summary: v.pipe(
-      v.union([ReasoningSummaryResourceSchema, v.nullable(v.null())]),
+      v.union([ReasoningSummaryResourceSchema, v.null()]),
       v.description(
         'The requested reasoning summary format, or `null` when summaries are disabled.',
       ),
@@ -41967,7 +43213,10 @@ export const TextFormatResourceJsonSchemaSchema = v.pipe(
 export type TextFormatResourceJsonSchema = v.InferOutput<typeof TextFormatResourceJsonSchemaSchema>
 
 export const TextFormatResourceSchema = v.pipe(
-  v.union([TextFormatResourceTextSchema, TextFormatResourceJsonSchemaSchema]),
+  v.union([
+    v.intersect([TextFormatResourceTextSchema, v.object({ type: v.literal('text') })]),
+    v.intersect([TextFormatResourceJsonSchemaSchema, v.object({ type: v.literal('json_schema') })]),
+  ]),
   v.description('The effective output format for generated text.'),
 )
 
@@ -42100,7 +43349,10 @@ export const McpTransportResourceStdioSchema = v.pipe(
 export type McpTransportResourceStdio = v.InferOutput<typeof McpTransportResourceStdioSchema>
 
 export const McpTransportResourceSchema = v.pipe(
-  v.union([McpTransportResourceHttpSchema, McpTransportResourceStdioSchema]),
+  v.union([
+    v.intersect([McpTransportResourceHttpSchema, v.object({ type: v.literal('http') })]),
+    v.intersect([McpTransportResourceStdioSchema, v.object({ type: v.literal('stdio') })]),
+  ]),
   v.description('The transport used to connect to an MCP server.'),
 )
 
@@ -42218,7 +43470,7 @@ export const AgentToolResourceWebSearchSchema = v.pipe(
       v.description('Allowed search domains, or `null` when the search is unrestricted.'),
     ),
     location: v.pipe(
-      v.union([WebSearchLocationResourceSchema, v.nullable(v.null())]),
+      v.union([WebSearchLocationResourceSchema, v.null()]),
       v.description('Approximate location used to localize search results, if provided.'),
     ),
   }),
@@ -42257,12 +43509,18 @@ export type AgentToolResourceAutomations = v.InferOutput<typeof AgentToolResourc
 
 export const AgentToolResourceSchema = v.pipe(
   v.union([
-    AgentToolResourceFunctionSchema,
-    AgentToolResourceProgrammaticToolCallingSchema,
-    AgentToolResourceMcpSchema,
-    AgentToolResourceWebSearchSchema,
-    AgentToolResourceComputerUseSchema,
-    AgentToolResourceAutomationsSchema,
+    v.intersect([AgentToolResourceFunctionSchema, v.object({ type: v.literal('function') })]),
+    v.intersect([
+      AgentToolResourceProgrammaticToolCallingSchema,
+      v.object({ type: v.literal('programmatic_tool_calling') }),
+    ]),
+    v.intersect([AgentToolResourceMcpSchema, v.object({ type: v.literal('mcp') })]),
+    v.intersect([AgentToolResourceWebSearchSchema, v.object({ type: v.literal('web_search') })]),
+    v.intersect([
+      AgentToolResourceComputerUseSchema,
+      v.object({ type: v.literal('computer_use') }),
+    ]),
+    v.intersect([AgentToolResourceAutomationsSchema, v.object({ type: v.literal('automations') })]),
   ]),
   v.description('A tool available to the agent.'),
 )
@@ -42496,8 +43754,11 @@ export type HostedTemplateSkillResourceInline = v.InferOutput<
 
 export const HostedTemplateSkillResourceSchema = v.pipe(
   v.union([
-    HostedTemplateSkillResourceSkillReferenceSchema,
-    HostedTemplateSkillResourceInlineSchema,
+    v.intersect([
+      HostedTemplateSkillResourceSkillReferenceSchema,
+      v.object({ type: v.literal('skill_reference') }),
+    ]),
+    v.intersect([HostedTemplateSkillResourceInlineSchema, v.object({ type: v.literal('inline') })]),
   ]),
   v.description('Safe metadata for a skill configured by an environment template.'),
 )
@@ -42525,7 +43786,9 @@ export const HostedPluginResourceInlineSchema = v.pipe(
 export type HostedPluginResourceInline = v.InferOutput<typeof HostedPluginResourceInlineSchema>
 
 export const HostedPluginResourceSchema = v.pipe(
-  v.union([HostedPluginResourceInlineSchema]),
+  v.union([
+    v.intersect([HostedPluginResourceInlineSchema, v.object({ type: v.literal('inline') })]),
+  ]),
   v.description('A plugin installed in an OpenAI-hosted environment.'),
 )
 
@@ -42586,7 +43849,10 @@ export type HostedTemplateFileResourceInline = v.InferOutput<
 >
 
 export const HostedTemplateFileResourceSchema = v.pipe(
-  v.union([HostedTemplateFileResourceFileIdSchema, HostedTemplateFileResourceInlineSchema]),
+  v.union([
+    v.intersect([HostedTemplateFileResourceFileIdSchema, v.object({ type: v.literal('file_id') })]),
+    v.intersect([HostedTemplateFileResourceInlineSchema, v.object({ type: v.literal('inline') })]),
+  ]),
   v.description('Safe metadata for a file configured by an environment template.'),
 )
 
@@ -42609,19 +43875,19 @@ export const AutomationEnvironmentResourceOpenaiHostedSchema = v.pipe(
       v.description('A template reference, or null when no template is selected.'),
     ),
     container_size: v.pipe(
-      v.union([ContainerSizeResourceSchema, v.nullable(v.null())]),
+      v.union([ContainerSizeResourceSchema, v.null()]),
       v.description('The configured container size, or null to use the creation default.'),
     ),
     packages: v.pipe(
-      v.union([EnvironmentPackagesResourceSchema, v.nullable(v.null())]),
+      v.union([EnvironmentPackagesResourceSchema, v.null()]),
       v.description('Package overrides, or null to inherit the template or creation default.'),
     ),
     network: v.pipe(
-      v.union([NetworkPolicyResourceSchema, v.nullable(v.null())]),
+      v.union([NetworkPolicyResourceSchema, v.null()]),
       v.description('Network overrides, or null to inherit the template or creation default.'),
     ),
     desktop: v.pipe(
-      v.union([DesktopResourceSchema, v.nullable(v.null())]),
+      v.union([DesktopResourceSchema, v.null()]),
       v.description('Desktop overrides, or null to inherit the template or creation default.'),
     ),
     capability_directories: v.pipe(
@@ -42681,9 +43947,15 @@ export type AutomationEnvironmentResourceSelfHosted = v.InferOutput<
 
 export const AutomationEnvironmentResourceSchema = v.pipe(
   v.union([
-    AutomationEnvironmentResourceNoneSchema,
-    AutomationEnvironmentResourceOpenaiHostedSchema,
-    AutomationEnvironmentResourceSelfHostedSchema,
+    v.intersect([AutomationEnvironmentResourceNoneSchema, v.object({ type: v.literal('none') })]),
+    v.intersect([
+      AutomationEnvironmentResourceOpenaiHostedSchema,
+      v.object({ type: v.literal('openai_hosted') }),
+    ]),
+    v.intersect([
+      AutomationEnvironmentResourceSelfHostedSchema,
+      v.object({ type: v.literal('self_hosted') }),
+    ]),
   ]),
   v.description('Environment selection saved before an invocation creates its session.'),
 )
@@ -42731,7 +44003,13 @@ export type InputContentResourceInputImage = v.InferOutput<
 >
 
 export const InputContentResourceSchema = v.pipe(
-  v.union([InputContentResourceInputTextSchema, InputContentResourceInputImageSchema]),
+  v.union([
+    v.intersect([InputContentResourceInputTextSchema, v.object({ type: v.literal('input_text') })]),
+    v.intersect([
+      InputContentResourceInputImageSchema,
+      v.object({ type: v.literal('input_image') }),
+    ]),
+  ]),
   v.description('User-provided content recorded in a session item.'),
 )
 
@@ -42767,7 +44045,7 @@ export const AutomationTargetResourceNewSessionSchema = v.strictObject({
     v.description('The saved agent reference, or null when an inline agent is configured.'),
   ),
   agent: v.pipe(
-    v.union([AutomationAgentConfigResourceSchema, v.nullable(v.null())]),
+    v.union([AutomationAgentConfigResourceSchema, v.null()]),
     v.description('The inline agent configuration, or null when agent_id is configured.'),
   ),
   environment: v.pipe(
@@ -42813,8 +44091,14 @@ export type AutomationTargetResourceExistingSession = v.InferOutput<
 
 export const AutomationTargetResourceSchema = v.pipe(
   v.union([
-    AutomationTargetResourceNewSessionSchema,
-    AutomationTargetResourceExistingSessionSchema,
+    v.intersect([
+      AutomationTargetResourceNewSessionSchema,
+      v.object({ type: v.literal('new_session') }),
+    ]),
+    v.intersect([
+      AutomationTargetResourceExistingSessionSchema,
+      v.object({ type: v.literal('existing_session') }),
+    ]),
   ]),
   v.description('Saved target configuration, excluding confidential request-only values.'),
 )
@@ -42852,7 +44136,13 @@ export type AutomationCreatedByResourceAgent = v.InferOutput<
 >
 
 export const AutomationCreatedByResourceSchema = v.pipe(
-  v.union([AutomationCreatedByResourceDeveloperSchema, AutomationCreatedByResourceAgentSchema]),
+  v.union([
+    v.intersect([
+      AutomationCreatedByResourceDeveloperSchema,
+      v.object({ type: v.literal('developer') }),
+    ]),
+    v.intersect([AutomationCreatedByResourceAgentSchema, v.object({ type: v.literal('agent') })]),
+  ]),
   v.description('How the automation was created, independently of how an invocation started.'),
 )
 
@@ -42905,10 +44195,7 @@ export const AutomationResourcePeriodicSchema = v.pipe(
       v.description('Service-recorded provenance; callers cannot supply this field.'),
     ),
     pause_reason: v.pipe(
-      v.optional(
-        v.nullable(v.union([v.literal('target_session_failed'), v.null()])),
-        'target_session_failed',
-      ),
+      v.optional(v.nullable(v.literal('target_session_failed')), 'target_session_failed'),
       v.description('Why the service paused this schedule, or null for other schedules.'),
     ),
     expression: v.pipe(
@@ -42974,10 +44261,7 @@ export const AutomationResourceOnceSchema = v.pipe(
       v.description('Service-recorded provenance; callers cannot supply this field.'),
     ),
     pause_reason: v.pipe(
-      v.optional(
-        v.nullable(v.union([v.literal('target_session_failed'), v.null()])),
-        'target_session_failed',
-      ),
+      v.optional(v.nullable(v.literal('target_session_failed')), 'target_session_failed'),
       v.description('Why the service paused this schedule, or null for other schedules.'),
     ),
     run_at: v.pipe(
@@ -43004,7 +44288,10 @@ export const AutomationResourceOnceSchema = v.pipe(
 export type AutomationResourceOnce = v.InferOutput<typeof AutomationResourceOnceSchema>
 
 export const AutomationResourceSchema = v.pipe(
-  v.union([AutomationResourcePeriodicSchema, AutomationResourceOnceSchema]),
+  v.union([
+    v.intersect([AutomationResourcePeriodicSchema, v.object({ type: v.literal('periodic') })]),
+    v.intersect([AutomationResourceOnceSchema, v.object({ type: v.literal('once') })]),
+  ]),
   v.description('A saved automation and its schedule.'),
 )
 
@@ -43078,13 +44365,13 @@ export const ReasoningParamSchema = v.pipe(
   v.partial(
     v.strictObject({
       effort: v.pipe(
-        v.union([ReasoningEffortParamSchema, v.nullable(v.null())]),
+        v.union([ReasoningEffortParamSchema, v.null()]),
         v.description(
           'The amount of reasoning effort the model should use. Omission lets the model select it.',
         ),
       ),
       summary: v.pipe(
-        v.union([ReasoningSummaryParamSchema, v.nullable(v.null())]),
+        v.union([ReasoningSummaryParamSchema, v.null()]),
         v.description('Controls whether the response includes a reasoning summary.'),
       ),
     }),
@@ -43123,7 +44410,10 @@ export const TextFormatParamJsonSchemaSchema = v.pipe(
 export type TextFormatParamJsonSchema = v.InferOutput<typeof TextFormatParamJsonSchemaSchema>
 
 export const TextFormatParamSchema = v.pipe(
-  v.union([TextFormatParamTextSchema, TextFormatParamJsonSchemaSchema]),
+  v.union([
+    v.intersect([TextFormatParamTextSchema, v.object({ type: v.literal('text') })]),
+    v.intersect([TextFormatParamJsonSchemaSchema, v.object({ type: v.literal('json_schema') })]),
+  ]),
   v.description('The output format for generated text.'),
 )
 
@@ -43140,11 +44430,11 @@ export const TextParamSchema = v.pipe(
   v.partial(
     v.strictObject({
       format: v.pipe(
-        v.union([TextFormatParamSchema, v.nullable(v.null())]),
+        v.union([TextFormatParamSchema, v.null()]),
         v.description('The output format. Omission uses ordinary text (`{"type": "text"}`).'),
       ),
       verbosity: v.pipe(
-        v.union([VerbosityParamSchema, v.nullable(v.null())]),
+        v.union([VerbosityParamSchema, v.null()]),
         v.description(
           'The amount of text the model should produce. Defaults to `medium`, matching Responses.',
         ),
@@ -43358,7 +44648,10 @@ export const McpTransportConfigParamStdioSchema = v.pipe(
 export type McpTransportConfigParamStdio = v.InferOutput<typeof McpTransportConfigParamStdioSchema>
 
 export const McpTransportConfigParamSchema = v.pipe(
-  v.union([McpTransportConfigParamHttpSchema, McpTransportConfigParamStdioSchema]),
+  v.union([
+    v.intersect([McpTransportConfigParamHttpSchema, v.object({ type: v.literal('http') })]),
+    v.intersect([McpTransportConfigParamStdioSchema, v.object({ type: v.literal('stdio') })]),
+  ]),
   v.description('The transport used to connect to an MCP server.'),
 )
 
@@ -43421,7 +44714,7 @@ export const AgentToolConfigParamMcpSchema = v.pipe(
     ),
     connection_origin: v.optional(
       v.pipe(
-        v.union([McpConnectionOriginParamSchema, v.nullable(v.null())]),
+        v.union([McpConnectionOriginParamSchema, v.null()]),
         v.description(
           "Selects where outbound MCP HTTP connections originate. Omitted or `service` uses the Managed Agents service network; `environment` uses the session's selected environment.",
         ),
@@ -43481,13 +44774,13 @@ export const AgentToolConfigParamWebSearchSchema = v.pipe(
     ),
     mode: v.optional(
       v.pipe(
-        v.union([WebSearchModeParamSchema, v.nullable(v.null())]),
+        v.union([WebSearchModeParamSchema, v.null()]),
         v.description('The source used for web search results. Defaults to `live`.'),
       ),
     ),
     context_size: v.optional(
       v.pipe(
-        v.union([WebSearchContextSizeParamSchema, v.nullable(v.null())]),
+        v.union([WebSearchContextSizeParamSchema, v.null()]),
         v.description(
           'The amount of search context made available to the model. Defaults to `medium`.',
         ),
@@ -43507,7 +44800,7 @@ export const AgentToolConfigParamWebSearchSchema = v.pipe(
     ),
     location: v.optional(
       v.pipe(
-        v.union([WebSearchLocationParamSchema, v.nullable(v.null())]),
+        v.union([WebSearchLocationParamSchema, v.null()]),
         v.description('Approximate location used to localize search results.'),
       ),
     ),
@@ -43553,13 +44846,25 @@ export type AgentToolConfigParamAutomations = v.InferOutput<
 
 export const AgentToolConfigParamSchema = v.pipe(
   v.union([
-    AgentToolConfigParamFunctionSchema,
-    AgentToolConfigParamToolSearchSchema,
-    AgentToolConfigParamProgrammaticToolCallingSchema,
-    AgentToolConfigParamMcpSchema,
-    AgentToolConfigParamWebSearchSchema,
-    AgentToolConfigParamComputerUseSchema,
-    AgentToolConfigParamAutomationsSchema,
+    v.intersect([AgentToolConfigParamFunctionSchema, v.object({ type: v.literal('function') })]),
+    v.intersect([
+      AgentToolConfigParamToolSearchSchema,
+      v.object({ type: v.literal('tool_search') }),
+    ]),
+    v.intersect([
+      AgentToolConfigParamProgrammaticToolCallingSchema,
+      v.object({ type: v.literal('programmatic_tool_calling') }),
+    ]),
+    v.intersect([AgentToolConfigParamMcpSchema, v.object({ type: v.literal('mcp') })]),
+    v.intersect([AgentToolConfigParamWebSearchSchema, v.object({ type: v.literal('web_search') })]),
+    v.intersect([
+      AgentToolConfigParamComputerUseSchema,
+      v.object({ type: v.literal('computer_use') }),
+    ]),
+    v.intersect([
+      AgentToolConfigParamAutomationsSchema,
+      v.object({ type: v.literal('automations') }),
+    ]),
   ]),
   v.description('A tool available to the agent.'),
 )
@@ -43582,7 +44887,7 @@ export const SessionAgentConfigParamSchema = v.pipe(
     ),
     reasoning: v.optional(
       v.pipe(
-        v.union([ReasoningParamSchema, v.nullable(v.null())]),
+        v.union([ReasoningParamSchema, v.null()]),
         v.description(
           "Configuration for model reasoning. Omit to keep the current settings; pass `null` to reset to the model's default effort.",
         ),
@@ -43590,13 +44895,13 @@ export const SessionAgentConfigParamSchema = v.pipe(
     ),
     text: v.optional(
       v.pipe(
-        v.union([TextParamSchema, v.nullable(v.null())]),
+        v.union([TextParamSchema, v.null()]),
         v.description('Configuration for text generated by the agent.'),
       ),
     ),
     service_tier: v.optional(
       v.pipe(
-        v.union([ServiceTierParamSchema, v.nullable(v.null())]),
+        v.union([ServiceTierParamSchema, v.null()]),
         v.description('The service tier used for model requests.'),
       ),
     ),
@@ -43610,13 +44915,13 @@ export const SessionAgentConfigParamSchema = v.pipe(
     ),
     multi_agent: v.optional(
       v.pipe(
-        v.union([MultiAgentConfigCurrentParamSchema, v.nullable(v.null())]),
+        v.union([MultiAgentConfigCurrentParamSchema, v.null()]),
         v.description('Configuration for creating and coordinating subagents.'),
       ),
     ),
     compaction: v.optional(
       v.pipe(
-        v.union([CompactionParamSchema, v.nullable(v.null())]),
+        v.union([CompactionParamSchema, v.null()]),
         v.description(
           'Context compaction settings. Omit to keep the current settings. A supplied object replaces the settings; null or an empty object uses blocking compaction.',
         ),
@@ -43814,7 +45119,9 @@ export type InlineCapabilitySourceParamBase64 = v.InferOutput<
 >
 
 export const InlineCapabilitySourceParamSchema = v.pipe(
-  v.union([InlineCapabilitySourceParamBase64Schema]),
+  v.union([
+    v.intersect([InlineCapabilitySourceParamBase64Schema, v.object({ type: v.literal('base64') })]),
+  ]),
   v.description('The encoded ZIP archive for an inline skill or plugin.'),
 )
 
@@ -43842,7 +45149,13 @@ export const HostedSkillParamInlineSchema = v.pipe(
 export type HostedSkillParamInline = v.InferOutput<typeof HostedSkillParamInlineSchema>
 
 export const HostedSkillParamSchema = v.pipe(
-  v.union([HostedSkillParamSkillReferenceSchema, HostedSkillParamInlineSchema]),
+  v.union([
+    v.intersect([
+      HostedSkillParamSkillReferenceSchema,
+      v.object({ type: v.literal('skill_reference') }),
+    ]),
+    v.intersect([HostedSkillParamInlineSchema, v.object({ type: v.literal('inline') })]),
+  ]),
   v.description('A skill installed in an OpenAI-hosted environment.'),
 )
 
@@ -43870,7 +45183,7 @@ export const HostedPluginParamInlineSchema = v.pipe(
 export type HostedPluginParamInline = v.InferOutput<typeof HostedPluginParamInlineSchema>
 
 export const HostedPluginParamSchema = v.pipe(
-  v.union([HostedPluginParamInlineSchema]),
+  v.union([v.intersect([HostedPluginParamInlineSchema, v.object({ type: v.literal('inline') })])]),
   v.description('A plugin installed in an OpenAI-hosted environment.'),
 )
 
@@ -43921,7 +45234,10 @@ export type HostedEnvironmentFileParamInline = v.InferOutput<
 >
 
 export const HostedEnvironmentFileParamSchema = v.pipe(
-  v.union([HostedEnvironmentFileParamFileIdSchema, HostedEnvironmentFileParamInlineSchema]),
+  v.union([
+    v.intersect([HostedEnvironmentFileParamFileIdSchema, v.object({ type: v.literal('file_id') })]),
+    v.intersect([HostedEnvironmentFileParamInlineSchema, v.object({ type: v.literal('inline') })]),
+  ]),
   v.description('A file materialized in an OpenAI-hosted execution environment.'),
 )
 
@@ -43942,7 +45258,7 @@ export const EnvironmentParamOpenaiHostedSchema = v.pipe(
     ),
     packages: v.optional(
       v.pipe(
-        v.union([EnvironmentPackagesParamSchema, v.nullable(v.null())]),
+        v.union([EnvironmentPackagesParamSchema, v.null()]),
         v.description('Packages to install in the environment. Defaults to empty package lists.'),
       ),
     ),
@@ -43954,7 +45270,7 @@ export const EnvironmentParamOpenaiHostedSchema = v.pipe(
     ),
     network: v.optional(
       v.pipe(
-        v.union([NetworkPolicyParamSchema, v.nullable(v.null())]),
+        v.union([NetworkPolicyParamSchema, v.null()]),
         v.description(
           'Network access policy for the environment. If omitted, the API version determines whether network access is enabled or disabled.',
         ),
@@ -43962,7 +45278,7 @@ export const EnvironmentParamOpenaiHostedSchema = v.pipe(
     ),
     desktop: v.optional(
       v.pipe(
-        v.union([DesktopParamSchema, v.nullable(v.null())]),
+        v.union([DesktopParamSchema, v.null()]),
         v.description(
           'Desktop provisioning. Omission or null inherits the template setting, or defaults to disabled.',
         ),
@@ -44093,9 +45409,12 @@ export type EnvironmentParamSelfHosted = v.InferOutput<typeof EnvironmentParamSe
 
 export const EnvironmentParamSchema = v.pipe(
   v.union([
-    EnvironmentParamNoneSchema,
-    EnvironmentParamOpenaiHostedSchema,
-    EnvironmentParamSelfHostedSchema,
+    v.intersect([EnvironmentParamNoneSchema, v.object({ type: v.literal('none') })]),
+    v.intersect([
+      EnvironmentParamOpenaiHostedSchema,
+      v.object({ type: v.literal('openai_hosted') }),
+    ]),
+    v.intersect([EnvironmentParamSelfHostedSchema, v.object({ type: v.literal('self_hosted') })]),
   ]),
   v.description('The execution environment and optional reusable template for a session.'),
 )
@@ -44135,7 +45454,10 @@ export const InputContentParamInputImageSchema = v.pipe(
 export type InputContentParamInputImage = v.InferOutput<typeof InputContentParamInputImageSchema>
 
 export const InputContentParamSchema = v.pipe(
-  v.union([InputContentParamInputTextSchema, InputContentParamInputImageSchema]),
+  v.union([
+    v.intersect([InputContentParamInputTextSchema, v.object({ type: v.literal('input_text') })]),
+    v.intersect([InputContentParamInputImageSchema, v.object({ type: v.literal('input_image') })]),
+  ]),
   v.description('Content included in an input message.'),
 )
 
@@ -44238,7 +45560,16 @@ export type AutomationTargetParamExistingSession = v.InferOutput<
 >
 
 export const AutomationTargetParamSchema = v.pipe(
-  v.union([AutomationTargetParamNewSessionSchema, AutomationTargetParamExistingSessionSchema]),
+  v.union([
+    v.intersect([
+      AutomationTargetParamNewSessionSchema,
+      v.object({ type: v.literal('new_session') }),
+    ]),
+    v.intersect([
+      AutomationTargetParamExistingSessionSchema,
+      v.object({ type: v.literal('existing_session') }),
+    ]),
+  ]),
   v.description('The session an automation invocation targets.'),
 )
 
@@ -44302,7 +45633,10 @@ export const CreateAutomationParamsOnceSchema = v.strictObject({
 export type CreateAutomationParamsOnce = v.InferOutput<typeof CreateAutomationParamsOnceSchema>
 
 export const CreateAutomationParamsSchema = v.pipe(
-  v.union([CreateAutomationParamsPeriodicSchema, CreateAutomationParamsOnceSchema]),
+  v.union([
+    v.intersect([CreateAutomationParamsPeriodicSchema, v.object({ type: v.literal('periodic') })]),
+    v.intersect([CreateAutomationParamsOnceSchema, v.object({ type: v.literal('once') })]),
+  ]),
   v.description('Creates an automation without invoking it immediately.'),
 )
 
@@ -44388,8 +45722,14 @@ export type AutomationInvocationSourceResourceAutomation = v.InferOutput<
 >
 
 export const AutomationInvocationSourceResourceSchema = v.union([
-  AutomationInvocationSourceResourceManualSchema,
-  AutomationInvocationSourceResourceAutomationSchema,
+  v.intersect([
+    AutomationInvocationSourceResourceManualSchema,
+    v.object({ type: v.literal('manual') }),
+  ]),
+  v.intersect([
+    AutomationInvocationSourceResourceAutomationSchema,
+    v.object({ type: v.literal('automation') }),
+  ]),
 ])
 
 export type AutomationInvocationSourceResource = v.InferOutput<
@@ -44476,14 +45816,11 @@ export const AutomationInvocationResourceSchema = v.pipe(
       v.description("Delivery status; completed does not mean the agent's work has finished."),
     ),
     skip_reason: v.pipe(
-      v.optional(
-        v.nullable(v.union([v.literal('pending_delivery'), v.null()])),
-        'pending_delivery',
-      ),
+      v.optional(v.nullable(v.literal('pending_delivery')), 'pending_delivery'),
       v.description('Why an occurrence was skipped, or null when it was not skipped.'),
     ),
     error: v.pipe(
-      v.union([AutomationInvocationErrorResourceSchema, v.nullable(v.null())]),
+      v.union([AutomationInvocationErrorResourceSchema, v.null()]),
       v.description('The permanent delivery failure, or null when no failure occurred.'),
     ),
   }),
@@ -44590,7 +45927,16 @@ export type HostedEnvironmentFileResourceInline = v.InferOutput<
 >
 
 export const HostedEnvironmentFileResourceSchema = v.pipe(
-  v.union([HostedEnvironmentFileResourceFileIdSchema, HostedEnvironmentFileResourceInlineSchema]),
+  v.union([
+    v.intersect([
+      HostedEnvironmentFileResourceFileIdSchema,
+      v.object({ type: v.literal('file_id') }),
+    ]),
+    v.intersect([
+      HostedEnvironmentFileResourceInlineSchema,
+      v.object({ type: v.literal('inline') }),
+    ]),
+  ]),
   v.description('Metadata for a file materialized in an OpenAI-hosted execution environment.'),
 )
 
@@ -44649,7 +45995,13 @@ export const HostedSkillResourceInlineSchema = v.pipe(
 export type HostedSkillResourceInline = v.InferOutput<typeof HostedSkillResourceInlineSchema>
 
 export const HostedSkillResourceSchema = v.pipe(
-  v.union([HostedSkillResourceSkillReferenceSchema, HostedSkillResourceInlineSchema]),
+  v.union([
+    v.intersect([
+      HostedSkillResourceSkillReferenceSchema,
+      v.object({ type: v.literal('skill_reference') }),
+    ]),
+    v.intersect([HostedSkillResourceInlineSchema, v.object({ type: v.literal('inline') })]),
+  ]),
   v.description('A skill installed in an OpenAI-hosted environment.'),
 )
 
@@ -44726,7 +46078,7 @@ export const CreateEnvironmentParamOpenaiHostedSchema = v.pipe(
     ),
     packages: v.optional(
       v.pipe(
-        v.union([EnvironmentPackagesParamSchema, v.nullable(v.null())]),
+        v.union([EnvironmentPackagesParamSchema, v.null()]),
         v.description('Packages to install in the environment. Defaults to empty package lists.'),
       ),
     ),
@@ -44738,7 +46090,7 @@ export const CreateEnvironmentParamOpenaiHostedSchema = v.pipe(
     ),
     network: v.optional(
       v.pipe(
-        v.union([NetworkPolicyParamSchema, v.nullable(v.null())]),
+        v.union([NetworkPolicyParamSchema, v.null()]),
         v.description(
           'Network access policy for the environment. If omitted, the API version determines whether network access is enabled or disabled.',
         ),
@@ -44746,7 +46098,7 @@ export const CreateEnvironmentParamOpenaiHostedSchema = v.pipe(
     ),
     desktop: v.optional(
       v.pipe(
-        v.union([DesktopParamSchema, v.nullable(v.null())]),
+        v.union([DesktopParamSchema, v.null()]),
         v.description(
           'Desktop provisioning. Omission or null inherits the template setting, or defaults to disabled.',
         ),
@@ -44813,7 +46165,12 @@ export type CreateEnvironmentParamOpenaiHosted = v.InferOutput<
 >
 
 export const CreateEnvironmentParamSchema = v.pipe(
-  v.union([CreateEnvironmentParamOpenaiHostedSchema]),
+  v.union([
+    v.intersect([
+      CreateEnvironmentParamOpenaiHostedSchema,
+      v.object({ type: v.literal('openai_hosted') }),
+    ]),
+  ]),
   v.description('Configuration for a new prewarmed OpenAI-hosted environment.'),
 )
 
@@ -44947,7 +46304,13 @@ export const EncryptedContentResourceSchema = v.pipe(
 export type EncryptedContentResource = v.InferOutput<typeof EncryptedContentResourceSchema>
 
 export const AgentContentResourceSchema = v.pipe(
-  v.union([OutputTextResourceSchema, EncryptedContentResourceSchema]),
+  v.union([
+    v.intersect([OutputTextResourceSchema, v.object({ type: v.literal('output_text') })]),
+    v.intersect([
+      EncryptedContentResourceSchema,
+      v.object({ type: v.literal('encrypted_content') }),
+    ]),
+  ]),
   v.description('A plaintext or encrypted content part exchanged between agents.'),
 )
 
@@ -45092,9 +46455,18 @@ export type MessageContentResourceOutputText = v.InferOutput<
 
 export const MessageContentResourceSchema = v.pipe(
   v.union([
-    MessageContentResourceInputTextSchema,
-    MessageContentResourceInputImageSchema,
-    MessageContentResourceOutputTextSchema,
+    v.intersect([
+      MessageContentResourceInputTextSchema,
+      v.object({ type: v.literal('input_text') }),
+    ]),
+    v.intersect([
+      MessageContentResourceInputImageSchema,
+      v.object({ type: v.literal('input_image') }),
+    ]),
+    v.intersect([
+      MessageContentResourceOutputTextSchema,
+      v.object({ type: v.literal('output_text') }),
+    ]),
   ]),
   v.description('A content part in a session message.'),
 )
@@ -45146,7 +46518,7 @@ export const MessageItemResourceSchema = v.pipe(
       v.description('The status of the message. User messages are always `completed`.'),
     ),
     phase: v.pipe(
-      v.union([MessagePhaseResourceSchema, v.nullable(v.null())]),
+      v.union([MessagePhaseResourceSchema, v.null()]),
       v.description('The phase of an assistant message. Null for user messages.'),
     ),
   }),
@@ -45190,7 +46562,7 @@ export const ReasoningItemResourceSchema = v.pipe(
       v.description('The reasoning summaries produced by the agent.'),
     ),
     status: v.pipe(
-      v.union([OutputItemStatusResourceSchema, v.nullable(v.null())]),
+      v.union([OutputItemStatusResourceSchema, v.null()]),
       v.description('The status of the reasoning item.'),
     ),
   }),
@@ -45272,7 +46644,7 @@ export const FunctionCallOutputItemResourceSchema = v.pipe(
       v.description('The status of the function call.'),
     ),
     output: v.pipe(
-      v.union([FunctionCallOutputResourceSchema, v.nullable(v.null())]),
+      v.union([FunctionCallOutputResourceSchema, v.null()]),
       v.description('The function result, if the call succeeded.'),
     ),
     error: v.pipe(
@@ -45344,11 +46716,11 @@ export const McpCallItemResourceSchema = v.pipe(
       v.description('The status of the MCP tool call.'),
     ),
     output: v.pipe(
-      v.union([v.any(), v.nullable(v.null())]),
+      v.union([v.any(), v.null()]),
       v.description('The output returned by the MCP tool, if any.'),
     ),
     error: v.pipe(
-      v.union([v.any(), v.nullable(v.null())]),
+      v.union([v.any(), v.null()]),
       v.description('The error returned by the MCP tool, if any.'),
     ),
   }),
@@ -45396,7 +46768,7 @@ export const ComputerUseCallItemResourceSchema = v.pipe(
       v.description('The execution status of the activity.'),
     ),
     output: v.pipe(
-      v.union([ComputerScreenshotResourceSchema, v.nullable(v.null())]),
+      v.union([ComputerScreenshotResourceSchema, v.null()]),
       v.description(
         'The last screenshot emitted by the model. Null when screenshot inclusion is disabled or the call emitted no screenshot.',
       ),
@@ -45483,7 +46855,10 @@ export type BrowserAuthenticationHistoryRequestKindResourceBrowserAuthentication
 >
 
 export const BrowserAuthenticationHistoryRequestKindResourceSchema = v.union([
-  BrowserAuthenticationHistoryRequestKindResourceBrowserAuthenticationSchema,
+  v.intersect([
+    BrowserAuthenticationHistoryRequestKindResourceBrowserAuthenticationSchema,
+    v.object({ type: v.literal('browser_authentication') }),
+  ]),
 ])
 
 export type BrowserAuthenticationHistoryRequestKindResource = v.InferOutput<
@@ -45538,8 +46913,14 @@ export type ComputerUseApprovalResponseKindResourceBrowserAuthenticationCancelRe
   >
 
 export const ComputerUseApprovalResponseKindResourceSchema = v.union([
-  ComputerUseApprovalResponseKindResourceBrowserAuthenticationSubmitResourceSchema,
-  ComputerUseApprovalResponseKindResourceBrowserAuthenticationCancelResourceSchema,
+  v.intersect([
+    ComputerUseApprovalResponseKindResourceBrowserAuthenticationSubmitResourceSchema,
+    v.object({ action: v.literal('submit') }),
+  ]),
+  v.intersect([
+    ComputerUseApprovalResponseKindResourceBrowserAuthenticationCancelResourceSchema,
+    v.object({ action: v.literal('cancel') }),
+  ]),
 ])
 
 export type ComputerUseApprovalResponseKindResource = v.InferOutput<
@@ -45654,10 +47035,16 @@ export type WebSearchActionResourceOther = v.InferOutput<typeof WebSearchActionR
 
 export const WebSearchActionResourceSchema = v.pipe(
   v.union([
-    WebSearchActionResourceSearchSchema,
-    WebSearchActionResourceOpenPageSchema,
-    WebSearchActionResourceFindInPageSchema,
-    WebSearchActionResourceOtherSchema,
+    v.intersect([WebSearchActionResourceSearchSchema, v.object({ type: v.literal('search') })]),
+    v.intersect([
+      WebSearchActionResourceOpenPageSchema,
+      v.object({ type: v.literal('open_page') }),
+    ]),
+    v.intersect([
+      WebSearchActionResourceFindInPageSchema,
+      v.object({ type: v.literal('find_in_page') }),
+    ]),
+    v.intersect([WebSearchActionResourceOtherSchema, v.object({ type: v.literal('other') })]),
   ]),
   v.description('An action performed by the web search tool.'),
 )
@@ -45683,7 +47070,7 @@ export const WebSearchCallItemResourceSchema = v.pipe(
       v.description('The status of the web search call.'),
     ),
     action: v.pipe(
-      v.union([WebSearchActionResourceSchema, v.nullable(v.null())]),
+      v.union([WebSearchActionResourceSchema, v.null()]),
       v.description('The action performed by the web search tool.'),
     ),
   }),
@@ -45960,23 +47347,59 @@ export type CloseSubagentCallItemResource = v.InferOutput<
 
 export const SessionTurnItemResourceSchema = v.pipe(
   v.union([
-    MessageItemResourceSchema,
-    ReasoningItemResourceSchema,
-    FunctionCallItemResourceSchema,
-    FunctionCallOutputItemResourceSchema,
-    AgentMessageItemResourceSchema,
-    McpCallItemResourceSchema,
-    ComputerUseCallItemResourceSchema,
-    BrowserAuthenticationRequestItemResourceSchema,
-    ComputerUseApprovalRequestResultItemResourceSchema,
-    WebSearchCallItemResourceSchema,
-    CommandExecutionItemResourceSchema,
-    CreateSubagentCallItemResourceSchema,
-    SendSubagentInputCallItemResourceSchema,
-    ResumeSubagentCallItemResourceSchema,
-    WaitForSubagentsCallItemResourceSchema,
-    InterruptSubagentCallItemResourceSchema,
-    CloseSubagentCallItemResourceSchema,
+    v.intersect([MessageItemResourceSchema, v.object({ type: v.literal('message') })]),
+    v.intersect([ReasoningItemResourceSchema, v.object({ type: v.literal('reasoning') })]),
+    v.intersect([FunctionCallItemResourceSchema, v.object({ type: v.literal('function_call') })]),
+    v.intersect([
+      FunctionCallOutputItemResourceSchema,
+      v.object({ type: v.literal('function_call_output') }),
+    ]),
+    v.intersect([AgentMessageItemResourceSchema, v.object({ type: v.literal('agent_message') })]),
+    v.intersect([McpCallItemResourceSchema, v.object({ type: v.literal('mcp_call') })]),
+    v.intersect([
+      ComputerUseCallItemResourceSchema,
+      v.object({ type: v.literal('computer_use_call') }),
+    ]),
+    v.intersect([
+      BrowserAuthenticationRequestItemResourceSchema,
+      v.object({ type: v.literal('computer_use_approval_request') }),
+    ]),
+    v.intersect([
+      ComputerUseApprovalRequestResultItemResourceSchema,
+      v.object({ type: v.literal('computer_use_approval_request_result') }),
+    ]),
+    v.intersect([
+      WebSearchCallItemResourceSchema,
+      v.object({ type: v.literal('web_search_call') }),
+    ]),
+    v.intersect([
+      CommandExecutionItemResourceSchema,
+      v.object({ type: v.literal('command_execution') }),
+    ]),
+    v.intersect([
+      CreateSubagentCallItemResourceSchema,
+      v.object({ type: v.literal('create_subagent_call') }),
+    ]),
+    v.intersect([
+      SendSubagentInputCallItemResourceSchema,
+      v.object({ type: v.literal('send_subagent_input_call') }),
+    ]),
+    v.intersect([
+      ResumeSubagentCallItemResourceSchema,
+      v.object({ type: v.literal('resume_subagent_call') }),
+    ]),
+    v.intersect([
+      WaitForSubagentsCallItemResourceSchema,
+      v.object({ type: v.literal('wait_for_subagents_call') }),
+    ]),
+    v.intersect([
+      InterruptSubagentCallItemResourceSchema,
+      v.object({ type: v.literal('interrupt_subagent_call') }),
+    ]),
+    v.intersect([
+      CloseSubagentCallItemResourceSchema,
+      v.object({ type: v.literal('close_subagent_call') }),
+    ]),
   ]),
   v.description('An item associated with a session turn.'),
 )
@@ -46188,7 +47611,7 @@ export const TurnResourceSchema = v.pipe(
   v.strictObject({
     prompt_cache_options: v.optional(
       v.pipe(
-        v.union([PromptCacheOptionsResourceSchema, v.nullable(v.null())]),
+        v.union([PromptCacheOptionsResourceSchema, v.null()]),
         v.description(
           'Prompt cache lifetime selected when this turn started, including an inherited session TTL. Null when the turn used the model default or no TTL was recorded.',
         ),
@@ -46258,11 +47681,11 @@ export const TurnResourceSchema = v.pipe(
       v.description('The Unix timestamp, in seconds, when the turn reached a terminal state.'),
     ),
     error: v.pipe(
-      v.union([SessionTurnErrorResourceSchema, v.nullable(v.null())]),
+      v.union([SessionTurnErrorResourceSchema, v.null()]),
       v.description('A customer-safe error. Non-null only for a failed turn.'),
     ),
     usage: v.pipe(
-      v.union([TokenUsageResourceSchema, v.nullable(v.null())]),
+      v.union([TokenUsageResourceSchema, v.null()]),
       v.description(
         'Best-effort token usage for the turn, or null if unknown. Recorded usage may change.',
       ),
@@ -46424,7 +47847,10 @@ export type PersistedMcpTransportResourceStdio = v.InferOutput<
 >
 
 export const PersistedMcpTransportResourceSchema = v.pipe(
-  v.union([PersistedMcpTransportResourceHttpSchema, PersistedMcpTransportResourceStdioSchema]),
+  v.union([
+    v.intersect([PersistedMcpTransportResourceHttpSchema, v.object({ type: v.literal('http') })]),
+    v.intersect([PersistedMcpTransportResourceStdioSchema, v.object({ type: v.literal('stdio') })]),
+  ]),
   v.description('A credential-free transport used to connect to an MCP server.'),
 )
 
@@ -46499,7 +47925,7 @@ export const PersistedAgentToolResourceWebSearchSchema = v.pipe(
       v.description('Allowed search domains, or `null` when the search is unrestricted.'),
     ),
     location: v.pipe(
-      v.union([WebSearchLocationResourceSchema, v.nullable(v.null())]),
+      v.union([WebSearchLocationResourceSchema, v.null()]),
       v.description('Approximate location used to localize search results, if provided.'),
     ),
   }),
@@ -46544,13 +47970,31 @@ export type PersistedAgentToolResourceAutomations = v.InferOutput<
 
 export const PersistedAgentToolResourceSchema = v.pipe(
   v.union([
-    PersistedAgentToolResourceFunctionSchema,
-    PersistedAgentToolResourceToolSearchSchema,
-    PersistedAgentToolResourceProgrammaticToolCallingSchema,
-    PersistedAgentToolResourceMcpSchema,
-    PersistedAgentToolResourceWebSearchSchema,
-    PersistedAgentToolResourceComputerUseSchema,
-    PersistedAgentToolResourceAutomationsSchema,
+    v.intersect([
+      PersistedAgentToolResourceFunctionSchema,
+      v.object({ type: v.literal('function') }),
+    ]),
+    v.intersect([
+      PersistedAgentToolResourceToolSearchSchema,
+      v.object({ type: v.literal('tool_search') }),
+    ]),
+    v.intersect([
+      PersistedAgentToolResourceProgrammaticToolCallingSchema,
+      v.object({ type: v.literal('programmatic_tool_calling') }),
+    ]),
+    v.intersect([PersistedAgentToolResourceMcpSchema, v.object({ type: v.literal('mcp') })]),
+    v.intersect([
+      PersistedAgentToolResourceWebSearchSchema,
+      v.object({ type: v.literal('web_search') }),
+    ]),
+    v.intersect([
+      PersistedAgentToolResourceComputerUseSchema,
+      v.object({ type: v.literal('computer_use') }),
+    ]),
+    v.intersect([
+      PersistedAgentToolResourceAutomationsSchema,
+      v.object({ type: v.literal('automations') }),
+    ]),
   ]),
   v.description('A credential-free tool available to a reusable agent.'),
 )
@@ -46836,8 +48280,14 @@ export type PersistedMcpTransportConfigParamStdio = v.InferOutput<
 
 export const PersistedMcpTransportConfigParamSchema = v.pipe(
   v.union([
-    PersistedMcpTransportConfigParamHttpSchema,
-    PersistedMcpTransportConfigParamStdioSchema,
+    v.intersect([
+      PersistedMcpTransportConfigParamHttpSchema,
+      v.object({ type: v.literal('http') }),
+    ]),
+    v.intersect([
+      PersistedMcpTransportConfigParamStdioSchema,
+      v.object({ type: v.literal('stdio') }),
+    ]),
   ]),
   v.description('A credential-free transport used to connect to an MCP server.'),
 )
@@ -46896,7 +48346,7 @@ export const PersistedAgentToolConfigParamMcpSchema = v.pipe(
     ),
     connection_origin: v.optional(
       v.pipe(
-        v.union([McpConnectionOriginParamSchema, v.nullable(v.null())]),
+        v.union([McpConnectionOriginParamSchema, v.null()]),
         v.description('Selects where outbound MCP HTTP connections originate.'),
       ),
     ),
@@ -46916,13 +48366,13 @@ export const PersistedAgentToolConfigParamWebSearchSchema = v.pipe(
     ),
     mode: v.optional(
       v.pipe(
-        v.union([WebSearchModeParamSchema, v.nullable(v.null())]),
+        v.union([WebSearchModeParamSchema, v.null()]),
         v.description('The source used for web search results. Defaults to `live`.'),
       ),
     ),
     context_size: v.optional(
       v.pipe(
-        v.union([WebSearchContextSizeParamSchema, v.nullable(v.null())]),
+        v.union([WebSearchContextSizeParamSchema, v.null()]),
         v.description(
           'The amount of search context made available to the model. Defaults to `medium`.',
         ),
@@ -46942,7 +48392,7 @@ export const PersistedAgentToolConfigParamWebSearchSchema = v.pipe(
     ),
     location: v.optional(
       v.pipe(
-        v.union([WebSearchLocationParamSchema, v.nullable(v.null())]),
+        v.union([WebSearchLocationParamSchema, v.null()]),
         v.description('Approximate location used to localize search results.'),
       ),
     ),
@@ -46988,13 +48438,31 @@ export type PersistedAgentToolConfigParamAutomations = v.InferOutput<
 
 export const PersistedAgentToolConfigParamSchema = v.pipe(
   v.union([
-    PersistedAgentToolConfigParamFunctionSchema,
-    PersistedAgentToolConfigParamToolSearchSchema,
-    PersistedAgentToolConfigParamProgrammaticToolCallingSchema,
-    PersistedAgentToolConfigParamMcpSchema,
-    PersistedAgentToolConfigParamWebSearchSchema,
-    PersistedAgentToolConfigParamComputerUseSchema,
-    PersistedAgentToolConfigParamAutomationsSchema,
+    v.intersect([
+      PersistedAgentToolConfigParamFunctionSchema,
+      v.object({ type: v.literal('function') }),
+    ]),
+    v.intersect([
+      PersistedAgentToolConfigParamToolSearchSchema,
+      v.object({ type: v.literal('tool_search') }),
+    ]),
+    v.intersect([
+      PersistedAgentToolConfigParamProgrammaticToolCallingSchema,
+      v.object({ type: v.literal('programmatic_tool_calling') }),
+    ]),
+    v.intersect([PersistedAgentToolConfigParamMcpSchema, v.object({ type: v.literal('mcp') })]),
+    v.intersect([
+      PersistedAgentToolConfigParamWebSearchSchema,
+      v.object({ type: v.literal('web_search') }),
+    ]),
+    v.intersect([
+      PersistedAgentToolConfigParamComputerUseSchema,
+      v.object({ type: v.literal('computer_use') }),
+    ]),
+    v.intersect([
+      PersistedAgentToolConfigParamAutomationsSchema,
+      v.object({ type: v.literal('automations') }),
+    ]),
   ]),
   v.description('A tool that can be stored on a reusable agent without session credentials.'),
 )
@@ -47033,7 +48501,7 @@ export const CreateAgentParamsSchema = v.pipe(
     ),
     reasoning: v.optional(
       v.pipe(
-        v.union([ReasoningParamSchema, v.nullable(v.null())]),
+        v.union([ReasoningParamSchema, v.null()]),
         v.description(
           "Configuration for model reasoning. Omission uses the model's default effort.",
         ),
@@ -47041,7 +48509,7 @@ export const CreateAgentParamsSchema = v.pipe(
     ),
     text: v.optional(
       v.pipe(
-        v.union([TextParamSchema, v.nullable(v.null())]),
+        v.union([TextParamSchema, v.null()]),
         v.description(
           'Configuration for generated text. Defaults to the `text` format and medium verbosity.',
         ),
@@ -47049,7 +48517,7 @@ export const CreateAgentParamsSchema = v.pipe(
     ),
     service_tier: v.optional(
       v.pipe(
-        v.union([ServiceTierParamSchema, v.nullable(v.null())]),
+        v.union([ServiceTierParamSchema, v.null()]),
         v.description('The service tier used for model requests. Defaults to `auto`.'),
       ),
     ),
@@ -47073,7 +48541,7 @@ export const CreateAgentParamsSchema = v.pipe(
     ),
     multi_agent: v.optional(
       v.pipe(
-        v.union([MultiAgentConfigCurrentParamSchema, v.nullable(v.null())]),
+        v.union([MultiAgentConfigCurrentParamSchema, v.null()]),
         v.description(
           'Configuration for creating and coordinating subagents. Subagent tools are disabled by default.',
         ),
@@ -47081,7 +48549,7 @@ export const CreateAgentParamsSchema = v.pipe(
     ),
     compaction: v.optional(
       v.pipe(
-        v.union([CompactionParamSchema, v.nullable(v.null())]),
+        v.union([CompactionParamSchema, v.null()]),
         v.description('Context compaction settings. Omission or null uses blocking compaction.'),
       ),
     ),
@@ -47107,7 +48575,7 @@ export const UpdateAgentParamsSchema = v.pipe(
     ),
     reasoning: v.optional(
       v.pipe(
-        v.union([ReasoningParamSchema, v.nullable(v.null())]),
+        v.union([ReasoningParamSchema, v.null()]),
         v.description(
           "Configuration for model reasoning. Omit to keep the current settings; pass `null` to reset to the model's default effort.",
         ),
@@ -47115,13 +48583,13 @@ export const UpdateAgentParamsSchema = v.pipe(
     ),
     text: v.optional(
       v.pipe(
-        v.union([TextParamSchema, v.nullable(v.null())]),
+        v.union([TextParamSchema, v.null()]),
         v.description('Configuration for text generated by the agent.'),
       ),
     ),
     service_tier: v.optional(
       v.pipe(
-        v.union([ServiceTierParamSchema, v.nullable(v.null())]),
+        v.union([ServiceTierParamSchema, v.null()]),
         v.description('The service tier used for model requests.'),
       ),
     ),
@@ -47135,13 +48603,13 @@ export const UpdateAgentParamsSchema = v.pipe(
     ),
     multi_agent: v.optional(
       v.pipe(
-        v.union([MultiAgentConfigCurrentParamSchema, v.nullable(v.null())]),
+        v.union([MultiAgentConfigCurrentParamSchema, v.null()]),
         v.description('Configuration for creating and coordinating subagents.'),
       ),
     ),
     compaction: v.optional(
       v.pipe(
-        v.union([CompactionParamSchema, v.nullable(v.null())]),
+        v.union([CompactionParamSchema, v.null()]),
         v.description(
           'Context compaction settings. Omit to keep the current settings. A supplied object replaces the settings; null or an empty object uses blocking compaction.',
         ),
@@ -47308,7 +48776,7 @@ export const CreateEnvironmentTemplateParamsSchema = v.pipe(
   v.partial(
     v.strictObject({
       packages: v.pipe(
-        v.union([EnvironmentPackagesParamSchema, v.nullable(v.null())]),
+        v.union([EnvironmentPackagesParamSchema, v.null()]),
         v.description('Packages to install in the environment. Defaults to empty package lists.'),
       ),
       setup_commands: v.pipe(
@@ -47316,13 +48784,13 @@ export const CreateEnvironmentTemplateParamsSchema = v.pipe(
         v.description('Ordered, confidential setup commands. Command bodies are never returned.'),
       ),
       network: v.pipe(
-        v.union([NetworkPolicyParamSchema, v.nullable(v.null())]),
+        v.union([NetworkPolicyParamSchema, v.null()]),
         v.description(
           'Network access policy for the environment. If omitted, the API version determines whether network access is enabled or disabled.',
         ),
       ),
       desktop: v.pipe(
-        v.union([DesktopParamSchema, v.nullable(v.null())]),
+        v.union([DesktopParamSchema, v.null()]),
         v.description(
           'Desktop provisioning. Omission or null inherits the template setting, or defaults to disabled.',
         ),
@@ -47384,7 +48852,7 @@ export const UpdateEnvironmentTemplateParamsSchema = v.pipe(
         v.description('A replacement human-readable display name, or `null` to clear the name.'),
       ),
       packages: v.pipe(
-        v.union([EnvironmentPackagesParamSchema, v.nullable(v.null())]),
+        v.union([EnvironmentPackagesParamSchema, v.null()]),
         v.description('Packages installed before the runtime network policy applies.'),
       ),
       setup_commands: v.pipe(
@@ -47394,13 +48862,13 @@ export const UpdateEnvironmentTemplateParamsSchema = v.pipe(
         ),
       ),
       network: v.pipe(
-        v.union([NetworkPolicyParamSchema, v.nullable(v.null())]),
+        v.union([NetworkPolicyParamSchema, v.null()]),
         v.description(
           'Network access available after setup completes. Omit to preserve the current policy, or pass `null` to reset to the default policy.',
         ),
       ),
       desktop: v.pipe(
-        v.union([DesktopParamSchema, v.nullable(v.null())]),
+        v.union([DesktopParamSchema, v.null()]),
         v.description('Replacement desktop configuration, or null to disable the desktop.'),
       ),
       env: v.pipe(
@@ -47525,7 +48993,7 @@ export const McpApprovalRequestResourceMcpToolCallSchema = v.strictObject({
     v.description('The tool name, or null when CCA does not provide it.'),
   ),
   arguments: v.pipe(
-    v.union([v.any(), v.nullable(v.null())]),
+    v.union([v.any(), v.null()]),
     v.description('The tool arguments as JSON, or null when CCA does not provide them.'),
   ),
   message: v.pipe(v.string(), v.minCodePoints(0)),
@@ -47536,7 +49004,12 @@ export type McpApprovalRequestResourceMcpToolCall = v.InferOutput<
 >
 
 export const McpApprovalRequestResourceSchema = v.pipe(
-  v.union([McpApprovalRequestResourceMcpToolCallSchema]),
+  v.union([
+    v.intersect([
+      McpApprovalRequestResourceMcpToolCallSchema,
+      v.object({ type: v.literal('mcp_tool_call') }),
+    ]),
+  ]),
   v.description('Information for presenting an MCP approval.'),
 )
 
@@ -47618,8 +49091,14 @@ export type ComputerUseApprovalRequestKindResourceBrowserOriginAccess = v.InferO
 >
 
 export const ComputerUseApprovalRequestKindResourceSchema = v.union([
-  ComputerUseApprovalRequestKindResourceBrowserAuthenticationSchema,
-  ComputerUseApprovalRequestKindResourceBrowserOriginAccessSchema,
+  v.intersect([
+    ComputerUseApprovalRequestKindResourceBrowserAuthenticationSchema,
+    v.object({ type: v.literal('browser_authentication') }),
+  ]),
+  v.intersect([
+    ComputerUseApprovalRequestKindResourceBrowserOriginAccessSchema,
+    v.object({ type: v.literal('browser_origin_access') }),
+  ]),
 ])
 
 export type ComputerUseApprovalRequestKindResource = v.InferOutput<
@@ -47696,10 +49175,22 @@ export type SessionRequiredActionResourceEnvironmentConnection = v.InferOutput<
 
 export const SessionRequiredActionResourceSchema = v.pipe(
   v.union([
-    SessionRequiredActionResourceMcpApprovalRequestSchema,
-    SessionRequiredActionResourceComputerUseApprovalRequestSchema,
-    SessionRequiredActionResourceFunctionCallSchema,
-    SessionRequiredActionResourceEnvironmentConnectionSchema,
+    v.intersect([
+      SessionRequiredActionResourceMcpApprovalRequestSchema,
+      v.object({ type: v.literal('mcp_approval_request') }),
+    ]),
+    v.intersect([
+      SessionRequiredActionResourceComputerUseApprovalRequestSchema,
+      v.object({ type: v.literal('computer_use_approval_request') }),
+    ]),
+    v.intersect([
+      SessionRequiredActionResourceFunctionCallSchema,
+      v.object({ type: v.literal('function_call') }),
+    ]),
+    v.intersect([
+      SessionRequiredActionResourceEnvironmentConnectionSchema,
+      v.object({ type: v.literal('environment_connection') }),
+    ]),
   ]),
   v.description('An action that must be completed before a session can continue.'),
 )
@@ -47786,7 +49277,7 @@ export const EnvironmentResourceOpenaiHostedSchema = v.pipe(
     ),
     container_size: v.optional(
       v.pipe(
-        v.union([ContainerSizeResourceSchema, v.nullable(v.null())]),
+        v.union([ContainerSizeResourceSchema, v.null()]),
         v.description(
           'The effective CPU and memory tier, or null when unknown or outside the public tiers.',
         ),
@@ -47861,9 +49352,15 @@ export type EnvironmentResourceSelfHosted = v.InferOutput<
 
 export const EnvironmentResourceSchema = v.pipe(
   v.union([
-    EnvironmentResourceNoneSchema,
-    EnvironmentResourceOpenaiHostedSchema,
-    EnvironmentResourceSelfHostedSchema,
+    v.intersect([EnvironmentResourceNoneSchema, v.object({ type: v.literal('none') })]),
+    v.intersect([
+      EnvironmentResourceOpenaiHostedSchema,
+      v.object({ type: v.literal('openai_hosted') }),
+    ]),
+    v.intersect([
+      EnvironmentResourceSelfHostedSchema,
+      v.object({ type: v.literal('self_hosted') }),
+    ]),
   ]),
   v.description('The execution environment for a session.'),
 )
@@ -47874,7 +49371,7 @@ export const SessionResourceSchema = v.pipe(
   v.strictObject({
     prompt_cache_options: v.optional(
       v.pipe(
-        v.union([PromptCacheOptionsResourceSchema, v.nullable(v.null())]),
+        v.union([PromptCacheOptionsResourceSchema, v.null()]),
         v.description('Default prompt cache lifetime for turns in this session, when configured.'),
       ),
     ),
@@ -47949,7 +49446,7 @@ export const SessionResourceSchema = v.pipe(
       v.description('The IDs of vaults made available to the session.'),
     ),
     usage: v.pipe(
-      v.union([TokenUsageResourceSchema, v.nullable(v.null())]),
+      v.union([TokenUsageResourceSchema, v.null()]),
       v.description(
         'Best-effort token usage for the session, or null if unknown. Recorded usage may change.',
       ),
@@ -48073,7 +49570,7 @@ export const CreateAgentSessionParamsSchema = v.pipe(
     ),
     spend_control: v.optional(
       v.pipe(
-        v.union([SessionBudgetControlParamsSchema, v.nullable(v.null())]),
+        v.union([SessionBudgetControlParamsSchema, v.null()]),
         v.description(
           'Optional spending limit in USD cents. Omission or null creates an unlimited session.',
         ),
@@ -48119,7 +49616,7 @@ export const CreateAgentSessionParamsSchema = v.pipe(
     ),
     input: v.optional(
       v.pipe(
-        v.union([CreateSessionInputParamSchema, v.nullable(v.null())]),
+        v.union([CreateSessionInputParamSchema, v.null()]),
         v.description(
           'Initial input to submit when the session is created. A string is shorthand for a single user message. Required when `environment.type` is `none`, or when `stream` is `true` for an environment that is not `self_hosted`; optional for self-hosted and non-streaming execution environments.',
         ),
@@ -48127,7 +49624,7 @@ export const CreateAgentSessionParamsSchema = v.pipe(
     ),
     prompt_cache_options: v.optional(
       v.pipe(
-        v.union([PromptCacheOptionsParam2Schema, v.nullable(v.null())]),
+        v.union([PromptCacheOptionsParam2Schema, v.null()]),
         v.description(
           'Default prompt cache lifetime for turns in this session. Omit to use the model default.',
         ),
@@ -48283,7 +49780,7 @@ export const SessionEventAgentSessionTurnReasoningSummaryPartDoneSchema = v.pipe
     ),
     part: v.pipe(SummaryTextResourceSchema, v.description('The completed summary part.')),
     status: v.pipe(
-      v.nullable(v.union([v.literal('incomplete'), v.null()])),
+      v.nullable(v.literal('incomplete')),
       v.description('Present as `incomplete` when summary generation was interrupted.'),
     ),
     obfuscation: v.optional(
@@ -48463,7 +49960,7 @@ export const SessionEnvironmentStateResourceSchema = v.pipe(
       v.description("The environment's connection status."),
     ),
     error: v.pipe(
-      v.union([SessionEnvironmentErrorResourceSchema, v.nullable(v.null())]),
+      v.union([SessionEnvironmentErrorResourceSchema, v.null()]),
       v.description('The error reported while preparing the environment, if any.'),
     ),
   }),
@@ -48813,7 +50310,7 @@ export const SessionEventAgentSessionTurnCompletedSchema = v.pipe(
     ),
     turn: v.pipe(TurnResourceSchema, v.description('The completed turn.')),
     usage: v.pipe(
-      v.union([TokenUsageResourceSchema, v.nullable(v.null())]),
+      v.union([TokenUsageResourceSchema, v.null()]),
       v.description('Token usage by the root agent during the turn, when available.'),
     ),
     obfuscation: v.optional(
@@ -48850,7 +50347,7 @@ export const SessionEventAgentSessionTurnFailedSchema = v.pipe(
     ),
     turn: v.pipe(TurnResourceSchema, v.description('The failed turn.')),
     usage: v.pipe(
-      v.union([TokenUsageResourceSchema, v.nullable(v.null())]),
+      v.union([TokenUsageResourceSchema, v.null()]),
       v.description('Token usage by the root agent during the turn, when available.'),
     ),
     obfuscation: v.optional(
@@ -48887,7 +50384,7 @@ export const SessionEventAgentSessionTurnCancelledSchema = v.pipe(
     ),
     turn: v.pipe(TurnResourceSchema, v.description('The cancelled turn.')),
     usage: v.pipe(
-      v.union([TokenUsageResourceSchema, v.nullable(v.null())]),
+      v.union([TokenUsageResourceSchema, v.null()]),
       v.description('Token usage by the root agent during the turn, when available.'),
     ),
     obfuscation: v.optional(
@@ -49329,7 +50826,7 @@ export const AssistantMessageItemResourceSchema = v.pipe(
       v.description('The content of the message.'),
     ),
     phase: v.pipe(
-      v.union([MessagePhaseResourceSchema, v.nullable(v.null())]),
+      v.union([MessagePhaseResourceSchema, v.null()]),
       v.description('The phase of the assistant message.'),
     ),
   }),
@@ -49340,20 +50837,50 @@ export type AssistantMessageItemResource = v.InferOutput<typeof AssistantMessage
 
 export const AgentOutputItemResourceSchema = v.pipe(
   v.union([
-    AssistantMessageItemResourceSchema,
-    ReasoningItemResourceSchema,
-    FunctionCallItemResourceSchema,
-    McpCallItemResourceSchema,
-    ComputerUseCallItemResourceSchema,
-    BrowserAuthenticationRequestItemResourceSchema,
-    WebSearchCallItemResourceSchema,
-    CommandExecutionItemResourceSchema,
-    CreateSubagentCallItemResourceSchema,
-    SendSubagentInputCallItemResourceSchema,
-    ResumeSubagentCallItemResourceSchema,
-    WaitForSubagentsCallItemResourceSchema,
-    InterruptSubagentCallItemResourceSchema,
-    CloseSubagentCallItemResourceSchema,
+    v.intersect([AssistantMessageItemResourceSchema, v.object({ type: v.literal('message') })]),
+    v.intersect([ReasoningItemResourceSchema, v.object({ type: v.literal('reasoning') })]),
+    v.intersect([FunctionCallItemResourceSchema, v.object({ type: v.literal('function_call') })]),
+    v.intersect([McpCallItemResourceSchema, v.object({ type: v.literal('mcp_call') })]),
+    v.intersect([
+      ComputerUseCallItemResourceSchema,
+      v.object({ type: v.literal('computer_use_call') }),
+    ]),
+    v.intersect([
+      BrowserAuthenticationRequestItemResourceSchema,
+      v.object({ type: v.literal('computer_use_approval_request') }),
+    ]),
+    v.intersect([
+      WebSearchCallItemResourceSchema,
+      v.object({ type: v.literal('web_search_call') }),
+    ]),
+    v.intersect([
+      CommandExecutionItemResourceSchema,
+      v.object({ type: v.literal('command_execution') }),
+    ]),
+    v.intersect([
+      CreateSubagentCallItemResourceSchema,
+      v.object({ type: v.literal('create_subagent_call') }),
+    ]),
+    v.intersect([
+      SendSubagentInputCallItemResourceSchema,
+      v.object({ type: v.literal('send_subagent_input_call') }),
+    ]),
+    v.intersect([
+      ResumeSubagentCallItemResourceSchema,
+      v.object({ type: v.literal('resume_subagent_call') }),
+    ]),
+    v.intersect([
+      WaitForSubagentsCallItemResourceSchema,
+      v.object({ type: v.literal('wait_for_subagents_call') }),
+    ]),
+    v.intersect([
+      InterruptSubagentCallItemResourceSchema,
+      v.object({ type: v.literal('interrupt_subagent_call') }),
+    ]),
+    v.intersect([
+      CloseSubagentCallItemResourceSchema,
+      v.object({ type: v.literal('close_subagent_call') }),
+    ]),
   ]),
   v.description('An output item produced by an agent.'),
 )
@@ -49768,40 +51295,139 @@ export type SessionEventAgentSessionTurnReasoningSummaryPartAdded = v.InferOutpu
 
 export const SessionEventSchema = v.pipe(
   v.union([
-    SessionEventErrorSchema,
-    SessionEventAgentSessionEnvironmentReadySchema,
-    SessionEventAgentSessionEnvironmentSuspendedSchema,
-    SessionEventAgentSessionEnvironmentExpiredSchema,
-    SessionEventAgentSessionEnvironmentResetSchema,
-    SessionEventAgentOutputCommandExecutionOutputDeltaSchema,
-    SessionEventAgentSessionCreatedSchema,
-    SessionEventAgentSessionTurnCreatedSchema,
-    SessionEventAgentSessionTurnInProgressSchema,
-    SessionEventAgentSessionTurnCompletedSchema,
-    SessionEventAgentSessionTurnFailedSchema,
-    SessionEventAgentSessionTurnCancelledSchema,
-    SessionEventAgentSessionTurnItemAddedSchema,
-    SessionEventAgentSessionIdleSchema,
-    SessionEventAgentSessionBudgetReachedSchema,
-    SessionEventAgentSessionInProgressSchema,
-    SessionEventAgentSessionRequiresActionSchema,
-    SessionEventAgentSessionFailedSchema,
-    SessionEventAgentSessionEnvironmentPendingSchema,
-    SessionEventAgentSessionEnvironmentConnectedSchema,
-    SessionEventAgentSessionEnvironmentDisconnectedSchema,
-    SessionEventAgentSessionEnvironmentFailedSchema,
-    SessionEventAgentSessionSubagentCreatedSchema,
-    SessionEventAgentSessionSubagentActiveSchema,
-    SessionEventAgentSessionSubagentClosedSchema,
-    SessionEventAgentSessionTurnItemDoneSchema,
-    SessionEventAgentSessionTurnContentPartAddedSchema,
-    SessionEventAgentSessionTurnContentPartDoneSchema,
-    SessionEventAgentSessionTurnOutputTextDeltaSchema,
-    SessionEventAgentSessionTurnOutputTextDoneSchema,
-    SessionEventAgentSessionTurnReasoningSummaryPartAddedSchema,
-    SessionEventAgentSessionTurnReasoningSummaryPartDoneSchema,
-    SessionEventAgentSessionTurnReasoningSummaryTextDeltaSchema,
-    SessionEventAgentSessionTurnReasoningSummaryTextDoneSchema,
+    v.intersect([SessionEventErrorSchema, v.object({ type: v.literal('error') })]),
+    v.intersect([
+      SessionEventAgentSessionEnvironmentReadySchema,
+      v.object({ type: v.literal('agent.session.environment.ready') }),
+    ]),
+    v.intersect([
+      SessionEventAgentSessionEnvironmentSuspendedSchema,
+      v.object({ type: v.literal('agent.session.environment.suspended') }),
+    ]),
+    v.intersect([
+      SessionEventAgentSessionEnvironmentExpiredSchema,
+      v.object({ type: v.literal('agent.session.environment.expired') }),
+    ]),
+    v.intersect([
+      SessionEventAgentSessionEnvironmentResetSchema,
+      v.object({ type: v.literal('agent.session.environment.reset') }),
+    ]),
+    v.intersect([
+      SessionEventAgentOutputCommandExecutionOutputDeltaSchema,
+      v.object({ type: v.literal('agent.output.command_execution_output.delta') }),
+    ]),
+    v.intersect([
+      SessionEventAgentSessionCreatedSchema,
+      v.object({ type: v.literal('agent.session.created') }),
+    ]),
+    v.intersect([
+      SessionEventAgentSessionTurnCreatedSchema,
+      v.object({ type: v.literal('agent.session.turn.created') }),
+    ]),
+    v.intersect([
+      SessionEventAgentSessionTurnInProgressSchema,
+      v.object({ type: v.literal('agent.session.turn.in_progress') }),
+    ]),
+    v.intersect([
+      SessionEventAgentSessionTurnCompletedSchema,
+      v.object({ type: v.literal('agent.session.turn.completed') }),
+    ]),
+    v.intersect([
+      SessionEventAgentSessionTurnFailedSchema,
+      v.object({ type: v.literal('agent.session.turn.failed') }),
+    ]),
+    v.intersect([
+      SessionEventAgentSessionTurnCancelledSchema,
+      v.object({ type: v.literal('agent.session.turn.cancelled') }),
+    ]),
+    v.intersect([
+      SessionEventAgentSessionTurnItemAddedSchema,
+      v.object({ type: v.literal('agent.session.turn.item.added') }),
+    ]),
+    v.intersect([
+      SessionEventAgentSessionIdleSchema,
+      v.object({ type: v.literal('agent.session.idle') }),
+    ]),
+    v.intersect([
+      SessionEventAgentSessionBudgetReachedSchema,
+      v.object({ type: v.literal('agent.session.budget_reached') }),
+    ]),
+    v.intersect([
+      SessionEventAgentSessionInProgressSchema,
+      v.object({ type: v.literal('agent.session.in_progress') }),
+    ]),
+    v.intersect([
+      SessionEventAgentSessionRequiresActionSchema,
+      v.object({ type: v.literal('agent.session.requires_action') }),
+    ]),
+    v.intersect([
+      SessionEventAgentSessionFailedSchema,
+      v.object({ type: v.literal('agent.session.failed') }),
+    ]),
+    v.intersect([
+      SessionEventAgentSessionEnvironmentPendingSchema,
+      v.object({ type: v.literal('agent.session.environment.pending') }),
+    ]),
+    v.intersect([
+      SessionEventAgentSessionEnvironmentConnectedSchema,
+      v.object({ type: v.literal('agent.session.environment.connected') }),
+    ]),
+    v.intersect([
+      SessionEventAgentSessionEnvironmentDisconnectedSchema,
+      v.object({ type: v.literal('agent.session.environment.disconnected') }),
+    ]),
+    v.intersect([
+      SessionEventAgentSessionEnvironmentFailedSchema,
+      v.object({ type: v.literal('agent.session.environment.failed') }),
+    ]),
+    v.intersect([
+      SessionEventAgentSessionSubagentCreatedSchema,
+      v.object({ type: v.literal('agent.session.subagent.created') }),
+    ]),
+    v.intersect([
+      SessionEventAgentSessionSubagentActiveSchema,
+      v.object({ type: v.literal('agent.session.subagent.active') }),
+    ]),
+    v.intersect([
+      SessionEventAgentSessionSubagentClosedSchema,
+      v.object({ type: v.literal('agent.session.subagent.closed') }),
+    ]),
+    v.intersect([
+      SessionEventAgentSessionTurnItemDoneSchema,
+      v.object({ type: v.literal('agent.session.turn.item.done') }),
+    ]),
+    v.intersect([
+      SessionEventAgentSessionTurnContentPartAddedSchema,
+      v.object({ type: v.literal('agent.session.turn.content_part.added') }),
+    ]),
+    v.intersect([
+      SessionEventAgentSessionTurnContentPartDoneSchema,
+      v.object({ type: v.literal('agent.session.turn.content_part.done') }),
+    ]),
+    v.intersect([
+      SessionEventAgentSessionTurnOutputTextDeltaSchema,
+      v.object({ type: v.literal('agent.session.turn.output_text.delta') }),
+    ]),
+    v.intersect([
+      SessionEventAgentSessionTurnOutputTextDoneSchema,
+      v.object({ type: v.literal('agent.session.turn.output_text.done') }),
+    ]),
+    v.intersect([
+      SessionEventAgentSessionTurnReasoningSummaryPartAddedSchema,
+      v.object({ type: v.literal('agent.session.turn.reasoning_summary_part.added') }),
+    ]),
+    v.intersect([
+      SessionEventAgentSessionTurnReasoningSummaryPartDoneSchema,
+      v.object({ type: v.literal('agent.session.turn.reasoning_summary_part.done') }),
+    ]),
+    v.intersect([
+      SessionEventAgentSessionTurnReasoningSummaryTextDeltaSchema,
+      v.object({ type: v.literal('agent.session.turn.reasoning_summary_text.delta') }),
+    ]),
+    v.intersect([
+      SessionEventAgentSessionTurnReasoningSummaryTextDoneSchema,
+      v.object({ type: v.literal('agent.session.turn.reasoning_summary_text.done') }),
+    ]),
   ]),
   v.description('An event emitted by a Managed Agents session.'),
 )
@@ -49812,7 +51438,7 @@ export const UpdateSessionReasoningParamSchema = v.pipe(
   v.partial(
     v.strictObject({
       effort: v.pipe(
-        v.union([ReasoningEffortParamSchema, v.nullable(v.null())]),
+        v.union([ReasoningEffortParamSchema, v.null()]),
         v.description("Omit to keep the current effort. Null selects the model's default effort."),
       ),
     }),
@@ -49840,7 +51466,7 @@ export const UpdateSessionAgentParamSchema = v.pipe(
         v.description('Reasoning settings to update. Omit to keep the current effort.'),
       ),
       service_tier: v.pipe(
-        v.union([ServiceTierParamSchema, v.nullable(v.null())]),
+        v.union([ServiceTierParamSchema, v.null()]),
         v.description('Omit to keep the current tier. Null resets it to auto.'),
       ),
     }),
@@ -49854,7 +51480,7 @@ export const UpdateAgentSessionParamsSchema = v.pipe(
   v.partial(
     v.strictObject({
       prompt_cache_options: v.pipe(
-        v.union([PromptCacheOptionsParam2Schema, v.nullable(v.null())]),
+        v.union([PromptCacheOptionsParam2Schema, v.null()]),
         v.description(
           'Default prompt cache lifetime for future turns. Send null to clear the session default.',
         ),
@@ -49878,7 +51504,7 @@ export const UpdateAgentSessionParamsSchema = v.pipe(
         ),
       ),
       spend_control: v.pipe(
-        v.union([SessionBudgetControlParamsSchema, v.nullable(v.null())]),
+        v.union([SessionBudgetControlParamsSchema, v.null()]),
         v.description(
           'Omit to retain the limit; null or a null limit removes it without resetting spend.',
         ),
@@ -50054,7 +51680,12 @@ export type McpApprovalResponseParamMcpToolCall = v.InferOutput<
 >
 
 export const McpApprovalResponseParamSchema = v.pipe(
-  v.union([McpApprovalResponseParamMcpToolCallSchema]),
+  v.union([
+    v.intersect([
+      McpApprovalResponseParamMcpToolCallSchema,
+      v.object({ type: v.literal('mcp_tool_call') }),
+    ]),
+  ]),
   v.description("The user's decision for a pending MCP tool call."),
 )
 
@@ -50135,8 +51766,14 @@ export type ComputerUseApprovalResponseParamBrowserAuthenticationCancelParam = v
 >
 
 export const ComputerUseApprovalResponseParamBrowserAuthenticationSchema = v.union([
-  ComputerUseApprovalResponseParamBrowserAuthenticationSubmitParamSchema,
-  ComputerUseApprovalResponseParamBrowserAuthenticationCancelParamSchema,
+  v.intersect([
+    ComputerUseApprovalResponseParamBrowserAuthenticationSubmitParamSchema,
+    v.object({ action: v.literal('submit') }),
+  ]),
+  v.intersect([
+    ComputerUseApprovalResponseParamBrowserAuthenticationCancelParamSchema,
+    v.object({ action: v.literal('cancel') }),
+  ]),
 ])
 
 export type ComputerUseApprovalResponseParamBrowserAuthentication = v.InferOutput<
@@ -50165,8 +51802,14 @@ export type ComputerUseApprovalResponseParamBrowserOriginAccessParam = v.InferOu
 >
 
 export const ComputerUseApprovalResponseParamSchema = v.union([
-  ComputerUseApprovalResponseParamBrowserAuthenticationSchema,
-  ComputerUseApprovalResponseParamBrowserOriginAccessParamSchema,
+  v.intersect([
+    ComputerUseApprovalResponseParamBrowserAuthenticationSchema,
+    v.object({ type: v.literal('browser_authentication') }),
+  ]),
+  v.intersect([
+    ComputerUseApprovalResponseParamBrowserOriginAccessParamSchema,
+    v.object({ type: v.literal('browser_origin_access') }),
+  ]),
 ])
 
 export type ComputerUseApprovalResponseParam = v.InferOutput<
@@ -50259,7 +51902,7 @@ export const SessionInputParamAgentSessionInputToolResultSchema = v.pipe(
     success: v.pipe(v.boolean(), v.description('Whether the function call succeeded.')),
     output: v.optional(
       v.pipe(
-        v.union([FunctionCallOutputParamSchema, v.nullable(v.null())]),
+        v.union([FunctionCallOutputParamSchema, v.null()]),
         v.description('The function result when the call succeeded.'),
       ),
     ),
@@ -50279,11 +51922,26 @@ export type SessionInputParamAgentSessionInputToolResult = v.InferOutput<
 
 export const SessionInputParamSchema = v.pipe(
   v.union([
-    SessionInputParamAgentSessionInputMcpApprovalRequestResultSchema,
-    SessionInputParamAgentSessionInputComputerUseApprovalRequestResultSchema,
-    SessionInputParamAgentSessionInputMessageSchema,
-    SessionInputParamAgentSessionInputCancelSchema,
-    SessionInputParamAgentSessionInputToolResultSchema,
+    v.intersect([
+      SessionInputParamAgentSessionInputMcpApprovalRequestResultSchema,
+      v.object({ type: v.literal('agent.session.input.mcp_approval_request_result') }),
+    ]),
+    v.intersect([
+      SessionInputParamAgentSessionInputComputerUseApprovalRequestResultSchema,
+      v.object({ type: v.literal('agent.session.input.computer_use_approval_request_result') }),
+    ]),
+    v.intersect([
+      SessionInputParamAgentSessionInputMessageSchema,
+      v.object({ type: v.literal('agent.session.input.message') }),
+    ]),
+    v.intersect([
+      SessionInputParamAgentSessionInputCancelSchema,
+      v.object({ type: v.literal('agent.session.input.cancel') }),
+    ]),
+    v.intersect([
+      SessionInputParamAgentSessionInputToolResultSchema,
+      v.object({ type: v.literal('agent.session.input.tool_result') }),
+    ]),
   ]),
   v.description('Input submitted to an existing session.'),
 )
@@ -50558,9 +52216,18 @@ export type McpOauthTokenEndpointAuthResourceClientSecretPost = v.InferOutput<
 
 export const McpOauthTokenEndpointAuthResourceSchema = v.pipe(
   v.union([
-    McpOauthTokenEndpointAuthResourceNoneSchema,
-    McpOauthTokenEndpointAuthResourceClientSecretBasicSchema,
-    McpOauthTokenEndpointAuthResourceClientSecretPostSchema,
+    v.intersect([
+      McpOauthTokenEndpointAuthResourceNoneSchema,
+      v.object({ type: v.literal('none') }),
+    ]),
+    v.intersect([
+      McpOauthTokenEndpointAuthResourceClientSecretBasicSchema,
+      v.object({ type: v.literal('client_secret_basic') }),
+    ]),
+    v.intersect([
+      McpOauthTokenEndpointAuthResourceClientSecretPostSchema,
+      v.object({ type: v.literal('client_secret_post') }),
+    ]),
   ]),
   v.description('The client authentication method used for OAuth token refresh.'),
 )
@@ -50618,7 +52285,7 @@ export const VaultCredentialAuthResourceMcpOauthSchema = v.pipe(
       v.description('When the OAuth access token expires, as an RFC 3339 timestamp, if known.'),
     ),
     refresh: v.pipe(
-      v.union([McpOauthRefreshResourceSchema, v.nullable(v.null())]),
+      v.union([McpOauthRefreshResourceSchema, v.null()]),
       v.description('Public refresh metadata without refresh tokens or OAuth client secrets.'),
     ),
   }),
@@ -50689,8 +52356,14 @@ export type VaultCredentialNetworkingResourceLimited = v.InferOutput<
 
 export const VaultCredentialNetworkingResourceSchema = v.pipe(
   v.union([
-    VaultCredentialNetworkingResourceUnrestrictedSchema,
-    VaultCredentialNetworkingResourceLimitedSchema,
+    v.intersect([
+      VaultCredentialNetworkingResourceUnrestrictedSchema,
+      v.object({ type: v.literal('unrestricted') }),
+    ]),
+    v.intersect([
+      VaultCredentialNetworkingResourceLimitedSchema,
+      v.object({ type: v.literal('limited') }),
+    ]),
   ]),
   v.description(
     'Destination permissions for an environment-variable credential. These do not grant network access to the environment.',
@@ -50729,9 +52402,18 @@ export type VaultCredentialAuthResourceEnvironmentVariable = v.InferOutput<
 
 export const VaultCredentialAuthResourceSchema = v.pipe(
   v.union([
-    VaultCredentialAuthResourceMcpOauthSchema,
-    VaultCredentialAuthResourceStaticBearerSchema,
-    VaultCredentialAuthResourceEnvironmentVariableSchema,
+    v.intersect([
+      VaultCredentialAuthResourceMcpOauthSchema,
+      v.object({ type: v.literal('mcp_oauth') }),
+    ]),
+    v.intersect([
+      VaultCredentialAuthResourceStaticBearerSchema,
+      v.object({ type: v.literal('static_bearer') }),
+    ]),
+    v.intersect([
+      VaultCredentialAuthResourceEnvironmentVariableSchema,
+      v.object({ type: v.literal('environment_variable') }),
+    ]),
   ]),
   v.description('The authentication configuration of a vault credential, excluding secrets.'),
 )
@@ -50875,9 +52557,18 @@ export type CreateMcpOauthTokenEndpointAuthParamClientSecretPost = v.InferOutput
 
 export const CreateMcpOauthTokenEndpointAuthParamSchema = v.pipe(
   v.union([
-    CreateMcpOauthTokenEndpointAuthParamNoneSchema,
-    CreateMcpOauthTokenEndpointAuthParamClientSecretBasicSchema,
-    CreateMcpOauthTokenEndpointAuthParamClientSecretPostSchema,
+    v.intersect([
+      CreateMcpOauthTokenEndpointAuthParamNoneSchema,
+      v.object({ type: v.literal('none') }),
+    ]),
+    v.intersect([
+      CreateMcpOauthTokenEndpointAuthParamClientSecretBasicSchema,
+      v.object({ type: v.literal('client_secret_basic') }),
+    ]),
+    v.intersect([
+      CreateMcpOauthTokenEndpointAuthParamClientSecretPostSchema,
+      v.object({ type: v.literal('client_secret_post') }),
+    ]),
   ]),
   v.description('Client authentication credentials for OAuth token refresh.'),
 )
@@ -50950,7 +52641,7 @@ export const CreateVaultCredentialAuthParamMcpOauthSchema = v.pipe(
     ),
     refresh: v.optional(
       v.pipe(
-        v.union([CreateMcpOauthRefreshParamSchema, v.nullable(v.null())]),
+        v.union([CreateMcpOauthRefreshParamSchema, v.null()]),
         v.description('Optional refresh configuration for an HTTPS OAuth token endpoint.'),
       ),
     ),
@@ -51030,8 +52721,14 @@ export type VaultCredentialNetworkingParamLimited = v.InferOutput<
 
 export const VaultCredentialNetworkingParamSchema = v.pipe(
   v.union([
-    VaultCredentialNetworkingParamUnrestrictedSchema,
-    VaultCredentialNetworkingParamLimitedSchema,
+    v.intersect([
+      VaultCredentialNetworkingParamUnrestrictedSchema,
+      v.object({ type: v.literal('unrestricted') }),
+    ]),
+    v.intersect([
+      VaultCredentialNetworkingParamLimitedSchema,
+      v.object({ type: v.literal('limited') }),
+    ]),
   ]),
   v.description(
     'Destination permissions for an environment-variable credential. These do not grant network access to the environment.',
@@ -51078,9 +52775,18 @@ export type CreateVaultCredentialAuthParamEnvironmentVariable = v.InferOutput<
 
 export const CreateVaultCredentialAuthParamSchema = v.pipe(
   v.union([
-    CreateVaultCredentialAuthParamMcpOauthSchema,
-    CreateVaultCredentialAuthParamStaticBearerSchema,
-    CreateVaultCredentialAuthParamEnvironmentVariableSchema,
+    v.intersect([
+      CreateVaultCredentialAuthParamMcpOauthSchema,
+      v.object({ type: v.literal('mcp_oauth') }),
+    ]),
+    v.intersect([
+      CreateVaultCredentialAuthParamStaticBearerSchema,
+      v.object({ type: v.literal('static_bearer') }),
+    ]),
+    v.intersect([
+      CreateVaultCredentialAuthParamEnvironmentVariableSchema,
+      v.object({ type: v.literal('environment_variable') }),
+    ]),
   ]),
   v.description('Authentication credentials for an MCP server or an OpenAI-hosted environment.'),
 )
@@ -51163,8 +52869,14 @@ export type RotateMcpOauthTokenEndpointAuthParamClientSecretPost = v.InferOutput
 
 export const RotateMcpOauthTokenEndpointAuthParamSchema = v.pipe(
   v.union([
-    RotateMcpOauthTokenEndpointAuthParamClientSecretBasicSchema,
-    RotateMcpOauthTokenEndpointAuthParamClientSecretPostSchema,
+    v.intersect([
+      RotateMcpOauthTokenEndpointAuthParamClientSecretBasicSchema,
+      v.object({ type: v.literal('client_secret_basic') }),
+    ]),
+    v.intersect([
+      RotateMcpOauthTokenEndpointAuthParamClientSecretPostSchema,
+      v.object({ type: v.literal('client_secret_post') }),
+    ]),
   ]),
   v.description(
     "Client-secret updates that preserve the credential's OAuth authentication method.",
@@ -51191,7 +52903,7 @@ export const RotateMcpOauthRefreshParamSchema = v.pipe(
         ),
       ),
       token_endpoint_auth: v.pipe(
-        v.union([RotateMcpOauthTokenEndpointAuthParamSchema, v.nullable(v.null())]),
+        v.union([RotateMcpOauthTokenEndpointAuthParamSchema, v.null()]),
         v.description(
           'Client-secret updates for the existing token endpoint authentication method.',
         ),
@@ -51225,7 +52937,7 @@ export const RotateVaultCredentialAuthParamMcpOauthSchema = v.pipe(
     ),
     refresh: v.optional(
       v.pipe(
-        v.union([RotateMcpOauthRefreshParamSchema, v.nullable(v.null())]),
+        v.union([RotateMcpOauthRefreshParamSchema, v.null()]),
         v.description('Optional write-only refresh-token and client-secret updates.'),
       ),
     ),
@@ -51281,9 +52993,18 @@ export type RotateVaultCredentialAuthParamEnvironmentVariable = v.InferOutput<
 
 export const RotateVaultCredentialAuthParamSchema = v.pipe(
   v.union([
-    RotateVaultCredentialAuthParamMcpOauthSchema,
-    RotateVaultCredentialAuthParamStaticBearerSchema,
-    RotateVaultCredentialAuthParamEnvironmentVariableSchema,
+    v.intersect([
+      RotateVaultCredentialAuthParamMcpOauthSchema,
+      v.object({ type: v.literal('mcp_oauth') }),
+    ]),
+    v.intersect([
+      RotateVaultCredentialAuthParamStaticBearerSchema,
+      v.object({ type: v.literal('static_bearer') }),
+    ]),
+    v.intersect([
+      RotateVaultCredentialAuthParamEnvironmentVariableSchema,
+      v.object({ type: v.literal('environment_variable') }),
+    ]),
   ]),
   v.description(
     'Updates to a vault credential without changing its authentication method or destination configuration.',
@@ -51365,7 +53086,7 @@ export const WebhookEndpointBodySchema = v.object({
   ),
   signing_secret_hint: v.union([
     v.pipe(v.string(), v.description("A masked hint for the endpoint's signing secret.")),
-    v.nullable(v.null()),
+    v.null(),
   ]),
 })
 
@@ -51382,11 +53103,11 @@ export const WebhookEndpointListResourceSchema = v.object({
   ),
   first_id: v.union([
     v.pipe(v.string(), v.description('The ID of the first endpoint in this page.')),
-    v.nullable(v.null()),
+    v.null(),
   ]),
   last_id: v.union([
     v.pipe(v.string(), v.description('The ID of the last endpoint in this page.')),
-    v.nullable(v.null()),
+    v.null(),
   ]),
   has_more: v.pipe(v.boolean(), v.description('Whether more webhook endpoints are available.')),
 })
@@ -51468,7 +53189,7 @@ export const WebhookEndpointWithSecretResourceSchema = v.object({
   ),
   signing_secret_hint: v.union([
     v.pipe(v.string(), v.description("A masked hint for the endpoint's signing secret.")),
-    v.nullable(v.null()),
+    v.null(),
   ]),
   signing_secret: v.pipe(
     v.string(),
@@ -51651,13 +53372,13 @@ export const BetaInputImageContentSchema = v.pipe(
             'The URL of the image to be sent to the model. A fully qualified URL or base64 encoded image in a data URL.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     file_id: v.optional(
       v.union([
         v.pipe(v.string(), v.description('The ID of the file to be sent to the model.')),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     detail: v.pipe(
@@ -51688,7 +53409,7 @@ export const BetaInputFileContentSchema = v.pipe(
     file_id: v.optional(
       v.union([
         v.pipe(v.string(), v.description('The ID of the file to be sent to the model.')),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     filename: v.optional(
@@ -51719,9 +53440,12 @@ export const BetaInputFileContentSchema = v.pipe(
 export type BetaInputFileContent = v.InferOutput<typeof BetaInputFileContentSchema>
 
 export const BetaInputContentSchema = v.union([
-  BetaInputTextContentSchema,
-  BetaInputImageContentSchema,
-  BetaInputFileContentSchema,
+  v.intersect([BetaInputTextContentSchema, v.object({ type: v.literal('BetaInputTextContent') })]),
+  v.intersect([
+    BetaInputImageContentSchema,
+    v.object({ type: v.literal('BetaInputImageContent') }),
+  ]),
+  v.intersect([BetaInputFileContentSchema, v.object({ type: v.literal('BetaInputFileContent') })]),
 ])
 
 export type BetaInputContent = v.InferOutput<typeof BetaInputContentSchema>
@@ -51761,7 +53485,7 @@ export const BetaEasyInputMessageSchema = v.pipe(
         'Text, image, or audio input to the model, used to generate a response.\nCan also contain previous assistant responses.\n',
       ),
     ),
-    phase: v.optional(v.union([BetaMessagePhaseSchema, v.nullable(v.null())])),
+    phase: v.optional(v.union([BetaMessagePhaseSchema, v.null()])),
     type: v.optional(
       v.pipe(
         v.literal('message'),
@@ -51789,7 +53513,7 @@ export const BetaInputMessageSchema = v.pipe(
   v.object({
     agent: v.optional(
       v.pipe(
-        v.union([BetaAgentTagSchema, v.nullable(v.null())]),
+        v.union([BetaAgentTagSchema, v.null()]),
         v.description('The agent that produced this item.'),
       ),
     ),
@@ -51908,10 +53632,16 @@ export type BetaFilePath = v.InferOutput<typeof BetaFilePathSchema>
 
 export const BetaAnnotationSchema = v.pipe(
   v.union([
-    BetaFileCitationBodySchema,
-    BetaUrlCitationBodySchema,
-    BetaContainerFileCitationBodySchema,
-    BetaFilePathSchema,
+    v.intersect([
+      BetaFileCitationBodySchema,
+      v.object({ type: v.literal('BetaFileCitationBody') }),
+    ]),
+    v.intersect([BetaUrlCitationBodySchema, v.object({ type: v.literal('BetaUrlCitationBody') })]),
+    v.intersect([
+      BetaContainerFileCitationBodySchema,
+      v.object({ type: v.literal('BetaContainerFileCitationBody') }),
+    ]),
+    v.intersect([BetaFilePathSchema, v.object({ type: v.literal('BetaFilePath') })]),
   ]),
   v.description('An annotation that applies to a span of output text.'),
 )
@@ -51973,8 +53703,11 @@ export const BetaRefusalContentSchema = v.pipe(
 export type BetaRefusalContent = v.InferOutput<typeof BetaRefusalContentSchema>
 
 export const BetaOutputMessageContentSchema = v.union([
-  BetaOutputTextContentSchema,
-  BetaRefusalContentSchema,
+  v.intersect([
+    BetaOutputTextContentSchema,
+    v.object({ type: v.literal('BetaOutputTextContent') }),
+  ]),
+  v.intersect([BetaRefusalContentSchema, v.object({ type: v.literal('BetaRefusalContent') })]),
 ])
 
 export type BetaOutputMessageContent = v.InferOutput<typeof BetaOutputMessageContentSchema>
@@ -51983,7 +53716,7 @@ export const BetaOutputMessageSchema = v.pipe(
   v.object({
     agent: v.optional(
       v.pipe(
-        v.union([BetaAgentTagSchema, v.nullable(v.null())]),
+        v.union([BetaAgentTagSchema, v.null()]),
         v.description('The agent that produced this item.'),
       ),
     ),
@@ -52000,7 +53733,7 @@ export const BetaOutputMessageSchema = v.pipe(
       v.array(BetaOutputMessageContentSchema),
       v.description('The content of the output message.\n'),
     ),
-    phase: v.optional(v.union([BetaMessagePhaseSchema, v.nullable(v.null())])),
+    phase: v.optional(v.union([BetaMessagePhaseSchema, v.null()])),
     status: v.pipe(
       v.picklist(['in_progress', 'completed', 'incomplete']),
       v.description(
@@ -52023,7 +53756,7 @@ export const BetaVectorStoreFileAttributesSchema = v.union([
       'Set of 16 key-value pairs that can be attached to an object. This can be\nuseful for storing additional information about the object in a structured\nformat, and querying for objects via API or the dashboard. Keys are strings\nwith a maximum length of 64 characters. Values are strings with a maximum\nlength of 512 characters, booleans, or numbers.\n',
     ),
   ),
-  v.nullable(v.null()),
+  v.null(),
 ])
 
 export type BetaVectorStoreFileAttributes = v.InferOutput<
@@ -52034,7 +53767,7 @@ export const BetaFileSearchToolCallSchema = v.pipe(
   v.object({
     agent: v.optional(
       v.pipe(
-        v.union([BetaAgentTagSchema, v.nullable(v.null())]),
+        v.union([BetaAgentTagSchema, v.null()]),
         v.description('The agent that produced this item.'),
       ),
     ),
@@ -52076,7 +53809,7 @@ export const BetaFileSearchToolCallSchema = v.pipe(
           ),
           v.description('The results of the file search tool call.\n'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
   }),
@@ -52116,7 +53849,7 @@ export const BetaClickParamSchema = v.pipe(
     keys: v.optional(
       v.union([
         v.pipe(v.array(v.string()), v.description('The keys being held while clicking.')),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
   }),
@@ -52143,7 +53876,7 @@ export const BetaDoubleClickActionSchema = v.pipe(
     ),
     keys: v.union([
       v.pipe(v.array(v.string()), v.description('The keys being held while double-clicking.')),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   }),
   v.description('A double click action.'),
@@ -52178,7 +53911,7 @@ export const BetaDragParamSchema = v.pipe(
     keys: v.optional(
       v.union([
         v.pipe(v.array(v.string()), v.description('The keys being held while dragging the mouse.')),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
   }),
@@ -52222,7 +53955,7 @@ export const BetaMoveParamSchema = v.pipe(
     keys: v.optional(
       v.union([
         v.pipe(v.array(v.string()), v.description('The keys being held while moving the mouse.')),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
   }),
@@ -52272,7 +54005,7 @@ export const BetaScrollParamSchema = v.pipe(
     keys: v.optional(
       v.union([
         v.pipe(v.array(v.string()), v.description('The keys being held while scrolling.')),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
   }),
@@ -52311,15 +54044,18 @@ export const BetaWaitParamSchema = v.pipe(
 export type BetaWaitParam = v.InferOutput<typeof BetaWaitParamSchema>
 
 export const BetaComputerActionSchema = v.union([
-  BetaClickParamSchema,
-  BetaDoubleClickActionSchema,
-  BetaDragParamSchema,
-  BetaKeyPressActionSchema,
-  BetaMoveParamSchema,
-  BetaScreenshotParamSchema,
-  BetaScrollParamSchema,
-  BetaTypeParamSchema,
-  BetaWaitParamSchema,
+  v.intersect([BetaClickParamSchema, v.object({ type: v.literal('BetaClickParam') })]),
+  v.intersect([
+    BetaDoubleClickActionSchema,
+    v.object({ type: v.literal('BetaDoubleClickAction') }),
+  ]),
+  v.intersect([BetaDragParamSchema, v.object({ type: v.literal('BetaDragParam') })]),
+  v.intersect([BetaKeyPressActionSchema, v.object({ type: v.literal('BetaKeyPressAction') })]),
+  v.intersect([BetaMoveParamSchema, v.object({ type: v.literal('BetaMoveParam') })]),
+  v.intersect([BetaScreenshotParamSchema, v.object({ type: v.literal('BetaScreenshotParam') })]),
+  v.intersect([BetaScrollParamSchema, v.object({ type: v.literal('BetaScrollParam') })]),
+  v.intersect([BetaTypeParamSchema, v.object({ type: v.literal('BetaTypeParam') })]),
+  v.intersect([BetaWaitParamSchema, v.object({ type: v.literal('BetaWaitParam') })]),
 ])
 
 export type BetaComputerAction = v.InferOutput<typeof BetaComputerActionSchema>
@@ -52339,13 +54075,13 @@ export const BetaComputerCallSafetyCheckParamSchema = v.pipe(
     code: v.optional(
       v.union([
         v.pipe(v.string(), v.description('The type of the pending safety check.')),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     message: v.optional(
       v.union([
         v.pipe(v.string(), v.description('Details about the pending safety check.')),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
   }),
@@ -52360,7 +54096,7 @@ export const BetaComputerToolCallSchema = v.pipe(
   v.object({
     agent: v.optional(
       v.pipe(
-        v.union([BetaAgentTagSchema, v.nullable(v.null())]),
+        v.union([BetaAgentTagSchema, v.null()]),
         v.description('The agent that produced this item.'),
       ),
     ),
@@ -52441,7 +54177,7 @@ export const BetaComputerCallOutputItemParamSchema = v.pipe(
     agent: v.optional(
       v.union([
         v.pipe(BetaAgentTagParamSchema, v.description('The agent that produced this item.')),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     id: v.optional(
@@ -52451,7 +54187,7 @@ export const BetaComputerCallOutputItemParamSchema = v.pipe(
           v.description('The ID of the computer tool call output.'),
           v.metadata({ examples: ['cuo_123'] }),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     call_id: v.pipe(
@@ -52471,7 +54207,7 @@ export const BetaComputerCallOutputItemParamSchema = v.pipe(
             'The safety checks reported by the API that have been acknowledged by the developer.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     status: v.optional(
@@ -52482,7 +54218,7 @@ export const BetaComputerCallOutputItemParamSchema = v.pipe(
             'The status of the message input. One of `in_progress`, `completed`, or `incomplete`. Populated when input items are returned via API.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
   }),
@@ -52540,7 +54276,7 @@ export const BetaWebSearchActionOpenPageSchema = v.pipe(
     type: v.pipe(v.literal('open_page'), v.description('The action type.\n')),
     url: v.optional(
       v.pipe(
-        v.union([v.pipe(v.string(), v.url()), v.nullable(v.null())]),
+        v.union([v.pipe(v.string(), v.url()), v.null()]),
         v.description('The URL opened by the model.\n'),
       ),
     ),
@@ -52555,7 +54291,7 @@ export const BetaWebSearchActionFindSchema = v.pipe(
     type: v.pipe(v.literal('find_in_page'), v.description('The action type.\n')),
     url: v.optional(
       v.pipe(
-        v.union([v.pipe(v.string(), v.url()), v.nullable(v.null())]),
+        v.union([v.pipe(v.string(), v.url()), v.null()]),
         v.description('The URL of the page searched for the pattern, when available.\n'),
       ),
     ),
@@ -52573,7 +54309,7 @@ export const BetaWebSearchToolCallSchema = v.pipe(
   v.object({
     agent: v.optional(
       v.pipe(
-        v.union([BetaAgentTagSchema, v.nullable(v.null())]),
+        v.union([BetaAgentTagSchema, v.null()]),
         v.description('The agent that produced this item.'),
       ),
     ),
@@ -52589,9 +54325,18 @@ export const BetaWebSearchToolCallSchema = v.pipe(
     action: v.optional(
       v.pipe(
         v.union([
-          BetaWebSearchActionSearchSchema,
-          BetaWebSearchActionOpenPageSchema,
-          BetaWebSearchActionFindSchema,
+          v.intersect([
+            BetaWebSearchActionSearchSchema,
+            v.object({ type: v.literal('BetaWebSearchActionSearch') }),
+          ]),
+          v.intersect([
+            BetaWebSearchActionOpenPageSchema,
+            v.object({ type: v.literal('BetaWebSearchActionOpenPage') }),
+          ]),
+          v.intersect([
+            BetaWebSearchActionFindSchema,
+            v.object({ type: v.literal('BetaWebSearchActionFind') }),
+          ]),
         ]),
         v.description(
           'An object describing the specific action taken in this web search call.\nIncludes details on how the model used the web (search, open_page, find_in_page).\n',
@@ -52623,7 +54368,16 @@ export const BetaProgramToolCallCallerSchema = v.object({
 export type BetaProgramToolCallCaller = v.InferOutput<typeof BetaProgramToolCallCallerSchema>
 
 export const BetaToolCallCallerSchema = v.pipe(
-  v.union([BetaDirectToolCallCallerSchema, BetaProgramToolCallCallerSchema]),
+  v.union([
+    v.intersect([
+      BetaDirectToolCallCallerSchema,
+      v.object({ type: v.literal('BetaDirectToolCallCaller') }),
+    ]),
+    v.intersect([
+      BetaProgramToolCallCallerSchema,
+      v.object({ type: v.literal('BetaProgramToolCallCaller') }),
+    ]),
+  ]),
   v.description('The execution context that produced this tool call.'),
 )
 
@@ -52633,7 +54387,7 @@ export const BetaFunctionToolCallSchema = v.pipe(
   v.object({
     agent: v.optional(
       v.pipe(
-        v.union([BetaAgentTagSchema, v.nullable(v.null())]),
+        v.union([BetaAgentTagSchema, v.null()]),
         v.description('The agent that produced this item.'),
       ),
     ),
@@ -52646,7 +54400,7 @@ export const BetaFunctionToolCallSchema = v.pipe(
       v.string(),
       v.description('The unique ID of the function tool call generated by the model.\n'),
     ),
-    caller: v.optional(v.union([BetaToolCallCallerSchema, v.nullable(v.null())])),
+    caller: v.optional(v.union([BetaToolCallCallerSchema, v.null()])),
     namespace: v.optional(
       v.pipe(v.string(), v.description('The namespace of the function to run.\n')),
     ),
@@ -52708,9 +54462,7 @@ export const BetaInputTextContentParamSchema = v.pipe(
       v.pipe(v.string(), v.maxCodePoints(10485760)),
       v.description('The text input to the model.'),
     ),
-    prompt_cache_breakpoint: v.optional(
-      v.union([BetaPromptCacheBreakpointParamSchema, v.nullable(v.null())]),
-    ),
+    prompt_cache_breakpoint: v.optional(v.union([BetaPromptCacheBreakpointParamSchema, v.null()])),
   }),
   v.description('A text input to the model.'),
 )
@@ -52735,7 +54487,7 @@ export const BetaInputImageContentParamAutoParamSchema = v.pipe(
             'The URL of the image to be sent to the model. A fully qualified URL or base64 encoded image in a data URL.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     file_id: v.optional(
@@ -52745,7 +54497,7 @@ export const BetaInputImageContentParamAutoParamSchema = v.pipe(
           v.description('The ID of the file to be sent to the model.'),
           v.metadata({ examples: ['file-123'] }),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     detail: v.optional(
@@ -52756,12 +54508,10 @@ export const BetaInputImageContentParamAutoParamSchema = v.pipe(
             'The detail level of the image to be sent to the model. One of `high`, `low`, `auto`, or `original`. Defaults to `auto`.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
-    prompt_cache_breakpoint: v.optional(
-      v.union([BetaPromptCacheBreakpointParamSchema, v.nullable(v.null())]),
-    ),
+    prompt_cache_breakpoint: v.optional(v.union([BetaPromptCacheBreakpointParamSchema, v.null()])),
   }),
   v.description(
     'An image input to the model. Learn about [image inputs](https://developers.openai.com/api/docs/guides/images-vision)',
@@ -52789,13 +54539,13 @@ export const BetaInputFileContentParamSchema = v.pipe(
           v.description('The ID of the file to be sent to the model.'),
           v.metadata({ examples: ['file-123'] }),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     filename: v.optional(
       v.union([
         v.pipe(v.string(), v.description('The name of the file to be sent to the model.')),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     file_data: v.optional(
@@ -52804,7 +54554,7 @@ export const BetaInputFileContentParamSchema = v.pipe(
           v.pipe(v.string(), v.maxCodePoints(73400320)),
           v.description('The base64-encoded data of the file to be sent to the model.'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     file_url: v.optional(
@@ -52813,7 +54563,7 @@ export const BetaInputFileContentParamSchema = v.pipe(
           v.pipe(v.string(), v.url()),
           v.description('The URL of the file to be sent to the model.'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     detail: v.optional(
@@ -52824,9 +54574,7 @@ export const BetaInputFileContentParamSchema = v.pipe(
         ),
       ),
     ),
-    prompt_cache_breakpoint: v.optional(
-      v.union([BetaPromptCacheBreakpointParamSchema, v.nullable(v.null())]),
-    ),
+    prompt_cache_breakpoint: v.optional(v.union([BetaPromptCacheBreakpointParamSchema, v.null()])),
   }),
   v.description('A file input to the model.'),
 )
@@ -52860,7 +54608,16 @@ export type BetaProgramToolCallCallerParam = v.InferOutput<
 >
 
 export const BetaToolCallCallerParamSchema = v.pipe(
-  v.union([BetaDirectToolCallCallerParamSchema, BetaProgramToolCallCallerParamSchema]),
+  v.union([
+    v.intersect([
+      BetaDirectToolCallCallerParamSchema,
+      v.object({ type: v.literal('BetaDirectToolCallCallerParam') }),
+    ]),
+    v.intersect([
+      BetaProgramToolCallCallerParamSchema,
+      v.object({ type: v.literal('BetaProgramToolCallCallerParam') }),
+    ]),
+  ]),
   v.description('The execution context that produced this tool call.'),
 )
 
@@ -52871,7 +54628,7 @@ export const BetaFunctionCallOutputItemParamSchema = v.pipe(
     agent: v.optional(
       v.union([
         v.pipe(BetaAgentTagParamSchema, v.description('The agent that produced this item.')),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     id: v.optional(
@@ -52883,7 +54640,7 @@ export const BetaFunctionCallOutputItemParamSchema = v.pipe(
           ),
           v.metadata({ examples: ['fc_123'] }),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     call_id: v.optional(
@@ -52892,7 +54649,7 @@ export const BetaFunctionCallOutputItemParamSchema = v.pipe(
           v.pipe(v.string(), v.minCodePoints(1), v.maxCodePoints(64)),
           v.description('The unique ID of the function tool call generated by the model.'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     type: v.pipe(
@@ -52909,9 +54666,18 @@ export const BetaFunctionCallOutputItemParamSchema = v.pipe(
           v.array(
             v.pipe(
               v.union([
-                BetaInputTextContentParamSchema,
-                BetaInputImageContentParamAutoParamSchema,
-                BetaInputFileContentParamSchema,
+                v.intersect([
+                  BetaInputTextContentParamSchema,
+                  v.object({ type: v.literal('BetaInputTextContentParam') }),
+                ]),
+                v.intersect([
+                  BetaInputImageContentParamAutoParamSchema,
+                  v.object({ type: v.literal('BetaInputImageContentParamAutoParam') }),
+                ]),
+                v.intersect([
+                  BetaInputFileContentParamSchema,
+                  v.object({ type: v.literal('BetaInputFileContentParam') }),
+                ]),
               ]),
               v.description('A piece of message content, such as text, an image, or a file.'),
             ),
@@ -52929,7 +54695,7 @@ export const BetaFunctionCallOutputItemParamSchema = v.pipe(
           v.pipe(v.string(), v.minCodePoints(1), v.maxCodePoints(128)),
           v.description('The name of the tool that produced the output.'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     namespace: v.optional(
@@ -52938,7 +54704,7 @@ export const BetaFunctionCallOutputItemParamSchema = v.pipe(
           v.pipe(v.string(), v.regex(/^[a-zA-Z0-9_-]+$/), v.minCodePoints(1), v.maxCodePoints(128)),
           v.description('The namespace of the tool that produced the output.'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     caller: v.optional(
@@ -52947,7 +54713,7 @@ export const BetaFunctionCallOutputItemParamSchema = v.pipe(
           BetaToolCallCallerParamSchema,
           v.description('The execution context that produced this tool call.'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     status: v.optional(
@@ -52958,7 +54724,7 @@ export const BetaFunctionCallOutputItemParamSchema = v.pipe(
             'The status of the item. One of `in_progress`, `completed`, or `incomplete`. Populated when items are returned via API.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
   }),
@@ -52992,7 +54758,7 @@ export const BetaAgentMessageItemParamSchema = v.pipe(
     agent: v.optional(
       v.union([
         v.pipe(BetaAgentTagParamSchema, v.description('The agent that produced this item.')),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     id: v.optional(
@@ -53002,7 +54768,7 @@ export const BetaAgentMessageItemParamSchema = v.pipe(
           v.description('The unique ID of this agent message item.'),
           v.metadata({ examples: ['amsg_123'] }),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     type: v.pipe(
@@ -53015,9 +54781,18 @@ export const BetaAgentMessageItemParamSchema = v.pipe(
       v.array(
         v.pipe(
           v.union([
-            BetaInputTextContentParamSchema,
-            BetaInputImageContentParamAutoParamSchema,
-            BetaEncryptedContentParamSchema,
+            v.intersect([
+              BetaInputTextContentParamSchema,
+              v.object({ type: v.literal('BetaInputTextContentParam') }),
+            ]),
+            v.intersect([
+              BetaInputImageContentParamAutoParamSchema,
+              v.object({ type: v.literal('BetaInputImageContentParamAutoParam') }),
+            ]),
+            v.intersect([
+              BetaEncryptedContentParamSchema,
+              v.object({ type: v.literal('BetaEncryptedContentParam') }),
+            ]),
           ]),
           v.description('A plaintext, image, or encrypted agent message content part.'),
         ),
@@ -53045,7 +54820,7 @@ export const BetaMultiAgentCallItemParamSchema = v.object({
   agent: v.optional(
     v.union([
       v.pipe(BetaAgentTagParamSchema, v.description('The agent that produced this item.')),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   ),
   id: v.optional(
@@ -53055,7 +54830,7 @@ export const BetaMultiAgentCallItemParamSchema = v.object({
         v.description('The unique ID of this multi-agent call.'),
         v.metadata({ examples: ['mac_123'] }),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   ),
   call_id: v.pipe(
@@ -53153,9 +54928,18 @@ export const BetaOutputTextContentParamSchema = v.object({
     v.pipe(
       v.array(
         v.union([
-          BetaFileCitationParamSchema,
-          BetaUrlCitationParamSchema,
-          BetaContainerFileCitationParamSchema,
+          v.intersect([
+            BetaFileCitationParamSchema,
+            v.object({ type: v.literal('BetaFileCitationParam') }),
+          ]),
+          v.intersect([
+            BetaUrlCitationParamSchema,
+            v.object({ type: v.literal('BetaUrlCitationParam') }),
+          ]),
+          v.intersect([
+            BetaContainerFileCitationParamSchema,
+            v.object({ type: v.literal('BetaContainerFileCitationParam') }),
+          ]),
         ]),
       ),
       v.description('Citations associated with the text content.'),
@@ -53169,7 +54953,7 @@ export const BetaMultiAgentCallOutputItemParamSchema = v.object({
   agent: v.optional(
     v.union([
       v.pipe(BetaAgentTagParamSchema, v.description('The agent that produced this item.')),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   ),
   id: v.optional(
@@ -53179,7 +54963,7 @@ export const BetaMultiAgentCallOutputItemParamSchema = v.object({
         v.description('The unique ID of this multi-agent call output.'),
         v.metadata({ examples: ['maco_123'] }),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   ),
   call_id: v.pipe(
@@ -53216,7 +55000,7 @@ export const BetaToolSearchCallItemParamSchema = v.object({
   agent: v.optional(
     v.union([
       v.pipe(BetaAgentTagParamSchema, v.description('The agent that produced this item.')),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   ),
   id: v.optional(
@@ -53226,7 +55010,7 @@ export const BetaToolSearchCallItemParamSchema = v.object({
         v.description('The unique ID of this tool search call.'),
         v.metadata({ examples: ['tsc_123'] }),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   ),
   call_id: v.optional(
@@ -53235,7 +55019,7 @@ export const BetaToolSearchCallItemParamSchema = v.object({
         v.pipe(v.string(), v.minCodePoints(1), v.maxCodePoints(64)),
         v.description('The unique ID of the tool search call generated by the model.'),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   ),
   type: v.pipe(
@@ -53258,7 +55042,7 @@ export const BetaToolSearchCallItemParamSchema = v.object({
         BetaFunctionCallItemStatusSchema,
         v.description('The status of the tool search call.'),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   ),
 })
@@ -53287,7 +55071,7 @@ export const BetaFunctionToolSchema = v.pipe(
             'A description of the function. Used by the model to determine whether or not to call the function.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     parameters: v.union([
@@ -53295,7 +55079,7 @@ export const BetaFunctionToolSchema = v.pipe(
         v.record(v.string(), v.any()),
         v.description('A JSON schema object describing the parameters of the function.'),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
     output_schema: v.optional(
       v.union([
@@ -53305,7 +55089,7 @@ export const BetaFunctionToolSchema = v.pipe(
             'A JSON schema object describing the JSON value encoded in string outputs for this function.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     strict: v.union([
@@ -53313,7 +55097,7 @@ export const BetaFunctionToolSchema = v.pipe(
         v.boolean(),
         v.description('Whether strict parameter validation is enforced for this function tool.'),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
     defer_loading: v.optional(
       v.pipe(
@@ -53327,7 +55111,7 @@ export const BetaFunctionToolSchema = v.pipe(
           v.array(BetaCallableToolAllowedCallerSchema),
           v.description('The tool invocation context(s).'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
   }),
@@ -53410,7 +55194,18 @@ export const BetaCompoundFilterSchema: v.GenericSchema<BetaCompoundFilterType> =
   v.strictObject({
     type: v.pipe(v.picklist(['and', 'or']), v.description('Type of operation: `and` or `or`.')),
     filters: v.pipe(
-      v.array(v.union([BetaComparisonFilterSchema, v.lazy(() => BetaCompoundFilterSchema)])),
+      v.array(
+        v.union([
+          v.intersect([
+            BetaComparisonFilterSchema,
+            v.object({ type: v.literal('BetaComparisonFilter') }),
+          ]),
+          v.intersect([
+            v.lazy(() => BetaCompoundFilterSchema),
+            v.object({ type: v.literal('BetaCompoundFilter') }),
+          ]),
+        ]),
+      ),
       v.description(
         'Array of filters to combine. Items can be `ComparisonFilter` or `CompoundFilter`.',
       ),
@@ -53447,10 +55242,7 @@ export const BetaFileSearchToolSchema = v.pipe(
       v.pipe(BetaRankingOptionsSchema, v.description('Ranking options for search.')),
     ),
     filters: v.optional(
-      v.union([
-        v.pipe(BetaFiltersSchema, v.description('A filter to apply.')),
-        v.nullable(v.null()),
-      ]),
+      v.union([v.pipe(BetaFiltersSchema, v.description('A filter to apply.')), v.null()]),
     ),
   }),
   v.description(
@@ -53525,7 +55317,7 @@ export const BetaWebSearchApproximateLocationSchema = v.union([
               'The two-letter [ISO country code](https://en.wikipedia.org/wiki/ISO_3166-1) of the user, e.g. `US`.',
             ),
           ),
-          v.nullable(v.null()),
+          v.null(),
         ]),
       ),
       region: v.optional(
@@ -53534,7 +55326,7 @@ export const BetaWebSearchApproximateLocationSchema = v.union([
             v.string(),
             v.description('Free text input for the region of the user, e.g. `California`.'),
           ),
-          v.nullable(v.null()),
+          v.null(),
         ]),
       ),
       city: v.optional(
@@ -53543,7 +55335,7 @@ export const BetaWebSearchApproximateLocationSchema = v.union([
             v.string(),
             v.description('Free text input for the city of the user, e.g. `San Francisco`.'),
           ),
-          v.nullable(v.null()),
+          v.null(),
         ]),
       ),
       timezone: v.optional(
@@ -53554,13 +55346,13 @@ export const BetaWebSearchApproximateLocationSchema = v.union([
               'The [IANA timezone](https://timeapi.io/documentation/iana-timezones) of the user, e.g. `America/Los_Angeles`.',
             ),
           ),
-          v.nullable(v.null()),
+          v.null(),
         ]),
       ),
     }),
     v.description('The approximate location of the user.\n'),
   ),
-  v.nullable(v.null()),
+  v.null(),
 ])
 
 export type BetaWebSearchApproximateLocation = v.InferOutput<
@@ -53596,13 +55388,13 @@ export const BetaWebSearchToolSchema = v.pipe(
                     'Allowed domains for the search. If not provided, all domains are allowed.\nSubdomains of the provided domains are allowed as well.\n\nExample: `["pubmed.ncbi.nlm.nih.gov"]`\n',
                   ),
                 ),
-                v.nullable(v.null()),
+                v.null(),
               ]),
             }),
           ),
           v.description('Filters for the search.\n'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     user_location: v.optional(
@@ -53707,7 +55499,7 @@ export const BetaMCPToolSchema = v.pipe(
             'Optional HTTP headers to send to the MCP server. Use for authentication\nor other purposes.\n',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     allowed_tools: v.optional(
@@ -53719,7 +55511,7 @@ export const BetaMCPToolSchema = v.pipe(
           ]),
           v.description('List of allowed tool names or a filter object.\n'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     allowed_callers: v.optional(
@@ -53728,7 +55520,7 @@ export const BetaMCPToolSchema = v.pipe(
           v.pipe(v.array(BetaCallableToolAllowedCallerSchema), v.minLength(1)),
           v.description('The tool invocation context(s).'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     require_approval: v.optional(
@@ -53758,7 +55550,7 @@ export const BetaMCPToolSchema = v.pipe(
           ),
           v.description("Specify which of the MCP server's tools require approval."),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     defer_loading: v.optional(
@@ -53848,14 +55640,20 @@ export const BetaAutoCodeInterpreterToolParamSchema = v.pipe(
           BetaContainerMemoryLimitSchema,
           v.description('The memory limit for the code interpreter container.'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     network_policy: v.optional(
       v.pipe(
         v.union([
-          BetaContainerNetworkPolicyDisabledParamSchema,
-          BetaContainerNetworkPolicyAllowlistParamSchema,
+          v.intersect([
+            BetaContainerNetworkPolicyDisabledParamSchema,
+            v.object({ type: v.literal('BetaContainerNetworkPolicyDisabledParam') }),
+          ]),
+          v.intersect([
+            BetaContainerNetworkPolicyAllowlistParamSchema,
+            v.object({ type: v.literal('BetaContainerNetworkPolicyAllowlistParam') }),
+          ]),
         ]),
         v.description('Network access policy for the container.'),
       ),
@@ -53891,7 +55689,7 @@ export const BetaCodeInterpreterToolSchema = v.pipe(
           v.pipe(v.array(BetaCallableToolAllowedCallerSchema), v.minLength(1)),
           v.description('The tool invocation context(s).'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
   }),
@@ -53953,7 +55751,7 @@ export const BetaSvgParamSchema = v.partial(
           "Reasoning effort for SVG authoring. When omitted, uses the author model's default in both Images and Responses.",
         ),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   }),
 )
@@ -54067,7 +55865,7 @@ export const BetaImageGenToolSchema = v.pipe(
         'Set the background of the generated image. One of `transparent`, `opaque`,\nor `auto`. `gpt-image-2.5-sunburst` and `gpt-image-2.5-flare`, including\ntheir `2026-09-08` snapshots, support `opaque` and `transparent`\nbackgrounds. Transparent backgrounds are available for supported GPT Image\nmodels. For `gpt-image-2` and `gpt-image-2-2026-04-21`, this support is in\npreview. When using `transparent`, set the output format to `png` or `webp`.\nDefault: `auto`.\n',
       ),
     ),
-    input_fidelity: v.optional(v.union([BetaInputFidelitySchema, v.nullable(v.null())])),
+    input_fidelity: v.optional(v.union([BetaInputFidelitySchema, v.null()])),
     input_image_mask: v.optional(
       v.pipe(
         v.partial(
@@ -54180,14 +55978,20 @@ export const BetaContainerAutoParamSchema = v.object({
   memory_limit: v.optional(
     v.union([
       v.pipe(BetaContainerMemoryLimitSchema, v.description('The memory limit for the container.')),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   ),
   network_policy: v.optional(
     v.pipe(
       v.union([
-        BetaContainerNetworkPolicyDisabledParamSchema,
-        BetaContainerNetworkPolicyAllowlistParamSchema,
+        v.intersect([
+          BetaContainerNetworkPolicyDisabledParamSchema,
+          v.object({ type: v.literal('BetaContainerNetworkPolicyDisabledParam') }),
+        ]),
+        v.intersect([
+          BetaContainerNetworkPolicyAllowlistParamSchema,
+          v.object({ type: v.literal('BetaContainerNetworkPolicyAllowlistParam') }),
+        ]),
       ]),
       v.description('Network access policy for the container.'),
     ),
@@ -54195,7 +55999,18 @@ export const BetaContainerAutoParamSchema = v.object({
   skills: v.optional(
     v.pipe(
       v.pipe(
-        v.array(v.union([BetaSkillReferenceParamSchema, BetaInlineSkillParamSchema])),
+        v.array(
+          v.union([
+            v.intersect([
+              BetaSkillReferenceParamSchema,
+              v.object({ type: v.literal('BetaSkillReferenceParam') }),
+            ]),
+            v.intersect([
+              BetaInlineSkillParamSchema,
+              v.object({ type: v.literal('BetaInlineSkillParam') }),
+            ]),
+          ]),
+        ),
         v.maxLength(200),
       ),
       v.description(
@@ -54253,11 +56068,20 @@ export const BetaFunctionShellToolParamSchema = v.pipe(
     environment: v.optional(
       v.union([
         v.union([
-          BetaContainerAutoParamSchema,
-          BetaLocalEnvironmentParamSchema,
-          BetaContainerReferenceParamSchema,
+          v.intersect([
+            BetaContainerAutoParamSchema,
+            v.object({ type: v.literal('BetaContainerAutoParam') }),
+          ]),
+          v.intersect([
+            BetaLocalEnvironmentParamSchema,
+            v.object({ type: v.literal('BetaLocalEnvironmentParam') }),
+          ]),
+          v.intersect([
+            BetaContainerReferenceParamSchema,
+            v.object({ type: v.literal('BetaContainerReferenceParam') }),
+          ]),
         ]),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     allowed_callers: v.optional(
@@ -54266,7 +56090,7 @@ export const BetaFunctionShellToolParamSchema = v.pipe(
           v.pipe(v.array(BetaCallableToolAllowedCallerSchema), v.minLength(1)),
           v.description('The tool invocation context(s).'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
   }),
@@ -54334,7 +56158,16 @@ export const BetaCustomToolParamSchema = v.pipe(
     ),
     format: v.optional(
       v.pipe(
-        v.union([BetaCustomTextFormatParamSchema, BetaCustomGrammarFormatParamSchema]),
+        v.union([
+          v.intersect([
+            BetaCustomTextFormatParamSchema,
+            v.object({ type: v.literal('BetaCustomTextFormatParam') }),
+          ]),
+          v.intersect([
+            BetaCustomGrammarFormatParamSchema,
+            v.object({ type: v.literal('BetaCustomGrammarFormatParam') }),
+          ]),
+        ]),
         v.description('The input format for the custom tool. Default is unconstrained text.'),
       ),
     ),
@@ -54350,7 +56183,7 @@ export const BetaCustomToolParamSchema = v.pipe(
           v.pipe(v.array(BetaCallableToolAllowedCallerSchema), v.minLength(1)),
           v.description('The tool invocation context(s).'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
   }),
@@ -54371,8 +56204,8 @@ export const BetaToolSearchOutputFunctionToolParamSchema = v.object({
     ),
     v.description('The name of the loaded function tool.'),
   ),
-  description: v.optional(v.union([v.string(), v.nullable(v.null())])),
-  parameters: v.optional(v.union([BetaEmptyModelParamSchema, v.nullable(v.null())])),
+  description: v.optional(v.union([v.string(), v.null()])),
+  parameters: v.optional(v.union([BetaEmptyModelParamSchema, v.null()])),
   strict: v.optional(
     v.union([
       v.pipe(
@@ -54381,7 +56214,7 @@ export const BetaToolSearchOutputFunctionToolParamSchema = v.object({
           'Whether to enforce strict parameter validation. If omitted, Responses attempts to use strict validation when the schema is compatible, and falls back to non-strict validation otherwise.',
         ),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   ),
   type: v.optional(v.literal('function'), 'function'),
@@ -54401,7 +56234,7 @@ export const BetaToolSearchOutputFunctionToolParamSchema = v.object({
           'A JSON Schema describing the JSON value encoded in string outputs for this function tool. This does not describe content-array outputs.',
         ),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   ),
   defer_loading: v.optional(
@@ -54416,7 +56249,7 @@ export const BetaToolSearchOutputFunctionToolParamSchema = v.object({
         v.pipe(v.array(BetaCallableToolAllowedCallerSchema), v.minLength(1)),
         v.description('The tool invocation context(s).'),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   ),
 })
@@ -54443,7 +56276,16 @@ export const BetaToolSearchOutputNamespaceToolParamSchema = v.pipe(
       v.pipe(
         v.array(
           v.pipe(
-            v.union([BetaToolSearchOutputFunctionToolParamSchema, BetaCustomToolParamSchema]),
+            v.union([
+              v.intersect([
+                BetaToolSearchOutputFunctionToolParamSchema,
+                v.object({ type: v.literal('BetaToolSearchOutputFunctionToolParam') }),
+              ]),
+              v.intersect([
+                BetaCustomToolParamSchema,
+                v.object({ type: v.literal('BetaCustomToolParam') }),
+              ]),
+            ]),
             v.description('A function or custom tool loaded into a namespace by tool search.'),
           ),
         ),
@@ -54477,7 +56319,7 @@ export const BetaToolSearchToolParamSchema = v.pipe(
           v.string(),
           v.description('Description shown to the model for a client-executed tool search tool.'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     parameters: v.optional(
@@ -54486,7 +56328,7 @@ export const BetaToolSearchToolParamSchema = v.pipe(
           BetaEmptyModelParamSchema,
           v.description('Parameter schema for a client-executed tool search tool.'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
   }),
@@ -54508,7 +56350,7 @@ export const BetaApproximateLocationSchema = v.object({
           'The two-letter [ISO country code](https://en.wikipedia.org/wiki/ISO_3166-1) of the user, e.g. `US`.',
         ),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   ),
   region: v.optional(
@@ -54517,7 +56359,7 @@ export const BetaApproximateLocationSchema = v.object({
         v.string(),
         v.description('Free text input for the region of the user, e.g. `California`.'),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   ),
   city: v.optional(
@@ -54526,7 +56368,7 @@ export const BetaApproximateLocationSchema = v.object({
         v.string(),
         v.description('Free text input for the city of the user, e.g. `San Francisco`.'),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   ),
   timezone: v.optional(
@@ -54537,7 +56379,7 @@ export const BetaApproximateLocationSchema = v.object({
           'The [IANA timezone](https://timeapi.io/documentation/iana-timezones) of the user, e.g. `America/Los_Angeles`.',
         ),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   ),
 })
@@ -54571,7 +56413,7 @@ export const BetaWebSearchPreviewToolSchema = v.pipe(
             'The approximate location of the user. If omitted or null, defaults to the United States. To avoid this fallback, pass `{"type": "approximate"}` without location fields. To localize results, provide the relevant location fields.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     search_context_size: v.optional(
@@ -54603,7 +56445,7 @@ export const BetaApplyPatchToolParamSchema = v.pipe(
           v.pipe(v.array(BetaCallableToolAllowedCallerSchema), v.minLength(1)),
           v.description('The tool invocation context(s).'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
   }),
@@ -54614,22 +56456,49 @@ export type BetaApplyPatchToolParam = v.InferOutput<typeof BetaApplyPatchToolPar
 
 export const BetaToolSearchOutputToolSchema = v.pipe(
   v.union([
-    BetaFunctionToolSchema,
-    BetaFileSearchToolSchema,
-    BetaComputerToolSchema,
-    BetaComputerUsePreviewToolSchema,
-    BetaWebSearchToolSchema,
-    BetaMCPToolSchema,
-    BetaCodeInterpreterToolSchema,
-    BetaProgrammaticToolCallingParamSchema,
-    BetaImageGenToolSchema,
-    BetaLocalShellToolParamSchema,
-    BetaFunctionShellToolParamSchema,
-    BetaCustomToolParamSchema,
-    BetaToolSearchOutputNamespaceToolParamSchema,
-    BetaToolSearchToolParamSchema,
-    BetaWebSearchPreviewToolSchema,
-    BetaApplyPatchToolParamSchema,
+    v.intersect([BetaFunctionToolSchema, v.object({ type: v.literal('BetaFunctionTool') })]),
+    v.intersect([BetaFileSearchToolSchema, v.object({ type: v.literal('BetaFileSearchTool') })]),
+    v.intersect([BetaComputerToolSchema, v.object({ type: v.literal('BetaComputerTool') })]),
+    v.intersect([
+      BetaComputerUsePreviewToolSchema,
+      v.object({ type: v.literal('BetaComputerUsePreviewTool') }),
+    ]),
+    v.intersect([BetaWebSearchToolSchema, v.object({ type: v.literal('BetaWebSearchTool') })]),
+    v.intersect([BetaMCPToolSchema, v.object({ type: v.literal('BetaMCPTool') })]),
+    v.intersect([
+      BetaCodeInterpreterToolSchema,
+      v.object({ type: v.literal('BetaCodeInterpreterTool') }),
+    ]),
+    v.intersect([
+      BetaProgrammaticToolCallingParamSchema,
+      v.object({ type: v.literal('BetaProgrammaticToolCallingParam') }),
+    ]),
+    v.intersect([BetaImageGenToolSchema, v.object({ type: v.literal('BetaImageGenTool') })]),
+    v.intersect([
+      BetaLocalShellToolParamSchema,
+      v.object({ type: v.literal('BetaLocalShellToolParam') }),
+    ]),
+    v.intersect([
+      BetaFunctionShellToolParamSchema,
+      v.object({ type: v.literal('BetaFunctionShellToolParam') }),
+    ]),
+    v.intersect([BetaCustomToolParamSchema, v.object({ type: v.literal('BetaCustomToolParam') })]),
+    v.intersect([
+      BetaToolSearchOutputNamespaceToolParamSchema,
+      v.object({ type: v.literal('BetaToolSearchOutputNamespaceToolParam') }),
+    ]),
+    v.intersect([
+      BetaToolSearchToolParamSchema,
+      v.object({ type: v.literal('BetaToolSearchToolParam') }),
+    ]),
+    v.intersect([
+      BetaWebSearchPreviewToolSchema,
+      v.object({ type: v.literal('BetaWebSearchPreviewTool') }),
+    ]),
+    v.intersect([
+      BetaApplyPatchToolParamSchema,
+      v.object({ type: v.literal('BetaApplyPatchToolParam') }),
+    ]),
   ]),
   v.description('A tool definition returned by a tool search output.\n'),
 )
@@ -54640,7 +56509,7 @@ export const BetaToolSearchOutputItemParamSchema = v.object({
   agent: v.optional(
     v.union([
       v.pipe(BetaAgentTagParamSchema, v.description('The agent that produced this item.')),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   ),
   id: v.optional(
@@ -54650,7 +56519,7 @@ export const BetaToolSearchOutputItemParamSchema = v.object({
         v.description('The unique ID of this tool search output.'),
         v.metadata({ examples: ['tso_123'] }),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   ),
   call_id: v.optional(
@@ -54659,7 +56528,7 @@ export const BetaToolSearchOutputItemParamSchema = v.object({
         v.pipe(v.string(), v.minCodePoints(1), v.maxCodePoints(64)),
         v.description('The unique ID of the tool search call generated by the model.'),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   ),
   type: v.pipe(
@@ -54682,7 +56551,7 @@ export const BetaToolSearchOutputItemParamSchema = v.object({
         BetaFunctionCallItemStatusSchema,
         v.description('The status of the tool search output.'),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   ),
 })
@@ -54693,8 +56562,8 @@ export type BetaToolSearchOutputItemParam = v.InferOutput<
 
 export const BetaFunctionToolParamSchema = v.object({
   name: v.pipe(v.string(), v.regex(/^[a-zA-Z0-9_-]+$/), v.minCodePoints(1), v.maxCodePoints(128)),
-  description: v.optional(v.union([v.string(), v.nullable(v.null())])),
-  parameters: v.optional(v.union([BetaEmptyModelParamSchema, v.nullable(v.null())])),
+  description: v.optional(v.union([v.string(), v.null()])),
+  parameters: v.optional(v.union([BetaEmptyModelParamSchema, v.null()])),
   strict: v.optional(
     v.union([
       v.pipe(
@@ -54703,7 +56572,7 @@ export const BetaFunctionToolParamSchema = v.object({
           'Whether to enforce strict parameter validation. If omitted, Responses attempts to use strict validation when the schema is compatible, and falls back to non-strict validation otherwise.',
         ),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   ),
   type: v.optional(v.literal('function'), 'function'),
@@ -54723,7 +56592,7 @@ export const BetaFunctionToolParamSchema = v.object({
           'A JSON Schema describing the JSON value encoded in string outputs for this function tool. This does not describe content-array outputs.',
         ),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   ),
   defer_loading: v.optional(
@@ -54738,7 +56607,7 @@ export const BetaFunctionToolParamSchema = v.object({
         v.pipe(v.array(BetaCallableToolAllowedCallerSchema), v.minLength(1)),
         v.description('The tool invocation context(s).'),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   ),
 })
@@ -54763,7 +56632,16 @@ export const BetaNamespaceToolParamSchema = v.pipe(
       v.pipe(
         v.array(
           v.pipe(
-            v.union([BetaFunctionToolParamSchema, BetaCustomToolParamSchema]),
+            v.union([
+              v.intersect([
+                BetaFunctionToolParamSchema,
+                v.object({ type: v.literal('BetaFunctionToolParam') }),
+              ]),
+              v.intersect([
+                BetaCustomToolParamSchema,
+                v.object({ type: v.literal('BetaCustomToolParam') }),
+              ]),
+            ]),
             v.description('A function or custom tool that belongs to a namespace.'),
           ),
         ),
@@ -54779,22 +56657,49 @@ export type BetaNamespaceToolParam = v.InferOutput<typeof BetaNamespaceToolParam
 
 export const BetaToolSchema = v.pipe(
   v.union([
-    BetaFunctionToolSchema,
-    BetaFileSearchToolSchema,
-    BetaComputerToolSchema,
-    BetaComputerUsePreviewToolSchema,
-    BetaWebSearchToolSchema,
-    BetaMCPToolSchema,
-    BetaCodeInterpreterToolSchema,
-    BetaProgrammaticToolCallingParamSchema,
-    BetaImageGenToolSchema,
-    BetaLocalShellToolParamSchema,
-    BetaFunctionShellToolParamSchema,
-    BetaCustomToolParamSchema,
-    BetaNamespaceToolParamSchema,
-    BetaToolSearchToolParamSchema,
-    BetaWebSearchPreviewToolSchema,
-    BetaApplyPatchToolParamSchema,
+    v.intersect([BetaFunctionToolSchema, v.object({ type: v.literal('BetaFunctionTool') })]),
+    v.intersect([BetaFileSearchToolSchema, v.object({ type: v.literal('BetaFileSearchTool') })]),
+    v.intersect([BetaComputerToolSchema, v.object({ type: v.literal('BetaComputerTool') })]),
+    v.intersect([
+      BetaComputerUsePreviewToolSchema,
+      v.object({ type: v.literal('BetaComputerUsePreviewTool') }),
+    ]),
+    v.intersect([BetaWebSearchToolSchema, v.object({ type: v.literal('BetaWebSearchTool') })]),
+    v.intersect([BetaMCPToolSchema, v.object({ type: v.literal('BetaMCPTool') })]),
+    v.intersect([
+      BetaCodeInterpreterToolSchema,
+      v.object({ type: v.literal('BetaCodeInterpreterTool') }),
+    ]),
+    v.intersect([
+      BetaProgrammaticToolCallingParamSchema,
+      v.object({ type: v.literal('BetaProgrammaticToolCallingParam') }),
+    ]),
+    v.intersect([BetaImageGenToolSchema, v.object({ type: v.literal('BetaImageGenTool') })]),
+    v.intersect([
+      BetaLocalShellToolParamSchema,
+      v.object({ type: v.literal('BetaLocalShellToolParam') }),
+    ]),
+    v.intersect([
+      BetaFunctionShellToolParamSchema,
+      v.object({ type: v.literal('BetaFunctionShellToolParam') }),
+    ]),
+    v.intersect([BetaCustomToolParamSchema, v.object({ type: v.literal('BetaCustomToolParam') })]),
+    v.intersect([
+      BetaNamespaceToolParamSchema,
+      v.object({ type: v.literal('BetaNamespaceToolParam') }),
+    ]),
+    v.intersect([
+      BetaToolSearchToolParamSchema,
+      v.object({ type: v.literal('BetaToolSearchToolParam') }),
+    ]),
+    v.intersect([
+      BetaWebSearchPreviewToolSchema,
+      v.object({ type: v.literal('BetaWebSearchPreviewTool') }),
+    ]),
+    v.intersect([
+      BetaApplyPatchToolParamSchema,
+      v.object({ type: v.literal('BetaApplyPatchToolParam') }),
+    ]),
   ]),
   v.description('A tool that can be used to generate a response.\n'),
 )
@@ -54805,7 +56710,7 @@ export const BetaAdditionalToolsItemParamSchema = v.object({
   agent: v.optional(
     v.union([
       v.pipe(BetaAgentTagParamSchema, v.description('The agent that produced this item.')),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   ),
   id: v.optional(
@@ -54815,7 +56720,7 @@ export const BetaAdditionalToolsItemParamSchema = v.object({
         v.description('The unique ID of this additional tools item.'),
         v.metadata({ examples: ['at_123'] }),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   ),
   type: v.pipe(
@@ -54841,7 +56746,7 @@ export const BetaReasoningEffortSchema = v.union([
       'Constrains effort on reasoning for reasoning models. Currently supported\nvalues are `none`, `minimal`, `low`, `medium`, `high`, `xhigh`, and `max`.\nReducing reasoning effort can result in faster responses and fewer tokens\nused on reasoning in a response. Not all reasoning models support every\nvalue. See the\n[reasoning guide](https://developers.openai.com/api/docs/guides/reasoning)\nfor model-specific support.\n',
     ),
   ),
-  v.nullable(v.null()),
+  v.null(),
 ])
 
 export type BetaReasoningEffort = v.InferOutput<typeof BetaReasoningEffortSchema>
@@ -54898,7 +56803,7 @@ export const BetaTextResponseFormatJsonSchemaSchema = v.pipe(
             'Whether to enable strict schema adherence when generating the output.\nIf set to true, the model will always follow the exact schema defined\nin the `schema` field. Only a subset of JSON Schema is supported when\n`strict` is `true`. To learn more, read the [Structured Outputs\nguide](https://developers.openai.com/api/docs/guides/structured-outputs).\n',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
   }),
@@ -54916,7 +56821,7 @@ export const BetaResponseConfigurationUpdateItemParamSchema = v.pipe(
     agent: v.optional(
       v.union([
         v.pipe(BetaAgentTagParamSchema, v.description('The agent that produced this item.')),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     id: v.optional(
@@ -54926,7 +56831,7 @@ export const BetaResponseConfigurationUpdateItemParamSchema = v.pipe(
           v.description('The unique ID of the configuration update item.'),
           v.metadata({ examples: ['cnfu_123'] }),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     type: v.pipe(
@@ -54952,7 +56857,16 @@ export const BetaResponseConfigurationUpdateItemParamSchema = v.pipe(
       v.pipe(
         v.object({
           format: v.pipe(
-            v.union([BetaResponseFormatTextSchema, BetaTextResponseFormatJsonSchemaSchema]),
+            v.union([
+              v.intersect([
+                BetaResponseFormatTextSchema,
+                v.object({ type: v.literal('BetaResponseFormatText') }),
+              ]),
+              v.intersect([
+                BetaTextResponseFormatJsonSchemaSchema,
+                v.object({ type: v.literal('BetaTextResponseFormatJsonSchema') }),
+              ]),
+            ]),
             v.description(
               'Use a JSON schema for structured output or text to return to plain text.',
             ),
@@ -55004,7 +56918,7 @@ export const BetaReasoningItemSchema = v.pipe(
   v.object({
     agent: v.optional(
       v.pipe(
-        v.union([BetaAgentTagSchema, v.nullable(v.null())]),
+        v.union([BetaAgentTagSchema, v.null()]),
         v.description('The agent that produced this item.'),
       ),
     ),
@@ -55021,7 +56935,7 @@ export const BetaReasoningItemSchema = v.pipe(
             'The encrypted content of the reasoning item. This is populated by default\nfor reasoning items returned by `POST /v1/responses` and WebSocket\n`response.create` requests.\n\nWhen streaming, use the completed reasoning item and its\n`encrypted_content` from the `response.output_item.done` event in\nsubsequent requests. The `encrypted_content` in\n`response.output_item.added` may be incomplete. This is especially\nimportant when `store` is `false` or when using Zero Data Retention.\n',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     summary: v.pipe(
@@ -55052,7 +56966,7 @@ export const BetaCompactionSummaryItemParamSchema = v.pipe(
     agent: v.optional(
       v.union([
         v.pipe(BetaAgentTagParamSchema, v.description('The agent that produced this item.')),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     id: v.optional(
@@ -55062,7 +56976,7 @@ export const BetaCompactionSummaryItemParamSchema = v.pipe(
           v.description('The ID of the compaction item.'),
           v.metadata({ examples: ['cmp_123'] }),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     type: v.pipe(
@@ -55099,13 +57013,10 @@ export type BetaImageGenToolCallModerationDetails = v.InferOutput<
 >
 
 export const BetaImageGenToolCallErrorSchema = v.object({
-  code: v.union([v.pipe(v.string(), v.description('The error code.')), v.nullable(v.null())]),
+  code: v.union([v.pipe(v.string(), v.description('The error code.')), v.null()]),
   type: v.pipe(v.string(), v.description('The error type.')),
   message: v.pipe(v.string(), v.description('A description of the error.')),
-  param: v.union([
-    v.pipe(v.string(), v.description('The related request parameter.')),
-    v.nullable(v.null()),
-  ]),
+  param: v.union([v.pipe(v.string(), v.description('The related request parameter.')), v.null()]),
   moderation_details: v.optional(
     v.pipe(
       BetaImageGenToolCallModerationDetailsSchema,
@@ -55139,7 +57050,7 @@ export const BetaImageGenToolCallSchema = v.pipe(
     agent: v.optional(
       v.union([
         v.pipe(BetaAgentTagSchema, v.description('The agent that produced this item.')),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     type: v.pipe(
@@ -55153,7 +57064,7 @@ export const BetaImageGenToolCallSchema = v.pipe(
     ),
     result: v.union([
       v.pipe(v.string(), v.description('The generated image encoded in base64.')),
-      v.nullable(v.null()),
+      v.null(),
     ]),
     error: v.optional(
       v.pipe(
@@ -55167,7 +57078,7 @@ export const BetaImageGenToolCallSchema = v.pipe(
           v.union([v.string(), v.picklist(['1024x1024', '1024x1536', '1536x1024'])]),
           v.description('The image dimensions as a `WIDTHxHEIGHT` string, for example `1536x864`.'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     quality: v.optional(
@@ -55178,7 +57089,7 @@ export const BetaImageGenToolCallSchema = v.pipe(
             'The quality of the image generated by the image generation tool call. One of `low`, `medium`, `high`, `xhigh`, `max`, or `auto`.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     action: v.optional(
@@ -55187,7 +57098,7 @@ export const BetaImageGenToolCallSchema = v.pipe(
           BetaImageGenActionEnumSchema,
           v.description('The action used for image generation.'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     background: v.optional(
@@ -55196,7 +57107,7 @@ export const BetaImageGenToolCallSchema = v.pipe(
           BetaImageBackgroundSchema,
           v.description('The background setting used for generation.'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     output_format: v.optional(
@@ -55205,7 +57116,7 @@ export const BetaImageGenToolCallSchema = v.pipe(
           BetaImageOutputFormatSchema,
           v.description('The output format used for generation.'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     svg_usage: v.optional(BetaSvgUsageSchema),
@@ -55215,7 +57126,7 @@ export const BetaImageGenToolCallSchema = v.pipe(
           v.string(),
           v.description('The prompt that was used after any model prompt rewriting.'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
   }),
@@ -55261,7 +57172,7 @@ export const BetaCodeInterpreterToolCallSchema = v.pipe(
   v.object({
     agent: v.optional(
       v.pipe(
-        v.union([BetaAgentTagSchema, v.nullable(v.null())]),
+        v.union([BetaAgentTagSchema, v.null()]),
         v.description('The agent that produced this item.'),
       ),
     ),
@@ -55284,18 +57195,27 @@ export const BetaCodeInterpreterToolCallSchema = v.pipe(
     ),
     code: v.union([
       v.pipe(v.string(), v.description('The code to run, or null if not available.\n')),
-      v.nullable(v.null()),
+      v.null(),
     ]),
     outputs: v.union([
       v.pipe(
         v.array(
-          v.union([BetaCodeInterpreterOutputLogsSchema, BetaCodeInterpreterOutputImageSchema]),
+          v.union([
+            v.intersect([
+              BetaCodeInterpreterOutputLogsSchema,
+              v.object({ type: v.literal('BetaCodeInterpreterOutputLogs') }),
+            ]),
+            v.intersect([
+              BetaCodeInterpreterOutputImageSchema,
+              v.object({ type: v.literal('BetaCodeInterpreterOutputImage') }),
+            ]),
+          ]),
         ),
         v.description(
           'The outputs generated by the code interpreter, such as logs or images.\nCan be null if no outputs are available.\n',
         ),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   }),
   v.description('A tool call to run code.\n'),
@@ -55316,13 +57236,13 @@ export const BetaLocalShellExecActionSchema = v.pipe(
           v.pipe(v.number(), v.integer()),
           v.description('Optional timeout in milliseconds for the command.'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     working_directory: v.optional(
       v.union([
         v.pipe(v.string(), v.description('Optional working directory to run the command in.')),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     env: v.pipe(
@@ -55332,7 +57252,7 @@ export const BetaLocalShellExecActionSchema = v.pipe(
     user: v.optional(
       v.union([
         v.pipe(v.string(), v.description('Optional user to run the command as.')),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
   }),
@@ -55345,7 +57265,7 @@ export const BetaLocalShellToolCallSchema = v.pipe(
   v.object({
     agent: v.optional(
       v.pipe(
-        v.union([BetaAgentTagSchema, v.nullable(v.null())]),
+        v.union([BetaAgentTagSchema, v.null()]),
         v.description('The agent that produced this item.'),
       ),
     ),
@@ -55370,39 +57290,42 @@ export const BetaLocalShellToolCallSchema = v.pipe(
 export type BetaLocalShellToolCall = v.InferOutput<typeof BetaLocalShellToolCallSchema>
 
 export const BetaLocalShellToolCallOutputSchema = v.pipe(
-  v.object({
-    agent: v.optional(
-      v.pipe(
-        v.union([BetaAgentTagSchema, v.nullable(v.null())]),
-        v.description('The agent that produced this item.'),
-      ),
-    ),
-    type: v.pipe(
-      v.literal('local_shell_call_output'),
-      v.description(
-        'The type of the local shell tool call output. Always `local_shell_call_output`.\n',
-      ),
-    ),
-    id: v.pipe(
-      v.string(),
-      v.description('The unique ID of the local shell tool call generated by the model.\n'),
-    ),
-    output: v.pipe(
-      v.string(),
-      v.description('A JSON string of the output of the local shell tool call.\n'),
-    ),
-    status: v.optional(
-      v.union([
+  v.pipe(
+    v.looseObject({
+      agent: v.optional(
         v.pipe(
-          v.picklist(['in_progress', 'completed', 'incomplete']),
-          v.description(
-            'The status of the item. One of `in_progress`, `completed`, or `incomplete`.\n',
-          ),
+          v.union([BetaAgentTagSchema, v.null()]),
+          v.description('The agent that produced this item.'),
         ),
-        v.nullable(v.null()),
-      ]),
-    ),
-  }),
+      ),
+      type: v.pipe(
+        v.literal('local_shell_call_output'),
+        v.description(
+          'The type of the local shell tool call output. Always `local_shell_call_output`.\n',
+        ),
+      ),
+      id: v.pipe(
+        v.string(),
+        v.description('The unique ID of the local shell tool call generated by the model.\n'),
+      ),
+      output: v.pipe(
+        v.string(),
+        v.description('A JSON string of the output of the local shell tool call.\n'),
+      ),
+      status: v.optional(
+        v.union([
+          v.pipe(
+            v.picklist(['in_progress', 'completed', 'incomplete']),
+            v.description(
+              'The status of the item. One of `in_progress`, `completed`, or `incomplete`.\n',
+            ),
+          ),
+          v.null(),
+        ]),
+      ),
+    }),
+    v.check((input) => ['call_id'].every((key) => key in input)),
+  ),
   v.description('The output of a local shell tool call.\n'),
 )
 
@@ -55422,7 +57345,7 @@ export const BetaFunctionShellActionParamSchema = v.pipe(
             'Maximum wall-clock time in milliseconds to allow the shell commands to run.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     max_output_length: v.optional(
@@ -55433,7 +57356,7 @@ export const BetaFunctionShellActionParamSchema = v.pipe(
             'Maximum number of UTF-8 characters to capture from combined stdout and stderr output.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
   }),
@@ -55456,7 +57379,7 @@ export const BetaFunctionShellCallItemParamSchema = v.pipe(
     agent: v.optional(
       v.union([
         v.pipe(BetaAgentTagParamSchema, v.description('The agent that produced this item.')),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     id: v.optional(
@@ -55468,7 +57391,7 @@ export const BetaFunctionShellCallItemParamSchema = v.pipe(
           ),
           v.metadata({ examples: ['sh_123'] }),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     call_id: v.pipe(
@@ -55481,7 +57404,7 @@ export const BetaFunctionShellCallItemParamSchema = v.pipe(
           BetaToolCallCallerParamSchema,
           v.description('The execution context that produced this tool call.'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     type: v.pipe(
@@ -55500,16 +57423,25 @@ export const BetaFunctionShellCallItemParamSchema = v.pipe(
             'The status of the shell call. One of `in_progress`, `completed`, or `incomplete`.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     environment: v.optional(
       v.union([
         v.pipe(
-          v.union([BetaLocalEnvironmentParamSchema, BetaContainerReferenceParamSchema]),
+          v.union([
+            v.intersect([
+              BetaLocalEnvironmentParamSchema,
+              v.object({ type: v.literal('BetaLocalEnvironmentParam') }),
+            ]),
+            v.intersect([
+              BetaContainerReferenceParamSchema,
+              v.object({ type: v.literal('BetaContainerReferenceParam') }),
+            ]),
+          ]),
           v.description('The environment to execute the shell commands in.'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
   }),
@@ -55554,8 +57486,14 @@ export type BetaFunctionShellCallOutputExitOutcomeParam = v.InferOutput<
 
 export const BetaFunctionShellCallOutputOutcomeParamSchema = v.pipe(
   v.union([
-    BetaFunctionShellCallOutputTimeoutOutcomeParamSchema,
-    BetaFunctionShellCallOutputExitOutcomeParamSchema,
+    v.intersect([
+      BetaFunctionShellCallOutputTimeoutOutcomeParamSchema,
+      v.object({ type: v.literal('BetaFunctionShellCallOutputTimeoutOutcomeParam') }),
+    ]),
+    v.intersect([
+      BetaFunctionShellCallOutputExitOutcomeParamSchema,
+      v.object({ type: v.literal('BetaFunctionShellCallOutputExitOutcomeParam') }),
+    ]),
   ]),
   v.description('The exit or timeout outcome associated with this shell call.'),
 )
@@ -55591,7 +57529,7 @@ export const BetaFunctionShellCallOutputItemParamSchema = v.pipe(
     agent: v.optional(
       v.union([
         v.pipe(BetaAgentTagParamSchema, v.description('The agent that produced this item.')),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     id: v.optional(
@@ -55603,7 +57541,7 @@ export const BetaFunctionShellCallOutputItemParamSchema = v.pipe(
           ),
           v.metadata({ examples: ['sho_123'] }),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     call_id: v.pipe(
@@ -55616,7 +57554,7 @@ export const BetaFunctionShellCallOutputItemParamSchema = v.pipe(
           BetaToolCallCallerParamSchema,
           v.description('The execution context that produced this tool call.'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     type: v.pipe(
@@ -55635,7 +57573,7 @@ export const BetaFunctionShellCallOutputItemParamSchema = v.pipe(
           BetaFunctionShellCallItemStatusSchema,
           v.description('The status of the shell call output.'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     max_output_length: v.optional(
@@ -55646,7 +57584,7 @@ export const BetaFunctionShellCallOutputItemParamSchema = v.pipe(
             "The maximum number of UTF-8 characters captured for this shell call's combined output.",
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
   }),
@@ -55730,9 +57668,18 @@ export type BetaApplyPatchUpdateFileOperationParam = v.InferOutput<
 
 export const BetaApplyPatchOperationParamSchema = v.pipe(
   v.union([
-    BetaApplyPatchCreateFileOperationParamSchema,
-    BetaApplyPatchDeleteFileOperationParamSchema,
-    BetaApplyPatchUpdateFileOperationParamSchema,
+    v.intersect([
+      BetaApplyPatchCreateFileOperationParamSchema,
+      v.object({ type: v.literal('BetaApplyPatchCreateFileOperationParam') }),
+    ]),
+    v.intersect([
+      BetaApplyPatchDeleteFileOperationParamSchema,
+      v.object({ type: v.literal('BetaApplyPatchDeleteFileOperationParam') }),
+    ]),
+    v.intersect([
+      BetaApplyPatchUpdateFileOperationParamSchema,
+      v.object({ type: v.literal('BetaApplyPatchUpdateFileOperationParam') }),
+    ]),
   ]),
   v.description(
     'One of the create_file, delete_file, or update_file operations supplied to the apply_patch tool.',
@@ -55746,7 +57693,7 @@ export const BetaApplyPatchToolCallItemParamSchema = v.pipe(
     agent: v.optional(
       v.union([
         v.pipe(BetaAgentTagParamSchema, v.description('The agent that produced this item.')),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     type: v.pipe(
@@ -55762,7 +57709,7 @@ export const BetaApplyPatchToolCallItemParamSchema = v.pipe(
           ),
           v.metadata({ examples: ['apc_123'] }),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     call_id: v.pipe(
@@ -55775,7 +57722,7 @@ export const BetaApplyPatchToolCallItemParamSchema = v.pipe(
           BetaToolCallCallerParamSchema,
           v.description('The execution context that produced this tool call.'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     status: v.pipe(
@@ -55814,7 +57761,7 @@ export const BetaApplyPatchToolCallOutputItemParamSchema = v.pipe(
     agent: v.optional(
       v.union([
         v.pipe(BetaAgentTagParamSchema, v.description('The agent that produced this item.')),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     type: v.pipe(
@@ -55830,7 +57777,7 @@ export const BetaApplyPatchToolCallOutputItemParamSchema = v.pipe(
           ),
           v.metadata({ examples: ['apco_123'] }),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     call_id: v.pipe(
@@ -55843,7 +57790,7 @@ export const BetaApplyPatchToolCallOutputItemParamSchema = v.pipe(
           BetaToolCallCallerParamSchema,
           v.description('The execution context that produced this tool call.'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     status: v.pipe(
@@ -55860,7 +57807,7 @@ export const BetaApplyPatchToolCallOutputItemParamSchema = v.pipe(
             'Optional human-readable log text from the apply patch tool (e.g., patch results or errors).',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
   }),
@@ -55875,10 +57822,7 @@ export const BetaMCPListToolsToolSchema = v.pipe(
   v.object({
     name: v.pipe(v.string(), v.description('The name of the tool.\n')),
     description: v.optional(
-      v.union([
-        v.pipe(v.string(), v.description('The description of the tool.\n')),
-        v.nullable(v.null()),
-      ]),
+      v.union([v.pipe(v.string(), v.description('The description of the tool.\n')), v.null()]),
     ),
     input_schema: v.pipe(
       v.object({}),
@@ -55887,7 +57831,7 @@ export const BetaMCPListToolsToolSchema = v.pipe(
     annotations: v.optional(
       v.union([
         v.pipe(v.object({}), v.description('Additional annotations about the tool.\n')),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
   }),
@@ -55900,7 +57844,7 @@ export const BetaMCPListToolsSchema = v.pipe(
   v.object({
     agent: v.optional(
       v.pipe(
-        v.union([BetaAgentTagSchema, v.nullable(v.null())]),
+        v.union([BetaAgentTagSchema, v.null()]),
         v.description('The agent that produced this item.'),
       ),
     ),
@@ -55917,7 +57861,7 @@ export const BetaMCPListToolsSchema = v.pipe(
     error: v.optional(
       v.union([
         v.pipe(v.string(), v.description('Error message if the server could not list tools.\n')),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
   }),
@@ -55930,7 +57874,7 @@ export const BetaMCPApprovalRequestSchema = v.pipe(
   v.object({
     agent: v.optional(
       v.pipe(
-        v.union([BetaAgentTagSchema, v.nullable(v.null())]),
+        v.union([BetaAgentTagSchema, v.null()]),
         v.description('The agent that produced this item.'),
       ),
     ),
@@ -55952,35 +57896,38 @@ export const BetaMCPApprovalRequestSchema = v.pipe(
 export type BetaMCPApprovalRequest = v.InferOutput<typeof BetaMCPApprovalRequestSchema>
 
 export const BetaMCPApprovalResponseSchema = v.pipe(
-  v.object({
-    agent: v.optional(
-      v.pipe(
-        v.union([BetaAgentTagSchema, v.nullable(v.null())]),
-        v.description('The agent that produced this item.'),
+  v.pipe(
+    v.looseObject({
+      agent: v.optional(
+        v.pipe(
+          v.union([BetaAgentTagSchema, v.null()]),
+          v.description('The agent that produced this item.'),
+        ),
       ),
-    ),
-    type: v.pipe(
-      v.literal('mcp_approval_response'),
-      v.description('The type of the item. Always `mcp_approval_response`.\n'),
-    ),
-    id: v.optional(
-      v.union([
-        v.pipe(v.string(), v.description('The unique ID of the approval response\n')),
-        v.nullable(v.null()),
-      ]),
-    ),
-    approval_request_id: v.pipe(
-      v.string(),
-      v.description('The ID of the approval request being answered.\n'),
-    ),
-    approve: v.pipe(v.boolean(), v.description('Whether the request was approved.\n')),
-    reason: v.optional(
-      v.union([
-        v.pipe(v.string(), v.description('Optional reason for the decision.\n')),
-        v.nullable(v.null()),
-      ]),
-    ),
-  }),
+      type: v.pipe(
+        v.literal('mcp_approval_response'),
+        v.description('The type of the item. Always `mcp_approval_response`.\n'),
+      ),
+      id: v.optional(
+        v.union([
+          v.pipe(v.string(), v.description('The unique ID of the approval response\n')),
+          v.null(),
+        ]),
+      ),
+      approval_request_id: v.pipe(
+        v.string(),
+        v.description('The ID of the approval request being answered.\n'),
+      ),
+      approve: v.pipe(v.boolean(), v.description('Whether the request was approved.\n')),
+      reason: v.optional(
+        v.union([
+          v.pipe(v.string(), v.description('Optional reason for the decision.\n')),
+          v.null(),
+        ]),
+      ),
+    }),
+    v.check((input) => ['request_id'].every((key) => key in input)),
+  ),
   v.description('A response to an MCP approval request.\n'),
 )
 
@@ -56010,9 +57957,12 @@ export const BetaHTTPErrorSchema = v.object({
 export type BetaHTTPError = v.InferOutput<typeof BetaHTTPErrorSchema>
 
 export const BetaMCPToolCallErrorSchema = v.union([
-  BetaMCPProtocolErrorSchema,
-  BetaMCPToolExecutionErrorSchema,
-  BetaHTTPErrorSchema,
+  v.intersect([BetaMCPProtocolErrorSchema, v.object({ type: v.literal('BetaMCPProtocolError') })]),
+  v.intersect([
+    BetaMCPToolExecutionErrorSchema,
+    v.object({ type: v.literal('BetaMCPToolExecutionError') }),
+  ]),
+  v.intersect([BetaHTTPErrorSchema, v.object({ type: v.literal('BetaHTTPError') })]),
 ])
 
 export type BetaMCPToolCallError = v.InferOutput<typeof BetaMCPToolCallErrorSchema>
@@ -56031,7 +57981,7 @@ export const BetaMCPToolCallSchema = v.pipe(
   v.object({
     agent: v.optional(
       v.pipe(
-        v.union([BetaAgentTagSchema, v.nullable(v.null())]),
+        v.union([BetaAgentTagSchema, v.null()]),
         v.description('The agent that produced this item.'),
       ),
     ),
@@ -56050,14 +58000,11 @@ export const BetaMCPToolCallSchema = v.pipe(
       v.description('A JSON string of the arguments passed to the tool.\n'),
     ),
     output: v.optional(
-      v.union([
-        v.pipe(v.string(), v.description('The output from the tool call.\n')),
-        v.nullable(v.null()),
-      ]),
+      v.union([v.pipe(v.string(), v.description('The output from the tool call.\n')), v.null()]),
     ),
     error: v.optional(
       v.pipe(
-        v.union([BetaMCPToolCallErrorSchema, v.nullable(v.null())]),
+        v.union([BetaMCPToolCallErrorSchema, v.null()]),
         v.description('The error from the tool call, if any.'),
       ),
     ),
@@ -56077,7 +58024,7 @@ export const BetaMCPToolCallSchema = v.pipe(
             'Unique identifier for the MCP tool call approval request.\nInclude this value in a subsequent `mcp_approval_response` input to approve or reject the corresponding tool call.\n',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
   }),
@@ -56087,9 +58034,12 @@ export const BetaMCPToolCallSchema = v.pipe(
 export type BetaMCPToolCall = v.InferOutput<typeof BetaMCPToolCallSchema>
 
 export const BetaFunctionAndCustomToolCallOutputSchema = v.union([
-  BetaInputTextContentSchema,
-  BetaInputImageContentSchema,
-  BetaInputFileContentSchema,
+  v.intersect([BetaInputTextContentSchema, v.object({ type: v.literal('BetaInputTextContent') })]),
+  v.intersect([
+    BetaInputImageContentSchema,
+    v.object({ type: v.literal('BetaInputImageContent') }),
+  ]),
+  v.intersect([BetaInputFileContentSchema, v.object({ type: v.literal('BetaInputFileContent') })]),
 ])
 
 export type BetaFunctionAndCustomToolCallOutput = v.InferOutput<
@@ -56100,7 +58050,7 @@ export const BetaCustomToolCallOutputSchema = v.pipe(
   v.object({
     agent: v.optional(
       v.pipe(
-        v.union([BetaAgentTagSchema, v.nullable(v.null())]),
+        v.union([BetaAgentTagSchema, v.null()]),
         v.description('The agent that produced this item.'),
       ),
     ),
@@ -56120,7 +58070,7 @@ export const BetaCustomToolCallOutputSchema = v.pipe(
         'The call ID, used to map this custom tool call output to a custom tool call.\n',
       ),
     ),
-    caller: v.optional(v.union([BetaToolCallCallerParamSchema, v.nullable(v.null())])),
+    caller: v.optional(v.union([BetaToolCallCallerParamSchema, v.null()])),
     output: v.pipe(
       v.union([
         v.pipe(v.string(), v.description('A string of the output of the custom tool call.\n')),
@@ -56143,7 +58093,7 @@ export const BetaCustomToolCallSchema = v.pipe(
   v.object({
     agent: v.optional(
       v.pipe(
-        v.union([BetaAgentTagSchema, v.nullable(v.null())]),
+        v.union([BetaAgentTagSchema, v.null()]),
         v.description('The agent that produced this item.'),
       ),
     ),
@@ -56161,7 +58111,7 @@ export const BetaCustomToolCallSchema = v.pipe(
       v.string(),
       v.description('An identifier used to map this custom tool call to a tool call output.\n'),
     ),
-    caller: v.optional(v.union([BetaToolCallCallerSchema, v.nullable(v.null())])),
+    caller: v.optional(v.union([BetaToolCallCallerSchema, v.null()])),
     namespace: v.optional(
       v.pipe(v.string(), v.description('The namespace of the custom tool being called.\n')),
     ),
@@ -56181,37 +58131,112 @@ export type BetaCustomToolCall = v.InferOutput<typeof BetaCustomToolCallSchema>
 
 export const BetaItemSchema = v.pipe(
   v.union([
-    BetaInputMessageSchema,
-    BetaOutputMessageSchema,
-    BetaFileSearchToolCallSchema,
-    BetaComputerToolCallSchema,
-    BetaComputerCallOutputItemParamSchema,
-    BetaWebSearchToolCallSchema,
-    BetaFunctionToolCallSchema,
-    BetaFunctionCallOutputItemParamSchema,
-    BetaAgentMessageItemParamSchema,
-    BetaMultiAgentCallItemParamSchema,
-    BetaMultiAgentCallOutputItemParamSchema,
-    BetaToolSearchCallItemParamSchema,
-    BetaToolSearchOutputItemParamSchema,
-    BetaAdditionalToolsItemParamSchema,
-    BetaResponseConfigurationUpdateItemParamSchema,
-    BetaReasoningItemSchema,
-    BetaCompactionSummaryItemParamSchema,
-    BetaImageGenToolCallSchema,
-    BetaCodeInterpreterToolCallSchema,
-    BetaLocalShellToolCallSchema,
-    BetaLocalShellToolCallOutputSchema,
-    BetaFunctionShellCallItemParamSchema,
-    BetaFunctionShellCallOutputItemParamSchema,
-    BetaApplyPatchToolCallItemParamSchema,
-    BetaApplyPatchToolCallOutputItemParamSchema,
-    BetaMCPListToolsSchema,
-    BetaMCPApprovalRequestSchema,
-    BetaMCPApprovalResponseSchema,
-    BetaMCPToolCallSchema,
-    BetaCustomToolCallOutputSchema,
-    BetaCustomToolCallSchema,
+    v.intersect([BetaInputMessageSchema, v.object({ type: v.literal('BetaInputMessage') })]),
+    v.intersect([BetaOutputMessageSchema, v.object({ type: v.literal('BetaOutputMessage') })]),
+    v.intersect([
+      BetaFileSearchToolCallSchema,
+      v.object({ type: v.literal('BetaFileSearchToolCall') }),
+    ]),
+    v.intersect([
+      BetaComputerToolCallSchema,
+      v.object({ type: v.literal('BetaComputerToolCall') }),
+    ]),
+    v.intersect([
+      BetaComputerCallOutputItemParamSchema,
+      v.object({ type: v.literal('BetaComputerCallOutputItemParam') }),
+    ]),
+    v.intersect([
+      BetaWebSearchToolCallSchema,
+      v.object({ type: v.literal('BetaWebSearchToolCall') }),
+    ]),
+    v.intersect([
+      BetaFunctionToolCallSchema,
+      v.object({ type: v.literal('BetaFunctionToolCall') }),
+    ]),
+    v.intersect([
+      BetaFunctionCallOutputItemParamSchema,
+      v.object({ type: v.literal('BetaFunctionCallOutputItemParam') }),
+    ]),
+    v.intersect([
+      BetaAgentMessageItemParamSchema,
+      v.object({ type: v.literal('BetaAgentMessageItemParam') }),
+    ]),
+    v.intersect([
+      BetaMultiAgentCallItemParamSchema,
+      v.object({ type: v.literal('BetaMultiAgentCallItemParam') }),
+    ]),
+    v.intersect([
+      BetaMultiAgentCallOutputItemParamSchema,
+      v.object({ type: v.literal('BetaMultiAgentCallOutputItemParam') }),
+    ]),
+    v.intersect([
+      BetaToolSearchCallItemParamSchema,
+      v.object({ type: v.literal('BetaToolSearchCallItemParam') }),
+    ]),
+    v.intersect([
+      BetaToolSearchOutputItemParamSchema,
+      v.object({ type: v.literal('BetaToolSearchOutputItemParam') }),
+    ]),
+    v.intersect([
+      BetaAdditionalToolsItemParamSchema,
+      v.object({ type: v.literal('BetaAdditionalToolsItemParam') }),
+    ]),
+    v.intersect([
+      BetaResponseConfigurationUpdateItemParamSchema,
+      v.object({ type: v.literal('BetaResponseConfigurationUpdateItemParam') }),
+    ]),
+    v.intersect([BetaReasoningItemSchema, v.object({ type: v.literal('BetaReasoningItem') })]),
+    v.intersect([
+      BetaCompactionSummaryItemParamSchema,
+      v.object({ type: v.literal('BetaCompactionSummaryItemParam') }),
+    ]),
+    v.intersect([
+      BetaImageGenToolCallSchema,
+      v.object({ type: v.literal('BetaImageGenToolCall') }),
+    ]),
+    v.intersect([
+      BetaCodeInterpreterToolCallSchema,
+      v.object({ type: v.literal('BetaCodeInterpreterToolCall') }),
+    ]),
+    v.intersect([
+      BetaLocalShellToolCallSchema,
+      v.object({ type: v.literal('BetaLocalShellToolCall') }),
+    ]),
+    v.intersect([
+      BetaLocalShellToolCallOutputSchema,
+      v.object({ type: v.literal('BetaLocalShellToolCallOutput') }),
+    ]),
+    v.intersect([
+      BetaFunctionShellCallItemParamSchema,
+      v.object({ type: v.literal('BetaFunctionShellCallItemParam') }),
+    ]),
+    v.intersect([
+      BetaFunctionShellCallOutputItemParamSchema,
+      v.object({ type: v.literal('BetaFunctionShellCallOutputItemParam') }),
+    ]),
+    v.intersect([
+      BetaApplyPatchToolCallItemParamSchema,
+      v.object({ type: v.literal('BetaApplyPatchToolCallItemParam') }),
+    ]),
+    v.intersect([
+      BetaApplyPatchToolCallOutputItemParamSchema,
+      v.object({ type: v.literal('BetaApplyPatchToolCallOutputItemParam') }),
+    ]),
+    v.intersect([BetaMCPListToolsSchema, v.object({ type: v.literal('BetaMCPListTools') })]),
+    v.intersect([
+      BetaMCPApprovalRequestSchema,
+      v.object({ type: v.literal('BetaMCPApprovalRequest') }),
+    ]),
+    v.intersect([
+      BetaMCPApprovalResponseSchema,
+      v.object({ type: v.literal('BetaMCPApprovalResponse') }),
+    ]),
+    v.intersect([BetaMCPToolCallSchema, v.object({ type: v.literal('BetaMCPToolCall') })]),
+    v.intersect([
+      BetaCustomToolCallOutputSchema,
+      v.object({ type: v.literal('BetaCustomToolCallOutput') }),
+    ]),
+    v.intersect([BetaCustomToolCallSchema, v.object({ type: v.literal('BetaCustomToolCall') })]),
   ]),
   v.description('Content item used to generate a response.\n'),
 )
@@ -56223,7 +58248,7 @@ export const BetaCompactionTriggerItemParamSchema = v.pipe(
     agent: v.optional(
       v.union([
         v.pipe(BetaAgentTagParamSchema, v.description('The agent that produced this item.')),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     id: v.optional(
@@ -56233,7 +58258,7 @@ export const BetaCompactionTriggerItemParamSchema = v.pipe(
           v.description('The unique ID of this compaction trigger.'),
           v.metadata({ examples: ['msg_123'] }),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     type: v.pipe(
@@ -56253,7 +58278,7 @@ export const BetaItemReferenceParamSchema = v.pipe(
     agent: v.optional(
       v.union([
         v.pipe(BetaAgentTagParamSchema, v.description('The agent that produced this item.')),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     type: v.optional(
@@ -56262,7 +58287,7 @@ export const BetaItemReferenceParamSchema = v.pipe(
           v.optional(v.literal('item_reference'), 'item_reference'),
           v.description('The type of item to reference. Always `item_reference`.'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     id: v.pipe(v.string(), v.description('The ID of the item to reference.')),
@@ -56276,7 +58301,7 @@ export const BetaProgramItemParamSchema = v.object({
   agent: v.optional(
     v.union([
       v.pipe(BetaAgentTagParamSchema, v.description('The agent that produced this item.')),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   ),
   id: v.pipe(
@@ -56312,7 +58337,7 @@ export const BetaProgramOutputItemParamSchema = v.object({
   agent: v.optional(
     v.union([
       v.pipe(BetaAgentTagParamSchema, v.description('The agent that produced this item.')),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   ),
   id: v.pipe(
@@ -56341,17 +58366,29 @@ export const BetaProgramOutputItemParamSchema = v.object({
 export type BetaProgramOutputItemParam = v.InferOutput<typeof BetaProgramOutputItemParamSchema>
 
 export const BetaInputItemSchema = v.union([
-  BetaEasyInputMessageSchema,
-  v.pipe(
-    BetaItemSchema,
-    v.description(
-      'An item representing part of the context for the response to be\ngenerated by the model. Can contain text, images, and audio inputs,\nas well as previous assistant responses and tool call outputs.\n',
+  v.intersect([BetaEasyInputMessageSchema, v.object({ type: v.literal('BetaEasyInputMessage') })]),
+  v.intersect([
+    v.pipe(
+      BetaItemSchema,
+      v.description(
+        'An item representing part of the context for the response to be\ngenerated by the model. Can contain text, images, and audio inputs,\nas well as previous assistant responses and tool call outputs.\n',
+      ),
     ),
-  ),
-  BetaCompactionTriggerItemParamSchema,
-  BetaItemReferenceParamSchema,
-  BetaProgramItemParamSchema,
-  BetaProgramOutputItemParamSchema,
+    v.object({ type: v.literal('BetaItem') }),
+  ]),
+  v.intersect([
+    BetaCompactionTriggerItemParamSchema,
+    v.object({ type: v.literal('BetaCompactionTriggerItemParam') }),
+  ]),
+  v.intersect([
+    BetaItemReferenceParamSchema,
+    v.object({ type: v.literal('BetaItemReferenceParam') }),
+  ]),
+  v.intersect([BetaProgramItemParamSchema, v.object({ type: v.literal('BetaProgramItemParam') })]),
+  v.intersect([
+    BetaProgramOutputItemParamSchema,
+    v.object({ type: v.literal('BetaProgramOutputItemParam') }),
+  ]),
 ])
 
 export type BetaInputItem = v.InferOutput<typeof BetaInputItemSchema>
@@ -56372,9 +58409,18 @@ export type BetaResponseFormatJsonObject = v.InferOutput<typeof BetaResponseForm
 
 export const BetaTextResponseFormatConfigurationSchema = v.pipe(
   v.union([
-    BetaResponseFormatTextSchema,
-    BetaTextResponseFormatJsonSchemaSchema,
-    BetaResponseFormatJsonObjectSchema,
+    v.intersect([
+      BetaResponseFormatTextSchema,
+      v.object({ type: v.literal('BetaResponseFormatText') }),
+    ]),
+    v.intersect([
+      BetaTextResponseFormatJsonSchemaSchema,
+      v.object({ type: v.literal('BetaTextResponseFormatJsonSchema') }),
+    ]),
+    v.intersect([
+      BetaResponseFormatJsonObjectSchema,
+      v.object({ type: v.literal('BetaResponseFormatJsonObject') }),
+    ]),
   ]),
   v.description(
     'An object specifying the format that the model must output.\n\nConfiguring `{ "type": "json_schema" }` enables Structured Outputs,\nwhich ensures the model will match your supplied JSON schema. Learn more in the\n[Structured Outputs guide](https://developers.openai.com/api/docs/guides/structured-outputs).\n\nThe default format is `{ "type": "text" }` with no additional options.\n\n**Not recommended for gpt-4o and newer models:**\n\nSetting to `{ "type": "json_object" }` enables the older JSON mode, which\nensures the message the model generates is valid JSON. Using `json_schema`\nis preferred for models that support it.\n',
@@ -56392,7 +58438,7 @@ export const BetaVerbositySchema = v.union([
       "Constrains the verbosity of the model's response. Lower values will result in\nmore concise responses, while higher values will result in more verbose responses.\nCurrently supported values are `low`, `medium`, and `high`. The default is\n`medium`.\n",
     ),
   ),
-  v.nullable(v.null()),
+  v.null(),
 ])
 
 export type BetaVerbosity = v.InferOutput<typeof BetaVerbositySchema>
@@ -56429,7 +58475,7 @@ export const BetaReasoningSchema = v.pipe(
             "A summary of the reasoning performed by the model. This can be\nuseful for debugging and understanding the model's reasoning process.\nOne of `auto`, `concise`, or `detailed`.\n\n`concise` is supported for `computer-use-preview` models and all reasoning models after `gpt-5`.\n",
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
       context: v.union([
         v.pipe(
@@ -56438,7 +58484,7 @@ export const BetaReasoningSchema = v.pipe(
             'Controls which reasoning items are rendered back to the model on later turns.\nIf omitted or set to `auto`, the model determines the context mode. The\n`gpt-5.6` model family defaults to `all_turns`; earlier models default to\n`current_turn`.\n\nWhen returned on a response, this is the effective reasoning context mode\nused for the response.\n',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
       generate_summary: v.union([
         v.pipe(
@@ -56448,7 +58494,7 @@ export const BetaReasoningSchema = v.pipe(
           ),
           v.metadata({ deprecated: true }),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     }),
   ),
@@ -56578,7 +58624,7 @@ export const BetaToolChoiceMCPSchema = v.pipe(
     name: v.optional(
       v.union([
         v.pipe(v.string(), v.description('The name of the tool to call on the server.\n')),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
   }),
@@ -56667,7 +58713,7 @@ export const BetaTokenCountsBodySchema = v.partial(
           'Model ID used to generate the response, like `gpt-4o` or `o3`. OpenAI offers a wide range of models with different capabilities, performance characteristics, and price points. Refer to the [model guide](https://developers.openai.com/api/docs/models) to browse and compare available models.',
         ),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
     input: v.union([
       v.pipe(
@@ -56687,7 +58733,7 @@ export const BetaTokenCountsBodySchema = v.partial(
         ]),
         v.description('Text, image, or file inputs to the model, used to generate a response'),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
     previous_response_id: v.union([
       v.pipe(
@@ -56697,7 +58743,7 @@ export const BetaTokenCountsBodySchema = v.partial(
         ),
         v.metadata({ examples: ['resp_123'] }),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
     tools: v.union([
       v.pipe(
@@ -56706,9 +58752,9 @@ export const BetaTokenCountsBodySchema = v.partial(
           'An array of tools the model may call while generating a response. You can specify which tool to use by setting the `tool_choice` parameter.',
         ),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
-    text: v.union([BetaResponseTextParamSchema, v.nullable(v.null())]),
+    text: v.union([BetaResponseTextParamSchema, v.null()]),
     reasoning: v.union([
       v.pipe(
         BetaReasoningSchema,
@@ -56716,7 +58762,7 @@ export const BetaTokenCountsBodySchema = v.partial(
           '**gpt-5 and o-series models only** Configuration options for [reasoning models](https://developers.openai.com/api/docs/guides/reasoning).',
         ),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
     truncation: v.pipe(
       BetaTruncationEnumSchema,
@@ -56732,7 +58778,7 @@ export const BetaTokenCountsBodySchema = v.partial(
           "A system (or developer) message inserted into the model's context.\nWhen used along with `previous_response_id`, the instructions from a previous response will not be carried over to the next response. This makes it simple to swap out system (or developer) messages in new responses.",
         ),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
     personality: v.pipe(
       BetaPersonalityEnumSchema,
@@ -56740,20 +58786,20 @@ export const BetaTokenCountsBodySchema = v.partial(
         "A model-owned style preset to apply to this request. Omit this parameter to use the model's default style. Supported values may expand over time. Values must be at most 64 characters.",
       ),
     ),
-    conversation: v.union([BetaConversationParamSchema, v.nullable(v.null())]),
+    conversation: v.union([BetaConversationParamSchema, v.null()]),
     tool_choice: v.union([
       v.pipe(
         BetaToolChoiceParamSchema,
         v.description('Controls which tool the model should use, if any.'),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
     parallel_tool_calls: v.union([
       v.pipe(
         v.boolean(),
         v.description('Whether to allow the model to run tool calls in parallel.'),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   }),
 )
@@ -56898,7 +58944,7 @@ export const BetaModelIdsResponsesSchema = v.pipe(
 export type BetaModelIdsResponses = v.InferOutput<typeof BetaModelIdsResponsesSchema>
 
 export const BetaModelIdsCompactionSchema = v.pipe(
-  v.union([BetaModelIdsResponsesSchema, v.string(), v.nullable(v.null())]),
+  v.union([BetaModelIdsResponsesSchema, v.string(), v.null()]),
   v.description(
     'Model ID used to generate the response, like `gpt-6.2-astra`. OpenAI offers a wide range of models with different capabilities, performance characteristics, and price points. Refer to the [model guide](https://developers.openai.com/api/docs/models) to browse and compare available models.',
   ),
@@ -56987,7 +59033,7 @@ export const BetaCompactResponseMethodPublicBodySchema = v.object({
         ]),
         v.description('Text, image, or file inputs to the model, used to generate a response'),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   ),
   previous_response_id: v.optional(
@@ -56999,7 +59045,7 @@ export const BetaCompactResponseMethodPublicBodySchema = v.object({
         ),
         v.metadata({ examples: ['resp_123'] }),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   ),
   instructions: v.optional(
@@ -57011,7 +59057,16 @@ export const BetaCompactResponseMethodPublicBodySchema = v.object({
         ),
         v.metadata({ deprecated: true }),
       ),
-      v.nullable(v.null()),
+      v.null(),
+    ]),
+  ),
+  safety_identifier: v.optional(
+    v.union([
+      v.pipe(
+        v.pipe(v.string(), v.maxCodePoints(128)),
+        v.description('A stable identifier used for safety monitoring and abuse detection.'),
+      ),
+      v.null(),
     ]),
   ),
   image: v.optional(
@@ -57023,7 +59078,7 @@ export const BetaCompactResponseMethodPublicBodySchema = v.object({
         v.pipe(v.string(), v.maxCodePoints(64)),
         v.description('A key to use when reading from or writing to the prompt cache.'),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   ),
   prompt_cache_retention: v.optional(
@@ -57033,12 +59088,10 @@ export const BetaCompactResponseMethodPublicBodySchema = v.object({
         v.description('How long to retain a prompt cache entry created by this request.'),
         v.metadata({ deprecated: true }),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   ),
-  prompt_cache_options: v.optional(
-    v.union([BetaPromptCacheOptionsParamSchema, v.nullable(v.null())]),
-  ),
+  prompt_cache_options: v.optional(v.union([BetaPromptCacheOptionsParamSchema, v.null()])),
   service_tier: v.optional(
     v.union([
       v.pipe(
@@ -57047,7 +59100,7 @@ export const BetaCompactResponseMethodPublicBodySchema = v.object({
           "Specifies the processing type used for serving the request.   - If set to 'auto', then the request will be processed with the service tier configured in the Project settings. Unless otherwise configured, the Project will use 'default'.   - If set to 'default', then the request will be processed with the standard pricing and performance for the selected model.   - If set to '[flex](https://developers.openai.com/api/docs/guides/flex-processing)', then the request will be processed with the Flex Processing service tier.   - To opt-in to [Fast mode](https://developers.openai.com/api/docs/guides/fast-mode) at the request level, include the `service_tier=fast` or `service_tier=priority` parameter for Responses or Chat Completions. For models with a dedicated Fast tier, either value resolves to `service_tier=fast`; for other models, either value resolves to `service_tier=priority`.   - When not set, the default behavior is 'auto'.\n  When the `service_tier` parameter is set, the response body will include the `service_tier` value based on the processing mode actually used to serve the request. This response value may be different from the value set in the parameter.",
         ),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   ),
 })
@@ -57084,7 +59137,7 @@ export const BetaMisalignmentErrorDetailsResourceSchema = v.partial(
         ),
         v.check((input) => !v.safeParse(v.any(), input).success),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
     error_type: v.pipe(
       BetaMisalignmentErrorTypeSchema,
@@ -57106,9 +59159,9 @@ export type BetaMisalignmentErrorDetailsResource = v.InferOutput<
 >
 
 export const BetaErrorSchema = v.object({
-  code: v.union([v.string(), v.nullable(v.null())]),
+  code: v.union([v.string(), v.null()]),
   message: v.string(),
-  param: v.union([v.string(), v.nullable(v.null())]),
+  param: v.union([v.string(), v.null()]),
   type: v.string(),
   misalignment: v.optional(BetaMisalignmentErrorDetailsResourceSchema),
 })
@@ -57121,7 +59174,12 @@ export type BetaErrorResponse = v.InferOutput<typeof BetaErrorResponseSchema>
 
 export const BetaInputMessageResourceSchema = v.intersect([
   BetaInputMessageSchema,
-  v.object({ id: v.pipe(v.string(), v.description('The unique ID of the message input.\n')) }),
+  v.pipe(
+    v.looseObject({
+      id: v.pipe(v.string(), v.description('The unique ID of the message input.\n')),
+    }),
+    v.check((input) => ['type'].every((key) => key in input)),
+  ),
 ])
 
 export type BetaInputMessageResource = v.InferOutput<typeof BetaInputMessageResourceSchema>
@@ -57130,7 +59188,7 @@ export const BetaComputerToolCallOutputSchema = v.pipe(
   v.object({
     agent: v.optional(
       v.pipe(
-        v.union([BetaAgentTagSchema, v.nullable(v.null())]),
+        v.union([BetaAgentTagSchema, v.null()]),
         v.description('The agent that produced this item.'),
       ),
     ),
@@ -57172,17 +59230,20 @@ export type BetaComputerCallOutputStatus = v.InferOutput<typeof BetaComputerCall
 
 export const BetaComputerToolCallOutputResourceSchema = v.intersect([
   BetaComputerToolCallOutputSchema,
-  v.object({
-    status: v.pipe(
-      BetaComputerCallOutputStatusSchema,
-      v.description(
-        'The status of the message input. One of `in_progress`, `completed`, or\n`incomplete`. Populated when input items are returned via API.\n',
+  v.pipe(
+    v.looseObject({
+      status: v.pipe(
+        BetaComputerCallOutputStatusSchema,
+        v.description(
+          'The status of the message input. One of `in_progress`, `completed`, or\n`incomplete`. Populated when input items are returned via API.\n',
+        ),
       ),
-    ),
-    created_by: v.optional(
-      v.pipe(v.string(), v.description('The identifier of the actor that created the item.\n')),
-    ),
-  }),
+      created_by: v.optional(
+        v.pipe(v.string(), v.description('The identifier of the actor that created the item.\n')),
+      ),
+    }),
+    v.check((input) => ['id'].every((key) => key in input)),
+  ),
 ])
 
 export type BetaComputerToolCallOutputResource = v.InferOutput<
@@ -57215,7 +59276,7 @@ export const BetaFunctionToolCallOutputSchema = v.pipe(
   v.object({
     agent: v.optional(
       v.pipe(
-        v.union([BetaAgentTagSchema, v.nullable(v.null())]),
+        v.union([BetaAgentTagSchema, v.null()]),
         v.description('The agent that produced this item.'),
       ),
     ),
@@ -57243,7 +59304,7 @@ export const BetaFunctionToolCallOutputSchema = v.pipe(
     namespace: v.optional(
       v.pipe(v.string(), v.description('The namespace of the tool that produced the output.\n')),
     ),
-    caller: v.optional(v.union([BetaToolCallCallerParamSchema, v.nullable(v.null())])),
+    caller: v.optional(v.union([BetaToolCallCallerParamSchema, v.null()])),
     output: v.pipe(
       v.union([
         v.pipe(v.string(), v.description('A string of the output of the function call.\n')),
@@ -57317,14 +59378,14 @@ export const BetaComputerScreenshotContentSchema = v.pipe(
     ),
     image_url: v.union([
       v.pipe(v.pipe(v.string(), v.url()), v.description('The URL of the screenshot image.')),
-      v.nullable(v.null()),
+      v.null(),
     ]),
     file_id: v.union([
       v.pipe(
         v.string(),
         v.description('The identifier of an uploaded file that contains the screenshot.'),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
     detail: v.pipe(
       BetaImageDetailSchema,
@@ -57371,16 +59432,43 @@ export const BetaAgentMessageSchema = v.object({
     v.array(
       v.pipe(
         v.union([
-          BetaInputTextContentSchema,
-          BetaOutputTextContentSchema,
-          BetaTextContentSchema,
-          BetaSummaryTextContentSchema,
-          BetaReasoningTextContentSchema,
-          BetaRefusalContentSchema,
-          BetaInputImageContentSchema,
-          BetaComputerScreenshotContentSchema,
-          BetaInputFileContentSchema,
-          BetaEncryptedContentSchema,
+          v.intersect([
+            BetaInputTextContentSchema,
+            v.object({ type: v.literal('BetaInputTextContent') }),
+          ]),
+          v.intersect([
+            BetaOutputTextContentSchema,
+            v.object({ type: v.literal('BetaOutputTextContent') }),
+          ]),
+          v.intersect([BetaTextContentSchema, v.object({ type: v.literal('BetaTextContent') })]),
+          v.intersect([
+            BetaSummaryTextContentSchema,
+            v.object({ type: v.literal('BetaSummaryTextContent') }),
+          ]),
+          v.intersect([
+            BetaReasoningTextContentSchema,
+            v.object({ type: v.literal('BetaReasoningTextContent') }),
+          ]),
+          v.intersect([
+            BetaRefusalContentSchema,
+            v.object({ type: v.literal('BetaRefusalContent') }),
+          ]),
+          v.intersect([
+            BetaInputImageContentSchema,
+            v.object({ type: v.literal('BetaInputImageContent') }),
+          ]),
+          v.intersect([
+            BetaComputerScreenshotContentSchema,
+            v.object({ type: v.literal('BetaComputerScreenshotContent') }),
+          ]),
+          v.intersect([
+            BetaInputFileContentSchema,
+            v.object({ type: v.literal('BetaInputFileContent') }),
+          ]),
+          v.intersect([
+            BetaEncryptedContentSchema,
+            v.object({ type: v.literal('BetaEncryptedContent') }),
+          ]),
         ]),
         v.description('A content part that makes up an input or output item.'),
       ),
@@ -57457,7 +59545,7 @@ export const BetaToolSearchCallSchema = v.object({
       v.string(),
       v.description('The unique ID of the tool search call generated by the model.'),
     ),
-    v.nullable(v.null()),
+    v.null(),
   ]),
   execution: v.pipe(
     BetaToolSearchExecutionTypeSchema,
@@ -57489,7 +59577,7 @@ export const BetaToolSearchOutputSchema = v.object({
       v.string(),
       v.description('The unique ID of the tool search call generated by the model.'),
     ),
-    v.nullable(v.null()),
+    v.null(),
   ]),
   execution: v.pipe(
     BetaToolSearchExecutionTypeSchema,
@@ -57577,7 +59665,16 @@ export const BetaResponseConfigurationUpdateSchema = v.pipe(
       v.pipe(
         v.object({
           format: v.pipe(
-            v.union([BetaResponseFormatTextSchema, BetaTextResponseFormatJsonSchemaSchema]),
+            v.union([
+              v.intersect([
+                BetaResponseFormatTextSchema,
+                v.object({ type: v.literal('BetaResponseFormatText') }),
+              ]),
+              v.intersect([
+                BetaTextResponseFormatJsonSchemaSchema,
+                v.object({ type: v.literal('BetaTextResponseFormatJsonSchema') }),
+              ]),
+            ]),
             v.description(
               'Use a JSON schema for structured output or text to return to plain text.',
             ),
@@ -57674,14 +59771,14 @@ export const BetaFunctionShellActionSchema = v.pipe(
         v.pipe(v.number(), v.integer()),
         v.description('Optional timeout in milliseconds for the commands.'),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
     max_output_length: v.union([
       v.pipe(
         v.pipe(v.number(), v.integer()),
         v.description('Optional maximum number of characters to return from each command.'),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   }),
   v.description('Execute a shell command.'),
@@ -57749,7 +59846,7 @@ export const BetaFunctionShellCallSchema = v.pipe(
           BetaToolCallCallerSchema,
           v.description('The execution context that produced this tool call.'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     action: v.pipe(
@@ -57763,8 +59860,17 @@ export const BetaFunctionShellCallSchema = v.pipe(
       ),
     ),
     environment: v.union([
-      v.union([BetaLocalEnvironmentResourceSchema, BetaContainerReferenceResourceSchema]),
-      v.nullable(v.null()),
+      v.union([
+        v.intersect([
+          BetaLocalEnvironmentResourceSchema,
+          v.object({ type: v.literal('BetaLocalEnvironmentResource') }),
+        ]),
+        v.intersect([
+          BetaContainerReferenceResourceSchema,
+          v.object({ type: v.literal('BetaContainerReferenceResource') }),
+        ]),
+      ]),
+      v.null(),
     ]),
     created_by: v.optional(
       v.pipe(v.string(), v.description('The ID of the entity that created this tool call.')),
@@ -57823,8 +59929,14 @@ export const BetaFunctionShellCallOutputContentSchema = v.pipe(
     stderr: v.pipe(v.string(), v.description('The standard error output that was captured.')),
     outcome: v.pipe(
       v.union([
-        BetaFunctionShellCallOutputTimeoutOutcomeSchema,
-        BetaFunctionShellCallOutputExitOutcomeSchema,
+        v.intersect([
+          BetaFunctionShellCallOutputTimeoutOutcomeSchema,
+          v.object({ type: v.literal('BetaFunctionShellCallOutputTimeoutOutcome') }),
+        ]),
+        v.intersect([
+          BetaFunctionShellCallOutputExitOutcomeSchema,
+          v.object({ type: v.literal('BetaFunctionShellCallOutputExitOutcome') }),
+        ]),
       ]),
       v.description(
         'Represents either an exit outcome (with an exit code) or a timeout outcome for a shell call output chunk.',
@@ -57866,7 +59978,7 @@ export const BetaFunctionShellCallOutputSchema = v.pipe(
           BetaToolCallCallerSchema,
           v.description('The execution context that produced this tool call.'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     status: v.pipe(
@@ -57886,7 +59998,7 @@ export const BetaFunctionShellCallOutputSchema = v.pipe(
           'The maximum length of the shell command output. This is generated by the model and should be passed back with the raw output.',
         ),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
     created_by: v.optional(
       v.pipe(v.string(), v.description('The identifier of the actor that created the item.')),
@@ -57973,7 +60085,7 @@ export const BetaApplyPatchToolCallSchema = v.pipe(
           BetaToolCallCallerSchema,
           v.description('The execution context that produced this tool call.'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     status: v.pipe(
@@ -57984,9 +60096,18 @@ export const BetaApplyPatchToolCallSchema = v.pipe(
     ),
     operation: v.pipe(
       v.union([
-        BetaApplyPatchCreateFileOperationSchema,
-        BetaApplyPatchDeleteFileOperationSchema,
-        BetaApplyPatchUpdateFileOperationSchema,
+        v.intersect([
+          BetaApplyPatchCreateFileOperationSchema,
+          v.object({ type: v.literal('BetaApplyPatchCreateFileOperation') }),
+        ]),
+        v.intersect([
+          BetaApplyPatchDeleteFileOperationSchema,
+          v.object({ type: v.literal('BetaApplyPatchDeleteFileOperation') }),
+        ]),
+        v.intersect([
+          BetaApplyPatchUpdateFileOperationSchema,
+          v.object({ type: v.literal('BetaApplyPatchUpdateFileOperation') }),
+        ]),
       ]),
       v.description(
         'One of the create_file, delete_file, or update_file operations applied via apply_patch.',
@@ -58032,7 +60153,7 @@ export const BetaApplyPatchToolCallOutputSchema = v.pipe(
           BetaToolCallCallerSchema,
           v.description('The execution context that produced this tool call.'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     status: v.pipe(
@@ -58047,7 +60168,7 @@ export const BetaApplyPatchToolCallOutputSchema = v.pipe(
           v.string(),
           v.description('Optional textual output returned by the apply patch tool.'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
     created_by: v.optional(
@@ -58060,30 +60181,33 @@ export const BetaApplyPatchToolCallOutputSchema = v.pipe(
 export type BetaApplyPatchToolCallOutput = v.InferOutput<typeof BetaApplyPatchToolCallOutputSchema>
 
 export const BetaMCPApprovalResponseResourceSchema = v.pipe(
-  v.object({
-    agent: v.optional(
-      v.pipe(
-        v.union([BetaAgentTagSchema, v.nullable(v.null())]),
-        v.description('The agent that produced this item.'),
+  v.pipe(
+    v.looseObject({
+      agent: v.optional(
+        v.pipe(
+          v.union([BetaAgentTagSchema, v.null()]),
+          v.description('The agent that produced this item.'),
+        ),
       ),
-    ),
-    type: v.pipe(
-      v.literal('mcp_approval_response'),
-      v.description('The type of the item. Always `mcp_approval_response`.\n'),
-    ),
-    id: v.pipe(v.string(), v.description('The unique ID of the approval response\n')),
-    approval_request_id: v.pipe(
-      v.string(),
-      v.description('The ID of the approval request being answered.\n'),
-    ),
-    approve: v.pipe(v.boolean(), v.description('Whether the request was approved.\n')),
-    reason: v.optional(
-      v.union([
-        v.pipe(v.string(), v.description('Optional reason for the decision.\n')),
-        v.nullable(v.null()),
-      ]),
-    ),
-  }),
+      type: v.pipe(
+        v.literal('mcp_approval_response'),
+        v.description('The type of the item. Always `mcp_approval_response`.\n'),
+      ),
+      id: v.pipe(v.string(), v.description('The unique ID of the approval response\n')),
+      approval_request_id: v.pipe(
+        v.string(),
+        v.description('The ID of the approval request being answered.\n'),
+      ),
+      approve: v.pipe(v.boolean(), v.description('Whether the request was approved.\n')),
+      reason: v.optional(
+        v.union([
+          v.pipe(v.string(), v.description('Optional reason for the decision.\n')),
+          v.null(),
+        ]),
+      ),
+    }),
+    v.check((input) => ['request_id'].every((key) => key in input)),
+  ),
   v.description('A response to an MCP approval request.\n'),
 )
 
@@ -58131,39 +60255,105 @@ export type BetaCustomToolCallOutputResource = v.InferOutput<
 
 export const BetaItemResourceSchema = v.pipe(
   v.union([
-    BetaInputMessageResourceSchema,
-    BetaOutputMessageSchema,
-    BetaFileSearchToolCallSchema,
-    BetaComputerToolCallSchema,
-    BetaComputerToolCallOutputResourceSchema,
-    BetaWebSearchToolCallSchema,
-    BetaFunctionToolCallResourceSchema,
-    BetaFunctionToolCallOutputResourceSchema,
-    BetaAgentMessageSchema,
-    BetaMultiAgentCallSchema,
-    BetaMultiAgentCallOutputSchema,
-    BetaToolSearchCallSchema,
-    BetaToolSearchOutputSchema,
-    BetaAdditionalToolsSchema,
-    BetaResponseConfigurationUpdateSchema,
-    BetaReasoningItemSchema,
-    BetaProgramSchema,
-    BetaProgramOutputSchema,
-    BetaCompactionBodySchema,
-    BetaImageGenToolCallSchema,
-    BetaCodeInterpreterToolCallSchema,
-    BetaLocalShellToolCallSchema,
-    BetaLocalShellToolCallOutputSchema,
-    BetaFunctionShellCallSchema,
-    BetaFunctionShellCallOutputSchema,
-    BetaApplyPatchToolCallSchema,
-    BetaApplyPatchToolCallOutputSchema,
-    BetaMCPListToolsSchema,
-    BetaMCPApprovalRequestSchema,
-    BetaMCPApprovalResponseResourceSchema,
-    BetaMCPToolCallSchema,
-    BetaCustomToolCallResourceSchema,
-    BetaCustomToolCallOutputResourceSchema,
+    v.intersect([
+      BetaInputMessageResourceSchema,
+      v.object({ type: v.literal('BetaInputMessageResource') }),
+    ]),
+    v.intersect([BetaOutputMessageSchema, v.object({ type: v.literal('BetaOutputMessage') })]),
+    v.intersect([
+      BetaFileSearchToolCallSchema,
+      v.object({ type: v.literal('BetaFileSearchToolCall') }),
+    ]),
+    v.intersect([
+      BetaComputerToolCallSchema,
+      v.object({ type: v.literal('BetaComputerToolCall') }),
+    ]),
+    v.intersect([
+      BetaComputerToolCallOutputResourceSchema,
+      v.object({ type: v.literal('BetaComputerToolCallOutputResource') }),
+    ]),
+    v.intersect([
+      BetaWebSearchToolCallSchema,
+      v.object({ type: v.literal('BetaWebSearchToolCall') }),
+    ]),
+    v.intersect([
+      BetaFunctionToolCallResourceSchema,
+      v.object({ type: v.literal('BetaFunctionToolCallResource') }),
+    ]),
+    v.intersect([
+      BetaFunctionToolCallOutputResourceSchema,
+      v.object({ type: v.literal('BetaFunctionToolCallOutputResource') }),
+    ]),
+    v.intersect([BetaAgentMessageSchema, v.object({ type: v.literal('BetaAgentMessage') })]),
+    v.intersect([BetaMultiAgentCallSchema, v.object({ type: v.literal('BetaMultiAgentCall') })]),
+    v.intersect([
+      BetaMultiAgentCallOutputSchema,
+      v.object({ type: v.literal('BetaMultiAgentCallOutput') }),
+    ]),
+    v.intersect([BetaToolSearchCallSchema, v.object({ type: v.literal('BetaToolSearchCall') })]),
+    v.intersect([
+      BetaToolSearchOutputSchema,
+      v.object({ type: v.literal('BetaToolSearchOutput') }),
+    ]),
+    v.intersect([BetaAdditionalToolsSchema, v.object({ type: v.literal('BetaAdditionalTools') })]),
+    v.intersect([
+      BetaResponseConfigurationUpdateSchema,
+      v.object({ type: v.literal('BetaResponseConfigurationUpdate') }),
+    ]),
+    v.intersect([BetaReasoningItemSchema, v.object({ type: v.literal('BetaReasoningItem') })]),
+    v.intersect([BetaProgramSchema, v.object({ type: v.literal('BetaProgram') })]),
+    v.intersect([BetaProgramOutputSchema, v.object({ type: v.literal('BetaProgramOutput') })]),
+    v.intersect([BetaCompactionBodySchema, v.object({ type: v.literal('BetaCompactionBody') })]),
+    v.intersect([
+      BetaImageGenToolCallSchema,
+      v.object({ type: v.literal('BetaImageGenToolCall') }),
+    ]),
+    v.intersect([
+      BetaCodeInterpreterToolCallSchema,
+      v.object({ type: v.literal('BetaCodeInterpreterToolCall') }),
+    ]),
+    v.intersect([
+      BetaLocalShellToolCallSchema,
+      v.object({ type: v.literal('BetaLocalShellToolCall') }),
+    ]),
+    v.intersect([
+      BetaLocalShellToolCallOutputSchema,
+      v.object({ type: v.literal('BetaLocalShellToolCallOutput') }),
+    ]),
+    v.intersect([
+      BetaFunctionShellCallSchema,
+      v.object({ type: v.literal('BetaFunctionShellCall') }),
+    ]),
+    v.intersect([
+      BetaFunctionShellCallOutputSchema,
+      v.object({ type: v.literal('BetaFunctionShellCallOutput') }),
+    ]),
+    v.intersect([
+      BetaApplyPatchToolCallSchema,
+      v.object({ type: v.literal('BetaApplyPatchToolCall') }),
+    ]),
+    v.intersect([
+      BetaApplyPatchToolCallOutputSchema,
+      v.object({ type: v.literal('BetaApplyPatchToolCallOutput') }),
+    ]),
+    v.intersect([BetaMCPListToolsSchema, v.object({ type: v.literal('BetaMCPListTools') })]),
+    v.intersect([
+      BetaMCPApprovalRequestSchema,
+      v.object({ type: v.literal('BetaMCPApprovalRequest') }),
+    ]),
+    v.intersect([
+      BetaMCPApprovalResponseResourceSchema,
+      v.object({ type: v.literal('BetaMCPApprovalResponseResource') }),
+    ]),
+    v.intersect([BetaMCPToolCallSchema, v.object({ type: v.literal('BetaMCPToolCall') })]),
+    v.intersect([
+      BetaCustomToolCallResourceSchema,
+      v.object({ type: v.literal('BetaCustomToolCallResource') }),
+    ]),
+    v.intersect([
+      BetaCustomToolCallOutputResourceSchema,
+      v.object({ type: v.literal('BetaCustomToolCallOutputResource') }),
+    ]),
   ]),
   v.description('Content item used to generate a response.\n'),
 )
@@ -58238,16 +60428,43 @@ export const BetaMessageSchema = v.pipe(
       v.array(
         v.pipe(
           v.union([
-            BetaInputTextContentSchema,
-            BetaOutputTextContentSchema,
-            BetaTextContentSchema,
-            BetaSummaryTextContentSchema,
-            BetaReasoningTextContentSchema,
-            BetaRefusalContentSchema,
-            BetaInputImageContentSchema,
-            BetaComputerScreenshotContentSchema,
-            BetaInputFileContentSchema,
-            BetaEncryptedContentSchema,
+            v.intersect([
+              BetaInputTextContentSchema,
+              v.object({ type: v.literal('BetaInputTextContent') }),
+            ]),
+            v.intersect([
+              BetaOutputTextContentSchema,
+              v.object({ type: v.literal('BetaOutputTextContent') }),
+            ]),
+            v.intersect([BetaTextContentSchema, v.object({ type: v.literal('BetaTextContent') })]),
+            v.intersect([
+              BetaSummaryTextContentSchema,
+              v.object({ type: v.literal('BetaSummaryTextContent') }),
+            ]),
+            v.intersect([
+              BetaReasoningTextContentSchema,
+              v.object({ type: v.literal('BetaReasoningTextContent') }),
+            ]),
+            v.intersect([
+              BetaRefusalContentSchema,
+              v.object({ type: v.literal('BetaRefusalContent') }),
+            ]),
+            v.intersect([
+              BetaInputImageContentSchema,
+              v.object({ type: v.literal('BetaInputImageContent') }),
+            ]),
+            v.intersect([
+              BetaComputerScreenshotContentSchema,
+              v.object({ type: v.literal('BetaComputerScreenshotContent') }),
+            ]),
+            v.intersect([
+              BetaInputFileContentSchema,
+              v.object({ type: v.literal('BetaInputFileContent') }),
+            ]),
+            v.intersect([
+              BetaEncryptedContentSchema,
+              v.object({ type: v.literal('BetaEncryptedContent') }),
+            ]),
           ]),
           v.description('A content part that makes up an input or output item.'),
         ),
@@ -58262,7 +60479,7 @@ export const BetaMessageSchema = v.pipe(
             'Labels an `assistant` message as intermediate commentary (`commentary`) or the final answer (`final_answer`). For models like `gpt-5.3-codex` and beyond, when sending follow-up requests, preserve and resend phase on all assistant messages — dropping it can degrade performance. Not used for user messages.',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
   }),
@@ -58273,37 +60490,94 @@ export type BetaMessage = v.InferOutput<typeof BetaMessageSchema>
 
 export const BetaItemFieldSchema = v.pipe(
   v.union([
-    BetaMessageSchema,
-    BetaProgramSchema,
-    BetaProgramOutputSchema,
-    BetaFunctionToolCallSchema,
-    BetaMultiAgentCallSchema,
-    BetaMultiAgentCallOutputSchema,
-    BetaToolSearchCallSchema,
-    BetaToolSearchOutputSchema,
-    BetaAdditionalToolsSchema,
-    BetaAgentMessageSchema,
-    BetaFunctionToolCallOutputSchema,
-    BetaFileSearchToolCallSchema,
-    BetaWebSearchToolCallSchema,
-    BetaImageGenToolCallSchema,
-    BetaComputerToolCallSchema,
-    BetaComputerToolCallOutputResourceSchema,
-    BetaReasoningItemSchema,
-    BetaCompactionBodySchema,
-    BetaCodeInterpreterToolCallSchema,
-    v.pipe(BetaLocalShellToolCallSchema, v.metadata({ deprecated: true })),
-    v.pipe(BetaLocalShellToolCallOutputSchema, v.metadata({ deprecated: true })),
-    BetaFunctionShellCallSchema,
-    BetaFunctionShellCallOutputSchema,
-    BetaApplyPatchToolCallSchema,
-    BetaApplyPatchToolCallOutputSchema,
-    BetaMCPListToolsSchema,
-    BetaMCPApprovalRequestSchema,
-    BetaMCPApprovalResponseResourceSchema,
-    BetaMCPToolCallSchema,
-    BetaCustomToolCallSchema,
-    BetaCustomToolCallOutputSchema,
+    v.intersect([BetaMessageSchema, v.object({ type: v.literal('BetaMessage') })]),
+    v.intersect([BetaProgramSchema, v.object({ type: v.literal('BetaProgram') })]),
+    v.intersect([BetaProgramOutputSchema, v.object({ type: v.literal('BetaProgramOutput') })]),
+    v.intersect([
+      BetaFunctionToolCallSchema,
+      v.object({ type: v.literal('BetaFunctionToolCall') }),
+    ]),
+    v.intersect([BetaMultiAgentCallSchema, v.object({ type: v.literal('BetaMultiAgentCall') })]),
+    v.intersect([
+      BetaMultiAgentCallOutputSchema,
+      v.object({ type: v.literal('BetaMultiAgentCallOutput') }),
+    ]),
+    v.intersect([BetaToolSearchCallSchema, v.object({ type: v.literal('BetaToolSearchCall') })]),
+    v.intersect([
+      BetaToolSearchOutputSchema,
+      v.object({ type: v.literal('BetaToolSearchOutput') }),
+    ]),
+    v.intersect([BetaAdditionalToolsSchema, v.object({ type: v.literal('BetaAdditionalTools') })]),
+    v.intersect([BetaAgentMessageSchema, v.object({ type: v.literal('BetaAgentMessage') })]),
+    v.intersect([
+      BetaFunctionToolCallOutputSchema,
+      v.object({ type: v.literal('BetaFunctionToolCallOutput') }),
+    ]),
+    v.intersect([
+      BetaFileSearchToolCallSchema,
+      v.object({ type: v.literal('BetaFileSearchToolCall') }),
+    ]),
+    v.intersect([
+      BetaWebSearchToolCallSchema,
+      v.object({ type: v.literal('BetaWebSearchToolCall') }),
+    ]),
+    v.intersect([
+      BetaImageGenToolCallSchema,
+      v.object({ type: v.literal('BetaImageGenToolCall') }),
+    ]),
+    v.intersect([
+      BetaComputerToolCallSchema,
+      v.object({ type: v.literal('BetaComputerToolCall') }),
+    ]),
+    v.intersect([
+      BetaComputerToolCallOutputResourceSchema,
+      v.object({ type: v.literal('BetaComputerToolCallOutputResource') }),
+    ]),
+    v.intersect([BetaReasoningItemSchema, v.object({ type: v.literal('BetaReasoningItem') })]),
+    v.intersect([BetaCompactionBodySchema, v.object({ type: v.literal('BetaCompactionBody') })]),
+    v.intersect([
+      BetaCodeInterpreterToolCallSchema,
+      v.object({ type: v.literal('BetaCodeInterpreterToolCall') }),
+    ]),
+    v.intersect([
+      v.pipe(BetaLocalShellToolCallSchema, v.metadata({ deprecated: true })),
+      v.object({ type: v.literal('BetaLocalShellToolCall') }),
+    ]),
+    v.intersect([
+      v.pipe(BetaLocalShellToolCallOutputSchema, v.metadata({ deprecated: true })),
+      v.object({ type: v.literal('BetaLocalShellToolCallOutput') }),
+    ]),
+    v.intersect([
+      BetaFunctionShellCallSchema,
+      v.object({ type: v.literal('BetaFunctionShellCall') }),
+    ]),
+    v.intersect([
+      BetaFunctionShellCallOutputSchema,
+      v.object({ type: v.literal('BetaFunctionShellCallOutput') }),
+    ]),
+    v.intersect([
+      BetaApplyPatchToolCallSchema,
+      v.object({ type: v.literal('BetaApplyPatchToolCall') }),
+    ]),
+    v.intersect([
+      BetaApplyPatchToolCallOutputSchema,
+      v.object({ type: v.literal('BetaApplyPatchToolCallOutput') }),
+    ]),
+    v.intersect([BetaMCPListToolsSchema, v.object({ type: v.literal('BetaMCPListTools') })]),
+    v.intersect([
+      BetaMCPApprovalRequestSchema,
+      v.object({ type: v.literal('BetaMCPApprovalRequest') }),
+    ]),
+    v.intersect([
+      BetaMCPApprovalResponseResourceSchema,
+      v.object({ type: v.literal('BetaMCPApprovalResponseResource') }),
+    ]),
+    v.intersect([BetaMCPToolCallSchema, v.object({ type: v.literal('BetaMCPToolCall') })]),
+    v.intersect([BetaCustomToolCallSchema, v.object({ type: v.literal('BetaCustomToolCall') })]),
+    v.intersect([
+      BetaCustomToolCallOutputSchema,
+      v.object({ type: v.literal('BetaCustomToolCallOutput') }),
+    ]),
   ]),
   v.description(
     'An item representing a message, tool call, tool output, reasoning, or other response element.',
@@ -58380,6 +60654,17 @@ export const BetaCompactResourceSchema = v.pipe(
       v.optional(v.literal('response.compaction'), 'response.compaction'),
       v.description('The object type. Always `response.compaction`.'),
     ),
+    safety_identifier: v.optional(
+      v.union([
+        v.pipe(
+          v.string(),
+          v.description(
+            'A stable identifier that was used for safety monitoring and abuse detection.',
+          ),
+        ),
+        v.null(),
+      ]),
+    ),
     output: v.pipe(
       v.array(BetaItemFieldSchema),
       v.description('The compacted list of output items.'),
@@ -58387,6 +60672,9 @@ export const BetaCompactResourceSchema = v.pipe(
     created_at: v.pipe(
       v.pipe(v.number(), v.integer()),
       v.description('Unix timestamp (in seconds) when the compacted conversation was created.'),
+    ),
+    service_tier: v.optional(
+      v.pipe(v.string(), v.description('The service tier used for compaction, when reported.')),
     ),
     usage: v.pipe(
       BetaResponseUsageSchema,
@@ -58400,6 +60688,7 @@ export const BetaCompactResourceSchema = v.pipe(
       {
         id: 'resp_001',
         object: 'response.compaction',
+        safety_identifier: 'compact-review-example-001',
         image: { context_compression: 'disabled' },
         output: [
           {
@@ -58441,7 +60730,7 @@ export const BetaResponseCustomToolCallInputDoneEventSchema = v.pipe(
   v.object({
     agent: v.optional(
       v.pipe(
-        v.union([BetaAgentTagSchema, v.nullable(v.null())]),
+        v.union([BetaAgentTagSchema, v.null()]),
         v.description('The agent that owns this multi-agent streaming event.'),
       ),
     ),
@@ -58474,7 +60763,7 @@ export const BetaResponseCustomToolCallInputDeltaEventSchema = v.pipe(
   v.object({
     agent: v.optional(
       v.pipe(
-        v.union([BetaAgentTagSchema, v.nullable(v.null())]),
+        v.union([BetaAgentTagSchema, v.null()]),
         v.description('The agent that owns this multi-agent streaming event.'),
       ),
     ),
@@ -58515,7 +60804,7 @@ export const BetaMetadataSchema = v.union([
       'Set of 16 key-value pairs that can be attached to an object. This can be\nuseful for storing additional information about the object in a structured\nformat, and querying for objects via API or the dashboard.\n\nKeys are strings with a maximum length of 64 characters. Values are strings\nwith a maximum length of 512 characters.\n',
     ),
   ),
-  v.nullable(v.null()),
+  v.null(),
 ])
 
 export type BetaMetadata = v.InferOutput<typeof BetaMetadataSchema>
@@ -58530,7 +60819,7 @@ export const BetaModelResponsePropertiesSchema = v.partial(
           'An integer between 0 and 20 specifying the maximum number of most likely\ntokens to return at each token position, each with an associated log\nprobability. In some cases, the number of returned tokens may be fewer than\nrequested.\n',
         ),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
     temperature: v.union([
       v.pipe(
@@ -58540,7 +60829,7 @@ export const BetaModelResponsePropertiesSchema = v.partial(
         ),
         v.metadata({ examples: [1] }),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
     top_p: v.union([
       v.pipe(
@@ -58550,7 +60839,7 @@ export const BetaModelResponsePropertiesSchema = v.partial(
         ),
         v.metadata({ examples: [1] }),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
     user: v.pipe(
       v.nullable(v.string()),
@@ -58567,7 +60856,7 @@ export const BetaModelResponsePropertiesSchema = v.partial(
         ),
         v.metadata({ examples: ['safety-identifier-1234'] }),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
     prompt_cache_key: v.union([
       v.pipe(
@@ -58577,7 +60866,7 @@ export const BetaModelResponsePropertiesSchema = v.partial(
         ),
         v.metadata({ examples: ['prompt-cache-key-1234'] }),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
     prompt_cache_retention: v.pipe(
       v.union([
@@ -58587,7 +60876,7 @@ export const BetaModelResponsePropertiesSchema = v.partial(
             "Deprecated. Use `prompt_cache_options.ttl` instead.\n\nThe retention policy for the prompt cache. Set to `24h` to enable extended prompt caching, which keeps cached prefixes active for longer, up to a maximum of 24 hours. [Learn more](https://developers.openai.com/api/docs/guides/prompt-caching#prompt-cache-retention).\nThis field expresses a maximum retention policy, while\n`prompt_cache_options.ttl` expresses a minimum cache lifetime. The two\nfields are independent and do not interact.\nFor `gpt-5.5`, `gpt-5.5-pro`, and future models, only `24h` is supported.\n\nFor older models that support both `in_memory` and `24h`, the default depends on your organization's data retention policy:\n  - Organizations without ZDR enabled default to `24h`.\n  - Organizations with ZDR enabled default to `in_memory` when `prompt_cache_retention` is not specified.\n",
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
       v.metadata({ deprecated: true }),
     ),
@@ -58620,7 +60909,7 @@ export const BetaResponsePromptVariablesSchema = v.union([
       'Optional map of values to substitute in for variables in your\nprompt. The substitution values can either be strings, or other\nResponse input types like images or files.\n',
     ),
   ),
-  v.nullable(v.null()),
+  v.null(),
 ])
 
 export type BetaResponsePromptVariables = v.InferOutput<typeof BetaResponsePromptVariablesSchema>
@@ -58632,7 +60921,7 @@ export const BetaPromptSchema = v.union([
       version: v.optional(
         v.union([
           v.pipe(v.string(), v.description('Optional version of the prompt template.')),
-          v.nullable(v.null()),
+          v.null(),
         ]),
       ),
       variables: v.optional(BetaResponsePromptVariablesSchema),
@@ -58641,7 +60930,7 @@ export const BetaPromptSchema = v.union([
       'Reference to a prompt template and its variables.\n[Learn more](https://developers.openai.com/api/docs/guides/text?api-mode=responses#version-prompts-in-code).\n',
     ),
   ),
-  v.nullable(v.null()),
+  v.null(),
 ])
 
 export type BetaPrompt = v.InferOutput<typeof BetaPromptSchema>
@@ -58655,7 +60944,7 @@ export const BetaResponsePropertiesSchema = v.partial(
           'The unique ID of the previous response to the model. Use this to\ncreate multi-turn conversations. Learn more about\n[conversation state](https://developers.openai.com/api/docs/guides/conversation-state). Cannot be used in conjunction with `conversation`.\n',
         ),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
     model: v.pipe(
       BetaModelIdsResponsesSchema,
@@ -58670,7 +60959,7 @@ export const BetaResponsePropertiesSchema = v.partial(
           'Whether to run the model response in the background.\n[Learn more](https://developers.openai.com/api/docs/guides/background).\n',
         ),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
     max_tool_calls: v.union([
       v.pipe(
@@ -58679,7 +60968,7 @@ export const BetaResponsePropertiesSchema = v.partial(
           'The maximum number of total calls to built-in tools that can be processed in a response. This maximum number applies across all built-in tool calls, not per individual tool. Any further attempts to call a tool by the model will be ignored.\n',
         ),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
     text: BetaResponseTextParamSchema,
     tools: BetaToolsArraySchema,
@@ -58700,7 +60989,7 @@ export const BetaServiceTierResponsesSchema = v.union([
       "Specifies the processing type used for serving the request.\n  - If set to 'auto', then the request will be processed with the service tier configured in the Project settings. Unless otherwise configured, the Project will use 'default'.\n  - If set to 'default', then the request will be processed with the standard pricing and performance for the selected model.\n  - If set to '[flex](https://developers.openai.com/api/docs/guides/flex-processing)', then the request will be processed with the Flex Processing service tier.\n  - To opt-in to [Fast mode](https://developers.openai.com/api/docs/guides/fast-mode) at the request level, include the `service_tier=fast` or `service_tier=priority` parameter for Responses or Chat Completions. The response will show `service_tier=priority` regardless of if you specify `service_tier=fast` or `priority` in your request.\n  - If set to 'ultrafast', then the request will be processed with the access-controlled Ultrafast Processing service tier. This tier is currently available for `gpt-5.6-sol`; a response served through it will show `service_tier=ultrafast`.\n  - When not set, the default behavior is 'auto'.\n\n  When the `service_tier` parameter is set, the response body will include the `service_tier` value based on the processing mode actually used to serve the request. This response value may be different from the value set in the parameter.\n",
     ),
   ),
-  v.nullable(v.null()),
+  v.null(),
 ])
 
 export type BetaServiceTierResponses = v.InferOutput<typeof BetaServiceTierResponsesSchema>
@@ -58756,13 +61045,13 @@ export const BetaResponseErrorSchema = v.union([
     v.object({
       type: v.optional(
         v.pipe(
-          v.union([v.string(), v.nullable(v.null())]),
+          v.union([v.string(), v.null()]),
           v.description('The original error type, or null if it was not recorded.'),
         ),
       ),
       param: v.optional(
         v.pipe(
-          v.union([v.string(), v.nullable(v.null())]),
+          v.union([v.string(), v.null()]),
           v.description(
             'The request parameter associated with the error, or null if none was recorded.',
           ),
@@ -58774,7 +61063,7 @@ export const BetaResponseErrorSchema = v.union([
     }),
     v.description('An error object returned when the model fails to generate a Response.\n'),
   ),
-  v.nullable(v.null()),
+  v.null(),
 ])
 
 export type BetaResponseError = v.InferOutput<typeof BetaResponseErrorSchema>
@@ -58801,37 +61090,82 @@ export type BetaReasoningInputTransformation = v.InferOutput<
 >
 
 export const BetaOutputItemSchema = v.union([
-  BetaOutputMessageSchema,
-  BetaFileSearchToolCallSchema,
-  BetaFunctionToolCallSchema,
-  BetaFunctionToolCallOutputResourceSchema,
-  BetaAgentMessageSchema,
-  BetaMultiAgentCallSchema,
-  BetaMultiAgentCallOutputSchema,
-  BetaWebSearchToolCallSchema,
-  BetaComputerToolCallSchema,
-  BetaComputerToolCallOutputResourceSchema,
-  BetaReasoningItemSchema,
-  BetaProgramSchema,
-  BetaProgramOutputSchema,
-  BetaToolSearchCallSchema,
-  BetaToolSearchOutputSchema,
-  BetaAdditionalToolsSchema,
-  BetaCompactionBodySchema,
-  BetaImageGenToolCallSchema,
-  BetaCodeInterpreterToolCallSchema,
-  BetaLocalShellToolCallSchema,
-  BetaLocalShellToolCallOutputSchema,
-  BetaFunctionShellCallSchema,
-  BetaFunctionShellCallOutputSchema,
-  BetaApplyPatchToolCallSchema,
-  BetaApplyPatchToolCallOutputSchema,
-  BetaMCPToolCallSchema,
-  BetaMCPListToolsSchema,
-  BetaMCPApprovalRequestSchema,
-  BetaMCPApprovalResponseResourceSchema,
-  BetaCustomToolCallSchema,
-  BetaCustomToolCallOutputResourceSchema,
+  v.intersect([BetaOutputMessageSchema, v.object({ type: v.literal('BetaOutputMessage') })]),
+  v.intersect([
+    BetaFileSearchToolCallSchema,
+    v.object({ type: v.literal('BetaFileSearchToolCall') }),
+  ]),
+  v.intersect([BetaFunctionToolCallSchema, v.object({ type: v.literal('BetaFunctionToolCall') })]),
+  v.intersect([
+    BetaFunctionToolCallOutputResourceSchema,
+    v.object({ type: v.literal('BetaFunctionToolCallOutputResource') }),
+  ]),
+  v.intersect([BetaAgentMessageSchema, v.object({ type: v.literal('BetaAgentMessage') })]),
+  v.intersect([BetaMultiAgentCallSchema, v.object({ type: v.literal('BetaMultiAgentCall') })]),
+  v.intersect([
+    BetaMultiAgentCallOutputSchema,
+    v.object({ type: v.literal('BetaMultiAgentCallOutput') }),
+  ]),
+  v.intersect([
+    BetaWebSearchToolCallSchema,
+    v.object({ type: v.literal('BetaWebSearchToolCall') }),
+  ]),
+  v.intersect([BetaComputerToolCallSchema, v.object({ type: v.literal('BetaComputerToolCall') })]),
+  v.intersect([
+    BetaComputerToolCallOutputResourceSchema,
+    v.object({ type: v.literal('BetaComputerToolCallOutputResource') }),
+  ]),
+  v.intersect([BetaReasoningItemSchema, v.object({ type: v.literal('BetaReasoningItem') })]),
+  v.intersect([BetaProgramSchema, v.object({ type: v.literal('BetaProgram') })]),
+  v.intersect([BetaProgramOutputSchema, v.object({ type: v.literal('BetaProgramOutput') })]),
+  v.intersect([BetaToolSearchCallSchema, v.object({ type: v.literal('BetaToolSearchCall') })]),
+  v.intersect([BetaToolSearchOutputSchema, v.object({ type: v.literal('BetaToolSearchOutput') })]),
+  v.intersect([BetaAdditionalToolsSchema, v.object({ type: v.literal('BetaAdditionalTools') })]),
+  v.intersect([BetaCompactionBodySchema, v.object({ type: v.literal('BetaCompactionBody') })]),
+  v.intersect([BetaImageGenToolCallSchema, v.object({ type: v.literal('BetaImageGenToolCall') })]),
+  v.intersect([
+    BetaCodeInterpreterToolCallSchema,
+    v.object({ type: v.literal('BetaCodeInterpreterToolCall') }),
+  ]),
+  v.intersect([
+    BetaLocalShellToolCallSchema,
+    v.object({ type: v.literal('BetaLocalShellToolCall') }),
+  ]),
+  v.intersect([
+    BetaLocalShellToolCallOutputSchema,
+    v.object({ type: v.literal('BetaLocalShellToolCallOutput') }),
+  ]),
+  v.intersect([
+    BetaFunctionShellCallSchema,
+    v.object({ type: v.literal('BetaFunctionShellCall') }),
+  ]),
+  v.intersect([
+    BetaFunctionShellCallOutputSchema,
+    v.object({ type: v.literal('BetaFunctionShellCallOutput') }),
+  ]),
+  v.intersect([
+    BetaApplyPatchToolCallSchema,
+    v.object({ type: v.literal('BetaApplyPatchToolCall') }),
+  ]),
+  v.intersect([
+    BetaApplyPatchToolCallOutputSchema,
+    v.object({ type: v.literal('BetaApplyPatchToolCallOutput') }),
+  ]),
+  v.intersect([BetaMCPToolCallSchema, v.object({ type: v.literal('BetaMCPToolCall') })]),
+  v.intersect([BetaMCPListToolsSchema, v.object({ type: v.literal('BetaMCPListTools') })]),
+  v.intersect([
+    BetaMCPApprovalRequestSchema,
+    v.object({ type: v.literal('BetaMCPApprovalRequest') }),
+  ]),
+  v.intersect([
+    BetaMCPApprovalResponseResourceSchema,
+    v.object({ type: v.literal('BetaMCPApprovalResponseResource') }),
+  ]),
+  v.intersect([BetaCustomToolCallSchema, v.object({ type: v.literal('BetaCustomToolCall') })]),
+  v.intersect([
+    BetaCustomToolCallOutputResourceSchema,
+    v.object({ type: v.literal('BetaCustomToolCallOutputResource') }),
+  ]),
 ])
 
 export type BetaOutputItem = v.InferOutput<typeof BetaOutputItemSchema>
@@ -58949,7 +61283,7 @@ export const BetaPromptCacheOptionsSchema = v.pipe(
           v.string(),
           v.description('The response ID supplied as the prompt cache diagnostics comparison.'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
   }),
@@ -59024,10 +61358,22 @@ export type BetaPromptCacheUnavailableDiagnosticsBody = v.InferOutput<
 
 export const BetaPromptCacheDiagnosticsSchema = v.pipe(
   v.union([
-    BetaPromptCacheMissDiagnosticsBodySchema,
-    BetaPromptCacheHitDiagnosticsBodySchema,
-    BetaPromptCacheComparisonResponseNotFoundDiagnosticsBodySchema,
-    BetaPromptCacheUnavailableDiagnosticsBodySchema,
+    v.intersect([
+      BetaPromptCacheMissDiagnosticsBodySchema,
+      v.object({ type: v.literal('BetaPromptCacheMissDiagnosticsBody') }),
+    ]),
+    v.intersect([
+      BetaPromptCacheHitDiagnosticsBodySchema,
+      v.object({ type: v.literal('BetaPromptCacheHitDiagnosticsBody') }),
+    ]),
+    v.intersect([
+      BetaPromptCacheComparisonResponseNotFoundDiagnosticsBodySchema,
+      v.object({ type: v.literal('BetaPromptCacheComparisonResponseNotFoundDiagnosticsBody') }),
+    ]),
+    v.intersect([
+      BetaPromptCacheUnavailableDiagnosticsBodySchema,
+      v.object({ type: v.literal('BetaPromptCacheUnavailableDiagnosticsBody') }),
+    ]),
   ]),
   v.description('Prompt cache diagnostics requested for this response.'),
 )
@@ -59088,11 +61434,29 @@ export type BetaModerationErrorBody = v.InferOutput<typeof BetaModerationErrorBo
 export const BetaModerationSchema = v.pipe(
   v.object({
     input: v.pipe(
-      v.union([BetaModerationResultBodySchema, BetaModerationErrorBodySchema]),
+      v.union([
+        v.intersect([
+          BetaModerationResultBodySchema,
+          v.object({ type: v.literal('BetaModerationResultBody') }),
+        ]),
+        v.intersect([
+          BetaModerationErrorBodySchema,
+          v.object({ type: v.literal('BetaModerationErrorBody') }),
+        ]),
+      ]),
       v.description('Moderation for the response input.'),
     ),
     output: v.pipe(
-      v.union([BetaModerationResultBodySchema, BetaModerationErrorBodySchema]),
+      v.union([
+        v.intersect([
+          BetaModerationResultBodySchema,
+          v.object({ type: v.literal('BetaModerationResultBody') }),
+        ]),
+        v.intersect([
+          BetaModerationErrorBodySchema,
+          v.object({ type: v.literal('BetaModerationErrorBody') }),
+        ]),
+      ]),
       v.description('Moderation for the response output.'),
     ),
   }),
@@ -59119,151 +61483,158 @@ export const BetaResponseSchema = v.pipe(
   v.intersect([
     BetaModelResponsePropertiesSchema,
     BetaResponsePropertiesSchema,
-    v.object({
-      image: v.optional(BetaResolvedImageOptionsSchema),
-      service_tier: v.optional(BetaServiceTierResponsesSchema),
-      truncation: v.optional(
-        v.union([
-          v.pipe(
-            v.optional(v.picklist(['auto', 'disabled']), 'disabled'),
-            v.description(
-              "The truncation strategy to use for the model response.\n- `auto`: If the input to this Response exceeds\n  the model's context window size, the model will truncate the\n  response to fit the context window by dropping items from the beginning of the conversation.\n  On some models, trimming can begin earlier because the API subtracts the model's\n  maximum output allowance from its input limit, even if you set a lower `max_output_tokens`.\n- `disabled` (default): If the input size will exceed the context window\n  size for a model, the request will fail with a 400 error.\n",
+    v.pipe(
+      v.looseObject({
+        image: v.optional(BetaResolvedImageOptionsSchema),
+        service_tier: v.optional(BetaServiceTierResponsesSchema),
+        truncation: v.optional(
+          v.union([
+            v.pipe(
+              v.optional(v.picklist(['auto', 'disabled']), 'disabled'),
+              v.description(
+                "The truncation strategy to use for the model response.\n- `auto`: If the input to this Response exceeds\n  the model's context window size, the model will truncate the\n  response to fit the context window by dropping items from the beginning of the conversation.\n  On some models, trimming can begin earlier because the API subtracts the model's\n  maximum output allowance from its input limit, even if you set a lower `max_output_tokens`.\n- `disabled` (default): If the input size will exceed the context window\n  size for a model, the request will fail with a 400 error.\n",
+              ),
             ),
-          ),
-          v.nullable(v.null()),
-        ]),
-      ),
-      id: v.pipe(v.string(), v.description('Unique identifier for this Response.\n')),
-      object: v.pipe(
-        v.literal('response'),
-        v.description('The object type of this resource - always set to `response`.\n'),
-      ),
-      status: v.optional(
-        v.pipe(
-          v.picklist(['completed', 'failed', 'in_progress', 'cancelled', 'queued', 'incomplete']),
-          v.description(
-            'The status of the response generation. One of `completed`, `failed`,\n`in_progress`, `cancelled`, `queued`, or `incomplete`.\n',
+            v.null(),
+          ]),
+        ),
+        id: v.pipe(v.string(), v.description('Unique identifier for this Response.\n')),
+        object: v.pipe(
+          v.literal('response'),
+          v.description('The object type of this resource - always set to `response`.\n'),
+        ),
+        status: v.optional(
+          v.pipe(
+            v.picklist(['completed', 'failed', 'in_progress', 'cancelled', 'queued', 'incomplete']),
+            v.description(
+              'The status of the response generation. One of `completed`, `failed`,\n`in_progress`, `cancelled`, `queued`, or `incomplete`.\n',
+            ),
           ),
         ),
-      ),
-      access_programs: v.union([BetaAccessProgramsBodySchema, v.nullable(v.null())]),
-      created_at: v.pipe(
-        v.number(),
-        v.description('Unix timestamp (in seconds) of when this Response was created.\n'),
-      ),
-      completed_at: v.optional(
-        v.union([
-          v.pipe(
-            v.number(),
-            v.description(
-              'Unix timestamp (in seconds) of when this Response was completed.\nOnly present when the status is `completed`.\n',
+        access_programs: v.union([BetaAccessProgramsBodySchema, v.null()]),
+        created_at: v.pipe(
+          v.number(),
+          v.description('Unix timestamp (in seconds) of when this Response was created.\n'),
+        ),
+        completed_at: v.optional(
+          v.union([
+            v.pipe(
+              v.number(),
+              v.description(
+                'Unix timestamp (in seconds) of when this Response was completed.\nOnly present when the status is `completed`.\n',
+              ),
             ),
+            v.null(),
+          ]),
+        ),
+        error: BetaResponseErrorSchema,
+        incomplete_details: v.union([
+          v.pipe(
+            v.partial(
+              v.object({
+                reason: v.pipe(
+                  v.picklist(['max_output_tokens', 'max_messages', 'content_filter', 'steered']),
+                  v.description(
+                    'The reason why the response is incomplete. `steered` means\nthe response stopped at a safe output boundary after a\nWebSocket `response.steer` event. The server can then create\na successor response automatically with the queued input.\n',
+                  ),
+                ),
+              }),
+            ),
+            v.description('Details about why the response is incomplete.\n'),
           ),
-          v.nullable(v.null()),
+          v.null(),
         ]),
-      ),
-      error: BetaResponseErrorSchema,
-      incomplete_details: v.union([
-        v.pipe(
-          v.partial(
-            v.object({
-              reason: v.pipe(
-                v.picklist(['max_output_tokens', 'max_messages', 'content_filter', 'steered']),
+        input_transformations: v.optional(
+          v.pipe(
+            v.array(BetaReasoningInputTransformationSchema),
+            v.description('Reasoning inputs withheld from the model, in input order.'),
+          ),
+        ),
+        output: v.pipe(
+          v.array(BetaOutputItemSchema),
+          v.description(
+            "An array of content items generated by the model.\n\n- The length and order of items in the `output` array is dependent\n  on the model's response.\n- Rather than accessing the first item in the `output` array and\n  assuming it's an `assistant` message with the content generated by\n  the model, you might consider using the `output_text` property where\n  supported in SDKs.\n",
+          ),
+        ),
+        reasoning: v.optional(v.union([BetaReasoningSchema, v.null()])),
+        instructions: v.union([
+          v.pipe(
+            v.union([
+              v.pipe(
+                v.string(),
                 v.description(
-                  'The reason why the response is incomplete. `steered` means\nthe response stopped at a safe output boundary after a\nWebSocket `response.steer` event. The server can then create\na successor response automatically with the queued input.\n',
+                  'A text input to the model, equivalent to a text input with the\n`developer` role.\n',
                 ),
               ),
-            }),
+              v.pipe(
+                v.array(BetaInputItemSchema),
+                v.description(
+                  'A list of one or many input items to the model, containing\ndifferent content types.\n',
+                ),
+              ),
+            ]),
+            v.description(
+              "A system (or developer) message inserted into the model's context.\n\nWhen using along with `previous_response_id`, the instructions from a previous\nresponse will not be carried over to the next response. This makes it simple\nto swap out system (or developer) messages in new responses.\n",
+            ),
           ),
-          v.description('Details about why the response is incomplete.\n'),
-        ),
-        v.nullable(v.null()),
-      ]),
-      input_transformations: v.optional(
-        v.pipe(
-          v.array(BetaReasoningInputTransformationSchema),
-          v.description('Reasoning inputs withheld from the model, in input order.'),
-        ),
-      ),
-      output: v.pipe(
-        v.array(BetaOutputItemSchema),
-        v.description(
-          "An array of content items generated by the model.\n\n- The length and order of items in the `output` array is dependent\n  on the model's response.\n- Rather than accessing the first item in the `output` array and\n  assuming it's an `assistant` message with the content generated by\n  the model, you might consider using the `output_text` property where\n  supported in SDKs.\n",
-        ),
-      ),
-      reasoning: v.optional(v.union([BetaReasoningSchema, v.nullable(v.null())])),
-      instructions: v.union([
-        v.pipe(
+          v.null(),
+        ]),
+        output_text: v.optional(
           v.union([
             v.pipe(
               v.string(),
               v.description(
-                'A text input to the model, equivalent to a text input with the\n`developer` role.\n',
+                'SDK-only convenience property that contains the aggregated text output\nfrom all `output_text` items in the `output` array, if any are present.\nSupported in the Python and JavaScript SDKs.\n',
               ),
             ),
-            v.pipe(
-              v.array(BetaInputItemSchema),
-              v.description(
-                'A list of one or many input items to the model, containing\ndifferent content types.\n',
-              ),
-            ),
+            v.null(),
           ]),
-          v.description(
-            "A system (or developer) message inserted into the model's context.\n\nWhen using along with `previous_response_id`, the instructions from a previous\nresponse will not be carried over to the next response. This makes it simple\nto swap out system (or developer) messages in new responses.\n",
+        ),
+        usage: v.optional(v.union([BetaResponseUsageSchema, v.null()])),
+        tool_usage: v.optional(
+          v.pipe(
+            BetaResponseToolUsageSchema,
+            v.description(
+              'Usage reported by hosted tools, separate from base model `usage`. The field\ncan be omitted when tool usage is unavailable. When present, tool families\nwith no recorded usage have zero counts.\n\n`image_gen` sums available token counts across image generation calls.\nCalls with missing or incomplete usage records may be skipped. Output\ntoken details and cached input counts can be omitted. An omitted cache\ncount means cache usage is unknown.\n\n`web_search.num_requests` counts billable searches. Discounted searches\nand actions such as opening a page are excluded. Use billing records to\nreconcile final charges.\n',
+            ),
           ),
         ),
-        v.nullable(v.null()),
-      ]),
-      output_text: v.optional(
-        v.union([
-          v.pipe(
-            v.string(),
-            v.description(
-              'SDK-only convenience property that contains the aggregated text output\nfrom all `output_text` items in the `output` array, if any are present.\nSupported in the Python and JavaScript SDKs.\n',
+        prompt_cache_options: v.optional(BetaPromptCacheOptionsSchema),
+        prompt_cache_diagnostics: v.optional(BetaPromptCacheDiagnosticsSchema),
+        moderation: v.optional(
+          v.union([
+            v.pipe(
+              BetaModerationSchema,
+              v.description(
+                'Moderation results for the response input and output, if moderated completions were requested.\n',
+              ),
             ),
-          ),
-          v.nullable(v.null()),
-        ]),
-      ),
-      usage: v.optional(v.union([BetaResponseUsageSchema, v.nullable(v.null())])),
-      tool_usage: v.optional(
-        v.pipe(
-          BetaResponseToolUsageSchema,
-          v.description(
-            'Usage reported by hosted tools, separate from base model `usage`. The field\ncan be omitted when tool usage is unavailable. When present, tool families\nwith no recorded usage have zero counts.\n\n`image_gen` sums available token counts across image generation calls.\nCalls with missing or incomplete usage records may be skipped. Output\ntoken details and cached input counts can be omitted. An omitted cache\ncount means cache usage is unknown.\n\n`web_search.num_requests` counts billable searches. Discounted searches\nand actions such as opening a page are excluded. Use billing records to\nreconcile final charges.\n',
-          ),
+            v.null(),
+          ]),
+        ),
+        parallel_tool_calls: v.pipe(
+          v.optional(v.boolean(), true),
+          v.description('Whether to allow the model to run tool calls in parallel.\n'),
+        ),
+        conversation: v.optional(v.union([BetaResponseConversationSchema, v.null()])),
+        max_output_tokens: v.optional(
+          v.union([
+            v.pipe(
+              v.pipe(v.number(), v.integer()),
+              v.description(
+                'An upper bound for the number of tokens that can be generated for a response, including visible output tokens and [reasoning tokens](https://developers.openai.com/api/docs/guides/reasoning).\n',
+              ),
+            ),
+            v.null(),
+          ]),
+        ),
+      }),
+      v.check((input) =>
+        ['model', 'tools', 'metadata', 'tool_choice', 'temperature', 'top_p'].every(
+          (key) => key in input,
         ),
       ),
-      prompt_cache_options: v.optional(BetaPromptCacheOptionsSchema),
-      prompt_cache_diagnostics: v.optional(BetaPromptCacheDiagnosticsSchema),
-      moderation: v.optional(
-        v.union([
-          v.pipe(
-            BetaModerationSchema,
-            v.description(
-              'Moderation results for the response input and output, if moderated completions were requested.\n',
-            ),
-          ),
-          v.nullable(v.null()),
-        ]),
-      ),
-      parallel_tool_calls: v.pipe(
-        v.optional(v.boolean(), true),
-        v.description('Whether to allow the model to run tool calls in parallel.\n'),
-      ),
-      conversation: v.optional(v.union([BetaResponseConversationSchema, v.nullable(v.null())])),
-      max_output_tokens: v.optional(
-        v.union([
-          v.pipe(
-            v.pipe(v.number(), v.integer()),
-            v.description(
-              'An upper bound for the number of tokens that can be generated for a response, including visible output tokens and [reasoning tokens](https://developers.openai.com/api/docs/guides/reasoning).\n',
-            ),
-          ),
-          v.nullable(v.null()),
-        ]),
-      ),
-    }),
+    ),
   ]),
   v.metadata({
     examples: [
@@ -59335,7 +61706,7 @@ export const BetaResponseQueuedEventSchema = v.pipe(
   v.object({
     agent: v.optional(
       v.pipe(
-        v.union([BetaAgentTagSchema, v.nullable(v.null())]),
+        v.union([BetaAgentTagSchema, v.null()]),
         v.description('The agent that owns this multi-agent streaming event.'),
       ),
     ),
@@ -59358,7 +61729,7 @@ export const BetaResponseOutputTextAnnotationAddedEventSchema = v.pipe(
   v.object({
     agent: v.optional(
       v.pipe(
-        v.union([BetaAgentTagSchema, v.nullable(v.null())]),
+        v.union([BetaAgentTagSchema, v.null()]),
         v.description('The agent that owns this multi-agent streaming event.'),
       ),
     ),
@@ -59387,7 +61758,7 @@ export const BetaResponseOutputTextAnnotationAddedEventSchema = v.pipe(
       v.description('The sequence number of this event.'),
     ),
     annotation: v.pipe(
-      v.union([BetaAnnotationSchema, v.nullable(v.null())]),
+      v.union([BetaAnnotationSchema, v.null()]),
       v.description('The annotation object being added. (See annotation schema for details.)'),
     ),
   }),
@@ -59402,7 +61773,7 @@ export const BetaResponseMCPListToolsInProgressEventSchema = v.pipe(
   v.object({
     agent: v.optional(
       v.pipe(
-        v.union([BetaAgentTagSchema, v.nullable(v.null())]),
+        v.union([BetaAgentTagSchema, v.null()]),
         v.description('The agent that owns this multi-agent streaming event.'),
       ),
     ),
@@ -59436,7 +61807,7 @@ export const BetaResponseMCPListToolsFailedEventSchema = v.pipe(
   v.object({
     agent: v.optional(
       v.pipe(
-        v.union([BetaAgentTagSchema, v.nullable(v.null())]),
+        v.union([BetaAgentTagSchema, v.null()]),
         v.description('The agent that owns this multi-agent streaming event.'),
       ),
     ),
@@ -59465,7 +61836,7 @@ export const BetaResponseMCPListToolsCompletedEventSchema = v.pipe(
   v.object({
     agent: v.optional(
       v.pipe(
-        v.union([BetaAgentTagSchema, v.nullable(v.null())]),
+        v.union([BetaAgentTagSchema, v.null()]),
         v.description('The agent that owns this multi-agent streaming event.'),
       ),
     ),
@@ -59497,7 +61868,7 @@ export const BetaResponseMCPCallInProgressEventSchema = v.pipe(
   v.object({
     agent: v.optional(
       v.pipe(
-        v.union([BetaAgentTagSchema, v.nullable(v.null())]),
+        v.union([BetaAgentTagSchema, v.null()]),
         v.description('The agent that owns this multi-agent streaming event.'),
       ),
     ),
@@ -59529,7 +61900,7 @@ export const BetaResponseMCPCallFailedEventSchema = v.pipe(
   v.object({
     agent: v.optional(
       v.pipe(
-        v.union([BetaAgentTagSchema, v.nullable(v.null())]),
+        v.union([BetaAgentTagSchema, v.null()]),
         v.description('The agent that owns this multi-agent streaming event.'),
       ),
     ),
@@ -59558,7 +61929,7 @@ export const BetaResponseMCPCallCompletedEventSchema = v.pipe(
   v.object({
     agent: v.optional(
       v.pipe(
-        v.union([BetaAgentTagSchema, v.nullable(v.null())]),
+        v.union([BetaAgentTagSchema, v.null()]),
         v.description('The agent that owns this multi-agent streaming event.'),
       ),
     ),
@@ -59587,7 +61958,7 @@ export const BetaResponseMCPCallArgumentsDoneEventSchema = v.pipe(
   v.object({
     agent: v.optional(
       v.pipe(
-        v.union([BetaAgentTagSchema, v.nullable(v.null())]),
+        v.union([BetaAgentTagSchema, v.null()]),
         v.description('The agent that owns this multi-agent streaming event.'),
       ),
     ),
@@ -59623,7 +61994,7 @@ export const BetaResponseMCPCallArgumentsDeltaEventSchema = v.pipe(
   v.object({
     agent: v.optional(
       v.pipe(
-        v.union([BetaAgentTagSchema, v.nullable(v.null())]),
+        v.union([BetaAgentTagSchema, v.null()]),
         v.description('The agent that owns this multi-agent streaming event.'),
       ),
     ),
@@ -59663,7 +62034,7 @@ export const BetaResponseImageGenCallPartialImageEventSchema = v.pipe(
   v.object({
     agent: v.optional(
       v.pipe(
-        v.union([BetaAgentTagSchema, v.nullable(v.null())]),
+        v.union([BetaAgentTagSchema, v.null()]),
         v.description('The agent that owns this multi-agent streaming event.'),
       ),
     ),
@@ -59715,7 +62086,7 @@ export const BetaResponseImageGenCallInProgressEventSchema = v.pipe(
   v.object({
     agent: v.optional(
       v.pipe(
-        v.union([BetaAgentTagSchema, v.nullable(v.null())]),
+        v.union([BetaAgentTagSchema, v.null()]),
         v.description('The agent that owns this multi-agent streaming event.'),
       ),
     ),
@@ -59747,7 +62118,7 @@ export const BetaResponseImageGenCallGeneratingEventSchema = v.pipe(
   v.object({
     agent: v.optional(
       v.pipe(
-        v.union([BetaAgentTagSchema, v.nullable(v.null())]),
+        v.union([BetaAgentTagSchema, v.null()]),
         v.description('The agent that owns this multi-agent streaming event.'),
       ),
     ),
@@ -59781,7 +62152,7 @@ export const BetaResponseImageGenCallCompletedEventSchema = v.pipe(
   v.object({
     agent: v.optional(
       v.pipe(
-        v.union([BetaAgentTagSchema, v.nullable(v.null())]),
+        v.union([BetaAgentTagSchema, v.null()]),
         v.description('The agent that owns this multi-agent streaming event.'),
       ),
     ),
@@ -59815,7 +62186,7 @@ export const BetaResponseReasoningTextDoneEventSchema = v.pipe(
   v.object({
     agent: v.optional(
       v.pipe(
-        v.union([BetaAgentTagSchema, v.nullable(v.null())]),
+        v.union([BetaAgentTagSchema, v.null()]),
         v.description('The agent that owns this multi-agent streaming event.'),
       ),
     ),
@@ -59852,7 +62223,7 @@ export const BetaResponseReasoningTextDeltaEventSchema = v.pipe(
   v.object({
     agent: v.optional(
       v.pipe(
-        v.union([BetaAgentTagSchema, v.nullable(v.null())]),
+        v.union([BetaAgentTagSchema, v.null()]),
         v.description('The agent that owns this multi-agent streaming event.'),
       ),
     ),
@@ -59892,7 +62263,7 @@ export const BetaResponseReasoningSummaryTextDoneEventSchema = v.pipe(
   v.object({
     agent: v.optional(
       v.pipe(
-        v.union([BetaAgentTagSchema, v.nullable(v.null())]),
+        v.union([BetaAgentTagSchema, v.null()]),
         v.description('The agent that owns this multi-agent streaming event.'),
       ),
     ),
@@ -59929,7 +62300,7 @@ export const BetaResponseReasoningSummaryTextDeltaEventSchema = v.pipe(
   v.object({
     agent: v.optional(
       v.pipe(
-        v.union([BetaAgentTagSchema, v.nullable(v.null())]),
+        v.union([BetaAgentTagSchema, v.null()]),
         v.description('The agent that owns this multi-agent streaming event.'),
       ),
     ),
@@ -59966,7 +62337,7 @@ export const BetaResponseReasoningSummaryPartDoneEventSchema = v.pipe(
   v.object({
     agent: v.optional(
       v.pipe(
-        v.union([BetaAgentTagSchema, v.nullable(v.null())]),
+        v.union([BetaAgentTagSchema, v.null()]),
         v.description('The agent that owns this multi-agent streaming event.'),
       ),
     ),
@@ -60020,7 +62391,7 @@ export const BetaResponseReasoningSummaryPartAddedEventSchema = v.pipe(
   v.object({
     agent: v.optional(
       v.pipe(
-        v.union([BetaAgentTagSchema, v.nullable(v.null())]),
+        v.union([BetaAgentTagSchema, v.null()]),
         v.description('The agent that owns this multi-agent streaming event.'),
       ),
     ),
@@ -60091,7 +62462,7 @@ export const BetaResponseTextDoneEventSchema = v.pipe(
   v.object({
     agent: v.optional(
       v.pipe(
-        v.union([BetaAgentTagSchema, v.nullable(v.null())]),
+        v.union([BetaAgentTagSchema, v.null()]),
         v.description('The agent that owns this multi-agent streaming event.'),
       ),
     ),
@@ -60130,7 +62501,7 @@ export const BetaResponseTextDeltaEventSchema = v.pipe(
   v.object({
     agent: v.optional(
       v.pipe(
-        v.union([BetaAgentTagSchema, v.nullable(v.null())]),
+        v.union([BetaAgentTagSchema, v.null()]),
         v.description('The agent that owns this multi-agent streaming event.'),
       ),
     ),
@@ -60169,7 +62540,7 @@ export const BetaResponseRefusalDoneEventSchema = v.pipe(
   v.object({
     agent: v.optional(
       v.pipe(
-        v.union([BetaAgentTagSchema, v.nullable(v.null())]),
+        v.union([BetaAgentTagSchema, v.null()]),
         v.description('The agent that owns this multi-agent streaming event.'),
       ),
     ),
@@ -60204,7 +62575,7 @@ export const BetaResponseRefusalDeltaEventSchema = v.pipe(
   v.object({
     agent: v.optional(
       v.pipe(
-        v.union([BetaAgentTagSchema, v.nullable(v.null())]),
+        v.union([BetaAgentTagSchema, v.null()]),
         v.description('The agent that owns this multi-agent streaming event.'),
       ),
     ),
@@ -60241,7 +62612,7 @@ export const BetaResponseOutputItemDoneEventSchema = v.pipe(
   v.object({
     agent: v.optional(
       v.pipe(
-        v.union([BetaAgentTagSchema, v.nullable(v.null())]),
+        v.union([BetaAgentTagSchema, v.null()]),
         v.description('The agent that owns this multi-agent streaming event.'),
       ),
     ),
@@ -60270,7 +62641,7 @@ export const BetaResponseOutputItemAddedEventSchema = v.pipe(
   v.object({
     agent: v.optional(
       v.pipe(
-        v.union([BetaAgentTagSchema, v.nullable(v.null())]),
+        v.union([BetaAgentTagSchema, v.null()]),
         v.description('The agent that owns this multi-agent streaming event.'),
       ),
     ),
@@ -60304,7 +62675,7 @@ export const BetaResponseInProgressEventSchema = v.pipe(
   v.object({
     agent: v.optional(
       v.pipe(
-        v.union([BetaAgentTagSchema, v.nullable(v.null())]),
+        v.union([BetaAgentTagSchema, v.null()]),
         v.description('The agent that owns this multi-agent streaming event.'),
       ),
     ),
@@ -60530,7 +62901,7 @@ export const BetaResponseFunctionCallArgumentsDoneEventSchema = v.pipe(
   v.object({
     agent: v.optional(
       v.pipe(
-        v.union([BetaAgentTagSchema, v.nullable(v.null())]),
+        v.union([BetaAgentTagSchema, v.null()]),
         v.description('The agent that owns this multi-agent streaming event.'),
       ),
     ),
@@ -60557,7 +62928,7 @@ export const BetaResponseFunctionCallArgumentsDeltaEventSchema = v.pipe(
   v.object({
     agent: v.optional(
       v.pipe(
-        v.union([BetaAgentTagSchema, v.nullable(v.null())]),
+        v.union([BetaAgentTagSchema, v.null()]),
         v.description('The agent that owns this multi-agent streaming event.'),
       ),
     ),
@@ -60594,7 +62965,7 @@ export const BetaResponseFileSearchCallSearchingEventSchema = v.pipe(
   v.object({
     agent: v.optional(
       v.pipe(
-        v.union([BetaAgentTagSchema, v.nullable(v.null())]),
+        v.union([BetaAgentTagSchema, v.null()]),
         v.description('The agent that owns this multi-agent streaming event.'),
       ),
     ),
@@ -60626,7 +62997,7 @@ export const BetaResponseFileSearchCallInProgressEventSchema = v.pipe(
   v.object({
     agent: v.optional(
       v.pipe(
-        v.union([BetaAgentTagSchema, v.nullable(v.null())]),
+        v.union([BetaAgentTagSchema, v.null()]),
         v.description('The agent that owns this multi-agent streaming event.'),
       ),
     ),
@@ -60658,7 +63029,7 @@ export const BetaResponseFileSearchCallCompletedEventSchema = v.pipe(
   v.object({
     agent: v.optional(
       v.pipe(
-        v.union([BetaAgentTagSchema, v.nullable(v.null())]),
+        v.union([BetaAgentTagSchema, v.null()]),
         v.description('The agent that owns this multi-agent streaming event.'),
       ),
     ),
@@ -60690,17 +63061,14 @@ export const BetaResponseErrorEventSchema = v.pipe(
   v.object({
     agent: v.optional(
       v.pipe(
-        v.union([BetaAgentTagSchema, v.nullable(v.null())]),
+        v.union([BetaAgentTagSchema, v.null()]),
         v.description('The agent that owns this multi-agent streaming event.'),
       ),
     ),
     type: v.pipe(v.literal('error'), v.description('The type of the event. Always `error`.\n')),
-    code: v.union([v.pipe(v.string(), v.description('The error code.\n')), v.nullable(v.null())]),
+    code: v.union([v.pipe(v.string(), v.description('The error code.\n')), v.null()]),
     message: v.pipe(v.string(), v.description('The error message.\n')),
-    param: v.union([
-      v.pipe(v.string(), v.description('The error parameter.\n')),
-      v.nullable(v.null()),
-    ]),
+    param: v.union([v.pipe(v.string(), v.description('The error parameter.\n')), v.null()]),
     sequence_number: v.pipe(
       v.pipe(v.number(), v.integer()),
       v.description('The sequence number of this event.'),
@@ -60715,7 +63083,7 @@ export const BetaResponseCreatedEventSchema = v.pipe(
   v.object({
     agent: v.optional(
       v.pipe(
-        v.union([BetaAgentTagSchema, v.nullable(v.null())]),
+        v.union([BetaAgentTagSchema, v.null()]),
         v.description('The agent that owns this multi-agent streaming event.'),
       ),
     ),
@@ -60735,9 +63103,15 @@ export const BetaResponseCreatedEventSchema = v.pipe(
 export type BetaResponseCreatedEvent = v.InferOutput<typeof BetaResponseCreatedEventSchema>
 
 export const BetaOutputContentSchema = v.union([
-  BetaOutputTextContentSchema,
-  BetaRefusalContentSchema,
-  BetaReasoningTextContentSchema,
+  v.intersect([
+    BetaOutputTextContentSchema,
+    v.object({ type: v.literal('BetaOutputTextContent') }),
+  ]),
+  v.intersect([BetaRefusalContentSchema, v.object({ type: v.literal('BetaRefusalContent') })]),
+  v.intersect([
+    BetaReasoningTextContentSchema,
+    v.object({ type: v.literal('BetaReasoningTextContent') }),
+  ]),
 ])
 
 export type BetaOutputContent = v.InferOutput<typeof BetaOutputContentSchema>
@@ -60746,7 +63120,7 @@ export const BetaResponseContentPartDoneEventSchema = v.pipe(
   v.object({
     agent: v.optional(
       v.pipe(
-        v.union([BetaAgentTagSchema, v.nullable(v.null())]),
+        v.union([BetaAgentTagSchema, v.null()]),
         v.description('The agent that owns this multi-agent streaming event.'),
       ),
     ),
@@ -60783,7 +63157,7 @@ export const BetaResponseContentPartAddedEventSchema = v.pipe(
   v.object({
     agent: v.optional(
       v.pipe(
-        v.union([BetaAgentTagSchema, v.nullable(v.null())]),
+        v.union([BetaAgentTagSchema, v.null()]),
         v.description('The agent that owns this multi-agent streaming event.'),
       ),
     ),
@@ -60820,7 +63194,7 @@ export const BetaResponseCompletedEventSchema = v.pipe(
   v.object({
     agent: v.optional(
       v.pipe(
-        v.union([BetaAgentTagSchema, v.nullable(v.null())]),
+        v.union([BetaAgentTagSchema, v.null()]),
         v.description('The agent that owns this multi-agent streaming event.'),
       ),
     ),
@@ -60874,7 +63248,7 @@ export const BetaResponseCodeInterpreterCallInterpretingEventSchema = v.pipe(
   v.object({
     agent: v.optional(
       v.pipe(
-        v.union([BetaAgentTagSchema, v.nullable(v.null())]),
+        v.union([BetaAgentTagSchema, v.null()]),
         v.description('The agent that owns this multi-agent streaming event.'),
       ),
     ),
@@ -60908,7 +63282,7 @@ export const BetaResponseCodeInterpreterCallInProgressEventSchema = v.pipe(
   v.object({
     agent: v.optional(
       v.pipe(
-        v.union([BetaAgentTagSchema, v.nullable(v.null())]),
+        v.union([BetaAgentTagSchema, v.null()]),
         v.description('The agent that owns this multi-agent streaming event.'),
       ),
     ),
@@ -60942,7 +63316,7 @@ export const BetaResponseCodeInterpreterCallCompletedEventSchema = v.pipe(
   v.object({
     agent: v.optional(
       v.pipe(
-        v.union([BetaAgentTagSchema, v.nullable(v.null())]),
+        v.union([BetaAgentTagSchema, v.null()]),
         v.description('The agent that owns this multi-agent streaming event.'),
       ),
     ),
@@ -60976,7 +63350,7 @@ export const BetaResponseCodeInterpreterCallCodeDoneEventSchema = v.pipe(
   v.object({
     agent: v.optional(
       v.pipe(
-        v.union([BetaAgentTagSchema, v.nullable(v.null())]),
+        v.union([BetaAgentTagSchema, v.null()]),
         v.description('The agent that owns this multi-agent streaming event.'),
       ),
     ),
@@ -61014,7 +63388,7 @@ export const BetaResponseCodeInterpreterCallCodeDeltaEventSchema = v.pipe(
   v.object({
     agent: v.optional(
       v.pipe(
-        v.union([BetaAgentTagSchema, v.nullable(v.null())]),
+        v.union([BetaAgentTagSchema, v.null()]),
         v.description('The agent that owns this multi-agent streaming event.'),
       ),
     ),
@@ -61049,22 +63423,25 @@ export type BetaResponseCodeInterpreterCallCodeDeltaEvent = v.InferOutput<
 >
 
 export const BetaResponseAudioTranscriptDoneEventSchema = v.pipe(
-  v.object({
-    agent: v.optional(
-      v.pipe(
-        v.union([BetaAgentTagSchema, v.nullable(v.null())]),
-        v.description('The agent that owns this multi-agent streaming event.'),
+  v.pipe(
+    v.looseObject({
+      agent: v.optional(
+        v.pipe(
+          v.union([BetaAgentTagSchema, v.null()]),
+          v.description('The agent that owns this multi-agent streaming event.'),
+        ),
       ),
-    ),
-    type: v.pipe(
-      v.literal('response.audio.transcript.done'),
-      v.description('The type of the event. Always `response.audio.transcript.done`.\n'),
-    ),
-    sequence_number: v.pipe(
-      v.pipe(v.number(), v.integer()),
-      v.description('The sequence number of this event.'),
-    ),
-  }),
+      type: v.pipe(
+        v.literal('response.audio.transcript.done'),
+        v.description('The type of the event. Always `response.audio.transcript.done`.\n'),
+      ),
+      sequence_number: v.pipe(
+        v.pipe(v.number(), v.integer()),
+        v.description('The sequence number of this event.'),
+      ),
+    }),
+    v.check((input) => ['response_id'].every((key) => key in input)),
+  ),
   v.description('Emitted when the full audio transcript is completed.'),
 )
 
@@ -61073,23 +63450,26 @@ export type BetaResponseAudioTranscriptDoneEvent = v.InferOutput<
 >
 
 export const BetaResponseAudioTranscriptDeltaEventSchema = v.pipe(
-  v.object({
-    agent: v.optional(
-      v.pipe(
-        v.union([BetaAgentTagSchema, v.nullable(v.null())]),
-        v.description('The agent that owns this multi-agent streaming event.'),
+  v.pipe(
+    v.looseObject({
+      agent: v.optional(
+        v.pipe(
+          v.union([BetaAgentTagSchema, v.null()]),
+          v.description('The agent that owns this multi-agent streaming event.'),
+        ),
       ),
-    ),
-    type: v.pipe(
-      v.literal('response.audio.transcript.delta'),
-      v.description('The type of the event. Always `response.audio.transcript.delta`.\n'),
-    ),
-    delta: v.pipe(v.string(), v.description('The partial transcript of the audio response.\n')),
-    sequence_number: v.pipe(
-      v.pipe(v.number(), v.integer()),
-      v.description('The sequence number of this event.'),
-    ),
-  }),
+      type: v.pipe(
+        v.literal('response.audio.transcript.delta'),
+        v.description('The type of the event. Always `response.audio.transcript.delta`.\n'),
+      ),
+      delta: v.pipe(v.string(), v.description('The partial transcript of the audio response.\n')),
+      sequence_number: v.pipe(
+        v.pipe(v.number(), v.integer()),
+        v.description('The sequence number of this event.'),
+      ),
+    }),
+    v.check((input) => ['response_id'].every((key) => key in input)),
+  ),
   v.description('Emitted when there is a partial transcript of audio.'),
 )
 
@@ -61098,22 +63478,25 @@ export type BetaResponseAudioTranscriptDeltaEvent = v.InferOutput<
 >
 
 export const BetaResponseAudioDoneEventSchema = v.pipe(
-  v.object({
-    agent: v.optional(
-      v.pipe(
-        v.union([BetaAgentTagSchema, v.nullable(v.null())]),
-        v.description('The agent that owns this multi-agent streaming event.'),
+  v.pipe(
+    v.looseObject({
+      agent: v.optional(
+        v.pipe(
+          v.union([BetaAgentTagSchema, v.null()]),
+          v.description('The agent that owns this multi-agent streaming event.'),
+        ),
       ),
-    ),
-    type: v.pipe(
-      v.literal('response.audio.done'),
-      v.description('The type of the event. Always `response.audio.done`.\n'),
-    ),
-    sequence_number: v.pipe(
-      v.pipe(v.number(), v.integer()),
-      v.description('The sequence number of the delta.\n'),
-    ),
-  }),
+      type: v.pipe(
+        v.literal('response.audio.done'),
+        v.description('The type of the event. Always `response.audio.done`.\n'),
+      ),
+      sequence_number: v.pipe(
+        v.pipe(v.number(), v.integer()),
+        v.description('The sequence number of the delta.\n'),
+      ),
+    }),
+    v.check((input) => ['response_id'].every((key) => key in input)),
+  ),
   v.description('Emitted when the audio response is complete.'),
 )
 
@@ -61123,7 +63506,7 @@ export const BetaResponseAudioDeltaEventSchema = v.pipe(
   v.object({
     agent: v.optional(
       v.pipe(
-        v.union([BetaAgentTagSchema, v.nullable(v.null())]),
+        v.union([BetaAgentTagSchema, v.null()]),
         v.description('The agent that owns this multi-agent streaming event.'),
       ),
     ),
@@ -61146,7 +63529,7 @@ export const BetaResponseIncompleteEventSchema = v.pipe(
   v.object({
     agent: v.optional(
       v.pipe(
-        v.union([BetaAgentTagSchema, v.nullable(v.null())]),
+        v.union([BetaAgentTagSchema, v.null()]),
         v.description('The agent that owns this multi-agent streaming event.'),
       ),
     ),
@@ -61171,7 +63554,7 @@ export const BetaResponseFailedEventSchema = v.pipe(
   v.object({
     agent: v.optional(
       v.pipe(
-        v.union([BetaAgentTagSchema, v.nullable(v.null())]),
+        v.union([BetaAgentTagSchema, v.null()]),
         v.description('The agent that owns this multi-agent streaming event.'),
       ),
     ),
@@ -61194,7 +63577,7 @@ export const BetaResponseWebSearchCallCompletedEventSchema = v.pipe(
   v.object({
     agent: v.optional(
       v.pipe(
-        v.union([BetaAgentTagSchema, v.nullable(v.null())]),
+        v.union([BetaAgentTagSchema, v.null()]),
         v.description('The agent that owns this multi-agent streaming event.'),
       ),
     ),
@@ -61226,7 +63609,7 @@ export const BetaResponseWebSearchCallSearchingEventSchema = v.pipe(
   v.object({
     agent: v.optional(
       v.pipe(
-        v.union([BetaAgentTagSchema, v.nullable(v.null())]),
+        v.union([BetaAgentTagSchema, v.null()]),
         v.description('The agent that owns this multi-agent streaming event.'),
       ),
     ),
@@ -61258,7 +63641,7 @@ export const BetaResponseWebSearchCallInProgressEventSchema = v.pipe(
   v.object({
     agent: v.optional(
       v.pipe(
-        v.union([BetaAgentTagSchema, v.nullable(v.null())]),
+        v.union([BetaAgentTagSchema, v.null()]),
         v.description('The agent that owns this multi-agent streaming event.'),
       ),
     ),
@@ -61290,7 +63673,7 @@ export const BetaUserMessageItemParamSchema = v.object({
   agent: v.optional(
     v.union([
       v.pipe(BetaAgentTagParamSchema, v.description('The agent that produced this item.')),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   ),
   id: v.optional(
@@ -61300,7 +63683,7 @@ export const BetaUserMessageItemParamSchema = v.object({
         v.description('The unique ID of this message item.'),
         v.metadata({ examples: ['msg_123'] }),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   ),
   type: v.pipe(
@@ -61316,9 +63699,18 @@ export const BetaUserMessageItemParamSchema = v.object({
       v.array(
         v.pipe(
           v.union([
-            BetaInputTextContentParamSchema,
-            BetaInputImageContentParamAutoParamSchema,
-            BetaInputFileContentParamSchema,
+            v.intersect([
+              BetaInputTextContentParamSchema,
+              v.object({ type: v.literal('BetaInputTextContentParam') }),
+            ]),
+            v.intersect([
+              BetaInputImageContentParamAutoParamSchema,
+              v.object({ type: v.literal('BetaInputImageContentParamAutoParam') }),
+            ]),
+            v.intersect([
+              BetaInputFileContentParamSchema,
+              v.object({ type: v.literal('BetaInputFileContentParam') }),
+            ]),
           ]),
           v.description('A piece of message content, such as text, an image, or a file.'),
         ),
@@ -61331,10 +63723,7 @@ export const BetaUserMessageItemParamSchema = v.object({
     v.description('The message content, as an array of content parts.'),
   ),
   status: v.optional(
-    v.union([
-      v.pipe(v.string(), v.description('The status of the message item.')),
-      v.nullable(v.null()),
-    ]),
+    v.union([v.pipe(v.string(), v.description('The status of the message item.')), v.null()]),
   ),
 })
 
@@ -61707,7 +64096,7 @@ export const BetaErrorPayloadSchema = v.pipe(
     type: v.pipe(v.string(), v.description('The error type that was emitted.')),
     code: v.union([
       v.pipe(v.string(), v.description('The error code that was emitted, if any.')),
-      v.nullable(v.null()),
+      v.null(),
     ]),
     message: v.pipe(
       v.string(),
@@ -61718,7 +64107,7 @@ export const BetaErrorPayloadSchema = v.pipe(
         v.string(),
         v.description('The parameter name that was associated with the error, if any.'),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
     headers: v.optional(
       v.pipe(
@@ -61740,7 +64129,7 @@ export const BetaResponseWsErrorSchema = v.pipe(
   v.object({
     agent: v.optional(
       v.pipe(
-        v.union([BetaAgentTagSchema, v.nullable(v.null())]),
+        v.union([BetaAgentTagSchema, v.null()]),
         v.description('The agent that owns this multi-agent streaming event.'),
       ),
     ),
@@ -62950,7 +65339,7 @@ export const BetaResponsePromptCacheOptionsParamSchema = v.pipe(
           ),
           v.metadata({ examples: ['resp_123'] }),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     }),
   ),
@@ -62982,14 +65371,14 @@ export const BetaModerationPolicyParamSchema = v.pipe(
           BetaModerationConfigParamSchema,
           v.description('The moderation policy for the response input.'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
       output: v.union([
         v.pipe(
           BetaModerationConfigParamSchema,
           v.description('The moderation policy for the response output.'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     }),
   ),
@@ -63012,7 +65401,7 @@ export const BetaModerationParamSchema = v.pipe(
           BetaModerationPolicyParamSchema,
           v.description('The policy to apply to moderated response input and output.'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
   }),
@@ -63063,7 +65452,7 @@ export const BetaResponseStreamOptionsSchema = v.union([
     ),
     v.description('Options for streaming responses. Only set this when you set `stream: true`.\n'),
   ),
-  v.nullable(v.null()),
+  v.null(),
 ])
 
 export type BetaResponseStreamOptions = v.InferOutput<typeof BetaResponseStreamOptionsSchema>
@@ -63079,7 +65468,7 @@ export const BetaContextManagementParamSchema = v.object({
         v.pipe(v.number(), v.integer(), v.minValue(1000)),
         v.description('Token threshold at which compaction should be triggered for this entry.'),
       ),
-      v.nullable(v.null()),
+      v.null(),
     ]),
   ),
 })
@@ -63123,11 +65512,11 @@ export const BetaCreateResponseSchema = v.intersect([
               "The truncation strategy to use for the model response.\n- `auto`: If the input to this Response exceeds\n  the model's context window size, the model will truncate the\n  response to fit the context window by dropping items from the beginning of the conversation.\n  On some models, trimming can begin earlier because the API subtracts the model's\n  maximum output allowance from its input limit, even if you set a lower `max_output_tokens`.\n- `disabled` (default): If the input size will exceed the context window\n  size for a model, the request will fail with a 400 error.\n",
             ),
           ),
-          v.nullable(v.null()),
+          v.null(),
         ]),
         v.metadata({ deprecated: true }),
       ),
-      reasoning: v.union([BetaReasoningSchema, v.nullable(v.null())]),
+      reasoning: v.union([BetaReasoningSchema, v.null()]),
       input: BetaInputParamSchema,
       include: v.union([
         v.pipe(
@@ -63136,14 +65525,14 @@ export const BetaCreateResponseSchema = v.intersect([
             'Specify additional output data to include in the model response. Currently supported values are:\n- `web_search_call.action.sources`: Include the sources of the web search tool call.\n- `code_interpreter_call.outputs`: Includes the outputs of python code execution in code interpreter tool call items.\n- `computer_call_output.output.image_url`: Include image urls from the computer call output.\n- `file_search_call.results`: Include the search results of the file search tool call.\n- `message.input_image.image_url`: Include image urls from the input message.\n- `message.output_text.logprobs`: Include logprobs with assistant messages.\n- `reasoning.encrypted_content`: Includes an encrypted version of reasoning tokens in reasoning item outputs. This enables reasoning items to be used in multi-turn conversations when using the Responses API statelessly (like when the `store` parameter is set to `false`, or when an organization is enrolled in the zero data retention program).',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
       parallel_tool_calls: v.union([
         v.pipe(
           v.optional(v.boolean(), true),
           v.description('Whether to allow the model to run tool calls in parallel.\n'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
       store: v.union([
         v.pipe(
@@ -63152,7 +65541,7 @@ export const BetaCreateResponseSchema = v.intersect([
             'Whether to store the generated model response for later retrieval via\nAPI.\nDefaults to true when omitted.\nIf set to true, response data will be stored for at least 30 days, subject to the [data retention exceptions](https://developers.openai.com/api/docs/guides/your-data#v1responses).\n',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
       instructions: v.union([
         v.pipe(
@@ -63161,7 +65550,7 @@ export const BetaCreateResponseSchema = v.intersect([
             "A system (or developer) message inserted into the model's context.\n\nWhen using along with `previous_response_id`, the instructions from a previous\nresponse will not be carried over to the next response. This makes it simple\nto swap out system (or developer) messages in new responses.\n",
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
       moderation: v.union([
         v.pipe(
@@ -63170,7 +65559,7 @@ export const BetaCreateResponseSchema = v.intersect([
             'Configuration for running moderation on the input and output of this response.\n',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
       background_options: v.pipe(
         BetaBackgroundOptionsParamSchema,
@@ -63185,17 +65574,17 @@ export const BetaCreateResponseSchema = v.intersect([
             'If set to true, the model response data will be streamed to the client\nas it is generated using [server-sent events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events#Event_stream_format).\nSee the [Streaming section below](https://developers.openai.com/api/reference/resources/responses/streaming-events)\nfor more information.\n',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
       stream_options: BetaResponseStreamOptionsSchema,
-      conversation: v.union([BetaConversationParamSchema, v.nullable(v.null())]),
+      conversation: v.union([BetaConversationParamSchema, v.null()]),
       context_management: v.union([
         v.pipe(
           v.pipe(v.array(BetaContextManagementParamSchema), v.minLength(1)),
           v.description('Context management configuration for this request.\n'),
           v.metadata({ examples: [[{ type: 'compaction', compact_threshold: 1000 }]] }),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
       max_output_tokens: v.union([
         v.pipe(
@@ -63204,14 +65593,14 @@ export const BetaCreateResponseSchema = v.intersect([
             'An upper bound for the number of tokens that can be generated for a response, including visible output tokens and [reasoning tokens](https://developers.openai.com/api/docs/guides/reasoning).\n',
           ),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
       multi_agent: v.union([
         v.pipe(
           BetaMultiAgentParamSchema,
           v.description('Configuration for server-hosted multi-agent execution.'),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     }),
   ),
@@ -63436,7 +65825,16 @@ export const InferenceServiceUnavailableResponse = {
 
 export const getAssistantsHandler = defineHandler({
   query: v.object({
-    limit: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '20'),
+    limit: v.optional(
+      v.pipe(
+        v.string(),
+        v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.transform((input) => Number(input)),
+        v.number(),
+        v.safeInteger(),
+      ),
+      '20',
+    ),
     order: v.optional(v.picklist(['asc', 'desc']), 'desc'),
     after: v.optional(v.string()),
     before: v.optional(v.string()),
@@ -63535,7 +65933,16 @@ export const postAudioTranscriptionsHandler = defineHandler({
     ),
     response_format: v.optional(AudioResponseFormatSchema),
     temperature: v.pipe(
-      v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.finite()), '0'),
+      v.optional(
+        v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.finite(),
+        ),
+        '0',
+      ),
       v.description(
         'The sampling temperature, between 0 and 1. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic. If set to 0, the model will use [log probability](https://en.wikipedia.org/wiki/Log_probability) to automatically increase the temperature until certain thresholds are hit.\n',
       ),
@@ -63587,7 +65994,7 @@ export const postAudioTranscriptionsHandler = defineHandler({
             v.pipe(
               v.unknown(),
               v.transform((input) => (input === 'null' ? null : input)),
-              v.nullable(v.null()),
+              v.null(),
             ),
           ]),
         ),
@@ -63612,7 +66019,13 @@ export const postAudioTranscriptionsHandler = defineHandler({
               ),
               prefix_padding_ms: v.pipe(
                 v.optional(
-                  v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
+                  v.pipe(
+                    v.string(),
+                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                    v.transform((input) => Number(input)),
+                    v.number(),
+                    v.safeInteger(),
+                  ),
                   '300',
                 ),
                 v.description(
@@ -63621,7 +66034,13 @@ export const postAudioTranscriptionsHandler = defineHandler({
               ),
               silence_duration_ms: v.pipe(
                 v.optional(
-                  v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
+                  v.pipe(
+                    v.string(),
+                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                    v.transform((input) => Number(input)),
+                    v.number(),
+                    v.safeInteger(),
+                  ),
                   '200',
                 ),
                 v.description(
@@ -63629,7 +66048,16 @@ export const postAudioTranscriptionsHandler = defineHandler({
                 ),
               ),
               threshold: v.pipe(
-                v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.finite()), '0.5'),
+                v.optional(
+                  v.pipe(
+                    v.string(),
+                    v.regex(/^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/),
+                    v.transform((input) => Number(input)),
+                    v.number(),
+                    v.finite(),
+                  ),
+                  '0.5',
+                ),
                 v.description(
                   'Sensitivity threshold (0.0 to 1.0) for voice activity detection. A \nhigher threshold will require louder audio to activate the model, and \nthus might perform better in noisy environments.\n',
                 ),
@@ -63643,7 +66071,7 @@ export const postAudioTranscriptionsHandler = defineHandler({
         v.pipe(
           v.unknown(),
           v.transform((input) => (input === 'null' ? null : input)),
-          v.nullable(v.null()),
+          v.null(),
         ),
       ]),
     ),
@@ -63711,7 +66139,16 @@ export const postAudioTranslationsHandler = defineHandler({
       ),
     ),
     temperature: v.pipe(
-      v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.finite()), '0'),
+      v.optional(
+        v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.finite(),
+        ),
+        '0',
+      ),
       v.description(
         'The sampling temperature, between 0 and 1. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic. If set to 0, the model will use [log probability](https://en.wikipedia.org/wiki/Log_probability) to automatically increase the temperature until certain thresholds are hit.\n',
       ),
@@ -63726,7 +66163,16 @@ export const postAudioTranslationsHandler = defineHandler({
 export const getAudioVoiceConsentsHandler = defineHandler({
   query: v.object({
     after: v.optional(v.string()),
-    limit: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '20'),
+    limit: v.optional(
+      v.pipe(
+        v.string(),
+        v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.transform((input) => Number(input)),
+        v.number(),
+        v.safeInteger(),
+      ),
+      '20',
+    ),
   }),
   response: VoiceConsentListResourceSchema,
 })
@@ -63766,7 +66212,16 @@ export const deleteAudioVoicesVoiceIdHandler = defineHandler({
 export const getBatchesHandler = defineHandler({
   query: v.object({
     after: v.optional(v.string()),
-    limit: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '20'),
+    limit: v.optional(
+      v.pipe(
+        v.string(),
+        v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.transform((input) => Number(input)),
+        v.number(),
+        v.safeInteger(),
+      ),
+      '20',
+    ),
   }),
   response: ListBatchesResponseSchema,
 })
@@ -63804,14 +66259,23 @@ export const getChatCompletionsHandler = defineHandler({
             v.pipe(
               v.unknown(),
               v.transform((input) => (input === 'null' ? null : input)),
-              v.nullable(v.null()),
+              v.null(),
             ),
           ]),
         ),
       ),
     ),
     after: v.optional(v.string()),
-    limit: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '20'),
+    limit: v.optional(
+      v.pipe(
+        v.string(),
+        v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.transform((input) => Number(input)),
+        v.number(),
+        v.safeInteger(),
+      ),
+      '20',
+    ),
     order: v.optional(v.picklist(['asc', 'desc']), 'asc'),
   }),
   response: ChatCompletionListSchema,
@@ -63842,7 +66306,16 @@ export const getChatCompletionsCompletionIdMessagesHandler = defineHandler({
   param: v.object({ completion_id: v.string() }),
   query: v.object({
     after: v.optional(v.string()),
-    limit: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '20'),
+    limit: v.optional(
+      v.pipe(
+        v.string(),
+        v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.transform((input) => Number(input)),
+        v.number(),
+        v.safeInteger(),
+      ),
+      '20',
+    ),
     order: v.optional(v.picklist(['asc', 'desc']), 'asc'),
   }),
   response: ChatCompletionMessageListSchema,
@@ -63855,7 +66328,16 @@ export const postCompletionsHandler = defineHandler({
 
 export const getContainersHandler = defineHandler({
   query: v.object({
-    limit: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '20'),
+    limit: v.optional(
+      v.pipe(
+        v.string(),
+        v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.transform((input) => Number(input)),
+        v.number(),
+        v.safeInteger(),
+      ),
+      '20',
+    ),
     order: v.optional(v.picklist(['asc', 'desc']), 'desc'),
     after: v.optional(v.string()),
     name: v.optional(v.string()),
@@ -63885,7 +66367,16 @@ export const deleteContainersContainerIdHandler = defineHandler({
 export const getContainersContainerIdFilesHandler = defineHandler({
   param: v.object({ container_id: v.string() }),
   query: v.object({
-    limit: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '20'),
+    limit: v.optional(
+      v.pipe(
+        v.string(),
+        v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.transform((input) => Number(input)),
+        v.number(),
+        v.safeInteger(),
+      ),
+      '20',
+    ),
     order: v.optional(v.picklist(['asc', 'desc']), 'desc'),
     after: v.optional(v.string()),
   }),
@@ -63920,7 +66411,16 @@ export const getContainersContainerIdFilesFileIdContentHandler = defineHandler({
 export const getConversationsConversationIdItemsHandler = defineHandler({
   param: v.object({ conversation_id: v.pipe(v.string(), v.metadata({ examples: ['conv_123'] })) }),
   query: v.object({
-    limit: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '20'),
+    limit: v.optional(
+      v.pipe(
+        v.string(),
+        v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.transform((input) => Number(input)),
+        v.number(),
+        v.safeInteger(),
+      ),
+      '20',
+    ),
     order: v.optional(v.picklist(['asc', 'desc'])),
     after: v.optional(v.string()),
     include: v.optional(
@@ -64010,7 +66510,16 @@ export const postEmbeddingsHandler = defineHandler({
 export const getEvalsHandler = defineHandler({
   query: v.object({
     after: v.optional(v.string()),
-    limit: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '20'),
+    limit: v.optional(
+      v.pipe(
+        v.string(),
+        v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.transform((input) => Number(input)),
+        v.number(),
+        v.safeInteger(),
+      ),
+      '20',
+    ),
     order: v.optional(v.picklist(['asc', 'desc']), 'asc'),
     order_by: v.optional(v.picklist(['created_at', 'updated_at']), 'created_at'),
   }),
@@ -64051,7 +66560,16 @@ export const getEvalsEvalIdRunsHandler = defineHandler({
   param: v.object({ eval_id: v.string() }),
   query: v.object({
     after: v.optional(v.string()),
-    limit: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '20'),
+    limit: v.optional(
+      v.pipe(
+        v.string(),
+        v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.transform((input) => Number(input)),
+        v.number(),
+        v.safeInteger(),
+      ),
+      '20',
+    ),
     order: v.optional(v.picklist(['asc', 'desc']), 'asc'),
     status: v.optional(v.picklist(['queued', 'in_progress', 'completed', 'canceled', 'failed'])),
   }),
@@ -64092,7 +66610,16 @@ export const getEvalsEvalIdRunsRunIdOutputItemsHandler = defineHandler({
   param: v.object({ eval_id: v.string(), run_id: v.string() }),
   query: v.object({
     after: v.optional(v.string()),
-    limit: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '20'),
+    limit: v.optional(
+      v.pipe(
+        v.string(),
+        v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.transform((input) => Number(input)),
+        v.number(),
+        v.safeInteger(),
+      ),
+      '20',
+    ),
     status: v.optional(v.picklist(['fail', 'pass'])),
     order: v.optional(v.picklist(['asc', 'desc']), 'asc'),
   }),
@@ -64108,7 +66635,13 @@ export const getFilesHandler = defineHandler({
   query: v.object({
     purpose: v.optional(v.string()),
     limit: v.optional(
-      v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
+      v.pipe(
+        v.string(),
+        v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.transform((input) => Number(input)),
+        v.number(),
+        v.safeInteger(),
+      ),
       '10000',
     ),
     order: v.optional(v.picklist(['asc', 'desc']), 'desc'),
@@ -64193,7 +66726,16 @@ export const getFineTuningCheckpointsFineTunedModelCheckpointPermissionsHandler 
   query: v.object({
     project_id: v.optional(v.string()),
     after: v.optional(v.string()),
-    limit: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '10'),
+    limit: v.optional(
+      v.pipe(
+        v.string(),
+        v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.transform((input) => Number(input)),
+        v.number(),
+        v.safeInteger(),
+      ),
+      '10',
+    ),
     order: v.optional(v.picklist(['ascending', 'descending']), 'descending'),
   }),
   response: ListFineTuningCheckpointPermissionResponseSchema,
@@ -64225,7 +66767,16 @@ export const deleteFineTuningCheckpointsFineTunedModelCheckpointPermissionsPermi
 export const getFineTuningJobsHandler = defineHandler({
   query: v.object({
     after: v.optional(v.string()),
-    limit: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '20'),
+    limit: v.optional(
+      v.pipe(
+        v.string(),
+        v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.transform((input) => Number(input)),
+        v.number(),
+        v.safeInteger(),
+      ),
+      '20',
+    ),
     metadata: v.optional(
       v.pipe(
         v.unknown(),
@@ -64271,7 +66822,16 @@ export const getFineTuningJobsFineTuningJobIdCheckpointsHandler = defineHandler(
   }),
   query: v.object({
     after: v.optional(v.string()),
-    limit: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '10'),
+    limit: v.optional(
+      v.pipe(
+        v.string(),
+        v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.transform((input) => Number(input)),
+        v.number(),
+        v.safeInteger(),
+      ),
+      '10',
+    ),
   }),
   response: ListFineTuningJobCheckpointsResponseSchema,
 })
@@ -64285,7 +66845,16 @@ export const getFineTuningJobsFineTuningJobIdEventsHandler = defineHandler({
   }),
   query: v.object({
     after: v.optional(v.string()),
-    limit: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '20'),
+    limit: v.optional(
+      v.pipe(
+        v.string(),
+        v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.transform((input) => Number(input)),
+        v.number(),
+        v.safeInteger(),
+      ),
+      '20',
+    ),
   }),
   response: ListFineTuningJobEventsResponseSchema,
 })
@@ -64320,7 +66889,8 @@ export const postImagesEditsHandler = defineHandler({
           v.nullable(
             v.pipe(
               v.string(),
-              v.transform(Number),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
               v.number(),
               v.safeInteger(),
               v.minValue(2),
@@ -64339,7 +66909,14 @@ export const postImagesEditsHandler = defineHandler({
           v.unknown(),
           v.transform((input) => (input === 'null' ? null : input)),
           v.nullable(
-            v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger(), v.minValue(20)),
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+              v.minValue(20),
+            ),
           ),
         ),
         v.description(
@@ -64392,7 +66969,7 @@ export const postImagesEditsHandler = defineHandler({
           v.pipe(
             v.unknown(),
             v.transform((input) => (input === 'null' ? null : input)),
-            v.nullable(v.null()),
+            v.null(),
           ),
         ]),
         'auto',
@@ -64434,7 +67011,8 @@ export const postImagesEditsHandler = defineHandler({
           v.nullable(
             v.pipe(
               v.string(),
-              v.transform(Number),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
               v.number(),
               v.safeInteger(),
               v.minValue(1),
@@ -64455,7 +67033,7 @@ export const postImagesEditsHandler = defineHandler({
           v.pipe(
             v.unknown(),
             v.transform((input) => (input === 'null' ? null : input)),
-            v.nullable(v.null()),
+            v.null(),
           ),
         ]),
         'auto',
@@ -64467,7 +67045,7 @@ export const postImagesEditsHandler = defineHandler({
     ),
     response_format: v.optional(
       v.pipe(
-        v.nullable(v.union([v.literal('url'), v.literal('b64_json'), v.null()])),
+        v.nullable(v.picklist(['url', 'b64_json'])),
         v.description(
           'Legacy response format parameter for retired image models. Unsupported for GPT image models, which always return base64-encoded images.',
         ),
@@ -64485,7 +67063,7 @@ export const postImagesEditsHandler = defineHandler({
               v.pipe(
                 v.unknown(),
                 v.transform((input) => (input === 'null' ? null : input)),
-                v.nullable(v.null()),
+                v.null(),
               ),
             ]),
           ),
@@ -64521,7 +67099,7 @@ export const postImagesEditsHandler = defineHandler({
                         v.pipe(
                           v.unknown(),
                           v.transform((input) => (input === 'null' ? null : input)),
-                          v.nullable(v.null()),
+                          v.null(),
                         ),
                       ]),
                     ),
@@ -64531,7 +67109,7 @@ export const postImagesEditsHandler = defineHandler({
               v.pipe(
                 v.unknown(),
                 v.transform((input) => (input === 'null' ? null : input)),
-                v.nullable(v.null()),
+                v.null(),
               ),
             ]),
           ),
@@ -64546,7 +67124,15 @@ export const postImagesEditsHandler = defineHandler({
         v.pipe(
           v.unknown(),
           v.transform((input) => (input === 'null' ? null : input)),
-          v.nullable(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger())),
+          v.nullable(
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+            ),
+          ),
         ),
         '100',
       ),
@@ -64583,7 +67169,7 @@ export const postImagesEditsHandler = defineHandler({
             v.pipe(
               v.unknown(),
               v.transform((input) => (input === 'null' ? null : input)),
-              v.nullable(v.null()),
+              v.null(),
             ),
           ]),
         ),
@@ -64619,7 +67205,8 @@ export const postImagesEditsHandler = defineHandler({
               v.optional(
                 v.pipe(
                   v.string(),
-                  v.transform(Number),
+                  v.regex(/^-?(?:0|[1-9]\d*)$/),
+                  v.transform((input) => Number(input)),
                   v.number(),
                   v.safeInteger(),
                   v.minValue(0),
@@ -64635,7 +67222,7 @@ export const postImagesEditsHandler = defineHandler({
             v.pipe(
               v.unknown(),
               v.transform((input) => (input === 'null' ? null : input)),
-              v.nullable(v.null()),
+              v.null(),
             ),
           ]),
         ),
@@ -64648,7 +67235,7 @@ export const postImagesEditsHandler = defineHandler({
           v.pipe(
             v.unknown(),
             v.transform((input) => (input === 'null' ? null : input)),
-            v.nullable(v.null()),
+            v.null(),
           ),
         ]),
         'auto',
@@ -64685,7 +67272,7 @@ export const postImagesVariationsHandler = defineHandler({
             v.pipe(
               v.unknown(),
               v.transform((input) => (input === 'null' ? null : input)),
-              v.nullable(v.null()),
+              v.null(),
             ),
           ]),
           'dall-e-2',
@@ -64703,7 +67290,8 @@ export const postImagesVariationsHandler = defineHandler({
             v.nullable(
               v.pipe(
                 v.string(),
-                v.transform(Number),
+                v.regex(/^-?(?:0|[1-9]\d*)$/),
+                v.transform((input) => Number(input)),
                 v.number(),
                 v.safeInteger(),
                 v.minValue(1),
@@ -64717,19 +67305,14 @@ export const postImagesVariationsHandler = defineHandler({
         v.metadata({ examples: [1] }),
       ),
       response_format: v.pipe(
-        v.optional(v.nullable(v.union([v.literal('url'), v.literal('b64_json'), v.null()])), 'url'),
+        v.optional(v.nullable(v.picklist(['url', 'b64_json'])), 'url'),
         v.description(
           'The format in which the generated images are returned. Must be one of `url` or `b64_json`. URLs are only valid for 60 minutes after the image has been generated.',
         ),
         v.metadata({ examples: ['url'] }),
       ),
       size: v.pipe(
-        v.optional(
-          v.nullable(
-            v.union([v.literal('256x256'), v.literal('512x512'), v.literal('1024x1024'), v.null()]),
-          ),
-          '1024x1024',
-        ),
+        v.optional(v.nullable(v.picklist(['256x256', '512x512', '1024x1024'])), '1024x1024'),
         v.description(
           'The size of the generated images. Must be one of `256x256`, `512x512`, or `1024x1024`.',
         ),
@@ -64827,7 +67410,16 @@ export const getOrganizationAdminApiKeysHandler = defineHandler({
       v.description('Order results by creation time, ascending or descending.'),
     ),
     limit: v.pipe(
-      v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '20'),
+      v.optional(
+        v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
+        '20',
+      ),
       v.description('Maximum number of keys to return.'),
     ),
   }),
@@ -64875,25 +67467,49 @@ export const getOrganizationAuditLogsHandler = defineHandler({
       v.partial(
         v.object({
           gt: v.pipe(
-            v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+            ),
             v.description(
               'Return only events whose `effective_at` (Unix seconds) is greater than this value.',
             ),
           ),
           gte: v.pipe(
-            v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+            ),
             v.description(
               'Return only events whose `effective_at` (Unix seconds) is greater than or equal to this value.',
             ),
           ),
           lt: v.pipe(
-            v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+            ),
             v.description(
               'Return only events whose `effective_at` (Unix seconds) is less than this value.',
             ),
           ),
           lte: v.pipe(
-            v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+            ),
             v.description(
               'Return only events whose `effective_at` (Unix seconds) is less than or equal to this value.',
             ),
@@ -64944,7 +67560,16 @@ export const getOrganizationAuditLogsHandler = defineHandler({
       ),
       'false',
     ),
-    limit: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '20'),
+    limit: v.optional(
+      v.pipe(
+        v.string(),
+        v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.transform((input) => Number(input)),
+        v.number(),
+        v.safeInteger(),
+      ),
+      '20',
+    ),
     after: v.optional(v.string()),
     before: v.optional(v.string()),
   }),
@@ -64953,7 +67578,16 @@ export const getOrganizationAuditLogsHandler = defineHandler({
 
 export const getOrganizationCertificatesHandler = defineHandler({
   query: v.object({
-    limit: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '20'),
+    limit: v.optional(
+      v.pipe(
+        v.string(),
+        v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.transform((input) => Number(input)),
+        v.number(),
+        v.safeInteger(),
+      ),
+      '20',
+    ),
     after: v.optional(v.string()),
     order: v.optional(v.picklist(['asc', 'desc']), 'desc'),
   }),
@@ -65002,8 +67636,22 @@ export const deleteOrganizationCertificatesCertificateIdHandler = defineHandler(
 
 export const getOrganizationCostsHandler = defineHandler({
   query: v.object({
-    start_time: v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
-    end_time: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger())),
+    start_time: v.pipe(
+      v.string(),
+      v.regex(/^-?(?:0|[1-9]\d*)$/),
+      v.transform((input) => Number(input)),
+      v.number(),
+      v.safeInteger(),
+    ),
+    end_time: v.optional(
+      v.pipe(
+        v.string(),
+        v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.transform((input) => Number(input)),
+        v.number(),
+        v.safeInteger(),
+      ),
+    ),
     bucket_width: v.optional(v.literal('1d'), '1d'),
     project_ids: v.optional(
       v.pipe(
@@ -65033,7 +67681,16 @@ export const getOrganizationCostsHandler = defineHandler({
         v.array(v.picklist(['project_id', 'user_id', 'line_item', 'api_key_id', 'api_source'])),
       ),
     ),
-    limit: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '7'),
+    limit: v.optional(
+      v.pipe(
+        v.string(),
+        v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.transform((input) => Number(input)),
+        v.number(),
+        v.safeInteger(),
+      ),
+      '7',
+    ),
     page: v.optional(v.string()),
   }),
   response: UsageResponseSchema,
@@ -65053,7 +67710,8 @@ export const getOrganizationGroupsHandler = defineHandler({
     limit: v.optional(
       v.pipe(
         v.string(),
-        v.transform(Number),
+        v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.transform((input) => Number(input)),
         v.number(),
         v.safeInteger(),
         v.minValue(0),
@@ -65094,7 +67752,8 @@ export const getOrganizationGroupsGroupIdRolesHandler = defineHandler({
     v.object({
       limit: v.pipe(
         v.string(),
-        v.transform(Number),
+        v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.transform((input) => Number(input)),
         v.number(),
         v.safeInteger(),
         v.minValue(0),
@@ -65129,7 +67788,8 @@ export const getOrganizationGroupsGroupIdUsersHandler = defineHandler({
     limit: v.optional(
       v.pipe(
         v.string(),
-        v.transform(Number),
+        v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.transform((input) => Number(input)),
         v.number(),
         v.safeInteger(),
         v.minValue(0),
@@ -65161,7 +67821,16 @@ export const deleteOrganizationGroupsGroupIdUsersUserIdHandler = defineHandler({
 
 export const getOrganizationInvitesHandler = defineHandler({
   query: v.object({
-    limit: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '20'),
+    limit: v.optional(
+      v.pipe(
+        v.string(),
+        v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.transform((input) => Number(input)),
+        v.number(),
+        v.safeInteger(),
+      ),
+      '20',
+    ),
     after: v.optional(v.string()),
   }),
   response: InviteListResponseSchema,
@@ -65184,7 +67853,16 @@ export const deleteOrganizationInvitesInviteIdHandler = defineHandler({
 
 export const getOrganizationProjectsHandler = defineHandler({
   query: v.object({
-    limit: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '20'),
+    limit: v.optional(
+      v.pipe(
+        v.string(),
+        v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.transform((input) => Number(input)),
+        v.number(),
+        v.safeInteger(),
+      ),
+      '20',
+    ),
     after: v.optional(v.string()),
     include_archived: v.optional(
       v.pipe(
@@ -65217,7 +67895,16 @@ export const postOrganizationProjectsProjectIdHandler = defineHandler({
 export const getOrganizationProjectsProjectIdApiKeysHandler = defineHandler({
   param: v.object({ project_id: v.string() }),
   query: v.object({
-    limit: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '20'),
+    limit: v.optional(
+      v.pipe(
+        v.string(),
+        v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.transform((input) => Number(input)),
+        v.number(),
+        v.safeInteger(),
+      ),
+      '20',
+    ),
     after: v.optional(v.string()),
     owner_project_access: v.optional(v.picklist(['active', 'inactive', 'any'])),
   }),
@@ -65248,7 +67935,16 @@ export const postOrganizationProjectsProjectIdArchiveHandler = defineHandler({
 export const getOrganizationProjectsProjectIdCertificatesHandler = defineHandler({
   param: v.object({ project_id: v.string() }),
   query: v.object({
-    limit: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '20'),
+    limit: v.optional(
+      v.pipe(
+        v.string(),
+        v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.transform((input) => Number(input)),
+        v.number(),
+        v.safeInteger(),
+      ),
+      '20',
+    ),
     after: v.optional(v.string()),
     order: v.optional(v.picklist(['asc', 'desc']), 'desc'),
   }),
@@ -65284,7 +67980,8 @@ export const getOrganizationProjectsProjectIdGroupsHandler = defineHandler({
     limit: v.optional(
       v.pipe(
         v.string(),
-        v.transform(Number),
+        v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.transform((input) => Number(input)),
         v.number(),
         v.safeInteger(),
         v.minValue(0),
@@ -65345,7 +68042,16 @@ export const deleteOrganizationProjectsProjectIdModelPermissionsHandler = define
 export const getOrganizationProjectsProjectIdRateLimitsHandler = defineHandler({
   param: v.object({ project_id: v.string() }),
   query: v.object({
-    limit: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '100'),
+    limit: v.optional(
+      v.pipe(
+        v.string(),
+        v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.transform((input) => Number(input)),
+        v.number(),
+        v.safeInteger(),
+      ),
+      '100',
+    ),
     after: v.optional(v.string()),
     before: v.optional(v.string()),
   }),
@@ -65361,7 +68067,16 @@ export const postOrganizationProjectsProjectIdRateLimitsRateLimitIdHandler = def
 export const getOrganizationProjectsProjectIdServiceAccountsHandler = defineHandler({
   param: v.object({ project_id: v.string() }),
   query: v.object({
-    limit: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '20'),
+    limit: v.optional(
+      v.pipe(
+        v.string(),
+        v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.transform((input) => Number(input)),
+        v.number(),
+        v.safeInteger(),
+      ),
+      '20',
+    ),
     after: v.optional(v.string()),
   }),
   response: ProjectServiceAccountListResponseSchema,
@@ -65399,7 +68114,8 @@ export const getOrganizationProjectsProjectIdSpendAlertsHandler = defineHandler(
     limit: v.optional(
       v.pipe(
         v.string(),
-        v.transform(Number),
+        v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.transform((input) => Number(input)),
         v.number(),
         v.safeInteger(),
         v.minValue(0),
@@ -65438,7 +68154,16 @@ export const deleteOrganizationProjectsProjectIdSpendAlertsAlertIdHandler = defi
 export const getOrganizationProjectsProjectIdUsersHandler = defineHandler({
   param: v.object({ project_id: v.string() }),
   query: v.object({
-    limit: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '20'),
+    limit: v.optional(
+      v.pipe(
+        v.string(),
+        v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.transform((input) => Number(input)),
+        v.number(),
+        v.safeInteger(),
+      ),
+      '20',
+    ),
     after: v.optional(v.string()),
   }),
   response: ProjectUserListResponseSchema,
@@ -65471,7 +68196,8 @@ export const getOrganizationRolesHandler = defineHandler({
     limit: v.optional(
       v.pipe(
         v.string(),
-        v.transform(Number),
+        v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.transform((input) => Number(input)),
         v.number(),
         v.safeInteger(),
         v.minValue(0),
@@ -65511,7 +68237,8 @@ export const getOrganizationSpendAlertsHandler = defineHandler({
     limit: v.optional(
       v.pipe(
         v.string(),
-        v.transform(Number),
+        v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.transform((input) => Number(input)),
         v.number(),
         v.safeInteger(),
         v.minValue(0),
@@ -65548,8 +68275,22 @@ export const deleteOrganizationSpendAlertsAlertIdHandler = defineHandler({
 
 export const getOrganizationUsageAudioSpeechesHandler = defineHandler({
   query: v.object({
-    start_time: v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
-    end_time: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger())),
+    start_time: v.pipe(
+      v.string(),
+      v.regex(/^-?(?:0|[1-9]\d*)$/),
+      v.transform((input) => Number(input)),
+      v.number(),
+      v.safeInteger(),
+    ),
+    end_time: v.optional(
+      v.pipe(
+        v.string(),
+        v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.transform((input) => Number(input)),
+        v.number(),
+        v.safeInteger(),
+      ),
+    ),
     bucket_width: v.optional(v.picklist(['1m', '1h', '1d']), '1d'),
     project_ids: v.optional(
       v.pipe(
@@ -65586,7 +68327,15 @@ export const getOrganizationUsageAudioSpeechesHandler = defineHandler({
         v.array(v.picklist(['project_id', 'user_id', 'api_key_id', 'model'])),
       ),
     ),
-    limit: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger())),
+    limit: v.optional(
+      v.pipe(
+        v.string(),
+        v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.transform((input) => Number(input)),
+        v.number(),
+        v.safeInteger(),
+      ),
+    ),
     page: v.optional(v.string()),
   }),
   response: UsageResponseSchema,
@@ -65594,8 +68343,22 @@ export const getOrganizationUsageAudioSpeechesHandler = defineHandler({
 
 export const getOrganizationUsageAudioTranscriptionsHandler = defineHandler({
   query: v.object({
-    start_time: v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
-    end_time: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger())),
+    start_time: v.pipe(
+      v.string(),
+      v.regex(/^-?(?:0|[1-9]\d*)$/),
+      v.transform((input) => Number(input)),
+      v.number(),
+      v.safeInteger(),
+    ),
+    end_time: v.optional(
+      v.pipe(
+        v.string(),
+        v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.transform((input) => Number(input)),
+        v.number(),
+        v.safeInteger(),
+      ),
+    ),
     bucket_width: v.optional(v.picklist(['1m', '1h', '1d']), '1d'),
     project_ids: v.optional(
       v.pipe(
@@ -65632,7 +68395,15 @@ export const getOrganizationUsageAudioTranscriptionsHandler = defineHandler({
         v.array(v.picklist(['project_id', 'user_id', 'api_key_id', 'model'])),
       ),
     ),
-    limit: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger())),
+    limit: v.optional(
+      v.pipe(
+        v.string(),
+        v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.transform((input) => Number(input)),
+        v.number(),
+        v.safeInteger(),
+      ),
+    ),
     page: v.optional(v.string()),
   }),
   response: UsageResponseSchema,
@@ -65640,8 +68411,22 @@ export const getOrganizationUsageAudioTranscriptionsHandler = defineHandler({
 
 export const getOrganizationUsageCodeInterpreterSessionsHandler = defineHandler({
   query: v.object({
-    start_time: v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
-    end_time: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger())),
+    start_time: v.pipe(
+      v.string(),
+      v.regex(/^-?(?:0|[1-9]\d*)$/),
+      v.transform((input) => Number(input)),
+      v.number(),
+      v.safeInteger(),
+    ),
+    end_time: v.optional(
+      v.pipe(
+        v.string(),
+        v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.transform((input) => Number(input)),
+        v.number(),
+        v.safeInteger(),
+      ),
+    ),
     bucket_width: v.optional(v.picklist(['1m', '1h', '1d']), '1d'),
     project_ids: v.optional(
       v.pipe(
@@ -65657,7 +68442,15 @@ export const getOrganizationUsageCodeInterpreterSessionsHandler = defineHandler(
         v.array(v.literal('project_id')),
       ),
     ),
-    limit: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger())),
+    limit: v.optional(
+      v.pipe(
+        v.string(),
+        v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.transform((input) => Number(input)),
+        v.number(),
+        v.safeInteger(),
+      ),
+    ),
     page: v.optional(v.string()),
   }),
   response: UsageResponseSchema,
@@ -65665,8 +68458,22 @@ export const getOrganizationUsageCodeInterpreterSessionsHandler = defineHandler(
 
 export const getOrganizationUsageCompletionsHandler = defineHandler({
   query: v.object({
-    start_time: v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
-    end_time: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger())),
+    start_time: v.pipe(
+      v.string(),
+      v.regex(/^-?(?:0|[1-9]\d*)$/),
+      v.transform((input) => Number(input)),
+      v.number(),
+      v.safeInteger(),
+    ),
+    end_time: v.optional(
+      v.pipe(
+        v.string(),
+        v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.transform((input) => Number(input)),
+        v.number(),
+        v.safeInteger(),
+      ),
+    ),
     bucket_width: v.optional(v.picklist(['1m', '1h', '1d']), '1d'),
     project_ids: v.optional(
       v.pipe(
@@ -65720,7 +68527,15 @@ export const getOrganizationUsageCompletionsHandler = defineHandler({
         ),
       ),
     ),
-    limit: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger())),
+    limit: v.optional(
+      v.pipe(
+        v.string(),
+        v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.transform((input) => Number(input)),
+        v.number(),
+        v.safeInteger(),
+      ),
+    ),
     page: v.optional(v.string()),
   }),
   response: UsageResponseSchema,
@@ -65728,8 +68543,22 @@ export const getOrganizationUsageCompletionsHandler = defineHandler({
 
 export const getOrganizationUsageEmbeddingsHandler = defineHandler({
   query: v.object({
-    start_time: v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
-    end_time: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger())),
+    start_time: v.pipe(
+      v.string(),
+      v.regex(/^-?(?:0|[1-9]\d*)$/),
+      v.transform((input) => Number(input)),
+      v.number(),
+      v.safeInteger(),
+    ),
+    end_time: v.optional(
+      v.pipe(
+        v.string(),
+        v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.transform((input) => Number(input)),
+        v.number(),
+        v.safeInteger(),
+      ),
+    ),
     bucket_width: v.optional(v.picklist(['1m', '1h', '1d']), '1d'),
     project_ids: v.optional(
       v.pipe(
@@ -65766,7 +68595,15 @@ export const getOrganizationUsageEmbeddingsHandler = defineHandler({
         v.array(v.picklist(['project_id', 'user_id', 'api_key_id', 'model'])),
       ),
     ),
-    limit: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger())),
+    limit: v.optional(
+      v.pipe(
+        v.string(),
+        v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.transform((input) => Number(input)),
+        v.number(),
+        v.safeInteger(),
+      ),
+    ),
     page: v.optional(v.string()),
   }),
   response: UsageResponseSchema,
@@ -65774,8 +68611,22 @@ export const getOrganizationUsageEmbeddingsHandler = defineHandler({
 
 export const getOrganizationUsageFileSearchCallsHandler = defineHandler({
   query: v.object({
-    start_time: v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
-    end_time: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger())),
+    start_time: v.pipe(
+      v.string(),
+      v.regex(/^-?(?:0|[1-9]\d*)$/),
+      v.transform((input) => Number(input)),
+      v.number(),
+      v.safeInteger(),
+    ),
+    end_time: v.optional(
+      v.pipe(
+        v.string(),
+        v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.transform((input) => Number(input)),
+        v.number(),
+        v.safeInteger(),
+      ),
+    ),
     bucket_width: v.optional(v.picklist(['1m', '1h', '1d']), '1d'),
     project_ids: v.optional(
       v.pipe(
@@ -65812,7 +68663,15 @@ export const getOrganizationUsageFileSearchCallsHandler = defineHandler({
         v.array(v.picklist(['project_id', 'user_id', 'api_key_id', 'vector_store_id'])),
       ),
     ),
-    limit: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger())),
+    limit: v.optional(
+      v.pipe(
+        v.string(),
+        v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.transform((input) => Number(input)),
+        v.number(),
+        v.safeInteger(),
+      ),
+    ),
     page: v.optional(v.string()),
   }),
   response: UsageResponseSchema,
@@ -65820,8 +68679,22 @@ export const getOrganizationUsageFileSearchCallsHandler = defineHandler({
 
 export const getOrganizationUsageImagesHandler = defineHandler({
   query: v.object({
-    start_time: v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
-    end_time: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger())),
+    start_time: v.pipe(
+      v.string(),
+      v.regex(/^-?(?:0|[1-9]\d*)$/),
+      v.transform((input) => Number(input)),
+      v.number(),
+      v.safeInteger(),
+    ),
+    end_time: v.optional(
+      v.pipe(
+        v.string(),
+        v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.transform((input) => Number(input)),
+        v.number(),
+        v.safeInteger(),
+      ),
+    ),
     bucket_width: v.optional(v.picklist(['1m', '1h', '1d']), '1d'),
     sources: v.optional(
       v.pipe(
@@ -65872,7 +68745,15 @@ export const getOrganizationUsageImagesHandler = defineHandler({
         v.array(v.picklist(['project_id', 'user_id', 'api_key_id', 'model', 'size', 'source'])),
       ),
     ),
-    limit: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger())),
+    limit: v.optional(
+      v.pipe(
+        v.string(),
+        v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.transform((input) => Number(input)),
+        v.number(),
+        v.safeInteger(),
+      ),
+    ),
     page: v.optional(v.string()),
   }),
   response: UsageResponseSchema,
@@ -65880,8 +68761,22 @@ export const getOrganizationUsageImagesHandler = defineHandler({
 
 export const getOrganizationUsageModerationsHandler = defineHandler({
   query: v.object({
-    start_time: v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
-    end_time: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger())),
+    start_time: v.pipe(
+      v.string(),
+      v.regex(/^-?(?:0|[1-9]\d*)$/),
+      v.transform((input) => Number(input)),
+      v.number(),
+      v.safeInteger(),
+    ),
+    end_time: v.optional(
+      v.pipe(
+        v.string(),
+        v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.transform((input) => Number(input)),
+        v.number(),
+        v.safeInteger(),
+      ),
+    ),
     bucket_width: v.optional(v.picklist(['1m', '1h', '1d']), '1d'),
     project_ids: v.optional(
       v.pipe(
@@ -65918,7 +68813,15 @@ export const getOrganizationUsageModerationsHandler = defineHandler({
         v.array(v.picklist(['project_id', 'user_id', 'api_key_id', 'model'])),
       ),
     ),
-    limit: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger())),
+    limit: v.optional(
+      v.pipe(
+        v.string(),
+        v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.transform((input) => Number(input)),
+        v.number(),
+        v.safeInteger(),
+      ),
+    ),
     page: v.optional(v.string()),
   }),
   response: UsageResponseSchema,
@@ -65926,8 +68829,22 @@ export const getOrganizationUsageModerationsHandler = defineHandler({
 
 export const getOrganizationUsageVectorStoresHandler = defineHandler({
   query: v.object({
-    start_time: v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
-    end_time: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger())),
+    start_time: v.pipe(
+      v.string(),
+      v.regex(/^-?(?:0|[1-9]\d*)$/),
+      v.transform((input) => Number(input)),
+      v.number(),
+      v.safeInteger(),
+    ),
+    end_time: v.optional(
+      v.pipe(
+        v.string(),
+        v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.transform((input) => Number(input)),
+        v.number(),
+        v.safeInteger(),
+      ),
+    ),
     bucket_width: v.optional(v.picklist(['1m', '1h', '1d']), '1d'),
     project_ids: v.optional(
       v.pipe(
@@ -65943,7 +68860,15 @@ export const getOrganizationUsageVectorStoresHandler = defineHandler({
         v.array(v.literal('project_id')),
       ),
     ),
-    limit: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger())),
+    limit: v.optional(
+      v.pipe(
+        v.string(),
+        v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.transform((input) => Number(input)),
+        v.number(),
+        v.safeInteger(),
+      ),
+    ),
     page: v.optional(v.string()),
   }),
   response: UsageResponseSchema,
@@ -65951,8 +68876,22 @@ export const getOrganizationUsageVectorStoresHandler = defineHandler({
 
 export const getOrganizationUsageWebSearchCallsHandler = defineHandler({
   query: v.object({
-    start_time: v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
-    end_time: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger())),
+    start_time: v.pipe(
+      v.string(),
+      v.regex(/^-?(?:0|[1-9]\d*)$/),
+      v.transform((input) => Number(input)),
+      v.number(),
+      v.safeInteger(),
+    ),
+    end_time: v.optional(
+      v.pipe(
+        v.string(),
+        v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.transform((input) => Number(input)),
+        v.number(),
+        v.safeInteger(),
+      ),
+    ),
     bucket_width: v.optional(v.picklist(['1m', '1h', '1d']), '1d'),
     project_ids: v.optional(
       v.pipe(
@@ -66005,7 +68944,15 @@ export const getOrganizationUsageWebSearchCallsHandler = defineHandler({
         ),
       ),
     ),
-    limit: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger())),
+    limit: v.optional(
+      v.pipe(
+        v.string(),
+        v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.transform((input) => Number(input)),
+        v.number(),
+        v.safeInteger(),
+      ),
+    ),
     page: v.optional(v.string()),
   }),
   response: UsageResponseSchema,
@@ -66013,7 +68960,16 @@ export const getOrganizationUsageWebSearchCallsHandler = defineHandler({
 
 export const getOrganizationUsersHandler = defineHandler({
   query: v.object({
-    limit: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '20'),
+    limit: v.optional(
+      v.pipe(
+        v.string(),
+        v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.transform((input) => Number(input)),
+        v.number(),
+        v.safeInteger(),
+      ),
+      '20',
+    ),
     after: v.optional(v.string()),
     emails: v.optional(
       v.pipe(
@@ -66048,7 +69004,8 @@ export const getOrganizationUsersUserIdRolesHandler = defineHandler({
     v.object({
       limit: v.pipe(
         v.string(),
-        v.transform(Number),
+        v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.transform((input) => Number(input)),
         v.number(),
         v.safeInteger(),
         v.minValue(0),
@@ -66082,7 +69039,8 @@ export const getOrganizationExternalKeysHandler = defineHandler({
     v.object({
       limit: v.pipe(
         v.string(),
-        v.transform(Number),
+        v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.transform((input) => Number(input)),
         v.number(),
         v.safeInteger(),
         v.minValue(0),
@@ -66094,7 +69052,7 @@ export const getOrganizationExternalKeysHandler = defineHandler({
         v.pipe(
           v.unknown(),
           v.transform((input) => (input === 'null' ? null : input)),
-          v.nullable(v.null()),
+          v.null(),
         ),
       ]),
       purpose: ExternalKeyPurposeSchema,
@@ -66128,7 +69086,8 @@ export const getOrganizationWorkloadIdentityProvidersHandler = defineHandler({
     v.object({
       limit: v.pipe(
         v.string(),
-        v.transform(Number),
+        v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.transform((input) => Number(input)),
         v.number(),
         v.safeInteger(),
         v.minValue(1),
@@ -66172,7 +69131,8 @@ export const getOrganizationWorkloadIdentityProvidersWorkloadIdentityProviderIdF
       v.object({
         limit: v.pipe(
           v.string(),
-          v.transform(Number),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
           v.minValue(1),
@@ -66226,18 +69186,30 @@ export const deleteOrganizationWorkloadIdentityProvidersWorkloadIdentityProvider
 
 export const getOrganizationUsageDecisionsHandler = defineHandler({
   query: v.object({
-    start_time: v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
+    start_time: v.pipe(
+      v.string(),
+      v.regex(/^-?(?:0|[1-9]\d*)$/),
+      v.transform((input) => Number(input)),
+      v.number(),
+      v.safeInteger(),
+    ),
     end_time: v.optional(
       v.pipe(
         v.unknown(),
         v.transform((input) => (input === 'null' ? null : input)),
         v.nullable(
           v.union([
-            v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+            ),
             v.pipe(
               v.unknown(),
               v.transform((input) => (input === 'null' ? null : input)),
-              v.nullable(v.null()),
+              v.null(),
             ),
           ]),
         ),
@@ -66258,7 +69230,7 @@ export const getOrganizationUsageDecisionsHandler = defineHandler({
             v.pipe(
               v.unknown(),
               v.transform((input) => (input === 'null' ? null : input)),
-              v.nullable(v.null()),
+              v.null(),
             ),
           ]),
         ),
@@ -66270,11 +69242,17 @@ export const getOrganizationUsageDecisionsHandler = defineHandler({
         v.transform((input) => (input === 'null' ? null : input)),
         v.nullable(
           v.union([
-            v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+            ),
             v.pipe(
               v.unknown(),
               v.transform((input) => (input === 'null' ? null : input)),
-              v.nullable(v.null()),
+              v.null(),
             ),
           ]),
         ),
@@ -66291,7 +69269,7 @@ export const getOrganizationUsageDecisionsHandler = defineHandler({
         v.pipe(
           v.unknown(),
           v.transform((input) => (input === 'null' ? null : input)),
-          v.nullable(v.null()),
+          v.null(),
         ),
       ]),
     ),
@@ -66316,7 +69294,7 @@ export const getOrganizationUsageDecisionsHandler = defineHandler({
             v.pipe(
               v.unknown(),
               v.transform((input) => (input === 'null' ? null : input)),
-              v.nullable(v.null()),
+              v.null(),
             ),
           ]),
         ),
@@ -66345,7 +69323,7 @@ export const getOrganizationUsageDecisionsHandler = defineHandler({
             v.pipe(
               v.unknown(),
               v.transform((input) => (input === 'null' ? null : input)),
-              v.nullable(v.null()),
+              v.null(),
             ),
           ]),
         ),
@@ -66372,7 +69350,7 @@ export const getOrganizationUsageDecisionsHandler = defineHandler({
             v.pipe(
               v.unknown(),
               v.transform((input) => (input === 'null' ? null : input)),
-              v.nullable(v.null()),
+              v.null(),
             ),
           ]),
         ),
@@ -66399,7 +69377,7 @@ export const getOrganizationUsageDecisionsHandler = defineHandler({
             v.pipe(
               v.unknown(),
               v.transform((input) => (input === 'null' ? null : input)),
-              v.nullable(v.null()),
+              v.null(),
             ),
           ]),
         ),
@@ -66426,7 +69404,7 @@ export const getOrganizationUsageDecisionsHandler = defineHandler({
             v.pipe(
               v.unknown(),
               v.transform((input) => (input === 'null' ? null : input)),
-              v.nullable(v.null()),
+              v.null(),
             ),
           ]),
         ),
@@ -66446,7 +69424,7 @@ export const getOrganizationUsageDecisionsHandler = defineHandler({
             v.pipe(
               v.unknown(),
               v.transform((input) => (input === 'null' ? null : input)),
-              v.nullable(v.null()),
+              v.null(),
             ),
           ]),
         ),
@@ -66464,7 +69442,7 @@ export const getOrganizationExternalStorageHandler = defineHandler({
         v.pipe(
           v.unknown(),
           v.transform((input) => (input === 'null' ? null : input)),
-          v.nullable(v.null()),
+          v.null(),
         ),
       ]),
       after: v.union([
@@ -66472,13 +69450,14 @@ export const getOrganizationExternalStorageHandler = defineHandler({
         v.pipe(
           v.unknown(),
           v.transform((input) => (input === 'null' ? null : input)),
-          v.nullable(v.null()),
+          v.null(),
         ),
       ]),
       order: ExternalStorageOrderSchema,
       limit: v.pipe(
         v.string(),
-        v.transform(Number),
+        v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.transform((input) => Number(input)),
         v.number(),
         v.safeInteger(),
         v.minValue(1),
@@ -66571,7 +69550,8 @@ export const getProjectsProjectIdGroupsGroupIdRolesHandler = defineHandler({
     v.object({
       limit: v.pipe(
         v.string(),
-        v.transform(Number),
+        v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.transform((input) => Number(input)),
         v.number(),
         v.safeInteger(),
         v.minValue(0),
@@ -66606,7 +69586,8 @@ export const getProjectsProjectIdRolesHandler = defineHandler({
     limit: v.optional(
       v.pipe(
         v.string(),
-        v.transform(Number),
+        v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.transform((input) => Number(input)),
         v.number(),
         v.safeInteger(),
         v.minValue(0),
@@ -66648,7 +69629,8 @@ export const getProjectsProjectIdUsersUserIdRolesHandler = defineHandler({
     v.object({
       limit: v.pipe(
         v.string(),
-        v.transform(Number),
+        v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.transform((input) => Number(input)),
         v.number(),
         v.safeInteger(),
         v.minValue(0),
@@ -66763,7 +69745,12 @@ export const postRealtimeCallsHandler = defineHandler({
                                       v.description('The audio format. Always `audio/pcm`.'),
                                     ),
                                     rate: v.pipe(
-                                      v.pipe(v.string(), v.transform(Number), v.literal(24000)),
+                                      v.pipe(
+                                        v.string(),
+                                        v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                        v.transform((input) => Number(input)),
+                                        v.literal(24000),
+                                      ),
                                       v.description(
                                         'The sample rate of the audio. Always `24000`.',
                                       ),
@@ -66900,7 +69887,10 @@ export const postRealtimeCallsHandler = defineHandler({
                                           v.pipe(
                                             v.pipe(
                                               v.string(),
-                                              v.transform(Number),
+                                              v.regex(
+                                                /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/,
+                                              ),
+                                              v.transform((input) => Number(input)),
                                               v.number(),
                                               v.finite(),
                                             ),
@@ -66913,7 +69903,8 @@ export const postRealtimeCallsHandler = defineHandler({
                                           v.pipe(
                                             v.pipe(
                                               v.string(),
-                                              v.transform(Number),
+                                              v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                              v.transform((input) => Number(input)),
                                               v.number(),
                                               v.safeInteger(),
                                             ),
@@ -66926,7 +69917,8 @@ export const postRealtimeCallsHandler = defineHandler({
                                           v.pipe(
                                             v.pipe(
                                               v.string(),
-                                              v.transform(Number),
+                                              v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                              v.transform((input) => Number(input)),
                                               v.number(),
                                               v.safeInteger(),
                                             ),
@@ -66980,7 +69972,8 @@ export const postRealtimeCallsHandler = defineHandler({
                                                 v.pipe(
                                                   v.pipe(
                                                     v.string(),
-                                                    v.transform(Number),
+                                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                                    v.transform((input) => Number(input)),
                                                     v.number(),
                                                     v.safeInteger(),
                                                     v.minValue(5000),
@@ -66995,7 +69988,7 @@ export const postRealtimeCallsHandler = defineHandler({
                                                   v.transform((input) =>
                                                     input === 'null' ? null : input,
                                                   ),
-                                                  v.nullable(v.null()),
+                                                  v.null(),
                                                 ),
                                               ]),
                                             ),
@@ -67070,7 +70063,7 @@ export const postRealtimeCallsHandler = defineHandler({
                                 v.pipe(
                                   v.unknown(),
                                   v.transform((input) => (input === 'null' ? null : input)),
-                                  v.nullable(v.null()),
+                                  v.null(),
                                 ),
                               ]),
                             ),
@@ -67089,7 +70082,12 @@ export const postRealtimeCallsHandler = defineHandler({
                                       v.description('The audio format. Always `audio/pcm`.'),
                                     ),
                                     rate: v.pipe(
-                                      v.pipe(v.string(), v.transform(Number), v.literal(24000)),
+                                      v.pipe(
+                                        v.string(),
+                                        v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                        v.transform((input) => Number(input)),
+                                        v.literal(24000),
+                                      ),
                                       v.description(
                                         'The sample rate of the audio. Always `24000`.',
                                       ),
@@ -67136,7 +70134,8 @@ export const postRealtimeCallsHandler = defineHandler({
                           v.optional(
                             v.pipe(
                               v.string(),
-                              v.transform(Number),
+                              v.regex(/^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/),
+                              v.transform((input) => Number(input)),
                               v.number(),
                               v.finite(),
                               v.minValue(0.25),
@@ -67168,8 +70167,8 @@ export const postRealtimeCallsHandler = defineHandler({
                   ),
                 ),
               ),
-              tracing: v.optional(
-                v.pipe(
+              tracing: v.pipe(
+                v.optional(
                   v.union([
                     v.pipe(
                       v.optional(v.literal('auto'), 'auto'),
@@ -67205,12 +70204,13 @@ export const postRealtimeCallsHandler = defineHandler({
                     v.pipe(
                       v.unknown(),
                       v.transform((input) => (input === 'null' ? null : input)),
-                      v.nullable(v.null()),
+                      v.null(),
                     ),
                   ]),
-                  v.description(
-                    'Realtime API can write session traces to the [Traces Dashboard](https://platform.openai.com/logs?api=traces). Set to null to disable tracing. Once\ntracing is enabled for a session, the configuration cannot be modified.\n\n`auto` will create a trace for the session with default values for the\nworkflow name, group id, and metadata.\n',
-                  ),
+                  null,
+                ),
+                v.description(
+                  'Realtime API can write session traces to the [Traces Dashboard](https://platform.openai.com/logs?api=traces). Set to null to disable tracing. Once\ntracing is enabled for a session, the configuration cannot be modified.\n\n`auto` will create a trace for the session with default values for the\nworkflow name, group id, and metadata.\n',
                 ),
               ),
               tools: v.optional(
@@ -67300,7 +70300,7 @@ export const postRealtimeCallsHandler = defineHandler({
                                     v.pipe(
                                       v.unknown(),
                                       v.transform((input) => (input === 'null' ? null : input)),
-                                      v.nullable(v.null()),
+                                      v.null(),
                                     ),
                                   ]),
                                 ),
@@ -67369,7 +70369,7 @@ export const postRealtimeCallsHandler = defineHandler({
                                     v.pipe(
                                       v.unknown(),
                                       v.transform((input) => (input === 'null' ? null : input)),
-                                      v.nullable(v.null()),
+                                      v.null(),
                                     ),
                                   ]),
                                 ),
@@ -67397,7 +70397,7 @@ export const postRealtimeCallsHandler = defineHandler({
                                     v.pipe(
                                       v.unknown(),
                                       v.transform((input) => (input === 'null' ? null : input)),
-                                      v.nullable(v.null()),
+                                      v.null(),
                                     ),
                                   ]),
                                 ),
@@ -67507,7 +70507,7 @@ export const postRealtimeCallsHandler = defineHandler({
                                 v.pipe(
                                   v.unknown(),
                                   v.transform((input) => (input === 'null' ? null : input)),
-                                  v.nullable(v.null()),
+                                  v.null(),
                                 ),
                               ]),
                             ),
@@ -67562,7 +70562,7 @@ export const postRealtimeCallsHandler = defineHandler({
                             v.pipe(
                               v.unknown(),
                               v.transform((input) => (input === 'null' ? null : input)),
-                              v.nullable(v.null()),
+                              v.null(),
                             ),
                           ]),
                         ),
@@ -67594,7 +70594,13 @@ export const postRealtimeCallsHandler = defineHandler({
               max_output_tokens: v.optional(
                 v.pipe(
                   v.union([
-                    v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
+                    v.pipe(
+                      v.string(),
+                      v.regex(/^-?(?:0|[1-9]\d*)$/),
+                      v.transform((input) => Number(input)),
+                      v.number(),
+                      v.safeInteger(),
+                    ),
                     v.literal('inf'),
                   ]),
                   v.description(
@@ -67620,7 +70626,8 @@ export const postRealtimeCallsHandler = defineHandler({
                         retention_ratio: v.pipe(
                           v.pipe(
                             v.string(),
-                            v.transform(Number),
+                            v.regex(/^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/),
+                            v.transform((input) => Number(input)),
                             v.number(),
                             v.finite(),
                             v.minValue(0),
@@ -67637,7 +70644,8 @@ export const postRealtimeCallsHandler = defineHandler({
                                 post_instructions: v.pipe(
                                   v.pipe(
                                     v.string(),
-                                    v.transform(Number),
+                                    v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.transform((input) => Number(input)),
                                     v.number(),
                                     v.safeInteger(),
                                     v.minValue(0),
@@ -67685,7 +70693,7 @@ export const postRealtimeCallsHandler = defineHandler({
                               v.pipe(
                                 v.unknown(),
                                 v.transform((input) => (input === 'null' ? null : input)),
-                                v.nullable(v.null()),
+                                v.null(),
                               ),
                             ]),
                           ),
@@ -67722,7 +70730,7 @@ export const postRealtimeCallsHandler = defineHandler({
                                                   v.transform((input) =>
                                                     input === 'null' ? null : input,
                                                   ),
-                                                  v.nullable(v.null()),
+                                                  v.null(),
                                                 ),
                                               ]),
                                             ),
@@ -67739,7 +70747,7 @@ export const postRealtimeCallsHandler = defineHandler({
                                                   v.transform((input) =>
                                                     input === 'null' ? null : input,
                                                   ),
-                                                  v.nullable(v.null()),
+                                                  v.null(),
                                                 ),
                                               ]),
                                             ),
@@ -67778,7 +70786,7 @@ export const postRealtimeCallsHandler = defineHandler({
                                                   v.transform((input) =>
                                                     input === 'null' ? null : input,
                                                   ),
-                                                  v.nullable(v.null()),
+                                                  v.null(),
                                                 ),
                                               ]),
                                             ),
@@ -67829,7 +70837,7 @@ export const postRealtimeCallsHandler = defineHandler({
                                   v.pipe(
                                     v.unknown(),
                                     v.transform((input) => (input === 'null' ? null : input)),
-                                    v.nullable(v.null()),
+                                    v.null(),
                                   ),
                                 ]),
                               ),
@@ -67843,7 +70851,7 @@ export const postRealtimeCallsHandler = defineHandler({
                       v.pipe(
                         v.unknown(),
                         v.transform((input) => (input === 'null' ? null : input)),
-                        v.nullable(v.null()),
+                        v.null(),
                       ),
                     ]),
                   ),
@@ -67927,7 +70935,13 @@ export const getResponsesResponseIdHandler = defineHandler({
         v.regex(/^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i),
         v.transform((input) => /^(?:true|1|yes|on|y|enabled)$/i.test(input)),
       ),
-      starting_after: v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
+      starting_after: v.pipe(
+        v.string(),
+        v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.transform((input) => Number(input)),
+        v.number(),
+        v.safeInteger(),
+      ),
       include_obfuscation: v.pipe(
         v.string(),
         v.regex(/^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i),
@@ -67965,7 +70979,16 @@ export const postResponsesResponseIdCancelHandler = defineHandler({
 export const getResponsesResponseIdInputItemsHandler = defineHandler({
   param: v.object({ response_id: v.string() }),
   query: v.object({
-    limit: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '20'),
+    limit: v.optional(
+      v.pipe(
+        v.string(),
+        v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.transform((input) => Number(input)),
+        v.number(),
+        v.safeInteger(),
+      ),
+      '20',
+    ),
     order: v.optional(v.picklist(['asc', 'desc'])),
     after: v.optional(v.string()),
     include: v.optional(
@@ -68008,7 +71031,13 @@ export const getResponsesResponseIdBetaTrueHandler = defineHandler({
         v.regex(/^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i),
         v.transform((input) => /^(?:true|1|yes|on|y|enabled)$/i.test(input)),
       ),
-      starting_after: v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
+      starting_after: v.pipe(
+        v.string(),
+        v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.transform((input) => Number(input)),
+        v.number(),
+        v.safeInteger(),
+      ),
       include_obfuscation: v.pipe(
         v.string(),
         v.regex(/^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i),
@@ -68087,7 +71116,16 @@ export const postResponsesCompactBetaTrueHandler = defineHandler({
 export const getResponsesResponseIdInputItemsBetaTrueHandler = defineHandler({
   param: v.object({ response_id: v.string() }),
   query: v.object({
-    limit: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '20'),
+    limit: v.optional(
+      v.pipe(
+        v.string(),
+        v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.transform((input) => Number(input)),
+        v.number(),
+        v.safeInteger(),
+      ),
+      '20',
+    ),
     order: v.optional(v.picklist(['asc', 'desc'])),
     after: v.optional(v.string()),
     include: v.optional(
@@ -68153,7 +71191,16 @@ export const deleteThreadsThreadIdHandler = defineHandler({
 export const getThreadsThreadIdMessagesHandler = defineHandler({
   param: v.object({ thread_id: v.string() }),
   query: v.object({
-    limit: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '20'),
+    limit: v.optional(
+      v.pipe(
+        v.string(),
+        v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.transform((input) => Number(input)),
+        v.number(),
+        v.safeInteger(),
+      ),
+      '20',
+    ),
     order: v.optional(v.picklist(['asc', 'desc']), 'desc'),
     after: v.optional(v.string()),
     before: v.optional(v.string()),
@@ -68187,7 +71234,16 @@ export const deleteThreadsThreadIdMessagesMessageIdHandler = defineHandler({
 export const getThreadsThreadIdRunsHandler = defineHandler({
   param: v.object({ thread_id: v.string() }),
   query: v.object({
-    limit: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '20'),
+    limit: v.optional(
+      v.pipe(
+        v.string(),
+        v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.transform((input) => Number(input)),
+        v.number(),
+        v.safeInteger(),
+      ),
+      '20',
+    ),
     order: v.optional(v.picklist(['asc', 'desc']), 'desc'),
     after: v.optional(v.string()),
     before: v.optional(v.string()),
@@ -68229,7 +71285,16 @@ export const postThreadsThreadIdRunsRunIdCancelHandler = defineHandler({
 export const getThreadsThreadIdRunsRunIdStepsHandler = defineHandler({
   param: v.object({ thread_id: v.string(), run_id: v.string() }),
   query: v.object({
-    limit: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '20'),
+    limit: v.optional(
+      v.pipe(
+        v.string(),
+        v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.transform((input) => Number(input)),
+        v.number(),
+        v.safeInteger(),
+      ),
+      '20',
+    ),
     order: v.optional(v.picklist(['asc', 'desc']), 'desc'),
     after: v.optional(v.string()),
     before: v.optional(v.string()),
@@ -68288,7 +71353,16 @@ export const postUploadsUploadIdPartsHandler = defineHandler({
 
 export const getVectorStoresHandler = defineHandler({
   query: v.object({
-    limit: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '20'),
+    limit: v.optional(
+      v.pipe(
+        v.string(),
+        v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.transform((input) => Number(input)),
+        v.number(),
+        v.safeInteger(),
+      ),
+      '20',
+    ),
     order: v.optional(v.picklist(['asc', 'desc']), 'desc'),
     after: v.optional(v.string()),
     before: v.optional(v.string()),
@@ -68339,7 +71413,16 @@ export const postVectorStoresVectorStoreIdFileBatchesBatchIdCancelHandler = defi
 export const getVectorStoresVectorStoreIdFileBatchesBatchIdFilesHandler = defineHandler({
   param: v.object({ vector_store_id: v.string(), batch_id: v.string() }),
   query: v.object({
-    limit: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '20'),
+    limit: v.optional(
+      v.pipe(
+        v.string(),
+        v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.transform((input) => Number(input)),
+        v.number(),
+        v.safeInteger(),
+      ),
+      '20',
+    ),
     order: v.optional(v.picklist(['asc', 'desc']), 'desc'),
     after: v.optional(v.string()),
     before: v.optional(v.string()),
@@ -68351,7 +71434,16 @@ export const getVectorStoresVectorStoreIdFileBatchesBatchIdFilesHandler = define
 export const getVectorStoresVectorStoreIdFilesHandler = defineHandler({
   param: v.object({ vector_store_id: v.string() }),
   query: v.object({
-    limit: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '20'),
+    limit: v.optional(
+      v.pipe(
+        v.string(),
+        v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.transform((input) => Number(input)),
+        v.number(),
+        v.safeInteger(),
+      ),
+      '20',
+    ),
     order: v.optional(v.picklist(['asc', 'desc']), 'desc'),
     after: v.optional(v.string()),
     before: v.optional(v.string()),
@@ -68426,7 +71518,8 @@ export const getVideosHandler = defineHandler({
     v.object({
       limit: v.pipe(
         v.string(),
-        v.transform(Number),
+        v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.transform((input) => Number(input)),
         v.number(),
         v.safeInteger(),
         v.minValue(0),
@@ -68498,7 +71591,8 @@ export const getSkillsHandler = defineHandler({
     v.object({
       limit: v.pipe(
         v.string(),
-        v.transform(Number),
+        v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.transform((input) => Number(input)),
         v.number(),
         v.safeInteger(),
         v.minValue(0),
@@ -68565,7 +71659,8 @@ export const getSkillsSkillIdVersionsHandler = defineHandler({
     v.object({
       limit: v.pipe(
         v.string(),
-        v.transform(Number),
+        v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.transform((input) => Number(input)),
         v.number(),
         v.safeInteger(),
         v.minValue(0),
@@ -68651,7 +71746,8 @@ export const getChatkitThreadsThreadIdItemsHandler = defineHandler({
     v.object({
       limit: v.pipe(
         v.string(),
-        v.transform(Number),
+        v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.transform((input) => Number(input)),
         v.number(),
         v.safeInteger(),
         v.minValue(0),
@@ -68690,7 +71786,8 @@ export const getChatkitThreadsHandler = defineHandler({
     v.object({
       limit: v.pipe(
         v.string(),
-        v.transform(Number),
+        v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.transform((input) => Number(input)),
         v.number(),
         v.safeInteger(),
         v.minValue(0),
@@ -69543,7 +72640,8 @@ export const getWebhookEndpointsHandler = defineHandler({
     v.object({
       limit: v.pipe(
         v.string(),
-        v.transform(Number),
+        v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.transform((input) => Number(input)),
         v.number(),
         v.safeInteger(),
         v.minValue(1),
@@ -69554,7 +72652,7 @@ export const getWebhookEndpointsHandler = defineHandler({
         v.pipe(
           v.unknown(),
           v.transform((input) => (input === 'null' ? null : input)),
-          v.nullable(v.null()),
+          v.null(),
         ),
       ]),
     }),

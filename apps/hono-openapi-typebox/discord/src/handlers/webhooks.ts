@@ -1,6 +1,6 @@
 import { Hono } from 'hono'
 import { describeRoute, resolver, validator } from 'hono-openapi'
-import { Type, Codec } from 'typebox'
+import { Type, Codec, type StaticDecode, type StaticEncode, type TSchema } from 'typebox'
 import { Compile } from 'typebox/compile'
 import {
   AllowedMentionTypesSchema,
@@ -32,6 +32,31 @@ import {
   ClientRatelimitedResponseResponse,
 } from '../components'
 
+const toStandardSchemaV1 = <T extends TSchema>(schema: T) => {
+  const validator = Compile(schema)
+  return Object.assign(validator, {
+    '~standard': {
+      version: 1 as const,
+      vendor: 'typebox',
+      validate: (value: unknown) =>
+        validator.Check(value)
+          ? { value: validator.Decode(value) }
+          : {
+              issues: validator.Errors(value).map((error) => ({
+                message: error.message,
+                path: error.instancePath
+                  .split('/')
+                  .slice(1)
+                  .map((key) => key.replaceAll('~1', '/').replaceAll('~0', '~')),
+              })),
+            },
+      types: undefined as
+        | { readonly input: StaticEncode<T>; readonly output: StaticDecode<T> }
+        | undefined,
+    },
+  })
+}
+
 export const webhooksHandler = new Hono()
   .get(
     '/webhooks/:webhook_id',
@@ -50,7 +75,7 @@ export const webhooksHandler = new Hono()
           content: {
             'application/json': {
               schema: resolver(
-                Compile(
+                toStandardSchemaV1(
                   Type.Union([
                     ApplicationIncomingWebhookResponseSchema,
                     ChannelFollowerWebhookResponseSchema,
@@ -66,7 +91,7 @@ export const webhooksHandler = new Hono()
       },
       security: [{ BotToken: [] }],
     }),
-    validator('param', Compile(Type.Object({ webhook_id: SnowflakeTypeSchema }))),
+    validator('param', toStandardSchemaV1(Type.Object({ webhook_id: SnowflakeTypeSchema }))),
     (c) => { throw new Error('Not implemented') },
   )
   .delete(
@@ -89,7 +114,7 @@ export const webhooksHandler = new Hono()
       },
       security: [{ BotToken: [] }],
     }),
-    validator('param', Compile(Type.Object({ webhook_id: SnowflakeTypeSchema }))),
+    validator('param', toStandardSchemaV1(Type.Object({ webhook_id: SnowflakeTypeSchema }))),
     (c) => { throw new Error('Not implemented') },
   )
   .patch(
@@ -109,7 +134,7 @@ export const webhooksHandler = new Hono()
           content: {
             'application/json': {
               schema: resolver(
-                Compile(
+                toStandardSchemaV1(
                   Type.Union([
                     ApplicationIncomingWebhookResponseSchema,
                     ChannelFollowerWebhookResponseSchema,
@@ -125,16 +150,14 @@ export const webhooksHandler = new Hono()
       },
       security: [{ BotToken: [] }],
     }),
-    validator('param', Compile(Type.Object({ webhook_id: SnowflakeTypeSchema }))),
+    validator('param', toStandardSchemaV1(Type.Object({ webhook_id: SnowflakeTypeSchema }))),
     validator(
       'json',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           name: Type.Optional(Type.String({ minLength: 1, maxLength: 80 })),
           avatar: Type.Optional(Type.Union([Type.String(), Type.Null()])),
-          channel_id: Type.Optional(
-            Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
-          ),
+          channel_id: Type.Optional(Type.Union([Type.Null(), SnowflakeTypeSchema])),
         }),
       ),
     ),
@@ -157,7 +180,7 @@ export const webhooksHandler = new Hono()
           content: {
             'application/json': {
               schema: resolver(
-                Compile(
+                toStandardSchemaV1(
                   Type.Union([
                     ApplicationIncomingWebhookResponseSchema,
                     ChannelFollowerWebhookResponseSchema,
@@ -175,7 +198,7 @@ export const webhooksHandler = new Hono()
     }),
     validator(
       'param',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           webhook_id: SnowflakeTypeSchema,
           webhook_token: Type.String({ maxLength: 152133 }),
@@ -198,7 +221,9 @@ export const webhooksHandler = new Hono()
             'X-RateLimit-Reset-After': { $ref: '#/components/headers/X-RateLimit-Reset-After' },
             'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
           },
-          content: { 'application/json': { schema: resolver(Compile(MessageResponseSchema)) } },
+          content: {
+            'application/json': { schema: resolver(toStandardSchemaV1(MessageResponseSchema)) },
+          },
         },
         '204': {
           description: '204 response for execute_webhook',
@@ -217,7 +242,7 @@ export const webhooksHandler = new Hono()
     }),
     validator(
       'param',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           webhook_id: SnowflakeTypeSchema,
           webhook_token: Type.String({ maxLength: 152133 }),
@@ -226,17 +251,21 @@ export const webhooksHandler = new Hono()
     ),
     validator(
       'query',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           wait: Type.Optional(
-            Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-              .Decode((value) => value === 'true')
+            Codec(
+              Type.String({ pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i }),
+            )
+              .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
               .Encode((value) => (value ? 'true' : 'false')),
           ),
           thread_id: Type.Optional(SnowflakeTypeSchema),
           with_components: Type.Optional(
-            Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-              .Decode((value) => value === 'true')
+            Codec(
+              Type.String({ pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i }),
+            )
+              .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
               .Encode((value) => (value ? 'true' : 'false')),
           ),
         }),
@@ -244,7 +273,7 @@ export const webhooksHandler = new Hono()
     ),
     validator(
       'json',
-      Compile(
+      toStandardSchemaV1(
         Type.Union([
           IncomingWebhookRequestPartialSchema,
           IncomingWebhookUpdateRequestPartialSchema,
@@ -253,7 +282,7 @@ export const webhooksHandler = new Hono()
     ),
     validator(
       'form',
-      Compile(
+      toStandardSchemaV1(
         Type.Union([
           Type.Object({
             content: Type.Optional(Type.Union([Type.String({ maxLength: 2000 }), Type.Null()])),
@@ -272,8 +301,18 @@ export const webhooksHandler = new Hono()
                     ),
                     color: Type.Optional(
                       Type.Union([
-                        Codec(Type.String())
-                          .Decode((value) => Number.parseInt(value, 10))
+                        Codec(
+                          Type.Refine(
+                            Type.Refine(
+                              Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                              (value) => Number(value) >= 0,
+                              () => 'must be >= 0',
+                            ),
+                            (value) => Number(value) <= 16777215,
+                            () => 'must be <= 16777215',
+                          ),
+                        )
+                          .Decode((value) => Number(value))
                           .Encode((value) => String(value)),
                         Type.Null(),
                       ]),
@@ -284,12 +323,10 @@ export const webhooksHandler = new Hono()
                     description: Type.Optional(
                       Type.Union([Type.String({ maxLength: 4096 }), Type.Null()]),
                     ),
-                    author: Type.Optional(
-                      Type.Union([Type.Union([Type.Null(), Type.Null()]), RichEmbedAuthorSchema]),
-                    ),
+                    author: Type.Optional(Type.Union([Type.Null(), RichEmbedAuthorSchema])),
                     image: Type.Optional(
                       Type.Union([
-                        Type.Union([Type.Null(), Type.Null()]),
+                        Type.Null(),
                         Type.Object({
                           url: Type.Optional(
                             Type.Union([
@@ -299,16 +336,16 @@ export const webhooksHandler = new Hono()
                           ),
                           width: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
                           ),
                           height: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
@@ -318,16 +355,31 @@ export const webhooksHandler = new Hono()
                           ),
                           placeholder_version: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(
+                                Type.Refine(
+                                  Type.Refine(
+                                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                    (value) => Number(value) >= 0,
+                                    () => 'must be >= 0',
+                                  ),
+                                  (value) => Number(value) <= 2147483647,
+                                  () => 'must be <= 2147483647',
+                                ),
+                              )
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
                           ),
                           is_animated: Type.Optional(
                             Type.Union([
-                              Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                .Decode((value) => value === 'true')
+                              Codec(
+                                Type.String({
+                                  pattern:
+                                    /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                }),
+                              )
+                                .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                 .Encode((value) => (value ? 'true' : 'false')),
                               Type.Null(),
                             ]),
@@ -340,7 +392,7 @@ export const webhooksHandler = new Hono()
                     ),
                     thumbnail: Type.Optional(
                       Type.Union([
-                        Type.Union([Type.Null(), Type.Null()]),
+                        Type.Null(),
                         Type.Object({
                           url: Type.Optional(
                             Type.Union([
@@ -350,16 +402,16 @@ export const webhooksHandler = new Hono()
                           ),
                           width: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
                           ),
                           height: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
@@ -369,16 +421,31 @@ export const webhooksHandler = new Hono()
                           ),
                           placeholder_version: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(
+                                Type.Refine(
+                                  Type.Refine(
+                                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                    (value) => Number(value) >= 0,
+                                    () => 'must be >= 0',
+                                  ),
+                                  (value) => Number(value) <= 2147483647,
+                                  () => 'must be <= 2147483647',
+                                ),
+                              )
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
                           ),
                           is_animated: Type.Optional(
                             Type.Union([
-                              Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                .Decode((value) => value === 'true')
+                              Codec(
+                                Type.String({
+                                  pattern:
+                                    /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                }),
+                              )
+                                .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                 .Encode((value) => (value ? 'true' : 'false')),
                               Type.Null(),
                             ]),
@@ -389,9 +456,7 @@ export const webhooksHandler = new Hono()
                         }),
                       ]),
                     ),
-                    footer: Type.Optional(
-                      Type.Union([Type.Union([Type.Null(), Type.Null()]), RichEmbedFooterSchema]),
-                    ),
+                    footer: Type.Optional(Type.Union([Type.Null(), RichEmbedFooterSchema])),
                     fields: Type.Optional(
                       Type.Union([
                         Type.Array(
@@ -400,8 +465,13 @@ export const webhooksHandler = new Hono()
                             value: Type.String({ maxLength: 1024 }),
                             inline: Type.Optional(
                               Type.Union([
-                                Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                  .Decode((value) => value === 'true')
+                                Codec(
+                                  Type.String({
+                                    pattern:
+                                      /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                  }),
+                                )
+                                  .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                   .Encode((value) => (value ? 'true' : 'false')),
                                 Type.Null(),
                               ]),
@@ -412,12 +482,10 @@ export const webhooksHandler = new Hono()
                         Type.Null(),
                       ]),
                     ),
-                    provider: Type.Optional(
-                      Type.Union([Type.Union([Type.Null(), Type.Null()]), RichEmbedProviderSchema]),
-                    ),
+                    provider: Type.Optional(Type.Union([Type.Null(), RichEmbedProviderSchema])),
                     video: Type.Optional(
                       Type.Union([
-                        Type.Union([Type.Null(), Type.Null()]),
+                        Type.Null(),
                         Type.Object({
                           url: Type.Optional(
                             Type.Union([
@@ -427,16 +495,16 @@ export const webhooksHandler = new Hono()
                           ),
                           width: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
                           ),
                           height: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
@@ -446,16 +514,31 @@ export const webhooksHandler = new Hono()
                           ),
                           placeholder_version: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(
+                                Type.Refine(
+                                  Type.Refine(
+                                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                    (value) => Number(value) >= 0,
+                                    () => 'must be >= 0',
+                                  ),
+                                  (value) => Number(value) <= 2147483647,
+                                  () => 'must be <= 2147483647',
+                                ),
+                              )
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
                           ),
                           is_animated: Type.Optional(
                             Type.Union([
-                              Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                .Decode((value) => value === 'true')
+                              Codec(
+                                Type.String({
+                                  pattern:
+                                    /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                }),
+                              )
+                                .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                 .Encode((value) => (value ? 'true' : 'false')),
                               Type.Null(),
                             ]),
@@ -466,9 +549,7 @@ export const webhooksHandler = new Hono()
                         }),
                       ]),
                     ),
-                    audio: Type.Optional(
-                      Type.Union([Type.Union([Type.Null(), Type.Null()]), RichEmbedAudioSchema]),
-                    ),
+                    audio: Type.Optional(Type.Union([Type.Null(), RichEmbedAudioSchema])),
                   }),
                   { maxItems: 10 },
                 ),
@@ -477,42 +558,43 @@ export const webhooksHandler = new Hono()
             ),
             allowed_mentions: Type.Optional(
               Type.Union([
-                Type.Union([Type.Null(), Type.Null()]),
+                Type.Null(),
                 Type.Object({
                   parse: Type.Optional(
                     Type.Union([
-                      Type.Array(
-                        Type.Union([
-                          Type.Union([Type.Null(), Type.Null()]),
-                          AllowedMentionTypesSchema,
-                        ]),
-                        { maxItems: 1521, uniqueItems: true },
-                      ),
+                      Type.Array(Type.Union([Type.Null(), AllowedMentionTypesSchema]), {
+                        maxItems: 1521,
+                        uniqueItems: true,
+                      }),
                       Type.Null(),
                     ]),
                   ),
                   users: Type.Optional(
                     Type.Union([
-                      Type.Array(
-                        Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
-                        { maxItems: 100, uniqueItems: true },
-                      ),
+                      Type.Array(Type.Union([Type.Null(), SnowflakeTypeSchema]), {
+                        maxItems: 100,
+                        uniqueItems: true,
+                      }),
                       Type.Null(),
                     ]),
                   ),
                   roles: Type.Optional(
                     Type.Union([
-                      Type.Array(
-                        Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
-                        { maxItems: 100, uniqueItems: true },
-                      ),
+                      Type.Array(Type.Union([Type.Null(), SnowflakeTypeSchema]), {
+                        maxItems: 100,
+                        uniqueItems: true,
+                      }),
                       Type.Null(),
                     ]),
                   ),
                   replied_user: Type.Optional(
                     Type.Union([
-                      Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                        .Decode((value) => value === 'true')
+                      Codec(
+                        Type.String({
+                          pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                        }),
+                      )
+                        .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                         .Encode((value) => (value ? 'true' : 'false')),
                       Type.Null(),
                     ]),
@@ -528,8 +610,14 @@ export const webhooksHandler = new Hono()
                       type: MessageComponentTypesSchema,
                       id: Type.Optional(
                         Type.Union([
-                          Codec(Type.String())
-                            .Decode((value) => Number.parseInt(value, 10))
+                          Codec(
+                            Type.Refine(
+                              Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                              (value) => Number(value) >= 0,
+                              () => 'must be >= 0',
+                            ),
+                          )
+                            .Decode((value) => Number(value))
                             .Encode((value) => String(value)),
                           Type.Null(),
                         ]),
@@ -540,8 +628,14 @@ export const webhooksHandler = new Hono()
                             type: MessageComponentTypesSchema,
                             id: Type.Optional(
                               Type.Union([
-                                Codec(Type.String())
-                                  .Decode((value) => Number.parseInt(value, 10))
+                                Codec(
+                                  Type.Refine(
+                                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                    (value) => Number(value) >= 0,
+                                    () => 'must be >= 0',
+                                  ),
+                                )
+                                  .Decode((value) => Number(value))
                                   .Encode((value) => String(value)),
                                 Type.Null(),
                               ]),
@@ -558,8 +652,13 @@ export const webhooksHandler = new Hono()
                             ),
                             disabled: Type.Optional(
                               Type.Union([
-                                Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                  .Decode((value) => value === 'true')
+                                Codec(
+                                  Type.String({
+                                    pattern:
+                                      /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                  }),
+                                )
+                                  .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                   .Encode((value) => (value ? 'true' : 'false')),
                                 Type.Null(),
                               ]),
@@ -570,25 +669,23 @@ export const webhooksHandler = new Hono()
                                 Type.Null(),
                               ]),
                             ),
-                            sku_id: Type.Optional(
-                              Type.Union([
-                                Type.Union([Type.Null(), Type.Null()]),
-                                SnowflakeTypeSchema,
-                              ]),
-                            ),
+                            sku_id: Type.Optional(Type.Union([Type.Null(), SnowflakeTypeSchema])),
                             emoji: Type.Optional(
-                              Type.Union([
-                                Type.Union([Type.Null(), Type.Null()]),
-                                ComponentEmojiForRequestSchema,
-                              ]),
+                              Type.Union([Type.Null(), ComponentEmojiForRequestSchema]),
                             ),
                           }),
                           Type.Object({
                             type: MessageComponentTypesSchema,
                             id: Type.Optional(
                               Type.Union([
-                                Codec(Type.String())
-                                  .Decode((value) => Number.parseInt(value, 10))
+                                Codec(
+                                  Type.Refine(
+                                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                    (value) => Number(value) >= 0,
+                                    () => 'must be >= 0',
+                                  ),
+                                )
+                                  .Decode((value) => Number(value))
                                   .Encode((value) => String(value)),
                                 Type.Null(),
                               ]),
@@ -599,32 +696,62 @@ export const webhooksHandler = new Hono()
                             ),
                             min_values: Type.Optional(
                               Type.Union([
-                                Codec(Type.String())
-                                  .Decode((value) => Number.parseInt(value, 10))
+                                Codec(
+                                  Type.Refine(
+                                    Type.Refine(
+                                      Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                      (value) => Number(value) >= 0,
+                                      () => 'must be >= 0',
+                                    ),
+                                    (value) => Number(value) <= 25,
+                                    () => 'must be <= 25',
+                                  ),
+                                )
+                                  .Decode((value) => Number(value))
                                   .Encode((value) => String(value)),
                                 Type.Null(),
                               ]),
                             ),
                             max_values: Type.Optional(
                               Type.Union([
-                                Codec(Type.String())
-                                  .Decode((value) => Number.parseInt(value, 10))
+                                Codec(
+                                  Type.Refine(
+                                    Type.Refine(
+                                      Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                      (value) => Number(value) >= 1,
+                                      () => 'must be >= 1',
+                                    ),
+                                    (value) => Number(value) <= 25,
+                                    () => 'must be <= 25',
+                                  ),
+                                )
+                                  .Decode((value) => Number(value))
                                   .Encode((value) => String(value)),
                                 Type.Null(),
                               ]),
                             ),
                             disabled: Type.Optional(
                               Type.Union([
-                                Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                  .Decode((value) => value === 'true')
+                                Codec(
+                                  Type.String({
+                                    pattern:
+                                      /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                  }),
+                                )
+                                  .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                   .Encode((value) => (value ? 'true' : 'false')),
                                 Type.Null(),
                               ]),
                             ),
                             required: Type.Optional(
                               Type.Union([
-                                Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                  .Decode((value) => value === 'true')
+                                Codec(
+                                  Type.String({
+                                    pattern:
+                                      /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                  }),
+                                )
+                                  .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                   .Encode((value) => (value ? 'true' : 'false')),
                                 Type.Null(),
                               ]),
@@ -646,8 +773,14 @@ export const webhooksHandler = new Hono()
                             type: MessageComponentTypesSchema,
                             id: Type.Optional(
                               Type.Union([
-                                Codec(Type.String())
-                                  .Decode((value) => Number.parseInt(value, 10))
+                                Codec(
+                                  Type.Refine(
+                                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                    (value) => Number(value) >= 0,
+                                    () => 'must be >= 0',
+                                  ),
+                                )
+                                  .Decode((value) => Number(value))
                                   .Encode((value) => String(value)),
                                 Type.Null(),
                               ]),
@@ -658,32 +791,62 @@ export const webhooksHandler = new Hono()
                             ),
                             min_values: Type.Optional(
                               Type.Union([
-                                Codec(Type.String())
-                                  .Decode((value) => Number.parseInt(value, 10))
+                                Codec(
+                                  Type.Refine(
+                                    Type.Refine(
+                                      Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                      (value) => Number(value) >= 0,
+                                      () => 'must be >= 0',
+                                    ),
+                                    (value) => Number(value) <= 25,
+                                    () => 'must be <= 25',
+                                  ),
+                                )
+                                  .Decode((value) => Number(value))
                                   .Encode((value) => String(value)),
                                 Type.Null(),
                               ]),
                             ),
                             max_values: Type.Optional(
                               Type.Union([
-                                Codec(Type.String())
-                                  .Decode((value) => Number.parseInt(value, 10))
+                                Codec(
+                                  Type.Refine(
+                                    Type.Refine(
+                                      Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                      (value) => Number(value) >= 1,
+                                      () => 'must be >= 1',
+                                    ),
+                                    (value) => Number(value) <= 25,
+                                    () => 'must be <= 25',
+                                  ),
+                                )
+                                  .Decode((value) => Number(value))
                                   .Encode((value) => String(value)),
                                 Type.Null(),
                               ]),
                             ),
                             disabled: Type.Optional(
                               Type.Union([
-                                Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                  .Decode((value) => value === 'true')
+                                Codec(
+                                  Type.String({
+                                    pattern:
+                                      /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                  }),
+                                )
+                                  .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                   .Encode((value) => (value ? 'true' : 'false')),
                                 Type.Null(),
                               ]),
                             ),
                             required: Type.Optional(
                               Type.Union([
-                                Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                  .Decode((value) => value === 'true')
+                                Codec(
+                                  Type.String({
+                                    pattern:
+                                      /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                  }),
+                                )
+                                  .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                   .Encode((value) => (value ? 'true' : 'false')),
                                 Type.Null(),
                               ]),
@@ -705,8 +868,14 @@ export const webhooksHandler = new Hono()
                             type: MessageComponentTypesSchema,
                             id: Type.Optional(
                               Type.Union([
-                                Codec(Type.String())
-                                  .Decode((value) => Number.parseInt(value, 10))
+                                Codec(
+                                  Type.Refine(
+                                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                    (value) => Number(value) >= 0,
+                                    () => 'must be >= 0',
+                                  ),
+                                )
+                                  .Decode((value) => Number(value))
                                   .Encode((value) => String(value)),
                                 Type.Null(),
                               ]),
@@ -717,32 +886,62 @@ export const webhooksHandler = new Hono()
                             ),
                             min_values: Type.Optional(
                               Type.Union([
-                                Codec(Type.String())
-                                  .Decode((value) => Number.parseInt(value, 10))
+                                Codec(
+                                  Type.Refine(
+                                    Type.Refine(
+                                      Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                      (value) => Number(value) >= 0,
+                                      () => 'must be >= 0',
+                                    ),
+                                    (value) => Number(value) <= 25,
+                                    () => 'must be <= 25',
+                                  ),
+                                )
+                                  .Decode((value) => Number(value))
                                   .Encode((value) => String(value)),
                                 Type.Null(),
                               ]),
                             ),
                             max_values: Type.Optional(
                               Type.Union([
-                                Codec(Type.String())
-                                  .Decode((value) => Number.parseInt(value, 10))
+                                Codec(
+                                  Type.Refine(
+                                    Type.Refine(
+                                      Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                      (value) => Number(value) >= 1,
+                                      () => 'must be >= 1',
+                                    ),
+                                    (value) => Number(value) <= 25,
+                                    () => 'must be <= 25',
+                                  ),
+                                )
+                                  .Decode((value) => Number(value))
                                   .Encode((value) => String(value)),
                                 Type.Null(),
                               ]),
                             ),
                             disabled: Type.Optional(
                               Type.Union([
-                                Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                  .Decode((value) => value === 'true')
+                                Codec(
+                                  Type.String({
+                                    pattern:
+                                      /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                  }),
+                                )
+                                  .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                   .Encode((value) => (value ? 'true' : 'false')),
                                 Type.Null(),
                               ]),
                             ),
                             required: Type.Optional(
                               Type.Union([
-                                Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                  .Decode((value) => value === 'true')
+                                Codec(
+                                  Type.String({
+                                    pattern:
+                                      /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                  }),
+                                )
+                                  .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                   .Encode((value) => (value ? 'true' : 'false')),
                                 Type.Null(),
                               ]),
@@ -758,8 +957,14 @@ export const webhooksHandler = new Hono()
                             type: MessageComponentTypesSchema,
                             id: Type.Optional(
                               Type.Union([
-                                Codec(Type.String())
-                                  .Decode((value) => Number.parseInt(value, 10))
+                                Codec(
+                                  Type.Refine(
+                                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                    (value) => Number(value) >= 0,
+                                    () => 'must be >= 0',
+                                  ),
+                                )
+                                  .Decode((value) => Number(value))
                                   .Encode((value) => String(value)),
                                 Type.Null(),
                               ]),
@@ -770,32 +975,62 @@ export const webhooksHandler = new Hono()
                             ),
                             min_values: Type.Optional(
                               Type.Union([
-                                Codec(Type.String())
-                                  .Decode((value) => Number.parseInt(value, 10))
+                                Codec(
+                                  Type.Refine(
+                                    Type.Refine(
+                                      Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                      (value) => Number(value) >= 0,
+                                      () => 'must be >= 0',
+                                    ),
+                                    (value) => Number(value) <= 25,
+                                    () => 'must be <= 25',
+                                  ),
+                                )
+                                  .Decode((value) => Number(value))
                                   .Encode((value) => String(value)),
                                 Type.Null(),
                               ]),
                             ),
                             max_values: Type.Optional(
                               Type.Union([
-                                Codec(Type.String())
-                                  .Decode((value) => Number.parseInt(value, 10))
+                                Codec(
+                                  Type.Refine(
+                                    Type.Refine(
+                                      Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                      (value) => Number(value) >= 1,
+                                      () => 'must be >= 1',
+                                    ),
+                                    (value) => Number(value) <= 25,
+                                    () => 'must be <= 25',
+                                  ),
+                                )
+                                  .Decode((value) => Number(value))
                                   .Encode((value) => String(value)),
                                 Type.Null(),
                               ]),
                             ),
                             disabled: Type.Optional(
                               Type.Union([
-                                Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                  .Decode((value) => value === 'true')
+                                Codec(
+                                  Type.String({
+                                    pattern:
+                                      /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                  }),
+                                )
+                                  .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                   .Encode((value) => (value ? 'true' : 'false')),
                                 Type.Null(),
                               ]),
                             ),
                             required: Type.Optional(
                               Type.Union([
-                                Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                  .Decode((value) => value === 'true')
+                                Codec(
+                                  Type.String({
+                                    pattern:
+                                      /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                  }),
+                                )
+                                  .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                   .Encode((value) => (value ? 'true' : 'false')),
                                 Type.Null(),
                               ]),
@@ -809,17 +1044,21 @@ export const webhooksHandler = new Hono()
                                 ),
                                 default: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                      .Decode((value) => value === 'true')
+                                    Codec(
+                                      Type.String({
+                                        pattern:
+                                          /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                      }),
+                                    )
+                                      .Decode((value) =>
+                                        /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                      )
                                       .Encode((value) => (value ? 'true' : 'false')),
                                     Type.Null(),
                                   ]),
                                 ),
                                 emoji: Type.Optional(
-                                  Type.Union([
-                                    Type.Union([Type.Null(), Type.Null()]),
-                                    ComponentEmojiForRequestSchema,
-                                  ]),
+                                  Type.Union([Type.Null(), ComponentEmojiForRequestSchema]),
                                 ),
                               }),
                               { minItems: 1, maxItems: 25 },
@@ -829,8 +1068,14 @@ export const webhooksHandler = new Hono()
                             type: MessageComponentTypesSchema,
                             id: Type.Optional(
                               Type.Union([
-                                Codec(Type.String())
-                                  .Decode((value) => Number.parseInt(value, 10))
+                                Codec(
+                                  Type.Refine(
+                                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                    (value) => Number(value) >= 0,
+                                    () => 'must be >= 0',
+                                  ),
+                                )
+                                  .Decode((value) => Number(value))
                                   .Encode((value) => String(value)),
                                 Type.Null(),
                               ]),
@@ -841,32 +1086,62 @@ export const webhooksHandler = new Hono()
                             ),
                             min_values: Type.Optional(
                               Type.Union([
-                                Codec(Type.String())
-                                  .Decode((value) => Number.parseInt(value, 10))
+                                Codec(
+                                  Type.Refine(
+                                    Type.Refine(
+                                      Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                      (value) => Number(value) >= 0,
+                                      () => 'must be >= 0',
+                                    ),
+                                    (value) => Number(value) <= 25,
+                                    () => 'must be <= 25',
+                                  ),
+                                )
+                                  .Decode((value) => Number(value))
                                   .Encode((value) => String(value)),
                                 Type.Null(),
                               ]),
                             ),
                             max_values: Type.Optional(
                               Type.Union([
-                                Codec(Type.String())
-                                  .Decode((value) => Number.parseInt(value, 10))
+                                Codec(
+                                  Type.Refine(
+                                    Type.Refine(
+                                      Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                      (value) => Number(value) >= 1,
+                                      () => 'must be >= 1',
+                                    ),
+                                    (value) => Number(value) <= 25,
+                                    () => 'must be <= 25',
+                                  ),
+                                )
+                                  .Decode((value) => Number(value))
                                   .Encode((value) => String(value)),
                                 Type.Null(),
                               ]),
                             ),
                             disabled: Type.Optional(
                               Type.Union([
-                                Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                  .Decode((value) => value === 'true')
+                                Codec(
+                                  Type.String({
+                                    pattern:
+                                      /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                  }),
+                                )
+                                  .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                   .Encode((value) => (value ? 'true' : 'false')),
                                 Type.Null(),
                               ]),
                             ),
                             required: Type.Optional(
                               Type.Union([
-                                Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                  .Decode((value) => value === 'true')
+                                Codec(
+                                  Type.String({
+                                    pattern:
+                                      /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                  }),
+                                )
+                                  .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                   .Encode((value) => (value ? 'true' : 'false')),
                                 Type.Null(),
                               ]),
@@ -886,16 +1161,32 @@ export const webhooksHandler = new Hono()
                       type: MessageComponentTypesSchema,
                       id: Type.Optional(
                         Type.Union([
-                          Codec(Type.String())
-                            .Decode((value) => Number.parseInt(value, 10))
+                          Codec(
+                            Type.Refine(
+                              Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                              (value) => Number(value) >= 0,
+                              () => 'must be >= 0',
+                            ),
+                          )
+                            .Decode((value) => Number(value))
                             .Encode((value) => String(value)),
                           Type.Null(),
                         ]),
                       ),
                       accent_color: Type.Optional(
                         Type.Union([
-                          Codec(Type.String())
-                            .Decode((value) => Number.parseInt(value, 10))
+                          Codec(
+                            Type.Refine(
+                              Type.Refine(
+                                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                (value) => Number(value) >= 0,
+                                () => 'must be >= 0',
+                              ),
+                              (value) => Number(value) <= 16777215,
+                              () => 'must be <= 16777215',
+                            ),
+                          )
+                            .Decode((value) => Number(value))
                             .Encode((value) => String(value)),
                           Type.Null(),
                         ]),
@@ -906,8 +1197,14 @@ export const webhooksHandler = new Hono()
                             type: MessageComponentTypesSchema,
                             id: Type.Optional(
                               Type.Union([
-                                Codec(Type.String())
-                                  .Decode((value) => Number.parseInt(value, 10))
+                                Codec(
+                                  Type.Refine(
+                                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                    (value) => Number(value) >= 0,
+                                    () => 'must be >= 0',
+                                  ),
+                                )
+                                  .Decode((value) => Number(value))
                                   .Encode((value) => String(value)),
                                 Type.Null(),
                               ]),
@@ -918,8 +1215,14 @@ export const webhooksHandler = new Hono()
                                   type: MessageComponentTypesSchema,
                                   id: Type.Optional(
                                     Type.Union([
-                                      Codec(Type.String())
-                                        .Decode((value) => Number.parseInt(value, 10))
+                                      Codec(
+                                        Type.Refine(
+                                          Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                          (value) => Number(value) >= 0,
+                                          () => 'must be >= 0',
+                                        ),
+                                      )
+                                        .Decode((value) => Number(value))
                                         .Encode((value) => String(value)),
                                       Type.Null(),
                                     ]),
@@ -937,9 +1240,14 @@ export const webhooksHandler = new Hono()
                                   disabled: Type.Optional(
                                     Type.Union([
                                       Codec(
-                                        Type.Union([Type.Literal('true'), Type.Literal('false')]),
+                                        Type.String({
+                                          pattern:
+                                            /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                        }),
                                       )
-                                        .Decode((value) => value === 'true')
+                                        .Decode((value) =>
+                                          /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                        )
                                         .Encode((value) => (value ? 'true' : 'false')),
                                       Type.Null(),
                                     ]),
@@ -951,24 +1259,24 @@ export const webhooksHandler = new Hono()
                                     ]),
                                   ),
                                   sku_id: Type.Optional(
-                                    Type.Union([
-                                      Type.Union([Type.Null(), Type.Null()]),
-                                      SnowflakeTypeSchema,
-                                    ]),
+                                    Type.Union([Type.Null(), SnowflakeTypeSchema]),
                                   ),
                                   emoji: Type.Optional(
-                                    Type.Union([
-                                      Type.Union([Type.Null(), Type.Null()]),
-                                      ComponentEmojiForRequestSchema,
-                                    ]),
+                                    Type.Union([Type.Null(), ComponentEmojiForRequestSchema]),
                                   ),
                                 }),
                                 Type.Object({
                                   type: MessageComponentTypesSchema,
                                   id: Type.Optional(
                                     Type.Union([
-                                      Codec(Type.String())
-                                        .Decode((value) => Number.parseInt(value, 10))
+                                      Codec(
+                                        Type.Refine(
+                                          Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                          (value) => Number(value) >= 0,
+                                          () => 'must be >= 0',
+                                        ),
+                                      )
+                                        .Decode((value) => Number(value))
                                         .Encode((value) => String(value)),
                                       Type.Null(),
                                     ]),
@@ -979,16 +1287,36 @@ export const webhooksHandler = new Hono()
                                   ),
                                   min_values: Type.Optional(
                                     Type.Union([
-                                      Codec(Type.String())
-                                        .Decode((value) => Number.parseInt(value, 10))
+                                      Codec(
+                                        Type.Refine(
+                                          Type.Refine(
+                                            Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                            (value) => Number(value) >= 0,
+                                            () => 'must be >= 0',
+                                          ),
+                                          (value) => Number(value) <= 25,
+                                          () => 'must be <= 25',
+                                        ),
+                                      )
+                                        .Decode((value) => Number(value))
                                         .Encode((value) => String(value)),
                                       Type.Null(),
                                     ]),
                                   ),
                                   max_values: Type.Optional(
                                     Type.Union([
-                                      Codec(Type.String())
-                                        .Decode((value) => Number.parseInt(value, 10))
+                                      Codec(
+                                        Type.Refine(
+                                          Type.Refine(
+                                            Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                            (value) => Number(value) >= 1,
+                                            () => 'must be >= 1',
+                                          ),
+                                          (value) => Number(value) <= 25,
+                                          () => 'must be <= 25',
+                                        ),
+                                      )
+                                        .Decode((value) => Number(value))
                                         .Encode((value) => String(value)),
                                       Type.Null(),
                                     ]),
@@ -996,9 +1324,14 @@ export const webhooksHandler = new Hono()
                                   disabled: Type.Optional(
                                     Type.Union([
                                       Codec(
-                                        Type.Union([Type.Literal('true'), Type.Literal('false')]),
+                                        Type.String({
+                                          pattern:
+                                            /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                        }),
                                       )
-                                        .Decode((value) => value === 'true')
+                                        .Decode((value) =>
+                                          /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                        )
                                         .Encode((value) => (value ? 'true' : 'false')),
                                       Type.Null(),
                                     ]),
@@ -1006,9 +1339,14 @@ export const webhooksHandler = new Hono()
                                   required: Type.Optional(
                                     Type.Union([
                                       Codec(
-                                        Type.Union([Type.Literal('true'), Type.Literal('false')]),
+                                        Type.String({
+                                          pattern:
+                                            /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                        }),
                                       )
-                                        .Decode((value) => value === 'true')
+                                        .Decode((value) =>
+                                          /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                        )
                                         .Encode((value) => (value ? 'true' : 'false')),
                                       Type.Null(),
                                     ]),
@@ -1030,8 +1368,14 @@ export const webhooksHandler = new Hono()
                                   type: MessageComponentTypesSchema,
                                   id: Type.Optional(
                                     Type.Union([
-                                      Codec(Type.String())
-                                        .Decode((value) => Number.parseInt(value, 10))
+                                      Codec(
+                                        Type.Refine(
+                                          Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                          (value) => Number(value) >= 0,
+                                          () => 'must be >= 0',
+                                        ),
+                                      )
+                                        .Decode((value) => Number(value))
                                         .Encode((value) => String(value)),
                                       Type.Null(),
                                     ]),
@@ -1042,16 +1386,36 @@ export const webhooksHandler = new Hono()
                                   ),
                                   min_values: Type.Optional(
                                     Type.Union([
-                                      Codec(Type.String())
-                                        .Decode((value) => Number.parseInt(value, 10))
+                                      Codec(
+                                        Type.Refine(
+                                          Type.Refine(
+                                            Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                            (value) => Number(value) >= 0,
+                                            () => 'must be >= 0',
+                                          ),
+                                          (value) => Number(value) <= 25,
+                                          () => 'must be <= 25',
+                                        ),
+                                      )
+                                        .Decode((value) => Number(value))
                                         .Encode((value) => String(value)),
                                       Type.Null(),
                                     ]),
                                   ),
                                   max_values: Type.Optional(
                                     Type.Union([
-                                      Codec(Type.String())
-                                        .Decode((value) => Number.parseInt(value, 10))
+                                      Codec(
+                                        Type.Refine(
+                                          Type.Refine(
+                                            Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                            (value) => Number(value) >= 1,
+                                            () => 'must be >= 1',
+                                          ),
+                                          (value) => Number(value) <= 25,
+                                          () => 'must be <= 25',
+                                        ),
+                                      )
+                                        .Decode((value) => Number(value))
                                         .Encode((value) => String(value)),
                                       Type.Null(),
                                     ]),
@@ -1059,9 +1423,14 @@ export const webhooksHandler = new Hono()
                                   disabled: Type.Optional(
                                     Type.Union([
                                       Codec(
-                                        Type.Union([Type.Literal('true'), Type.Literal('false')]),
+                                        Type.String({
+                                          pattern:
+                                            /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                        }),
                                       )
-                                        .Decode((value) => value === 'true')
+                                        .Decode((value) =>
+                                          /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                        )
                                         .Encode((value) => (value ? 'true' : 'false')),
                                       Type.Null(),
                                     ]),
@@ -1069,9 +1438,14 @@ export const webhooksHandler = new Hono()
                                   required: Type.Optional(
                                     Type.Union([
                                       Codec(
-                                        Type.Union([Type.Literal('true'), Type.Literal('false')]),
+                                        Type.String({
+                                          pattern:
+                                            /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                        }),
                                       )
-                                        .Decode((value) => value === 'true')
+                                        .Decode((value) =>
+                                          /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                        )
                                         .Encode((value) => (value ? 'true' : 'false')),
                                       Type.Null(),
                                     ]),
@@ -1093,8 +1467,14 @@ export const webhooksHandler = new Hono()
                                   type: MessageComponentTypesSchema,
                                   id: Type.Optional(
                                     Type.Union([
-                                      Codec(Type.String())
-                                        .Decode((value) => Number.parseInt(value, 10))
+                                      Codec(
+                                        Type.Refine(
+                                          Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                          (value) => Number(value) >= 0,
+                                          () => 'must be >= 0',
+                                        ),
+                                      )
+                                        .Decode((value) => Number(value))
                                         .Encode((value) => String(value)),
                                       Type.Null(),
                                     ]),
@@ -1105,16 +1485,36 @@ export const webhooksHandler = new Hono()
                                   ),
                                   min_values: Type.Optional(
                                     Type.Union([
-                                      Codec(Type.String())
-                                        .Decode((value) => Number.parseInt(value, 10))
+                                      Codec(
+                                        Type.Refine(
+                                          Type.Refine(
+                                            Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                            (value) => Number(value) >= 0,
+                                            () => 'must be >= 0',
+                                          ),
+                                          (value) => Number(value) <= 25,
+                                          () => 'must be <= 25',
+                                        ),
+                                      )
+                                        .Decode((value) => Number(value))
                                         .Encode((value) => String(value)),
                                       Type.Null(),
                                     ]),
                                   ),
                                   max_values: Type.Optional(
                                     Type.Union([
-                                      Codec(Type.String())
-                                        .Decode((value) => Number.parseInt(value, 10))
+                                      Codec(
+                                        Type.Refine(
+                                          Type.Refine(
+                                            Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                            (value) => Number(value) >= 1,
+                                            () => 'must be >= 1',
+                                          ),
+                                          (value) => Number(value) <= 25,
+                                          () => 'must be <= 25',
+                                        ),
+                                      )
+                                        .Decode((value) => Number(value))
                                         .Encode((value) => String(value)),
                                       Type.Null(),
                                     ]),
@@ -1122,9 +1522,14 @@ export const webhooksHandler = new Hono()
                                   disabled: Type.Optional(
                                     Type.Union([
                                       Codec(
-                                        Type.Union([Type.Literal('true'), Type.Literal('false')]),
+                                        Type.String({
+                                          pattern:
+                                            /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                        }),
                                       )
-                                        .Decode((value) => value === 'true')
+                                        .Decode((value) =>
+                                          /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                        )
                                         .Encode((value) => (value ? 'true' : 'false')),
                                       Type.Null(),
                                     ]),
@@ -1132,9 +1537,14 @@ export const webhooksHandler = new Hono()
                                   required: Type.Optional(
                                     Type.Union([
                                       Codec(
-                                        Type.Union([Type.Literal('true'), Type.Literal('false')]),
+                                        Type.String({
+                                          pattern:
+                                            /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                        }),
                                       )
-                                        .Decode((value) => value === 'true')
+                                        .Decode((value) =>
+                                          /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                        )
                                         .Encode((value) => (value ? 'true' : 'false')),
                                       Type.Null(),
                                     ]),
@@ -1150,8 +1560,14 @@ export const webhooksHandler = new Hono()
                                   type: MessageComponentTypesSchema,
                                   id: Type.Optional(
                                     Type.Union([
-                                      Codec(Type.String())
-                                        .Decode((value) => Number.parseInt(value, 10))
+                                      Codec(
+                                        Type.Refine(
+                                          Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                          (value) => Number(value) >= 0,
+                                          () => 'must be >= 0',
+                                        ),
+                                      )
+                                        .Decode((value) => Number(value))
                                         .Encode((value) => String(value)),
                                       Type.Null(),
                                     ]),
@@ -1162,16 +1578,36 @@ export const webhooksHandler = new Hono()
                                   ),
                                   min_values: Type.Optional(
                                     Type.Union([
-                                      Codec(Type.String())
-                                        .Decode((value) => Number.parseInt(value, 10))
+                                      Codec(
+                                        Type.Refine(
+                                          Type.Refine(
+                                            Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                            (value) => Number(value) >= 0,
+                                            () => 'must be >= 0',
+                                          ),
+                                          (value) => Number(value) <= 25,
+                                          () => 'must be <= 25',
+                                        ),
+                                      )
+                                        .Decode((value) => Number(value))
                                         .Encode((value) => String(value)),
                                       Type.Null(),
                                     ]),
                                   ),
                                   max_values: Type.Optional(
                                     Type.Union([
-                                      Codec(Type.String())
-                                        .Decode((value) => Number.parseInt(value, 10))
+                                      Codec(
+                                        Type.Refine(
+                                          Type.Refine(
+                                            Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                            (value) => Number(value) >= 1,
+                                            () => 'must be >= 1',
+                                          ),
+                                          (value) => Number(value) <= 25,
+                                          () => 'must be <= 25',
+                                        ),
+                                      )
+                                        .Decode((value) => Number(value))
                                         .Encode((value) => String(value)),
                                       Type.Null(),
                                     ]),
@@ -1179,9 +1615,14 @@ export const webhooksHandler = new Hono()
                                   disabled: Type.Optional(
                                     Type.Union([
                                       Codec(
-                                        Type.Union([Type.Literal('true'), Type.Literal('false')]),
+                                        Type.String({
+                                          pattern:
+                                            /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                        }),
                                       )
-                                        .Decode((value) => value === 'true')
+                                        .Decode((value) =>
+                                          /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                        )
                                         .Encode((value) => (value ? 'true' : 'false')),
                                       Type.Null(),
                                     ]),
@@ -1189,9 +1630,14 @@ export const webhooksHandler = new Hono()
                                   required: Type.Optional(
                                     Type.Union([
                                       Codec(
-                                        Type.Union([Type.Literal('true'), Type.Literal('false')]),
+                                        Type.String({
+                                          pattern:
+                                            /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                        }),
                                       )
-                                        .Decode((value) => value === 'true')
+                                        .Decode((value) =>
+                                          /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                        )
                                         .Encode((value) => (value ? 'true' : 'false')),
                                       Type.Null(),
                                     ]),
@@ -1206,21 +1652,20 @@ export const webhooksHandler = new Hono()
                                       default: Type.Optional(
                                         Type.Union([
                                           Codec(
-                                            Type.Union([
-                                              Type.Literal('true'),
-                                              Type.Literal('false'),
-                                            ]),
+                                            Type.String({
+                                              pattern:
+                                                /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                            }),
                                           )
-                                            .Decode((value) => value === 'true')
+                                            .Decode((value) =>
+                                              /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                            )
                                             .Encode((value) => (value ? 'true' : 'false')),
                                           Type.Null(),
                                         ]),
                                       ),
                                       emoji: Type.Optional(
-                                        Type.Union([
-                                          Type.Union([Type.Null(), Type.Null()]),
-                                          ComponentEmojiForRequestSchema,
-                                        ]),
+                                        Type.Union([Type.Null(), ComponentEmojiForRequestSchema]),
                                       ),
                                     }),
                                     { minItems: 1, maxItems: 25 },
@@ -1230,8 +1675,14 @@ export const webhooksHandler = new Hono()
                                   type: MessageComponentTypesSchema,
                                   id: Type.Optional(
                                     Type.Union([
-                                      Codec(Type.String())
-                                        .Decode((value) => Number.parseInt(value, 10))
+                                      Codec(
+                                        Type.Refine(
+                                          Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                          (value) => Number(value) >= 0,
+                                          () => 'must be >= 0',
+                                        ),
+                                      )
+                                        .Decode((value) => Number(value))
                                         .Encode((value) => String(value)),
                                       Type.Null(),
                                     ]),
@@ -1242,16 +1693,36 @@ export const webhooksHandler = new Hono()
                                   ),
                                   min_values: Type.Optional(
                                     Type.Union([
-                                      Codec(Type.String())
-                                        .Decode((value) => Number.parseInt(value, 10))
+                                      Codec(
+                                        Type.Refine(
+                                          Type.Refine(
+                                            Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                            (value) => Number(value) >= 0,
+                                            () => 'must be >= 0',
+                                          ),
+                                          (value) => Number(value) <= 25,
+                                          () => 'must be <= 25',
+                                        ),
+                                      )
+                                        .Decode((value) => Number(value))
                                         .Encode((value) => String(value)),
                                       Type.Null(),
                                     ]),
                                   ),
                                   max_values: Type.Optional(
                                     Type.Union([
-                                      Codec(Type.String())
-                                        .Decode((value) => Number.parseInt(value, 10))
+                                      Codec(
+                                        Type.Refine(
+                                          Type.Refine(
+                                            Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                            (value) => Number(value) >= 1,
+                                            () => 'must be >= 1',
+                                          ),
+                                          (value) => Number(value) <= 25,
+                                          () => 'must be <= 25',
+                                        ),
+                                      )
+                                        .Decode((value) => Number(value))
                                         .Encode((value) => String(value)),
                                       Type.Null(),
                                     ]),
@@ -1259,9 +1730,14 @@ export const webhooksHandler = new Hono()
                                   disabled: Type.Optional(
                                     Type.Union([
                                       Codec(
-                                        Type.Union([Type.Literal('true'), Type.Literal('false')]),
+                                        Type.String({
+                                          pattern:
+                                            /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                        }),
                                       )
-                                        .Decode((value) => value === 'true')
+                                        .Decode((value) =>
+                                          /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                        )
                                         .Encode((value) => (value ? 'true' : 'false')),
                                       Type.Null(),
                                     ]),
@@ -1269,9 +1745,14 @@ export const webhooksHandler = new Hono()
                                   required: Type.Optional(
                                     Type.Union([
                                       Codec(
-                                        Type.Union([Type.Literal('true'), Type.Literal('false')]),
+                                        Type.String({
+                                          pattern:
+                                            /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                        }),
                                       )
-                                        .Decode((value) => value === 'true')
+                                        .Decode((value) =>
+                                          /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                        )
                                         .Encode((value) => (value ? 'true' : 'false')),
                                       Type.Null(),
                                     ]),
@@ -1291,16 +1772,27 @@ export const webhooksHandler = new Hono()
                             type: MessageComponentTypesSchema,
                             id: Type.Optional(
                               Type.Union([
-                                Codec(Type.String())
-                                  .Decode((value) => Number.parseInt(value, 10))
+                                Codec(
+                                  Type.Refine(
+                                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                    (value) => Number(value) >= 0,
+                                    () => 'must be >= 0',
+                                  ),
+                                )
+                                  .Decode((value) => Number(value))
                                   .Encode((value) => String(value)),
                                 Type.Null(),
                               ]),
                             ),
                             spoiler: Type.Optional(
                               Type.Union([
-                                Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                  .Decode((value) => value === 'true')
+                                Codec(
+                                  Type.String({
+                                    pattern:
+                                      /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                  }),
+                                )
+                                  .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                   .Encode((value) => (value ? 'true' : 'false')),
                                 Type.Null(),
                               ]),
@@ -1311,8 +1803,14 @@ export const webhooksHandler = new Hono()
                             type: MessageComponentTypesSchema,
                             id: Type.Optional(
                               Type.Union([
-                                Codec(Type.String())
-                                  .Decode((value) => Number.parseInt(value, 10))
+                                Codec(
+                                  Type.Refine(
+                                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                    (value) => Number(value) >= 0,
+                                    () => 'must be >= 0',
+                                  ),
+                                )
+                                  .Decode((value) => Number(value))
                                   .Encode((value) => String(value)),
                                 Type.Null(),
                               ]),
@@ -1327,8 +1825,15 @@ export const webhooksHandler = new Hono()
                                 ),
                                 spoiler: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                      .Decode((value) => value === 'true')
+                                    Codec(
+                                      Type.String({
+                                        pattern:
+                                          /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                      }),
+                                    )
+                                      .Decode((value) =>
+                                        /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                      )
                                       .Encode((value) => (value ? 'true' : 'false')),
                                     Type.Null(),
                                   ]),
@@ -1342,8 +1847,14 @@ export const webhooksHandler = new Hono()
                             type: MessageComponentTypesSchema,
                             id: Type.Optional(
                               Type.Union([
-                                Codec(Type.String())
-                                  .Decode((value) => Number.parseInt(value, 10))
+                                Codec(
+                                  Type.Refine(
+                                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                    (value) => Number(value) >= 0,
+                                    () => 'must be >= 0',
+                                  ),
+                                )
+                                  .Decode((value) => Number(value))
                                   .Encode((value) => String(value)),
                                 Type.Null(),
                               ]),
@@ -1353,8 +1864,14 @@ export const webhooksHandler = new Hono()
                                 type: MessageComponentTypesSchema,
                                 id: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.String())
-                                      .Decode((value) => Number.parseInt(value, 10))
+                                    Codec(
+                                      Type.Refine(
+                                        Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                        (value) => Number(value) >= 0,
+                                        () => 'must be >= 0',
+                                      ),
+                                    )
+                                      .Decode((value) => Number(value))
                                       .Encode((value) => String(value)),
                                     Type.Null(),
                                   ]),
@@ -1368,8 +1885,14 @@ export const webhooksHandler = new Hono()
                                 type: MessageComponentTypesSchema,
                                 id: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.String())
-                                      .Decode((value) => Number.parseInt(value, 10))
+                                    Codec(
+                                      Type.Refine(
+                                        Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                        (value) => Number(value) >= 0,
+                                        () => 'must be >= 0',
+                                      ),
+                                    )
+                                      .Decode((value) => Number(value))
                                       .Encode((value) => String(value)),
                                     Type.Null(),
                                   ]),
@@ -1386,8 +1909,15 @@ export const webhooksHandler = new Hono()
                                 ),
                                 disabled: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                      .Decode((value) => value === 'true')
+                                    Codec(
+                                      Type.String({
+                                        pattern:
+                                          /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                      }),
+                                    )
+                                      .Decode((value) =>
+                                        /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                      )
                                       .Encode((value) => (value ? 'true' : 'false')),
                                     Type.Null(),
                                   ]),
@@ -1399,24 +1929,24 @@ export const webhooksHandler = new Hono()
                                   ]),
                                 ),
                                 sku_id: Type.Optional(
-                                  Type.Union([
-                                    Type.Union([Type.Null(), Type.Null()]),
-                                    SnowflakeTypeSchema,
-                                  ]),
+                                  Type.Union([Type.Null(), SnowflakeTypeSchema]),
                                 ),
                                 emoji: Type.Optional(
-                                  Type.Union([
-                                    Type.Union([Type.Null(), Type.Null()]),
-                                    ComponentEmojiForRequestSchema,
-                                  ]),
+                                  Type.Union([Type.Null(), ComponentEmojiForRequestSchema]),
                                 ),
                               }),
                               Type.Object({
                                 type: MessageComponentTypesSchema,
                                 id: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.String())
-                                      .Decode((value) => Number.parseInt(value, 10))
+                                    Codec(
+                                      Type.Refine(
+                                        Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                        (value) => Number(value) >= 0,
+                                        () => 'must be >= 0',
+                                      ),
+                                    )
+                                      .Decode((value) => Number(value))
                                       .Encode((value) => String(value)),
                                     Type.Null(),
                                   ]),
@@ -1429,8 +1959,15 @@ export const webhooksHandler = new Hono()
                                 ),
                                 spoiler: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                      .Decode((value) => value === 'true')
+                                    Codec(
+                                      Type.String({
+                                        pattern:
+                                          /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                      }),
+                                    )
+                                      .Decode((value) =>
+                                        /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                      )
                                       .Encode((value) => (value ? 'true' : 'false')),
                                     Type.Null(),
                                   ]),
@@ -1443,22 +1980,30 @@ export const webhooksHandler = new Hono()
                             type: MessageComponentTypesSchema,
                             id: Type.Optional(
                               Type.Union([
-                                Codec(Type.String())
-                                  .Decode((value) => Number.parseInt(value, 10))
+                                Codec(
+                                  Type.Refine(
+                                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                    (value) => Number(value) >= 0,
+                                    () => 'must be >= 0',
+                                  ),
+                                )
+                                  .Decode((value) => Number(value))
                                   .Encode((value) => String(value)),
                                 Type.Null(),
                               ]),
                             ),
                             spacing: Type.Optional(
-                              Type.Union([
-                                Type.Union([Type.Null(), Type.Null()]),
-                                MessageComponentSeparatorSpacingSizeSchema,
-                              ]),
+                              Type.Union([Type.Null(), MessageComponentSeparatorSpacingSizeSchema]),
                             ),
                             divider: Type.Optional(
                               Type.Union([
-                                Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                  .Decode((value) => value === 'true')
+                                Codec(
+                                  Type.String({
+                                    pattern:
+                                      /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                  }),
+                                )
+                                  .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                   .Encode((value) => (value ? 'true' : 'false')),
                                 Type.Null(),
                               ]),
@@ -1468,8 +2013,14 @@ export const webhooksHandler = new Hono()
                             type: MessageComponentTypesSchema,
                             id: Type.Optional(
                               Type.Union([
-                                Codec(Type.String())
-                                  .Decode((value) => Number.parseInt(value, 10))
+                                Codec(
+                                  Type.Refine(
+                                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                    (value) => Number(value) >= 0,
+                                    () => 'must be >= 0',
+                                  ),
+                                )
+                                  .Decode((value) => Number(value))
                                   .Encode((value) => String(value)),
                                 Type.Null(),
                               ]),
@@ -1481,8 +2032,12 @@ export const webhooksHandler = new Hono()
                       ),
                       spoiler: Type.Optional(
                         Type.Union([
-                          Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                            .Decode((value) => value === 'true')
+                          Codec(
+                            Type.String({
+                              pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                            }),
+                          )
+                            .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                             .Encode((value) => (value ? 'true' : 'false')),
                           Type.Null(),
                         ]),
@@ -1492,16 +2047,26 @@ export const webhooksHandler = new Hono()
                       type: MessageComponentTypesSchema,
                       id: Type.Optional(
                         Type.Union([
-                          Codec(Type.String())
-                            .Decode((value) => Number.parseInt(value, 10))
+                          Codec(
+                            Type.Refine(
+                              Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                              (value) => Number(value) >= 0,
+                              () => 'must be >= 0',
+                            ),
+                          )
+                            .Decode((value) => Number(value))
                             .Encode((value) => String(value)),
                           Type.Null(),
                         ]),
                       ),
                       spoiler: Type.Optional(
                         Type.Union([
-                          Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                            .Decode((value) => value === 'true')
+                          Codec(
+                            Type.String({
+                              pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                            }),
+                          )
+                            .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                             .Encode((value) => (value ? 'true' : 'false')),
                           Type.Null(),
                         ]),
@@ -1512,8 +2077,14 @@ export const webhooksHandler = new Hono()
                       type: MessageComponentTypesSchema,
                       id: Type.Optional(
                         Type.Union([
-                          Codec(Type.String())
-                            .Decode((value) => Number.parseInt(value, 10))
+                          Codec(
+                            Type.Refine(
+                              Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                              (value) => Number(value) >= 0,
+                              () => 'must be >= 0',
+                            ),
+                          )
+                            .Decode((value) => Number(value))
                             .Encode((value) => String(value)),
                           Type.Null(),
                         ]),
@@ -1528,8 +2099,13 @@ export const webhooksHandler = new Hono()
                           ),
                           spoiler: Type.Optional(
                             Type.Union([
-                              Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                .Decode((value) => value === 'true')
+                              Codec(
+                                Type.String({
+                                  pattern:
+                                    /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                }),
+                              )
+                                .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                 .Encode((value) => (value ? 'true' : 'false')),
                               Type.Null(),
                             ]),
@@ -1543,8 +2119,14 @@ export const webhooksHandler = new Hono()
                       type: MessageComponentTypesSchema,
                       id: Type.Optional(
                         Type.Union([
-                          Codec(Type.String())
-                            .Decode((value) => Number.parseInt(value, 10))
+                          Codec(
+                            Type.Refine(
+                              Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                              (value) => Number(value) >= 0,
+                              () => 'must be >= 0',
+                            ),
+                          )
+                            .Decode((value) => Number(value))
                             .Encode((value) => String(value)),
                           Type.Null(),
                         ]),
@@ -1554,8 +2136,14 @@ export const webhooksHandler = new Hono()
                           type: MessageComponentTypesSchema,
                           id: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(
+                                Type.Refine(
+                                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                  (value) => Number(value) >= 0,
+                                  () => 'must be >= 0',
+                                ),
+                              )
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
@@ -1569,8 +2157,14 @@ export const webhooksHandler = new Hono()
                           type: MessageComponentTypesSchema,
                           id: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(
+                                Type.Refine(
+                                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                  (value) => Number(value) >= 0,
+                                  () => 'must be >= 0',
+                                ),
+                              )
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
@@ -1587,8 +2181,13 @@ export const webhooksHandler = new Hono()
                           ),
                           disabled: Type.Optional(
                             Type.Union([
-                              Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                .Decode((value) => value === 'true')
+                              Codec(
+                                Type.String({
+                                  pattern:
+                                    /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                }),
+                              )
+                                .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                 .Encode((value) => (value ? 'true' : 'false')),
                               Type.Null(),
                             ]),
@@ -1599,25 +2198,23 @@ export const webhooksHandler = new Hono()
                               Type.Null(),
                             ]),
                           ),
-                          sku_id: Type.Optional(
-                            Type.Union([
-                              Type.Union([Type.Null(), Type.Null()]),
-                              SnowflakeTypeSchema,
-                            ]),
-                          ),
+                          sku_id: Type.Optional(Type.Union([Type.Null(), SnowflakeTypeSchema])),
                           emoji: Type.Optional(
-                            Type.Union([
-                              Type.Union([Type.Null(), Type.Null()]),
-                              ComponentEmojiForRequestSchema,
-                            ]),
+                            Type.Union([Type.Null(), ComponentEmojiForRequestSchema]),
                           ),
                         }),
                         Type.Object({
                           type: MessageComponentTypesSchema,
                           id: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(
+                                Type.Refine(
+                                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                  (value) => Number(value) >= 0,
+                                  () => 'must be >= 0',
+                                ),
+                              )
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
@@ -1630,8 +2227,13 @@ export const webhooksHandler = new Hono()
                           ),
                           spoiler: Type.Optional(
                             Type.Union([
-                              Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                .Decode((value) => value === 'true')
+                              Codec(
+                                Type.String({
+                                  pattern:
+                                    /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                }),
+                              )
+                                .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                 .Encode((value) => (value ? 'true' : 'false')),
                               Type.Null(),
                             ]),
@@ -1644,22 +2246,29 @@ export const webhooksHandler = new Hono()
                       type: MessageComponentTypesSchema,
                       id: Type.Optional(
                         Type.Union([
-                          Codec(Type.String())
-                            .Decode((value) => Number.parseInt(value, 10))
+                          Codec(
+                            Type.Refine(
+                              Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                              (value) => Number(value) >= 0,
+                              () => 'must be >= 0',
+                            ),
+                          )
+                            .Decode((value) => Number(value))
                             .Encode((value) => String(value)),
                           Type.Null(),
                         ]),
                       ),
                       spacing: Type.Optional(
-                        Type.Union([
-                          Type.Union([Type.Null(), Type.Null()]),
-                          MessageComponentSeparatorSpacingSizeSchema,
-                        ]),
+                        Type.Union([Type.Null(), MessageComponentSeparatorSpacingSizeSchema]),
                       ),
                       divider: Type.Optional(
                         Type.Union([
-                          Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                            .Decode((value) => value === 'true')
+                          Codec(
+                            Type.String({
+                              pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                            }),
+                          )
+                            .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                             .Encode((value) => (value ? 'true' : 'false')),
                           Type.Null(),
                         ]),
@@ -1669,8 +2278,14 @@ export const webhooksHandler = new Hono()
                       type: MessageComponentTypesSchema,
                       id: Type.Optional(
                         Type.Union([
-                          Codec(Type.String())
-                            .Decode((value) => Number.parseInt(value, 10))
+                          Codec(
+                            Type.Refine(
+                              Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                              (value) => Number(value) >= 0,
+                              () => 'must be >= 0',
+                            ),
+                          )
+                            .Decode((value) => Number(value))
                             .Encode((value) => String(value)),
                           Type.Null(),
                         ]),
@@ -1696,7 +2311,19 @@ export const webhooksHandler = new Hono()
                     ),
                     duration_secs: Type.Optional(
                       Type.Union([
-                        Codec(Type.String())
+                        Codec(
+                          Type.Refine(
+                            Type.Refine(
+                              Type.String({
+                                pattern: '^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$',
+                              }),
+                              (value) => Number(value) >= 0,
+                              () => 'must be >= 0',
+                            ),
+                            (value) => Number(value) <= 2147483647,
+                            () => 'must be <= 2147483647',
+                          ),
+                        )
                           .Decode((value) => Number(value))
                           .Encode((value) => String(value)),
                         Type.Null(),
@@ -1710,8 +2337,12 @@ export const webhooksHandler = new Hono()
                     ),
                     is_spoiler: Type.Optional(
                       Type.Union([
-                        Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                          .Decode((value) => value === 'true')
+                        Codec(
+                          Type.String({
+                            pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                          }),
+                        )
+                          .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                           .Encode((value) => (value ? 'true' : 'false')),
                         Type.Null(),
                       ]),
@@ -1724,7 +2355,7 @@ export const webhooksHandler = new Hono()
             ),
             poll: Type.Optional(
               Type.Union([
-                Type.Union([Type.Null(), Type.Null()]),
+                Type.Null(),
                 Type.Object({
                   question: Type.Object(
                     {
@@ -1741,13 +2372,12 @@ export const webhooksHandler = new Hono()
                       emoji: Type.Optional(
                         Type.Union(
                           [
-                            Type.Union([Type.Null(), Type.Null()]),
+                            Type.Null(),
                             Type.Object({
                               id: Type.Optional(
-                                Type.Union(
-                                  [Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema],
-                                  { description: 'The ID of the custom emoji' },
-                                ),
+                                Type.Union([Type.Null(), SnowflakeTypeSchema], {
+                                  description: 'The ID of the custom emoji',
+                                }),
                               ),
                               name: Type.Optional(
                                 Type.Union([
@@ -1761,8 +2391,13 @@ export const webhooksHandler = new Hono()
                               ),
                               animated: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                    .Decode((value) => value === 'true')
+                                  Codec(
+                                    Type.String({
+                                      pattern:
+                                        /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                    }),
+                                  )
+                                    .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                     .Encode((value) => (value ? 'true' : 'false')),
                                   Type.Null(),
                                 ]),
@@ -1792,13 +2427,12 @@ export const webhooksHandler = new Hono()
                           emoji: Type.Optional(
                             Type.Union(
                               [
-                                Type.Union([Type.Null(), Type.Null()]),
+                                Type.Null(),
                                 Type.Object({
                                   id: Type.Optional(
-                                    Type.Union(
-                                      [Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema],
-                                      { description: 'The ID of the custom emoji' },
-                                    ),
+                                    Type.Union([Type.Null(), SnowflakeTypeSchema], {
+                                      description: 'The ID of the custom emoji',
+                                    }),
                                   ),
                                   name: Type.Optional(
                                     Type.Union([
@@ -1813,9 +2447,14 @@ export const webhooksHandler = new Hono()
                                   animated: Type.Optional(
                                     Type.Union([
                                       Codec(
-                                        Type.Union([Type.Literal('true'), Type.Literal('false')]),
+                                        Type.String({
+                                          pattern:
+                                            /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                        }),
                                       )
-                                        .Decode((value) => value === 'true')
+                                        .Decode((value) =>
+                                          /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                        )
                                         .Encode((value) => (value ? 'true' : 'false')),
                                       Type.Null(),
                                     ]),
@@ -1837,21 +2476,35 @@ export const webhooksHandler = new Hono()
                   ),
                   allow_multiselect: Type.Optional(
                     Type.Union([
-                      Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                        .Decode((value) => value === 'true')
+                      Codec(
+                        Type.String({
+                          pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                        }),
+                      )
+                        .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                         .Encode((value) => (value ? 'true' : 'false')),
                       Type.Null(),
                     ]),
                   ),
                   layout_type: Type.Optional(
-                    Type.Union([Type.Union([Type.Null(), Type.Null()]), PollLayoutTypesSchema], {
+                    Type.Union([Type.Null(), PollLayoutTypesSchema], {
                       description: 'The layout type of the poll. Defaults to... DEFAULT!',
                     }),
                   ),
                   duration: Type.Optional(
                     Type.Union([
-                      Codec(Type.String())
-                        .Decode((value) => Number.parseInt(value, 10))
+                      Codec(
+                        Type.Refine(
+                          Type.Refine(
+                            Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                            (value) => Number(value) >= 1,
+                            () => 'must be >= 1',
+                          ),
+                          (value) => Number(value) <= 768,
+                          () => 'must be <= 768',
+                        ),
+                      )
+                        .Decode((value) => Number(value))
                         .Encode((value) => String(value)),
                       Type.Null(),
                     ]),
@@ -1861,16 +2514,20 @@ export const webhooksHandler = new Hono()
             ),
             tts: Type.Optional(
               Type.Union([
-                Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                  .Decode((value) => value === 'true')
+                Codec(
+                  Type.String({
+                    pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                  }),
+                )
+                  .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                   .Encode((value) => (value ? 'true' : 'false')),
                 Type.Null(),
               ]),
             ),
             flags: Type.Optional(
               Type.Union([
-                Codec(Type.String())
-                  .Decode((value) => Number.parseInt(value, 10))
+                Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+                  .Decode((value) => Number(value))
                   .Encode((value) => String(value)),
                 Type.Null(),
               ]),
@@ -1905,8 +2562,18 @@ export const webhooksHandler = new Hono()
                     ),
                     color: Type.Optional(
                       Type.Union([
-                        Codec(Type.String())
-                          .Decode((value) => Number.parseInt(value, 10))
+                        Codec(
+                          Type.Refine(
+                            Type.Refine(
+                              Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                              (value) => Number(value) >= 0,
+                              () => 'must be >= 0',
+                            ),
+                            (value) => Number(value) <= 16777215,
+                            () => 'must be <= 16777215',
+                          ),
+                        )
+                          .Decode((value) => Number(value))
                           .Encode((value) => String(value)),
                         Type.Null(),
                       ]),
@@ -1917,12 +2584,10 @@ export const webhooksHandler = new Hono()
                     description: Type.Optional(
                       Type.Union([Type.String({ maxLength: 4096 }), Type.Null()]),
                     ),
-                    author: Type.Optional(
-                      Type.Union([Type.Union([Type.Null(), Type.Null()]), RichEmbedAuthorSchema]),
-                    ),
+                    author: Type.Optional(Type.Union([Type.Null(), RichEmbedAuthorSchema])),
                     image: Type.Optional(
                       Type.Union([
-                        Type.Union([Type.Null(), Type.Null()]),
+                        Type.Null(),
                         Type.Object({
                           url: Type.Optional(
                             Type.Union([
@@ -1932,16 +2597,16 @@ export const webhooksHandler = new Hono()
                           ),
                           width: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
                           ),
                           height: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
@@ -1951,16 +2616,31 @@ export const webhooksHandler = new Hono()
                           ),
                           placeholder_version: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(
+                                Type.Refine(
+                                  Type.Refine(
+                                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                    (value) => Number(value) >= 0,
+                                    () => 'must be >= 0',
+                                  ),
+                                  (value) => Number(value) <= 2147483647,
+                                  () => 'must be <= 2147483647',
+                                ),
+                              )
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
                           ),
                           is_animated: Type.Optional(
                             Type.Union([
-                              Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                .Decode((value) => value === 'true')
+                              Codec(
+                                Type.String({
+                                  pattern:
+                                    /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                }),
+                              )
+                                .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                 .Encode((value) => (value ? 'true' : 'false')),
                               Type.Null(),
                             ]),
@@ -1973,7 +2653,7 @@ export const webhooksHandler = new Hono()
                     ),
                     thumbnail: Type.Optional(
                       Type.Union([
-                        Type.Union([Type.Null(), Type.Null()]),
+                        Type.Null(),
                         Type.Object({
                           url: Type.Optional(
                             Type.Union([
@@ -1983,16 +2663,16 @@ export const webhooksHandler = new Hono()
                           ),
                           width: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
                           ),
                           height: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
@@ -2002,16 +2682,31 @@ export const webhooksHandler = new Hono()
                           ),
                           placeholder_version: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(
+                                Type.Refine(
+                                  Type.Refine(
+                                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                    (value) => Number(value) >= 0,
+                                    () => 'must be >= 0',
+                                  ),
+                                  (value) => Number(value) <= 2147483647,
+                                  () => 'must be <= 2147483647',
+                                ),
+                              )
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
                           ),
                           is_animated: Type.Optional(
                             Type.Union([
-                              Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                .Decode((value) => value === 'true')
+                              Codec(
+                                Type.String({
+                                  pattern:
+                                    /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                }),
+                              )
+                                .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                 .Encode((value) => (value ? 'true' : 'false')),
                               Type.Null(),
                             ]),
@@ -2022,9 +2717,7 @@ export const webhooksHandler = new Hono()
                         }),
                       ]),
                     ),
-                    footer: Type.Optional(
-                      Type.Union([Type.Union([Type.Null(), Type.Null()]), RichEmbedFooterSchema]),
-                    ),
+                    footer: Type.Optional(Type.Union([Type.Null(), RichEmbedFooterSchema])),
                     fields: Type.Optional(
                       Type.Union([
                         Type.Array(
@@ -2033,8 +2726,13 @@ export const webhooksHandler = new Hono()
                             value: Type.String({ maxLength: 1024 }),
                             inline: Type.Optional(
                               Type.Union([
-                                Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                  .Decode((value) => value === 'true')
+                                Codec(
+                                  Type.String({
+                                    pattern:
+                                      /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                  }),
+                                )
+                                  .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                   .Encode((value) => (value ? 'true' : 'false')),
                                 Type.Null(),
                               ]),
@@ -2045,12 +2743,10 @@ export const webhooksHandler = new Hono()
                         Type.Null(),
                       ]),
                     ),
-                    provider: Type.Optional(
-                      Type.Union([Type.Union([Type.Null(), Type.Null()]), RichEmbedProviderSchema]),
-                    ),
+                    provider: Type.Optional(Type.Union([Type.Null(), RichEmbedProviderSchema])),
                     video: Type.Optional(
                       Type.Union([
-                        Type.Union([Type.Null(), Type.Null()]),
+                        Type.Null(),
                         Type.Object({
                           url: Type.Optional(
                             Type.Union([
@@ -2060,16 +2756,16 @@ export const webhooksHandler = new Hono()
                           ),
                           width: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
                           ),
                           height: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
@@ -2079,16 +2775,31 @@ export const webhooksHandler = new Hono()
                           ),
                           placeholder_version: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(
+                                Type.Refine(
+                                  Type.Refine(
+                                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                    (value) => Number(value) >= 0,
+                                    () => 'must be >= 0',
+                                  ),
+                                  (value) => Number(value) <= 2147483647,
+                                  () => 'must be <= 2147483647',
+                                ),
+                              )
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
                           ),
                           is_animated: Type.Optional(
                             Type.Union([
-                              Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                .Decode((value) => value === 'true')
+                              Codec(
+                                Type.String({
+                                  pattern:
+                                    /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                }),
+                              )
+                                .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                 .Encode((value) => (value ? 'true' : 'false')),
                               Type.Null(),
                             ]),
@@ -2099,9 +2810,7 @@ export const webhooksHandler = new Hono()
                         }),
                       ]),
                     ),
-                    audio: Type.Optional(
-                      Type.Union([Type.Union([Type.Null(), Type.Null()]), RichEmbedAudioSchema]),
-                    ),
+                    audio: Type.Optional(Type.Union([Type.Null(), RichEmbedAudioSchema])),
                   }),
                   { maxItems: 10 },
                 ),
@@ -2110,42 +2819,43 @@ export const webhooksHandler = new Hono()
             ),
             allowed_mentions: Type.Optional(
               Type.Union([
-                Type.Union([Type.Null(), Type.Null()]),
+                Type.Null(),
                 Type.Object({
                   parse: Type.Optional(
                     Type.Union([
-                      Type.Array(
-                        Type.Union([
-                          Type.Union([Type.Null(), Type.Null()]),
-                          AllowedMentionTypesSchema,
-                        ]),
-                        { maxItems: 1521, uniqueItems: true },
-                      ),
+                      Type.Array(Type.Union([Type.Null(), AllowedMentionTypesSchema]), {
+                        maxItems: 1521,
+                        uniqueItems: true,
+                      }),
                       Type.Null(),
                     ]),
                   ),
                   users: Type.Optional(
                     Type.Union([
-                      Type.Array(
-                        Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
-                        { maxItems: 100, uniqueItems: true },
-                      ),
+                      Type.Array(Type.Union([Type.Null(), SnowflakeTypeSchema]), {
+                        maxItems: 100,
+                        uniqueItems: true,
+                      }),
                       Type.Null(),
                     ]),
                   ),
                   roles: Type.Optional(
                     Type.Union([
-                      Type.Array(
-                        Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
-                        { maxItems: 100, uniqueItems: true },
-                      ),
+                      Type.Array(Type.Union([Type.Null(), SnowflakeTypeSchema]), {
+                        maxItems: 100,
+                        uniqueItems: true,
+                      }),
                       Type.Null(),
                     ]),
                   ),
                   replied_user: Type.Optional(
                     Type.Union([
-                      Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                        .Decode((value) => value === 'true')
+                      Codec(
+                        Type.String({
+                          pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                        }),
+                      )
+                        .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                         .Encode((value) => (value ? 'true' : 'false')),
                       Type.Null(),
                     ]),
@@ -2161,8 +2871,14 @@ export const webhooksHandler = new Hono()
                       type: MessageComponentTypesSchema,
                       id: Type.Optional(
                         Type.Union([
-                          Codec(Type.String())
-                            .Decode((value) => Number.parseInt(value, 10))
+                          Codec(
+                            Type.Refine(
+                              Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                              (value) => Number(value) >= 0,
+                              () => 'must be >= 0',
+                            ),
+                          )
+                            .Decode((value) => Number(value))
                             .Encode((value) => String(value)),
                           Type.Null(),
                         ]),
@@ -2173,8 +2889,14 @@ export const webhooksHandler = new Hono()
                             type: MessageComponentTypesSchema,
                             id: Type.Optional(
                               Type.Union([
-                                Codec(Type.String())
-                                  .Decode((value) => Number.parseInt(value, 10))
+                                Codec(
+                                  Type.Refine(
+                                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                    (value) => Number(value) >= 0,
+                                    () => 'must be >= 0',
+                                  ),
+                                )
+                                  .Decode((value) => Number(value))
                                   .Encode((value) => String(value)),
                                 Type.Null(),
                               ]),
@@ -2191,8 +2913,13 @@ export const webhooksHandler = new Hono()
                             ),
                             disabled: Type.Optional(
                               Type.Union([
-                                Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                  .Decode((value) => value === 'true')
+                                Codec(
+                                  Type.String({
+                                    pattern:
+                                      /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                  }),
+                                )
+                                  .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                   .Encode((value) => (value ? 'true' : 'false')),
                                 Type.Null(),
                               ]),
@@ -2203,25 +2930,23 @@ export const webhooksHandler = new Hono()
                                 Type.Null(),
                               ]),
                             ),
-                            sku_id: Type.Optional(
-                              Type.Union([
-                                Type.Union([Type.Null(), Type.Null()]),
-                                SnowflakeTypeSchema,
-                              ]),
-                            ),
+                            sku_id: Type.Optional(Type.Union([Type.Null(), SnowflakeTypeSchema])),
                             emoji: Type.Optional(
-                              Type.Union([
-                                Type.Union([Type.Null(), Type.Null()]),
-                                ComponentEmojiForRequestSchema,
-                              ]),
+                              Type.Union([Type.Null(), ComponentEmojiForRequestSchema]),
                             ),
                           }),
                           Type.Object({
                             type: MessageComponentTypesSchema,
                             id: Type.Optional(
                               Type.Union([
-                                Codec(Type.String())
-                                  .Decode((value) => Number.parseInt(value, 10))
+                                Codec(
+                                  Type.Refine(
+                                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                    (value) => Number(value) >= 0,
+                                    () => 'must be >= 0',
+                                  ),
+                                )
+                                  .Decode((value) => Number(value))
                                   .Encode((value) => String(value)),
                                 Type.Null(),
                               ]),
@@ -2232,32 +2957,62 @@ export const webhooksHandler = new Hono()
                             ),
                             min_values: Type.Optional(
                               Type.Union([
-                                Codec(Type.String())
-                                  .Decode((value) => Number.parseInt(value, 10))
+                                Codec(
+                                  Type.Refine(
+                                    Type.Refine(
+                                      Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                      (value) => Number(value) >= 0,
+                                      () => 'must be >= 0',
+                                    ),
+                                    (value) => Number(value) <= 25,
+                                    () => 'must be <= 25',
+                                  ),
+                                )
+                                  .Decode((value) => Number(value))
                                   .Encode((value) => String(value)),
                                 Type.Null(),
                               ]),
                             ),
                             max_values: Type.Optional(
                               Type.Union([
-                                Codec(Type.String())
-                                  .Decode((value) => Number.parseInt(value, 10))
+                                Codec(
+                                  Type.Refine(
+                                    Type.Refine(
+                                      Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                      (value) => Number(value) >= 1,
+                                      () => 'must be >= 1',
+                                    ),
+                                    (value) => Number(value) <= 25,
+                                    () => 'must be <= 25',
+                                  ),
+                                )
+                                  .Decode((value) => Number(value))
                                   .Encode((value) => String(value)),
                                 Type.Null(),
                               ]),
                             ),
                             disabled: Type.Optional(
                               Type.Union([
-                                Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                  .Decode((value) => value === 'true')
+                                Codec(
+                                  Type.String({
+                                    pattern:
+                                      /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                  }),
+                                )
+                                  .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                   .Encode((value) => (value ? 'true' : 'false')),
                                 Type.Null(),
                               ]),
                             ),
                             required: Type.Optional(
                               Type.Union([
-                                Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                  .Decode((value) => value === 'true')
+                                Codec(
+                                  Type.String({
+                                    pattern:
+                                      /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                  }),
+                                )
+                                  .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                   .Encode((value) => (value ? 'true' : 'false')),
                                 Type.Null(),
                               ]),
@@ -2279,8 +3034,14 @@ export const webhooksHandler = new Hono()
                             type: MessageComponentTypesSchema,
                             id: Type.Optional(
                               Type.Union([
-                                Codec(Type.String())
-                                  .Decode((value) => Number.parseInt(value, 10))
+                                Codec(
+                                  Type.Refine(
+                                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                    (value) => Number(value) >= 0,
+                                    () => 'must be >= 0',
+                                  ),
+                                )
+                                  .Decode((value) => Number(value))
                                   .Encode((value) => String(value)),
                                 Type.Null(),
                               ]),
@@ -2291,32 +3052,62 @@ export const webhooksHandler = new Hono()
                             ),
                             min_values: Type.Optional(
                               Type.Union([
-                                Codec(Type.String())
-                                  .Decode((value) => Number.parseInt(value, 10))
+                                Codec(
+                                  Type.Refine(
+                                    Type.Refine(
+                                      Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                      (value) => Number(value) >= 0,
+                                      () => 'must be >= 0',
+                                    ),
+                                    (value) => Number(value) <= 25,
+                                    () => 'must be <= 25',
+                                  ),
+                                )
+                                  .Decode((value) => Number(value))
                                   .Encode((value) => String(value)),
                                 Type.Null(),
                               ]),
                             ),
                             max_values: Type.Optional(
                               Type.Union([
-                                Codec(Type.String())
-                                  .Decode((value) => Number.parseInt(value, 10))
+                                Codec(
+                                  Type.Refine(
+                                    Type.Refine(
+                                      Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                      (value) => Number(value) >= 1,
+                                      () => 'must be >= 1',
+                                    ),
+                                    (value) => Number(value) <= 25,
+                                    () => 'must be <= 25',
+                                  ),
+                                )
+                                  .Decode((value) => Number(value))
                                   .Encode((value) => String(value)),
                                 Type.Null(),
                               ]),
                             ),
                             disabled: Type.Optional(
                               Type.Union([
-                                Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                  .Decode((value) => value === 'true')
+                                Codec(
+                                  Type.String({
+                                    pattern:
+                                      /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                  }),
+                                )
+                                  .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                   .Encode((value) => (value ? 'true' : 'false')),
                                 Type.Null(),
                               ]),
                             ),
                             required: Type.Optional(
                               Type.Union([
-                                Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                  .Decode((value) => value === 'true')
+                                Codec(
+                                  Type.String({
+                                    pattern:
+                                      /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                  }),
+                                )
+                                  .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                   .Encode((value) => (value ? 'true' : 'false')),
                                 Type.Null(),
                               ]),
@@ -2338,8 +3129,14 @@ export const webhooksHandler = new Hono()
                             type: MessageComponentTypesSchema,
                             id: Type.Optional(
                               Type.Union([
-                                Codec(Type.String())
-                                  .Decode((value) => Number.parseInt(value, 10))
+                                Codec(
+                                  Type.Refine(
+                                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                    (value) => Number(value) >= 0,
+                                    () => 'must be >= 0',
+                                  ),
+                                )
+                                  .Decode((value) => Number(value))
                                   .Encode((value) => String(value)),
                                 Type.Null(),
                               ]),
@@ -2350,32 +3147,62 @@ export const webhooksHandler = new Hono()
                             ),
                             min_values: Type.Optional(
                               Type.Union([
-                                Codec(Type.String())
-                                  .Decode((value) => Number.parseInt(value, 10))
+                                Codec(
+                                  Type.Refine(
+                                    Type.Refine(
+                                      Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                      (value) => Number(value) >= 0,
+                                      () => 'must be >= 0',
+                                    ),
+                                    (value) => Number(value) <= 25,
+                                    () => 'must be <= 25',
+                                  ),
+                                )
+                                  .Decode((value) => Number(value))
                                   .Encode((value) => String(value)),
                                 Type.Null(),
                               ]),
                             ),
                             max_values: Type.Optional(
                               Type.Union([
-                                Codec(Type.String())
-                                  .Decode((value) => Number.parseInt(value, 10))
+                                Codec(
+                                  Type.Refine(
+                                    Type.Refine(
+                                      Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                      (value) => Number(value) >= 1,
+                                      () => 'must be >= 1',
+                                    ),
+                                    (value) => Number(value) <= 25,
+                                    () => 'must be <= 25',
+                                  ),
+                                )
+                                  .Decode((value) => Number(value))
                                   .Encode((value) => String(value)),
                                 Type.Null(),
                               ]),
                             ),
                             disabled: Type.Optional(
                               Type.Union([
-                                Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                  .Decode((value) => value === 'true')
+                                Codec(
+                                  Type.String({
+                                    pattern:
+                                      /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                  }),
+                                )
+                                  .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                   .Encode((value) => (value ? 'true' : 'false')),
                                 Type.Null(),
                               ]),
                             ),
                             required: Type.Optional(
                               Type.Union([
-                                Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                  .Decode((value) => value === 'true')
+                                Codec(
+                                  Type.String({
+                                    pattern:
+                                      /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                  }),
+                                )
+                                  .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                   .Encode((value) => (value ? 'true' : 'false')),
                                 Type.Null(),
                               ]),
@@ -2391,8 +3218,14 @@ export const webhooksHandler = new Hono()
                             type: MessageComponentTypesSchema,
                             id: Type.Optional(
                               Type.Union([
-                                Codec(Type.String())
-                                  .Decode((value) => Number.parseInt(value, 10))
+                                Codec(
+                                  Type.Refine(
+                                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                    (value) => Number(value) >= 0,
+                                    () => 'must be >= 0',
+                                  ),
+                                )
+                                  .Decode((value) => Number(value))
                                   .Encode((value) => String(value)),
                                 Type.Null(),
                               ]),
@@ -2403,32 +3236,62 @@ export const webhooksHandler = new Hono()
                             ),
                             min_values: Type.Optional(
                               Type.Union([
-                                Codec(Type.String())
-                                  .Decode((value) => Number.parseInt(value, 10))
+                                Codec(
+                                  Type.Refine(
+                                    Type.Refine(
+                                      Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                      (value) => Number(value) >= 0,
+                                      () => 'must be >= 0',
+                                    ),
+                                    (value) => Number(value) <= 25,
+                                    () => 'must be <= 25',
+                                  ),
+                                )
+                                  .Decode((value) => Number(value))
                                   .Encode((value) => String(value)),
                                 Type.Null(),
                               ]),
                             ),
                             max_values: Type.Optional(
                               Type.Union([
-                                Codec(Type.String())
-                                  .Decode((value) => Number.parseInt(value, 10))
+                                Codec(
+                                  Type.Refine(
+                                    Type.Refine(
+                                      Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                      (value) => Number(value) >= 1,
+                                      () => 'must be >= 1',
+                                    ),
+                                    (value) => Number(value) <= 25,
+                                    () => 'must be <= 25',
+                                  ),
+                                )
+                                  .Decode((value) => Number(value))
                                   .Encode((value) => String(value)),
                                 Type.Null(),
                               ]),
                             ),
                             disabled: Type.Optional(
                               Type.Union([
-                                Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                  .Decode((value) => value === 'true')
+                                Codec(
+                                  Type.String({
+                                    pattern:
+                                      /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                  }),
+                                )
+                                  .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                   .Encode((value) => (value ? 'true' : 'false')),
                                 Type.Null(),
                               ]),
                             ),
                             required: Type.Optional(
                               Type.Union([
-                                Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                  .Decode((value) => value === 'true')
+                                Codec(
+                                  Type.String({
+                                    pattern:
+                                      /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                  }),
+                                )
+                                  .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                   .Encode((value) => (value ? 'true' : 'false')),
                                 Type.Null(),
                               ]),
@@ -2442,17 +3305,21 @@ export const webhooksHandler = new Hono()
                                 ),
                                 default: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                      .Decode((value) => value === 'true')
+                                    Codec(
+                                      Type.String({
+                                        pattern:
+                                          /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                      }),
+                                    )
+                                      .Decode((value) =>
+                                        /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                      )
                                       .Encode((value) => (value ? 'true' : 'false')),
                                     Type.Null(),
                                   ]),
                                 ),
                                 emoji: Type.Optional(
-                                  Type.Union([
-                                    Type.Union([Type.Null(), Type.Null()]),
-                                    ComponentEmojiForRequestSchema,
-                                  ]),
+                                  Type.Union([Type.Null(), ComponentEmojiForRequestSchema]),
                                 ),
                               }),
                               { minItems: 1, maxItems: 25 },
@@ -2462,8 +3329,14 @@ export const webhooksHandler = new Hono()
                             type: MessageComponentTypesSchema,
                             id: Type.Optional(
                               Type.Union([
-                                Codec(Type.String())
-                                  .Decode((value) => Number.parseInt(value, 10))
+                                Codec(
+                                  Type.Refine(
+                                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                    (value) => Number(value) >= 0,
+                                    () => 'must be >= 0',
+                                  ),
+                                )
+                                  .Decode((value) => Number(value))
                                   .Encode((value) => String(value)),
                                 Type.Null(),
                               ]),
@@ -2474,32 +3347,62 @@ export const webhooksHandler = new Hono()
                             ),
                             min_values: Type.Optional(
                               Type.Union([
-                                Codec(Type.String())
-                                  .Decode((value) => Number.parseInt(value, 10))
+                                Codec(
+                                  Type.Refine(
+                                    Type.Refine(
+                                      Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                      (value) => Number(value) >= 0,
+                                      () => 'must be >= 0',
+                                    ),
+                                    (value) => Number(value) <= 25,
+                                    () => 'must be <= 25',
+                                  ),
+                                )
+                                  .Decode((value) => Number(value))
                                   .Encode((value) => String(value)),
                                 Type.Null(),
                               ]),
                             ),
                             max_values: Type.Optional(
                               Type.Union([
-                                Codec(Type.String())
-                                  .Decode((value) => Number.parseInt(value, 10))
+                                Codec(
+                                  Type.Refine(
+                                    Type.Refine(
+                                      Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                      (value) => Number(value) >= 1,
+                                      () => 'must be >= 1',
+                                    ),
+                                    (value) => Number(value) <= 25,
+                                    () => 'must be <= 25',
+                                  ),
+                                )
+                                  .Decode((value) => Number(value))
                                   .Encode((value) => String(value)),
                                 Type.Null(),
                               ]),
                             ),
                             disabled: Type.Optional(
                               Type.Union([
-                                Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                  .Decode((value) => value === 'true')
+                                Codec(
+                                  Type.String({
+                                    pattern:
+                                      /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                  }),
+                                )
+                                  .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                   .Encode((value) => (value ? 'true' : 'false')),
                                 Type.Null(),
                               ]),
                             ),
                             required: Type.Optional(
                               Type.Union([
-                                Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                  .Decode((value) => value === 'true')
+                                Codec(
+                                  Type.String({
+                                    pattern:
+                                      /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                  }),
+                                )
+                                  .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                   .Encode((value) => (value ? 'true' : 'false')),
                                 Type.Null(),
                               ]),
@@ -2519,16 +3422,32 @@ export const webhooksHandler = new Hono()
                       type: MessageComponentTypesSchema,
                       id: Type.Optional(
                         Type.Union([
-                          Codec(Type.String())
-                            .Decode((value) => Number.parseInt(value, 10))
+                          Codec(
+                            Type.Refine(
+                              Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                              (value) => Number(value) >= 0,
+                              () => 'must be >= 0',
+                            ),
+                          )
+                            .Decode((value) => Number(value))
                             .Encode((value) => String(value)),
                           Type.Null(),
                         ]),
                       ),
                       accent_color: Type.Optional(
                         Type.Union([
-                          Codec(Type.String())
-                            .Decode((value) => Number.parseInt(value, 10))
+                          Codec(
+                            Type.Refine(
+                              Type.Refine(
+                                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                (value) => Number(value) >= 0,
+                                () => 'must be >= 0',
+                              ),
+                              (value) => Number(value) <= 16777215,
+                              () => 'must be <= 16777215',
+                            ),
+                          )
+                            .Decode((value) => Number(value))
                             .Encode((value) => String(value)),
                           Type.Null(),
                         ]),
@@ -2539,8 +3458,14 @@ export const webhooksHandler = new Hono()
                             type: MessageComponentTypesSchema,
                             id: Type.Optional(
                               Type.Union([
-                                Codec(Type.String())
-                                  .Decode((value) => Number.parseInt(value, 10))
+                                Codec(
+                                  Type.Refine(
+                                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                    (value) => Number(value) >= 0,
+                                    () => 'must be >= 0',
+                                  ),
+                                )
+                                  .Decode((value) => Number(value))
                                   .Encode((value) => String(value)),
                                 Type.Null(),
                               ]),
@@ -2551,8 +3476,14 @@ export const webhooksHandler = new Hono()
                                   type: MessageComponentTypesSchema,
                                   id: Type.Optional(
                                     Type.Union([
-                                      Codec(Type.String())
-                                        .Decode((value) => Number.parseInt(value, 10))
+                                      Codec(
+                                        Type.Refine(
+                                          Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                          (value) => Number(value) >= 0,
+                                          () => 'must be >= 0',
+                                        ),
+                                      )
+                                        .Decode((value) => Number(value))
                                         .Encode((value) => String(value)),
                                       Type.Null(),
                                     ]),
@@ -2570,9 +3501,14 @@ export const webhooksHandler = new Hono()
                                   disabled: Type.Optional(
                                     Type.Union([
                                       Codec(
-                                        Type.Union([Type.Literal('true'), Type.Literal('false')]),
+                                        Type.String({
+                                          pattern:
+                                            /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                        }),
                                       )
-                                        .Decode((value) => value === 'true')
+                                        .Decode((value) =>
+                                          /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                        )
                                         .Encode((value) => (value ? 'true' : 'false')),
                                       Type.Null(),
                                     ]),
@@ -2584,24 +3520,24 @@ export const webhooksHandler = new Hono()
                                     ]),
                                   ),
                                   sku_id: Type.Optional(
-                                    Type.Union([
-                                      Type.Union([Type.Null(), Type.Null()]),
-                                      SnowflakeTypeSchema,
-                                    ]),
+                                    Type.Union([Type.Null(), SnowflakeTypeSchema]),
                                   ),
                                   emoji: Type.Optional(
-                                    Type.Union([
-                                      Type.Union([Type.Null(), Type.Null()]),
-                                      ComponentEmojiForRequestSchema,
-                                    ]),
+                                    Type.Union([Type.Null(), ComponentEmojiForRequestSchema]),
                                   ),
                                 }),
                                 Type.Object({
                                   type: MessageComponentTypesSchema,
                                   id: Type.Optional(
                                     Type.Union([
-                                      Codec(Type.String())
-                                        .Decode((value) => Number.parseInt(value, 10))
+                                      Codec(
+                                        Type.Refine(
+                                          Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                          (value) => Number(value) >= 0,
+                                          () => 'must be >= 0',
+                                        ),
+                                      )
+                                        .Decode((value) => Number(value))
                                         .Encode((value) => String(value)),
                                       Type.Null(),
                                     ]),
@@ -2612,16 +3548,36 @@ export const webhooksHandler = new Hono()
                                   ),
                                   min_values: Type.Optional(
                                     Type.Union([
-                                      Codec(Type.String())
-                                        .Decode((value) => Number.parseInt(value, 10))
+                                      Codec(
+                                        Type.Refine(
+                                          Type.Refine(
+                                            Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                            (value) => Number(value) >= 0,
+                                            () => 'must be >= 0',
+                                          ),
+                                          (value) => Number(value) <= 25,
+                                          () => 'must be <= 25',
+                                        ),
+                                      )
+                                        .Decode((value) => Number(value))
                                         .Encode((value) => String(value)),
                                       Type.Null(),
                                     ]),
                                   ),
                                   max_values: Type.Optional(
                                     Type.Union([
-                                      Codec(Type.String())
-                                        .Decode((value) => Number.parseInt(value, 10))
+                                      Codec(
+                                        Type.Refine(
+                                          Type.Refine(
+                                            Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                            (value) => Number(value) >= 1,
+                                            () => 'must be >= 1',
+                                          ),
+                                          (value) => Number(value) <= 25,
+                                          () => 'must be <= 25',
+                                        ),
+                                      )
+                                        .Decode((value) => Number(value))
                                         .Encode((value) => String(value)),
                                       Type.Null(),
                                     ]),
@@ -2629,9 +3585,14 @@ export const webhooksHandler = new Hono()
                                   disabled: Type.Optional(
                                     Type.Union([
                                       Codec(
-                                        Type.Union([Type.Literal('true'), Type.Literal('false')]),
+                                        Type.String({
+                                          pattern:
+                                            /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                        }),
                                       )
-                                        .Decode((value) => value === 'true')
+                                        .Decode((value) =>
+                                          /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                        )
                                         .Encode((value) => (value ? 'true' : 'false')),
                                       Type.Null(),
                                     ]),
@@ -2639,9 +3600,14 @@ export const webhooksHandler = new Hono()
                                   required: Type.Optional(
                                     Type.Union([
                                       Codec(
-                                        Type.Union([Type.Literal('true'), Type.Literal('false')]),
+                                        Type.String({
+                                          pattern:
+                                            /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                        }),
                                       )
-                                        .Decode((value) => value === 'true')
+                                        .Decode((value) =>
+                                          /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                        )
                                         .Encode((value) => (value ? 'true' : 'false')),
                                       Type.Null(),
                                     ]),
@@ -2663,8 +3629,14 @@ export const webhooksHandler = new Hono()
                                   type: MessageComponentTypesSchema,
                                   id: Type.Optional(
                                     Type.Union([
-                                      Codec(Type.String())
-                                        .Decode((value) => Number.parseInt(value, 10))
+                                      Codec(
+                                        Type.Refine(
+                                          Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                          (value) => Number(value) >= 0,
+                                          () => 'must be >= 0',
+                                        ),
+                                      )
+                                        .Decode((value) => Number(value))
                                         .Encode((value) => String(value)),
                                       Type.Null(),
                                     ]),
@@ -2675,16 +3647,36 @@ export const webhooksHandler = new Hono()
                                   ),
                                   min_values: Type.Optional(
                                     Type.Union([
-                                      Codec(Type.String())
-                                        .Decode((value) => Number.parseInt(value, 10))
+                                      Codec(
+                                        Type.Refine(
+                                          Type.Refine(
+                                            Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                            (value) => Number(value) >= 0,
+                                            () => 'must be >= 0',
+                                          ),
+                                          (value) => Number(value) <= 25,
+                                          () => 'must be <= 25',
+                                        ),
+                                      )
+                                        .Decode((value) => Number(value))
                                         .Encode((value) => String(value)),
                                       Type.Null(),
                                     ]),
                                   ),
                                   max_values: Type.Optional(
                                     Type.Union([
-                                      Codec(Type.String())
-                                        .Decode((value) => Number.parseInt(value, 10))
+                                      Codec(
+                                        Type.Refine(
+                                          Type.Refine(
+                                            Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                            (value) => Number(value) >= 1,
+                                            () => 'must be >= 1',
+                                          ),
+                                          (value) => Number(value) <= 25,
+                                          () => 'must be <= 25',
+                                        ),
+                                      )
+                                        .Decode((value) => Number(value))
                                         .Encode((value) => String(value)),
                                       Type.Null(),
                                     ]),
@@ -2692,9 +3684,14 @@ export const webhooksHandler = new Hono()
                                   disabled: Type.Optional(
                                     Type.Union([
                                       Codec(
-                                        Type.Union([Type.Literal('true'), Type.Literal('false')]),
+                                        Type.String({
+                                          pattern:
+                                            /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                        }),
                                       )
-                                        .Decode((value) => value === 'true')
+                                        .Decode((value) =>
+                                          /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                        )
                                         .Encode((value) => (value ? 'true' : 'false')),
                                       Type.Null(),
                                     ]),
@@ -2702,9 +3699,14 @@ export const webhooksHandler = new Hono()
                                   required: Type.Optional(
                                     Type.Union([
                                       Codec(
-                                        Type.Union([Type.Literal('true'), Type.Literal('false')]),
+                                        Type.String({
+                                          pattern:
+                                            /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                        }),
                                       )
-                                        .Decode((value) => value === 'true')
+                                        .Decode((value) =>
+                                          /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                        )
                                         .Encode((value) => (value ? 'true' : 'false')),
                                       Type.Null(),
                                     ]),
@@ -2726,8 +3728,14 @@ export const webhooksHandler = new Hono()
                                   type: MessageComponentTypesSchema,
                                   id: Type.Optional(
                                     Type.Union([
-                                      Codec(Type.String())
-                                        .Decode((value) => Number.parseInt(value, 10))
+                                      Codec(
+                                        Type.Refine(
+                                          Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                          (value) => Number(value) >= 0,
+                                          () => 'must be >= 0',
+                                        ),
+                                      )
+                                        .Decode((value) => Number(value))
                                         .Encode((value) => String(value)),
                                       Type.Null(),
                                     ]),
@@ -2738,16 +3746,36 @@ export const webhooksHandler = new Hono()
                                   ),
                                   min_values: Type.Optional(
                                     Type.Union([
-                                      Codec(Type.String())
-                                        .Decode((value) => Number.parseInt(value, 10))
+                                      Codec(
+                                        Type.Refine(
+                                          Type.Refine(
+                                            Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                            (value) => Number(value) >= 0,
+                                            () => 'must be >= 0',
+                                          ),
+                                          (value) => Number(value) <= 25,
+                                          () => 'must be <= 25',
+                                        ),
+                                      )
+                                        .Decode((value) => Number(value))
                                         .Encode((value) => String(value)),
                                       Type.Null(),
                                     ]),
                                   ),
                                   max_values: Type.Optional(
                                     Type.Union([
-                                      Codec(Type.String())
-                                        .Decode((value) => Number.parseInt(value, 10))
+                                      Codec(
+                                        Type.Refine(
+                                          Type.Refine(
+                                            Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                            (value) => Number(value) >= 1,
+                                            () => 'must be >= 1',
+                                          ),
+                                          (value) => Number(value) <= 25,
+                                          () => 'must be <= 25',
+                                        ),
+                                      )
+                                        .Decode((value) => Number(value))
                                         .Encode((value) => String(value)),
                                       Type.Null(),
                                     ]),
@@ -2755,9 +3783,14 @@ export const webhooksHandler = new Hono()
                                   disabled: Type.Optional(
                                     Type.Union([
                                       Codec(
-                                        Type.Union([Type.Literal('true'), Type.Literal('false')]),
+                                        Type.String({
+                                          pattern:
+                                            /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                        }),
                                       )
-                                        .Decode((value) => value === 'true')
+                                        .Decode((value) =>
+                                          /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                        )
                                         .Encode((value) => (value ? 'true' : 'false')),
                                       Type.Null(),
                                     ]),
@@ -2765,9 +3798,14 @@ export const webhooksHandler = new Hono()
                                   required: Type.Optional(
                                     Type.Union([
                                       Codec(
-                                        Type.Union([Type.Literal('true'), Type.Literal('false')]),
+                                        Type.String({
+                                          pattern:
+                                            /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                        }),
                                       )
-                                        .Decode((value) => value === 'true')
+                                        .Decode((value) =>
+                                          /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                        )
                                         .Encode((value) => (value ? 'true' : 'false')),
                                       Type.Null(),
                                     ]),
@@ -2783,8 +3821,14 @@ export const webhooksHandler = new Hono()
                                   type: MessageComponentTypesSchema,
                                   id: Type.Optional(
                                     Type.Union([
-                                      Codec(Type.String())
-                                        .Decode((value) => Number.parseInt(value, 10))
+                                      Codec(
+                                        Type.Refine(
+                                          Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                          (value) => Number(value) >= 0,
+                                          () => 'must be >= 0',
+                                        ),
+                                      )
+                                        .Decode((value) => Number(value))
                                         .Encode((value) => String(value)),
                                       Type.Null(),
                                     ]),
@@ -2795,16 +3839,36 @@ export const webhooksHandler = new Hono()
                                   ),
                                   min_values: Type.Optional(
                                     Type.Union([
-                                      Codec(Type.String())
-                                        .Decode((value) => Number.parseInt(value, 10))
+                                      Codec(
+                                        Type.Refine(
+                                          Type.Refine(
+                                            Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                            (value) => Number(value) >= 0,
+                                            () => 'must be >= 0',
+                                          ),
+                                          (value) => Number(value) <= 25,
+                                          () => 'must be <= 25',
+                                        ),
+                                      )
+                                        .Decode((value) => Number(value))
                                         .Encode((value) => String(value)),
                                       Type.Null(),
                                     ]),
                                   ),
                                   max_values: Type.Optional(
                                     Type.Union([
-                                      Codec(Type.String())
-                                        .Decode((value) => Number.parseInt(value, 10))
+                                      Codec(
+                                        Type.Refine(
+                                          Type.Refine(
+                                            Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                            (value) => Number(value) >= 1,
+                                            () => 'must be >= 1',
+                                          ),
+                                          (value) => Number(value) <= 25,
+                                          () => 'must be <= 25',
+                                        ),
+                                      )
+                                        .Decode((value) => Number(value))
                                         .Encode((value) => String(value)),
                                       Type.Null(),
                                     ]),
@@ -2812,9 +3876,14 @@ export const webhooksHandler = new Hono()
                                   disabled: Type.Optional(
                                     Type.Union([
                                       Codec(
-                                        Type.Union([Type.Literal('true'), Type.Literal('false')]),
+                                        Type.String({
+                                          pattern:
+                                            /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                        }),
                                       )
-                                        .Decode((value) => value === 'true')
+                                        .Decode((value) =>
+                                          /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                        )
                                         .Encode((value) => (value ? 'true' : 'false')),
                                       Type.Null(),
                                     ]),
@@ -2822,9 +3891,14 @@ export const webhooksHandler = new Hono()
                                   required: Type.Optional(
                                     Type.Union([
                                       Codec(
-                                        Type.Union([Type.Literal('true'), Type.Literal('false')]),
+                                        Type.String({
+                                          pattern:
+                                            /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                        }),
                                       )
-                                        .Decode((value) => value === 'true')
+                                        .Decode((value) =>
+                                          /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                        )
                                         .Encode((value) => (value ? 'true' : 'false')),
                                       Type.Null(),
                                     ]),
@@ -2839,21 +3913,20 @@ export const webhooksHandler = new Hono()
                                       default: Type.Optional(
                                         Type.Union([
                                           Codec(
-                                            Type.Union([
-                                              Type.Literal('true'),
-                                              Type.Literal('false'),
-                                            ]),
+                                            Type.String({
+                                              pattern:
+                                                /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                            }),
                                           )
-                                            .Decode((value) => value === 'true')
+                                            .Decode((value) =>
+                                              /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                            )
                                             .Encode((value) => (value ? 'true' : 'false')),
                                           Type.Null(),
                                         ]),
                                       ),
                                       emoji: Type.Optional(
-                                        Type.Union([
-                                          Type.Union([Type.Null(), Type.Null()]),
-                                          ComponentEmojiForRequestSchema,
-                                        ]),
+                                        Type.Union([Type.Null(), ComponentEmojiForRequestSchema]),
                                       ),
                                     }),
                                     { minItems: 1, maxItems: 25 },
@@ -2863,8 +3936,14 @@ export const webhooksHandler = new Hono()
                                   type: MessageComponentTypesSchema,
                                   id: Type.Optional(
                                     Type.Union([
-                                      Codec(Type.String())
-                                        .Decode((value) => Number.parseInt(value, 10))
+                                      Codec(
+                                        Type.Refine(
+                                          Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                          (value) => Number(value) >= 0,
+                                          () => 'must be >= 0',
+                                        ),
+                                      )
+                                        .Decode((value) => Number(value))
                                         .Encode((value) => String(value)),
                                       Type.Null(),
                                     ]),
@@ -2875,16 +3954,36 @@ export const webhooksHandler = new Hono()
                                   ),
                                   min_values: Type.Optional(
                                     Type.Union([
-                                      Codec(Type.String())
-                                        .Decode((value) => Number.parseInt(value, 10))
+                                      Codec(
+                                        Type.Refine(
+                                          Type.Refine(
+                                            Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                            (value) => Number(value) >= 0,
+                                            () => 'must be >= 0',
+                                          ),
+                                          (value) => Number(value) <= 25,
+                                          () => 'must be <= 25',
+                                        ),
+                                      )
+                                        .Decode((value) => Number(value))
                                         .Encode((value) => String(value)),
                                       Type.Null(),
                                     ]),
                                   ),
                                   max_values: Type.Optional(
                                     Type.Union([
-                                      Codec(Type.String())
-                                        .Decode((value) => Number.parseInt(value, 10))
+                                      Codec(
+                                        Type.Refine(
+                                          Type.Refine(
+                                            Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                            (value) => Number(value) >= 1,
+                                            () => 'must be >= 1',
+                                          ),
+                                          (value) => Number(value) <= 25,
+                                          () => 'must be <= 25',
+                                        ),
+                                      )
+                                        .Decode((value) => Number(value))
                                         .Encode((value) => String(value)),
                                       Type.Null(),
                                     ]),
@@ -2892,9 +3991,14 @@ export const webhooksHandler = new Hono()
                                   disabled: Type.Optional(
                                     Type.Union([
                                       Codec(
-                                        Type.Union([Type.Literal('true'), Type.Literal('false')]),
+                                        Type.String({
+                                          pattern:
+                                            /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                        }),
                                       )
-                                        .Decode((value) => value === 'true')
+                                        .Decode((value) =>
+                                          /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                        )
                                         .Encode((value) => (value ? 'true' : 'false')),
                                       Type.Null(),
                                     ]),
@@ -2902,9 +4006,14 @@ export const webhooksHandler = new Hono()
                                   required: Type.Optional(
                                     Type.Union([
                                       Codec(
-                                        Type.Union([Type.Literal('true'), Type.Literal('false')]),
+                                        Type.String({
+                                          pattern:
+                                            /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                        }),
                                       )
-                                        .Decode((value) => value === 'true')
+                                        .Decode((value) =>
+                                          /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                        )
                                         .Encode((value) => (value ? 'true' : 'false')),
                                       Type.Null(),
                                     ]),
@@ -2924,16 +4033,27 @@ export const webhooksHandler = new Hono()
                             type: MessageComponentTypesSchema,
                             id: Type.Optional(
                               Type.Union([
-                                Codec(Type.String())
-                                  .Decode((value) => Number.parseInt(value, 10))
+                                Codec(
+                                  Type.Refine(
+                                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                    (value) => Number(value) >= 0,
+                                    () => 'must be >= 0',
+                                  ),
+                                )
+                                  .Decode((value) => Number(value))
                                   .Encode((value) => String(value)),
                                 Type.Null(),
                               ]),
                             ),
                             spoiler: Type.Optional(
                               Type.Union([
-                                Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                  .Decode((value) => value === 'true')
+                                Codec(
+                                  Type.String({
+                                    pattern:
+                                      /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                  }),
+                                )
+                                  .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                   .Encode((value) => (value ? 'true' : 'false')),
                                 Type.Null(),
                               ]),
@@ -2944,8 +4064,14 @@ export const webhooksHandler = new Hono()
                             type: MessageComponentTypesSchema,
                             id: Type.Optional(
                               Type.Union([
-                                Codec(Type.String())
-                                  .Decode((value) => Number.parseInt(value, 10))
+                                Codec(
+                                  Type.Refine(
+                                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                    (value) => Number(value) >= 0,
+                                    () => 'must be >= 0',
+                                  ),
+                                )
+                                  .Decode((value) => Number(value))
                                   .Encode((value) => String(value)),
                                 Type.Null(),
                               ]),
@@ -2960,8 +4086,15 @@ export const webhooksHandler = new Hono()
                                 ),
                                 spoiler: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                      .Decode((value) => value === 'true')
+                                    Codec(
+                                      Type.String({
+                                        pattern:
+                                          /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                      }),
+                                    )
+                                      .Decode((value) =>
+                                        /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                      )
                                       .Encode((value) => (value ? 'true' : 'false')),
                                     Type.Null(),
                                   ]),
@@ -2975,8 +4108,14 @@ export const webhooksHandler = new Hono()
                             type: MessageComponentTypesSchema,
                             id: Type.Optional(
                               Type.Union([
-                                Codec(Type.String())
-                                  .Decode((value) => Number.parseInt(value, 10))
+                                Codec(
+                                  Type.Refine(
+                                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                    (value) => Number(value) >= 0,
+                                    () => 'must be >= 0',
+                                  ),
+                                )
+                                  .Decode((value) => Number(value))
                                   .Encode((value) => String(value)),
                                 Type.Null(),
                               ]),
@@ -2986,8 +4125,14 @@ export const webhooksHandler = new Hono()
                                 type: MessageComponentTypesSchema,
                                 id: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.String())
-                                      .Decode((value) => Number.parseInt(value, 10))
+                                    Codec(
+                                      Type.Refine(
+                                        Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                        (value) => Number(value) >= 0,
+                                        () => 'must be >= 0',
+                                      ),
+                                    )
+                                      .Decode((value) => Number(value))
                                       .Encode((value) => String(value)),
                                     Type.Null(),
                                   ]),
@@ -3001,8 +4146,14 @@ export const webhooksHandler = new Hono()
                                 type: MessageComponentTypesSchema,
                                 id: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.String())
-                                      .Decode((value) => Number.parseInt(value, 10))
+                                    Codec(
+                                      Type.Refine(
+                                        Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                        (value) => Number(value) >= 0,
+                                        () => 'must be >= 0',
+                                      ),
+                                    )
+                                      .Decode((value) => Number(value))
                                       .Encode((value) => String(value)),
                                     Type.Null(),
                                   ]),
@@ -3019,8 +4170,15 @@ export const webhooksHandler = new Hono()
                                 ),
                                 disabled: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                      .Decode((value) => value === 'true')
+                                    Codec(
+                                      Type.String({
+                                        pattern:
+                                          /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                      }),
+                                    )
+                                      .Decode((value) =>
+                                        /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                      )
                                       .Encode((value) => (value ? 'true' : 'false')),
                                     Type.Null(),
                                   ]),
@@ -3032,24 +4190,24 @@ export const webhooksHandler = new Hono()
                                   ]),
                                 ),
                                 sku_id: Type.Optional(
-                                  Type.Union([
-                                    Type.Union([Type.Null(), Type.Null()]),
-                                    SnowflakeTypeSchema,
-                                  ]),
+                                  Type.Union([Type.Null(), SnowflakeTypeSchema]),
                                 ),
                                 emoji: Type.Optional(
-                                  Type.Union([
-                                    Type.Union([Type.Null(), Type.Null()]),
-                                    ComponentEmojiForRequestSchema,
-                                  ]),
+                                  Type.Union([Type.Null(), ComponentEmojiForRequestSchema]),
                                 ),
                               }),
                               Type.Object({
                                 type: MessageComponentTypesSchema,
                                 id: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.String())
-                                      .Decode((value) => Number.parseInt(value, 10))
+                                    Codec(
+                                      Type.Refine(
+                                        Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                        (value) => Number(value) >= 0,
+                                        () => 'must be >= 0',
+                                      ),
+                                    )
+                                      .Decode((value) => Number(value))
                                       .Encode((value) => String(value)),
                                     Type.Null(),
                                   ]),
@@ -3062,8 +4220,15 @@ export const webhooksHandler = new Hono()
                                 ),
                                 spoiler: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                      .Decode((value) => value === 'true')
+                                    Codec(
+                                      Type.String({
+                                        pattern:
+                                          /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                      }),
+                                    )
+                                      .Decode((value) =>
+                                        /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                      )
                                       .Encode((value) => (value ? 'true' : 'false')),
                                     Type.Null(),
                                   ]),
@@ -3076,22 +4241,30 @@ export const webhooksHandler = new Hono()
                             type: MessageComponentTypesSchema,
                             id: Type.Optional(
                               Type.Union([
-                                Codec(Type.String())
-                                  .Decode((value) => Number.parseInt(value, 10))
+                                Codec(
+                                  Type.Refine(
+                                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                    (value) => Number(value) >= 0,
+                                    () => 'must be >= 0',
+                                  ),
+                                )
+                                  .Decode((value) => Number(value))
                                   .Encode((value) => String(value)),
                                 Type.Null(),
                               ]),
                             ),
                             spacing: Type.Optional(
-                              Type.Union([
-                                Type.Union([Type.Null(), Type.Null()]),
-                                MessageComponentSeparatorSpacingSizeSchema,
-                              ]),
+                              Type.Union([Type.Null(), MessageComponentSeparatorSpacingSizeSchema]),
                             ),
                             divider: Type.Optional(
                               Type.Union([
-                                Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                  .Decode((value) => value === 'true')
+                                Codec(
+                                  Type.String({
+                                    pattern:
+                                      /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                  }),
+                                )
+                                  .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                   .Encode((value) => (value ? 'true' : 'false')),
                                 Type.Null(),
                               ]),
@@ -3101,8 +4274,14 @@ export const webhooksHandler = new Hono()
                             type: MessageComponentTypesSchema,
                             id: Type.Optional(
                               Type.Union([
-                                Codec(Type.String())
-                                  .Decode((value) => Number.parseInt(value, 10))
+                                Codec(
+                                  Type.Refine(
+                                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                    (value) => Number(value) >= 0,
+                                    () => 'must be >= 0',
+                                  ),
+                                )
+                                  .Decode((value) => Number(value))
                                   .Encode((value) => String(value)),
                                 Type.Null(),
                               ]),
@@ -3114,8 +4293,12 @@ export const webhooksHandler = new Hono()
                       ),
                       spoiler: Type.Optional(
                         Type.Union([
-                          Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                            .Decode((value) => value === 'true')
+                          Codec(
+                            Type.String({
+                              pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                            }),
+                          )
+                            .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                             .Encode((value) => (value ? 'true' : 'false')),
                           Type.Null(),
                         ]),
@@ -3125,16 +4308,26 @@ export const webhooksHandler = new Hono()
                       type: MessageComponentTypesSchema,
                       id: Type.Optional(
                         Type.Union([
-                          Codec(Type.String())
-                            .Decode((value) => Number.parseInt(value, 10))
+                          Codec(
+                            Type.Refine(
+                              Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                              (value) => Number(value) >= 0,
+                              () => 'must be >= 0',
+                            ),
+                          )
+                            .Decode((value) => Number(value))
                             .Encode((value) => String(value)),
                           Type.Null(),
                         ]),
                       ),
                       spoiler: Type.Optional(
                         Type.Union([
-                          Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                            .Decode((value) => value === 'true')
+                          Codec(
+                            Type.String({
+                              pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                            }),
+                          )
+                            .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                             .Encode((value) => (value ? 'true' : 'false')),
                           Type.Null(),
                         ]),
@@ -3145,8 +4338,14 @@ export const webhooksHandler = new Hono()
                       type: MessageComponentTypesSchema,
                       id: Type.Optional(
                         Type.Union([
-                          Codec(Type.String())
-                            .Decode((value) => Number.parseInt(value, 10))
+                          Codec(
+                            Type.Refine(
+                              Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                              (value) => Number(value) >= 0,
+                              () => 'must be >= 0',
+                            ),
+                          )
+                            .Decode((value) => Number(value))
                             .Encode((value) => String(value)),
                           Type.Null(),
                         ]),
@@ -3161,8 +4360,13 @@ export const webhooksHandler = new Hono()
                           ),
                           spoiler: Type.Optional(
                             Type.Union([
-                              Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                .Decode((value) => value === 'true')
+                              Codec(
+                                Type.String({
+                                  pattern:
+                                    /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                }),
+                              )
+                                .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                 .Encode((value) => (value ? 'true' : 'false')),
                               Type.Null(),
                             ]),
@@ -3176,8 +4380,14 @@ export const webhooksHandler = new Hono()
                       type: MessageComponentTypesSchema,
                       id: Type.Optional(
                         Type.Union([
-                          Codec(Type.String())
-                            .Decode((value) => Number.parseInt(value, 10))
+                          Codec(
+                            Type.Refine(
+                              Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                              (value) => Number(value) >= 0,
+                              () => 'must be >= 0',
+                            ),
+                          )
+                            .Decode((value) => Number(value))
                             .Encode((value) => String(value)),
                           Type.Null(),
                         ]),
@@ -3187,8 +4397,14 @@ export const webhooksHandler = new Hono()
                           type: MessageComponentTypesSchema,
                           id: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(
+                                Type.Refine(
+                                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                  (value) => Number(value) >= 0,
+                                  () => 'must be >= 0',
+                                ),
+                              )
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
@@ -3202,8 +4418,14 @@ export const webhooksHandler = new Hono()
                           type: MessageComponentTypesSchema,
                           id: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(
+                                Type.Refine(
+                                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                  (value) => Number(value) >= 0,
+                                  () => 'must be >= 0',
+                                ),
+                              )
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
@@ -3220,8 +4442,13 @@ export const webhooksHandler = new Hono()
                           ),
                           disabled: Type.Optional(
                             Type.Union([
-                              Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                .Decode((value) => value === 'true')
+                              Codec(
+                                Type.String({
+                                  pattern:
+                                    /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                }),
+                              )
+                                .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                 .Encode((value) => (value ? 'true' : 'false')),
                               Type.Null(),
                             ]),
@@ -3232,25 +4459,23 @@ export const webhooksHandler = new Hono()
                               Type.Null(),
                             ]),
                           ),
-                          sku_id: Type.Optional(
-                            Type.Union([
-                              Type.Union([Type.Null(), Type.Null()]),
-                              SnowflakeTypeSchema,
-                            ]),
-                          ),
+                          sku_id: Type.Optional(Type.Union([Type.Null(), SnowflakeTypeSchema])),
                           emoji: Type.Optional(
-                            Type.Union([
-                              Type.Union([Type.Null(), Type.Null()]),
-                              ComponentEmojiForRequestSchema,
-                            ]),
+                            Type.Union([Type.Null(), ComponentEmojiForRequestSchema]),
                           ),
                         }),
                         Type.Object({
                           type: MessageComponentTypesSchema,
                           id: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(
+                                Type.Refine(
+                                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                  (value) => Number(value) >= 0,
+                                  () => 'must be >= 0',
+                                ),
+                              )
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
@@ -3263,8 +4488,13 @@ export const webhooksHandler = new Hono()
                           ),
                           spoiler: Type.Optional(
                             Type.Union([
-                              Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                .Decode((value) => value === 'true')
+                              Codec(
+                                Type.String({
+                                  pattern:
+                                    /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                }),
+                              )
+                                .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                 .Encode((value) => (value ? 'true' : 'false')),
                               Type.Null(),
                             ]),
@@ -3277,22 +4507,29 @@ export const webhooksHandler = new Hono()
                       type: MessageComponentTypesSchema,
                       id: Type.Optional(
                         Type.Union([
-                          Codec(Type.String())
-                            .Decode((value) => Number.parseInt(value, 10))
+                          Codec(
+                            Type.Refine(
+                              Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                              (value) => Number(value) >= 0,
+                              () => 'must be >= 0',
+                            ),
+                          )
+                            .Decode((value) => Number(value))
                             .Encode((value) => String(value)),
                           Type.Null(),
                         ]),
                       ),
                       spacing: Type.Optional(
-                        Type.Union([
-                          Type.Union([Type.Null(), Type.Null()]),
-                          MessageComponentSeparatorSpacingSizeSchema,
-                        ]),
+                        Type.Union([Type.Null(), MessageComponentSeparatorSpacingSizeSchema]),
                       ),
                       divider: Type.Optional(
                         Type.Union([
-                          Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                            .Decode((value) => value === 'true')
+                          Codec(
+                            Type.String({
+                              pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                            }),
+                          )
+                            .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                             .Encode((value) => (value ? 'true' : 'false')),
                           Type.Null(),
                         ]),
@@ -3302,8 +4539,14 @@ export const webhooksHandler = new Hono()
                       type: MessageComponentTypesSchema,
                       id: Type.Optional(
                         Type.Union([
-                          Codec(Type.String())
-                            .Decode((value) => Number.parseInt(value, 10))
+                          Codec(
+                            Type.Refine(
+                              Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                              (value) => Number(value) >= 0,
+                              () => 'must be >= 0',
+                            ),
+                          )
+                            .Decode((value) => Number(value))
                             .Encode((value) => String(value)),
                           Type.Null(),
                         ]),
@@ -3329,7 +4572,19 @@ export const webhooksHandler = new Hono()
                     ),
                     duration_secs: Type.Optional(
                       Type.Union([
-                        Codec(Type.String())
+                        Codec(
+                          Type.Refine(
+                            Type.Refine(
+                              Type.String({
+                                pattern: '^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$',
+                              }),
+                              (value) => Number(value) >= 0,
+                              () => 'must be >= 0',
+                            ),
+                            (value) => Number(value) <= 2147483647,
+                            () => 'must be <= 2147483647',
+                          ),
+                        )
                           .Decode((value) => Number(value))
                           .Encode((value) => String(value)),
                         Type.Null(),
@@ -3343,8 +4598,12 @@ export const webhooksHandler = new Hono()
                     ),
                     is_spoiler: Type.Optional(
                       Type.Union([
-                        Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                          .Decode((value) => value === 'true')
+                        Codec(
+                          Type.String({
+                            pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                          }),
+                        )
+                          .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                           .Encode((value) => (value ? 'true' : 'false')),
                         Type.Null(),
                       ]),
@@ -3357,7 +4616,7 @@ export const webhooksHandler = new Hono()
             ),
             poll: Type.Optional(
               Type.Union([
-                Type.Union([Type.Null(), Type.Null()]),
+                Type.Null(),
                 Type.Object({
                   question: Type.Object(
                     {
@@ -3374,13 +4633,12 @@ export const webhooksHandler = new Hono()
                       emoji: Type.Optional(
                         Type.Union(
                           [
-                            Type.Union([Type.Null(), Type.Null()]),
+                            Type.Null(),
                             Type.Object({
                               id: Type.Optional(
-                                Type.Union(
-                                  [Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema],
-                                  { description: 'The ID of the custom emoji' },
-                                ),
+                                Type.Union([Type.Null(), SnowflakeTypeSchema], {
+                                  description: 'The ID of the custom emoji',
+                                }),
                               ),
                               name: Type.Optional(
                                 Type.Union([
@@ -3394,8 +4652,13 @@ export const webhooksHandler = new Hono()
                               ),
                               animated: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                    .Decode((value) => value === 'true')
+                                  Codec(
+                                    Type.String({
+                                      pattern:
+                                        /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                    }),
+                                  )
+                                    .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                     .Encode((value) => (value ? 'true' : 'false')),
                                   Type.Null(),
                                 ]),
@@ -3425,13 +4688,12 @@ export const webhooksHandler = new Hono()
                           emoji: Type.Optional(
                             Type.Union(
                               [
-                                Type.Union([Type.Null(), Type.Null()]),
+                                Type.Null(),
                                 Type.Object({
                                   id: Type.Optional(
-                                    Type.Union(
-                                      [Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema],
-                                      { description: 'The ID of the custom emoji' },
-                                    ),
+                                    Type.Union([Type.Null(), SnowflakeTypeSchema], {
+                                      description: 'The ID of the custom emoji',
+                                    }),
                                   ),
                                   name: Type.Optional(
                                     Type.Union([
@@ -3446,9 +4708,14 @@ export const webhooksHandler = new Hono()
                                   animated: Type.Optional(
                                     Type.Union([
                                       Codec(
-                                        Type.Union([Type.Literal('true'), Type.Literal('false')]),
+                                        Type.String({
+                                          pattern:
+                                            /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                        }),
                                       )
-                                        .Decode((value) => value === 'true')
+                                        .Decode((value) =>
+                                          /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                        )
                                         .Encode((value) => (value ? 'true' : 'false')),
                                       Type.Null(),
                                     ]),
@@ -3470,21 +4737,35 @@ export const webhooksHandler = new Hono()
                   ),
                   allow_multiselect: Type.Optional(
                     Type.Union([
-                      Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                        .Decode((value) => value === 'true')
+                      Codec(
+                        Type.String({
+                          pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                        }),
+                      )
+                        .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                         .Encode((value) => (value ? 'true' : 'false')),
                       Type.Null(),
                     ]),
                   ),
                   layout_type: Type.Optional(
-                    Type.Union([Type.Union([Type.Null(), Type.Null()]), PollLayoutTypesSchema], {
+                    Type.Union([Type.Null(), PollLayoutTypesSchema], {
                       description: 'The layout type of the poll. Defaults to... DEFAULT!',
                     }),
                   ),
                   duration: Type.Optional(
                     Type.Union([
-                      Codec(Type.String())
-                        .Decode((value) => Number.parseInt(value, 10))
+                      Codec(
+                        Type.Refine(
+                          Type.Refine(
+                            Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                            (value) => Number(value) >= 1,
+                            () => 'must be >= 1',
+                          ),
+                          (value) => Number(value) <= 768,
+                          () => 'must be <= 768',
+                        ),
+                      )
+                        .Decode((value) => Number(value))
                         .Encode((value) => String(value)),
                       Type.Null(),
                     ]),
@@ -3494,8 +4775,8 @@ export const webhooksHandler = new Hono()
             ),
             flags: Type.Optional(
               Type.Union([
-                Codec(Type.String())
-                  .Decode((value) => Number.parseInt(value, 10))
+                Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+                  .Decode((value) => Number(value))
                   .Encode((value) => String(value)),
                 Type.Null(),
               ]),
@@ -3528,7 +4809,7 @@ export const webhooksHandler = new Hono()
     }),
     validator(
       'param',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           webhook_id: SnowflakeTypeSchema,
           webhook_token: Type.String({ maxLength: 152133 }),
@@ -3554,7 +4835,7 @@ export const webhooksHandler = new Hono()
           content: {
             'application/json': {
               schema: resolver(
-                Compile(
+                toStandardSchemaV1(
                   Type.Union([
                     ApplicationIncomingWebhookResponseSchema,
                     ChannelFollowerWebhookResponseSchema,
@@ -3572,7 +4853,7 @@ export const webhooksHandler = new Hono()
     }),
     validator(
       'param',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           webhook_id: SnowflakeTypeSchema,
           webhook_token: Type.String({ maxLength: 152133 }),
@@ -3581,7 +4862,7 @@ export const webhooksHandler = new Hono()
     ),
     validator(
       'json',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           name: Type.Optional(Type.String({ minLength: 1, maxLength: 80 })),
           avatar: Type.Optional(Type.Union([Type.String(), Type.Null()])),
@@ -3612,7 +4893,7 @@ export const webhooksHandler = new Hono()
     }),
     validator(
       'param',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           webhook_id: SnowflakeTypeSchema,
           webhook_token: Type.String({ maxLength: 152133 }),
@@ -3621,18 +4902,20 @@ export const webhooksHandler = new Hono()
     ),
     validator(
       'query',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           wait: Type.Optional(
-            Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-              .Decode((value) => value === 'true')
+            Codec(
+              Type.String({ pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i }),
+            )
+              .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
               .Encode((value) => (value ? 'true' : 'false')),
           ),
           thread_id: Type.Optional(SnowflakeTypeSchema),
         }),
       ),
     ),
-    validator('json', Compile(GithubWebhookSchema)),
+    validator('json', toStandardSchemaV1(GithubWebhookSchema)),
     (c) => { throw new Error('Not implemented') },
   )
   .get(
@@ -3649,7 +4932,9 @@ export const webhooksHandler = new Hono()
             'X-RateLimit-Reset-After': { $ref: '#/components/headers/X-RateLimit-Reset-After' },
             'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
           },
-          content: { 'application/json': { schema: resolver(Compile(MessageResponseSchema)) } },
+          content: {
+            'application/json': { schema: resolver(toStandardSchemaV1(MessageResponseSchema)) },
+          },
         },
         '429': ClientRatelimitedResponseResponse,
         '4XX': ClientErrorResponseResponse,
@@ -3658,14 +4943,17 @@ export const webhooksHandler = new Hono()
     }),
     validator(
       'param',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           webhook_id: SnowflakeTypeSchema,
           webhook_token: Type.String({ maxLength: 152133 }),
         }),
       ),
     ),
-    validator('query', Compile(Type.Object({ thread_id: Type.Optional(SnowflakeTypeSchema) }))),
+    validator(
+      'query',
+      toStandardSchemaV1(Type.Object({ thread_id: Type.Optional(SnowflakeTypeSchema) })),
+    ),
     (c) => { throw new Error('Not implemented') },
   )
   .delete(
@@ -3690,14 +4978,17 @@ export const webhooksHandler = new Hono()
     }),
     validator(
       'param',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           webhook_id: SnowflakeTypeSchema,
           webhook_token: Type.String({ maxLength: 152133 }),
         }),
       ),
     ),
-    validator('query', Compile(Type.Object({ thread_id: Type.Optional(SnowflakeTypeSchema) }))),
+    validator(
+      'query',
+      toStandardSchemaV1(Type.Object({ thread_id: Type.Optional(SnowflakeTypeSchema) })),
+    ),
     (c) => { throw new Error('Not implemented') },
   )
   .patch(
@@ -3714,7 +5005,9 @@ export const webhooksHandler = new Hono()
             'X-RateLimit-Reset-After': { $ref: '#/components/headers/X-RateLimit-Reset-After' },
             'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
           },
-          content: { 'application/json': { schema: resolver(Compile(MessageResponseSchema)) } },
+          content: {
+            'application/json': { schema: resolver(toStandardSchemaV1(MessageResponseSchema)) },
+          },
         },
         '429': ClientRatelimitedResponseResponse,
         '4XX': ClientErrorResponseResponse,
@@ -3723,7 +5016,7 @@ export const webhooksHandler = new Hono()
     }),
     validator(
       'param',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           webhook_id: SnowflakeTypeSchema,
           webhook_token: Type.String({ maxLength: 152133 }),
@@ -3732,21 +5025,23 @@ export const webhooksHandler = new Hono()
     ),
     validator(
       'query',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           thread_id: Type.Optional(SnowflakeTypeSchema),
           with_components: Type.Optional(
-            Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-              .Decode((value) => value === 'true')
+            Codec(
+              Type.String({ pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i }),
+            )
+              .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
               .Encode((value) => (value ? 'true' : 'false')),
           ),
         }),
       ),
     ),
-    validator('json', Compile(IncomingWebhookUpdateRequestPartialSchema)),
+    validator('json', toStandardSchemaV1(IncomingWebhookUpdateRequestPartialSchema)),
     validator(
       'form',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           content: Type.Optional(Type.Union([Type.String({ maxLength: 2000 }), Type.Null()])),
           embeds: Type.Optional(
@@ -3762,8 +5057,18 @@ export const webhooksHandler = new Hono()
                   title: Type.Optional(Type.Union([Type.String({ maxLength: 256 }), Type.Null()])),
                   color: Type.Optional(
                     Type.Union([
-                      Codec(Type.String())
-                        .Decode((value) => Number.parseInt(value, 10))
+                      Codec(
+                        Type.Refine(
+                          Type.Refine(
+                            Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                            (value) => Number(value) >= 0,
+                            () => 'must be >= 0',
+                          ),
+                          (value) => Number(value) <= 16777215,
+                          () => 'must be <= 16777215',
+                        ),
+                      )
+                        .Decode((value) => Number(value))
                         .Encode((value) => String(value)),
                       Type.Null(),
                     ]),
@@ -3774,12 +5079,10 @@ export const webhooksHandler = new Hono()
                   description: Type.Optional(
                     Type.Union([Type.String({ maxLength: 4096 }), Type.Null()]),
                   ),
-                  author: Type.Optional(
-                    Type.Union([Type.Union([Type.Null(), Type.Null()]), RichEmbedAuthorSchema]),
-                  ),
+                  author: Type.Optional(Type.Union([Type.Null(), RichEmbedAuthorSchema])),
                   image: Type.Optional(
                     Type.Union([
-                      Type.Union([Type.Null(), Type.Null()]),
+                      Type.Null(),
                       Type.Object({
                         url: Type.Optional(
                           Type.Union([
@@ -3789,16 +5092,16 @@ export const webhooksHandler = new Hono()
                         ),
                         width: Type.Optional(
                           Type.Union([
-                            Codec(Type.String())
-                              .Decode((value) => Number.parseInt(value, 10))
+                            Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+                              .Decode((value) => Number(value))
                               .Encode((value) => String(value)),
                             Type.Null(),
                           ]),
                         ),
                         height: Type.Optional(
                           Type.Union([
-                            Codec(Type.String())
-                              .Decode((value) => Number.parseInt(value, 10))
+                            Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+                              .Decode((value) => Number(value))
                               .Encode((value) => String(value)),
                             Type.Null(),
                           ]),
@@ -3808,16 +5111,30 @@ export const webhooksHandler = new Hono()
                         ),
                         placeholder_version: Type.Optional(
                           Type.Union([
-                            Codec(Type.String())
-                              .Decode((value) => Number.parseInt(value, 10))
+                            Codec(
+                              Type.Refine(
+                                Type.Refine(
+                                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                  (value) => Number(value) >= 0,
+                                  () => 'must be >= 0',
+                                ),
+                                (value) => Number(value) <= 2147483647,
+                                () => 'must be <= 2147483647',
+                              ),
+                            )
+                              .Decode((value) => Number(value))
                               .Encode((value) => String(value)),
                             Type.Null(),
                           ]),
                         ),
                         is_animated: Type.Optional(
                           Type.Union([
-                            Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                              .Decode((value) => value === 'true')
+                            Codec(
+                              Type.String({
+                                pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                              }),
+                            )
+                              .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                               .Encode((value) => (value ? 'true' : 'false')),
                             Type.Null(),
                           ]),
@@ -3830,7 +5147,7 @@ export const webhooksHandler = new Hono()
                   ),
                   thumbnail: Type.Optional(
                     Type.Union([
-                      Type.Union([Type.Null(), Type.Null()]),
+                      Type.Null(),
                       Type.Object({
                         url: Type.Optional(
                           Type.Union([
@@ -3840,16 +5157,16 @@ export const webhooksHandler = new Hono()
                         ),
                         width: Type.Optional(
                           Type.Union([
-                            Codec(Type.String())
-                              .Decode((value) => Number.parseInt(value, 10))
+                            Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+                              .Decode((value) => Number(value))
                               .Encode((value) => String(value)),
                             Type.Null(),
                           ]),
                         ),
                         height: Type.Optional(
                           Type.Union([
-                            Codec(Type.String())
-                              .Decode((value) => Number.parseInt(value, 10))
+                            Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+                              .Decode((value) => Number(value))
                               .Encode((value) => String(value)),
                             Type.Null(),
                           ]),
@@ -3859,16 +5176,30 @@ export const webhooksHandler = new Hono()
                         ),
                         placeholder_version: Type.Optional(
                           Type.Union([
-                            Codec(Type.String())
-                              .Decode((value) => Number.parseInt(value, 10))
+                            Codec(
+                              Type.Refine(
+                                Type.Refine(
+                                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                  (value) => Number(value) >= 0,
+                                  () => 'must be >= 0',
+                                ),
+                                (value) => Number(value) <= 2147483647,
+                                () => 'must be <= 2147483647',
+                              ),
+                            )
+                              .Decode((value) => Number(value))
                               .Encode((value) => String(value)),
                             Type.Null(),
                           ]),
                         ),
                         is_animated: Type.Optional(
                           Type.Union([
-                            Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                              .Decode((value) => value === 'true')
+                            Codec(
+                              Type.String({
+                                pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                              }),
+                            )
+                              .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                               .Encode((value) => (value ? 'true' : 'false')),
                             Type.Null(),
                           ]),
@@ -3879,9 +5210,7 @@ export const webhooksHandler = new Hono()
                       }),
                     ]),
                   ),
-                  footer: Type.Optional(
-                    Type.Union([Type.Union([Type.Null(), Type.Null()]), RichEmbedFooterSchema]),
-                  ),
+                  footer: Type.Optional(Type.Union([Type.Null(), RichEmbedFooterSchema])),
                   fields: Type.Optional(
                     Type.Union([
                       Type.Array(
@@ -3890,8 +5219,13 @@ export const webhooksHandler = new Hono()
                           value: Type.String({ maxLength: 1024 }),
                           inline: Type.Optional(
                             Type.Union([
-                              Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                .Decode((value) => value === 'true')
+                              Codec(
+                                Type.String({
+                                  pattern:
+                                    /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                }),
+                              )
+                                .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                 .Encode((value) => (value ? 'true' : 'false')),
                               Type.Null(),
                             ]),
@@ -3902,12 +5236,10 @@ export const webhooksHandler = new Hono()
                       Type.Null(),
                     ]),
                   ),
-                  provider: Type.Optional(
-                    Type.Union([Type.Union([Type.Null(), Type.Null()]), RichEmbedProviderSchema]),
-                  ),
+                  provider: Type.Optional(Type.Union([Type.Null(), RichEmbedProviderSchema])),
                   video: Type.Optional(
                     Type.Union([
-                      Type.Union([Type.Null(), Type.Null()]),
+                      Type.Null(),
                       Type.Object({
                         url: Type.Optional(
                           Type.Union([
@@ -3917,16 +5249,16 @@ export const webhooksHandler = new Hono()
                         ),
                         width: Type.Optional(
                           Type.Union([
-                            Codec(Type.String())
-                              .Decode((value) => Number.parseInt(value, 10))
+                            Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+                              .Decode((value) => Number(value))
                               .Encode((value) => String(value)),
                             Type.Null(),
                           ]),
                         ),
                         height: Type.Optional(
                           Type.Union([
-                            Codec(Type.String())
-                              .Decode((value) => Number.parseInt(value, 10))
+                            Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+                              .Decode((value) => Number(value))
                               .Encode((value) => String(value)),
                             Type.Null(),
                           ]),
@@ -3936,16 +5268,30 @@ export const webhooksHandler = new Hono()
                         ),
                         placeholder_version: Type.Optional(
                           Type.Union([
-                            Codec(Type.String())
-                              .Decode((value) => Number.parseInt(value, 10))
+                            Codec(
+                              Type.Refine(
+                                Type.Refine(
+                                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                  (value) => Number(value) >= 0,
+                                  () => 'must be >= 0',
+                                ),
+                                (value) => Number(value) <= 2147483647,
+                                () => 'must be <= 2147483647',
+                              ),
+                            )
+                              .Decode((value) => Number(value))
                               .Encode((value) => String(value)),
                             Type.Null(),
                           ]),
                         ),
                         is_animated: Type.Optional(
                           Type.Union([
-                            Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                              .Decode((value) => value === 'true')
+                            Codec(
+                              Type.String({
+                                pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                              }),
+                            )
+                              .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                               .Encode((value) => (value ? 'true' : 'false')),
                             Type.Null(),
                           ]),
@@ -3956,9 +5302,7 @@ export const webhooksHandler = new Hono()
                       }),
                     ]),
                   ),
-                  audio: Type.Optional(
-                    Type.Union([Type.Union([Type.Null(), Type.Null()]), RichEmbedAudioSchema]),
-                  ),
+                  audio: Type.Optional(Type.Union([Type.Null(), RichEmbedAudioSchema])),
                 }),
                 { maxItems: 10 },
               ),
@@ -3967,42 +5311,43 @@ export const webhooksHandler = new Hono()
           ),
           allowed_mentions: Type.Optional(
             Type.Union([
-              Type.Union([Type.Null(), Type.Null()]),
+              Type.Null(),
               Type.Object({
                 parse: Type.Optional(
                   Type.Union([
-                    Type.Array(
-                      Type.Union([
-                        Type.Union([Type.Null(), Type.Null()]),
-                        AllowedMentionTypesSchema,
-                      ]),
-                      { maxItems: 1521, uniqueItems: true },
-                    ),
+                    Type.Array(Type.Union([Type.Null(), AllowedMentionTypesSchema]), {
+                      maxItems: 1521,
+                      uniqueItems: true,
+                    }),
                     Type.Null(),
                   ]),
                 ),
                 users: Type.Optional(
                   Type.Union([
-                    Type.Array(
-                      Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
-                      { maxItems: 100, uniqueItems: true },
-                    ),
+                    Type.Array(Type.Union([Type.Null(), SnowflakeTypeSchema]), {
+                      maxItems: 100,
+                      uniqueItems: true,
+                    }),
                     Type.Null(),
                   ]),
                 ),
                 roles: Type.Optional(
                   Type.Union([
-                    Type.Array(
-                      Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
-                      { maxItems: 100, uniqueItems: true },
-                    ),
+                    Type.Array(Type.Union([Type.Null(), SnowflakeTypeSchema]), {
+                      maxItems: 100,
+                      uniqueItems: true,
+                    }),
                     Type.Null(),
                   ]),
                 ),
                 replied_user: Type.Optional(
                   Type.Union([
-                    Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                      .Decode((value) => value === 'true')
+                    Codec(
+                      Type.String({
+                        pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                      }),
+                    )
+                      .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                       .Encode((value) => (value ? 'true' : 'false')),
                     Type.Null(),
                   ]),
@@ -4018,8 +5363,14 @@ export const webhooksHandler = new Hono()
                     type: MessageComponentTypesSchema,
                     id: Type.Optional(
                       Type.Union([
-                        Codec(Type.String())
-                          .Decode((value) => Number.parseInt(value, 10))
+                        Codec(
+                          Type.Refine(
+                            Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                            (value) => Number(value) >= 0,
+                            () => 'must be >= 0',
+                          ),
+                        )
+                          .Decode((value) => Number(value))
                           .Encode((value) => String(value)),
                         Type.Null(),
                       ]),
@@ -4030,8 +5381,14 @@ export const webhooksHandler = new Hono()
                           type: MessageComponentTypesSchema,
                           id: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(
+                                Type.Refine(
+                                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                  (value) => Number(value) >= 0,
+                                  () => 'must be >= 0',
+                                ),
+                              )
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
@@ -4048,8 +5405,13 @@ export const webhooksHandler = new Hono()
                           ),
                           disabled: Type.Optional(
                             Type.Union([
-                              Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                .Decode((value) => value === 'true')
+                              Codec(
+                                Type.String({
+                                  pattern:
+                                    /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                }),
+                              )
+                                .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                 .Encode((value) => (value ? 'true' : 'false')),
                               Type.Null(),
                             ]),
@@ -4060,25 +5422,23 @@ export const webhooksHandler = new Hono()
                               Type.Null(),
                             ]),
                           ),
-                          sku_id: Type.Optional(
-                            Type.Union([
-                              Type.Union([Type.Null(), Type.Null()]),
-                              SnowflakeTypeSchema,
-                            ]),
-                          ),
+                          sku_id: Type.Optional(Type.Union([Type.Null(), SnowflakeTypeSchema])),
                           emoji: Type.Optional(
-                            Type.Union([
-                              Type.Union([Type.Null(), Type.Null()]),
-                              ComponentEmojiForRequestSchema,
-                            ]),
+                            Type.Union([Type.Null(), ComponentEmojiForRequestSchema]),
                           ),
                         }),
                         Type.Object({
                           type: MessageComponentTypesSchema,
                           id: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(
+                                Type.Refine(
+                                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                  (value) => Number(value) >= 0,
+                                  () => 'must be >= 0',
+                                ),
+                              )
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
@@ -4089,32 +5449,62 @@ export const webhooksHandler = new Hono()
                           ),
                           min_values: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(
+                                Type.Refine(
+                                  Type.Refine(
+                                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                    (value) => Number(value) >= 0,
+                                    () => 'must be >= 0',
+                                  ),
+                                  (value) => Number(value) <= 25,
+                                  () => 'must be <= 25',
+                                ),
+                              )
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
                           ),
                           max_values: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(
+                                Type.Refine(
+                                  Type.Refine(
+                                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                    (value) => Number(value) >= 1,
+                                    () => 'must be >= 1',
+                                  ),
+                                  (value) => Number(value) <= 25,
+                                  () => 'must be <= 25',
+                                ),
+                              )
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
                           ),
                           disabled: Type.Optional(
                             Type.Union([
-                              Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                .Decode((value) => value === 'true')
+                              Codec(
+                                Type.String({
+                                  pattern:
+                                    /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                }),
+                              )
+                                .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                 .Encode((value) => (value ? 'true' : 'false')),
                               Type.Null(),
                             ]),
                           ),
                           required: Type.Optional(
                             Type.Union([
-                              Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                .Decode((value) => value === 'true')
+                              Codec(
+                                Type.String({
+                                  pattern:
+                                    /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                }),
+                              )
+                                .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                 .Encode((value) => (value ? 'true' : 'false')),
                               Type.Null(),
                             ]),
@@ -4136,8 +5526,14 @@ export const webhooksHandler = new Hono()
                           type: MessageComponentTypesSchema,
                           id: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(
+                                Type.Refine(
+                                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                  (value) => Number(value) >= 0,
+                                  () => 'must be >= 0',
+                                ),
+                              )
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
@@ -4148,32 +5544,62 @@ export const webhooksHandler = new Hono()
                           ),
                           min_values: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(
+                                Type.Refine(
+                                  Type.Refine(
+                                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                    (value) => Number(value) >= 0,
+                                    () => 'must be >= 0',
+                                  ),
+                                  (value) => Number(value) <= 25,
+                                  () => 'must be <= 25',
+                                ),
+                              )
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
                           ),
                           max_values: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(
+                                Type.Refine(
+                                  Type.Refine(
+                                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                    (value) => Number(value) >= 1,
+                                    () => 'must be >= 1',
+                                  ),
+                                  (value) => Number(value) <= 25,
+                                  () => 'must be <= 25',
+                                ),
+                              )
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
                           ),
                           disabled: Type.Optional(
                             Type.Union([
-                              Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                .Decode((value) => value === 'true')
+                              Codec(
+                                Type.String({
+                                  pattern:
+                                    /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                }),
+                              )
+                                .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                 .Encode((value) => (value ? 'true' : 'false')),
                               Type.Null(),
                             ]),
                           ),
                           required: Type.Optional(
                             Type.Union([
-                              Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                .Decode((value) => value === 'true')
+                              Codec(
+                                Type.String({
+                                  pattern:
+                                    /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                }),
+                              )
+                                .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                 .Encode((value) => (value ? 'true' : 'false')),
                               Type.Null(),
                             ]),
@@ -4195,8 +5621,14 @@ export const webhooksHandler = new Hono()
                           type: MessageComponentTypesSchema,
                           id: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(
+                                Type.Refine(
+                                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                  (value) => Number(value) >= 0,
+                                  () => 'must be >= 0',
+                                ),
+                              )
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
@@ -4207,32 +5639,62 @@ export const webhooksHandler = new Hono()
                           ),
                           min_values: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(
+                                Type.Refine(
+                                  Type.Refine(
+                                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                    (value) => Number(value) >= 0,
+                                    () => 'must be >= 0',
+                                  ),
+                                  (value) => Number(value) <= 25,
+                                  () => 'must be <= 25',
+                                ),
+                              )
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
                           ),
                           max_values: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(
+                                Type.Refine(
+                                  Type.Refine(
+                                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                    (value) => Number(value) >= 1,
+                                    () => 'must be >= 1',
+                                  ),
+                                  (value) => Number(value) <= 25,
+                                  () => 'must be <= 25',
+                                ),
+                              )
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
                           ),
                           disabled: Type.Optional(
                             Type.Union([
-                              Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                .Decode((value) => value === 'true')
+                              Codec(
+                                Type.String({
+                                  pattern:
+                                    /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                }),
+                              )
+                                .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                 .Encode((value) => (value ? 'true' : 'false')),
                               Type.Null(),
                             ]),
                           ),
                           required: Type.Optional(
                             Type.Union([
-                              Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                .Decode((value) => value === 'true')
+                              Codec(
+                                Type.String({
+                                  pattern:
+                                    /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                }),
+                              )
+                                .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                 .Encode((value) => (value ? 'true' : 'false')),
                               Type.Null(),
                             ]),
@@ -4248,8 +5710,14 @@ export const webhooksHandler = new Hono()
                           type: MessageComponentTypesSchema,
                           id: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(
+                                Type.Refine(
+                                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                  (value) => Number(value) >= 0,
+                                  () => 'must be >= 0',
+                                ),
+                              )
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
@@ -4260,32 +5728,62 @@ export const webhooksHandler = new Hono()
                           ),
                           min_values: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(
+                                Type.Refine(
+                                  Type.Refine(
+                                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                    (value) => Number(value) >= 0,
+                                    () => 'must be >= 0',
+                                  ),
+                                  (value) => Number(value) <= 25,
+                                  () => 'must be <= 25',
+                                ),
+                              )
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
                           ),
                           max_values: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(
+                                Type.Refine(
+                                  Type.Refine(
+                                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                    (value) => Number(value) >= 1,
+                                    () => 'must be >= 1',
+                                  ),
+                                  (value) => Number(value) <= 25,
+                                  () => 'must be <= 25',
+                                ),
+                              )
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
                           ),
                           disabled: Type.Optional(
                             Type.Union([
-                              Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                .Decode((value) => value === 'true')
+                              Codec(
+                                Type.String({
+                                  pattern:
+                                    /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                }),
+                              )
+                                .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                 .Encode((value) => (value ? 'true' : 'false')),
                               Type.Null(),
                             ]),
                           ),
                           required: Type.Optional(
                             Type.Union([
-                              Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                .Decode((value) => value === 'true')
+                              Codec(
+                                Type.String({
+                                  pattern:
+                                    /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                }),
+                              )
+                                .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                 .Encode((value) => (value ? 'true' : 'false')),
                               Type.Null(),
                             ]),
@@ -4299,17 +5797,19 @@ export const webhooksHandler = new Hono()
                               ),
                               default: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                    .Decode((value) => value === 'true')
+                                  Codec(
+                                    Type.String({
+                                      pattern:
+                                        /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                    }),
+                                  )
+                                    .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                     .Encode((value) => (value ? 'true' : 'false')),
                                   Type.Null(),
                                 ]),
                               ),
                               emoji: Type.Optional(
-                                Type.Union([
-                                  Type.Union([Type.Null(), Type.Null()]),
-                                  ComponentEmojiForRequestSchema,
-                                ]),
+                                Type.Union([Type.Null(), ComponentEmojiForRequestSchema]),
                               ),
                             }),
                             { minItems: 1, maxItems: 25 },
@@ -4319,8 +5819,14 @@ export const webhooksHandler = new Hono()
                           type: MessageComponentTypesSchema,
                           id: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(
+                                Type.Refine(
+                                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                  (value) => Number(value) >= 0,
+                                  () => 'must be >= 0',
+                                ),
+                              )
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
@@ -4331,32 +5837,62 @@ export const webhooksHandler = new Hono()
                           ),
                           min_values: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(
+                                Type.Refine(
+                                  Type.Refine(
+                                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                    (value) => Number(value) >= 0,
+                                    () => 'must be >= 0',
+                                  ),
+                                  (value) => Number(value) <= 25,
+                                  () => 'must be <= 25',
+                                ),
+                              )
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
                           ),
                           max_values: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(
+                                Type.Refine(
+                                  Type.Refine(
+                                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                    (value) => Number(value) >= 1,
+                                    () => 'must be >= 1',
+                                  ),
+                                  (value) => Number(value) <= 25,
+                                  () => 'must be <= 25',
+                                ),
+                              )
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
                           ),
                           disabled: Type.Optional(
                             Type.Union([
-                              Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                .Decode((value) => value === 'true')
+                              Codec(
+                                Type.String({
+                                  pattern:
+                                    /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                }),
+                              )
+                                .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                 .Encode((value) => (value ? 'true' : 'false')),
                               Type.Null(),
                             ]),
                           ),
                           required: Type.Optional(
                             Type.Union([
-                              Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                .Decode((value) => value === 'true')
+                              Codec(
+                                Type.String({
+                                  pattern:
+                                    /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                }),
+                              )
+                                .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                 .Encode((value) => (value ? 'true' : 'false')),
                               Type.Null(),
                             ]),
@@ -4376,16 +5912,32 @@ export const webhooksHandler = new Hono()
                     type: MessageComponentTypesSchema,
                     id: Type.Optional(
                       Type.Union([
-                        Codec(Type.String())
-                          .Decode((value) => Number.parseInt(value, 10))
+                        Codec(
+                          Type.Refine(
+                            Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                            (value) => Number(value) >= 0,
+                            () => 'must be >= 0',
+                          ),
+                        )
+                          .Decode((value) => Number(value))
                           .Encode((value) => String(value)),
                         Type.Null(),
                       ]),
                     ),
                     accent_color: Type.Optional(
                       Type.Union([
-                        Codec(Type.String())
-                          .Decode((value) => Number.parseInt(value, 10))
+                        Codec(
+                          Type.Refine(
+                            Type.Refine(
+                              Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                              (value) => Number(value) >= 0,
+                              () => 'must be >= 0',
+                            ),
+                            (value) => Number(value) <= 16777215,
+                            () => 'must be <= 16777215',
+                          ),
+                        )
+                          .Decode((value) => Number(value))
                           .Encode((value) => String(value)),
                         Type.Null(),
                       ]),
@@ -4396,8 +5948,14 @@ export const webhooksHandler = new Hono()
                           type: MessageComponentTypesSchema,
                           id: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(
+                                Type.Refine(
+                                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                  (value) => Number(value) >= 0,
+                                  () => 'must be >= 0',
+                                ),
+                              )
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
@@ -4408,8 +5966,14 @@ export const webhooksHandler = new Hono()
                                 type: MessageComponentTypesSchema,
                                 id: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.String())
-                                      .Decode((value) => Number.parseInt(value, 10))
+                                    Codec(
+                                      Type.Refine(
+                                        Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                        (value) => Number(value) >= 0,
+                                        () => 'must be >= 0',
+                                      ),
+                                    )
+                                      .Decode((value) => Number(value))
                                       .Encode((value) => String(value)),
                                     Type.Null(),
                                   ]),
@@ -4426,8 +5990,15 @@ export const webhooksHandler = new Hono()
                                 ),
                                 disabled: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                      .Decode((value) => value === 'true')
+                                    Codec(
+                                      Type.String({
+                                        pattern:
+                                          /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                      }),
+                                    )
+                                      .Decode((value) =>
+                                        /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                      )
                                       .Encode((value) => (value ? 'true' : 'false')),
                                     Type.Null(),
                                   ]),
@@ -4439,24 +6010,24 @@ export const webhooksHandler = new Hono()
                                   ]),
                                 ),
                                 sku_id: Type.Optional(
-                                  Type.Union([
-                                    Type.Union([Type.Null(), Type.Null()]),
-                                    SnowflakeTypeSchema,
-                                  ]),
+                                  Type.Union([Type.Null(), SnowflakeTypeSchema]),
                                 ),
                                 emoji: Type.Optional(
-                                  Type.Union([
-                                    Type.Union([Type.Null(), Type.Null()]),
-                                    ComponentEmojiForRequestSchema,
-                                  ]),
+                                  Type.Union([Type.Null(), ComponentEmojiForRequestSchema]),
                                 ),
                               }),
                               Type.Object({
                                 type: MessageComponentTypesSchema,
                                 id: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.String())
-                                      .Decode((value) => Number.parseInt(value, 10))
+                                    Codec(
+                                      Type.Refine(
+                                        Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                        (value) => Number(value) >= 0,
+                                        () => 'must be >= 0',
+                                      ),
+                                    )
+                                      .Decode((value) => Number(value))
                                       .Encode((value) => String(value)),
                                     Type.Null(),
                                   ]),
@@ -4467,32 +6038,66 @@ export const webhooksHandler = new Hono()
                                 ),
                                 min_values: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.String())
-                                      .Decode((value) => Number.parseInt(value, 10))
+                                    Codec(
+                                      Type.Refine(
+                                        Type.Refine(
+                                          Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                          (value) => Number(value) >= 0,
+                                          () => 'must be >= 0',
+                                        ),
+                                        (value) => Number(value) <= 25,
+                                        () => 'must be <= 25',
+                                      ),
+                                    )
+                                      .Decode((value) => Number(value))
                                       .Encode((value) => String(value)),
                                     Type.Null(),
                                   ]),
                                 ),
                                 max_values: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.String())
-                                      .Decode((value) => Number.parseInt(value, 10))
+                                    Codec(
+                                      Type.Refine(
+                                        Type.Refine(
+                                          Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                          (value) => Number(value) >= 1,
+                                          () => 'must be >= 1',
+                                        ),
+                                        (value) => Number(value) <= 25,
+                                        () => 'must be <= 25',
+                                      ),
+                                    )
+                                      .Decode((value) => Number(value))
                                       .Encode((value) => String(value)),
                                     Type.Null(),
                                   ]),
                                 ),
                                 disabled: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                      .Decode((value) => value === 'true')
+                                    Codec(
+                                      Type.String({
+                                        pattern:
+                                          /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                      }),
+                                    )
+                                      .Decode((value) =>
+                                        /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                      )
                                       .Encode((value) => (value ? 'true' : 'false')),
                                     Type.Null(),
                                   ]),
                                 ),
                                 required: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                      .Decode((value) => value === 'true')
+                                    Codec(
+                                      Type.String({
+                                        pattern:
+                                          /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                      }),
+                                    )
+                                      .Decode((value) =>
+                                        /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                      )
                                       .Encode((value) => (value ? 'true' : 'false')),
                                     Type.Null(),
                                   ]),
@@ -4514,8 +6119,14 @@ export const webhooksHandler = new Hono()
                                 type: MessageComponentTypesSchema,
                                 id: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.String())
-                                      .Decode((value) => Number.parseInt(value, 10))
+                                    Codec(
+                                      Type.Refine(
+                                        Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                        (value) => Number(value) >= 0,
+                                        () => 'must be >= 0',
+                                      ),
+                                    )
+                                      .Decode((value) => Number(value))
                                       .Encode((value) => String(value)),
                                     Type.Null(),
                                   ]),
@@ -4526,32 +6137,66 @@ export const webhooksHandler = new Hono()
                                 ),
                                 min_values: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.String())
-                                      .Decode((value) => Number.parseInt(value, 10))
+                                    Codec(
+                                      Type.Refine(
+                                        Type.Refine(
+                                          Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                          (value) => Number(value) >= 0,
+                                          () => 'must be >= 0',
+                                        ),
+                                        (value) => Number(value) <= 25,
+                                        () => 'must be <= 25',
+                                      ),
+                                    )
+                                      .Decode((value) => Number(value))
                                       .Encode((value) => String(value)),
                                     Type.Null(),
                                   ]),
                                 ),
                                 max_values: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.String())
-                                      .Decode((value) => Number.parseInt(value, 10))
+                                    Codec(
+                                      Type.Refine(
+                                        Type.Refine(
+                                          Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                          (value) => Number(value) >= 1,
+                                          () => 'must be >= 1',
+                                        ),
+                                        (value) => Number(value) <= 25,
+                                        () => 'must be <= 25',
+                                      ),
+                                    )
+                                      .Decode((value) => Number(value))
                                       .Encode((value) => String(value)),
                                     Type.Null(),
                                   ]),
                                 ),
                                 disabled: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                      .Decode((value) => value === 'true')
+                                    Codec(
+                                      Type.String({
+                                        pattern:
+                                          /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                      }),
+                                    )
+                                      .Decode((value) =>
+                                        /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                      )
                                       .Encode((value) => (value ? 'true' : 'false')),
                                     Type.Null(),
                                   ]),
                                 ),
                                 required: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                      .Decode((value) => value === 'true')
+                                    Codec(
+                                      Type.String({
+                                        pattern:
+                                          /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                      }),
+                                    )
+                                      .Decode((value) =>
+                                        /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                      )
                                       .Encode((value) => (value ? 'true' : 'false')),
                                     Type.Null(),
                                   ]),
@@ -4573,8 +6218,14 @@ export const webhooksHandler = new Hono()
                                 type: MessageComponentTypesSchema,
                                 id: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.String())
-                                      .Decode((value) => Number.parseInt(value, 10))
+                                    Codec(
+                                      Type.Refine(
+                                        Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                        (value) => Number(value) >= 0,
+                                        () => 'must be >= 0',
+                                      ),
+                                    )
+                                      .Decode((value) => Number(value))
                                       .Encode((value) => String(value)),
                                     Type.Null(),
                                   ]),
@@ -4585,32 +6236,66 @@ export const webhooksHandler = new Hono()
                                 ),
                                 min_values: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.String())
-                                      .Decode((value) => Number.parseInt(value, 10))
+                                    Codec(
+                                      Type.Refine(
+                                        Type.Refine(
+                                          Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                          (value) => Number(value) >= 0,
+                                          () => 'must be >= 0',
+                                        ),
+                                        (value) => Number(value) <= 25,
+                                        () => 'must be <= 25',
+                                      ),
+                                    )
+                                      .Decode((value) => Number(value))
                                       .Encode((value) => String(value)),
                                     Type.Null(),
                                   ]),
                                 ),
                                 max_values: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.String())
-                                      .Decode((value) => Number.parseInt(value, 10))
+                                    Codec(
+                                      Type.Refine(
+                                        Type.Refine(
+                                          Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                          (value) => Number(value) >= 1,
+                                          () => 'must be >= 1',
+                                        ),
+                                        (value) => Number(value) <= 25,
+                                        () => 'must be <= 25',
+                                      ),
+                                    )
+                                      .Decode((value) => Number(value))
                                       .Encode((value) => String(value)),
                                     Type.Null(),
                                   ]),
                                 ),
                                 disabled: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                      .Decode((value) => value === 'true')
+                                    Codec(
+                                      Type.String({
+                                        pattern:
+                                          /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                      }),
+                                    )
+                                      .Decode((value) =>
+                                        /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                      )
                                       .Encode((value) => (value ? 'true' : 'false')),
                                     Type.Null(),
                                   ]),
                                 ),
                                 required: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                      .Decode((value) => value === 'true')
+                                    Codec(
+                                      Type.String({
+                                        pattern:
+                                          /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                      }),
+                                    )
+                                      .Decode((value) =>
+                                        /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                      )
                                       .Encode((value) => (value ? 'true' : 'false')),
                                     Type.Null(),
                                   ]),
@@ -4626,8 +6311,14 @@ export const webhooksHandler = new Hono()
                                 type: MessageComponentTypesSchema,
                                 id: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.String())
-                                      .Decode((value) => Number.parseInt(value, 10))
+                                    Codec(
+                                      Type.Refine(
+                                        Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                        (value) => Number(value) >= 0,
+                                        () => 'must be >= 0',
+                                      ),
+                                    )
+                                      .Decode((value) => Number(value))
                                       .Encode((value) => String(value)),
                                     Type.Null(),
                                   ]),
@@ -4638,32 +6329,66 @@ export const webhooksHandler = new Hono()
                                 ),
                                 min_values: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.String())
-                                      .Decode((value) => Number.parseInt(value, 10))
+                                    Codec(
+                                      Type.Refine(
+                                        Type.Refine(
+                                          Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                          (value) => Number(value) >= 0,
+                                          () => 'must be >= 0',
+                                        ),
+                                        (value) => Number(value) <= 25,
+                                        () => 'must be <= 25',
+                                      ),
+                                    )
+                                      .Decode((value) => Number(value))
                                       .Encode((value) => String(value)),
                                     Type.Null(),
                                   ]),
                                 ),
                                 max_values: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.String())
-                                      .Decode((value) => Number.parseInt(value, 10))
+                                    Codec(
+                                      Type.Refine(
+                                        Type.Refine(
+                                          Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                          (value) => Number(value) >= 1,
+                                          () => 'must be >= 1',
+                                        ),
+                                        (value) => Number(value) <= 25,
+                                        () => 'must be <= 25',
+                                      ),
+                                    )
+                                      .Decode((value) => Number(value))
                                       .Encode((value) => String(value)),
                                     Type.Null(),
                                   ]),
                                 ),
                                 disabled: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                      .Decode((value) => value === 'true')
+                                    Codec(
+                                      Type.String({
+                                        pattern:
+                                          /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                      }),
+                                    )
+                                      .Decode((value) =>
+                                        /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                      )
                                       .Encode((value) => (value ? 'true' : 'false')),
                                     Type.Null(),
                                   ]),
                                 ),
                                 required: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                      .Decode((value) => value === 'true')
+                                    Codec(
+                                      Type.String({
+                                        pattern:
+                                          /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                      }),
+                                    )
+                                      .Decode((value) =>
+                                        /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                      )
                                       .Encode((value) => (value ? 'true' : 'false')),
                                     Type.Null(),
                                   ]),
@@ -4678,18 +6403,20 @@ export const webhooksHandler = new Hono()
                                     default: Type.Optional(
                                       Type.Union([
                                         Codec(
-                                          Type.Union([Type.Literal('true'), Type.Literal('false')]),
+                                          Type.String({
+                                            pattern:
+                                              /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                          }),
                                         )
-                                          .Decode((value) => value === 'true')
+                                          .Decode((value) =>
+                                            /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                          )
                                           .Encode((value) => (value ? 'true' : 'false')),
                                         Type.Null(),
                                       ]),
                                     ),
                                     emoji: Type.Optional(
-                                      Type.Union([
-                                        Type.Union([Type.Null(), Type.Null()]),
-                                        ComponentEmojiForRequestSchema,
-                                      ]),
+                                      Type.Union([Type.Null(), ComponentEmojiForRequestSchema]),
                                     ),
                                   }),
                                   { minItems: 1, maxItems: 25 },
@@ -4699,8 +6426,14 @@ export const webhooksHandler = new Hono()
                                 type: MessageComponentTypesSchema,
                                 id: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.String())
-                                      .Decode((value) => Number.parseInt(value, 10))
+                                    Codec(
+                                      Type.Refine(
+                                        Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                        (value) => Number(value) >= 0,
+                                        () => 'must be >= 0',
+                                      ),
+                                    )
+                                      .Decode((value) => Number(value))
                                       .Encode((value) => String(value)),
                                     Type.Null(),
                                   ]),
@@ -4711,32 +6444,66 @@ export const webhooksHandler = new Hono()
                                 ),
                                 min_values: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.String())
-                                      .Decode((value) => Number.parseInt(value, 10))
+                                    Codec(
+                                      Type.Refine(
+                                        Type.Refine(
+                                          Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                          (value) => Number(value) >= 0,
+                                          () => 'must be >= 0',
+                                        ),
+                                        (value) => Number(value) <= 25,
+                                        () => 'must be <= 25',
+                                      ),
+                                    )
+                                      .Decode((value) => Number(value))
                                       .Encode((value) => String(value)),
                                     Type.Null(),
                                   ]),
                                 ),
                                 max_values: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.String())
-                                      .Decode((value) => Number.parseInt(value, 10))
+                                    Codec(
+                                      Type.Refine(
+                                        Type.Refine(
+                                          Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                          (value) => Number(value) >= 1,
+                                          () => 'must be >= 1',
+                                        ),
+                                        (value) => Number(value) <= 25,
+                                        () => 'must be <= 25',
+                                      ),
+                                    )
+                                      .Decode((value) => Number(value))
                                       .Encode((value) => String(value)),
                                     Type.Null(),
                                   ]),
                                 ),
                                 disabled: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                      .Decode((value) => value === 'true')
+                                    Codec(
+                                      Type.String({
+                                        pattern:
+                                          /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                      }),
+                                    )
+                                      .Decode((value) =>
+                                        /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                      )
                                       .Encode((value) => (value ? 'true' : 'false')),
                                     Type.Null(),
                                   ]),
                                 ),
                                 required: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                      .Decode((value) => value === 'true')
+                                    Codec(
+                                      Type.String({
+                                        pattern:
+                                          /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                      }),
+                                    )
+                                      .Decode((value) =>
+                                        /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                      )
                                       .Encode((value) => (value ? 'true' : 'false')),
                                     Type.Null(),
                                   ]),
@@ -4756,16 +6523,27 @@ export const webhooksHandler = new Hono()
                           type: MessageComponentTypesSchema,
                           id: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(
+                                Type.Refine(
+                                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                  (value) => Number(value) >= 0,
+                                  () => 'must be >= 0',
+                                ),
+                              )
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
                           ),
                           spoiler: Type.Optional(
                             Type.Union([
-                              Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                .Decode((value) => value === 'true')
+                              Codec(
+                                Type.String({
+                                  pattern:
+                                    /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                }),
+                              )
+                                .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                 .Encode((value) => (value ? 'true' : 'false')),
                               Type.Null(),
                             ]),
@@ -4776,8 +6554,14 @@ export const webhooksHandler = new Hono()
                           type: MessageComponentTypesSchema,
                           id: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(
+                                Type.Refine(
+                                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                  (value) => Number(value) >= 0,
+                                  () => 'must be >= 0',
+                                ),
+                              )
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
@@ -4792,8 +6576,13 @@ export const webhooksHandler = new Hono()
                               ),
                               spoiler: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                    .Decode((value) => value === 'true')
+                                  Codec(
+                                    Type.String({
+                                      pattern:
+                                        /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                    }),
+                                  )
+                                    .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                     .Encode((value) => (value ? 'true' : 'false')),
                                   Type.Null(),
                                 ]),
@@ -4807,8 +6596,14 @@ export const webhooksHandler = new Hono()
                           type: MessageComponentTypesSchema,
                           id: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(
+                                Type.Refine(
+                                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                  (value) => Number(value) >= 0,
+                                  () => 'must be >= 0',
+                                ),
+                              )
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
@@ -4818,8 +6613,14 @@ export const webhooksHandler = new Hono()
                               type: MessageComponentTypesSchema,
                               id: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.String())
-                                    .Decode((value) => Number.parseInt(value, 10))
+                                  Codec(
+                                    Type.Refine(
+                                      Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                      (value) => Number(value) >= 0,
+                                      () => 'must be >= 0',
+                                    ),
+                                  )
+                                    .Decode((value) => Number(value))
                                     .Encode((value) => String(value)),
                                   Type.Null(),
                                 ]),
@@ -4833,8 +6634,14 @@ export const webhooksHandler = new Hono()
                               type: MessageComponentTypesSchema,
                               id: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.String())
-                                    .Decode((value) => Number.parseInt(value, 10))
+                                  Codec(
+                                    Type.Refine(
+                                      Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                      (value) => Number(value) >= 0,
+                                      () => 'must be >= 0',
+                                    ),
+                                  )
+                                    .Decode((value) => Number(value))
                                     .Encode((value) => String(value)),
                                   Type.Null(),
                                 ]),
@@ -4851,8 +6658,13 @@ export const webhooksHandler = new Hono()
                               ),
                               disabled: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                    .Decode((value) => value === 'true')
+                                  Codec(
+                                    Type.String({
+                                      pattern:
+                                        /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                    }),
+                                  )
+                                    .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                     .Encode((value) => (value ? 'true' : 'false')),
                                   Type.Null(),
                                 ]),
@@ -4863,25 +6675,23 @@ export const webhooksHandler = new Hono()
                                   Type.Null(),
                                 ]),
                               ),
-                              sku_id: Type.Optional(
-                                Type.Union([
-                                  Type.Union([Type.Null(), Type.Null()]),
-                                  SnowflakeTypeSchema,
-                                ]),
-                              ),
+                              sku_id: Type.Optional(Type.Union([Type.Null(), SnowflakeTypeSchema])),
                               emoji: Type.Optional(
-                                Type.Union([
-                                  Type.Union([Type.Null(), Type.Null()]),
-                                  ComponentEmojiForRequestSchema,
-                                ]),
+                                Type.Union([Type.Null(), ComponentEmojiForRequestSchema]),
                               ),
                             }),
                             Type.Object({
                               type: MessageComponentTypesSchema,
                               id: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.String())
-                                    .Decode((value) => Number.parseInt(value, 10))
+                                  Codec(
+                                    Type.Refine(
+                                      Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                      (value) => Number(value) >= 0,
+                                      () => 'must be >= 0',
+                                    ),
+                                  )
+                                    .Decode((value) => Number(value))
                                     .Encode((value) => String(value)),
                                   Type.Null(),
                                 ]),
@@ -4894,8 +6704,13 @@ export const webhooksHandler = new Hono()
                               ),
                               spoiler: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                    .Decode((value) => value === 'true')
+                                  Codec(
+                                    Type.String({
+                                      pattern:
+                                        /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                    }),
+                                  )
+                                    .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                     .Encode((value) => (value ? 'true' : 'false')),
                                   Type.Null(),
                                 ]),
@@ -4908,22 +6723,30 @@ export const webhooksHandler = new Hono()
                           type: MessageComponentTypesSchema,
                           id: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(
+                                Type.Refine(
+                                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                  (value) => Number(value) >= 0,
+                                  () => 'must be >= 0',
+                                ),
+                              )
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
                           ),
                           spacing: Type.Optional(
-                            Type.Union([
-                              Type.Union([Type.Null(), Type.Null()]),
-                              MessageComponentSeparatorSpacingSizeSchema,
-                            ]),
+                            Type.Union([Type.Null(), MessageComponentSeparatorSpacingSizeSchema]),
                           ),
                           divider: Type.Optional(
                             Type.Union([
-                              Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                .Decode((value) => value === 'true')
+                              Codec(
+                                Type.String({
+                                  pattern:
+                                    /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                }),
+                              )
+                                .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                 .Encode((value) => (value ? 'true' : 'false')),
                               Type.Null(),
                             ]),
@@ -4933,8 +6756,14 @@ export const webhooksHandler = new Hono()
                           type: MessageComponentTypesSchema,
                           id: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(
+                                Type.Refine(
+                                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                  (value) => Number(value) >= 0,
+                                  () => 'must be >= 0',
+                                ),
+                              )
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
@@ -4946,8 +6775,12 @@ export const webhooksHandler = new Hono()
                     ),
                     spoiler: Type.Optional(
                       Type.Union([
-                        Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                          .Decode((value) => value === 'true')
+                        Codec(
+                          Type.String({
+                            pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                          }),
+                        )
+                          .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                           .Encode((value) => (value ? 'true' : 'false')),
                         Type.Null(),
                       ]),
@@ -4957,16 +6790,26 @@ export const webhooksHandler = new Hono()
                     type: MessageComponentTypesSchema,
                     id: Type.Optional(
                       Type.Union([
-                        Codec(Type.String())
-                          .Decode((value) => Number.parseInt(value, 10))
+                        Codec(
+                          Type.Refine(
+                            Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                            (value) => Number(value) >= 0,
+                            () => 'must be >= 0',
+                          ),
+                        )
+                          .Decode((value) => Number(value))
                           .Encode((value) => String(value)),
                         Type.Null(),
                       ]),
                     ),
                     spoiler: Type.Optional(
                       Type.Union([
-                        Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                          .Decode((value) => value === 'true')
+                        Codec(
+                          Type.String({
+                            pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                          }),
+                        )
+                          .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                           .Encode((value) => (value ? 'true' : 'false')),
                         Type.Null(),
                       ]),
@@ -4977,8 +6820,14 @@ export const webhooksHandler = new Hono()
                     type: MessageComponentTypesSchema,
                     id: Type.Optional(
                       Type.Union([
-                        Codec(Type.String())
-                          .Decode((value) => Number.parseInt(value, 10))
+                        Codec(
+                          Type.Refine(
+                            Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                            (value) => Number(value) >= 0,
+                            () => 'must be >= 0',
+                          ),
+                        )
+                          .Decode((value) => Number(value))
                           .Encode((value) => String(value)),
                         Type.Null(),
                       ]),
@@ -4990,8 +6839,12 @@ export const webhooksHandler = new Hono()
                         ),
                         spoiler: Type.Optional(
                           Type.Union([
-                            Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                              .Decode((value) => value === 'true')
+                            Codec(
+                              Type.String({
+                                pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                              }),
+                            )
+                              .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                               .Encode((value) => (value ? 'true' : 'false')),
                             Type.Null(),
                           ]),
@@ -5005,8 +6858,14 @@ export const webhooksHandler = new Hono()
                     type: MessageComponentTypesSchema,
                     id: Type.Optional(
                       Type.Union([
-                        Codec(Type.String())
-                          .Decode((value) => Number.parseInt(value, 10))
+                        Codec(
+                          Type.Refine(
+                            Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                            (value) => Number(value) >= 0,
+                            () => 'must be >= 0',
+                          ),
+                        )
+                          .Decode((value) => Number(value))
                           .Encode((value) => String(value)),
                         Type.Null(),
                       ]),
@@ -5016,8 +6875,14 @@ export const webhooksHandler = new Hono()
                         type: MessageComponentTypesSchema,
                         id: Type.Optional(
                           Type.Union([
-                            Codec(Type.String())
-                              .Decode((value) => Number.parseInt(value, 10))
+                            Codec(
+                              Type.Refine(
+                                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                (value) => Number(value) >= 0,
+                                () => 'must be >= 0',
+                              ),
+                            )
+                              .Decode((value) => Number(value))
                               .Encode((value) => String(value)),
                             Type.Null(),
                           ]),
@@ -5031,8 +6896,14 @@ export const webhooksHandler = new Hono()
                         type: MessageComponentTypesSchema,
                         id: Type.Optional(
                           Type.Union([
-                            Codec(Type.String())
-                              .Decode((value) => Number.parseInt(value, 10))
+                            Codec(
+                              Type.Refine(
+                                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                (value) => Number(value) >= 0,
+                                () => 'must be >= 0',
+                              ),
+                            )
+                              .Decode((value) => Number(value))
                               .Encode((value) => String(value)),
                             Type.Null(),
                           ]),
@@ -5046,8 +6917,12 @@ export const webhooksHandler = new Hono()
                         ),
                         disabled: Type.Optional(
                           Type.Union([
-                            Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                              .Decode((value) => value === 'true')
+                            Codec(
+                              Type.String({
+                                pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                              }),
+                            )
+                              .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                               .Encode((value) => (value ? 'true' : 'false')),
                             Type.Null(),
                           ]),
@@ -5055,22 +6930,23 @@ export const webhooksHandler = new Hono()
                         url: Type.Optional(
                           Type.Union([Type.String({ format: 'uri', maxLength: 512 }), Type.Null()]),
                         ),
-                        sku_id: Type.Optional(
-                          Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
-                        ),
+                        sku_id: Type.Optional(Type.Union([Type.Null(), SnowflakeTypeSchema])),
                         emoji: Type.Optional(
-                          Type.Union([
-                            Type.Union([Type.Null(), Type.Null()]),
-                            ComponentEmojiForRequestSchema,
-                          ]),
+                          Type.Union([Type.Null(), ComponentEmojiForRequestSchema]),
                         ),
                       }),
                       Type.Object({
                         type: MessageComponentTypesSchema,
                         id: Type.Optional(
                           Type.Union([
-                            Codec(Type.String())
-                              .Decode((value) => Number.parseInt(value, 10))
+                            Codec(
+                              Type.Refine(
+                                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                (value) => Number(value) >= 0,
+                                () => 'must be >= 0',
+                              ),
+                            )
+                              .Decode((value) => Number(value))
                               .Encode((value) => String(value)),
                             Type.Null(),
                           ]),
@@ -5080,8 +6956,12 @@ export const webhooksHandler = new Hono()
                         ),
                         spoiler: Type.Optional(
                           Type.Union([
-                            Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                              .Decode((value) => value === 'true')
+                            Codec(
+                              Type.String({
+                                pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                              }),
+                            )
+                              .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                               .Encode((value) => (value ? 'true' : 'false')),
                             Type.Null(),
                           ]),
@@ -5094,22 +6974,29 @@ export const webhooksHandler = new Hono()
                     type: MessageComponentTypesSchema,
                     id: Type.Optional(
                       Type.Union([
-                        Codec(Type.String())
-                          .Decode((value) => Number.parseInt(value, 10))
+                        Codec(
+                          Type.Refine(
+                            Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                            (value) => Number(value) >= 0,
+                            () => 'must be >= 0',
+                          ),
+                        )
+                          .Decode((value) => Number(value))
                           .Encode((value) => String(value)),
                         Type.Null(),
                       ]),
                     ),
                     spacing: Type.Optional(
-                      Type.Union([
-                        Type.Union([Type.Null(), Type.Null()]),
-                        MessageComponentSeparatorSpacingSizeSchema,
-                      ]),
+                      Type.Union([Type.Null(), MessageComponentSeparatorSpacingSizeSchema]),
                     ),
                     divider: Type.Optional(
                       Type.Union([
-                        Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                          .Decode((value) => value === 'true')
+                        Codec(
+                          Type.String({
+                            pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                          }),
+                        )
+                          .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                           .Encode((value) => (value ? 'true' : 'false')),
                         Type.Null(),
                       ]),
@@ -5119,8 +7006,14 @@ export const webhooksHandler = new Hono()
                     type: MessageComponentTypesSchema,
                     id: Type.Optional(
                       Type.Union([
-                        Codec(Type.String())
-                          .Decode((value) => Number.parseInt(value, 10))
+                        Codec(
+                          Type.Refine(
+                            Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                            (value) => Number(value) >= 0,
+                            () => 'must be >= 0',
+                          ),
+                        )
+                          .Decode((value) => Number(value))
                           .Encode((value) => String(value)),
                         Type.Null(),
                       ]),
@@ -5146,7 +7039,19 @@ export const webhooksHandler = new Hono()
                   ),
                   duration_secs: Type.Optional(
                     Type.Union([
-                      Codec(Type.String())
+                      Codec(
+                        Type.Refine(
+                          Type.Refine(
+                            Type.String({
+                              pattern: '^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$',
+                            }),
+                            (value) => Number(value) >= 0,
+                            () => 'must be >= 0',
+                          ),
+                          (value) => Number(value) <= 2147483647,
+                          () => 'must be <= 2147483647',
+                        ),
+                      )
                         .Decode((value) => Number(value))
                         .Encode((value) => String(value)),
                       Type.Null(),
@@ -5158,8 +7063,12 @@ export const webhooksHandler = new Hono()
                   title: Type.Optional(Type.Union([Type.String({ maxLength: 1024 }), Type.Null()])),
                   is_spoiler: Type.Optional(
                     Type.Union([
-                      Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                        .Decode((value) => value === 'true')
+                      Codec(
+                        Type.String({
+                          pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                        }),
+                      )
+                        .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                         .Encode((value) => (value ? 'true' : 'false')),
                       Type.Null(),
                     ]),
@@ -5172,7 +7081,7 @@ export const webhooksHandler = new Hono()
           ),
           poll: Type.Optional(
             Type.Union([
-              Type.Union([Type.Null(), Type.Null()]),
+              Type.Null(),
               Type.Object({
                 question: Type.Object(
                   {
@@ -5189,13 +7098,12 @@ export const webhooksHandler = new Hono()
                     emoji: Type.Optional(
                       Type.Union(
                         [
-                          Type.Union([Type.Null(), Type.Null()]),
+                          Type.Null(),
                           Type.Object({
                             id: Type.Optional(
-                              Type.Union(
-                                [Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema],
-                                { description: 'The ID of the custom emoji' },
-                              ),
+                              Type.Union([Type.Null(), SnowflakeTypeSchema], {
+                                description: 'The ID of the custom emoji',
+                              }),
                             ),
                             name: Type.Optional(
                               Type.Union([
@@ -5209,8 +7117,13 @@ export const webhooksHandler = new Hono()
                             ),
                             animated: Type.Optional(
                               Type.Union([
-                                Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                  .Decode((value) => value === 'true')
+                                Codec(
+                                  Type.String({
+                                    pattern:
+                                      /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                  }),
+                                )
+                                  .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                   .Encode((value) => (value ? 'true' : 'false')),
                                 Type.Null(),
                               ]),
@@ -5240,13 +7153,12 @@ export const webhooksHandler = new Hono()
                         emoji: Type.Optional(
                           Type.Union(
                             [
-                              Type.Union([Type.Null(), Type.Null()]),
+                              Type.Null(),
                               Type.Object({
                                 id: Type.Optional(
-                                  Type.Union(
-                                    [Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema],
-                                    { description: 'The ID of the custom emoji' },
-                                  ),
+                                  Type.Union([Type.Null(), SnowflakeTypeSchema], {
+                                    description: 'The ID of the custom emoji',
+                                  }),
                                 ),
                                 name: Type.Optional(
                                   Type.Union([
@@ -5260,8 +7172,15 @@ export const webhooksHandler = new Hono()
                                 ),
                                 animated: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                      .Decode((value) => value === 'true')
+                                    Codec(
+                                      Type.String({
+                                        pattern:
+                                          /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                      }),
+                                    )
+                                      .Decode((value) =>
+                                        /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                      )
                                       .Encode((value) => (value ? 'true' : 'false')),
                                     Type.Null(),
                                   ]),
@@ -5283,21 +7202,35 @@ export const webhooksHandler = new Hono()
                 ),
                 allow_multiselect: Type.Optional(
                   Type.Union([
-                    Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                      .Decode((value) => value === 'true')
+                    Codec(
+                      Type.String({
+                        pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                      }),
+                    )
+                      .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                       .Encode((value) => (value ? 'true' : 'false')),
                     Type.Null(),
                   ]),
                 ),
                 layout_type: Type.Optional(
-                  Type.Union([Type.Union([Type.Null(), Type.Null()]), PollLayoutTypesSchema], {
+                  Type.Union([Type.Null(), PollLayoutTypesSchema], {
                     description: 'The layout type of the poll. Defaults to... DEFAULT!',
                   }),
                 ),
                 duration: Type.Optional(
                   Type.Union([
-                    Codec(Type.String())
-                      .Decode((value) => Number.parseInt(value, 10))
+                    Codec(
+                      Type.Refine(
+                        Type.Refine(
+                          Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                          (value) => Number(value) >= 1,
+                          () => 'must be >= 1',
+                        ),
+                        (value) => Number(value) <= 768,
+                        () => 'must be <= 768',
+                      ),
+                    )
+                      .Decode((value) => Number(value))
                       .Encode((value) => String(value)),
                     Type.Null(),
                   ]),
@@ -5307,8 +7240,8 @@ export const webhooksHandler = new Hono()
           ),
           flags: Type.Optional(
             Type.Union([
-              Codec(Type.String())
-                .Decode((value) => Number.parseInt(value, 10))
+              Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+                .Decode((value) => Number(value))
                 .Encode((value) => String(value)),
               Type.Null(),
             ]),
@@ -5332,7 +7265,9 @@ export const webhooksHandler = new Hono()
             'X-RateLimit-Reset-After': { $ref: '#/components/headers/X-RateLimit-Reset-After' },
             'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
           },
-          content: { 'application/json': { schema: resolver(Compile(MessageResponseSchema)) } },
+          content: {
+            'application/json': { schema: resolver(toStandardSchemaV1(MessageResponseSchema)) },
+          },
         },
         '429': ClientRatelimitedResponseResponse,
         '4XX': ClientErrorResponseResponse,
@@ -5341,7 +7276,7 @@ export const webhooksHandler = new Hono()
     }),
     validator(
       'param',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           webhook_id: SnowflakeTypeSchema,
           webhook_token: Type.String({ maxLength: 152133 }),
@@ -5349,7 +7284,10 @@ export const webhooksHandler = new Hono()
         }),
       ),
     ),
-    validator('query', Compile(Type.Object({ thread_id: Type.Optional(SnowflakeTypeSchema) }))),
+    validator(
+      'query',
+      toStandardSchemaV1(Type.Object({ thread_id: Type.Optional(SnowflakeTypeSchema) })),
+    ),
     (c) => { throw new Error('Not implemented') },
   )
   .delete(
@@ -5374,7 +7312,7 @@ export const webhooksHandler = new Hono()
     }),
     validator(
       'param',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           webhook_id: SnowflakeTypeSchema,
           webhook_token: Type.String({ maxLength: 152133 }),
@@ -5382,7 +7320,10 @@ export const webhooksHandler = new Hono()
         }),
       ),
     ),
-    validator('query', Compile(Type.Object({ thread_id: Type.Optional(SnowflakeTypeSchema) }))),
+    validator(
+      'query',
+      toStandardSchemaV1(Type.Object({ thread_id: Type.Optional(SnowflakeTypeSchema) })),
+    ),
     (c) => { throw new Error('Not implemented') },
   )
   .patch(
@@ -5399,7 +7340,9 @@ export const webhooksHandler = new Hono()
             'X-RateLimit-Reset-After': { $ref: '#/components/headers/X-RateLimit-Reset-After' },
             'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
           },
-          content: { 'application/json': { schema: resolver(Compile(MessageResponseSchema)) } },
+          content: {
+            'application/json': { schema: resolver(toStandardSchemaV1(MessageResponseSchema)) },
+          },
         },
         '429': ClientRatelimitedResponseResponse,
         '4XX': ClientErrorResponseResponse,
@@ -5408,7 +7351,7 @@ export const webhooksHandler = new Hono()
     }),
     validator(
       'param',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           webhook_id: SnowflakeTypeSchema,
           webhook_token: Type.String({ maxLength: 152133 }),
@@ -5418,21 +7361,23 @@ export const webhooksHandler = new Hono()
     ),
     validator(
       'query',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           thread_id: Type.Optional(SnowflakeTypeSchema),
           with_components: Type.Optional(
-            Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-              .Decode((value) => value === 'true')
+            Codec(
+              Type.String({ pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i }),
+            )
+              .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
               .Encode((value) => (value ? 'true' : 'false')),
           ),
         }),
       ),
     ),
-    validator('json', Compile(IncomingWebhookUpdateRequestPartialSchema)),
+    validator('json', toStandardSchemaV1(IncomingWebhookUpdateRequestPartialSchema)),
     validator(
       'form',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           content: Type.Optional(Type.Union([Type.String({ maxLength: 2000 }), Type.Null()])),
           embeds: Type.Optional(
@@ -5448,8 +7393,18 @@ export const webhooksHandler = new Hono()
                   title: Type.Optional(Type.Union([Type.String({ maxLength: 256 }), Type.Null()])),
                   color: Type.Optional(
                     Type.Union([
-                      Codec(Type.String())
-                        .Decode((value) => Number.parseInt(value, 10))
+                      Codec(
+                        Type.Refine(
+                          Type.Refine(
+                            Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                            (value) => Number(value) >= 0,
+                            () => 'must be >= 0',
+                          ),
+                          (value) => Number(value) <= 16777215,
+                          () => 'must be <= 16777215',
+                        ),
+                      )
+                        .Decode((value) => Number(value))
                         .Encode((value) => String(value)),
                       Type.Null(),
                     ]),
@@ -5460,12 +7415,10 @@ export const webhooksHandler = new Hono()
                   description: Type.Optional(
                     Type.Union([Type.String({ maxLength: 4096 }), Type.Null()]),
                   ),
-                  author: Type.Optional(
-                    Type.Union([Type.Union([Type.Null(), Type.Null()]), RichEmbedAuthorSchema]),
-                  ),
+                  author: Type.Optional(Type.Union([Type.Null(), RichEmbedAuthorSchema])),
                   image: Type.Optional(
                     Type.Union([
-                      Type.Union([Type.Null(), Type.Null()]),
+                      Type.Null(),
                       Type.Object({
                         url: Type.Optional(
                           Type.Union([
@@ -5475,16 +7428,16 @@ export const webhooksHandler = new Hono()
                         ),
                         width: Type.Optional(
                           Type.Union([
-                            Codec(Type.String())
-                              .Decode((value) => Number.parseInt(value, 10))
+                            Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+                              .Decode((value) => Number(value))
                               .Encode((value) => String(value)),
                             Type.Null(),
                           ]),
                         ),
                         height: Type.Optional(
                           Type.Union([
-                            Codec(Type.String())
-                              .Decode((value) => Number.parseInt(value, 10))
+                            Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+                              .Decode((value) => Number(value))
                               .Encode((value) => String(value)),
                             Type.Null(),
                           ]),
@@ -5494,16 +7447,30 @@ export const webhooksHandler = new Hono()
                         ),
                         placeholder_version: Type.Optional(
                           Type.Union([
-                            Codec(Type.String())
-                              .Decode((value) => Number.parseInt(value, 10))
+                            Codec(
+                              Type.Refine(
+                                Type.Refine(
+                                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                  (value) => Number(value) >= 0,
+                                  () => 'must be >= 0',
+                                ),
+                                (value) => Number(value) <= 2147483647,
+                                () => 'must be <= 2147483647',
+                              ),
+                            )
+                              .Decode((value) => Number(value))
                               .Encode((value) => String(value)),
                             Type.Null(),
                           ]),
                         ),
                         is_animated: Type.Optional(
                           Type.Union([
-                            Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                              .Decode((value) => value === 'true')
+                            Codec(
+                              Type.String({
+                                pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                              }),
+                            )
+                              .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                               .Encode((value) => (value ? 'true' : 'false')),
                             Type.Null(),
                           ]),
@@ -5516,7 +7483,7 @@ export const webhooksHandler = new Hono()
                   ),
                   thumbnail: Type.Optional(
                     Type.Union([
-                      Type.Union([Type.Null(), Type.Null()]),
+                      Type.Null(),
                       Type.Object({
                         url: Type.Optional(
                           Type.Union([
@@ -5526,16 +7493,16 @@ export const webhooksHandler = new Hono()
                         ),
                         width: Type.Optional(
                           Type.Union([
-                            Codec(Type.String())
-                              .Decode((value) => Number.parseInt(value, 10))
+                            Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+                              .Decode((value) => Number(value))
                               .Encode((value) => String(value)),
                             Type.Null(),
                           ]),
                         ),
                         height: Type.Optional(
                           Type.Union([
-                            Codec(Type.String())
-                              .Decode((value) => Number.parseInt(value, 10))
+                            Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+                              .Decode((value) => Number(value))
                               .Encode((value) => String(value)),
                             Type.Null(),
                           ]),
@@ -5545,16 +7512,30 @@ export const webhooksHandler = new Hono()
                         ),
                         placeholder_version: Type.Optional(
                           Type.Union([
-                            Codec(Type.String())
-                              .Decode((value) => Number.parseInt(value, 10))
+                            Codec(
+                              Type.Refine(
+                                Type.Refine(
+                                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                  (value) => Number(value) >= 0,
+                                  () => 'must be >= 0',
+                                ),
+                                (value) => Number(value) <= 2147483647,
+                                () => 'must be <= 2147483647',
+                              ),
+                            )
+                              .Decode((value) => Number(value))
                               .Encode((value) => String(value)),
                             Type.Null(),
                           ]),
                         ),
                         is_animated: Type.Optional(
                           Type.Union([
-                            Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                              .Decode((value) => value === 'true')
+                            Codec(
+                              Type.String({
+                                pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                              }),
+                            )
+                              .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                               .Encode((value) => (value ? 'true' : 'false')),
                             Type.Null(),
                           ]),
@@ -5565,9 +7546,7 @@ export const webhooksHandler = new Hono()
                       }),
                     ]),
                   ),
-                  footer: Type.Optional(
-                    Type.Union([Type.Union([Type.Null(), Type.Null()]), RichEmbedFooterSchema]),
-                  ),
+                  footer: Type.Optional(Type.Union([Type.Null(), RichEmbedFooterSchema])),
                   fields: Type.Optional(
                     Type.Union([
                       Type.Array(
@@ -5576,8 +7555,13 @@ export const webhooksHandler = new Hono()
                           value: Type.String({ maxLength: 1024 }),
                           inline: Type.Optional(
                             Type.Union([
-                              Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                .Decode((value) => value === 'true')
+                              Codec(
+                                Type.String({
+                                  pattern:
+                                    /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                }),
+                              )
+                                .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                 .Encode((value) => (value ? 'true' : 'false')),
                               Type.Null(),
                             ]),
@@ -5588,12 +7572,10 @@ export const webhooksHandler = new Hono()
                       Type.Null(),
                     ]),
                   ),
-                  provider: Type.Optional(
-                    Type.Union([Type.Union([Type.Null(), Type.Null()]), RichEmbedProviderSchema]),
-                  ),
+                  provider: Type.Optional(Type.Union([Type.Null(), RichEmbedProviderSchema])),
                   video: Type.Optional(
                     Type.Union([
-                      Type.Union([Type.Null(), Type.Null()]),
+                      Type.Null(),
                       Type.Object({
                         url: Type.Optional(
                           Type.Union([
@@ -5603,16 +7585,16 @@ export const webhooksHandler = new Hono()
                         ),
                         width: Type.Optional(
                           Type.Union([
-                            Codec(Type.String())
-                              .Decode((value) => Number.parseInt(value, 10))
+                            Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+                              .Decode((value) => Number(value))
                               .Encode((value) => String(value)),
                             Type.Null(),
                           ]),
                         ),
                         height: Type.Optional(
                           Type.Union([
-                            Codec(Type.String())
-                              .Decode((value) => Number.parseInt(value, 10))
+                            Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+                              .Decode((value) => Number(value))
                               .Encode((value) => String(value)),
                             Type.Null(),
                           ]),
@@ -5622,16 +7604,30 @@ export const webhooksHandler = new Hono()
                         ),
                         placeholder_version: Type.Optional(
                           Type.Union([
-                            Codec(Type.String())
-                              .Decode((value) => Number.parseInt(value, 10))
+                            Codec(
+                              Type.Refine(
+                                Type.Refine(
+                                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                  (value) => Number(value) >= 0,
+                                  () => 'must be >= 0',
+                                ),
+                                (value) => Number(value) <= 2147483647,
+                                () => 'must be <= 2147483647',
+                              ),
+                            )
+                              .Decode((value) => Number(value))
                               .Encode((value) => String(value)),
                             Type.Null(),
                           ]),
                         ),
                         is_animated: Type.Optional(
                           Type.Union([
-                            Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                              .Decode((value) => value === 'true')
+                            Codec(
+                              Type.String({
+                                pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                              }),
+                            )
+                              .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                               .Encode((value) => (value ? 'true' : 'false')),
                             Type.Null(),
                           ]),
@@ -5642,9 +7638,7 @@ export const webhooksHandler = new Hono()
                       }),
                     ]),
                   ),
-                  audio: Type.Optional(
-                    Type.Union([Type.Union([Type.Null(), Type.Null()]), RichEmbedAudioSchema]),
-                  ),
+                  audio: Type.Optional(Type.Union([Type.Null(), RichEmbedAudioSchema])),
                 }),
                 { maxItems: 10 },
               ),
@@ -5653,42 +7647,43 @@ export const webhooksHandler = new Hono()
           ),
           allowed_mentions: Type.Optional(
             Type.Union([
-              Type.Union([Type.Null(), Type.Null()]),
+              Type.Null(),
               Type.Object({
                 parse: Type.Optional(
                   Type.Union([
-                    Type.Array(
-                      Type.Union([
-                        Type.Union([Type.Null(), Type.Null()]),
-                        AllowedMentionTypesSchema,
-                      ]),
-                      { maxItems: 1521, uniqueItems: true },
-                    ),
+                    Type.Array(Type.Union([Type.Null(), AllowedMentionTypesSchema]), {
+                      maxItems: 1521,
+                      uniqueItems: true,
+                    }),
                     Type.Null(),
                   ]),
                 ),
                 users: Type.Optional(
                   Type.Union([
-                    Type.Array(
-                      Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
-                      { maxItems: 100, uniqueItems: true },
-                    ),
+                    Type.Array(Type.Union([Type.Null(), SnowflakeTypeSchema]), {
+                      maxItems: 100,
+                      uniqueItems: true,
+                    }),
                     Type.Null(),
                   ]),
                 ),
                 roles: Type.Optional(
                   Type.Union([
-                    Type.Array(
-                      Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
-                      { maxItems: 100, uniqueItems: true },
-                    ),
+                    Type.Array(Type.Union([Type.Null(), SnowflakeTypeSchema]), {
+                      maxItems: 100,
+                      uniqueItems: true,
+                    }),
                     Type.Null(),
                   ]),
                 ),
                 replied_user: Type.Optional(
                   Type.Union([
-                    Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                      .Decode((value) => value === 'true')
+                    Codec(
+                      Type.String({
+                        pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                      }),
+                    )
+                      .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                       .Encode((value) => (value ? 'true' : 'false')),
                     Type.Null(),
                   ]),
@@ -5704,8 +7699,14 @@ export const webhooksHandler = new Hono()
                     type: MessageComponentTypesSchema,
                     id: Type.Optional(
                       Type.Union([
-                        Codec(Type.String())
-                          .Decode((value) => Number.parseInt(value, 10))
+                        Codec(
+                          Type.Refine(
+                            Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                            (value) => Number(value) >= 0,
+                            () => 'must be >= 0',
+                          ),
+                        )
+                          .Decode((value) => Number(value))
                           .Encode((value) => String(value)),
                         Type.Null(),
                       ]),
@@ -5716,8 +7717,14 @@ export const webhooksHandler = new Hono()
                           type: MessageComponentTypesSchema,
                           id: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(
+                                Type.Refine(
+                                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                  (value) => Number(value) >= 0,
+                                  () => 'must be >= 0',
+                                ),
+                              )
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
@@ -5734,8 +7741,13 @@ export const webhooksHandler = new Hono()
                           ),
                           disabled: Type.Optional(
                             Type.Union([
-                              Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                .Decode((value) => value === 'true')
+                              Codec(
+                                Type.String({
+                                  pattern:
+                                    /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                }),
+                              )
+                                .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                 .Encode((value) => (value ? 'true' : 'false')),
                               Type.Null(),
                             ]),
@@ -5746,25 +7758,23 @@ export const webhooksHandler = new Hono()
                               Type.Null(),
                             ]),
                           ),
-                          sku_id: Type.Optional(
-                            Type.Union([
-                              Type.Union([Type.Null(), Type.Null()]),
-                              SnowflakeTypeSchema,
-                            ]),
-                          ),
+                          sku_id: Type.Optional(Type.Union([Type.Null(), SnowflakeTypeSchema])),
                           emoji: Type.Optional(
-                            Type.Union([
-                              Type.Union([Type.Null(), Type.Null()]),
-                              ComponentEmojiForRequestSchema,
-                            ]),
+                            Type.Union([Type.Null(), ComponentEmojiForRequestSchema]),
                           ),
                         }),
                         Type.Object({
                           type: MessageComponentTypesSchema,
                           id: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(
+                                Type.Refine(
+                                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                  (value) => Number(value) >= 0,
+                                  () => 'must be >= 0',
+                                ),
+                              )
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
@@ -5775,32 +7785,62 @@ export const webhooksHandler = new Hono()
                           ),
                           min_values: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(
+                                Type.Refine(
+                                  Type.Refine(
+                                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                    (value) => Number(value) >= 0,
+                                    () => 'must be >= 0',
+                                  ),
+                                  (value) => Number(value) <= 25,
+                                  () => 'must be <= 25',
+                                ),
+                              )
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
                           ),
                           max_values: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(
+                                Type.Refine(
+                                  Type.Refine(
+                                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                    (value) => Number(value) >= 1,
+                                    () => 'must be >= 1',
+                                  ),
+                                  (value) => Number(value) <= 25,
+                                  () => 'must be <= 25',
+                                ),
+                              )
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
                           ),
                           disabled: Type.Optional(
                             Type.Union([
-                              Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                .Decode((value) => value === 'true')
+                              Codec(
+                                Type.String({
+                                  pattern:
+                                    /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                }),
+                              )
+                                .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                 .Encode((value) => (value ? 'true' : 'false')),
                               Type.Null(),
                             ]),
                           ),
                           required: Type.Optional(
                             Type.Union([
-                              Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                .Decode((value) => value === 'true')
+                              Codec(
+                                Type.String({
+                                  pattern:
+                                    /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                }),
+                              )
+                                .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                 .Encode((value) => (value ? 'true' : 'false')),
                               Type.Null(),
                             ]),
@@ -5822,8 +7862,14 @@ export const webhooksHandler = new Hono()
                           type: MessageComponentTypesSchema,
                           id: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(
+                                Type.Refine(
+                                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                  (value) => Number(value) >= 0,
+                                  () => 'must be >= 0',
+                                ),
+                              )
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
@@ -5834,32 +7880,62 @@ export const webhooksHandler = new Hono()
                           ),
                           min_values: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(
+                                Type.Refine(
+                                  Type.Refine(
+                                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                    (value) => Number(value) >= 0,
+                                    () => 'must be >= 0',
+                                  ),
+                                  (value) => Number(value) <= 25,
+                                  () => 'must be <= 25',
+                                ),
+                              )
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
                           ),
                           max_values: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(
+                                Type.Refine(
+                                  Type.Refine(
+                                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                    (value) => Number(value) >= 1,
+                                    () => 'must be >= 1',
+                                  ),
+                                  (value) => Number(value) <= 25,
+                                  () => 'must be <= 25',
+                                ),
+                              )
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
                           ),
                           disabled: Type.Optional(
                             Type.Union([
-                              Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                .Decode((value) => value === 'true')
+                              Codec(
+                                Type.String({
+                                  pattern:
+                                    /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                }),
+                              )
+                                .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                 .Encode((value) => (value ? 'true' : 'false')),
                               Type.Null(),
                             ]),
                           ),
                           required: Type.Optional(
                             Type.Union([
-                              Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                .Decode((value) => value === 'true')
+                              Codec(
+                                Type.String({
+                                  pattern:
+                                    /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                }),
+                              )
+                                .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                 .Encode((value) => (value ? 'true' : 'false')),
                               Type.Null(),
                             ]),
@@ -5881,8 +7957,14 @@ export const webhooksHandler = new Hono()
                           type: MessageComponentTypesSchema,
                           id: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(
+                                Type.Refine(
+                                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                  (value) => Number(value) >= 0,
+                                  () => 'must be >= 0',
+                                ),
+                              )
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
@@ -5893,32 +7975,62 @@ export const webhooksHandler = new Hono()
                           ),
                           min_values: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(
+                                Type.Refine(
+                                  Type.Refine(
+                                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                    (value) => Number(value) >= 0,
+                                    () => 'must be >= 0',
+                                  ),
+                                  (value) => Number(value) <= 25,
+                                  () => 'must be <= 25',
+                                ),
+                              )
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
                           ),
                           max_values: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(
+                                Type.Refine(
+                                  Type.Refine(
+                                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                    (value) => Number(value) >= 1,
+                                    () => 'must be >= 1',
+                                  ),
+                                  (value) => Number(value) <= 25,
+                                  () => 'must be <= 25',
+                                ),
+                              )
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
                           ),
                           disabled: Type.Optional(
                             Type.Union([
-                              Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                .Decode((value) => value === 'true')
+                              Codec(
+                                Type.String({
+                                  pattern:
+                                    /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                }),
+                              )
+                                .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                 .Encode((value) => (value ? 'true' : 'false')),
                               Type.Null(),
                             ]),
                           ),
                           required: Type.Optional(
                             Type.Union([
-                              Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                .Decode((value) => value === 'true')
+                              Codec(
+                                Type.String({
+                                  pattern:
+                                    /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                }),
+                              )
+                                .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                 .Encode((value) => (value ? 'true' : 'false')),
                               Type.Null(),
                             ]),
@@ -5934,8 +8046,14 @@ export const webhooksHandler = new Hono()
                           type: MessageComponentTypesSchema,
                           id: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(
+                                Type.Refine(
+                                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                  (value) => Number(value) >= 0,
+                                  () => 'must be >= 0',
+                                ),
+                              )
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
@@ -5946,32 +8064,62 @@ export const webhooksHandler = new Hono()
                           ),
                           min_values: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(
+                                Type.Refine(
+                                  Type.Refine(
+                                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                    (value) => Number(value) >= 0,
+                                    () => 'must be >= 0',
+                                  ),
+                                  (value) => Number(value) <= 25,
+                                  () => 'must be <= 25',
+                                ),
+                              )
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
                           ),
                           max_values: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(
+                                Type.Refine(
+                                  Type.Refine(
+                                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                    (value) => Number(value) >= 1,
+                                    () => 'must be >= 1',
+                                  ),
+                                  (value) => Number(value) <= 25,
+                                  () => 'must be <= 25',
+                                ),
+                              )
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
                           ),
                           disabled: Type.Optional(
                             Type.Union([
-                              Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                .Decode((value) => value === 'true')
+                              Codec(
+                                Type.String({
+                                  pattern:
+                                    /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                }),
+                              )
+                                .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                 .Encode((value) => (value ? 'true' : 'false')),
                               Type.Null(),
                             ]),
                           ),
                           required: Type.Optional(
                             Type.Union([
-                              Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                .Decode((value) => value === 'true')
+                              Codec(
+                                Type.String({
+                                  pattern:
+                                    /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                }),
+                              )
+                                .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                 .Encode((value) => (value ? 'true' : 'false')),
                               Type.Null(),
                             ]),
@@ -5985,17 +8133,19 @@ export const webhooksHandler = new Hono()
                               ),
                               default: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                    .Decode((value) => value === 'true')
+                                  Codec(
+                                    Type.String({
+                                      pattern:
+                                        /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                    }),
+                                  )
+                                    .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                     .Encode((value) => (value ? 'true' : 'false')),
                                   Type.Null(),
                                 ]),
                               ),
                               emoji: Type.Optional(
-                                Type.Union([
-                                  Type.Union([Type.Null(), Type.Null()]),
-                                  ComponentEmojiForRequestSchema,
-                                ]),
+                                Type.Union([Type.Null(), ComponentEmojiForRequestSchema]),
                               ),
                             }),
                             { minItems: 1, maxItems: 25 },
@@ -6005,8 +8155,14 @@ export const webhooksHandler = new Hono()
                           type: MessageComponentTypesSchema,
                           id: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(
+                                Type.Refine(
+                                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                  (value) => Number(value) >= 0,
+                                  () => 'must be >= 0',
+                                ),
+                              )
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
@@ -6017,32 +8173,62 @@ export const webhooksHandler = new Hono()
                           ),
                           min_values: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(
+                                Type.Refine(
+                                  Type.Refine(
+                                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                    (value) => Number(value) >= 0,
+                                    () => 'must be >= 0',
+                                  ),
+                                  (value) => Number(value) <= 25,
+                                  () => 'must be <= 25',
+                                ),
+                              )
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
                           ),
                           max_values: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(
+                                Type.Refine(
+                                  Type.Refine(
+                                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                    (value) => Number(value) >= 1,
+                                    () => 'must be >= 1',
+                                  ),
+                                  (value) => Number(value) <= 25,
+                                  () => 'must be <= 25',
+                                ),
+                              )
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
                           ),
                           disabled: Type.Optional(
                             Type.Union([
-                              Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                .Decode((value) => value === 'true')
+                              Codec(
+                                Type.String({
+                                  pattern:
+                                    /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                }),
+                              )
+                                .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                 .Encode((value) => (value ? 'true' : 'false')),
                               Type.Null(),
                             ]),
                           ),
                           required: Type.Optional(
                             Type.Union([
-                              Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                .Decode((value) => value === 'true')
+                              Codec(
+                                Type.String({
+                                  pattern:
+                                    /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                }),
+                              )
+                                .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                 .Encode((value) => (value ? 'true' : 'false')),
                               Type.Null(),
                             ]),
@@ -6062,16 +8248,32 @@ export const webhooksHandler = new Hono()
                     type: MessageComponentTypesSchema,
                     id: Type.Optional(
                       Type.Union([
-                        Codec(Type.String())
-                          .Decode((value) => Number.parseInt(value, 10))
+                        Codec(
+                          Type.Refine(
+                            Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                            (value) => Number(value) >= 0,
+                            () => 'must be >= 0',
+                          ),
+                        )
+                          .Decode((value) => Number(value))
                           .Encode((value) => String(value)),
                         Type.Null(),
                       ]),
                     ),
                     accent_color: Type.Optional(
                       Type.Union([
-                        Codec(Type.String())
-                          .Decode((value) => Number.parseInt(value, 10))
+                        Codec(
+                          Type.Refine(
+                            Type.Refine(
+                              Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                              (value) => Number(value) >= 0,
+                              () => 'must be >= 0',
+                            ),
+                            (value) => Number(value) <= 16777215,
+                            () => 'must be <= 16777215',
+                          ),
+                        )
+                          .Decode((value) => Number(value))
                           .Encode((value) => String(value)),
                         Type.Null(),
                       ]),
@@ -6082,8 +8284,14 @@ export const webhooksHandler = new Hono()
                           type: MessageComponentTypesSchema,
                           id: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(
+                                Type.Refine(
+                                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                  (value) => Number(value) >= 0,
+                                  () => 'must be >= 0',
+                                ),
+                              )
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
@@ -6094,8 +8302,14 @@ export const webhooksHandler = new Hono()
                                 type: MessageComponentTypesSchema,
                                 id: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.String())
-                                      .Decode((value) => Number.parseInt(value, 10))
+                                    Codec(
+                                      Type.Refine(
+                                        Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                        (value) => Number(value) >= 0,
+                                        () => 'must be >= 0',
+                                      ),
+                                    )
+                                      .Decode((value) => Number(value))
                                       .Encode((value) => String(value)),
                                     Type.Null(),
                                   ]),
@@ -6112,8 +8326,15 @@ export const webhooksHandler = new Hono()
                                 ),
                                 disabled: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                      .Decode((value) => value === 'true')
+                                    Codec(
+                                      Type.String({
+                                        pattern:
+                                          /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                      }),
+                                    )
+                                      .Decode((value) =>
+                                        /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                      )
                                       .Encode((value) => (value ? 'true' : 'false')),
                                     Type.Null(),
                                   ]),
@@ -6125,24 +8346,24 @@ export const webhooksHandler = new Hono()
                                   ]),
                                 ),
                                 sku_id: Type.Optional(
-                                  Type.Union([
-                                    Type.Union([Type.Null(), Type.Null()]),
-                                    SnowflakeTypeSchema,
-                                  ]),
+                                  Type.Union([Type.Null(), SnowflakeTypeSchema]),
                                 ),
                                 emoji: Type.Optional(
-                                  Type.Union([
-                                    Type.Union([Type.Null(), Type.Null()]),
-                                    ComponentEmojiForRequestSchema,
-                                  ]),
+                                  Type.Union([Type.Null(), ComponentEmojiForRequestSchema]),
                                 ),
                               }),
                               Type.Object({
                                 type: MessageComponentTypesSchema,
                                 id: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.String())
-                                      .Decode((value) => Number.parseInt(value, 10))
+                                    Codec(
+                                      Type.Refine(
+                                        Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                        (value) => Number(value) >= 0,
+                                        () => 'must be >= 0',
+                                      ),
+                                    )
+                                      .Decode((value) => Number(value))
                                       .Encode((value) => String(value)),
                                     Type.Null(),
                                   ]),
@@ -6153,32 +8374,66 @@ export const webhooksHandler = new Hono()
                                 ),
                                 min_values: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.String())
-                                      .Decode((value) => Number.parseInt(value, 10))
+                                    Codec(
+                                      Type.Refine(
+                                        Type.Refine(
+                                          Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                          (value) => Number(value) >= 0,
+                                          () => 'must be >= 0',
+                                        ),
+                                        (value) => Number(value) <= 25,
+                                        () => 'must be <= 25',
+                                      ),
+                                    )
+                                      .Decode((value) => Number(value))
                                       .Encode((value) => String(value)),
                                     Type.Null(),
                                   ]),
                                 ),
                                 max_values: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.String())
-                                      .Decode((value) => Number.parseInt(value, 10))
+                                    Codec(
+                                      Type.Refine(
+                                        Type.Refine(
+                                          Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                          (value) => Number(value) >= 1,
+                                          () => 'must be >= 1',
+                                        ),
+                                        (value) => Number(value) <= 25,
+                                        () => 'must be <= 25',
+                                      ),
+                                    )
+                                      .Decode((value) => Number(value))
                                       .Encode((value) => String(value)),
                                     Type.Null(),
                                   ]),
                                 ),
                                 disabled: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                      .Decode((value) => value === 'true')
+                                    Codec(
+                                      Type.String({
+                                        pattern:
+                                          /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                      }),
+                                    )
+                                      .Decode((value) =>
+                                        /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                      )
                                       .Encode((value) => (value ? 'true' : 'false')),
                                     Type.Null(),
                                   ]),
                                 ),
                                 required: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                      .Decode((value) => value === 'true')
+                                    Codec(
+                                      Type.String({
+                                        pattern:
+                                          /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                      }),
+                                    )
+                                      .Decode((value) =>
+                                        /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                      )
                                       .Encode((value) => (value ? 'true' : 'false')),
                                     Type.Null(),
                                   ]),
@@ -6200,8 +8455,14 @@ export const webhooksHandler = new Hono()
                                 type: MessageComponentTypesSchema,
                                 id: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.String())
-                                      .Decode((value) => Number.parseInt(value, 10))
+                                    Codec(
+                                      Type.Refine(
+                                        Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                        (value) => Number(value) >= 0,
+                                        () => 'must be >= 0',
+                                      ),
+                                    )
+                                      .Decode((value) => Number(value))
                                       .Encode((value) => String(value)),
                                     Type.Null(),
                                   ]),
@@ -6212,32 +8473,66 @@ export const webhooksHandler = new Hono()
                                 ),
                                 min_values: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.String())
-                                      .Decode((value) => Number.parseInt(value, 10))
+                                    Codec(
+                                      Type.Refine(
+                                        Type.Refine(
+                                          Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                          (value) => Number(value) >= 0,
+                                          () => 'must be >= 0',
+                                        ),
+                                        (value) => Number(value) <= 25,
+                                        () => 'must be <= 25',
+                                      ),
+                                    )
+                                      .Decode((value) => Number(value))
                                       .Encode((value) => String(value)),
                                     Type.Null(),
                                   ]),
                                 ),
                                 max_values: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.String())
-                                      .Decode((value) => Number.parseInt(value, 10))
+                                    Codec(
+                                      Type.Refine(
+                                        Type.Refine(
+                                          Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                          (value) => Number(value) >= 1,
+                                          () => 'must be >= 1',
+                                        ),
+                                        (value) => Number(value) <= 25,
+                                        () => 'must be <= 25',
+                                      ),
+                                    )
+                                      .Decode((value) => Number(value))
                                       .Encode((value) => String(value)),
                                     Type.Null(),
                                   ]),
                                 ),
                                 disabled: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                      .Decode((value) => value === 'true')
+                                    Codec(
+                                      Type.String({
+                                        pattern:
+                                          /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                      }),
+                                    )
+                                      .Decode((value) =>
+                                        /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                      )
                                       .Encode((value) => (value ? 'true' : 'false')),
                                     Type.Null(),
                                   ]),
                                 ),
                                 required: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                      .Decode((value) => value === 'true')
+                                    Codec(
+                                      Type.String({
+                                        pattern:
+                                          /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                      }),
+                                    )
+                                      .Decode((value) =>
+                                        /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                      )
                                       .Encode((value) => (value ? 'true' : 'false')),
                                     Type.Null(),
                                   ]),
@@ -6259,8 +8554,14 @@ export const webhooksHandler = new Hono()
                                 type: MessageComponentTypesSchema,
                                 id: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.String())
-                                      .Decode((value) => Number.parseInt(value, 10))
+                                    Codec(
+                                      Type.Refine(
+                                        Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                        (value) => Number(value) >= 0,
+                                        () => 'must be >= 0',
+                                      ),
+                                    )
+                                      .Decode((value) => Number(value))
                                       .Encode((value) => String(value)),
                                     Type.Null(),
                                   ]),
@@ -6271,32 +8572,66 @@ export const webhooksHandler = new Hono()
                                 ),
                                 min_values: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.String())
-                                      .Decode((value) => Number.parseInt(value, 10))
+                                    Codec(
+                                      Type.Refine(
+                                        Type.Refine(
+                                          Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                          (value) => Number(value) >= 0,
+                                          () => 'must be >= 0',
+                                        ),
+                                        (value) => Number(value) <= 25,
+                                        () => 'must be <= 25',
+                                      ),
+                                    )
+                                      .Decode((value) => Number(value))
                                       .Encode((value) => String(value)),
                                     Type.Null(),
                                   ]),
                                 ),
                                 max_values: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.String())
-                                      .Decode((value) => Number.parseInt(value, 10))
+                                    Codec(
+                                      Type.Refine(
+                                        Type.Refine(
+                                          Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                          (value) => Number(value) >= 1,
+                                          () => 'must be >= 1',
+                                        ),
+                                        (value) => Number(value) <= 25,
+                                        () => 'must be <= 25',
+                                      ),
+                                    )
+                                      .Decode((value) => Number(value))
                                       .Encode((value) => String(value)),
                                     Type.Null(),
                                   ]),
                                 ),
                                 disabled: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                      .Decode((value) => value === 'true')
+                                    Codec(
+                                      Type.String({
+                                        pattern:
+                                          /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                      }),
+                                    )
+                                      .Decode((value) =>
+                                        /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                      )
                                       .Encode((value) => (value ? 'true' : 'false')),
                                     Type.Null(),
                                   ]),
                                 ),
                                 required: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                      .Decode((value) => value === 'true')
+                                    Codec(
+                                      Type.String({
+                                        pattern:
+                                          /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                      }),
+                                    )
+                                      .Decode((value) =>
+                                        /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                      )
                                       .Encode((value) => (value ? 'true' : 'false')),
                                     Type.Null(),
                                   ]),
@@ -6312,8 +8647,14 @@ export const webhooksHandler = new Hono()
                                 type: MessageComponentTypesSchema,
                                 id: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.String())
-                                      .Decode((value) => Number.parseInt(value, 10))
+                                    Codec(
+                                      Type.Refine(
+                                        Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                        (value) => Number(value) >= 0,
+                                        () => 'must be >= 0',
+                                      ),
+                                    )
+                                      .Decode((value) => Number(value))
                                       .Encode((value) => String(value)),
                                     Type.Null(),
                                   ]),
@@ -6324,32 +8665,66 @@ export const webhooksHandler = new Hono()
                                 ),
                                 min_values: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.String())
-                                      .Decode((value) => Number.parseInt(value, 10))
+                                    Codec(
+                                      Type.Refine(
+                                        Type.Refine(
+                                          Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                          (value) => Number(value) >= 0,
+                                          () => 'must be >= 0',
+                                        ),
+                                        (value) => Number(value) <= 25,
+                                        () => 'must be <= 25',
+                                      ),
+                                    )
+                                      .Decode((value) => Number(value))
                                       .Encode((value) => String(value)),
                                     Type.Null(),
                                   ]),
                                 ),
                                 max_values: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.String())
-                                      .Decode((value) => Number.parseInt(value, 10))
+                                    Codec(
+                                      Type.Refine(
+                                        Type.Refine(
+                                          Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                          (value) => Number(value) >= 1,
+                                          () => 'must be >= 1',
+                                        ),
+                                        (value) => Number(value) <= 25,
+                                        () => 'must be <= 25',
+                                      ),
+                                    )
+                                      .Decode((value) => Number(value))
                                       .Encode((value) => String(value)),
                                     Type.Null(),
                                   ]),
                                 ),
                                 disabled: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                      .Decode((value) => value === 'true')
+                                    Codec(
+                                      Type.String({
+                                        pattern:
+                                          /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                      }),
+                                    )
+                                      .Decode((value) =>
+                                        /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                      )
                                       .Encode((value) => (value ? 'true' : 'false')),
                                     Type.Null(),
                                   ]),
                                 ),
                                 required: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                      .Decode((value) => value === 'true')
+                                    Codec(
+                                      Type.String({
+                                        pattern:
+                                          /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                      }),
+                                    )
+                                      .Decode((value) =>
+                                        /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                      )
                                       .Encode((value) => (value ? 'true' : 'false')),
                                     Type.Null(),
                                   ]),
@@ -6364,18 +8739,20 @@ export const webhooksHandler = new Hono()
                                     default: Type.Optional(
                                       Type.Union([
                                         Codec(
-                                          Type.Union([Type.Literal('true'), Type.Literal('false')]),
+                                          Type.String({
+                                            pattern:
+                                              /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                          }),
                                         )
-                                          .Decode((value) => value === 'true')
+                                          .Decode((value) =>
+                                            /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                          )
                                           .Encode((value) => (value ? 'true' : 'false')),
                                         Type.Null(),
                                       ]),
                                     ),
                                     emoji: Type.Optional(
-                                      Type.Union([
-                                        Type.Union([Type.Null(), Type.Null()]),
-                                        ComponentEmojiForRequestSchema,
-                                      ]),
+                                      Type.Union([Type.Null(), ComponentEmojiForRequestSchema]),
                                     ),
                                   }),
                                   { minItems: 1, maxItems: 25 },
@@ -6385,8 +8762,14 @@ export const webhooksHandler = new Hono()
                                 type: MessageComponentTypesSchema,
                                 id: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.String())
-                                      .Decode((value) => Number.parseInt(value, 10))
+                                    Codec(
+                                      Type.Refine(
+                                        Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                        (value) => Number(value) >= 0,
+                                        () => 'must be >= 0',
+                                      ),
+                                    )
+                                      .Decode((value) => Number(value))
                                       .Encode((value) => String(value)),
                                     Type.Null(),
                                   ]),
@@ -6397,32 +8780,66 @@ export const webhooksHandler = new Hono()
                                 ),
                                 min_values: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.String())
-                                      .Decode((value) => Number.parseInt(value, 10))
+                                    Codec(
+                                      Type.Refine(
+                                        Type.Refine(
+                                          Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                          (value) => Number(value) >= 0,
+                                          () => 'must be >= 0',
+                                        ),
+                                        (value) => Number(value) <= 25,
+                                        () => 'must be <= 25',
+                                      ),
+                                    )
+                                      .Decode((value) => Number(value))
                                       .Encode((value) => String(value)),
                                     Type.Null(),
                                   ]),
                                 ),
                                 max_values: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.String())
-                                      .Decode((value) => Number.parseInt(value, 10))
+                                    Codec(
+                                      Type.Refine(
+                                        Type.Refine(
+                                          Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                          (value) => Number(value) >= 1,
+                                          () => 'must be >= 1',
+                                        ),
+                                        (value) => Number(value) <= 25,
+                                        () => 'must be <= 25',
+                                      ),
+                                    )
+                                      .Decode((value) => Number(value))
                                       .Encode((value) => String(value)),
                                     Type.Null(),
                                   ]),
                                 ),
                                 disabled: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                      .Decode((value) => value === 'true')
+                                    Codec(
+                                      Type.String({
+                                        pattern:
+                                          /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                      }),
+                                    )
+                                      .Decode((value) =>
+                                        /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                      )
                                       .Encode((value) => (value ? 'true' : 'false')),
                                     Type.Null(),
                                   ]),
                                 ),
                                 required: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                      .Decode((value) => value === 'true')
+                                    Codec(
+                                      Type.String({
+                                        pattern:
+                                          /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                      }),
+                                    )
+                                      .Decode((value) =>
+                                        /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                      )
                                       .Encode((value) => (value ? 'true' : 'false')),
                                     Type.Null(),
                                   ]),
@@ -6442,16 +8859,27 @@ export const webhooksHandler = new Hono()
                           type: MessageComponentTypesSchema,
                           id: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(
+                                Type.Refine(
+                                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                  (value) => Number(value) >= 0,
+                                  () => 'must be >= 0',
+                                ),
+                              )
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
                           ),
                           spoiler: Type.Optional(
                             Type.Union([
-                              Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                .Decode((value) => value === 'true')
+                              Codec(
+                                Type.String({
+                                  pattern:
+                                    /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                }),
+                              )
+                                .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                 .Encode((value) => (value ? 'true' : 'false')),
                               Type.Null(),
                             ]),
@@ -6462,8 +8890,14 @@ export const webhooksHandler = new Hono()
                           type: MessageComponentTypesSchema,
                           id: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(
+                                Type.Refine(
+                                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                  (value) => Number(value) >= 0,
+                                  () => 'must be >= 0',
+                                ),
+                              )
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
@@ -6478,8 +8912,13 @@ export const webhooksHandler = new Hono()
                               ),
                               spoiler: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                    .Decode((value) => value === 'true')
+                                  Codec(
+                                    Type.String({
+                                      pattern:
+                                        /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                    }),
+                                  )
+                                    .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                     .Encode((value) => (value ? 'true' : 'false')),
                                   Type.Null(),
                                 ]),
@@ -6493,8 +8932,14 @@ export const webhooksHandler = new Hono()
                           type: MessageComponentTypesSchema,
                           id: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(
+                                Type.Refine(
+                                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                  (value) => Number(value) >= 0,
+                                  () => 'must be >= 0',
+                                ),
+                              )
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
@@ -6504,8 +8949,14 @@ export const webhooksHandler = new Hono()
                               type: MessageComponentTypesSchema,
                               id: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.String())
-                                    .Decode((value) => Number.parseInt(value, 10))
+                                  Codec(
+                                    Type.Refine(
+                                      Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                      (value) => Number(value) >= 0,
+                                      () => 'must be >= 0',
+                                    ),
+                                  )
+                                    .Decode((value) => Number(value))
                                     .Encode((value) => String(value)),
                                   Type.Null(),
                                 ]),
@@ -6519,8 +8970,14 @@ export const webhooksHandler = new Hono()
                               type: MessageComponentTypesSchema,
                               id: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.String())
-                                    .Decode((value) => Number.parseInt(value, 10))
+                                  Codec(
+                                    Type.Refine(
+                                      Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                      (value) => Number(value) >= 0,
+                                      () => 'must be >= 0',
+                                    ),
+                                  )
+                                    .Decode((value) => Number(value))
                                     .Encode((value) => String(value)),
                                   Type.Null(),
                                 ]),
@@ -6537,8 +8994,13 @@ export const webhooksHandler = new Hono()
                               ),
                               disabled: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                    .Decode((value) => value === 'true')
+                                  Codec(
+                                    Type.String({
+                                      pattern:
+                                        /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                    }),
+                                  )
+                                    .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                     .Encode((value) => (value ? 'true' : 'false')),
                                   Type.Null(),
                                 ]),
@@ -6549,25 +9011,23 @@ export const webhooksHandler = new Hono()
                                   Type.Null(),
                                 ]),
                               ),
-                              sku_id: Type.Optional(
-                                Type.Union([
-                                  Type.Union([Type.Null(), Type.Null()]),
-                                  SnowflakeTypeSchema,
-                                ]),
-                              ),
+                              sku_id: Type.Optional(Type.Union([Type.Null(), SnowflakeTypeSchema])),
                               emoji: Type.Optional(
-                                Type.Union([
-                                  Type.Union([Type.Null(), Type.Null()]),
-                                  ComponentEmojiForRequestSchema,
-                                ]),
+                                Type.Union([Type.Null(), ComponentEmojiForRequestSchema]),
                               ),
                             }),
                             Type.Object({
                               type: MessageComponentTypesSchema,
                               id: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.String())
-                                    .Decode((value) => Number.parseInt(value, 10))
+                                  Codec(
+                                    Type.Refine(
+                                      Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                      (value) => Number(value) >= 0,
+                                      () => 'must be >= 0',
+                                    ),
+                                  )
+                                    .Decode((value) => Number(value))
                                     .Encode((value) => String(value)),
                                   Type.Null(),
                                 ]),
@@ -6580,8 +9040,13 @@ export const webhooksHandler = new Hono()
                               ),
                               spoiler: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                    .Decode((value) => value === 'true')
+                                  Codec(
+                                    Type.String({
+                                      pattern:
+                                        /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                    }),
+                                  )
+                                    .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                     .Encode((value) => (value ? 'true' : 'false')),
                                   Type.Null(),
                                 ]),
@@ -6594,22 +9059,30 @@ export const webhooksHandler = new Hono()
                           type: MessageComponentTypesSchema,
                           id: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(
+                                Type.Refine(
+                                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                  (value) => Number(value) >= 0,
+                                  () => 'must be >= 0',
+                                ),
+                              )
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
                           ),
                           spacing: Type.Optional(
-                            Type.Union([
-                              Type.Union([Type.Null(), Type.Null()]),
-                              MessageComponentSeparatorSpacingSizeSchema,
-                            ]),
+                            Type.Union([Type.Null(), MessageComponentSeparatorSpacingSizeSchema]),
                           ),
                           divider: Type.Optional(
                             Type.Union([
-                              Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                .Decode((value) => value === 'true')
+                              Codec(
+                                Type.String({
+                                  pattern:
+                                    /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                }),
+                              )
+                                .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                 .Encode((value) => (value ? 'true' : 'false')),
                               Type.Null(),
                             ]),
@@ -6619,8 +9092,14 @@ export const webhooksHandler = new Hono()
                           type: MessageComponentTypesSchema,
                           id: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(
+                                Type.Refine(
+                                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                  (value) => Number(value) >= 0,
+                                  () => 'must be >= 0',
+                                ),
+                              )
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
@@ -6632,8 +9111,12 @@ export const webhooksHandler = new Hono()
                     ),
                     spoiler: Type.Optional(
                       Type.Union([
-                        Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                          .Decode((value) => value === 'true')
+                        Codec(
+                          Type.String({
+                            pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                          }),
+                        )
+                          .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                           .Encode((value) => (value ? 'true' : 'false')),
                         Type.Null(),
                       ]),
@@ -6643,16 +9126,26 @@ export const webhooksHandler = new Hono()
                     type: MessageComponentTypesSchema,
                     id: Type.Optional(
                       Type.Union([
-                        Codec(Type.String())
-                          .Decode((value) => Number.parseInt(value, 10))
+                        Codec(
+                          Type.Refine(
+                            Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                            (value) => Number(value) >= 0,
+                            () => 'must be >= 0',
+                          ),
+                        )
+                          .Decode((value) => Number(value))
                           .Encode((value) => String(value)),
                         Type.Null(),
                       ]),
                     ),
                     spoiler: Type.Optional(
                       Type.Union([
-                        Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                          .Decode((value) => value === 'true')
+                        Codec(
+                          Type.String({
+                            pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                          }),
+                        )
+                          .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                           .Encode((value) => (value ? 'true' : 'false')),
                         Type.Null(),
                       ]),
@@ -6663,8 +9156,14 @@ export const webhooksHandler = new Hono()
                     type: MessageComponentTypesSchema,
                     id: Type.Optional(
                       Type.Union([
-                        Codec(Type.String())
-                          .Decode((value) => Number.parseInt(value, 10))
+                        Codec(
+                          Type.Refine(
+                            Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                            (value) => Number(value) >= 0,
+                            () => 'must be >= 0',
+                          ),
+                        )
+                          .Decode((value) => Number(value))
                           .Encode((value) => String(value)),
                         Type.Null(),
                       ]),
@@ -6676,8 +9175,12 @@ export const webhooksHandler = new Hono()
                         ),
                         spoiler: Type.Optional(
                           Type.Union([
-                            Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                              .Decode((value) => value === 'true')
+                            Codec(
+                              Type.String({
+                                pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                              }),
+                            )
+                              .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                               .Encode((value) => (value ? 'true' : 'false')),
                             Type.Null(),
                           ]),
@@ -6691,8 +9194,14 @@ export const webhooksHandler = new Hono()
                     type: MessageComponentTypesSchema,
                     id: Type.Optional(
                       Type.Union([
-                        Codec(Type.String())
-                          .Decode((value) => Number.parseInt(value, 10))
+                        Codec(
+                          Type.Refine(
+                            Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                            (value) => Number(value) >= 0,
+                            () => 'must be >= 0',
+                          ),
+                        )
+                          .Decode((value) => Number(value))
                           .Encode((value) => String(value)),
                         Type.Null(),
                       ]),
@@ -6702,8 +9211,14 @@ export const webhooksHandler = new Hono()
                         type: MessageComponentTypesSchema,
                         id: Type.Optional(
                           Type.Union([
-                            Codec(Type.String())
-                              .Decode((value) => Number.parseInt(value, 10))
+                            Codec(
+                              Type.Refine(
+                                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                (value) => Number(value) >= 0,
+                                () => 'must be >= 0',
+                              ),
+                            )
+                              .Decode((value) => Number(value))
                               .Encode((value) => String(value)),
                             Type.Null(),
                           ]),
@@ -6717,8 +9232,14 @@ export const webhooksHandler = new Hono()
                         type: MessageComponentTypesSchema,
                         id: Type.Optional(
                           Type.Union([
-                            Codec(Type.String())
-                              .Decode((value) => Number.parseInt(value, 10))
+                            Codec(
+                              Type.Refine(
+                                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                (value) => Number(value) >= 0,
+                                () => 'must be >= 0',
+                              ),
+                            )
+                              .Decode((value) => Number(value))
                               .Encode((value) => String(value)),
                             Type.Null(),
                           ]),
@@ -6732,8 +9253,12 @@ export const webhooksHandler = new Hono()
                         ),
                         disabled: Type.Optional(
                           Type.Union([
-                            Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                              .Decode((value) => value === 'true')
+                            Codec(
+                              Type.String({
+                                pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                              }),
+                            )
+                              .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                               .Encode((value) => (value ? 'true' : 'false')),
                             Type.Null(),
                           ]),
@@ -6741,22 +9266,23 @@ export const webhooksHandler = new Hono()
                         url: Type.Optional(
                           Type.Union([Type.String({ format: 'uri', maxLength: 512 }), Type.Null()]),
                         ),
-                        sku_id: Type.Optional(
-                          Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
-                        ),
+                        sku_id: Type.Optional(Type.Union([Type.Null(), SnowflakeTypeSchema])),
                         emoji: Type.Optional(
-                          Type.Union([
-                            Type.Union([Type.Null(), Type.Null()]),
-                            ComponentEmojiForRequestSchema,
-                          ]),
+                          Type.Union([Type.Null(), ComponentEmojiForRequestSchema]),
                         ),
                       }),
                       Type.Object({
                         type: MessageComponentTypesSchema,
                         id: Type.Optional(
                           Type.Union([
-                            Codec(Type.String())
-                              .Decode((value) => Number.parseInt(value, 10))
+                            Codec(
+                              Type.Refine(
+                                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                (value) => Number(value) >= 0,
+                                () => 'must be >= 0',
+                              ),
+                            )
+                              .Decode((value) => Number(value))
                               .Encode((value) => String(value)),
                             Type.Null(),
                           ]),
@@ -6766,8 +9292,12 @@ export const webhooksHandler = new Hono()
                         ),
                         spoiler: Type.Optional(
                           Type.Union([
-                            Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                              .Decode((value) => value === 'true')
+                            Codec(
+                              Type.String({
+                                pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                              }),
+                            )
+                              .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                               .Encode((value) => (value ? 'true' : 'false')),
                             Type.Null(),
                           ]),
@@ -6780,22 +9310,29 @@ export const webhooksHandler = new Hono()
                     type: MessageComponentTypesSchema,
                     id: Type.Optional(
                       Type.Union([
-                        Codec(Type.String())
-                          .Decode((value) => Number.parseInt(value, 10))
+                        Codec(
+                          Type.Refine(
+                            Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                            (value) => Number(value) >= 0,
+                            () => 'must be >= 0',
+                          ),
+                        )
+                          .Decode((value) => Number(value))
                           .Encode((value) => String(value)),
                         Type.Null(),
                       ]),
                     ),
                     spacing: Type.Optional(
-                      Type.Union([
-                        Type.Union([Type.Null(), Type.Null()]),
-                        MessageComponentSeparatorSpacingSizeSchema,
-                      ]),
+                      Type.Union([Type.Null(), MessageComponentSeparatorSpacingSizeSchema]),
                     ),
                     divider: Type.Optional(
                       Type.Union([
-                        Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                          .Decode((value) => value === 'true')
+                        Codec(
+                          Type.String({
+                            pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                          }),
+                        )
+                          .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                           .Encode((value) => (value ? 'true' : 'false')),
                         Type.Null(),
                       ]),
@@ -6805,8 +9342,14 @@ export const webhooksHandler = new Hono()
                     type: MessageComponentTypesSchema,
                     id: Type.Optional(
                       Type.Union([
-                        Codec(Type.String())
-                          .Decode((value) => Number.parseInt(value, 10))
+                        Codec(
+                          Type.Refine(
+                            Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                            (value) => Number(value) >= 0,
+                            () => 'must be >= 0',
+                          ),
+                        )
+                          .Decode((value) => Number(value))
                           .Encode((value) => String(value)),
                         Type.Null(),
                       ]),
@@ -6832,7 +9375,19 @@ export const webhooksHandler = new Hono()
                   ),
                   duration_secs: Type.Optional(
                     Type.Union([
-                      Codec(Type.String())
+                      Codec(
+                        Type.Refine(
+                          Type.Refine(
+                            Type.String({
+                              pattern: '^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$',
+                            }),
+                            (value) => Number(value) >= 0,
+                            () => 'must be >= 0',
+                          ),
+                          (value) => Number(value) <= 2147483647,
+                          () => 'must be <= 2147483647',
+                        ),
+                      )
                         .Decode((value) => Number(value))
                         .Encode((value) => String(value)),
                       Type.Null(),
@@ -6844,8 +9399,12 @@ export const webhooksHandler = new Hono()
                   title: Type.Optional(Type.Union([Type.String({ maxLength: 1024 }), Type.Null()])),
                   is_spoiler: Type.Optional(
                     Type.Union([
-                      Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                        .Decode((value) => value === 'true')
+                      Codec(
+                        Type.String({
+                          pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                        }),
+                      )
+                        .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                         .Encode((value) => (value ? 'true' : 'false')),
                       Type.Null(),
                     ]),
@@ -6858,7 +9417,7 @@ export const webhooksHandler = new Hono()
           ),
           poll: Type.Optional(
             Type.Union([
-              Type.Union([Type.Null(), Type.Null()]),
+              Type.Null(),
               Type.Object({
                 question: Type.Object(
                   {
@@ -6875,13 +9434,12 @@ export const webhooksHandler = new Hono()
                     emoji: Type.Optional(
                       Type.Union(
                         [
-                          Type.Union([Type.Null(), Type.Null()]),
+                          Type.Null(),
                           Type.Object({
                             id: Type.Optional(
-                              Type.Union(
-                                [Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema],
-                                { description: 'The ID of the custom emoji' },
-                              ),
+                              Type.Union([Type.Null(), SnowflakeTypeSchema], {
+                                description: 'The ID of the custom emoji',
+                              }),
                             ),
                             name: Type.Optional(
                               Type.Union([
@@ -6895,8 +9453,13 @@ export const webhooksHandler = new Hono()
                             ),
                             animated: Type.Optional(
                               Type.Union([
-                                Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                  .Decode((value) => value === 'true')
+                                Codec(
+                                  Type.String({
+                                    pattern:
+                                      /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                  }),
+                                )
+                                  .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                   .Encode((value) => (value ? 'true' : 'false')),
                                 Type.Null(),
                               ]),
@@ -6926,13 +9489,12 @@ export const webhooksHandler = new Hono()
                         emoji: Type.Optional(
                           Type.Union(
                             [
-                              Type.Union([Type.Null(), Type.Null()]),
+                              Type.Null(),
                               Type.Object({
                                 id: Type.Optional(
-                                  Type.Union(
-                                    [Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema],
-                                    { description: 'The ID of the custom emoji' },
-                                  ),
+                                  Type.Union([Type.Null(), SnowflakeTypeSchema], {
+                                    description: 'The ID of the custom emoji',
+                                  }),
                                 ),
                                 name: Type.Optional(
                                   Type.Union([
@@ -6946,8 +9508,15 @@ export const webhooksHandler = new Hono()
                                 ),
                                 animated: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                      .Decode((value) => value === 'true')
+                                    Codec(
+                                      Type.String({
+                                        pattern:
+                                          /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                      }),
+                                    )
+                                      .Decode((value) =>
+                                        /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                      )
                                       .Encode((value) => (value ? 'true' : 'false')),
                                     Type.Null(),
                                   ]),
@@ -6969,21 +9538,35 @@ export const webhooksHandler = new Hono()
                 ),
                 allow_multiselect: Type.Optional(
                   Type.Union([
-                    Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                      .Decode((value) => value === 'true')
+                    Codec(
+                      Type.String({
+                        pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                      }),
+                    )
+                      .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                       .Encode((value) => (value ? 'true' : 'false')),
                     Type.Null(),
                   ]),
                 ),
                 layout_type: Type.Optional(
-                  Type.Union([Type.Union([Type.Null(), Type.Null()]), PollLayoutTypesSchema], {
+                  Type.Union([Type.Null(), PollLayoutTypesSchema], {
                     description: 'The layout type of the poll. Defaults to... DEFAULT!',
                   }),
                 ),
                 duration: Type.Optional(
                   Type.Union([
-                    Codec(Type.String())
-                      .Decode((value) => Number.parseInt(value, 10))
+                    Codec(
+                      Type.Refine(
+                        Type.Refine(
+                          Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                          (value) => Number(value) >= 1,
+                          () => 'must be >= 1',
+                        ),
+                        (value) => Number(value) <= 768,
+                        () => 'must be <= 768',
+                      ),
+                    )
+                      .Decode((value) => Number(value))
                       .Encode((value) => String(value)),
                     Type.Null(),
                   ]),
@@ -6993,8 +9576,8 @@ export const webhooksHandler = new Hono()
           ),
           flags: Type.Optional(
             Type.Union([
-              Codec(Type.String())
-                .Decode((value) => Number.parseInt(value, 10))
+              Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+                .Decode((value) => Number(value))
                 .Encode((value) => String(value)),
               Type.Null(),
             ]),
@@ -7020,7 +9603,7 @@ export const webhooksHandler = new Hono()
           },
           content: {
             'application/json': {
-              schema: resolver(Compile(Type.Union([Type.String(), Type.Null()]))),
+              schema: resolver(toStandardSchemaV1(Type.Union([Type.String(), Type.Null()]))),
             },
           },
         },
@@ -7031,7 +9614,7 @@ export const webhooksHandler = new Hono()
     }),
     validator(
       'param',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           webhook_id: SnowflakeTypeSchema,
           webhook_token: Type.String({ maxLength: 152133 }),
@@ -7040,21 +9623,23 @@ export const webhooksHandler = new Hono()
     ),
     validator(
       'query',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           wait: Type.Optional(
-            Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-              .Decode((value) => value === 'true')
+            Codec(
+              Type.String({ pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i }),
+            )
+              .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
               .Encode((value) => (value ? 'true' : 'false')),
           ),
           thread_id: Type.Optional(SnowflakeTypeSchema),
         }),
       ),
     ),
-    validator('json', Compile(SlackWebhookSchema)),
+    validator('json', toStandardSchemaV1(SlackWebhookSchema)),
     validator(
       'form',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           text: Type.Optional(Type.Union([Type.String({ maxLength: 2000 }), Type.Null()])),
           username: Type.Optional(Type.Union([Type.String({ maxLength: 152133 }), Type.Null()])),
@@ -7085,8 +9670,8 @@ export const webhooksHandler = new Hono()
                   ),
                   ts: Type.Optional(
                     Type.Union([
-                      Codec(Type.String())
-                        .Decode((value) => Number.parseInt(value, 10))
+                      Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+                        .Decode((value) => Number(value))
                         .Encode((value) => String(value)),
                       Type.Null(),
                     ]),
@@ -7127,8 +9712,13 @@ export const webhooksHandler = new Hono()
                           ),
                           inline: Type.Optional(
                             Type.Union([
-                              Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                .Decode((value) => value === 'true')
+                              Codec(
+                                Type.String({
+                                  pattern:
+                                    /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                }),
+                              )
+                                .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                 .Encode((value) => (value ? 'true' : 'false')),
                               Type.Null(),
                             ]),

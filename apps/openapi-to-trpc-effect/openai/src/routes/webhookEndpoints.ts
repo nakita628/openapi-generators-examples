@@ -17,17 +17,17 @@ export const webhookEndpointsRouter = t.router({
     .input(
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          limit: Schema.optional(
+          limit: Schema.optionalKey(
             Schema.Number.check(
               Schema.isInt(),
               Schema.isGreaterThanOrEqualTo(1),
               Schema.isLessThanOrEqualTo(100),
             ),
           ),
-          after: Schema.optional(
+          after: Schema.optionalKey(
             Schema.Union([
               Schema.String.annotate({ jsonSchemaExamples: ['whe_123'] }),
-              Schema.NullOr(Schema.Null),
+              Schema.Null,
             ]),
           ),
         }),
@@ -60,7 +60,7 @@ export const webhookEndpointsRouter = t.router({
       Schema.toStandardSchemaV1(
         Schema.Struct({
           webhook_endpoint_id: Schema.String.annotate({ jsonSchemaExamples: ['whe_123'] }),
-          name: Schema.optional(
+          name: Schema.optionalKey(
             Schema.String.check(
               Schema.makeFilter((input) => [...input].length >= 1, {
                 expected: 'a string of at least 1 character',
@@ -70,7 +70,7 @@ export const webhookEndpointsRouter = t.router({
               }),
             ).annotate({ description: 'A new human-readable name for the webhook endpoint.' }),
           ),
-          url: Schema.optional(
+          url: Schema.optionalKey(
             Schema.String.check(
               Schema.isPattern(/^https:\/\//),
               Schema.makeFilter((input) => [...input].length <= 2048, {
@@ -78,7 +78,7 @@ export const webhookEndpointsRouter = t.router({
               }),
             ).annotate({ description: 'A new HTTPS URL that receives webhook deliveries.' }),
           ),
-          event_types: Schema.optional(
+          event_types: Schema.optionalKey(
             Schema.Array(ProjectEventTypeEnumSchema)
               .check(Schema.isMinLength(1))
               .annotate({
@@ -109,7 +109,7 @@ export const webhookEndpointsRouter = t.router({
       Schema.toStandardSchemaV1(
         Schema.Struct({
           webhook_endpoint_id: Schema.String.annotate({ jsonSchemaExamples: ['whe_123'] }),
-          keep_old_secret_active_for_24_hours: Schema.optional(
+          keep_old_secret_active_for_24_hours: Schema.optionalKey(
             Schema.Boolean.annotate({
               description:
                 'Whether to keep the previous signing secret valid for 24 hours after rotation. Defaults to false, which invalidates the previous secret immediately.',

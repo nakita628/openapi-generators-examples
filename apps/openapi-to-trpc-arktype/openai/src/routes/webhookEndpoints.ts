@@ -15,10 +15,7 @@ const t = initTRPC.create()
 export const webhookEndpointsRouter = t.router({
   getWebhookEndpoints: t.procedure
     .input(
-      type({
-        'limit?': 'number.integer >= 1 & number.integer <= 100',
-        'after?': 'string | null | null',
-      }),
+      type({ 'limit?': 'number.integer >= 1 & number.integer <= 100', 'after?': 'string | null' }),
     )
     .output(WebhookEndpointListResourceSchema)
     .query(() => {

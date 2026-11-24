@@ -91,8 +91,18 @@ export const channelsHandler = new Hono()
         Type.Object({
           max_age: Type.Optional(
             Type.Union([
-              Codec(Type.String())
-                .Decode((value) => Number.parseInt(value, 10))
+              Codec(
+                Type.Refine(
+                  Type.Refine(
+                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                    (value) => Number(value) >= 1,
+                    () => 'must be >= 1',
+                  ),
+                  (value) => Number(value) <= 2592000,
+                  () => 'must be <= 2592000',
+                ),
+              )
+                .Decode((value) => Number(value))
                 .Encode((value) => String(value)),
               Type.Null(),
             ]),
@@ -101,50 +111,72 @@ export const channelsHandler = new Hono()
         Type.Object({
           max_age: Type.Optional(
             Type.Union([
-              Codec(Type.String())
-                .Decode((value) => Number.parseInt(value, 10))
+              Codec(
+                Type.Refine(
+                  Type.Refine(
+                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                    (value) => Number(value) >= 0,
+                    () => 'must be >= 0',
+                  ),
+                  (value) => Number(value) <= 5184000,
+                  () => 'must be <= 5184000',
+                ),
+              )
+                .Decode((value) => Number(value))
                 .Encode((value) => String(value)),
               Type.Null(),
             ]),
           ),
           temporary: Type.Optional(
             Type.Union([
-              Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                .Decode((value) => value === 'true')
+              Codec(
+                Type.String({
+                  pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                }),
+              )
+                .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                 .Encode((value) => (value ? 'true' : 'false')),
               Type.Null(),
             ]),
           ),
           max_uses: Type.Optional(
             Type.Union([
-              Codec(Type.String())
-                .Decode((value) => Number.parseInt(value, 10))
+              Codec(
+                Type.Refine(
+                  Type.Refine(
+                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                    (value) => Number(value) >= 0,
+                    () => 'must be >= 0',
+                  ),
+                  (value) => Number(value) <= 100,
+                  () => 'must be <= 100',
+                ),
+              )
+                .Decode((value) => Number(value))
                 .Encode((value) => String(value)),
               Type.Null(),
             ]),
           ),
           unique: Type.Optional(
             Type.Union([
-              Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                .Decode((value) => value === 'true')
+              Codec(
+                Type.String({
+                  pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                }),
+              )
+                .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                 .Encode((value) => (value ? 'true' : 'false')),
               Type.Null(),
             ]),
           ),
-          target_user_id: Type.Optional(
-            Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
-          ),
-          target_application_id: Type.Optional(
-            Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
-          ),
-          target_type: Type.Optional(
-            Type.Union([Type.Union([Type.Null(), Type.Null()]), InviteTargetTypesSchema]),
-          ),
+          target_user_id: Type.Optional(Type.Union([Type.Null(), SnowflakeTypeSchema])),
+          target_application_id: Type.Optional(Type.Union([Type.Null(), SnowflakeTypeSchema])),
+          target_type: Type.Optional(Type.Union([Type.Null(), InviteTargetTypesSchema])),
           role_ids: Type.Optional(
             Type.Union([
               Type.String(),
               Type.Array(SnowflakeTypeSchema, { maxItems: 250, uniqueItems: true }),
-              Type.Union([Type.Null(), Type.Null()]),
+              Type.Null(),
             ]),
           ),
           target_user_ids: Type.Optional(
@@ -152,7 +184,7 @@ export const channelsHandler = new Hono()
               [
                 Type.String(),
                 Type.Array(SnowflakeTypeSchema, { maxItems: 1000, uniqueItems: true }),
-                Type.Union([Type.Null(), Type.Null()]),
+                Type.Null(),
               ],
               { description: 'The IDs of the users to target with this invite.' },
             ),
@@ -172,8 +204,18 @@ export const channelsHandler = new Hono()
         before: Type.Optional(SnowflakeTypeSchema),
         after: Type.Optional(SnowflakeTypeSchema),
         limit: Type.Optional(
-          Codec(Type.String())
-            .Decode((value) => Number.parseInt(value, 10))
+          Codec(
+            Type.Refine(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                (value) => Number(value) >= 1,
+                () => 'must be >= 1',
+              ),
+              (value) => Number(value) <= 100,
+              () => 'must be <= 100',
+            ),
+          )
+            .Decode((value) => Number(value))
             .Encode((value) => String(value)),
         ),
       }),
@@ -199,8 +241,18 @@ export const channelsHandler = new Hono()
                 title: Type.Optional(Type.Union([Type.String({ maxLength: 256 }), Type.Null()])),
                 color: Type.Optional(
                   Type.Union([
-                    Codec(Type.String())
-                      .Decode((value) => Number.parseInt(value, 10))
+                    Codec(
+                      Type.Refine(
+                        Type.Refine(
+                          Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                          (value) => Number(value) >= 0,
+                          () => 'must be >= 0',
+                        ),
+                        (value) => Number(value) <= 16777215,
+                        () => 'must be <= 16777215',
+                      ),
+                    )
+                      .Decode((value) => Number(value))
                       .Encode((value) => String(value)),
                     Type.Null(),
                   ]),
@@ -211,28 +263,26 @@ export const channelsHandler = new Hono()
                 description: Type.Optional(
                   Type.Union([Type.String({ maxLength: 4096 }), Type.Null()]),
                 ),
-                author: Type.Optional(
-                  Type.Union([Type.Union([Type.Null(), Type.Null()]), RichEmbedAuthorSchema]),
-                ),
+                author: Type.Optional(Type.Union([Type.Null(), RichEmbedAuthorSchema])),
                 image: Type.Optional(
                   Type.Union([
-                    Type.Union([Type.Null(), Type.Null()]),
+                    Type.Null(),
                     Type.Object({
                       url: Type.Optional(
                         Type.Union([Type.String({ format: 'uri', maxLength: 2048 }), Type.Null()]),
                       ),
                       width: Type.Optional(
                         Type.Union([
-                          Codec(Type.String())
-                            .Decode((value) => Number.parseInt(value, 10))
+                          Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+                            .Decode((value) => Number(value))
                             .Encode((value) => String(value)),
                           Type.Null(),
                         ]),
                       ),
                       height: Type.Optional(
                         Type.Union([
-                          Codec(Type.String())
-                            .Decode((value) => Number.parseInt(value, 10))
+                          Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+                            .Decode((value) => Number(value))
                             .Encode((value) => String(value)),
                           Type.Null(),
                         ]),
@@ -242,16 +292,30 @@ export const channelsHandler = new Hono()
                       ),
                       placeholder_version: Type.Optional(
                         Type.Union([
-                          Codec(Type.String())
-                            .Decode((value) => Number.parseInt(value, 10))
+                          Codec(
+                            Type.Refine(
+                              Type.Refine(
+                                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                (value) => Number(value) >= 0,
+                                () => 'must be >= 0',
+                              ),
+                              (value) => Number(value) <= 2147483647,
+                              () => 'must be <= 2147483647',
+                            ),
+                          )
+                            .Decode((value) => Number(value))
                             .Encode((value) => String(value)),
                           Type.Null(),
                         ]),
                       ),
                       is_animated: Type.Optional(
                         Type.Union([
-                          Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                            .Decode((value) => value === 'true')
+                          Codec(
+                            Type.String({
+                              pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                            }),
+                          )
+                            .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                             .Encode((value) => (value ? 'true' : 'false')),
                           Type.Null(),
                         ]),
@@ -264,23 +328,23 @@ export const channelsHandler = new Hono()
                 ),
                 thumbnail: Type.Optional(
                   Type.Union([
-                    Type.Union([Type.Null(), Type.Null()]),
+                    Type.Null(),
                     Type.Object({
                       url: Type.Optional(
                         Type.Union([Type.String({ format: 'uri', maxLength: 2048 }), Type.Null()]),
                       ),
                       width: Type.Optional(
                         Type.Union([
-                          Codec(Type.String())
-                            .Decode((value) => Number.parseInt(value, 10))
+                          Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+                            .Decode((value) => Number(value))
                             .Encode((value) => String(value)),
                           Type.Null(),
                         ]),
                       ),
                       height: Type.Optional(
                         Type.Union([
-                          Codec(Type.String())
-                            .Decode((value) => Number.parseInt(value, 10))
+                          Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+                            .Decode((value) => Number(value))
                             .Encode((value) => String(value)),
                           Type.Null(),
                         ]),
@@ -290,16 +354,30 @@ export const channelsHandler = new Hono()
                       ),
                       placeholder_version: Type.Optional(
                         Type.Union([
-                          Codec(Type.String())
-                            .Decode((value) => Number.parseInt(value, 10))
+                          Codec(
+                            Type.Refine(
+                              Type.Refine(
+                                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                (value) => Number(value) >= 0,
+                                () => 'must be >= 0',
+                              ),
+                              (value) => Number(value) <= 2147483647,
+                              () => 'must be <= 2147483647',
+                            ),
+                          )
+                            .Decode((value) => Number(value))
                             .Encode((value) => String(value)),
                           Type.Null(),
                         ]),
                       ),
                       is_animated: Type.Optional(
                         Type.Union([
-                          Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                            .Decode((value) => value === 'true')
+                          Codec(
+                            Type.String({
+                              pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                            }),
+                          )
+                            .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                             .Encode((value) => (value ? 'true' : 'false')),
                           Type.Null(),
                         ]),
@@ -310,9 +388,7 @@ export const channelsHandler = new Hono()
                     }),
                   ]),
                 ),
-                footer: Type.Optional(
-                  Type.Union([Type.Union([Type.Null(), Type.Null()]), RichEmbedFooterSchema]),
-                ),
+                footer: Type.Optional(Type.Union([Type.Null(), RichEmbedFooterSchema])),
                 fields: Type.Optional(
                   Type.Union([
                     Type.Array(
@@ -321,8 +397,12 @@ export const channelsHandler = new Hono()
                         value: Type.String({ maxLength: 1024 }),
                         inline: Type.Optional(
                           Type.Union([
-                            Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                              .Decode((value) => value === 'true')
+                            Codec(
+                              Type.String({
+                                pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                              }),
+                            )
+                              .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                               .Encode((value) => (value ? 'true' : 'false')),
                             Type.Null(),
                           ]),
@@ -333,28 +413,26 @@ export const channelsHandler = new Hono()
                     Type.Null(),
                   ]),
                 ),
-                provider: Type.Optional(
-                  Type.Union([Type.Union([Type.Null(), Type.Null()]), RichEmbedProviderSchema]),
-                ),
+                provider: Type.Optional(Type.Union([Type.Null(), RichEmbedProviderSchema])),
                 video: Type.Optional(
                   Type.Union([
-                    Type.Union([Type.Null(), Type.Null()]),
+                    Type.Null(),
                     Type.Object({
                       url: Type.Optional(
                         Type.Union([Type.String({ format: 'uri', maxLength: 2048 }), Type.Null()]),
                       ),
                       width: Type.Optional(
                         Type.Union([
-                          Codec(Type.String())
-                            .Decode((value) => Number.parseInt(value, 10))
+                          Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+                            .Decode((value) => Number(value))
                             .Encode((value) => String(value)),
                           Type.Null(),
                         ]),
                       ),
                       height: Type.Optional(
                         Type.Union([
-                          Codec(Type.String())
-                            .Decode((value) => Number.parseInt(value, 10))
+                          Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+                            .Decode((value) => Number(value))
                             .Encode((value) => String(value)),
                           Type.Null(),
                         ]),
@@ -364,16 +442,30 @@ export const channelsHandler = new Hono()
                       ),
                       placeholder_version: Type.Optional(
                         Type.Union([
-                          Codec(Type.String())
-                            .Decode((value) => Number.parseInt(value, 10))
+                          Codec(
+                            Type.Refine(
+                              Type.Refine(
+                                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                (value) => Number(value) >= 0,
+                                () => 'must be >= 0',
+                              ),
+                              (value) => Number(value) <= 2147483647,
+                              () => 'must be <= 2147483647',
+                            ),
+                          )
+                            .Decode((value) => Number(value))
                             .Encode((value) => String(value)),
                           Type.Null(),
                         ]),
                       ),
                       is_animated: Type.Optional(
                         Type.Union([
-                          Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                            .Decode((value) => value === 'true')
+                          Codec(
+                            Type.String({
+                              pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                            }),
+                          )
+                            .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                             .Encode((value) => (value ? 'true' : 'false')),
                           Type.Null(),
                         ]),
@@ -384,9 +476,7 @@ export const channelsHandler = new Hono()
                     }),
                   ]),
                 ),
-                audio: Type.Optional(
-                  Type.Union([Type.Union([Type.Null(), Type.Null()]), RichEmbedAudioSchema]),
-                ),
+                audio: Type.Optional(Type.Union([Type.Null(), RichEmbedAudioSchema])),
               }),
               { maxItems: 10 },
             ),
@@ -395,39 +485,43 @@ export const channelsHandler = new Hono()
         ),
         allowed_mentions: Type.Optional(
           Type.Union([
-            Type.Union([Type.Null(), Type.Null()]),
+            Type.Null(),
             Type.Object({
               parse: Type.Optional(
                 Type.Union([
-                  Type.Array(
-                    Type.Union([Type.Union([Type.Null(), Type.Null()]), AllowedMentionTypesSchema]),
-                    { maxItems: 1521, uniqueItems: true },
-                  ),
+                  Type.Array(Type.Union([Type.Null(), AllowedMentionTypesSchema]), {
+                    maxItems: 1521,
+                    uniqueItems: true,
+                  }),
                   Type.Null(),
                 ]),
               ),
               users: Type.Optional(
                 Type.Union([
-                  Type.Array(
-                    Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
-                    { maxItems: 100, uniqueItems: true },
-                  ),
+                  Type.Array(Type.Union([Type.Null(), SnowflakeTypeSchema]), {
+                    maxItems: 100,
+                    uniqueItems: true,
+                  }),
                   Type.Null(),
                 ]),
               ),
               roles: Type.Optional(
                 Type.Union([
-                  Type.Array(
-                    Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
-                    { maxItems: 100, uniqueItems: true },
-                  ),
+                  Type.Array(Type.Union([Type.Null(), SnowflakeTypeSchema]), {
+                    maxItems: 100,
+                    uniqueItems: true,
+                  }),
                   Type.Null(),
                 ]),
               ),
               replied_user: Type.Optional(
                 Type.Union([
-                  Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                    .Decode((value) => value === 'true')
+                  Codec(
+                    Type.String({
+                      pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                    }),
+                  )
+                    .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                     .Encode((value) => (value ? 'true' : 'false')),
                   Type.Null(),
                 ]),
@@ -446,8 +540,14 @@ export const channelsHandler = new Hono()
                   type: MessageComponentTypesSchema,
                   id: Type.Optional(
                     Type.Union([
-                      Codec(Type.String())
-                        .Decode((value) => Number.parseInt(value, 10))
+                      Codec(
+                        Type.Refine(
+                          Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                          (value) => Number(value) >= 0,
+                          () => 'must be >= 0',
+                        ),
+                      )
+                        .Decode((value) => Number(value))
                         .Encode((value) => String(value)),
                       Type.Null(),
                     ]),
@@ -458,8 +558,14 @@ export const channelsHandler = new Hono()
                         type: MessageComponentTypesSchema,
                         id: Type.Optional(
                           Type.Union([
-                            Codec(Type.String())
-                              .Decode((value) => Number.parseInt(value, 10))
+                            Codec(
+                              Type.Refine(
+                                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                (value) => Number(value) >= 0,
+                                () => 'must be >= 0',
+                              ),
+                            )
+                              .Decode((value) => Number(value))
                               .Encode((value) => String(value)),
                             Type.Null(),
                           ]),
@@ -473,8 +579,12 @@ export const channelsHandler = new Hono()
                         ),
                         disabled: Type.Optional(
                           Type.Union([
-                            Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                              .Decode((value) => value === 'true')
+                            Codec(
+                              Type.String({
+                                pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                              }),
+                            )
+                              .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                               .Encode((value) => (value ? 'true' : 'false')),
                             Type.Null(),
                           ]),
@@ -482,22 +592,23 @@ export const channelsHandler = new Hono()
                         url: Type.Optional(
                           Type.Union([Type.String({ format: 'uri', maxLength: 512 }), Type.Null()]),
                         ),
-                        sku_id: Type.Optional(
-                          Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
-                        ),
+                        sku_id: Type.Optional(Type.Union([Type.Null(), SnowflakeTypeSchema])),
                         emoji: Type.Optional(
-                          Type.Union([
-                            Type.Union([Type.Null(), Type.Null()]),
-                            ComponentEmojiForRequestSchema,
-                          ]),
+                          Type.Union([Type.Null(), ComponentEmojiForRequestSchema]),
                         ),
                       }),
                       Type.Object({
                         type: MessageComponentTypesSchema,
                         id: Type.Optional(
                           Type.Union([
-                            Codec(Type.String())
-                              .Decode((value) => Number.parseInt(value, 10))
+                            Codec(
+                              Type.Refine(
+                                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                (value) => Number(value) >= 0,
+                                () => 'must be >= 0',
+                              ),
+                            )
+                              .Decode((value) => Number(value))
                               .Encode((value) => String(value)),
                             Type.Null(),
                           ]),
@@ -508,32 +619,60 @@ export const channelsHandler = new Hono()
                         ),
                         min_values: Type.Optional(
                           Type.Union([
-                            Codec(Type.String())
-                              .Decode((value) => Number.parseInt(value, 10))
+                            Codec(
+                              Type.Refine(
+                                Type.Refine(
+                                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                  (value) => Number(value) >= 0,
+                                  () => 'must be >= 0',
+                                ),
+                                (value) => Number(value) <= 25,
+                                () => 'must be <= 25',
+                              ),
+                            )
+                              .Decode((value) => Number(value))
                               .Encode((value) => String(value)),
                             Type.Null(),
                           ]),
                         ),
                         max_values: Type.Optional(
                           Type.Union([
-                            Codec(Type.String())
-                              .Decode((value) => Number.parseInt(value, 10))
+                            Codec(
+                              Type.Refine(
+                                Type.Refine(
+                                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                  (value) => Number(value) >= 1,
+                                  () => 'must be >= 1',
+                                ),
+                                (value) => Number(value) <= 25,
+                                () => 'must be <= 25',
+                              ),
+                            )
+                              .Decode((value) => Number(value))
                               .Encode((value) => String(value)),
                             Type.Null(),
                           ]),
                         ),
                         disabled: Type.Optional(
                           Type.Union([
-                            Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                              .Decode((value) => value === 'true')
+                            Codec(
+                              Type.String({
+                                pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                              }),
+                            )
+                              .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                               .Encode((value) => (value ? 'true' : 'false')),
                             Type.Null(),
                           ]),
                         ),
                         required: Type.Optional(
                           Type.Union([
-                            Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                              .Decode((value) => value === 'true')
+                            Codec(
+                              Type.String({
+                                pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                              }),
+                            )
+                              .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                               .Encode((value) => (value ? 'true' : 'false')),
                             Type.Null(),
                           ]),
@@ -555,8 +694,14 @@ export const channelsHandler = new Hono()
                         type: MessageComponentTypesSchema,
                         id: Type.Optional(
                           Type.Union([
-                            Codec(Type.String())
-                              .Decode((value) => Number.parseInt(value, 10))
+                            Codec(
+                              Type.Refine(
+                                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                (value) => Number(value) >= 0,
+                                () => 'must be >= 0',
+                              ),
+                            )
+                              .Decode((value) => Number(value))
                               .Encode((value) => String(value)),
                             Type.Null(),
                           ]),
@@ -567,32 +712,60 @@ export const channelsHandler = new Hono()
                         ),
                         min_values: Type.Optional(
                           Type.Union([
-                            Codec(Type.String())
-                              .Decode((value) => Number.parseInt(value, 10))
+                            Codec(
+                              Type.Refine(
+                                Type.Refine(
+                                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                  (value) => Number(value) >= 0,
+                                  () => 'must be >= 0',
+                                ),
+                                (value) => Number(value) <= 25,
+                                () => 'must be <= 25',
+                              ),
+                            )
+                              .Decode((value) => Number(value))
                               .Encode((value) => String(value)),
                             Type.Null(),
                           ]),
                         ),
                         max_values: Type.Optional(
                           Type.Union([
-                            Codec(Type.String())
-                              .Decode((value) => Number.parseInt(value, 10))
+                            Codec(
+                              Type.Refine(
+                                Type.Refine(
+                                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                  (value) => Number(value) >= 1,
+                                  () => 'must be >= 1',
+                                ),
+                                (value) => Number(value) <= 25,
+                                () => 'must be <= 25',
+                              ),
+                            )
+                              .Decode((value) => Number(value))
                               .Encode((value) => String(value)),
                             Type.Null(),
                           ]),
                         ),
                         disabled: Type.Optional(
                           Type.Union([
-                            Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                              .Decode((value) => value === 'true')
+                            Codec(
+                              Type.String({
+                                pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                              }),
+                            )
+                              .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                               .Encode((value) => (value ? 'true' : 'false')),
                             Type.Null(),
                           ]),
                         ),
                         required: Type.Optional(
                           Type.Union([
-                            Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                              .Decode((value) => value === 'true')
+                            Codec(
+                              Type.String({
+                                pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                              }),
+                            )
+                              .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                               .Encode((value) => (value ? 'true' : 'false')),
                             Type.Null(),
                           ]),
@@ -614,8 +787,14 @@ export const channelsHandler = new Hono()
                         type: MessageComponentTypesSchema,
                         id: Type.Optional(
                           Type.Union([
-                            Codec(Type.String())
-                              .Decode((value) => Number.parseInt(value, 10))
+                            Codec(
+                              Type.Refine(
+                                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                (value) => Number(value) >= 0,
+                                () => 'must be >= 0',
+                              ),
+                            )
+                              .Decode((value) => Number(value))
                               .Encode((value) => String(value)),
                             Type.Null(),
                           ]),
@@ -626,32 +805,60 @@ export const channelsHandler = new Hono()
                         ),
                         min_values: Type.Optional(
                           Type.Union([
-                            Codec(Type.String())
-                              .Decode((value) => Number.parseInt(value, 10))
+                            Codec(
+                              Type.Refine(
+                                Type.Refine(
+                                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                  (value) => Number(value) >= 0,
+                                  () => 'must be >= 0',
+                                ),
+                                (value) => Number(value) <= 25,
+                                () => 'must be <= 25',
+                              ),
+                            )
+                              .Decode((value) => Number(value))
                               .Encode((value) => String(value)),
                             Type.Null(),
                           ]),
                         ),
                         max_values: Type.Optional(
                           Type.Union([
-                            Codec(Type.String())
-                              .Decode((value) => Number.parseInt(value, 10))
+                            Codec(
+                              Type.Refine(
+                                Type.Refine(
+                                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                  (value) => Number(value) >= 1,
+                                  () => 'must be >= 1',
+                                ),
+                                (value) => Number(value) <= 25,
+                                () => 'must be <= 25',
+                              ),
+                            )
+                              .Decode((value) => Number(value))
                               .Encode((value) => String(value)),
                             Type.Null(),
                           ]),
                         ),
                         disabled: Type.Optional(
                           Type.Union([
-                            Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                              .Decode((value) => value === 'true')
+                            Codec(
+                              Type.String({
+                                pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                              }),
+                            )
+                              .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                               .Encode((value) => (value ? 'true' : 'false')),
                             Type.Null(),
                           ]),
                         ),
                         required: Type.Optional(
                           Type.Union([
-                            Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                              .Decode((value) => value === 'true')
+                            Codec(
+                              Type.String({
+                                pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                              }),
+                            )
+                              .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                               .Encode((value) => (value ? 'true' : 'false')),
                             Type.Null(),
                           ]),
@@ -667,8 +874,14 @@ export const channelsHandler = new Hono()
                         type: MessageComponentTypesSchema,
                         id: Type.Optional(
                           Type.Union([
-                            Codec(Type.String())
-                              .Decode((value) => Number.parseInt(value, 10))
+                            Codec(
+                              Type.Refine(
+                                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                (value) => Number(value) >= 0,
+                                () => 'must be >= 0',
+                              ),
+                            )
+                              .Decode((value) => Number(value))
                               .Encode((value) => String(value)),
                             Type.Null(),
                           ]),
@@ -679,32 +892,60 @@ export const channelsHandler = new Hono()
                         ),
                         min_values: Type.Optional(
                           Type.Union([
-                            Codec(Type.String())
-                              .Decode((value) => Number.parseInt(value, 10))
+                            Codec(
+                              Type.Refine(
+                                Type.Refine(
+                                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                  (value) => Number(value) >= 0,
+                                  () => 'must be >= 0',
+                                ),
+                                (value) => Number(value) <= 25,
+                                () => 'must be <= 25',
+                              ),
+                            )
+                              .Decode((value) => Number(value))
                               .Encode((value) => String(value)),
                             Type.Null(),
                           ]),
                         ),
                         max_values: Type.Optional(
                           Type.Union([
-                            Codec(Type.String())
-                              .Decode((value) => Number.parseInt(value, 10))
+                            Codec(
+                              Type.Refine(
+                                Type.Refine(
+                                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                  (value) => Number(value) >= 1,
+                                  () => 'must be >= 1',
+                                ),
+                                (value) => Number(value) <= 25,
+                                () => 'must be <= 25',
+                              ),
+                            )
+                              .Decode((value) => Number(value))
                               .Encode((value) => String(value)),
                             Type.Null(),
                           ]),
                         ),
                         disabled: Type.Optional(
                           Type.Union([
-                            Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                              .Decode((value) => value === 'true')
+                            Codec(
+                              Type.String({
+                                pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                              }),
+                            )
+                              .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                               .Encode((value) => (value ? 'true' : 'false')),
                             Type.Null(),
                           ]),
                         ),
                         required: Type.Optional(
                           Type.Union([
-                            Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                              .Decode((value) => value === 'true')
+                            Codec(
+                              Type.String({
+                                pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                              }),
+                            )
+                              .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                               .Encode((value) => (value ? 'true' : 'false')),
                             Type.Null(),
                           ]),
@@ -718,17 +959,19 @@ export const channelsHandler = new Hono()
                             ),
                             default: Type.Optional(
                               Type.Union([
-                                Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                  .Decode((value) => value === 'true')
+                                Codec(
+                                  Type.String({
+                                    pattern:
+                                      /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                  }),
+                                )
+                                  .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                   .Encode((value) => (value ? 'true' : 'false')),
                                 Type.Null(),
                               ]),
                             ),
                             emoji: Type.Optional(
-                              Type.Union([
-                                Type.Union([Type.Null(), Type.Null()]),
-                                ComponentEmojiForRequestSchema,
-                              ]),
+                              Type.Union([Type.Null(), ComponentEmojiForRequestSchema]),
                             ),
                           }),
                           { minItems: 1, maxItems: 25 },
@@ -738,8 +981,14 @@ export const channelsHandler = new Hono()
                         type: MessageComponentTypesSchema,
                         id: Type.Optional(
                           Type.Union([
-                            Codec(Type.String())
-                              .Decode((value) => Number.parseInt(value, 10))
+                            Codec(
+                              Type.Refine(
+                                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                (value) => Number(value) >= 0,
+                                () => 'must be >= 0',
+                              ),
+                            )
+                              .Decode((value) => Number(value))
                               .Encode((value) => String(value)),
                             Type.Null(),
                           ]),
@@ -750,32 +999,60 @@ export const channelsHandler = new Hono()
                         ),
                         min_values: Type.Optional(
                           Type.Union([
-                            Codec(Type.String())
-                              .Decode((value) => Number.parseInt(value, 10))
+                            Codec(
+                              Type.Refine(
+                                Type.Refine(
+                                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                  (value) => Number(value) >= 0,
+                                  () => 'must be >= 0',
+                                ),
+                                (value) => Number(value) <= 25,
+                                () => 'must be <= 25',
+                              ),
+                            )
+                              .Decode((value) => Number(value))
                               .Encode((value) => String(value)),
                             Type.Null(),
                           ]),
                         ),
                         max_values: Type.Optional(
                           Type.Union([
-                            Codec(Type.String())
-                              .Decode((value) => Number.parseInt(value, 10))
+                            Codec(
+                              Type.Refine(
+                                Type.Refine(
+                                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                  (value) => Number(value) >= 1,
+                                  () => 'must be >= 1',
+                                ),
+                                (value) => Number(value) <= 25,
+                                () => 'must be <= 25',
+                              ),
+                            )
+                              .Decode((value) => Number(value))
                               .Encode((value) => String(value)),
                             Type.Null(),
                           ]),
                         ),
                         disabled: Type.Optional(
                           Type.Union([
-                            Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                              .Decode((value) => value === 'true')
+                            Codec(
+                              Type.String({
+                                pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                              }),
+                            )
+                              .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                               .Encode((value) => (value ? 'true' : 'false')),
                             Type.Null(),
                           ]),
                         ),
                         required: Type.Optional(
                           Type.Union([
-                            Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                              .Decode((value) => value === 'true')
+                            Codec(
+                              Type.String({
+                                pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                              }),
+                            )
+                              .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                               .Encode((value) => (value ? 'true' : 'false')),
                             Type.Null(),
                           ]),
@@ -795,16 +1072,32 @@ export const channelsHandler = new Hono()
                   type: MessageComponentTypesSchema,
                   id: Type.Optional(
                     Type.Union([
-                      Codec(Type.String())
-                        .Decode((value) => Number.parseInt(value, 10))
+                      Codec(
+                        Type.Refine(
+                          Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                          (value) => Number(value) >= 0,
+                          () => 'must be >= 0',
+                        ),
+                      )
+                        .Decode((value) => Number(value))
                         .Encode((value) => String(value)),
                       Type.Null(),
                     ]),
                   ),
                   accent_color: Type.Optional(
                     Type.Union([
-                      Codec(Type.String())
-                        .Decode((value) => Number.parseInt(value, 10))
+                      Codec(
+                        Type.Refine(
+                          Type.Refine(
+                            Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                            (value) => Number(value) >= 0,
+                            () => 'must be >= 0',
+                          ),
+                          (value) => Number(value) <= 16777215,
+                          () => 'must be <= 16777215',
+                        ),
+                      )
+                        .Decode((value) => Number(value))
                         .Encode((value) => String(value)),
                       Type.Null(),
                     ]),
@@ -815,8 +1108,14 @@ export const channelsHandler = new Hono()
                         type: MessageComponentTypesSchema,
                         id: Type.Optional(
                           Type.Union([
-                            Codec(Type.String())
-                              .Decode((value) => Number.parseInt(value, 10))
+                            Codec(
+                              Type.Refine(
+                                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                (value) => Number(value) >= 0,
+                                () => 'must be >= 0',
+                              ),
+                            )
+                              .Decode((value) => Number(value))
                               .Encode((value) => String(value)),
                             Type.Null(),
                           ]),
@@ -827,8 +1126,14 @@ export const channelsHandler = new Hono()
                               type: MessageComponentTypesSchema,
                               id: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.String())
-                                    .Decode((value) => Number.parseInt(value, 10))
+                                  Codec(
+                                    Type.Refine(
+                                      Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                      (value) => Number(value) >= 0,
+                                      () => 'must be >= 0',
+                                    ),
+                                  )
+                                    .Decode((value) => Number(value))
                                     .Encode((value) => String(value)),
                                   Type.Null(),
                                 ]),
@@ -845,8 +1150,13 @@ export const channelsHandler = new Hono()
                               ),
                               disabled: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                    .Decode((value) => value === 'true')
+                                  Codec(
+                                    Type.String({
+                                      pattern:
+                                        /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                    }),
+                                  )
+                                    .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                     .Encode((value) => (value ? 'true' : 'false')),
                                   Type.Null(),
                                 ]),
@@ -857,25 +1167,23 @@ export const channelsHandler = new Hono()
                                   Type.Null(),
                                 ]),
                               ),
-                              sku_id: Type.Optional(
-                                Type.Union([
-                                  Type.Union([Type.Null(), Type.Null()]),
-                                  SnowflakeTypeSchema,
-                                ]),
-                              ),
+                              sku_id: Type.Optional(Type.Union([Type.Null(), SnowflakeTypeSchema])),
                               emoji: Type.Optional(
-                                Type.Union([
-                                  Type.Union([Type.Null(), Type.Null()]),
-                                  ComponentEmojiForRequestSchema,
-                                ]),
+                                Type.Union([Type.Null(), ComponentEmojiForRequestSchema]),
                               ),
                             }),
                             Type.Object({
                               type: MessageComponentTypesSchema,
                               id: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.String())
-                                    .Decode((value) => Number.parseInt(value, 10))
+                                  Codec(
+                                    Type.Refine(
+                                      Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                      (value) => Number(value) >= 0,
+                                      () => 'must be >= 0',
+                                    ),
+                                  )
+                                    .Decode((value) => Number(value))
                                     .Encode((value) => String(value)),
                                   Type.Null(),
                                 ]),
@@ -886,32 +1194,62 @@ export const channelsHandler = new Hono()
                               ),
                               min_values: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.String())
-                                    .Decode((value) => Number.parseInt(value, 10))
+                                  Codec(
+                                    Type.Refine(
+                                      Type.Refine(
+                                        Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                        (value) => Number(value) >= 0,
+                                        () => 'must be >= 0',
+                                      ),
+                                      (value) => Number(value) <= 25,
+                                      () => 'must be <= 25',
+                                    ),
+                                  )
+                                    .Decode((value) => Number(value))
                                     .Encode((value) => String(value)),
                                   Type.Null(),
                                 ]),
                               ),
                               max_values: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.String())
-                                    .Decode((value) => Number.parseInt(value, 10))
+                                  Codec(
+                                    Type.Refine(
+                                      Type.Refine(
+                                        Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                        (value) => Number(value) >= 1,
+                                        () => 'must be >= 1',
+                                      ),
+                                      (value) => Number(value) <= 25,
+                                      () => 'must be <= 25',
+                                    ),
+                                  )
+                                    .Decode((value) => Number(value))
                                     .Encode((value) => String(value)),
                                   Type.Null(),
                                 ]),
                               ),
                               disabled: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                    .Decode((value) => value === 'true')
+                                  Codec(
+                                    Type.String({
+                                      pattern:
+                                        /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                    }),
+                                  )
+                                    .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                     .Encode((value) => (value ? 'true' : 'false')),
                                   Type.Null(),
                                 ]),
                               ),
                               required: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                    .Decode((value) => value === 'true')
+                                  Codec(
+                                    Type.String({
+                                      pattern:
+                                        /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                    }),
+                                  )
+                                    .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                     .Encode((value) => (value ? 'true' : 'false')),
                                   Type.Null(),
                                 ]),
@@ -933,8 +1271,14 @@ export const channelsHandler = new Hono()
                               type: MessageComponentTypesSchema,
                               id: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.String())
-                                    .Decode((value) => Number.parseInt(value, 10))
+                                  Codec(
+                                    Type.Refine(
+                                      Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                      (value) => Number(value) >= 0,
+                                      () => 'must be >= 0',
+                                    ),
+                                  )
+                                    .Decode((value) => Number(value))
                                     .Encode((value) => String(value)),
                                   Type.Null(),
                                 ]),
@@ -945,32 +1289,62 @@ export const channelsHandler = new Hono()
                               ),
                               min_values: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.String())
-                                    .Decode((value) => Number.parseInt(value, 10))
+                                  Codec(
+                                    Type.Refine(
+                                      Type.Refine(
+                                        Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                        (value) => Number(value) >= 0,
+                                        () => 'must be >= 0',
+                                      ),
+                                      (value) => Number(value) <= 25,
+                                      () => 'must be <= 25',
+                                    ),
+                                  )
+                                    .Decode((value) => Number(value))
                                     .Encode((value) => String(value)),
                                   Type.Null(),
                                 ]),
                               ),
                               max_values: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.String())
-                                    .Decode((value) => Number.parseInt(value, 10))
+                                  Codec(
+                                    Type.Refine(
+                                      Type.Refine(
+                                        Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                        (value) => Number(value) >= 1,
+                                        () => 'must be >= 1',
+                                      ),
+                                      (value) => Number(value) <= 25,
+                                      () => 'must be <= 25',
+                                    ),
+                                  )
+                                    .Decode((value) => Number(value))
                                     .Encode((value) => String(value)),
                                   Type.Null(),
                                 ]),
                               ),
                               disabled: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                    .Decode((value) => value === 'true')
+                                  Codec(
+                                    Type.String({
+                                      pattern:
+                                        /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                    }),
+                                  )
+                                    .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                     .Encode((value) => (value ? 'true' : 'false')),
                                   Type.Null(),
                                 ]),
                               ),
                               required: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                    .Decode((value) => value === 'true')
+                                  Codec(
+                                    Type.String({
+                                      pattern:
+                                        /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                    }),
+                                  )
+                                    .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                     .Encode((value) => (value ? 'true' : 'false')),
                                   Type.Null(),
                                 ]),
@@ -992,8 +1366,14 @@ export const channelsHandler = new Hono()
                               type: MessageComponentTypesSchema,
                               id: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.String())
-                                    .Decode((value) => Number.parseInt(value, 10))
+                                  Codec(
+                                    Type.Refine(
+                                      Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                      (value) => Number(value) >= 0,
+                                      () => 'must be >= 0',
+                                    ),
+                                  )
+                                    .Decode((value) => Number(value))
                                     .Encode((value) => String(value)),
                                   Type.Null(),
                                 ]),
@@ -1004,32 +1384,62 @@ export const channelsHandler = new Hono()
                               ),
                               min_values: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.String())
-                                    .Decode((value) => Number.parseInt(value, 10))
+                                  Codec(
+                                    Type.Refine(
+                                      Type.Refine(
+                                        Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                        (value) => Number(value) >= 0,
+                                        () => 'must be >= 0',
+                                      ),
+                                      (value) => Number(value) <= 25,
+                                      () => 'must be <= 25',
+                                    ),
+                                  )
+                                    .Decode((value) => Number(value))
                                     .Encode((value) => String(value)),
                                   Type.Null(),
                                 ]),
                               ),
                               max_values: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.String())
-                                    .Decode((value) => Number.parseInt(value, 10))
+                                  Codec(
+                                    Type.Refine(
+                                      Type.Refine(
+                                        Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                        (value) => Number(value) >= 1,
+                                        () => 'must be >= 1',
+                                      ),
+                                      (value) => Number(value) <= 25,
+                                      () => 'must be <= 25',
+                                    ),
+                                  )
+                                    .Decode((value) => Number(value))
                                     .Encode((value) => String(value)),
                                   Type.Null(),
                                 ]),
                               ),
                               disabled: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                    .Decode((value) => value === 'true')
+                                  Codec(
+                                    Type.String({
+                                      pattern:
+                                        /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                    }),
+                                  )
+                                    .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                     .Encode((value) => (value ? 'true' : 'false')),
                                   Type.Null(),
                                 ]),
                               ),
                               required: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                    .Decode((value) => value === 'true')
+                                  Codec(
+                                    Type.String({
+                                      pattern:
+                                        /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                    }),
+                                  )
+                                    .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                     .Encode((value) => (value ? 'true' : 'false')),
                                   Type.Null(),
                                 ]),
@@ -1045,8 +1455,14 @@ export const channelsHandler = new Hono()
                               type: MessageComponentTypesSchema,
                               id: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.String())
-                                    .Decode((value) => Number.parseInt(value, 10))
+                                  Codec(
+                                    Type.Refine(
+                                      Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                      (value) => Number(value) >= 0,
+                                      () => 'must be >= 0',
+                                    ),
+                                  )
+                                    .Decode((value) => Number(value))
                                     .Encode((value) => String(value)),
                                   Type.Null(),
                                 ]),
@@ -1057,32 +1473,62 @@ export const channelsHandler = new Hono()
                               ),
                               min_values: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.String())
-                                    .Decode((value) => Number.parseInt(value, 10))
+                                  Codec(
+                                    Type.Refine(
+                                      Type.Refine(
+                                        Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                        (value) => Number(value) >= 0,
+                                        () => 'must be >= 0',
+                                      ),
+                                      (value) => Number(value) <= 25,
+                                      () => 'must be <= 25',
+                                    ),
+                                  )
+                                    .Decode((value) => Number(value))
                                     .Encode((value) => String(value)),
                                   Type.Null(),
                                 ]),
                               ),
                               max_values: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.String())
-                                    .Decode((value) => Number.parseInt(value, 10))
+                                  Codec(
+                                    Type.Refine(
+                                      Type.Refine(
+                                        Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                        (value) => Number(value) >= 1,
+                                        () => 'must be >= 1',
+                                      ),
+                                      (value) => Number(value) <= 25,
+                                      () => 'must be <= 25',
+                                    ),
+                                  )
+                                    .Decode((value) => Number(value))
                                     .Encode((value) => String(value)),
                                   Type.Null(),
                                 ]),
                               ),
                               disabled: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                    .Decode((value) => value === 'true')
+                                  Codec(
+                                    Type.String({
+                                      pattern:
+                                        /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                    }),
+                                  )
+                                    .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                     .Encode((value) => (value ? 'true' : 'false')),
                                   Type.Null(),
                                 ]),
                               ),
                               required: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                    .Decode((value) => value === 'true')
+                                  Codec(
+                                    Type.String({
+                                      pattern:
+                                        /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                    }),
+                                  )
+                                    .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                     .Encode((value) => (value ? 'true' : 'false')),
                                   Type.Null(),
                                 ]),
@@ -1097,18 +1543,20 @@ export const channelsHandler = new Hono()
                                   default: Type.Optional(
                                     Type.Union([
                                       Codec(
-                                        Type.Union([Type.Literal('true'), Type.Literal('false')]),
+                                        Type.String({
+                                          pattern:
+                                            /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                        }),
                                       )
-                                        .Decode((value) => value === 'true')
+                                        .Decode((value) =>
+                                          /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                        )
                                         .Encode((value) => (value ? 'true' : 'false')),
                                       Type.Null(),
                                     ]),
                                   ),
                                   emoji: Type.Optional(
-                                    Type.Union([
-                                      Type.Union([Type.Null(), Type.Null()]),
-                                      ComponentEmojiForRequestSchema,
-                                    ]),
+                                    Type.Union([Type.Null(), ComponentEmojiForRequestSchema]),
                                   ),
                                 }),
                                 { minItems: 1, maxItems: 25 },
@@ -1118,8 +1566,14 @@ export const channelsHandler = new Hono()
                               type: MessageComponentTypesSchema,
                               id: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.String())
-                                    .Decode((value) => Number.parseInt(value, 10))
+                                  Codec(
+                                    Type.Refine(
+                                      Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                      (value) => Number(value) >= 0,
+                                      () => 'must be >= 0',
+                                    ),
+                                  )
+                                    .Decode((value) => Number(value))
                                     .Encode((value) => String(value)),
                                   Type.Null(),
                                 ]),
@@ -1130,32 +1584,62 @@ export const channelsHandler = new Hono()
                               ),
                               min_values: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.String())
-                                    .Decode((value) => Number.parseInt(value, 10))
+                                  Codec(
+                                    Type.Refine(
+                                      Type.Refine(
+                                        Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                        (value) => Number(value) >= 0,
+                                        () => 'must be >= 0',
+                                      ),
+                                      (value) => Number(value) <= 25,
+                                      () => 'must be <= 25',
+                                    ),
+                                  )
+                                    .Decode((value) => Number(value))
                                     .Encode((value) => String(value)),
                                   Type.Null(),
                                 ]),
                               ),
                               max_values: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.String())
-                                    .Decode((value) => Number.parseInt(value, 10))
+                                  Codec(
+                                    Type.Refine(
+                                      Type.Refine(
+                                        Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                        (value) => Number(value) >= 1,
+                                        () => 'must be >= 1',
+                                      ),
+                                      (value) => Number(value) <= 25,
+                                      () => 'must be <= 25',
+                                    ),
+                                  )
+                                    .Decode((value) => Number(value))
                                     .Encode((value) => String(value)),
                                   Type.Null(),
                                 ]),
                               ),
                               disabled: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                    .Decode((value) => value === 'true')
+                                  Codec(
+                                    Type.String({
+                                      pattern:
+                                        /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                    }),
+                                  )
+                                    .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                     .Encode((value) => (value ? 'true' : 'false')),
                                   Type.Null(),
                                 ]),
                               ),
                               required: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                    .Decode((value) => value === 'true')
+                                  Codec(
+                                    Type.String({
+                                      pattern:
+                                        /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                    }),
+                                  )
+                                    .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                     .Encode((value) => (value ? 'true' : 'false')),
                                   Type.Null(),
                                 ]),
@@ -1175,16 +1659,26 @@ export const channelsHandler = new Hono()
                         type: MessageComponentTypesSchema,
                         id: Type.Optional(
                           Type.Union([
-                            Codec(Type.String())
-                              .Decode((value) => Number.parseInt(value, 10))
+                            Codec(
+                              Type.Refine(
+                                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                (value) => Number(value) >= 0,
+                                () => 'must be >= 0',
+                              ),
+                            )
+                              .Decode((value) => Number(value))
                               .Encode((value) => String(value)),
                             Type.Null(),
                           ]),
                         ),
                         spoiler: Type.Optional(
                           Type.Union([
-                            Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                              .Decode((value) => value === 'true')
+                            Codec(
+                              Type.String({
+                                pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                              }),
+                            )
+                              .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                               .Encode((value) => (value ? 'true' : 'false')),
                             Type.Null(),
                           ]),
@@ -1195,8 +1689,14 @@ export const channelsHandler = new Hono()
                         type: MessageComponentTypesSchema,
                         id: Type.Optional(
                           Type.Union([
-                            Codec(Type.String())
-                              .Decode((value) => Number.parseInt(value, 10))
+                            Codec(
+                              Type.Refine(
+                                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                (value) => Number(value) >= 0,
+                                () => 'must be >= 0',
+                              ),
+                            )
+                              .Decode((value) => Number(value))
                               .Encode((value) => String(value)),
                             Type.Null(),
                           ]),
@@ -1211,8 +1711,13 @@ export const channelsHandler = new Hono()
                             ),
                             spoiler: Type.Optional(
                               Type.Union([
-                                Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                  .Decode((value) => value === 'true')
+                                Codec(
+                                  Type.String({
+                                    pattern:
+                                      /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                  }),
+                                )
+                                  .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                   .Encode((value) => (value ? 'true' : 'false')),
                                 Type.Null(),
                               ]),
@@ -1226,8 +1731,14 @@ export const channelsHandler = new Hono()
                         type: MessageComponentTypesSchema,
                         id: Type.Optional(
                           Type.Union([
-                            Codec(Type.String())
-                              .Decode((value) => Number.parseInt(value, 10))
+                            Codec(
+                              Type.Refine(
+                                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                (value) => Number(value) >= 0,
+                                () => 'must be >= 0',
+                              ),
+                            )
+                              .Decode((value) => Number(value))
                               .Encode((value) => String(value)),
                             Type.Null(),
                           ]),
@@ -1237,8 +1748,14 @@ export const channelsHandler = new Hono()
                             type: MessageComponentTypesSchema,
                             id: Type.Optional(
                               Type.Union([
-                                Codec(Type.String())
-                                  .Decode((value) => Number.parseInt(value, 10))
+                                Codec(
+                                  Type.Refine(
+                                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                    (value) => Number(value) >= 0,
+                                    () => 'must be >= 0',
+                                  ),
+                                )
+                                  .Decode((value) => Number(value))
                                   .Encode((value) => String(value)),
                                 Type.Null(),
                               ]),
@@ -1252,8 +1769,14 @@ export const channelsHandler = new Hono()
                             type: MessageComponentTypesSchema,
                             id: Type.Optional(
                               Type.Union([
-                                Codec(Type.String())
-                                  .Decode((value) => Number.parseInt(value, 10))
+                                Codec(
+                                  Type.Refine(
+                                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                    (value) => Number(value) >= 0,
+                                    () => 'must be >= 0',
+                                  ),
+                                )
+                                  .Decode((value) => Number(value))
                                   .Encode((value) => String(value)),
                                 Type.Null(),
                               ]),
@@ -1270,8 +1793,13 @@ export const channelsHandler = new Hono()
                             ),
                             disabled: Type.Optional(
                               Type.Union([
-                                Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                  .Decode((value) => value === 'true')
+                                Codec(
+                                  Type.String({
+                                    pattern:
+                                      /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                  }),
+                                )
+                                  .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                   .Encode((value) => (value ? 'true' : 'false')),
                                 Type.Null(),
                               ]),
@@ -1282,25 +1810,23 @@ export const channelsHandler = new Hono()
                                 Type.Null(),
                               ]),
                             ),
-                            sku_id: Type.Optional(
-                              Type.Union([
-                                Type.Union([Type.Null(), Type.Null()]),
-                                SnowflakeTypeSchema,
-                              ]),
-                            ),
+                            sku_id: Type.Optional(Type.Union([Type.Null(), SnowflakeTypeSchema])),
                             emoji: Type.Optional(
-                              Type.Union([
-                                Type.Union([Type.Null(), Type.Null()]),
-                                ComponentEmojiForRequestSchema,
-                              ]),
+                              Type.Union([Type.Null(), ComponentEmojiForRequestSchema]),
                             ),
                           }),
                           Type.Object({
                             type: MessageComponentTypesSchema,
                             id: Type.Optional(
                               Type.Union([
-                                Codec(Type.String())
-                                  .Decode((value) => Number.parseInt(value, 10))
+                                Codec(
+                                  Type.Refine(
+                                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                    (value) => Number(value) >= 0,
+                                    () => 'must be >= 0',
+                                  ),
+                                )
+                                  .Decode((value) => Number(value))
                                   .Encode((value) => String(value)),
                                 Type.Null(),
                               ]),
@@ -1313,8 +1839,13 @@ export const channelsHandler = new Hono()
                             ),
                             spoiler: Type.Optional(
                               Type.Union([
-                                Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                  .Decode((value) => value === 'true')
+                                Codec(
+                                  Type.String({
+                                    pattern:
+                                      /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                  }),
+                                )
+                                  .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                   .Encode((value) => (value ? 'true' : 'false')),
                                 Type.Null(),
                               ]),
@@ -1327,22 +1858,29 @@ export const channelsHandler = new Hono()
                         type: MessageComponentTypesSchema,
                         id: Type.Optional(
                           Type.Union([
-                            Codec(Type.String())
-                              .Decode((value) => Number.parseInt(value, 10))
+                            Codec(
+                              Type.Refine(
+                                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                (value) => Number(value) >= 0,
+                                () => 'must be >= 0',
+                              ),
+                            )
+                              .Decode((value) => Number(value))
                               .Encode((value) => String(value)),
                             Type.Null(),
                           ]),
                         ),
                         spacing: Type.Optional(
-                          Type.Union([
-                            Type.Union([Type.Null(), Type.Null()]),
-                            MessageComponentSeparatorSpacingSizeSchema,
-                          ]),
+                          Type.Union([Type.Null(), MessageComponentSeparatorSpacingSizeSchema]),
                         ),
                         divider: Type.Optional(
                           Type.Union([
-                            Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                              .Decode((value) => value === 'true')
+                            Codec(
+                              Type.String({
+                                pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                              }),
+                            )
+                              .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                               .Encode((value) => (value ? 'true' : 'false')),
                             Type.Null(),
                           ]),
@@ -1352,8 +1890,14 @@ export const channelsHandler = new Hono()
                         type: MessageComponentTypesSchema,
                         id: Type.Optional(
                           Type.Union([
-                            Codec(Type.String())
-                              .Decode((value) => Number.parseInt(value, 10))
+                            Codec(
+                              Type.Refine(
+                                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                (value) => Number(value) >= 0,
+                                () => 'must be >= 0',
+                              ),
+                            )
+                              .Decode((value) => Number(value))
                               .Encode((value) => String(value)),
                             Type.Null(),
                           ]),
@@ -1365,8 +1909,12 @@ export const channelsHandler = new Hono()
                   ),
                   spoiler: Type.Optional(
                     Type.Union([
-                      Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                        .Decode((value) => value === 'true')
+                      Codec(
+                        Type.String({
+                          pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                        }),
+                      )
+                        .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                         .Encode((value) => (value ? 'true' : 'false')),
                       Type.Null(),
                     ]),
@@ -1376,16 +1924,26 @@ export const channelsHandler = new Hono()
                   type: MessageComponentTypesSchema,
                   id: Type.Optional(
                     Type.Union([
-                      Codec(Type.String())
-                        .Decode((value) => Number.parseInt(value, 10))
+                      Codec(
+                        Type.Refine(
+                          Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                          (value) => Number(value) >= 0,
+                          () => 'must be >= 0',
+                        ),
+                      )
+                        .Decode((value) => Number(value))
                         .Encode((value) => String(value)),
                       Type.Null(),
                     ]),
                   ),
                   spoiler: Type.Optional(
                     Type.Union([
-                      Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                        .Decode((value) => value === 'true')
+                      Codec(
+                        Type.String({
+                          pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                        }),
+                      )
+                        .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                         .Encode((value) => (value ? 'true' : 'false')),
                       Type.Null(),
                     ]),
@@ -1396,8 +1954,14 @@ export const channelsHandler = new Hono()
                   type: MessageComponentTypesSchema,
                   id: Type.Optional(
                     Type.Union([
-                      Codec(Type.String())
-                        .Decode((value) => Number.parseInt(value, 10))
+                      Codec(
+                        Type.Refine(
+                          Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                          (value) => Number(value) >= 0,
+                          () => 'must be >= 0',
+                        ),
+                      )
+                        .Decode((value) => Number(value))
                         .Encode((value) => String(value)),
                       Type.Null(),
                     ]),
@@ -1409,8 +1973,12 @@ export const channelsHandler = new Hono()
                       ),
                       spoiler: Type.Optional(
                         Type.Union([
-                          Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                            .Decode((value) => value === 'true')
+                          Codec(
+                            Type.String({
+                              pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                            }),
+                          )
+                            .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                             .Encode((value) => (value ? 'true' : 'false')),
                           Type.Null(),
                         ]),
@@ -1424,8 +1992,14 @@ export const channelsHandler = new Hono()
                   type: MessageComponentTypesSchema,
                   id: Type.Optional(
                     Type.Union([
-                      Codec(Type.String())
-                        .Decode((value) => Number.parseInt(value, 10))
+                      Codec(
+                        Type.Refine(
+                          Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                          (value) => Number(value) >= 0,
+                          () => 'must be >= 0',
+                        ),
+                      )
+                        .Decode((value) => Number(value))
                         .Encode((value) => String(value)),
                       Type.Null(),
                     ]),
@@ -1435,8 +2009,14 @@ export const channelsHandler = new Hono()
                       type: MessageComponentTypesSchema,
                       id: Type.Optional(
                         Type.Union([
-                          Codec(Type.String())
-                            .Decode((value) => Number.parseInt(value, 10))
+                          Codec(
+                            Type.Refine(
+                              Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                              (value) => Number(value) >= 0,
+                              () => 'must be >= 0',
+                            ),
+                          )
+                            .Decode((value) => Number(value))
                             .Encode((value) => String(value)),
                           Type.Null(),
                         ]),
@@ -1450,8 +2030,14 @@ export const channelsHandler = new Hono()
                       type: MessageComponentTypesSchema,
                       id: Type.Optional(
                         Type.Union([
-                          Codec(Type.String())
-                            .Decode((value) => Number.parseInt(value, 10))
+                          Codec(
+                            Type.Refine(
+                              Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                              (value) => Number(value) >= 0,
+                              () => 'must be >= 0',
+                            ),
+                          )
+                            .Decode((value) => Number(value))
                             .Encode((value) => String(value)),
                           Type.Null(),
                         ]),
@@ -1465,8 +2051,12 @@ export const channelsHandler = new Hono()
                       ),
                       disabled: Type.Optional(
                         Type.Union([
-                          Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                            .Decode((value) => value === 'true')
+                          Codec(
+                            Type.String({
+                              pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                            }),
+                          )
+                            .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                             .Encode((value) => (value ? 'true' : 'false')),
                           Type.Null(),
                         ]),
@@ -1474,22 +2064,23 @@ export const channelsHandler = new Hono()
                       url: Type.Optional(
                         Type.Union([Type.String({ format: 'uri', maxLength: 512 }), Type.Null()]),
                       ),
-                      sku_id: Type.Optional(
-                        Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
-                      ),
+                      sku_id: Type.Optional(Type.Union([Type.Null(), SnowflakeTypeSchema])),
                       emoji: Type.Optional(
-                        Type.Union([
-                          Type.Union([Type.Null(), Type.Null()]),
-                          ComponentEmojiForRequestSchema,
-                        ]),
+                        Type.Union([Type.Null(), ComponentEmojiForRequestSchema]),
                       ),
                     }),
                     Type.Object({
                       type: MessageComponentTypesSchema,
                       id: Type.Optional(
                         Type.Union([
-                          Codec(Type.String())
-                            .Decode((value) => Number.parseInt(value, 10))
+                          Codec(
+                            Type.Refine(
+                              Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                              (value) => Number(value) >= 0,
+                              () => 'must be >= 0',
+                            ),
+                          )
+                            .Decode((value) => Number(value))
                             .Encode((value) => String(value)),
                           Type.Null(),
                         ]),
@@ -1499,8 +2090,12 @@ export const channelsHandler = new Hono()
                       ),
                       spoiler: Type.Optional(
                         Type.Union([
-                          Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                            .Decode((value) => value === 'true')
+                          Codec(
+                            Type.String({
+                              pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                            }),
+                          )
+                            .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                             .Encode((value) => (value ? 'true' : 'false')),
                           Type.Null(),
                         ]),
@@ -1513,22 +2108,29 @@ export const channelsHandler = new Hono()
                   type: MessageComponentTypesSchema,
                   id: Type.Optional(
                     Type.Union([
-                      Codec(Type.String())
-                        .Decode((value) => Number.parseInt(value, 10))
+                      Codec(
+                        Type.Refine(
+                          Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                          (value) => Number(value) >= 0,
+                          () => 'must be >= 0',
+                        ),
+                      )
+                        .Decode((value) => Number(value))
                         .Encode((value) => String(value)),
                       Type.Null(),
                     ]),
                   ),
                   spacing: Type.Optional(
-                    Type.Union([
-                      Type.Union([Type.Null(), Type.Null()]),
-                      MessageComponentSeparatorSpacingSizeSchema,
-                    ]),
+                    Type.Union([Type.Null(), MessageComponentSeparatorSpacingSizeSchema]),
                   ),
                   divider: Type.Optional(
                     Type.Union([
-                      Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                        .Decode((value) => value === 'true')
+                      Codec(
+                        Type.String({
+                          pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                        }),
+                      )
+                        .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                         .Encode((value) => (value ? 'true' : 'false')),
                       Type.Null(),
                     ]),
@@ -1538,8 +2140,14 @@ export const channelsHandler = new Hono()
                   type: MessageComponentTypesSchema,
                   id: Type.Optional(
                     Type.Union([
-                      Codec(Type.String())
-                        .Decode((value) => Number.parseInt(value, 10))
+                      Codec(
+                        Type.Refine(
+                          Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                          (value) => Number(value) >= 0,
+                          () => 'must be >= 0',
+                        ),
+                      )
+                        .Decode((value) => Number(value))
                         .Encode((value) => String(value)),
                       Type.Null(),
                     ]),
@@ -1554,8 +2162,8 @@ export const channelsHandler = new Hono()
         ),
         flags: Type.Optional(
           Type.Union([
-            Codec(Type.String())
-              .Decode((value) => Number.parseInt(value, 10))
+            Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+              .Decode((value) => Number(value))
               .Encode((value) => String(value)),
             Type.Null(),
           ]),
@@ -1573,7 +2181,19 @@ export const channelsHandler = new Hono()
                 ),
                 duration_secs: Type.Optional(
                   Type.Union([
-                    Codec(Type.String())
+                    Codec(
+                      Type.Refine(
+                        Type.Refine(
+                          Type.String({
+                            pattern: '^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$',
+                          }),
+                          (value) => Number(value) >= 0,
+                          () => 'must be >= 0',
+                        ),
+                        (value) => Number(value) <= 2147483647,
+                        () => 'must be <= 2147483647',
+                      ),
+                    )
                       .Decode((value) => Number(value))
                       .Encode((value) => String(value)),
                     Type.Null(),
@@ -1583,8 +2203,12 @@ export const channelsHandler = new Hono()
                 title: Type.Optional(Type.Union([Type.String({ maxLength: 1024 }), Type.Null()])),
                 is_spoiler: Type.Optional(
                   Type.Union([
-                    Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                      .Decode((value) => value === 'true')
+                    Codec(
+                      Type.String({
+                        pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                      }),
+                    )
+                      .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                       .Encode((value) => (value ? 'true' : 'false')),
                     Type.Null(),
                   ]),
@@ -1597,7 +2221,7 @@ export const channelsHandler = new Hono()
         ),
         poll: Type.Optional(
           Type.Union([
-            Type.Union([Type.Null(), Type.Null()]),
+            Type.Null(),
             Type.Object({
               question: Type.Object(
                 {
@@ -1614,13 +2238,12 @@ export const channelsHandler = new Hono()
                   emoji: Type.Optional(
                     Type.Union(
                       [
-                        Type.Union([Type.Null(), Type.Null()]),
+                        Type.Null(),
                         Type.Object({
                           id: Type.Optional(
-                            Type.Union(
-                              [Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema],
-                              { description: 'The ID of the custom emoji' },
-                            ),
+                            Type.Union([Type.Null(), SnowflakeTypeSchema], {
+                              description: 'The ID of the custom emoji',
+                            }),
                           ),
                           name: Type.Optional(
                             Type.Union([
@@ -1634,8 +2257,13 @@ export const channelsHandler = new Hono()
                           ),
                           animated: Type.Optional(
                             Type.Union([
-                              Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                .Decode((value) => value === 'true')
+                              Codec(
+                                Type.String({
+                                  pattern:
+                                    /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                }),
+                              )
+                                .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                 .Encode((value) => (value ? 'true' : 'false')),
                               Type.Null(),
                             ]),
@@ -1665,13 +2293,12 @@ export const channelsHandler = new Hono()
                       emoji: Type.Optional(
                         Type.Union(
                           [
-                            Type.Union([Type.Null(), Type.Null()]),
+                            Type.Null(),
                             Type.Object({
                               id: Type.Optional(
-                                Type.Union(
-                                  [Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema],
-                                  { description: 'The ID of the custom emoji' },
-                                ),
+                                Type.Union([Type.Null(), SnowflakeTypeSchema], {
+                                  description: 'The ID of the custom emoji',
+                                }),
                               ),
                               name: Type.Optional(
                                 Type.Union([
@@ -1685,8 +2312,13 @@ export const channelsHandler = new Hono()
                               ),
                               animated: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                    .Decode((value) => value === 'true')
+                                  Codec(
+                                    Type.String({
+                                      pattern:
+                                        /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                    }),
+                                  )
+                                    .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                     .Encode((value) => (value ? 'true' : 'false')),
                                   Type.Null(),
                                 ]),
@@ -1708,21 +2340,35 @@ export const channelsHandler = new Hono()
               ),
               allow_multiselect: Type.Optional(
                 Type.Union([
-                  Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                    .Decode((value) => value === 'true')
+                  Codec(
+                    Type.String({
+                      pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                    }),
+                  )
+                    .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                     .Encode((value) => (value ? 'true' : 'false')),
                   Type.Null(),
                 ]),
               ),
               layout_type: Type.Optional(
-                Type.Union([Type.Union([Type.Null(), Type.Null()]), PollLayoutTypesSchema], {
+                Type.Union([Type.Null(), PollLayoutTypesSchema], {
                   description: 'The layout type of the poll. Defaults to... DEFAULT!',
                 }),
               ),
               duration: Type.Optional(
                 Type.Union([
-                  Codec(Type.String())
-                    .Decode((value) => Number.parseInt(value, 10))
+                  Codec(
+                    Type.Refine(
+                      Type.Refine(
+                        Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                        (value) => Number(value) >= 1,
+                        () => 'must be >= 1',
+                      ),
+                      (value) => Number(value) <= 768,
+                      () => 'must be <= 768',
+                    ),
+                  )
+                    .Decode((value) => Number(value))
                     .Encode((value) => String(value)),
                   Type.Null(),
                 ]),
@@ -1732,73 +2378,102 @@ export const channelsHandler = new Hono()
         ),
         shared_client_theme: Type.Optional(
           Type.Union([
-            Type.Union([Type.Null(), Type.Null()]),
+            Type.Null(),
             Type.Object({
               colors: Type.Array(Type.String({ minLength: 6, maxLength: 6 }), {
                 minItems: 1,
                 maxItems: 5,
               }),
-              gradient_angle: Codec(Type.String())
-                .Decode((value) => Number.parseInt(value, 10))
+              gradient_angle: Codec(
+                Type.Refine(
+                  Type.Refine(
+                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                    (value) => Number(value) >= 0,
+                    () => 'must be >= 0',
+                  ),
+                  (value) => Number(value) <= 360,
+                  () => 'must be <= 360',
+                ),
+              )
+                .Decode((value) => Number(value))
                 .Encode((value) => String(value)),
-              base_mix: Codec(Type.String())
-                .Decode((value) => Number.parseInt(value, 10))
+              base_mix: Codec(
+                Type.Refine(
+                  Type.Refine(
+                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                    (value) => Number(value) >= 0,
+                    () => 'must be >= 0',
+                  ),
+                  (value) => Number(value) <= 100,
+                  () => 'must be <= 100',
+                ),
+              )
+                .Decode((value) => Number(value))
                 .Encode((value) => String(value)),
               base_theme: Type.Optional(
-                Type.Union([
-                  Type.Union([Type.Null(), Type.Null()]),
-                  MessageShareCustomUserThemeBaseThemeSchema,
-                ]),
+                Type.Union([Type.Null(), MessageShareCustomUserThemeBaseThemeSchema]),
               ),
             }),
           ]),
         ),
         message_reference: Type.Optional(
           Type.Union([
-            Type.Union([Type.Null(), Type.Null()]),
+            Type.Null(),
             Type.Object({
-              guild_id: Type.Optional(
-                Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
-              ),
-              channel_id: Type.Optional(
-                Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
-              ),
+              guild_id: Type.Optional(Type.Union([Type.Null(), SnowflakeTypeSchema])),
+              channel_id: Type.Optional(Type.Union([Type.Null(), SnowflakeTypeSchema])),
               message_id: SnowflakeTypeSchema,
               fail_if_not_exists: Type.Optional(
                 Type.Union([
-                  Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                    .Decode((value) => value === 'true')
+                  Codec(
+                    Type.String({
+                      pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                    }),
+                  )
+                    .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                     .Encode((value) => (value ? 'true' : 'false')),
                   Type.Null(),
                 ]),
               ),
-              type: Type.Optional(
-                Type.Union([Type.Union([Type.Null(), Type.Null()]), MessageReferenceTypeSchema]),
-              ),
+              type: Type.Optional(Type.Union([Type.Null(), MessageReferenceTypeSchema])),
             }),
           ]),
         ),
         nonce: Type.Optional(
           Type.Union([
-            Codec(Type.String())
-              .Decode((value) => Number.parseInt(value, 10))
+            Codec(
+              Type.Refine(
+                Type.Refine(
+                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                  (value) => Number(value) >= -9223372036854776000,
+                  () => 'must be >= -9223372036854776000',
+                ),
+                (value) => Number(value) <= 9223372036854776000,
+                () => 'must be <= 9223372036854776000',
+              ),
+            )
+              .Decode((value) => Number(value))
               .Encode((value) => String(value)),
             Type.String({ maxLength: 25 }),
-            Type.Union([Type.Null(), Type.Null()]),
+            Type.Null(),
           ]),
         ),
         enforce_nonce: Type.Optional(
           Type.Union([
-            Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-              .Decode((value) => value === 'true')
+            Codec(
+              Type.String({ pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i }),
+            )
+              .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
               .Encode((value) => (value ? 'true' : 'false')),
             Type.Null(),
           ]),
         ),
         tts: Type.Optional(
           Type.Union([
-            Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-              .Decode((value) => value === 'true')
+            Codec(
+              Type.String({ pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i }),
+            )
+              .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
               .Encode((value) => (value ? 'true' : 'false')),
             Type.Null(),
           ]),
@@ -1830,8 +2505,18 @@ export const channelsHandler = new Hono()
       Type.Object({
         before: Type.Optional(Type.String({ format: 'date-time' })),
         limit: Type.Optional(
-          Codec(Type.String())
-            .Decode((value) => Number.parseInt(value, 10))
+          Codec(
+            Type.Refine(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                (value) => Number(value) >= 1,
+                () => 'must be >= 1',
+              ),
+              (value) => Number(value) <= 50,
+              () => 'must be <= 50',
+            ),
+          )
+            .Decode((value) => Number(value))
             .Encode((value) => String(value)),
         ),
       }),
@@ -1892,8 +2577,18 @@ export const channelsHandler = new Hono()
                 title: Type.Optional(Type.Union([Type.String({ maxLength: 256 }), Type.Null()])),
                 color: Type.Optional(
                   Type.Union([
-                    Codec(Type.String())
-                      .Decode((value) => Number.parseInt(value, 10))
+                    Codec(
+                      Type.Refine(
+                        Type.Refine(
+                          Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                          (value) => Number(value) >= 0,
+                          () => 'must be >= 0',
+                        ),
+                        (value) => Number(value) <= 16777215,
+                        () => 'must be <= 16777215',
+                      ),
+                    )
+                      .Decode((value) => Number(value))
                       .Encode((value) => String(value)),
                     Type.Null(),
                   ]),
@@ -1904,28 +2599,26 @@ export const channelsHandler = new Hono()
                 description: Type.Optional(
                   Type.Union([Type.String({ maxLength: 4096 }), Type.Null()]),
                 ),
-                author: Type.Optional(
-                  Type.Union([Type.Union([Type.Null(), Type.Null()]), RichEmbedAuthorSchema]),
-                ),
+                author: Type.Optional(Type.Union([Type.Null(), RichEmbedAuthorSchema])),
                 image: Type.Optional(
                   Type.Union([
-                    Type.Union([Type.Null(), Type.Null()]),
+                    Type.Null(),
                     Type.Object({
                       url: Type.Optional(
                         Type.Union([Type.String({ format: 'uri', maxLength: 2048 }), Type.Null()]),
                       ),
                       width: Type.Optional(
                         Type.Union([
-                          Codec(Type.String())
-                            .Decode((value) => Number.parseInt(value, 10))
+                          Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+                            .Decode((value) => Number(value))
                             .Encode((value) => String(value)),
                           Type.Null(),
                         ]),
                       ),
                       height: Type.Optional(
                         Type.Union([
-                          Codec(Type.String())
-                            .Decode((value) => Number.parseInt(value, 10))
+                          Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+                            .Decode((value) => Number(value))
                             .Encode((value) => String(value)),
                           Type.Null(),
                         ]),
@@ -1935,16 +2628,30 @@ export const channelsHandler = new Hono()
                       ),
                       placeholder_version: Type.Optional(
                         Type.Union([
-                          Codec(Type.String())
-                            .Decode((value) => Number.parseInt(value, 10))
+                          Codec(
+                            Type.Refine(
+                              Type.Refine(
+                                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                (value) => Number(value) >= 0,
+                                () => 'must be >= 0',
+                              ),
+                              (value) => Number(value) <= 2147483647,
+                              () => 'must be <= 2147483647',
+                            ),
+                          )
+                            .Decode((value) => Number(value))
                             .Encode((value) => String(value)),
                           Type.Null(),
                         ]),
                       ),
                       is_animated: Type.Optional(
                         Type.Union([
-                          Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                            .Decode((value) => value === 'true')
+                          Codec(
+                            Type.String({
+                              pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                            }),
+                          )
+                            .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                             .Encode((value) => (value ? 'true' : 'false')),
                           Type.Null(),
                         ]),
@@ -1957,23 +2664,23 @@ export const channelsHandler = new Hono()
                 ),
                 thumbnail: Type.Optional(
                   Type.Union([
-                    Type.Union([Type.Null(), Type.Null()]),
+                    Type.Null(),
                     Type.Object({
                       url: Type.Optional(
                         Type.Union([Type.String({ format: 'uri', maxLength: 2048 }), Type.Null()]),
                       ),
                       width: Type.Optional(
                         Type.Union([
-                          Codec(Type.String())
-                            .Decode((value) => Number.parseInt(value, 10))
+                          Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+                            .Decode((value) => Number(value))
                             .Encode((value) => String(value)),
                           Type.Null(),
                         ]),
                       ),
                       height: Type.Optional(
                         Type.Union([
-                          Codec(Type.String())
-                            .Decode((value) => Number.parseInt(value, 10))
+                          Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+                            .Decode((value) => Number(value))
                             .Encode((value) => String(value)),
                           Type.Null(),
                         ]),
@@ -1983,16 +2690,30 @@ export const channelsHandler = new Hono()
                       ),
                       placeholder_version: Type.Optional(
                         Type.Union([
-                          Codec(Type.String())
-                            .Decode((value) => Number.parseInt(value, 10))
+                          Codec(
+                            Type.Refine(
+                              Type.Refine(
+                                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                (value) => Number(value) >= 0,
+                                () => 'must be >= 0',
+                              ),
+                              (value) => Number(value) <= 2147483647,
+                              () => 'must be <= 2147483647',
+                            ),
+                          )
+                            .Decode((value) => Number(value))
                             .Encode((value) => String(value)),
                           Type.Null(),
                         ]),
                       ),
                       is_animated: Type.Optional(
                         Type.Union([
-                          Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                            .Decode((value) => value === 'true')
+                          Codec(
+                            Type.String({
+                              pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                            }),
+                          )
+                            .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                             .Encode((value) => (value ? 'true' : 'false')),
                           Type.Null(),
                         ]),
@@ -2003,9 +2724,7 @@ export const channelsHandler = new Hono()
                     }),
                   ]),
                 ),
-                footer: Type.Optional(
-                  Type.Union([Type.Union([Type.Null(), Type.Null()]), RichEmbedFooterSchema]),
-                ),
+                footer: Type.Optional(Type.Union([Type.Null(), RichEmbedFooterSchema])),
                 fields: Type.Optional(
                   Type.Union([
                     Type.Array(
@@ -2014,8 +2733,12 @@ export const channelsHandler = new Hono()
                         value: Type.String({ maxLength: 1024 }),
                         inline: Type.Optional(
                           Type.Union([
-                            Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                              .Decode((value) => value === 'true')
+                            Codec(
+                              Type.String({
+                                pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                              }),
+                            )
+                              .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                               .Encode((value) => (value ? 'true' : 'false')),
                             Type.Null(),
                           ]),
@@ -2026,28 +2749,26 @@ export const channelsHandler = new Hono()
                     Type.Null(),
                   ]),
                 ),
-                provider: Type.Optional(
-                  Type.Union([Type.Union([Type.Null(), Type.Null()]), RichEmbedProviderSchema]),
-                ),
+                provider: Type.Optional(Type.Union([Type.Null(), RichEmbedProviderSchema])),
                 video: Type.Optional(
                   Type.Union([
-                    Type.Union([Type.Null(), Type.Null()]),
+                    Type.Null(),
                     Type.Object({
                       url: Type.Optional(
                         Type.Union([Type.String({ format: 'uri', maxLength: 2048 }), Type.Null()]),
                       ),
                       width: Type.Optional(
                         Type.Union([
-                          Codec(Type.String())
-                            .Decode((value) => Number.parseInt(value, 10))
+                          Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+                            .Decode((value) => Number(value))
                             .Encode((value) => String(value)),
                           Type.Null(),
                         ]),
                       ),
                       height: Type.Optional(
                         Type.Union([
-                          Codec(Type.String())
-                            .Decode((value) => Number.parseInt(value, 10))
+                          Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+                            .Decode((value) => Number(value))
                             .Encode((value) => String(value)),
                           Type.Null(),
                         ]),
@@ -2057,16 +2778,30 @@ export const channelsHandler = new Hono()
                       ),
                       placeholder_version: Type.Optional(
                         Type.Union([
-                          Codec(Type.String())
-                            .Decode((value) => Number.parseInt(value, 10))
+                          Codec(
+                            Type.Refine(
+                              Type.Refine(
+                                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                (value) => Number(value) >= 0,
+                                () => 'must be >= 0',
+                              ),
+                              (value) => Number(value) <= 2147483647,
+                              () => 'must be <= 2147483647',
+                            ),
+                          )
+                            .Decode((value) => Number(value))
                             .Encode((value) => String(value)),
                           Type.Null(),
                         ]),
                       ),
                       is_animated: Type.Optional(
                         Type.Union([
-                          Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                            .Decode((value) => value === 'true')
+                          Codec(
+                            Type.String({
+                              pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                            }),
+                          )
+                            .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                             .Encode((value) => (value ? 'true' : 'false')),
                           Type.Null(),
                         ]),
@@ -2077,9 +2812,7 @@ export const channelsHandler = new Hono()
                     }),
                   ]),
                 ),
-                audio: Type.Optional(
-                  Type.Union([Type.Union([Type.Null(), Type.Null()]), RichEmbedAudioSchema]),
-                ),
+                audio: Type.Optional(Type.Union([Type.Null(), RichEmbedAudioSchema])),
               }),
               { maxItems: 10 },
             ),
@@ -2088,47 +2821,51 @@ export const channelsHandler = new Hono()
         ),
         flags: Type.Optional(
           Type.Union([
-            Codec(Type.String())
-              .Decode((value) => Number.parseInt(value, 10))
+            Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+              .Decode((value) => Number(value))
               .Encode((value) => String(value)),
             Type.Null(),
           ]),
         ),
         allowed_mentions: Type.Optional(
           Type.Union([
-            Type.Union([Type.Null(), Type.Null()]),
+            Type.Null(),
             Type.Object({
               parse: Type.Optional(
                 Type.Union([
-                  Type.Array(
-                    Type.Union([Type.Union([Type.Null(), Type.Null()]), AllowedMentionTypesSchema]),
-                    { maxItems: 1521, uniqueItems: true },
-                  ),
+                  Type.Array(Type.Union([Type.Null(), AllowedMentionTypesSchema]), {
+                    maxItems: 1521,
+                    uniqueItems: true,
+                  }),
                   Type.Null(),
                 ]),
               ),
               users: Type.Optional(
                 Type.Union([
-                  Type.Array(
-                    Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
-                    { maxItems: 100, uniqueItems: true },
-                  ),
+                  Type.Array(Type.Union([Type.Null(), SnowflakeTypeSchema]), {
+                    maxItems: 100,
+                    uniqueItems: true,
+                  }),
                   Type.Null(),
                 ]),
               ),
               roles: Type.Optional(
                 Type.Union([
-                  Type.Array(
-                    Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
-                    { maxItems: 100, uniqueItems: true },
-                  ),
+                  Type.Array(Type.Union([Type.Null(), SnowflakeTypeSchema]), {
+                    maxItems: 100,
+                    uniqueItems: true,
+                  }),
                   Type.Null(),
                 ]),
               ),
               replied_user: Type.Optional(
                 Type.Union([
-                  Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                    .Decode((value) => value === 'true')
+                  Codec(
+                    Type.String({
+                      pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                    }),
+                  )
+                    .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                     .Encode((value) => (value ? 'true' : 'false')),
                   Type.Null(),
                 ]),
@@ -2147,8 +2884,14 @@ export const channelsHandler = new Hono()
                   type: MessageComponentTypesSchema,
                   id: Type.Optional(
                     Type.Union([
-                      Codec(Type.String())
-                        .Decode((value) => Number.parseInt(value, 10))
+                      Codec(
+                        Type.Refine(
+                          Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                          (value) => Number(value) >= 0,
+                          () => 'must be >= 0',
+                        ),
+                      )
+                        .Decode((value) => Number(value))
                         .Encode((value) => String(value)),
                       Type.Null(),
                     ]),
@@ -2159,8 +2902,14 @@ export const channelsHandler = new Hono()
                         type: MessageComponentTypesSchema,
                         id: Type.Optional(
                           Type.Union([
-                            Codec(Type.String())
-                              .Decode((value) => Number.parseInt(value, 10))
+                            Codec(
+                              Type.Refine(
+                                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                (value) => Number(value) >= 0,
+                                () => 'must be >= 0',
+                              ),
+                            )
+                              .Decode((value) => Number(value))
                               .Encode((value) => String(value)),
                             Type.Null(),
                           ]),
@@ -2174,8 +2923,12 @@ export const channelsHandler = new Hono()
                         ),
                         disabled: Type.Optional(
                           Type.Union([
-                            Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                              .Decode((value) => value === 'true')
+                            Codec(
+                              Type.String({
+                                pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                              }),
+                            )
+                              .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                               .Encode((value) => (value ? 'true' : 'false')),
                             Type.Null(),
                           ]),
@@ -2183,22 +2936,23 @@ export const channelsHandler = new Hono()
                         url: Type.Optional(
                           Type.Union([Type.String({ format: 'uri', maxLength: 512 }), Type.Null()]),
                         ),
-                        sku_id: Type.Optional(
-                          Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
-                        ),
+                        sku_id: Type.Optional(Type.Union([Type.Null(), SnowflakeTypeSchema])),
                         emoji: Type.Optional(
-                          Type.Union([
-                            Type.Union([Type.Null(), Type.Null()]),
-                            ComponentEmojiForRequestSchema,
-                          ]),
+                          Type.Union([Type.Null(), ComponentEmojiForRequestSchema]),
                         ),
                       }),
                       Type.Object({
                         type: MessageComponentTypesSchema,
                         id: Type.Optional(
                           Type.Union([
-                            Codec(Type.String())
-                              .Decode((value) => Number.parseInt(value, 10))
+                            Codec(
+                              Type.Refine(
+                                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                (value) => Number(value) >= 0,
+                                () => 'must be >= 0',
+                              ),
+                            )
+                              .Decode((value) => Number(value))
                               .Encode((value) => String(value)),
                             Type.Null(),
                           ]),
@@ -2209,32 +2963,60 @@ export const channelsHandler = new Hono()
                         ),
                         min_values: Type.Optional(
                           Type.Union([
-                            Codec(Type.String())
-                              .Decode((value) => Number.parseInt(value, 10))
+                            Codec(
+                              Type.Refine(
+                                Type.Refine(
+                                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                  (value) => Number(value) >= 0,
+                                  () => 'must be >= 0',
+                                ),
+                                (value) => Number(value) <= 25,
+                                () => 'must be <= 25',
+                              ),
+                            )
+                              .Decode((value) => Number(value))
                               .Encode((value) => String(value)),
                             Type.Null(),
                           ]),
                         ),
                         max_values: Type.Optional(
                           Type.Union([
-                            Codec(Type.String())
-                              .Decode((value) => Number.parseInt(value, 10))
+                            Codec(
+                              Type.Refine(
+                                Type.Refine(
+                                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                  (value) => Number(value) >= 1,
+                                  () => 'must be >= 1',
+                                ),
+                                (value) => Number(value) <= 25,
+                                () => 'must be <= 25',
+                              ),
+                            )
+                              .Decode((value) => Number(value))
                               .Encode((value) => String(value)),
                             Type.Null(),
                           ]),
                         ),
                         disabled: Type.Optional(
                           Type.Union([
-                            Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                              .Decode((value) => value === 'true')
+                            Codec(
+                              Type.String({
+                                pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                              }),
+                            )
+                              .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                               .Encode((value) => (value ? 'true' : 'false')),
                             Type.Null(),
                           ]),
                         ),
                         required: Type.Optional(
                           Type.Union([
-                            Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                              .Decode((value) => value === 'true')
+                            Codec(
+                              Type.String({
+                                pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                              }),
+                            )
+                              .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                               .Encode((value) => (value ? 'true' : 'false')),
                             Type.Null(),
                           ]),
@@ -2256,8 +3038,14 @@ export const channelsHandler = new Hono()
                         type: MessageComponentTypesSchema,
                         id: Type.Optional(
                           Type.Union([
-                            Codec(Type.String())
-                              .Decode((value) => Number.parseInt(value, 10))
+                            Codec(
+                              Type.Refine(
+                                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                (value) => Number(value) >= 0,
+                                () => 'must be >= 0',
+                              ),
+                            )
+                              .Decode((value) => Number(value))
                               .Encode((value) => String(value)),
                             Type.Null(),
                           ]),
@@ -2268,32 +3056,60 @@ export const channelsHandler = new Hono()
                         ),
                         min_values: Type.Optional(
                           Type.Union([
-                            Codec(Type.String())
-                              .Decode((value) => Number.parseInt(value, 10))
+                            Codec(
+                              Type.Refine(
+                                Type.Refine(
+                                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                  (value) => Number(value) >= 0,
+                                  () => 'must be >= 0',
+                                ),
+                                (value) => Number(value) <= 25,
+                                () => 'must be <= 25',
+                              ),
+                            )
+                              .Decode((value) => Number(value))
                               .Encode((value) => String(value)),
                             Type.Null(),
                           ]),
                         ),
                         max_values: Type.Optional(
                           Type.Union([
-                            Codec(Type.String())
-                              .Decode((value) => Number.parseInt(value, 10))
+                            Codec(
+                              Type.Refine(
+                                Type.Refine(
+                                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                  (value) => Number(value) >= 1,
+                                  () => 'must be >= 1',
+                                ),
+                                (value) => Number(value) <= 25,
+                                () => 'must be <= 25',
+                              ),
+                            )
+                              .Decode((value) => Number(value))
                               .Encode((value) => String(value)),
                             Type.Null(),
                           ]),
                         ),
                         disabled: Type.Optional(
                           Type.Union([
-                            Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                              .Decode((value) => value === 'true')
+                            Codec(
+                              Type.String({
+                                pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                              }),
+                            )
+                              .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                               .Encode((value) => (value ? 'true' : 'false')),
                             Type.Null(),
                           ]),
                         ),
                         required: Type.Optional(
                           Type.Union([
-                            Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                              .Decode((value) => value === 'true')
+                            Codec(
+                              Type.String({
+                                pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                              }),
+                            )
+                              .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                               .Encode((value) => (value ? 'true' : 'false')),
                             Type.Null(),
                           ]),
@@ -2315,8 +3131,14 @@ export const channelsHandler = new Hono()
                         type: MessageComponentTypesSchema,
                         id: Type.Optional(
                           Type.Union([
-                            Codec(Type.String())
-                              .Decode((value) => Number.parseInt(value, 10))
+                            Codec(
+                              Type.Refine(
+                                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                (value) => Number(value) >= 0,
+                                () => 'must be >= 0',
+                              ),
+                            )
+                              .Decode((value) => Number(value))
                               .Encode((value) => String(value)),
                             Type.Null(),
                           ]),
@@ -2327,32 +3149,60 @@ export const channelsHandler = new Hono()
                         ),
                         min_values: Type.Optional(
                           Type.Union([
-                            Codec(Type.String())
-                              .Decode((value) => Number.parseInt(value, 10))
+                            Codec(
+                              Type.Refine(
+                                Type.Refine(
+                                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                  (value) => Number(value) >= 0,
+                                  () => 'must be >= 0',
+                                ),
+                                (value) => Number(value) <= 25,
+                                () => 'must be <= 25',
+                              ),
+                            )
+                              .Decode((value) => Number(value))
                               .Encode((value) => String(value)),
                             Type.Null(),
                           ]),
                         ),
                         max_values: Type.Optional(
                           Type.Union([
-                            Codec(Type.String())
-                              .Decode((value) => Number.parseInt(value, 10))
+                            Codec(
+                              Type.Refine(
+                                Type.Refine(
+                                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                  (value) => Number(value) >= 1,
+                                  () => 'must be >= 1',
+                                ),
+                                (value) => Number(value) <= 25,
+                                () => 'must be <= 25',
+                              ),
+                            )
+                              .Decode((value) => Number(value))
                               .Encode((value) => String(value)),
                             Type.Null(),
                           ]),
                         ),
                         disabled: Type.Optional(
                           Type.Union([
-                            Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                              .Decode((value) => value === 'true')
+                            Codec(
+                              Type.String({
+                                pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                              }),
+                            )
+                              .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                               .Encode((value) => (value ? 'true' : 'false')),
                             Type.Null(),
                           ]),
                         ),
                         required: Type.Optional(
                           Type.Union([
-                            Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                              .Decode((value) => value === 'true')
+                            Codec(
+                              Type.String({
+                                pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                              }),
+                            )
+                              .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                               .Encode((value) => (value ? 'true' : 'false')),
                             Type.Null(),
                           ]),
@@ -2368,8 +3218,14 @@ export const channelsHandler = new Hono()
                         type: MessageComponentTypesSchema,
                         id: Type.Optional(
                           Type.Union([
-                            Codec(Type.String())
-                              .Decode((value) => Number.parseInt(value, 10))
+                            Codec(
+                              Type.Refine(
+                                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                (value) => Number(value) >= 0,
+                                () => 'must be >= 0',
+                              ),
+                            )
+                              .Decode((value) => Number(value))
                               .Encode((value) => String(value)),
                             Type.Null(),
                           ]),
@@ -2380,32 +3236,60 @@ export const channelsHandler = new Hono()
                         ),
                         min_values: Type.Optional(
                           Type.Union([
-                            Codec(Type.String())
-                              .Decode((value) => Number.parseInt(value, 10))
+                            Codec(
+                              Type.Refine(
+                                Type.Refine(
+                                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                  (value) => Number(value) >= 0,
+                                  () => 'must be >= 0',
+                                ),
+                                (value) => Number(value) <= 25,
+                                () => 'must be <= 25',
+                              ),
+                            )
+                              .Decode((value) => Number(value))
                               .Encode((value) => String(value)),
                             Type.Null(),
                           ]),
                         ),
                         max_values: Type.Optional(
                           Type.Union([
-                            Codec(Type.String())
-                              .Decode((value) => Number.parseInt(value, 10))
+                            Codec(
+                              Type.Refine(
+                                Type.Refine(
+                                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                  (value) => Number(value) >= 1,
+                                  () => 'must be >= 1',
+                                ),
+                                (value) => Number(value) <= 25,
+                                () => 'must be <= 25',
+                              ),
+                            )
+                              .Decode((value) => Number(value))
                               .Encode((value) => String(value)),
                             Type.Null(),
                           ]),
                         ),
                         disabled: Type.Optional(
                           Type.Union([
-                            Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                              .Decode((value) => value === 'true')
+                            Codec(
+                              Type.String({
+                                pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                              }),
+                            )
+                              .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                               .Encode((value) => (value ? 'true' : 'false')),
                             Type.Null(),
                           ]),
                         ),
                         required: Type.Optional(
                           Type.Union([
-                            Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                              .Decode((value) => value === 'true')
+                            Codec(
+                              Type.String({
+                                pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                              }),
+                            )
+                              .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                               .Encode((value) => (value ? 'true' : 'false')),
                             Type.Null(),
                           ]),
@@ -2419,17 +3303,19 @@ export const channelsHandler = new Hono()
                             ),
                             default: Type.Optional(
                               Type.Union([
-                                Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                  .Decode((value) => value === 'true')
+                                Codec(
+                                  Type.String({
+                                    pattern:
+                                      /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                  }),
+                                )
+                                  .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                   .Encode((value) => (value ? 'true' : 'false')),
                                 Type.Null(),
                               ]),
                             ),
                             emoji: Type.Optional(
-                              Type.Union([
-                                Type.Union([Type.Null(), Type.Null()]),
-                                ComponentEmojiForRequestSchema,
-                              ]),
+                              Type.Union([Type.Null(), ComponentEmojiForRequestSchema]),
                             ),
                           }),
                           { minItems: 1, maxItems: 25 },
@@ -2439,8 +3325,14 @@ export const channelsHandler = new Hono()
                         type: MessageComponentTypesSchema,
                         id: Type.Optional(
                           Type.Union([
-                            Codec(Type.String())
-                              .Decode((value) => Number.parseInt(value, 10))
+                            Codec(
+                              Type.Refine(
+                                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                (value) => Number(value) >= 0,
+                                () => 'must be >= 0',
+                              ),
+                            )
+                              .Decode((value) => Number(value))
                               .Encode((value) => String(value)),
                             Type.Null(),
                           ]),
@@ -2451,32 +3343,60 @@ export const channelsHandler = new Hono()
                         ),
                         min_values: Type.Optional(
                           Type.Union([
-                            Codec(Type.String())
-                              .Decode((value) => Number.parseInt(value, 10))
+                            Codec(
+                              Type.Refine(
+                                Type.Refine(
+                                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                  (value) => Number(value) >= 0,
+                                  () => 'must be >= 0',
+                                ),
+                                (value) => Number(value) <= 25,
+                                () => 'must be <= 25',
+                              ),
+                            )
+                              .Decode((value) => Number(value))
                               .Encode((value) => String(value)),
                             Type.Null(),
                           ]),
                         ),
                         max_values: Type.Optional(
                           Type.Union([
-                            Codec(Type.String())
-                              .Decode((value) => Number.parseInt(value, 10))
+                            Codec(
+                              Type.Refine(
+                                Type.Refine(
+                                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                  (value) => Number(value) >= 1,
+                                  () => 'must be >= 1',
+                                ),
+                                (value) => Number(value) <= 25,
+                                () => 'must be <= 25',
+                              ),
+                            )
+                              .Decode((value) => Number(value))
                               .Encode((value) => String(value)),
                             Type.Null(),
                           ]),
                         ),
                         disabled: Type.Optional(
                           Type.Union([
-                            Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                              .Decode((value) => value === 'true')
+                            Codec(
+                              Type.String({
+                                pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                              }),
+                            )
+                              .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                               .Encode((value) => (value ? 'true' : 'false')),
                             Type.Null(),
                           ]),
                         ),
                         required: Type.Optional(
                           Type.Union([
-                            Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                              .Decode((value) => value === 'true')
+                            Codec(
+                              Type.String({
+                                pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                              }),
+                            )
+                              .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                               .Encode((value) => (value ? 'true' : 'false')),
                             Type.Null(),
                           ]),
@@ -2496,16 +3416,32 @@ export const channelsHandler = new Hono()
                   type: MessageComponentTypesSchema,
                   id: Type.Optional(
                     Type.Union([
-                      Codec(Type.String())
-                        .Decode((value) => Number.parseInt(value, 10))
+                      Codec(
+                        Type.Refine(
+                          Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                          (value) => Number(value) >= 0,
+                          () => 'must be >= 0',
+                        ),
+                      )
+                        .Decode((value) => Number(value))
                         .Encode((value) => String(value)),
                       Type.Null(),
                     ]),
                   ),
                   accent_color: Type.Optional(
                     Type.Union([
-                      Codec(Type.String())
-                        .Decode((value) => Number.parseInt(value, 10))
+                      Codec(
+                        Type.Refine(
+                          Type.Refine(
+                            Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                            (value) => Number(value) >= 0,
+                            () => 'must be >= 0',
+                          ),
+                          (value) => Number(value) <= 16777215,
+                          () => 'must be <= 16777215',
+                        ),
+                      )
+                        .Decode((value) => Number(value))
                         .Encode((value) => String(value)),
                       Type.Null(),
                     ]),
@@ -2516,8 +3452,14 @@ export const channelsHandler = new Hono()
                         type: MessageComponentTypesSchema,
                         id: Type.Optional(
                           Type.Union([
-                            Codec(Type.String())
-                              .Decode((value) => Number.parseInt(value, 10))
+                            Codec(
+                              Type.Refine(
+                                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                (value) => Number(value) >= 0,
+                                () => 'must be >= 0',
+                              ),
+                            )
+                              .Decode((value) => Number(value))
                               .Encode((value) => String(value)),
                             Type.Null(),
                           ]),
@@ -2528,8 +3470,14 @@ export const channelsHandler = new Hono()
                               type: MessageComponentTypesSchema,
                               id: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.String())
-                                    .Decode((value) => Number.parseInt(value, 10))
+                                  Codec(
+                                    Type.Refine(
+                                      Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                      (value) => Number(value) >= 0,
+                                      () => 'must be >= 0',
+                                    ),
+                                  )
+                                    .Decode((value) => Number(value))
                                     .Encode((value) => String(value)),
                                   Type.Null(),
                                 ]),
@@ -2546,8 +3494,13 @@ export const channelsHandler = new Hono()
                               ),
                               disabled: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                    .Decode((value) => value === 'true')
+                                  Codec(
+                                    Type.String({
+                                      pattern:
+                                        /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                    }),
+                                  )
+                                    .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                     .Encode((value) => (value ? 'true' : 'false')),
                                   Type.Null(),
                                 ]),
@@ -2558,25 +3511,23 @@ export const channelsHandler = new Hono()
                                   Type.Null(),
                                 ]),
                               ),
-                              sku_id: Type.Optional(
-                                Type.Union([
-                                  Type.Union([Type.Null(), Type.Null()]),
-                                  SnowflakeTypeSchema,
-                                ]),
-                              ),
+                              sku_id: Type.Optional(Type.Union([Type.Null(), SnowflakeTypeSchema])),
                               emoji: Type.Optional(
-                                Type.Union([
-                                  Type.Union([Type.Null(), Type.Null()]),
-                                  ComponentEmojiForRequestSchema,
-                                ]),
+                                Type.Union([Type.Null(), ComponentEmojiForRequestSchema]),
                               ),
                             }),
                             Type.Object({
                               type: MessageComponentTypesSchema,
                               id: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.String())
-                                    .Decode((value) => Number.parseInt(value, 10))
+                                  Codec(
+                                    Type.Refine(
+                                      Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                      (value) => Number(value) >= 0,
+                                      () => 'must be >= 0',
+                                    ),
+                                  )
+                                    .Decode((value) => Number(value))
                                     .Encode((value) => String(value)),
                                   Type.Null(),
                                 ]),
@@ -2587,32 +3538,62 @@ export const channelsHandler = new Hono()
                               ),
                               min_values: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.String())
-                                    .Decode((value) => Number.parseInt(value, 10))
+                                  Codec(
+                                    Type.Refine(
+                                      Type.Refine(
+                                        Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                        (value) => Number(value) >= 0,
+                                        () => 'must be >= 0',
+                                      ),
+                                      (value) => Number(value) <= 25,
+                                      () => 'must be <= 25',
+                                    ),
+                                  )
+                                    .Decode((value) => Number(value))
                                     .Encode((value) => String(value)),
                                   Type.Null(),
                                 ]),
                               ),
                               max_values: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.String())
-                                    .Decode((value) => Number.parseInt(value, 10))
+                                  Codec(
+                                    Type.Refine(
+                                      Type.Refine(
+                                        Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                        (value) => Number(value) >= 1,
+                                        () => 'must be >= 1',
+                                      ),
+                                      (value) => Number(value) <= 25,
+                                      () => 'must be <= 25',
+                                    ),
+                                  )
+                                    .Decode((value) => Number(value))
                                     .Encode((value) => String(value)),
                                   Type.Null(),
                                 ]),
                               ),
                               disabled: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                    .Decode((value) => value === 'true')
+                                  Codec(
+                                    Type.String({
+                                      pattern:
+                                        /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                    }),
+                                  )
+                                    .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                     .Encode((value) => (value ? 'true' : 'false')),
                                   Type.Null(),
                                 ]),
                               ),
                               required: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                    .Decode((value) => value === 'true')
+                                  Codec(
+                                    Type.String({
+                                      pattern:
+                                        /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                    }),
+                                  )
+                                    .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                     .Encode((value) => (value ? 'true' : 'false')),
                                   Type.Null(),
                                 ]),
@@ -2634,8 +3615,14 @@ export const channelsHandler = new Hono()
                               type: MessageComponentTypesSchema,
                               id: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.String())
-                                    .Decode((value) => Number.parseInt(value, 10))
+                                  Codec(
+                                    Type.Refine(
+                                      Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                      (value) => Number(value) >= 0,
+                                      () => 'must be >= 0',
+                                    ),
+                                  )
+                                    .Decode((value) => Number(value))
                                     .Encode((value) => String(value)),
                                   Type.Null(),
                                 ]),
@@ -2646,32 +3633,62 @@ export const channelsHandler = new Hono()
                               ),
                               min_values: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.String())
-                                    .Decode((value) => Number.parseInt(value, 10))
+                                  Codec(
+                                    Type.Refine(
+                                      Type.Refine(
+                                        Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                        (value) => Number(value) >= 0,
+                                        () => 'must be >= 0',
+                                      ),
+                                      (value) => Number(value) <= 25,
+                                      () => 'must be <= 25',
+                                    ),
+                                  )
+                                    .Decode((value) => Number(value))
                                     .Encode((value) => String(value)),
                                   Type.Null(),
                                 ]),
                               ),
                               max_values: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.String())
-                                    .Decode((value) => Number.parseInt(value, 10))
+                                  Codec(
+                                    Type.Refine(
+                                      Type.Refine(
+                                        Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                        (value) => Number(value) >= 1,
+                                        () => 'must be >= 1',
+                                      ),
+                                      (value) => Number(value) <= 25,
+                                      () => 'must be <= 25',
+                                    ),
+                                  )
+                                    .Decode((value) => Number(value))
                                     .Encode((value) => String(value)),
                                   Type.Null(),
                                 ]),
                               ),
                               disabled: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                    .Decode((value) => value === 'true')
+                                  Codec(
+                                    Type.String({
+                                      pattern:
+                                        /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                    }),
+                                  )
+                                    .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                     .Encode((value) => (value ? 'true' : 'false')),
                                   Type.Null(),
                                 ]),
                               ),
                               required: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                    .Decode((value) => value === 'true')
+                                  Codec(
+                                    Type.String({
+                                      pattern:
+                                        /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                    }),
+                                  )
+                                    .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                     .Encode((value) => (value ? 'true' : 'false')),
                                   Type.Null(),
                                 ]),
@@ -2693,8 +3710,14 @@ export const channelsHandler = new Hono()
                               type: MessageComponentTypesSchema,
                               id: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.String())
-                                    .Decode((value) => Number.parseInt(value, 10))
+                                  Codec(
+                                    Type.Refine(
+                                      Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                      (value) => Number(value) >= 0,
+                                      () => 'must be >= 0',
+                                    ),
+                                  )
+                                    .Decode((value) => Number(value))
                                     .Encode((value) => String(value)),
                                   Type.Null(),
                                 ]),
@@ -2705,32 +3728,62 @@ export const channelsHandler = new Hono()
                               ),
                               min_values: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.String())
-                                    .Decode((value) => Number.parseInt(value, 10))
+                                  Codec(
+                                    Type.Refine(
+                                      Type.Refine(
+                                        Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                        (value) => Number(value) >= 0,
+                                        () => 'must be >= 0',
+                                      ),
+                                      (value) => Number(value) <= 25,
+                                      () => 'must be <= 25',
+                                    ),
+                                  )
+                                    .Decode((value) => Number(value))
                                     .Encode((value) => String(value)),
                                   Type.Null(),
                                 ]),
                               ),
                               max_values: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.String())
-                                    .Decode((value) => Number.parseInt(value, 10))
+                                  Codec(
+                                    Type.Refine(
+                                      Type.Refine(
+                                        Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                        (value) => Number(value) >= 1,
+                                        () => 'must be >= 1',
+                                      ),
+                                      (value) => Number(value) <= 25,
+                                      () => 'must be <= 25',
+                                    ),
+                                  )
+                                    .Decode((value) => Number(value))
                                     .Encode((value) => String(value)),
                                   Type.Null(),
                                 ]),
                               ),
                               disabled: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                    .Decode((value) => value === 'true')
+                                  Codec(
+                                    Type.String({
+                                      pattern:
+                                        /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                    }),
+                                  )
+                                    .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                     .Encode((value) => (value ? 'true' : 'false')),
                                   Type.Null(),
                                 ]),
                               ),
                               required: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                    .Decode((value) => value === 'true')
+                                  Codec(
+                                    Type.String({
+                                      pattern:
+                                        /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                    }),
+                                  )
+                                    .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                     .Encode((value) => (value ? 'true' : 'false')),
                                   Type.Null(),
                                 ]),
@@ -2746,8 +3799,14 @@ export const channelsHandler = new Hono()
                               type: MessageComponentTypesSchema,
                               id: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.String())
-                                    .Decode((value) => Number.parseInt(value, 10))
+                                  Codec(
+                                    Type.Refine(
+                                      Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                      (value) => Number(value) >= 0,
+                                      () => 'must be >= 0',
+                                    ),
+                                  )
+                                    .Decode((value) => Number(value))
                                     .Encode((value) => String(value)),
                                   Type.Null(),
                                 ]),
@@ -2758,32 +3817,62 @@ export const channelsHandler = new Hono()
                               ),
                               min_values: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.String())
-                                    .Decode((value) => Number.parseInt(value, 10))
+                                  Codec(
+                                    Type.Refine(
+                                      Type.Refine(
+                                        Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                        (value) => Number(value) >= 0,
+                                        () => 'must be >= 0',
+                                      ),
+                                      (value) => Number(value) <= 25,
+                                      () => 'must be <= 25',
+                                    ),
+                                  )
+                                    .Decode((value) => Number(value))
                                     .Encode((value) => String(value)),
                                   Type.Null(),
                                 ]),
                               ),
                               max_values: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.String())
-                                    .Decode((value) => Number.parseInt(value, 10))
+                                  Codec(
+                                    Type.Refine(
+                                      Type.Refine(
+                                        Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                        (value) => Number(value) >= 1,
+                                        () => 'must be >= 1',
+                                      ),
+                                      (value) => Number(value) <= 25,
+                                      () => 'must be <= 25',
+                                    ),
+                                  )
+                                    .Decode((value) => Number(value))
                                     .Encode((value) => String(value)),
                                   Type.Null(),
                                 ]),
                               ),
                               disabled: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                    .Decode((value) => value === 'true')
+                                  Codec(
+                                    Type.String({
+                                      pattern:
+                                        /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                    }),
+                                  )
+                                    .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                     .Encode((value) => (value ? 'true' : 'false')),
                                   Type.Null(),
                                 ]),
                               ),
                               required: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                    .Decode((value) => value === 'true')
+                                  Codec(
+                                    Type.String({
+                                      pattern:
+                                        /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                    }),
+                                  )
+                                    .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                     .Encode((value) => (value ? 'true' : 'false')),
                                   Type.Null(),
                                 ]),
@@ -2798,18 +3887,20 @@ export const channelsHandler = new Hono()
                                   default: Type.Optional(
                                     Type.Union([
                                       Codec(
-                                        Type.Union([Type.Literal('true'), Type.Literal('false')]),
+                                        Type.String({
+                                          pattern:
+                                            /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                        }),
                                       )
-                                        .Decode((value) => value === 'true')
+                                        .Decode((value) =>
+                                          /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                        )
                                         .Encode((value) => (value ? 'true' : 'false')),
                                       Type.Null(),
                                     ]),
                                   ),
                                   emoji: Type.Optional(
-                                    Type.Union([
-                                      Type.Union([Type.Null(), Type.Null()]),
-                                      ComponentEmojiForRequestSchema,
-                                    ]),
+                                    Type.Union([Type.Null(), ComponentEmojiForRequestSchema]),
                                   ),
                                 }),
                                 { minItems: 1, maxItems: 25 },
@@ -2819,8 +3910,14 @@ export const channelsHandler = new Hono()
                               type: MessageComponentTypesSchema,
                               id: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.String())
-                                    .Decode((value) => Number.parseInt(value, 10))
+                                  Codec(
+                                    Type.Refine(
+                                      Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                      (value) => Number(value) >= 0,
+                                      () => 'must be >= 0',
+                                    ),
+                                  )
+                                    .Decode((value) => Number(value))
                                     .Encode((value) => String(value)),
                                   Type.Null(),
                                 ]),
@@ -2831,32 +3928,62 @@ export const channelsHandler = new Hono()
                               ),
                               min_values: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.String())
-                                    .Decode((value) => Number.parseInt(value, 10))
+                                  Codec(
+                                    Type.Refine(
+                                      Type.Refine(
+                                        Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                        (value) => Number(value) >= 0,
+                                        () => 'must be >= 0',
+                                      ),
+                                      (value) => Number(value) <= 25,
+                                      () => 'must be <= 25',
+                                    ),
+                                  )
+                                    .Decode((value) => Number(value))
                                     .Encode((value) => String(value)),
                                   Type.Null(),
                                 ]),
                               ),
                               max_values: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.String())
-                                    .Decode((value) => Number.parseInt(value, 10))
+                                  Codec(
+                                    Type.Refine(
+                                      Type.Refine(
+                                        Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                        (value) => Number(value) >= 1,
+                                        () => 'must be >= 1',
+                                      ),
+                                      (value) => Number(value) <= 25,
+                                      () => 'must be <= 25',
+                                    ),
+                                  )
+                                    .Decode((value) => Number(value))
                                     .Encode((value) => String(value)),
                                   Type.Null(),
                                 ]),
                               ),
                               disabled: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                    .Decode((value) => value === 'true')
+                                  Codec(
+                                    Type.String({
+                                      pattern:
+                                        /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                    }),
+                                  )
+                                    .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                     .Encode((value) => (value ? 'true' : 'false')),
                                   Type.Null(),
                                 ]),
                               ),
                               required: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                    .Decode((value) => value === 'true')
+                                  Codec(
+                                    Type.String({
+                                      pattern:
+                                        /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                    }),
+                                  )
+                                    .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                     .Encode((value) => (value ? 'true' : 'false')),
                                   Type.Null(),
                                 ]),
@@ -2876,16 +4003,26 @@ export const channelsHandler = new Hono()
                         type: MessageComponentTypesSchema,
                         id: Type.Optional(
                           Type.Union([
-                            Codec(Type.String())
-                              .Decode((value) => Number.parseInt(value, 10))
+                            Codec(
+                              Type.Refine(
+                                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                (value) => Number(value) >= 0,
+                                () => 'must be >= 0',
+                              ),
+                            )
+                              .Decode((value) => Number(value))
                               .Encode((value) => String(value)),
                             Type.Null(),
                           ]),
                         ),
                         spoiler: Type.Optional(
                           Type.Union([
-                            Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                              .Decode((value) => value === 'true')
+                            Codec(
+                              Type.String({
+                                pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                              }),
+                            )
+                              .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                               .Encode((value) => (value ? 'true' : 'false')),
                             Type.Null(),
                           ]),
@@ -2896,8 +4033,14 @@ export const channelsHandler = new Hono()
                         type: MessageComponentTypesSchema,
                         id: Type.Optional(
                           Type.Union([
-                            Codec(Type.String())
-                              .Decode((value) => Number.parseInt(value, 10))
+                            Codec(
+                              Type.Refine(
+                                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                (value) => Number(value) >= 0,
+                                () => 'must be >= 0',
+                              ),
+                            )
+                              .Decode((value) => Number(value))
                               .Encode((value) => String(value)),
                             Type.Null(),
                           ]),
@@ -2912,8 +4055,13 @@ export const channelsHandler = new Hono()
                             ),
                             spoiler: Type.Optional(
                               Type.Union([
-                                Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                  .Decode((value) => value === 'true')
+                                Codec(
+                                  Type.String({
+                                    pattern:
+                                      /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                  }),
+                                )
+                                  .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                   .Encode((value) => (value ? 'true' : 'false')),
                                 Type.Null(),
                               ]),
@@ -2927,8 +4075,14 @@ export const channelsHandler = new Hono()
                         type: MessageComponentTypesSchema,
                         id: Type.Optional(
                           Type.Union([
-                            Codec(Type.String())
-                              .Decode((value) => Number.parseInt(value, 10))
+                            Codec(
+                              Type.Refine(
+                                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                (value) => Number(value) >= 0,
+                                () => 'must be >= 0',
+                              ),
+                            )
+                              .Decode((value) => Number(value))
                               .Encode((value) => String(value)),
                             Type.Null(),
                           ]),
@@ -2938,8 +4092,14 @@ export const channelsHandler = new Hono()
                             type: MessageComponentTypesSchema,
                             id: Type.Optional(
                               Type.Union([
-                                Codec(Type.String())
-                                  .Decode((value) => Number.parseInt(value, 10))
+                                Codec(
+                                  Type.Refine(
+                                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                    (value) => Number(value) >= 0,
+                                    () => 'must be >= 0',
+                                  ),
+                                )
+                                  .Decode((value) => Number(value))
                                   .Encode((value) => String(value)),
                                 Type.Null(),
                               ]),
@@ -2953,8 +4113,14 @@ export const channelsHandler = new Hono()
                             type: MessageComponentTypesSchema,
                             id: Type.Optional(
                               Type.Union([
-                                Codec(Type.String())
-                                  .Decode((value) => Number.parseInt(value, 10))
+                                Codec(
+                                  Type.Refine(
+                                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                    (value) => Number(value) >= 0,
+                                    () => 'must be >= 0',
+                                  ),
+                                )
+                                  .Decode((value) => Number(value))
                                   .Encode((value) => String(value)),
                                 Type.Null(),
                               ]),
@@ -2971,8 +4137,13 @@ export const channelsHandler = new Hono()
                             ),
                             disabled: Type.Optional(
                               Type.Union([
-                                Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                  .Decode((value) => value === 'true')
+                                Codec(
+                                  Type.String({
+                                    pattern:
+                                      /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                  }),
+                                )
+                                  .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                   .Encode((value) => (value ? 'true' : 'false')),
                                 Type.Null(),
                               ]),
@@ -2983,25 +4154,23 @@ export const channelsHandler = new Hono()
                                 Type.Null(),
                               ]),
                             ),
-                            sku_id: Type.Optional(
-                              Type.Union([
-                                Type.Union([Type.Null(), Type.Null()]),
-                                SnowflakeTypeSchema,
-                              ]),
-                            ),
+                            sku_id: Type.Optional(Type.Union([Type.Null(), SnowflakeTypeSchema])),
                             emoji: Type.Optional(
-                              Type.Union([
-                                Type.Union([Type.Null(), Type.Null()]),
-                                ComponentEmojiForRequestSchema,
-                              ]),
+                              Type.Union([Type.Null(), ComponentEmojiForRequestSchema]),
                             ),
                           }),
                           Type.Object({
                             type: MessageComponentTypesSchema,
                             id: Type.Optional(
                               Type.Union([
-                                Codec(Type.String())
-                                  .Decode((value) => Number.parseInt(value, 10))
+                                Codec(
+                                  Type.Refine(
+                                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                    (value) => Number(value) >= 0,
+                                    () => 'must be >= 0',
+                                  ),
+                                )
+                                  .Decode((value) => Number(value))
                                   .Encode((value) => String(value)),
                                 Type.Null(),
                               ]),
@@ -3014,8 +4183,13 @@ export const channelsHandler = new Hono()
                             ),
                             spoiler: Type.Optional(
                               Type.Union([
-                                Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                  .Decode((value) => value === 'true')
+                                Codec(
+                                  Type.String({
+                                    pattern:
+                                      /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                  }),
+                                )
+                                  .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                   .Encode((value) => (value ? 'true' : 'false')),
                                 Type.Null(),
                               ]),
@@ -3028,22 +4202,29 @@ export const channelsHandler = new Hono()
                         type: MessageComponentTypesSchema,
                         id: Type.Optional(
                           Type.Union([
-                            Codec(Type.String())
-                              .Decode((value) => Number.parseInt(value, 10))
+                            Codec(
+                              Type.Refine(
+                                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                (value) => Number(value) >= 0,
+                                () => 'must be >= 0',
+                              ),
+                            )
+                              .Decode((value) => Number(value))
                               .Encode((value) => String(value)),
                             Type.Null(),
                           ]),
                         ),
                         spacing: Type.Optional(
-                          Type.Union([
-                            Type.Union([Type.Null(), Type.Null()]),
-                            MessageComponentSeparatorSpacingSizeSchema,
-                          ]),
+                          Type.Union([Type.Null(), MessageComponentSeparatorSpacingSizeSchema]),
                         ),
                         divider: Type.Optional(
                           Type.Union([
-                            Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                              .Decode((value) => value === 'true')
+                            Codec(
+                              Type.String({
+                                pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                              }),
+                            )
+                              .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                               .Encode((value) => (value ? 'true' : 'false')),
                             Type.Null(),
                           ]),
@@ -3053,8 +4234,14 @@ export const channelsHandler = new Hono()
                         type: MessageComponentTypesSchema,
                         id: Type.Optional(
                           Type.Union([
-                            Codec(Type.String())
-                              .Decode((value) => Number.parseInt(value, 10))
+                            Codec(
+                              Type.Refine(
+                                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                (value) => Number(value) >= 0,
+                                () => 'must be >= 0',
+                              ),
+                            )
+                              .Decode((value) => Number(value))
                               .Encode((value) => String(value)),
                             Type.Null(),
                           ]),
@@ -3066,8 +4253,12 @@ export const channelsHandler = new Hono()
                   ),
                   spoiler: Type.Optional(
                     Type.Union([
-                      Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                        .Decode((value) => value === 'true')
+                      Codec(
+                        Type.String({
+                          pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                        }),
+                      )
+                        .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                         .Encode((value) => (value ? 'true' : 'false')),
                       Type.Null(),
                     ]),
@@ -3077,16 +4268,26 @@ export const channelsHandler = new Hono()
                   type: MessageComponentTypesSchema,
                   id: Type.Optional(
                     Type.Union([
-                      Codec(Type.String())
-                        .Decode((value) => Number.parseInt(value, 10))
+                      Codec(
+                        Type.Refine(
+                          Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                          (value) => Number(value) >= 0,
+                          () => 'must be >= 0',
+                        ),
+                      )
+                        .Decode((value) => Number(value))
                         .Encode((value) => String(value)),
                       Type.Null(),
                     ]),
                   ),
                   spoiler: Type.Optional(
                     Type.Union([
-                      Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                        .Decode((value) => value === 'true')
+                      Codec(
+                        Type.String({
+                          pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                        }),
+                      )
+                        .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                         .Encode((value) => (value ? 'true' : 'false')),
                       Type.Null(),
                     ]),
@@ -3097,8 +4298,14 @@ export const channelsHandler = new Hono()
                   type: MessageComponentTypesSchema,
                   id: Type.Optional(
                     Type.Union([
-                      Codec(Type.String())
-                        .Decode((value) => Number.parseInt(value, 10))
+                      Codec(
+                        Type.Refine(
+                          Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                          (value) => Number(value) >= 0,
+                          () => 'must be >= 0',
+                        ),
+                      )
+                        .Decode((value) => Number(value))
                         .Encode((value) => String(value)),
                       Type.Null(),
                     ]),
@@ -3110,8 +4317,12 @@ export const channelsHandler = new Hono()
                       ),
                       spoiler: Type.Optional(
                         Type.Union([
-                          Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                            .Decode((value) => value === 'true')
+                          Codec(
+                            Type.String({
+                              pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                            }),
+                          )
+                            .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                             .Encode((value) => (value ? 'true' : 'false')),
                           Type.Null(),
                         ]),
@@ -3125,8 +4336,14 @@ export const channelsHandler = new Hono()
                   type: MessageComponentTypesSchema,
                   id: Type.Optional(
                     Type.Union([
-                      Codec(Type.String())
-                        .Decode((value) => Number.parseInt(value, 10))
+                      Codec(
+                        Type.Refine(
+                          Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                          (value) => Number(value) >= 0,
+                          () => 'must be >= 0',
+                        ),
+                      )
+                        .Decode((value) => Number(value))
                         .Encode((value) => String(value)),
                       Type.Null(),
                     ]),
@@ -3136,8 +4353,14 @@ export const channelsHandler = new Hono()
                       type: MessageComponentTypesSchema,
                       id: Type.Optional(
                         Type.Union([
-                          Codec(Type.String())
-                            .Decode((value) => Number.parseInt(value, 10))
+                          Codec(
+                            Type.Refine(
+                              Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                              (value) => Number(value) >= 0,
+                              () => 'must be >= 0',
+                            ),
+                          )
+                            .Decode((value) => Number(value))
                             .Encode((value) => String(value)),
                           Type.Null(),
                         ]),
@@ -3151,8 +4374,14 @@ export const channelsHandler = new Hono()
                       type: MessageComponentTypesSchema,
                       id: Type.Optional(
                         Type.Union([
-                          Codec(Type.String())
-                            .Decode((value) => Number.parseInt(value, 10))
+                          Codec(
+                            Type.Refine(
+                              Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                              (value) => Number(value) >= 0,
+                              () => 'must be >= 0',
+                            ),
+                          )
+                            .Decode((value) => Number(value))
                             .Encode((value) => String(value)),
                           Type.Null(),
                         ]),
@@ -3166,8 +4395,12 @@ export const channelsHandler = new Hono()
                       ),
                       disabled: Type.Optional(
                         Type.Union([
-                          Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                            .Decode((value) => value === 'true')
+                          Codec(
+                            Type.String({
+                              pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                            }),
+                          )
+                            .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                             .Encode((value) => (value ? 'true' : 'false')),
                           Type.Null(),
                         ]),
@@ -3175,22 +4408,23 @@ export const channelsHandler = new Hono()
                       url: Type.Optional(
                         Type.Union([Type.String({ format: 'uri', maxLength: 512 }), Type.Null()]),
                       ),
-                      sku_id: Type.Optional(
-                        Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
-                      ),
+                      sku_id: Type.Optional(Type.Union([Type.Null(), SnowflakeTypeSchema])),
                       emoji: Type.Optional(
-                        Type.Union([
-                          Type.Union([Type.Null(), Type.Null()]),
-                          ComponentEmojiForRequestSchema,
-                        ]),
+                        Type.Union([Type.Null(), ComponentEmojiForRequestSchema]),
                       ),
                     }),
                     Type.Object({
                       type: MessageComponentTypesSchema,
                       id: Type.Optional(
                         Type.Union([
-                          Codec(Type.String())
-                            .Decode((value) => Number.parseInt(value, 10))
+                          Codec(
+                            Type.Refine(
+                              Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                              (value) => Number(value) >= 0,
+                              () => 'must be >= 0',
+                            ),
+                          )
+                            .Decode((value) => Number(value))
                             .Encode((value) => String(value)),
                           Type.Null(),
                         ]),
@@ -3200,8 +4434,12 @@ export const channelsHandler = new Hono()
                       ),
                       spoiler: Type.Optional(
                         Type.Union([
-                          Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                            .Decode((value) => value === 'true')
+                          Codec(
+                            Type.String({
+                              pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                            }),
+                          )
+                            .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                             .Encode((value) => (value ? 'true' : 'false')),
                           Type.Null(),
                         ]),
@@ -3214,22 +4452,29 @@ export const channelsHandler = new Hono()
                   type: MessageComponentTypesSchema,
                   id: Type.Optional(
                     Type.Union([
-                      Codec(Type.String())
-                        .Decode((value) => Number.parseInt(value, 10))
+                      Codec(
+                        Type.Refine(
+                          Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                          (value) => Number(value) >= 0,
+                          () => 'must be >= 0',
+                        ),
+                      )
+                        .Decode((value) => Number(value))
                         .Encode((value) => String(value)),
                       Type.Null(),
                     ]),
                   ),
                   spacing: Type.Optional(
-                    Type.Union([
-                      Type.Union([Type.Null(), Type.Null()]),
-                      MessageComponentSeparatorSpacingSizeSchema,
-                    ]),
+                    Type.Union([Type.Null(), MessageComponentSeparatorSpacingSizeSchema]),
                   ),
                   divider: Type.Optional(
                     Type.Union([
-                      Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                        .Decode((value) => value === 'true')
+                      Codec(
+                        Type.String({
+                          pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                        }),
+                      )
+                        .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                         .Encode((value) => (value ? 'true' : 'false')),
                       Type.Null(),
                     ]),
@@ -3239,8 +4484,14 @@ export const channelsHandler = new Hono()
                   type: MessageComponentTypesSchema,
                   id: Type.Optional(
                     Type.Union([
-                      Codec(Type.String())
-                        .Decode((value) => Number.parseInt(value, 10))
+                      Codec(
+                        Type.Refine(
+                          Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                          (value) => Number(value) >= 0,
+                          () => 'must be >= 0',
+                        ),
+                      )
+                        .Decode((value) => Number(value))
                         .Encode((value) => String(value)),
                       Type.Null(),
                     ]),
@@ -3266,7 +4517,19 @@ export const channelsHandler = new Hono()
                 ),
                 duration_secs: Type.Optional(
                   Type.Union([
-                    Codec(Type.String())
+                    Codec(
+                      Type.Refine(
+                        Type.Refine(
+                          Type.String({
+                            pattern: '^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$',
+                          }),
+                          (value) => Number(value) >= 0,
+                          () => 'must be >= 0',
+                        ),
+                        (value) => Number(value) <= 2147483647,
+                        () => 'must be <= 2147483647',
+                      ),
+                    )
                       .Decode((value) => Number(value))
                       .Encode((value) => String(value)),
                     Type.Null(),
@@ -3276,8 +4539,12 @@ export const channelsHandler = new Hono()
                 title: Type.Optional(Type.Union([Type.String({ maxLength: 1024 }), Type.Null()])),
                 is_spoiler: Type.Optional(
                   Type.Union([
-                    Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                      .Decode((value) => value === 'true')
+                    Codec(
+                      Type.String({
+                        pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                      }),
+                    )
+                      .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                       .Encode((value) => (value ? 'true' : 'false')),
                     Type.Null(),
                   ]),
@@ -3323,8 +4590,18 @@ export const channelsHandler = new Hono()
       Type.Object({
         after: Type.Optional(SnowflakeTypeSchema),
         limit: Type.Optional(
-          Codec(Type.String())
-            .Decode((value) => Number.parseInt(value, 10))
+          Codec(
+            Type.Refine(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                (value) => Number(value) >= 1,
+                () => 'must be >= 1',
+              ),
+              (value) => Number(value) <= 100,
+              () => 'must be <= 100',
+            ),
+          )
+            .Decode((value) => Number(value))
             .Encode((value) => String(value)),
         ),
         type: Type.Optional(ReactionTypesSchema),
@@ -3400,8 +4677,10 @@ export const channelsHandler = new Hono()
       'query',
       Type.Object({
         implicit: Type.Optional(
-          Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-            .Decode((value) => value === 'true')
+          Codec(
+            Type.String({ pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i }),
+          )
+            .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
             .Encode((value) => (value ? 'true' : 'false')),
         ),
       }),
@@ -3418,8 +4697,10 @@ export const channelsHandler = new Hono()
       'query',
       Type.Object({
         implicit: Type.Optional(
-          Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-            .Decode((value) => value === 'true')
+          Codec(
+            Type.String({ pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i }),
+          )
+            .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
             .Encode((value) => (value ? 'true' : 'false')),
         ),
       }),
@@ -3435,9 +4716,7 @@ export const channelsHandler = new Hono()
     tbValidator(
       'json',
       Type.Object({
-        type: Type.Optional(
-          Type.Union([Type.Union([Type.Null(), Type.Null()]), ChannelPermissionOverwritesSchema]),
-        ),
+        type: Type.Optional(Type.Union([Type.Null(), ChannelPermissionOverwritesSchema])),
         allow: Type.Optional(Type.Union([Type.Integer(), Type.Null()])),
         deny: Type.Optional(Type.Union([Type.Integer(), Type.Null()])),
       }),
@@ -3480,8 +4759,18 @@ export const channelsHandler = new Hono()
       Type.Object({
         channel_id: SnowflakeTypeSchema,
         message_id: SnowflakeTypeSchema,
-        answer_id: Codec(Type.String())
-          .Decode((value) => Number.parseInt(value, 10))
+        answer_id: Codec(
+          Type.Refine(
+            Type.Refine(
+              Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+              (value) => Number(value) >= 1,
+              () => 'must be >= 1',
+            ),
+            (value) => Number(value) <= 10,
+            () => 'must be <= 10',
+          ),
+        )
+          .Decode((value) => Number(value))
           .Encode((value) => String(value)),
       }),
     ),
@@ -3490,8 +4779,18 @@ export const channelsHandler = new Hono()
       Type.Object({
         after: Type.Optional(SnowflakeTypeSchema),
         limit: Type.Optional(
-          Codec(Type.String())
-            .Decode((value) => Number.parseInt(value, 10))
+          Codec(
+            Type.Refine(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                (value) => Number(value) >= 1,
+                () => 'must be >= 1',
+              ),
+              (value) => Number(value) <= 100,
+              () => 'must be <= 100',
+            ),
+          )
+            .Decode((value) => Number(value))
             .Encode((value) => String(value)),
         ),
       }),
@@ -3542,13 +4841,25 @@ export const channelsHandler = new Hono()
       'query',
       Type.Object({
         with_member: Type.Optional(
-          Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-            .Decode((value) => value === 'true')
+          Codec(
+            Type.String({ pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i }),
+          )
+            .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
             .Encode((value) => (value ? 'true' : 'false')),
         ),
         limit: Type.Optional(
-          Codec(Type.String())
-            .Decode((value) => Number.parseInt(value, 10))
+          Codec(
+            Type.Refine(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                (value) => Number(value) >= 1,
+                () => 'must be >= 1',
+              ),
+              (value) => Number(value) <= 100,
+              () => 'must be <= 100',
+            ),
+          )
+            .Decode((value) => Number(value))
             .Encode((value) => String(value)),
         ),
         after: Type.Optional(SnowflakeTypeSchema),
@@ -3576,8 +4887,10 @@ export const channelsHandler = new Hono()
       'query',
       Type.Object({
         with_member: Type.Optional(
-          Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-            .Decode((value) => value === 'true')
+          Codec(
+            Type.String({ pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i }),
+          )
+            .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
             .Encode((value) => (value ? 'true' : 'false')),
         ),
       }),
@@ -3613,12 +4926,22 @@ export const channelsHandler = new Hono()
         Type.Object({
           name: Type.String({ minLength: 1, maxLength: 100 }),
           auto_archive_duration: Type.Optional(
-            Type.Union([Type.Union([Type.Null(), Type.Null()]), ThreadAutoArchiveDurationSchema]),
+            Type.Union([Type.Null(), ThreadAutoArchiveDurationSchema]),
           ),
           rate_limit_per_user: Type.Optional(
             Type.Union([
-              Codec(Type.String())
-                .Decode((value) => Number.parseInt(value, 10))
+              Codec(
+                Type.Refine(
+                  Type.Refine(
+                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                    (value) => Number(value) >= 0,
+                    () => 'must be >= 0',
+                  ),
+                  (value) => Number(value) <= 21600,
+                  () => 'must be <= 21600',
+                ),
+              )
+                .Decode((value) => Number(value))
                 .Encode((value) => String(value)),
               Type.Null(),
             ]),
@@ -3643,8 +4966,18 @@ export const channelsHandler = new Hono()
                     ),
                     color: Type.Optional(
                       Type.Union([
-                        Codec(Type.String())
-                          .Decode((value) => Number.parseInt(value, 10))
+                        Codec(
+                          Type.Refine(
+                            Type.Refine(
+                              Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                              (value) => Number(value) >= 0,
+                              () => 'must be >= 0',
+                            ),
+                            (value) => Number(value) <= 16777215,
+                            () => 'must be <= 16777215',
+                          ),
+                        )
+                          .Decode((value) => Number(value))
                           .Encode((value) => String(value)),
                         Type.Null(),
                       ]),
@@ -3655,12 +4988,10 @@ export const channelsHandler = new Hono()
                     description: Type.Optional(
                       Type.Union([Type.String({ maxLength: 4096 }), Type.Null()]),
                     ),
-                    author: Type.Optional(
-                      Type.Union([Type.Union([Type.Null(), Type.Null()]), RichEmbedAuthorSchema]),
-                    ),
+                    author: Type.Optional(Type.Union([Type.Null(), RichEmbedAuthorSchema])),
                     image: Type.Optional(
                       Type.Union([
-                        Type.Union([Type.Null(), Type.Null()]),
+                        Type.Null(),
                         Type.Object({
                           url: Type.Optional(
                             Type.Union([
@@ -3670,16 +5001,16 @@ export const channelsHandler = new Hono()
                           ),
                           width: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
                           ),
                           height: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
@@ -3689,16 +5020,31 @@ export const channelsHandler = new Hono()
                           ),
                           placeholder_version: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(
+                                Type.Refine(
+                                  Type.Refine(
+                                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                    (value) => Number(value) >= 0,
+                                    () => 'must be >= 0',
+                                  ),
+                                  (value) => Number(value) <= 2147483647,
+                                  () => 'must be <= 2147483647',
+                                ),
+                              )
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
                           ),
                           is_animated: Type.Optional(
                             Type.Union([
-                              Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                .Decode((value) => value === 'true')
+                              Codec(
+                                Type.String({
+                                  pattern:
+                                    /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                }),
+                              )
+                                .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                 .Encode((value) => (value ? 'true' : 'false')),
                               Type.Null(),
                             ]),
@@ -3711,7 +5057,7 @@ export const channelsHandler = new Hono()
                     ),
                     thumbnail: Type.Optional(
                       Type.Union([
-                        Type.Union([Type.Null(), Type.Null()]),
+                        Type.Null(),
                         Type.Object({
                           url: Type.Optional(
                             Type.Union([
@@ -3721,16 +5067,16 @@ export const channelsHandler = new Hono()
                           ),
                           width: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
                           ),
                           height: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
@@ -3740,16 +5086,31 @@ export const channelsHandler = new Hono()
                           ),
                           placeholder_version: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(
+                                Type.Refine(
+                                  Type.Refine(
+                                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                    (value) => Number(value) >= 0,
+                                    () => 'must be >= 0',
+                                  ),
+                                  (value) => Number(value) <= 2147483647,
+                                  () => 'must be <= 2147483647',
+                                ),
+                              )
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
                           ),
                           is_animated: Type.Optional(
                             Type.Union([
-                              Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                .Decode((value) => value === 'true')
+                              Codec(
+                                Type.String({
+                                  pattern:
+                                    /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                }),
+                              )
+                                .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                 .Encode((value) => (value ? 'true' : 'false')),
                               Type.Null(),
                             ]),
@@ -3760,9 +5121,7 @@ export const channelsHandler = new Hono()
                         }),
                       ]),
                     ),
-                    footer: Type.Optional(
-                      Type.Union([Type.Union([Type.Null(), Type.Null()]), RichEmbedFooterSchema]),
-                    ),
+                    footer: Type.Optional(Type.Union([Type.Null(), RichEmbedFooterSchema])),
                     fields: Type.Optional(
                       Type.Union([
                         Type.Array(
@@ -3771,8 +5130,13 @@ export const channelsHandler = new Hono()
                             value: Type.String({ maxLength: 1024 }),
                             inline: Type.Optional(
                               Type.Union([
-                                Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                  .Decode((value) => value === 'true')
+                                Codec(
+                                  Type.String({
+                                    pattern:
+                                      /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                  }),
+                                )
+                                  .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                   .Encode((value) => (value ? 'true' : 'false')),
                                 Type.Null(),
                               ]),
@@ -3783,12 +5147,10 @@ export const channelsHandler = new Hono()
                         Type.Null(),
                       ]),
                     ),
-                    provider: Type.Optional(
-                      Type.Union([Type.Union([Type.Null(), Type.Null()]), RichEmbedProviderSchema]),
-                    ),
+                    provider: Type.Optional(Type.Union([Type.Null(), RichEmbedProviderSchema])),
                     video: Type.Optional(
                       Type.Union([
-                        Type.Union([Type.Null(), Type.Null()]),
+                        Type.Null(),
                         Type.Object({
                           url: Type.Optional(
                             Type.Union([
@@ -3798,16 +5160,16 @@ export const channelsHandler = new Hono()
                           ),
                           width: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
                           ),
                           height: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
@@ -3817,16 +5179,31 @@ export const channelsHandler = new Hono()
                           ),
                           placeholder_version: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(
+                                Type.Refine(
+                                  Type.Refine(
+                                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                    (value) => Number(value) >= 0,
+                                    () => 'must be >= 0',
+                                  ),
+                                  (value) => Number(value) <= 2147483647,
+                                  () => 'must be <= 2147483647',
+                                ),
+                              )
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
                           ),
                           is_animated: Type.Optional(
                             Type.Union([
-                              Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                .Decode((value) => value === 'true')
+                              Codec(
+                                Type.String({
+                                  pattern:
+                                    /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                }),
+                              )
+                                .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                 .Encode((value) => (value ? 'true' : 'false')),
                               Type.Null(),
                             ]),
@@ -3837,9 +5214,7 @@ export const channelsHandler = new Hono()
                         }),
                       ]),
                     ),
-                    audio: Type.Optional(
-                      Type.Union([Type.Union([Type.Null(), Type.Null()]), RichEmbedAudioSchema]),
-                    ),
+                    audio: Type.Optional(Type.Union([Type.Null(), RichEmbedAudioSchema])),
                   }),
                   { maxItems: 10 },
                 ),
@@ -3848,42 +5223,43 @@ export const channelsHandler = new Hono()
             ),
             allowed_mentions: Type.Optional(
               Type.Union([
-                Type.Union([Type.Null(), Type.Null()]),
+                Type.Null(),
                 Type.Object({
                   parse: Type.Optional(
                     Type.Union([
-                      Type.Array(
-                        Type.Union([
-                          Type.Union([Type.Null(), Type.Null()]),
-                          AllowedMentionTypesSchema,
-                        ]),
-                        { maxItems: 1521, uniqueItems: true },
-                      ),
+                      Type.Array(Type.Union([Type.Null(), AllowedMentionTypesSchema]), {
+                        maxItems: 1521,
+                        uniqueItems: true,
+                      }),
                       Type.Null(),
                     ]),
                   ),
                   users: Type.Optional(
                     Type.Union([
-                      Type.Array(
-                        Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
-                        { maxItems: 100, uniqueItems: true },
-                      ),
+                      Type.Array(Type.Union([Type.Null(), SnowflakeTypeSchema]), {
+                        maxItems: 100,
+                        uniqueItems: true,
+                      }),
                       Type.Null(),
                     ]),
                   ),
                   roles: Type.Optional(
                     Type.Union([
-                      Type.Array(
-                        Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
-                        { maxItems: 100, uniqueItems: true },
-                      ),
+                      Type.Array(Type.Union([Type.Null(), SnowflakeTypeSchema]), {
+                        maxItems: 100,
+                        uniqueItems: true,
+                      }),
                       Type.Null(),
                     ]),
                   ),
                   replied_user: Type.Optional(
                     Type.Union([
-                      Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                        .Decode((value) => value === 'true')
+                      Codec(
+                        Type.String({
+                          pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                        }),
+                      )
+                        .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                         .Encode((value) => (value ? 'true' : 'false')),
                       Type.Null(),
                     ]),
@@ -3902,8 +5278,14 @@ export const channelsHandler = new Hono()
                       type: MessageComponentTypesSchema,
                       id: Type.Optional(
                         Type.Union([
-                          Codec(Type.String())
-                            .Decode((value) => Number.parseInt(value, 10))
+                          Codec(
+                            Type.Refine(
+                              Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                              (value) => Number(value) >= 0,
+                              () => 'must be >= 0',
+                            ),
+                          )
+                            .Decode((value) => Number(value))
                             .Encode((value) => String(value)),
                           Type.Null(),
                         ]),
@@ -3914,8 +5296,14 @@ export const channelsHandler = new Hono()
                             type: MessageComponentTypesSchema,
                             id: Type.Optional(
                               Type.Union([
-                                Codec(Type.String())
-                                  .Decode((value) => Number.parseInt(value, 10))
+                                Codec(
+                                  Type.Refine(
+                                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                    (value) => Number(value) >= 0,
+                                    () => 'must be >= 0',
+                                  ),
+                                )
+                                  .Decode((value) => Number(value))
                                   .Encode((value) => String(value)),
                                 Type.Null(),
                               ]),
@@ -3932,8 +5320,13 @@ export const channelsHandler = new Hono()
                             ),
                             disabled: Type.Optional(
                               Type.Union([
-                                Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                  .Decode((value) => value === 'true')
+                                Codec(
+                                  Type.String({
+                                    pattern:
+                                      /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                  }),
+                                )
+                                  .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                   .Encode((value) => (value ? 'true' : 'false')),
                                 Type.Null(),
                               ]),
@@ -3944,25 +5337,23 @@ export const channelsHandler = new Hono()
                                 Type.Null(),
                               ]),
                             ),
-                            sku_id: Type.Optional(
-                              Type.Union([
-                                Type.Union([Type.Null(), Type.Null()]),
-                                SnowflakeTypeSchema,
-                              ]),
-                            ),
+                            sku_id: Type.Optional(Type.Union([Type.Null(), SnowflakeTypeSchema])),
                             emoji: Type.Optional(
-                              Type.Union([
-                                Type.Union([Type.Null(), Type.Null()]),
-                                ComponentEmojiForRequestSchema,
-                              ]),
+                              Type.Union([Type.Null(), ComponentEmojiForRequestSchema]),
                             ),
                           }),
                           Type.Object({
                             type: MessageComponentTypesSchema,
                             id: Type.Optional(
                               Type.Union([
-                                Codec(Type.String())
-                                  .Decode((value) => Number.parseInt(value, 10))
+                                Codec(
+                                  Type.Refine(
+                                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                    (value) => Number(value) >= 0,
+                                    () => 'must be >= 0',
+                                  ),
+                                )
+                                  .Decode((value) => Number(value))
                                   .Encode((value) => String(value)),
                                 Type.Null(),
                               ]),
@@ -3973,32 +5364,62 @@ export const channelsHandler = new Hono()
                             ),
                             min_values: Type.Optional(
                               Type.Union([
-                                Codec(Type.String())
-                                  .Decode((value) => Number.parseInt(value, 10))
+                                Codec(
+                                  Type.Refine(
+                                    Type.Refine(
+                                      Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                      (value) => Number(value) >= 0,
+                                      () => 'must be >= 0',
+                                    ),
+                                    (value) => Number(value) <= 25,
+                                    () => 'must be <= 25',
+                                  ),
+                                )
+                                  .Decode((value) => Number(value))
                                   .Encode((value) => String(value)),
                                 Type.Null(),
                               ]),
                             ),
                             max_values: Type.Optional(
                               Type.Union([
-                                Codec(Type.String())
-                                  .Decode((value) => Number.parseInt(value, 10))
+                                Codec(
+                                  Type.Refine(
+                                    Type.Refine(
+                                      Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                      (value) => Number(value) >= 1,
+                                      () => 'must be >= 1',
+                                    ),
+                                    (value) => Number(value) <= 25,
+                                    () => 'must be <= 25',
+                                  ),
+                                )
+                                  .Decode((value) => Number(value))
                                   .Encode((value) => String(value)),
                                 Type.Null(),
                               ]),
                             ),
                             disabled: Type.Optional(
                               Type.Union([
-                                Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                  .Decode((value) => value === 'true')
+                                Codec(
+                                  Type.String({
+                                    pattern:
+                                      /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                  }),
+                                )
+                                  .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                   .Encode((value) => (value ? 'true' : 'false')),
                                 Type.Null(),
                               ]),
                             ),
                             required: Type.Optional(
                               Type.Union([
-                                Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                  .Decode((value) => value === 'true')
+                                Codec(
+                                  Type.String({
+                                    pattern:
+                                      /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                  }),
+                                )
+                                  .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                   .Encode((value) => (value ? 'true' : 'false')),
                                 Type.Null(),
                               ]),
@@ -4020,8 +5441,14 @@ export const channelsHandler = new Hono()
                             type: MessageComponentTypesSchema,
                             id: Type.Optional(
                               Type.Union([
-                                Codec(Type.String())
-                                  .Decode((value) => Number.parseInt(value, 10))
+                                Codec(
+                                  Type.Refine(
+                                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                    (value) => Number(value) >= 0,
+                                    () => 'must be >= 0',
+                                  ),
+                                )
+                                  .Decode((value) => Number(value))
                                   .Encode((value) => String(value)),
                                 Type.Null(),
                               ]),
@@ -4032,32 +5459,62 @@ export const channelsHandler = new Hono()
                             ),
                             min_values: Type.Optional(
                               Type.Union([
-                                Codec(Type.String())
-                                  .Decode((value) => Number.parseInt(value, 10))
+                                Codec(
+                                  Type.Refine(
+                                    Type.Refine(
+                                      Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                      (value) => Number(value) >= 0,
+                                      () => 'must be >= 0',
+                                    ),
+                                    (value) => Number(value) <= 25,
+                                    () => 'must be <= 25',
+                                  ),
+                                )
+                                  .Decode((value) => Number(value))
                                   .Encode((value) => String(value)),
                                 Type.Null(),
                               ]),
                             ),
                             max_values: Type.Optional(
                               Type.Union([
-                                Codec(Type.String())
-                                  .Decode((value) => Number.parseInt(value, 10))
+                                Codec(
+                                  Type.Refine(
+                                    Type.Refine(
+                                      Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                      (value) => Number(value) >= 1,
+                                      () => 'must be >= 1',
+                                    ),
+                                    (value) => Number(value) <= 25,
+                                    () => 'must be <= 25',
+                                  ),
+                                )
+                                  .Decode((value) => Number(value))
                                   .Encode((value) => String(value)),
                                 Type.Null(),
                               ]),
                             ),
                             disabled: Type.Optional(
                               Type.Union([
-                                Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                  .Decode((value) => value === 'true')
+                                Codec(
+                                  Type.String({
+                                    pattern:
+                                      /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                  }),
+                                )
+                                  .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                   .Encode((value) => (value ? 'true' : 'false')),
                                 Type.Null(),
                               ]),
                             ),
                             required: Type.Optional(
                               Type.Union([
-                                Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                  .Decode((value) => value === 'true')
+                                Codec(
+                                  Type.String({
+                                    pattern:
+                                      /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                  }),
+                                )
+                                  .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                   .Encode((value) => (value ? 'true' : 'false')),
                                 Type.Null(),
                               ]),
@@ -4079,8 +5536,14 @@ export const channelsHandler = new Hono()
                             type: MessageComponentTypesSchema,
                             id: Type.Optional(
                               Type.Union([
-                                Codec(Type.String())
-                                  .Decode((value) => Number.parseInt(value, 10))
+                                Codec(
+                                  Type.Refine(
+                                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                    (value) => Number(value) >= 0,
+                                    () => 'must be >= 0',
+                                  ),
+                                )
+                                  .Decode((value) => Number(value))
                                   .Encode((value) => String(value)),
                                 Type.Null(),
                               ]),
@@ -4091,32 +5554,62 @@ export const channelsHandler = new Hono()
                             ),
                             min_values: Type.Optional(
                               Type.Union([
-                                Codec(Type.String())
-                                  .Decode((value) => Number.parseInt(value, 10))
+                                Codec(
+                                  Type.Refine(
+                                    Type.Refine(
+                                      Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                      (value) => Number(value) >= 0,
+                                      () => 'must be >= 0',
+                                    ),
+                                    (value) => Number(value) <= 25,
+                                    () => 'must be <= 25',
+                                  ),
+                                )
+                                  .Decode((value) => Number(value))
                                   .Encode((value) => String(value)),
                                 Type.Null(),
                               ]),
                             ),
                             max_values: Type.Optional(
                               Type.Union([
-                                Codec(Type.String())
-                                  .Decode((value) => Number.parseInt(value, 10))
+                                Codec(
+                                  Type.Refine(
+                                    Type.Refine(
+                                      Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                      (value) => Number(value) >= 1,
+                                      () => 'must be >= 1',
+                                    ),
+                                    (value) => Number(value) <= 25,
+                                    () => 'must be <= 25',
+                                  ),
+                                )
+                                  .Decode((value) => Number(value))
                                   .Encode((value) => String(value)),
                                 Type.Null(),
                               ]),
                             ),
                             disabled: Type.Optional(
                               Type.Union([
-                                Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                  .Decode((value) => value === 'true')
+                                Codec(
+                                  Type.String({
+                                    pattern:
+                                      /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                  }),
+                                )
+                                  .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                   .Encode((value) => (value ? 'true' : 'false')),
                                 Type.Null(),
                               ]),
                             ),
                             required: Type.Optional(
                               Type.Union([
-                                Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                  .Decode((value) => value === 'true')
+                                Codec(
+                                  Type.String({
+                                    pattern:
+                                      /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                  }),
+                                )
+                                  .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                   .Encode((value) => (value ? 'true' : 'false')),
                                 Type.Null(),
                               ]),
@@ -4132,8 +5625,14 @@ export const channelsHandler = new Hono()
                             type: MessageComponentTypesSchema,
                             id: Type.Optional(
                               Type.Union([
-                                Codec(Type.String())
-                                  .Decode((value) => Number.parseInt(value, 10))
+                                Codec(
+                                  Type.Refine(
+                                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                    (value) => Number(value) >= 0,
+                                    () => 'must be >= 0',
+                                  ),
+                                )
+                                  .Decode((value) => Number(value))
                                   .Encode((value) => String(value)),
                                 Type.Null(),
                               ]),
@@ -4144,32 +5643,62 @@ export const channelsHandler = new Hono()
                             ),
                             min_values: Type.Optional(
                               Type.Union([
-                                Codec(Type.String())
-                                  .Decode((value) => Number.parseInt(value, 10))
+                                Codec(
+                                  Type.Refine(
+                                    Type.Refine(
+                                      Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                      (value) => Number(value) >= 0,
+                                      () => 'must be >= 0',
+                                    ),
+                                    (value) => Number(value) <= 25,
+                                    () => 'must be <= 25',
+                                  ),
+                                )
+                                  .Decode((value) => Number(value))
                                   .Encode((value) => String(value)),
                                 Type.Null(),
                               ]),
                             ),
                             max_values: Type.Optional(
                               Type.Union([
-                                Codec(Type.String())
-                                  .Decode((value) => Number.parseInt(value, 10))
+                                Codec(
+                                  Type.Refine(
+                                    Type.Refine(
+                                      Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                      (value) => Number(value) >= 1,
+                                      () => 'must be >= 1',
+                                    ),
+                                    (value) => Number(value) <= 25,
+                                    () => 'must be <= 25',
+                                  ),
+                                )
+                                  .Decode((value) => Number(value))
                                   .Encode((value) => String(value)),
                                 Type.Null(),
                               ]),
                             ),
                             disabled: Type.Optional(
                               Type.Union([
-                                Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                  .Decode((value) => value === 'true')
+                                Codec(
+                                  Type.String({
+                                    pattern:
+                                      /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                  }),
+                                )
+                                  .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                   .Encode((value) => (value ? 'true' : 'false')),
                                 Type.Null(),
                               ]),
                             ),
                             required: Type.Optional(
                               Type.Union([
-                                Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                  .Decode((value) => value === 'true')
+                                Codec(
+                                  Type.String({
+                                    pattern:
+                                      /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                  }),
+                                )
+                                  .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                   .Encode((value) => (value ? 'true' : 'false')),
                                 Type.Null(),
                               ]),
@@ -4183,17 +5712,21 @@ export const channelsHandler = new Hono()
                                 ),
                                 default: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                      .Decode((value) => value === 'true')
+                                    Codec(
+                                      Type.String({
+                                        pattern:
+                                          /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                      }),
+                                    )
+                                      .Decode((value) =>
+                                        /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                      )
                                       .Encode((value) => (value ? 'true' : 'false')),
                                     Type.Null(),
                                   ]),
                                 ),
                                 emoji: Type.Optional(
-                                  Type.Union([
-                                    Type.Union([Type.Null(), Type.Null()]),
-                                    ComponentEmojiForRequestSchema,
-                                  ]),
+                                  Type.Union([Type.Null(), ComponentEmojiForRequestSchema]),
                                 ),
                               }),
                               { minItems: 1, maxItems: 25 },
@@ -4203,8 +5736,14 @@ export const channelsHandler = new Hono()
                             type: MessageComponentTypesSchema,
                             id: Type.Optional(
                               Type.Union([
-                                Codec(Type.String())
-                                  .Decode((value) => Number.parseInt(value, 10))
+                                Codec(
+                                  Type.Refine(
+                                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                    (value) => Number(value) >= 0,
+                                    () => 'must be >= 0',
+                                  ),
+                                )
+                                  .Decode((value) => Number(value))
                                   .Encode((value) => String(value)),
                                 Type.Null(),
                               ]),
@@ -4215,32 +5754,62 @@ export const channelsHandler = new Hono()
                             ),
                             min_values: Type.Optional(
                               Type.Union([
-                                Codec(Type.String())
-                                  .Decode((value) => Number.parseInt(value, 10))
+                                Codec(
+                                  Type.Refine(
+                                    Type.Refine(
+                                      Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                      (value) => Number(value) >= 0,
+                                      () => 'must be >= 0',
+                                    ),
+                                    (value) => Number(value) <= 25,
+                                    () => 'must be <= 25',
+                                  ),
+                                )
+                                  .Decode((value) => Number(value))
                                   .Encode((value) => String(value)),
                                 Type.Null(),
                               ]),
                             ),
                             max_values: Type.Optional(
                               Type.Union([
-                                Codec(Type.String())
-                                  .Decode((value) => Number.parseInt(value, 10))
+                                Codec(
+                                  Type.Refine(
+                                    Type.Refine(
+                                      Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                      (value) => Number(value) >= 1,
+                                      () => 'must be >= 1',
+                                    ),
+                                    (value) => Number(value) <= 25,
+                                    () => 'must be <= 25',
+                                  ),
+                                )
+                                  .Decode((value) => Number(value))
                                   .Encode((value) => String(value)),
                                 Type.Null(),
                               ]),
                             ),
                             disabled: Type.Optional(
                               Type.Union([
-                                Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                  .Decode((value) => value === 'true')
+                                Codec(
+                                  Type.String({
+                                    pattern:
+                                      /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                  }),
+                                )
+                                  .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                   .Encode((value) => (value ? 'true' : 'false')),
                                 Type.Null(),
                               ]),
                             ),
                             required: Type.Optional(
                               Type.Union([
-                                Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                  .Decode((value) => value === 'true')
+                                Codec(
+                                  Type.String({
+                                    pattern:
+                                      /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                  }),
+                                )
+                                  .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                   .Encode((value) => (value ? 'true' : 'false')),
                                 Type.Null(),
                               ]),
@@ -4260,16 +5829,32 @@ export const channelsHandler = new Hono()
                       type: MessageComponentTypesSchema,
                       id: Type.Optional(
                         Type.Union([
-                          Codec(Type.String())
-                            .Decode((value) => Number.parseInt(value, 10))
+                          Codec(
+                            Type.Refine(
+                              Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                              (value) => Number(value) >= 0,
+                              () => 'must be >= 0',
+                            ),
+                          )
+                            .Decode((value) => Number(value))
                             .Encode((value) => String(value)),
                           Type.Null(),
                         ]),
                       ),
                       accent_color: Type.Optional(
                         Type.Union([
-                          Codec(Type.String())
-                            .Decode((value) => Number.parseInt(value, 10))
+                          Codec(
+                            Type.Refine(
+                              Type.Refine(
+                                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                (value) => Number(value) >= 0,
+                                () => 'must be >= 0',
+                              ),
+                              (value) => Number(value) <= 16777215,
+                              () => 'must be <= 16777215',
+                            ),
+                          )
+                            .Decode((value) => Number(value))
                             .Encode((value) => String(value)),
                           Type.Null(),
                         ]),
@@ -4280,8 +5865,14 @@ export const channelsHandler = new Hono()
                             type: MessageComponentTypesSchema,
                             id: Type.Optional(
                               Type.Union([
-                                Codec(Type.String())
-                                  .Decode((value) => Number.parseInt(value, 10))
+                                Codec(
+                                  Type.Refine(
+                                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                    (value) => Number(value) >= 0,
+                                    () => 'must be >= 0',
+                                  ),
+                                )
+                                  .Decode((value) => Number(value))
                                   .Encode((value) => String(value)),
                                 Type.Null(),
                               ]),
@@ -4292,8 +5883,14 @@ export const channelsHandler = new Hono()
                                   type: MessageComponentTypesSchema,
                                   id: Type.Optional(
                                     Type.Union([
-                                      Codec(Type.String())
-                                        .Decode((value) => Number.parseInt(value, 10))
+                                      Codec(
+                                        Type.Refine(
+                                          Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                          (value) => Number(value) >= 0,
+                                          () => 'must be >= 0',
+                                        ),
+                                      )
+                                        .Decode((value) => Number(value))
                                         .Encode((value) => String(value)),
                                       Type.Null(),
                                     ]),
@@ -4311,9 +5908,14 @@ export const channelsHandler = new Hono()
                                   disabled: Type.Optional(
                                     Type.Union([
                                       Codec(
-                                        Type.Union([Type.Literal('true'), Type.Literal('false')]),
+                                        Type.String({
+                                          pattern:
+                                            /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                        }),
                                       )
-                                        .Decode((value) => value === 'true')
+                                        .Decode((value) =>
+                                          /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                        )
                                         .Encode((value) => (value ? 'true' : 'false')),
                                       Type.Null(),
                                     ]),
@@ -4325,24 +5927,24 @@ export const channelsHandler = new Hono()
                                     ]),
                                   ),
                                   sku_id: Type.Optional(
-                                    Type.Union([
-                                      Type.Union([Type.Null(), Type.Null()]),
-                                      SnowflakeTypeSchema,
-                                    ]),
+                                    Type.Union([Type.Null(), SnowflakeTypeSchema]),
                                   ),
                                   emoji: Type.Optional(
-                                    Type.Union([
-                                      Type.Union([Type.Null(), Type.Null()]),
-                                      ComponentEmojiForRequestSchema,
-                                    ]),
+                                    Type.Union([Type.Null(), ComponentEmojiForRequestSchema]),
                                   ),
                                 }),
                                 Type.Object({
                                   type: MessageComponentTypesSchema,
                                   id: Type.Optional(
                                     Type.Union([
-                                      Codec(Type.String())
-                                        .Decode((value) => Number.parseInt(value, 10))
+                                      Codec(
+                                        Type.Refine(
+                                          Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                          (value) => Number(value) >= 0,
+                                          () => 'must be >= 0',
+                                        ),
+                                      )
+                                        .Decode((value) => Number(value))
                                         .Encode((value) => String(value)),
                                       Type.Null(),
                                     ]),
@@ -4353,16 +5955,36 @@ export const channelsHandler = new Hono()
                                   ),
                                   min_values: Type.Optional(
                                     Type.Union([
-                                      Codec(Type.String())
-                                        .Decode((value) => Number.parseInt(value, 10))
+                                      Codec(
+                                        Type.Refine(
+                                          Type.Refine(
+                                            Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                            (value) => Number(value) >= 0,
+                                            () => 'must be >= 0',
+                                          ),
+                                          (value) => Number(value) <= 25,
+                                          () => 'must be <= 25',
+                                        ),
+                                      )
+                                        .Decode((value) => Number(value))
                                         .Encode((value) => String(value)),
                                       Type.Null(),
                                     ]),
                                   ),
                                   max_values: Type.Optional(
                                     Type.Union([
-                                      Codec(Type.String())
-                                        .Decode((value) => Number.parseInt(value, 10))
+                                      Codec(
+                                        Type.Refine(
+                                          Type.Refine(
+                                            Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                            (value) => Number(value) >= 1,
+                                            () => 'must be >= 1',
+                                          ),
+                                          (value) => Number(value) <= 25,
+                                          () => 'must be <= 25',
+                                        ),
+                                      )
+                                        .Decode((value) => Number(value))
                                         .Encode((value) => String(value)),
                                       Type.Null(),
                                     ]),
@@ -4370,9 +5992,14 @@ export const channelsHandler = new Hono()
                                   disabled: Type.Optional(
                                     Type.Union([
                                       Codec(
-                                        Type.Union([Type.Literal('true'), Type.Literal('false')]),
+                                        Type.String({
+                                          pattern:
+                                            /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                        }),
                                       )
-                                        .Decode((value) => value === 'true')
+                                        .Decode((value) =>
+                                          /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                        )
                                         .Encode((value) => (value ? 'true' : 'false')),
                                       Type.Null(),
                                     ]),
@@ -4380,9 +6007,14 @@ export const channelsHandler = new Hono()
                                   required: Type.Optional(
                                     Type.Union([
                                       Codec(
-                                        Type.Union([Type.Literal('true'), Type.Literal('false')]),
+                                        Type.String({
+                                          pattern:
+                                            /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                        }),
                                       )
-                                        .Decode((value) => value === 'true')
+                                        .Decode((value) =>
+                                          /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                        )
                                         .Encode((value) => (value ? 'true' : 'false')),
                                       Type.Null(),
                                     ]),
@@ -4404,8 +6036,14 @@ export const channelsHandler = new Hono()
                                   type: MessageComponentTypesSchema,
                                   id: Type.Optional(
                                     Type.Union([
-                                      Codec(Type.String())
-                                        .Decode((value) => Number.parseInt(value, 10))
+                                      Codec(
+                                        Type.Refine(
+                                          Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                          (value) => Number(value) >= 0,
+                                          () => 'must be >= 0',
+                                        ),
+                                      )
+                                        .Decode((value) => Number(value))
                                         .Encode((value) => String(value)),
                                       Type.Null(),
                                     ]),
@@ -4416,16 +6054,36 @@ export const channelsHandler = new Hono()
                                   ),
                                   min_values: Type.Optional(
                                     Type.Union([
-                                      Codec(Type.String())
-                                        .Decode((value) => Number.parseInt(value, 10))
+                                      Codec(
+                                        Type.Refine(
+                                          Type.Refine(
+                                            Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                            (value) => Number(value) >= 0,
+                                            () => 'must be >= 0',
+                                          ),
+                                          (value) => Number(value) <= 25,
+                                          () => 'must be <= 25',
+                                        ),
+                                      )
+                                        .Decode((value) => Number(value))
                                         .Encode((value) => String(value)),
                                       Type.Null(),
                                     ]),
                                   ),
                                   max_values: Type.Optional(
                                     Type.Union([
-                                      Codec(Type.String())
-                                        .Decode((value) => Number.parseInt(value, 10))
+                                      Codec(
+                                        Type.Refine(
+                                          Type.Refine(
+                                            Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                            (value) => Number(value) >= 1,
+                                            () => 'must be >= 1',
+                                          ),
+                                          (value) => Number(value) <= 25,
+                                          () => 'must be <= 25',
+                                        ),
+                                      )
+                                        .Decode((value) => Number(value))
                                         .Encode((value) => String(value)),
                                       Type.Null(),
                                     ]),
@@ -4433,9 +6091,14 @@ export const channelsHandler = new Hono()
                                   disabled: Type.Optional(
                                     Type.Union([
                                       Codec(
-                                        Type.Union([Type.Literal('true'), Type.Literal('false')]),
+                                        Type.String({
+                                          pattern:
+                                            /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                        }),
                                       )
-                                        .Decode((value) => value === 'true')
+                                        .Decode((value) =>
+                                          /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                        )
                                         .Encode((value) => (value ? 'true' : 'false')),
                                       Type.Null(),
                                     ]),
@@ -4443,9 +6106,14 @@ export const channelsHandler = new Hono()
                                   required: Type.Optional(
                                     Type.Union([
                                       Codec(
-                                        Type.Union([Type.Literal('true'), Type.Literal('false')]),
+                                        Type.String({
+                                          pattern:
+                                            /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                        }),
                                       )
-                                        .Decode((value) => value === 'true')
+                                        .Decode((value) =>
+                                          /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                        )
                                         .Encode((value) => (value ? 'true' : 'false')),
                                       Type.Null(),
                                     ]),
@@ -4467,8 +6135,14 @@ export const channelsHandler = new Hono()
                                   type: MessageComponentTypesSchema,
                                   id: Type.Optional(
                                     Type.Union([
-                                      Codec(Type.String())
-                                        .Decode((value) => Number.parseInt(value, 10))
+                                      Codec(
+                                        Type.Refine(
+                                          Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                          (value) => Number(value) >= 0,
+                                          () => 'must be >= 0',
+                                        ),
+                                      )
+                                        .Decode((value) => Number(value))
                                         .Encode((value) => String(value)),
                                       Type.Null(),
                                     ]),
@@ -4479,16 +6153,36 @@ export const channelsHandler = new Hono()
                                   ),
                                   min_values: Type.Optional(
                                     Type.Union([
-                                      Codec(Type.String())
-                                        .Decode((value) => Number.parseInt(value, 10))
+                                      Codec(
+                                        Type.Refine(
+                                          Type.Refine(
+                                            Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                            (value) => Number(value) >= 0,
+                                            () => 'must be >= 0',
+                                          ),
+                                          (value) => Number(value) <= 25,
+                                          () => 'must be <= 25',
+                                        ),
+                                      )
+                                        .Decode((value) => Number(value))
                                         .Encode((value) => String(value)),
                                       Type.Null(),
                                     ]),
                                   ),
                                   max_values: Type.Optional(
                                     Type.Union([
-                                      Codec(Type.String())
-                                        .Decode((value) => Number.parseInt(value, 10))
+                                      Codec(
+                                        Type.Refine(
+                                          Type.Refine(
+                                            Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                            (value) => Number(value) >= 1,
+                                            () => 'must be >= 1',
+                                          ),
+                                          (value) => Number(value) <= 25,
+                                          () => 'must be <= 25',
+                                        ),
+                                      )
+                                        .Decode((value) => Number(value))
                                         .Encode((value) => String(value)),
                                       Type.Null(),
                                     ]),
@@ -4496,9 +6190,14 @@ export const channelsHandler = new Hono()
                                   disabled: Type.Optional(
                                     Type.Union([
                                       Codec(
-                                        Type.Union([Type.Literal('true'), Type.Literal('false')]),
+                                        Type.String({
+                                          pattern:
+                                            /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                        }),
                                       )
-                                        .Decode((value) => value === 'true')
+                                        .Decode((value) =>
+                                          /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                        )
                                         .Encode((value) => (value ? 'true' : 'false')),
                                       Type.Null(),
                                     ]),
@@ -4506,9 +6205,14 @@ export const channelsHandler = new Hono()
                                   required: Type.Optional(
                                     Type.Union([
                                       Codec(
-                                        Type.Union([Type.Literal('true'), Type.Literal('false')]),
+                                        Type.String({
+                                          pattern:
+                                            /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                        }),
                                       )
-                                        .Decode((value) => value === 'true')
+                                        .Decode((value) =>
+                                          /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                        )
                                         .Encode((value) => (value ? 'true' : 'false')),
                                       Type.Null(),
                                     ]),
@@ -4524,8 +6228,14 @@ export const channelsHandler = new Hono()
                                   type: MessageComponentTypesSchema,
                                   id: Type.Optional(
                                     Type.Union([
-                                      Codec(Type.String())
-                                        .Decode((value) => Number.parseInt(value, 10))
+                                      Codec(
+                                        Type.Refine(
+                                          Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                          (value) => Number(value) >= 0,
+                                          () => 'must be >= 0',
+                                        ),
+                                      )
+                                        .Decode((value) => Number(value))
                                         .Encode((value) => String(value)),
                                       Type.Null(),
                                     ]),
@@ -4536,16 +6246,36 @@ export const channelsHandler = new Hono()
                                   ),
                                   min_values: Type.Optional(
                                     Type.Union([
-                                      Codec(Type.String())
-                                        .Decode((value) => Number.parseInt(value, 10))
+                                      Codec(
+                                        Type.Refine(
+                                          Type.Refine(
+                                            Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                            (value) => Number(value) >= 0,
+                                            () => 'must be >= 0',
+                                          ),
+                                          (value) => Number(value) <= 25,
+                                          () => 'must be <= 25',
+                                        ),
+                                      )
+                                        .Decode((value) => Number(value))
                                         .Encode((value) => String(value)),
                                       Type.Null(),
                                     ]),
                                   ),
                                   max_values: Type.Optional(
                                     Type.Union([
-                                      Codec(Type.String())
-                                        .Decode((value) => Number.parseInt(value, 10))
+                                      Codec(
+                                        Type.Refine(
+                                          Type.Refine(
+                                            Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                            (value) => Number(value) >= 1,
+                                            () => 'must be >= 1',
+                                          ),
+                                          (value) => Number(value) <= 25,
+                                          () => 'must be <= 25',
+                                        ),
+                                      )
+                                        .Decode((value) => Number(value))
                                         .Encode((value) => String(value)),
                                       Type.Null(),
                                     ]),
@@ -4553,9 +6283,14 @@ export const channelsHandler = new Hono()
                                   disabled: Type.Optional(
                                     Type.Union([
                                       Codec(
-                                        Type.Union([Type.Literal('true'), Type.Literal('false')]),
+                                        Type.String({
+                                          pattern:
+                                            /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                        }),
                                       )
-                                        .Decode((value) => value === 'true')
+                                        .Decode((value) =>
+                                          /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                        )
                                         .Encode((value) => (value ? 'true' : 'false')),
                                       Type.Null(),
                                     ]),
@@ -4563,9 +6298,14 @@ export const channelsHandler = new Hono()
                                   required: Type.Optional(
                                     Type.Union([
                                       Codec(
-                                        Type.Union([Type.Literal('true'), Type.Literal('false')]),
+                                        Type.String({
+                                          pattern:
+                                            /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                        }),
                                       )
-                                        .Decode((value) => value === 'true')
+                                        .Decode((value) =>
+                                          /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                        )
                                         .Encode((value) => (value ? 'true' : 'false')),
                                       Type.Null(),
                                     ]),
@@ -4580,21 +6320,20 @@ export const channelsHandler = new Hono()
                                       default: Type.Optional(
                                         Type.Union([
                                           Codec(
-                                            Type.Union([
-                                              Type.Literal('true'),
-                                              Type.Literal('false'),
-                                            ]),
+                                            Type.String({
+                                              pattern:
+                                                /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                            }),
                                           )
-                                            .Decode((value) => value === 'true')
+                                            .Decode((value) =>
+                                              /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                            )
                                             .Encode((value) => (value ? 'true' : 'false')),
                                           Type.Null(),
                                         ]),
                                       ),
                                       emoji: Type.Optional(
-                                        Type.Union([
-                                          Type.Union([Type.Null(), Type.Null()]),
-                                          ComponentEmojiForRequestSchema,
-                                        ]),
+                                        Type.Union([Type.Null(), ComponentEmojiForRequestSchema]),
                                       ),
                                     }),
                                     { minItems: 1, maxItems: 25 },
@@ -4604,8 +6343,14 @@ export const channelsHandler = new Hono()
                                   type: MessageComponentTypesSchema,
                                   id: Type.Optional(
                                     Type.Union([
-                                      Codec(Type.String())
-                                        .Decode((value) => Number.parseInt(value, 10))
+                                      Codec(
+                                        Type.Refine(
+                                          Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                          (value) => Number(value) >= 0,
+                                          () => 'must be >= 0',
+                                        ),
+                                      )
+                                        .Decode((value) => Number(value))
                                         .Encode((value) => String(value)),
                                       Type.Null(),
                                     ]),
@@ -4616,16 +6361,36 @@ export const channelsHandler = new Hono()
                                   ),
                                   min_values: Type.Optional(
                                     Type.Union([
-                                      Codec(Type.String())
-                                        .Decode((value) => Number.parseInt(value, 10))
+                                      Codec(
+                                        Type.Refine(
+                                          Type.Refine(
+                                            Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                            (value) => Number(value) >= 0,
+                                            () => 'must be >= 0',
+                                          ),
+                                          (value) => Number(value) <= 25,
+                                          () => 'must be <= 25',
+                                        ),
+                                      )
+                                        .Decode((value) => Number(value))
                                         .Encode((value) => String(value)),
                                       Type.Null(),
                                     ]),
                                   ),
                                   max_values: Type.Optional(
                                     Type.Union([
-                                      Codec(Type.String())
-                                        .Decode((value) => Number.parseInt(value, 10))
+                                      Codec(
+                                        Type.Refine(
+                                          Type.Refine(
+                                            Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                            (value) => Number(value) >= 1,
+                                            () => 'must be >= 1',
+                                          ),
+                                          (value) => Number(value) <= 25,
+                                          () => 'must be <= 25',
+                                        ),
+                                      )
+                                        .Decode((value) => Number(value))
                                         .Encode((value) => String(value)),
                                       Type.Null(),
                                     ]),
@@ -4633,9 +6398,14 @@ export const channelsHandler = new Hono()
                                   disabled: Type.Optional(
                                     Type.Union([
                                       Codec(
-                                        Type.Union([Type.Literal('true'), Type.Literal('false')]),
+                                        Type.String({
+                                          pattern:
+                                            /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                        }),
                                       )
-                                        .Decode((value) => value === 'true')
+                                        .Decode((value) =>
+                                          /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                        )
                                         .Encode((value) => (value ? 'true' : 'false')),
                                       Type.Null(),
                                     ]),
@@ -4643,9 +6413,14 @@ export const channelsHandler = new Hono()
                                   required: Type.Optional(
                                     Type.Union([
                                       Codec(
-                                        Type.Union([Type.Literal('true'), Type.Literal('false')]),
+                                        Type.String({
+                                          pattern:
+                                            /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                        }),
                                       )
-                                        .Decode((value) => value === 'true')
+                                        .Decode((value) =>
+                                          /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                        )
                                         .Encode((value) => (value ? 'true' : 'false')),
                                       Type.Null(),
                                     ]),
@@ -4665,16 +6440,27 @@ export const channelsHandler = new Hono()
                             type: MessageComponentTypesSchema,
                             id: Type.Optional(
                               Type.Union([
-                                Codec(Type.String())
-                                  .Decode((value) => Number.parseInt(value, 10))
+                                Codec(
+                                  Type.Refine(
+                                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                    (value) => Number(value) >= 0,
+                                    () => 'must be >= 0',
+                                  ),
+                                )
+                                  .Decode((value) => Number(value))
                                   .Encode((value) => String(value)),
                                 Type.Null(),
                               ]),
                             ),
                             spoiler: Type.Optional(
                               Type.Union([
-                                Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                  .Decode((value) => value === 'true')
+                                Codec(
+                                  Type.String({
+                                    pattern:
+                                      /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                  }),
+                                )
+                                  .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                   .Encode((value) => (value ? 'true' : 'false')),
                                 Type.Null(),
                               ]),
@@ -4685,8 +6471,14 @@ export const channelsHandler = new Hono()
                             type: MessageComponentTypesSchema,
                             id: Type.Optional(
                               Type.Union([
-                                Codec(Type.String())
-                                  .Decode((value) => Number.parseInt(value, 10))
+                                Codec(
+                                  Type.Refine(
+                                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                    (value) => Number(value) >= 0,
+                                    () => 'must be >= 0',
+                                  ),
+                                )
+                                  .Decode((value) => Number(value))
                                   .Encode((value) => String(value)),
                                 Type.Null(),
                               ]),
@@ -4701,8 +6493,15 @@ export const channelsHandler = new Hono()
                                 ),
                                 spoiler: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                      .Decode((value) => value === 'true')
+                                    Codec(
+                                      Type.String({
+                                        pattern:
+                                          /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                      }),
+                                    )
+                                      .Decode((value) =>
+                                        /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                      )
                                       .Encode((value) => (value ? 'true' : 'false')),
                                     Type.Null(),
                                   ]),
@@ -4716,8 +6515,14 @@ export const channelsHandler = new Hono()
                             type: MessageComponentTypesSchema,
                             id: Type.Optional(
                               Type.Union([
-                                Codec(Type.String())
-                                  .Decode((value) => Number.parseInt(value, 10))
+                                Codec(
+                                  Type.Refine(
+                                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                    (value) => Number(value) >= 0,
+                                    () => 'must be >= 0',
+                                  ),
+                                )
+                                  .Decode((value) => Number(value))
                                   .Encode((value) => String(value)),
                                 Type.Null(),
                               ]),
@@ -4727,8 +6532,14 @@ export const channelsHandler = new Hono()
                                 type: MessageComponentTypesSchema,
                                 id: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.String())
-                                      .Decode((value) => Number.parseInt(value, 10))
+                                    Codec(
+                                      Type.Refine(
+                                        Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                        (value) => Number(value) >= 0,
+                                        () => 'must be >= 0',
+                                      ),
+                                    )
+                                      .Decode((value) => Number(value))
                                       .Encode((value) => String(value)),
                                     Type.Null(),
                                   ]),
@@ -4742,8 +6553,14 @@ export const channelsHandler = new Hono()
                                 type: MessageComponentTypesSchema,
                                 id: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.String())
-                                      .Decode((value) => Number.parseInt(value, 10))
+                                    Codec(
+                                      Type.Refine(
+                                        Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                        (value) => Number(value) >= 0,
+                                        () => 'must be >= 0',
+                                      ),
+                                    )
+                                      .Decode((value) => Number(value))
                                       .Encode((value) => String(value)),
                                     Type.Null(),
                                   ]),
@@ -4760,8 +6577,15 @@ export const channelsHandler = new Hono()
                                 ),
                                 disabled: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                      .Decode((value) => value === 'true')
+                                    Codec(
+                                      Type.String({
+                                        pattern:
+                                          /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                      }),
+                                    )
+                                      .Decode((value) =>
+                                        /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                      )
                                       .Encode((value) => (value ? 'true' : 'false')),
                                     Type.Null(),
                                   ]),
@@ -4773,24 +6597,24 @@ export const channelsHandler = new Hono()
                                   ]),
                                 ),
                                 sku_id: Type.Optional(
-                                  Type.Union([
-                                    Type.Union([Type.Null(), Type.Null()]),
-                                    SnowflakeTypeSchema,
-                                  ]),
+                                  Type.Union([Type.Null(), SnowflakeTypeSchema]),
                                 ),
                                 emoji: Type.Optional(
-                                  Type.Union([
-                                    Type.Union([Type.Null(), Type.Null()]),
-                                    ComponentEmojiForRequestSchema,
-                                  ]),
+                                  Type.Union([Type.Null(), ComponentEmojiForRequestSchema]),
                                 ),
                               }),
                               Type.Object({
                                 type: MessageComponentTypesSchema,
                                 id: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.String())
-                                      .Decode((value) => Number.parseInt(value, 10))
+                                    Codec(
+                                      Type.Refine(
+                                        Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                        (value) => Number(value) >= 0,
+                                        () => 'must be >= 0',
+                                      ),
+                                    )
+                                      .Decode((value) => Number(value))
                                       .Encode((value) => String(value)),
                                     Type.Null(),
                                   ]),
@@ -4803,8 +6627,15 @@ export const channelsHandler = new Hono()
                                 ),
                                 spoiler: Type.Optional(
                                   Type.Union([
-                                    Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                      .Decode((value) => value === 'true')
+                                    Codec(
+                                      Type.String({
+                                        pattern:
+                                          /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                      }),
+                                    )
+                                      .Decode((value) =>
+                                        /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                      )
                                       .Encode((value) => (value ? 'true' : 'false')),
                                     Type.Null(),
                                   ]),
@@ -4817,22 +6648,30 @@ export const channelsHandler = new Hono()
                             type: MessageComponentTypesSchema,
                             id: Type.Optional(
                               Type.Union([
-                                Codec(Type.String())
-                                  .Decode((value) => Number.parseInt(value, 10))
+                                Codec(
+                                  Type.Refine(
+                                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                    (value) => Number(value) >= 0,
+                                    () => 'must be >= 0',
+                                  ),
+                                )
+                                  .Decode((value) => Number(value))
                                   .Encode((value) => String(value)),
                                 Type.Null(),
                               ]),
                             ),
                             spacing: Type.Optional(
-                              Type.Union([
-                                Type.Union([Type.Null(), Type.Null()]),
-                                MessageComponentSeparatorSpacingSizeSchema,
-                              ]),
+                              Type.Union([Type.Null(), MessageComponentSeparatorSpacingSizeSchema]),
                             ),
                             divider: Type.Optional(
                               Type.Union([
-                                Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                  .Decode((value) => value === 'true')
+                                Codec(
+                                  Type.String({
+                                    pattern:
+                                      /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                  }),
+                                )
+                                  .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                   .Encode((value) => (value ? 'true' : 'false')),
                                 Type.Null(),
                               ]),
@@ -4842,8 +6681,14 @@ export const channelsHandler = new Hono()
                             type: MessageComponentTypesSchema,
                             id: Type.Optional(
                               Type.Union([
-                                Codec(Type.String())
-                                  .Decode((value) => Number.parseInt(value, 10))
+                                Codec(
+                                  Type.Refine(
+                                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                    (value) => Number(value) >= 0,
+                                    () => 'must be >= 0',
+                                  ),
+                                )
+                                  .Decode((value) => Number(value))
                                   .Encode((value) => String(value)),
                                 Type.Null(),
                               ]),
@@ -4855,8 +6700,12 @@ export const channelsHandler = new Hono()
                       ),
                       spoiler: Type.Optional(
                         Type.Union([
-                          Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                            .Decode((value) => value === 'true')
+                          Codec(
+                            Type.String({
+                              pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                            }),
+                          )
+                            .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                             .Encode((value) => (value ? 'true' : 'false')),
                           Type.Null(),
                         ]),
@@ -4866,16 +6715,26 @@ export const channelsHandler = new Hono()
                       type: MessageComponentTypesSchema,
                       id: Type.Optional(
                         Type.Union([
-                          Codec(Type.String())
-                            .Decode((value) => Number.parseInt(value, 10))
+                          Codec(
+                            Type.Refine(
+                              Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                              (value) => Number(value) >= 0,
+                              () => 'must be >= 0',
+                            ),
+                          )
+                            .Decode((value) => Number(value))
                             .Encode((value) => String(value)),
                           Type.Null(),
                         ]),
                       ),
                       spoiler: Type.Optional(
                         Type.Union([
-                          Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                            .Decode((value) => value === 'true')
+                          Codec(
+                            Type.String({
+                              pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                            }),
+                          )
+                            .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                             .Encode((value) => (value ? 'true' : 'false')),
                           Type.Null(),
                         ]),
@@ -4886,8 +6745,14 @@ export const channelsHandler = new Hono()
                       type: MessageComponentTypesSchema,
                       id: Type.Optional(
                         Type.Union([
-                          Codec(Type.String())
-                            .Decode((value) => Number.parseInt(value, 10))
+                          Codec(
+                            Type.Refine(
+                              Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                              (value) => Number(value) >= 0,
+                              () => 'must be >= 0',
+                            ),
+                          )
+                            .Decode((value) => Number(value))
                             .Encode((value) => String(value)),
                           Type.Null(),
                         ]),
@@ -4902,8 +6767,13 @@ export const channelsHandler = new Hono()
                           ),
                           spoiler: Type.Optional(
                             Type.Union([
-                              Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                .Decode((value) => value === 'true')
+                              Codec(
+                                Type.String({
+                                  pattern:
+                                    /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                }),
+                              )
+                                .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                 .Encode((value) => (value ? 'true' : 'false')),
                               Type.Null(),
                             ]),
@@ -4917,8 +6787,14 @@ export const channelsHandler = new Hono()
                       type: MessageComponentTypesSchema,
                       id: Type.Optional(
                         Type.Union([
-                          Codec(Type.String())
-                            .Decode((value) => Number.parseInt(value, 10))
+                          Codec(
+                            Type.Refine(
+                              Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                              (value) => Number(value) >= 0,
+                              () => 'must be >= 0',
+                            ),
+                          )
+                            .Decode((value) => Number(value))
                             .Encode((value) => String(value)),
                           Type.Null(),
                         ]),
@@ -4928,8 +6804,14 @@ export const channelsHandler = new Hono()
                           type: MessageComponentTypesSchema,
                           id: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(
+                                Type.Refine(
+                                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                  (value) => Number(value) >= 0,
+                                  () => 'must be >= 0',
+                                ),
+                              )
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
@@ -4943,8 +6825,14 @@ export const channelsHandler = new Hono()
                           type: MessageComponentTypesSchema,
                           id: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(
+                                Type.Refine(
+                                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                  (value) => Number(value) >= 0,
+                                  () => 'must be >= 0',
+                                ),
+                              )
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
@@ -4961,8 +6849,13 @@ export const channelsHandler = new Hono()
                           ),
                           disabled: Type.Optional(
                             Type.Union([
-                              Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                .Decode((value) => value === 'true')
+                              Codec(
+                                Type.String({
+                                  pattern:
+                                    /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                }),
+                              )
+                                .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                 .Encode((value) => (value ? 'true' : 'false')),
                               Type.Null(),
                             ]),
@@ -4973,25 +6866,23 @@ export const channelsHandler = new Hono()
                               Type.Null(),
                             ]),
                           ),
-                          sku_id: Type.Optional(
-                            Type.Union([
-                              Type.Union([Type.Null(), Type.Null()]),
-                              SnowflakeTypeSchema,
-                            ]),
-                          ),
+                          sku_id: Type.Optional(Type.Union([Type.Null(), SnowflakeTypeSchema])),
                           emoji: Type.Optional(
-                            Type.Union([
-                              Type.Union([Type.Null(), Type.Null()]),
-                              ComponentEmojiForRequestSchema,
-                            ]),
+                            Type.Union([Type.Null(), ComponentEmojiForRequestSchema]),
                           ),
                         }),
                         Type.Object({
                           type: MessageComponentTypesSchema,
                           id: Type.Optional(
                             Type.Union([
-                              Codec(Type.String())
-                                .Decode((value) => Number.parseInt(value, 10))
+                              Codec(
+                                Type.Refine(
+                                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                  (value) => Number(value) >= 0,
+                                  () => 'must be >= 0',
+                                ),
+                              )
+                                .Decode((value) => Number(value))
                                 .Encode((value) => String(value)),
                               Type.Null(),
                             ]),
@@ -5004,8 +6895,13 @@ export const channelsHandler = new Hono()
                           ),
                           spoiler: Type.Optional(
                             Type.Union([
-                              Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                .Decode((value) => value === 'true')
+                              Codec(
+                                Type.String({
+                                  pattern:
+                                    /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                }),
+                              )
+                                .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                 .Encode((value) => (value ? 'true' : 'false')),
                               Type.Null(),
                             ]),
@@ -5018,22 +6914,29 @@ export const channelsHandler = new Hono()
                       type: MessageComponentTypesSchema,
                       id: Type.Optional(
                         Type.Union([
-                          Codec(Type.String())
-                            .Decode((value) => Number.parseInt(value, 10))
+                          Codec(
+                            Type.Refine(
+                              Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                              (value) => Number(value) >= 0,
+                              () => 'must be >= 0',
+                            ),
+                          )
+                            .Decode((value) => Number(value))
                             .Encode((value) => String(value)),
                           Type.Null(),
                         ]),
                       ),
                       spacing: Type.Optional(
-                        Type.Union([
-                          Type.Union([Type.Null(), Type.Null()]),
-                          MessageComponentSeparatorSpacingSizeSchema,
-                        ]),
+                        Type.Union([Type.Null(), MessageComponentSeparatorSpacingSizeSchema]),
                       ),
                       divider: Type.Optional(
                         Type.Union([
-                          Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                            .Decode((value) => value === 'true')
+                          Codec(
+                            Type.String({
+                              pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                            }),
+                          )
+                            .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                             .Encode((value) => (value ? 'true' : 'false')),
                           Type.Null(),
                         ]),
@@ -5043,8 +6946,14 @@ export const channelsHandler = new Hono()
                       type: MessageComponentTypesSchema,
                       id: Type.Optional(
                         Type.Union([
-                          Codec(Type.String())
-                            .Decode((value) => Number.parseInt(value, 10))
+                          Codec(
+                            Type.Refine(
+                              Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                              (value) => Number(value) >= 0,
+                              () => 'must be >= 0',
+                            ),
+                          )
+                            .Decode((value) => Number(value))
                             .Encode((value) => String(value)),
                           Type.Null(),
                         ]),
@@ -5059,8 +6968,8 @@ export const channelsHandler = new Hono()
             ),
             flags: Type.Optional(
               Type.Union([
-                Codec(Type.String())
-                  .Decode((value) => Number.parseInt(value, 10))
+                Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+                  .Decode((value) => Number(value))
                   .Encode((value) => String(value)),
                 Type.Null(),
               ]),
@@ -5078,7 +6987,19 @@ export const channelsHandler = new Hono()
                     ),
                     duration_secs: Type.Optional(
                       Type.Union([
-                        Codec(Type.String())
+                        Codec(
+                          Type.Refine(
+                            Type.Refine(
+                              Type.String({
+                                pattern: '^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$',
+                              }),
+                              (value) => Number(value) >= 0,
+                              () => 'must be >= 0',
+                            ),
+                            (value) => Number(value) <= 2147483647,
+                            () => 'must be <= 2147483647',
+                          ),
+                        )
                           .Decode((value) => Number(value))
                           .Encode((value) => String(value)),
                         Type.Null(),
@@ -5092,8 +7013,12 @@ export const channelsHandler = new Hono()
                     ),
                     is_spoiler: Type.Optional(
                       Type.Union([
-                        Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                          .Decode((value) => value === 'true')
+                        Codec(
+                          Type.String({
+                            pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                          }),
+                        )
+                          .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                           .Encode((value) => (value ? 'true' : 'false')),
                         Type.Null(),
                       ]),
@@ -5106,7 +7031,7 @@ export const channelsHandler = new Hono()
             ),
             poll: Type.Optional(
               Type.Union([
-                Type.Union([Type.Null(), Type.Null()]),
+                Type.Null(),
                 Type.Object({
                   question: Type.Object(
                     {
@@ -5123,13 +7048,12 @@ export const channelsHandler = new Hono()
                       emoji: Type.Optional(
                         Type.Union(
                           [
-                            Type.Union([Type.Null(), Type.Null()]),
+                            Type.Null(),
                             Type.Object({
                               id: Type.Optional(
-                                Type.Union(
-                                  [Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema],
-                                  { description: 'The ID of the custom emoji' },
-                                ),
+                                Type.Union([Type.Null(), SnowflakeTypeSchema], {
+                                  description: 'The ID of the custom emoji',
+                                }),
                               ),
                               name: Type.Optional(
                                 Type.Union([
@@ -5143,8 +7067,13 @@ export const channelsHandler = new Hono()
                               ),
                               animated: Type.Optional(
                                 Type.Union([
-                                  Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                                    .Decode((value) => value === 'true')
+                                  Codec(
+                                    Type.String({
+                                      pattern:
+                                        /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                    }),
+                                  )
+                                    .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                                     .Encode((value) => (value ? 'true' : 'false')),
                                   Type.Null(),
                                 ]),
@@ -5174,13 +7103,12 @@ export const channelsHandler = new Hono()
                           emoji: Type.Optional(
                             Type.Union(
                               [
-                                Type.Union([Type.Null(), Type.Null()]),
+                                Type.Null(),
                                 Type.Object({
                                   id: Type.Optional(
-                                    Type.Union(
-                                      [Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema],
-                                      { description: 'The ID of the custom emoji' },
-                                    ),
+                                    Type.Union([Type.Null(), SnowflakeTypeSchema], {
+                                      description: 'The ID of the custom emoji',
+                                    }),
                                   ),
                                   name: Type.Optional(
                                     Type.Union([
@@ -5195,9 +7123,14 @@ export const channelsHandler = new Hono()
                                   animated: Type.Optional(
                                     Type.Union([
                                       Codec(
-                                        Type.Union([Type.Literal('true'), Type.Literal('false')]),
+                                        Type.String({
+                                          pattern:
+                                            /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                        }),
                                       )
-                                        .Decode((value) => value === 'true')
+                                        .Decode((value) =>
+                                          /^(?:true|1|yes|on|y|enabled)$/i.test(value),
+                                        )
                                         .Encode((value) => (value ? 'true' : 'false')),
                                       Type.Null(),
                                     ]),
@@ -5219,21 +7152,35 @@ export const channelsHandler = new Hono()
                   ),
                   allow_multiselect: Type.Optional(
                     Type.Union([
-                      Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                        .Decode((value) => value === 'true')
+                      Codec(
+                        Type.String({
+                          pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                        }),
+                      )
+                        .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                         .Encode((value) => (value ? 'true' : 'false')),
                       Type.Null(),
                     ]),
                   ),
                   layout_type: Type.Optional(
-                    Type.Union([Type.Union([Type.Null(), Type.Null()]), PollLayoutTypesSchema], {
+                    Type.Union([Type.Null(), PollLayoutTypesSchema], {
                       description: 'The layout type of the poll. Defaults to... DEFAULT!',
                     }),
                   ),
                   duration: Type.Optional(
                     Type.Union([
-                      Codec(Type.String())
-                        .Decode((value) => Number.parseInt(value, 10))
+                      Codec(
+                        Type.Refine(
+                          Type.Refine(
+                            Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                            (value) => Number(value) >= 1,
+                            () => 'must be >= 1',
+                          ),
+                          (value) => Number(value) <= 768,
+                          () => 'must be <= 768',
+                        ),
+                      )
+                        .Decode((value) => Number(value))
                         .Encode((value) => String(value)),
                       Type.Null(),
                     ]),
@@ -5243,23 +7190,40 @@ export const channelsHandler = new Hono()
             ),
             shared_client_theme: Type.Optional(
               Type.Union([
-                Type.Union([Type.Null(), Type.Null()]),
+                Type.Null(),
                 Type.Object({
                   colors: Type.Array(Type.String({ minLength: 6, maxLength: 6 }), {
                     minItems: 1,
                     maxItems: 5,
                   }),
-                  gradient_angle: Codec(Type.String())
-                    .Decode((value) => Number.parseInt(value, 10))
+                  gradient_angle: Codec(
+                    Type.Refine(
+                      Type.Refine(
+                        Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                        (value) => Number(value) >= 0,
+                        () => 'must be >= 0',
+                      ),
+                      (value) => Number(value) <= 360,
+                      () => 'must be <= 360',
+                    ),
+                  )
+                    .Decode((value) => Number(value))
                     .Encode((value) => String(value)),
-                  base_mix: Codec(Type.String())
-                    .Decode((value) => Number.parseInt(value, 10))
+                  base_mix: Codec(
+                    Type.Refine(
+                      Type.Refine(
+                        Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                        (value) => Number(value) >= 0,
+                        () => 'must be >= 0',
+                      ),
+                      (value) => Number(value) <= 100,
+                      () => 'must be <= 100',
+                    ),
+                  )
+                    .Decode((value) => Number(value))
                     .Encode((value) => String(value)),
                   base_theme: Type.Optional(
-                    Type.Union([
-                      Type.Union([Type.Null(), Type.Null()]),
-                      MessageShareCustomUserThemeBaseThemeSchema,
-                    ]),
+                    Type.Union([Type.Null(), MessageShareCustomUserThemeBaseThemeSchema]),
                   ),
                 }),
               ]),
@@ -5269,23 +7233,35 @@ export const channelsHandler = new Hono()
         Type.Object({
           name: Type.String({ minLength: 1, maxLength: 100 }),
           auto_archive_duration: Type.Optional(
-            Type.Union([Type.Union([Type.Null(), Type.Null()]), ThreadAutoArchiveDurationSchema]),
+            Type.Union([Type.Null(), ThreadAutoArchiveDurationSchema]),
           ),
           rate_limit_per_user: Type.Optional(
             Type.Union([
-              Codec(Type.String())
-                .Decode((value) => Number.parseInt(value, 10))
+              Codec(
+                Type.Refine(
+                  Type.Refine(
+                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                    (value) => Number(value) >= 0,
+                    () => 'must be >= 0',
+                  ),
+                  (value) => Number(value) <= 21600,
+                  () => 'must be <= 21600',
+                ),
+              )
+                .Decode((value) => Number(value))
                 .Encode((value) => String(value)),
               Type.Null(),
             ]),
           ),
-          type: Type.Optional(
-            Type.Union([Type.Union([Type.Null(), Type.Null()]), ChannelTypesSchema]),
-          ),
+          type: Type.Optional(Type.Union([Type.Null(), ChannelTypesSchema])),
           invitable: Type.Optional(
             Type.Union([
-              Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-                .Decode((value) => value === 'true')
+              Codec(
+                Type.String({
+                  pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                }),
+              )
+                .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
                 .Encode((value) => (value ? 'true' : 'false')),
               Type.Null(),
             ]),
@@ -5303,8 +7279,18 @@ export const channelsHandler = new Hono()
       Type.Object({
         before: Type.Optional(Type.String({ format: 'date-time' })),
         limit: Type.Optional(
-          Codec(Type.String())
-            .Decode((value) => Number.parseInt(value, 10))
+          Codec(
+            Type.Refine(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                (value) => Number(value) >= 2,
+                () => 'must be >= 2',
+              ),
+              (value) => Number(value) <= 100,
+              () => 'must be <= 100',
+            ),
+          )
+            .Decode((value) => Number(value))
             .Encode((value) => String(value)),
         ),
       }),
@@ -5319,8 +7305,18 @@ export const channelsHandler = new Hono()
       Type.Object({
         before: Type.Optional(Type.String({ format: 'date-time' })),
         limit: Type.Optional(
-          Codec(Type.String())
-            .Decode((value) => Number.parseInt(value, 10))
+          Codec(
+            Type.Refine(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                (value) => Number(value) >= 2,
+                () => 'must be >= 2',
+              ),
+              (value) => Number(value) <= 100,
+              () => 'must be <= 100',
+            ),
+          )
+            .Decode((value) => Number(value))
             .Encode((value) => String(value)),
         ),
       }),
@@ -5335,8 +7331,18 @@ export const channelsHandler = new Hono()
       Type.Object({
         name: Type.Optional(Type.String({ maxLength: 100 })),
         slop: Type.Optional(
-          Codec(Type.String())
-            .Decode((value) => Number.parseInt(value, 10))
+          Codec(
+            Type.Refine(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                (value) => Number(value) >= 0,
+                () => 'must be >= 0',
+              ),
+              (value) => Number(value) <= 100,
+              () => 'must be <= 100',
+            ),
+          )
+            .Decode((value) => Number(value))
             .Encode((value) => String(value)),
         ),
         min_id: Type.Optional(SnowflakeTypeSchema),
@@ -5349,20 +7355,42 @@ export const channelsHandler = new Hono()
         ),
         tag_setting: Type.Optional(ThreadSearchTagSettingSchema),
         archived: Type.Optional(
-          Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-            .Decode((value) => value === 'true')
+          Codec(
+            Type.String({ pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i }),
+          )
+            .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
             .Encode((value) => (value ? 'true' : 'false')),
         ),
         sort_by: Type.Optional(ThreadSortingModeSchema),
         sort_order: Type.Optional(SortingOrderSchema),
         limit: Type.Optional(
-          Codec(Type.String())
-            .Decode((value) => Number.parseInt(value, 10))
+          Codec(
+            Type.Refine(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                (value) => Number(value) >= 1,
+                () => 'must be >= 1',
+              ),
+              (value) => Number(value) <= 25,
+              () => 'must be <= 25',
+            ),
+          )
+            .Decode((value) => Number(value))
             .Encode((value) => String(value)),
         ),
         offset: Type.Optional(
-          Codec(Type.String())
-            .Decode((value) => Number.parseInt(value, 10))
+          Codec(
+            Type.Refine(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                (value) => Number(value) >= 0,
+                () => 'must be >= 0',
+              ),
+              (value) => Number(value) <= 9975,
+              () => 'must be <= 9975',
+            ),
+          )
+            .Decode((value) => Number(value))
             .Encode((value) => String(value)),
         ),
       }),
@@ -5382,8 +7410,18 @@ export const channelsHandler = new Hono()
       Type.Object({
         before: Type.Optional(SnowflakeTypeSchema),
         limit: Type.Optional(
-          Codec(Type.String())
-            .Decode((value) => Number.parseInt(value, 10))
+          Codec(
+            Type.Refine(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                (value) => Number(value) >= 2,
+                () => 'must be >= 2',
+              ),
+              (value) => Number(value) <= 100,
+              () => 'must be <= 100',
+            ),
+          )
+            .Decode((value) => Number(value))
             .Encode((value) => String(value)),
         ),
       }),

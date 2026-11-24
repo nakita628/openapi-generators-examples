@@ -1,17 +1,8 @@
-import {
-  injectQuery,
-  injectMutation,
-  queryOptions,
-  mutationOptions,
-} from '@tanstack/angular-query-experimental'
-import type {
-  CreateQueryOptions,
-  CreateMutationOptions,
-  InjectQueryOptions,
-  InjectMutationOptions,
-} from '@tanstack/angular-query-experimental'
-import type { WidgetResponse } from '../components/schemas'
-import { client } from '../lib'
+import { injectQuery, injectMutation, queryOptions, mutationOptions } from '@tanstack/angular-query'
+import type { CreateQueryOptions, CreateMutationOptions } from '@tanstack/angular-query'
+import type { Static } from 'elysia'
+import type { WidgetResponseSchema } from '../components/schemas'
+import { client, clientOrigin } from '../lib'
 
 export function getApplicationsKey() {
   return ['applications'] as const
@@ -135,12 +126,11 @@ export function injectApplicationsMe<
     >
     options?: Parameters<(typeof client.applications)['@me']['get']>[0]
   },
-  injectOptions?: InjectQueryOptions,
 ) {
   return injectQuery(() => {
     const { query, options: clientOptions } = options?.() ?? {}
     return { ...getApplicationsMeQueryOptions<TData, TError>(clientOptions), ...query }
-  }, injectOptions)
+  })
 }
 
 export function getPatchApplicationsMeMutationKey() {
@@ -199,7 +189,6 @@ export function injectPatchApplicationsMe<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -209,7 +198,7 @@ export function injectPatchApplicationsMe<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getApplicationsApplicationIdQueryKey(
@@ -277,7 +266,6 @@ export function injectApplicationsApplicationId<
     >
     options?: Parameters<ReturnType<typeof client.applications>['get']>[0]
   },
-  injectOptions?: InjectQueryOptions,
 ) {
   return injectQuery(() => {
     const { query, options: clientOptions } = options?.() ?? {}
@@ -285,7 +273,7 @@ export function injectApplicationsApplicationId<
       ...getApplicationsApplicationIdQueryOptions<TData, TError>(params(), clientOptions),
       ...query,
     }
-  }, injectOptions)
+  })
 }
 
 export function getPatchApplicationsApplicationIdMutationKey() {
@@ -345,7 +333,6 @@ export function injectPatchApplicationsApplicationId<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -358,7 +345,7 @@ export function injectPatchApplicationsApplicationId<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getApplicationsApplicationIdActivityInstancesInstanceIdQueryKey(
@@ -453,7 +440,6 @@ export function injectApplicationsApplicationIdActivityInstancesInstanceId<
       ReturnType<ReturnType<typeof client.applications>['activity-instances']>['get']
     >[0]
   },
-  injectOptions?: InjectQueryOptions,
 ) {
   return injectQuery(() => {
     const { query, options: clientOptions } = options?.() ?? {}
@@ -465,7 +451,7 @@ export function injectApplicationsApplicationIdActivityInstancesInstanceId<
       ),
       ...query,
     }
-  }, injectOptions)
+  })
 }
 
 export function getPostApplicationsApplicationIdAttachmentMutationKey() {
@@ -525,7 +511,6 @@ export function injectPostApplicationsApplicationIdAttachment<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -538,7 +523,7 @@ export function injectPostApplicationsApplicationIdAttachment<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getApplicationsApplicationIdCommandsQueryKey(
@@ -608,7 +593,6 @@ export function injectApplicationsApplicationIdCommands<
     >
     options?: Parameters<ReturnType<typeof client.applications>['commands']['get']>[0]
   },
-  injectOptions?: InjectQueryOptions,
 ) {
   return injectQuery(() => {
     const { query, options: clientOptions } = options?.() ?? {}
@@ -616,7 +600,7 @@ export function injectApplicationsApplicationIdCommands<
       ...getApplicationsApplicationIdCommandsQueryOptions<TData, TError>(params(), clientOptions),
       ...query,
     }
-  }, injectOptions)
+  })
 }
 
 export function getPutApplicationsApplicationIdCommandsMutationKey() {
@@ -676,7 +660,6 @@ export function injectPutApplicationsApplicationIdCommands<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -689,7 +672,7 @@ export function injectPutApplicationsApplicationIdCommands<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getPostApplicationsApplicationIdCommandsMutationKey() {
@@ -749,7 +732,6 @@ export function injectPostApplicationsApplicationIdCommands<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -762,7 +744,7 @@ export function injectPostApplicationsApplicationIdCommands<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getApplicationsApplicationIdCommandsCommandIdQueryKey(
@@ -845,7 +827,6 @@ export function injectApplicationsApplicationIdCommandsCommandId<
     >
     options?: Parameters<ReturnType<ReturnType<typeof client.applications>['commands']>['get']>[0]
   },
-  injectOptions?: InjectQueryOptions,
 ) {
   return injectQuery(() => {
     const { query, options: clientOptions } = options?.() ?? {}
@@ -857,7 +838,7 @@ export function injectApplicationsApplicationIdCommandsCommandId<
       ),
       ...query,
     }
-  }, injectOptions)
+  })
 }
 
 export function getDeleteApplicationsApplicationIdCommandsCommandIdMutationKey() {
@@ -936,7 +917,6 @@ export function injectDeleteApplicationsApplicationIdCommandsCommandId<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -949,7 +929,7 @@ export function injectDeleteApplicationsApplicationIdCommandsCommandId<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getPatchApplicationsApplicationIdCommandsCommandIdMutationKey() {
@@ -1028,7 +1008,6 @@ export function injectPatchApplicationsApplicationIdCommandsCommandId<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -1041,7 +1020,7 @@ export function injectPatchApplicationsApplicationIdCommandsCommandId<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getApplicationsApplicationIdEmojisQueryKey(
@@ -1109,7 +1088,6 @@ export function injectApplicationsApplicationIdEmojis<
     >
     options?: Parameters<ReturnType<typeof client.applications>['emojis']['get']>[0]
   },
-  injectOptions?: InjectQueryOptions,
 ) {
   return injectQuery(() => {
     const { query, options: clientOptions } = options?.() ?? {}
@@ -1117,7 +1095,7 @@ export function injectApplicationsApplicationIdEmojis<
       ...getApplicationsApplicationIdEmojisQueryOptions<TData, TError>(params(), clientOptions),
       ...query,
     }
-  }, injectOptions)
+  })
 }
 
 export function getPostApplicationsApplicationIdEmojisMutationKey() {
@@ -1177,7 +1155,6 @@ export function injectPostApplicationsApplicationIdEmojis<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -1190,7 +1167,7 @@ export function injectPostApplicationsApplicationIdEmojis<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getApplicationsApplicationIdEmojisEmojiIdQueryKey(
@@ -1271,7 +1248,6 @@ export function injectApplicationsApplicationIdEmojisEmojiId<
     >
     options?: Parameters<ReturnType<ReturnType<typeof client.applications>['emojis']>['get']>[0]
   },
-  injectOptions?: InjectQueryOptions,
 ) {
   return injectQuery(() => {
     const { query, options: clientOptions } = options?.() ?? {}
@@ -1283,7 +1259,7 @@ export function injectApplicationsApplicationIdEmojisEmojiId<
       ),
       ...query,
     }
-  }, injectOptions)
+  })
 }
 
 export function getDeleteApplicationsApplicationIdEmojisEmojiIdMutationKey() {
@@ -1362,7 +1338,6 @@ export function injectDeleteApplicationsApplicationIdEmojisEmojiId<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -1375,7 +1350,7 @@ export function injectDeleteApplicationsApplicationIdEmojisEmojiId<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getPatchApplicationsApplicationIdEmojisEmojiIdMutationKey() {
@@ -1447,7 +1422,6 @@ export function injectPatchApplicationsApplicationIdEmojisEmojiId<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -1460,7 +1434,7 @@ export function injectPatchApplicationsApplicationIdEmojisEmojiId<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getApplicationsApplicationIdEntitlementsQueryKey(
@@ -1530,7 +1504,6 @@ export function injectApplicationsApplicationIdEntitlements<
     >
     options?: Parameters<ReturnType<typeof client.applications>['entitlements']['get']>[0]
   },
-  injectOptions?: InjectQueryOptions,
 ) {
   return injectQuery(() => {
     const { query, options: clientOptions } = options?.() ?? {}
@@ -1541,7 +1514,7 @@ export function injectApplicationsApplicationIdEntitlements<
       ),
       ...query,
     }
-  }, injectOptions)
+  })
 }
 
 export function getPostApplicationsApplicationIdEntitlementsMutationKey() {
@@ -1601,7 +1574,6 @@ export function injectPostApplicationsApplicationIdEntitlements<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -1614,7 +1586,7 @@ export function injectPostApplicationsApplicationIdEntitlements<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getApplicationsApplicationIdEntitlementsEntitlementIdQueryKey(
@@ -1703,7 +1675,6 @@ export function injectApplicationsApplicationIdEntitlementsEntitlementId<
       ReturnType<ReturnType<typeof client.applications>['entitlements']>['get']
     >[0]
   },
-  injectOptions?: InjectQueryOptions,
 ) {
   return injectQuery(() => {
     const { query, options: clientOptions } = options?.() ?? {}
@@ -1715,7 +1686,7 @@ export function injectApplicationsApplicationIdEntitlementsEntitlementId<
       ),
       ...query,
     }
-  }, injectOptions)
+  })
 }
 
 export function getDeleteApplicationsApplicationIdEntitlementsEntitlementIdMutationKey() {
@@ -1802,7 +1773,6 @@ export function injectDeleteApplicationsApplicationIdEntitlementsEntitlementId<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -1816,7 +1786,7 @@ export function injectDeleteApplicationsApplicationIdEntitlementsEntitlementId<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getPostApplicationsApplicationIdEntitlementsEntitlementIdConsumeMutationKey() {
@@ -1911,7 +1881,6 @@ export function injectPostApplicationsApplicationIdEntitlementsEntitlementIdCons
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -1925,7 +1894,7 @@ export function injectPostApplicationsApplicationIdEntitlementsEntitlementIdCons
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getApplicationsApplicationIdGuildsGuildIdCommandsQueryKey(
@@ -2025,7 +1994,6 @@ export function injectApplicationsApplicationIdGuildsGuildIdCommands<
       ReturnType<ReturnType<typeof client.applications>['guilds']>['commands']['get']
     >[0]
   },
-  injectOptions?: InjectQueryOptions,
 ) {
   return injectQuery(() => {
     const { query, options: clientOptions } = options?.() ?? {}
@@ -2037,7 +2005,7 @@ export function injectApplicationsApplicationIdGuildsGuildIdCommands<
       ),
       ...query,
     }
-  }, injectOptions)
+  })
 }
 
 export function getPutApplicationsApplicationIdGuildsGuildIdCommandsMutationKey() {
@@ -2126,7 +2094,6 @@ export function injectPutApplicationsApplicationIdGuildsGuildIdCommands<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -2139,7 +2106,7 @@ export function injectPutApplicationsApplicationIdGuildsGuildIdCommands<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getPostApplicationsApplicationIdGuildsGuildIdCommandsMutationKey() {
@@ -2228,7 +2195,6 @@ export function injectPostApplicationsApplicationIdGuildsGuildIdCommands<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -2241,7 +2207,7 @@ export function injectPostApplicationsApplicationIdGuildsGuildIdCommands<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getApplicationsApplicationIdGuildsGuildIdCommandsPermissionsQueryKey(
@@ -2358,7 +2324,6 @@ export function injectApplicationsApplicationIdGuildsGuildIdCommandsPermissions<
       ReturnType<ReturnType<typeof client.applications>['guilds']>['commands']['permissions']['get']
     >[0]
   },
-  injectOptions?: InjectQueryOptions,
 ) {
   return injectQuery(() => {
     const { query, options: clientOptions } = options?.() ?? {}
@@ -2370,7 +2335,7 @@ export function injectApplicationsApplicationIdGuildsGuildIdCommandsPermissions<
       ),
       ...query,
     }
-  }, injectOptions)
+  })
 }
 
 export function getApplicationsApplicationIdGuildsGuildIdCommandsCommandIdQueryKey(
@@ -2490,7 +2455,6 @@ export function injectApplicationsApplicationIdGuildsGuildIdCommandsCommandId<
       ReturnType<ReturnType<ReturnType<typeof client.applications>['guilds']>['commands']>['get']
     >[0]
   },
-  injectOptions?: InjectQueryOptions,
 ) {
   return injectQuery(() => {
     const { query, options: clientOptions } = options?.() ?? {}
@@ -2503,7 +2467,7 @@ export function injectApplicationsApplicationIdGuildsGuildIdCommandsCommandId<
       ),
       ...query,
     }
-  }, injectOptions)
+  })
 }
 
 export function getDeleteApplicationsApplicationIdGuildsGuildIdCommandsCommandIdMutationKey() {
@@ -2619,7 +2583,6 @@ export function injectDeleteApplicationsApplicationIdGuildsGuildIdCommandsComman
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -2633,7 +2596,7 @@ export function injectDeleteApplicationsApplicationIdGuildsGuildIdCommandsComman
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getPatchApplicationsApplicationIdGuildsGuildIdCommandsCommandIdMutationKey() {
@@ -2749,7 +2712,6 @@ export function injectPatchApplicationsApplicationIdGuildsGuildIdCommandsCommand
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -2763,7 +2725,7 @@ export function injectPatchApplicationsApplicationIdGuildsGuildIdCommandsCommand
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getApplicationsApplicationIdGuildsGuildIdCommandsCommandIdPermissionsQueryKey(
@@ -2897,7 +2859,6 @@ export function injectApplicationsApplicationIdGuildsGuildIdCommandsCommandIdPer
       >['permissions']['get']
     >[0]
   },
-  injectOptions?: InjectQueryOptions,
 ) {
   return injectQuery(() => {
     const { query, options: clientOptions } = options?.() ?? {}
@@ -2908,7 +2869,7 @@ export function injectApplicationsApplicationIdGuildsGuildIdCommandsCommandIdPer
       >(params(), params2(), params3(), clientOptions),
       ...query,
     }
-  }, injectOptions)
+  })
 }
 
 export function getPutApplicationsApplicationIdGuildsGuildIdCommandsCommandIdPermissionsMutationKey() {
@@ -3025,7 +2986,6 @@ export function injectPutApplicationsApplicationIdGuildsGuildIdCommandsCommandId
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -3039,7 +2999,7 @@ export function injectPutApplicationsApplicationIdGuildsGuildIdCommandsCommandId
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getApplicationsApplicationIdRoleConnectionsMetadataQueryKey(
@@ -3129,7 +3089,6 @@ export function injectApplicationsApplicationIdRoleConnectionsMetadata<
       ReturnType<typeof client.applications>['role-connections']['metadata']['get']
     >[0]
   },
-  injectOptions?: InjectQueryOptions,
 ) {
   return injectQuery(() => {
     const { query, options: clientOptions } = options?.() ?? {}
@@ -3140,7 +3099,7 @@ export function injectApplicationsApplicationIdRoleConnectionsMetadata<
       ),
       ...query,
     }
-  }, injectOptions)
+  })
 }
 
 export function getPutApplicationsApplicationIdRoleConnectionsMetadataMutationKey() {
@@ -3224,7 +3183,6 @@ export function injectPutApplicationsApplicationIdRoleConnectionsMetadata<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -3237,7 +3195,7 @@ export function injectPutApplicationsApplicationIdRoleConnectionsMetadata<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getChannelsChannelIdQueryKey(params: Parameters<typeof client.channels>[0]) {
@@ -3297,12 +3255,11 @@ export function injectChannelsChannelId<
     >
     options?: Parameters<ReturnType<typeof client.channels>['get']>[0]
   },
-  injectOptions?: InjectQueryOptions,
 ) {
   return injectQuery(() => {
     const { query, options: clientOptions } = options?.() ?? {}
     return { ...getChannelsChannelIdQueryOptions<TData, TError>(params(), clientOptions), ...query }
-  }, injectOptions)
+  })
 }
 
 export function getDeleteChannelsChannelIdMutationKey() {
@@ -3362,7 +3319,6 @@ export function injectDeleteChannelsChannelId<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -3374,7 +3330,7 @@ export function injectDeleteChannelsChannelId<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getPatchChannelsChannelIdMutationKey() {
@@ -3428,7 +3384,6 @@ export function injectPatchChannelsChannelId<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -3440,7 +3395,7 @@ export function injectPatchChannelsChannelId<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getPostChannelsChannelIdFollowersMutationKey() {
@@ -3500,7 +3455,6 @@ export function injectPostChannelsChannelIdFollowers<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -3513,7 +3467,7 @@ export function injectPostChannelsChannelIdFollowers<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getChannelsChannelIdInvitesQueryKey(params: Parameters<typeof client.channels>[0]) {
@@ -3579,7 +3533,6 @@ export function injectChannelsChannelIdInvites<
     >
     options?: Parameters<ReturnType<typeof client.channels>['invites']['get']>[0]
   },
-  injectOptions?: InjectQueryOptions,
 ) {
   return injectQuery(() => {
     const { query, options: clientOptions } = options?.() ?? {}
@@ -3587,7 +3540,7 @@ export function injectChannelsChannelIdInvites<
       ...getChannelsChannelIdInvitesQueryOptions<TData, TError>(params(), clientOptions),
       ...query,
     }
-  }, injectOptions)
+  })
 }
 
 export function getPostChannelsChannelIdInvitesMutationKey() {
@@ -3647,7 +3600,6 @@ export function injectPostChannelsChannelIdInvites<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -3660,7 +3612,7 @@ export function injectPostChannelsChannelIdInvites<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getChannelsChannelIdMessagesQueryKey(
@@ -3730,7 +3682,6 @@ export function injectChannelsChannelIdMessages<
     >
     options?: Parameters<ReturnType<typeof client.channels>['messages']['get']>[0]
   },
-  injectOptions?: InjectQueryOptions,
 ) {
   return injectQuery(() => {
     const { query, options: clientOptions } = options?.() ?? {}
@@ -3738,7 +3689,7 @@ export function injectChannelsChannelIdMessages<
       ...getChannelsChannelIdMessagesQueryOptions<TData, TError>(params(), clientOptions),
       ...query,
     }
-  }, injectOptions)
+  })
 }
 
 export function getPostChannelsChannelIdMessagesMutationKey() {
@@ -3798,7 +3749,6 @@ export function injectPostChannelsChannelIdMessages<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -3811,7 +3761,7 @@ export function injectPostChannelsChannelIdMessages<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getPostChannelsChannelIdMessagesBulkDeleteMutationKey() {
@@ -3881,7 +3831,6 @@ export function injectPostChannelsChannelIdMessagesBulkDelete<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -3894,7 +3843,7 @@ export function injectPostChannelsChannelIdMessagesBulkDelete<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getChannelsChannelIdMessagesPinsQueryKey(
@@ -3964,7 +3913,6 @@ export function injectChannelsChannelIdMessagesPins<
     >
     options?: Parameters<ReturnType<typeof client.channels>['messages']['pins']['get']>[0]
   },
-  injectOptions?: InjectQueryOptions,
 ) {
   return injectQuery(() => {
     const { query, options: clientOptions } = options?.() ?? {}
@@ -3972,7 +3920,7 @@ export function injectChannelsChannelIdMessagesPins<
       ...getChannelsChannelIdMessagesPinsQueryOptions<TData, TError>(params(), clientOptions),
       ...query,
     }
-  }, injectOptions)
+  })
 }
 
 export function getPutChannelsChannelIdMessagesPinsMessageIdMutationKey() {
@@ -4055,7 +4003,6 @@ export function injectPutChannelsChannelIdMessagesPinsMessageId<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -4068,7 +4015,7 @@ export function injectPutChannelsChannelIdMessagesPinsMessageId<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getDeleteChannelsChannelIdMessagesPinsMessageIdMutationKey() {
@@ -4151,7 +4098,6 @@ export function injectDeleteChannelsChannelIdMessagesPinsMessageId<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -4164,7 +4110,7 @@ export function injectDeleteChannelsChannelIdMessagesPinsMessageId<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getChannelsChannelIdMessagesMessageIdQueryKey(
@@ -4236,7 +4182,6 @@ export function injectChannelsChannelIdMessagesMessageId<
     >
     options?: Parameters<ReturnType<ReturnType<typeof client.channels>['messages']>['get']>[0]
   },
-  injectOptions?: InjectQueryOptions,
 ) {
   return injectQuery(() => {
     const { query, options: clientOptions } = options?.() ?? {}
@@ -4248,7 +4193,7 @@ export function injectChannelsChannelIdMessagesMessageId<
       ),
       ...query,
     }
-  }, injectOptions)
+  })
 }
 
 export function getDeleteChannelsChannelIdMessagesMessageIdMutationKey() {
@@ -4318,7 +4263,6 @@ export function injectDeleteChannelsChannelIdMessagesMessageId<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -4331,7 +4275,7 @@ export function injectDeleteChannelsChannelIdMessagesMessageId<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getPatchChannelsChannelIdMessagesMessageIdMutationKey() {
@@ -4401,7 +4345,6 @@ export function injectPatchChannelsChannelIdMessagesMessageId<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -4414,7 +4357,7 @@ export function injectPatchChannelsChannelIdMessagesMessageId<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getPostChannelsChannelIdMessagesMessageIdCrosspostMutationKey() {
@@ -4499,7 +4442,6 @@ export function injectPostChannelsChannelIdMessagesMessageIdCrosspost<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -4512,7 +4454,7 @@ export function injectPostChannelsChannelIdMessagesMessageIdCrosspost<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getDeleteChannelsChannelIdMessagesMessageIdReactionsMutationKey() {
@@ -4599,7 +4541,6 @@ export function injectDeleteChannelsChannelIdMessagesMessageIdReactions<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -4612,7 +4553,7 @@ export function injectDeleteChannelsChannelIdMessagesMessageIdReactions<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getChannelsChannelIdMessagesMessageIdReactionsEmojiNameQueryKey(
@@ -4736,7 +4677,6 @@ export function injectChannelsChannelIdMessagesMessageIdReactionsEmojiName<
       ReturnType<ReturnType<ReturnType<typeof client.channels>['messages']>['reactions']>['get']
     >[0]
   },
-  injectOptions?: InjectQueryOptions,
 ) {
   return injectQuery(() => {
     const { query, options: clientOptions } = options?.() ?? {}
@@ -4749,7 +4689,7 @@ export function injectChannelsChannelIdMessagesMessageIdReactionsEmojiName<
       ),
       ...query,
     }
-  }, injectOptions)
+  })
 }
 
 export function getDeleteChannelsChannelIdMessagesMessageIdReactionsEmojiNameMutationKey() {
@@ -4865,7 +4805,6 @@ export function injectDeleteChannelsChannelIdMessagesMessageIdReactionsEmojiName
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -4879,7 +4818,7 @@ export function injectDeleteChannelsChannelIdMessagesMessageIdReactionsEmojiName
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getPutChannelsChannelIdMessagesMessageIdReactionsEmojiNameMeMutationKey() {
@@ -4995,7 +4934,6 @@ export function injectPutChannelsChannelIdMessagesMessageIdReactionsEmojiNameMe<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -5009,7 +4947,7 @@ export function injectPutChannelsChannelIdMessagesMessageIdReactionsEmojiNameMe<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getDeleteChannelsChannelIdMessagesMessageIdReactionsEmojiNameMeMutationKey() {
@@ -5125,7 +5063,6 @@ export function injectDeleteChannelsChannelIdMessagesMessageIdReactionsEmojiName
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -5139,7 +5076,7 @@ export function injectDeleteChannelsChannelIdMessagesMessageIdReactionsEmojiName
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getDeleteChannelsChannelIdMessagesMessageIdReactionsEmojiNameUserIdMutationKey() {
@@ -5261,7 +5198,6 @@ export function injectDeleteChannelsChannelIdMessagesMessageIdReactionsEmojiName
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -5275,7 +5211,7 @@ export function injectDeleteChannelsChannelIdMessagesMessageIdReactionsEmojiName
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getPostChannelsChannelIdMessagesMessageIdThreadsMutationKey() {
@@ -5360,7 +5296,6 @@ export function injectPostChannelsChannelIdMessagesMessageIdThreads<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -5373,7 +5308,7 @@ export function injectPostChannelsChannelIdMessagesMessageIdThreads<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getChannelsChannelIdPermissionsMemberUserIdQueryKey(
@@ -5473,7 +5408,6 @@ export function injectChannelsChannelIdPermissionsMemberUserId<
       ReturnType<ReturnType<typeof client.channels>['permissions']['member']>['get']
     >[0]
   },
-  injectOptions?: InjectQueryOptions,
 ) {
   return injectQuery(() => {
     const { query, options: clientOptions } = options?.() ?? {}
@@ -5485,7 +5419,7 @@ export function injectChannelsChannelIdPermissionsMemberUserId<
       ),
       ...query,
     }
-  }, injectOptions)
+  })
 }
 
 export function getChannelsChannelIdPermissionsRoleRoleIdQueryKey(
@@ -5583,7 +5517,6 @@ export function injectChannelsChannelIdPermissionsRoleRoleId<
       ReturnType<ReturnType<typeof client.channels>['permissions']['role']>['get']
     >[0]
   },
-  injectOptions?: InjectQueryOptions,
 ) {
   return injectQuery(() => {
     const { query, options: clientOptions } = options?.() ?? {}
@@ -5595,7 +5528,7 @@ export function injectChannelsChannelIdPermissionsRoleRoleId<
       ),
       ...query,
     }
-  }, injectOptions)
+  })
 }
 
 export function getPutChannelsChannelIdPermissionsOverwriteIdMutationKey() {
@@ -5665,7 +5598,6 @@ export function injectPutChannelsChannelIdPermissionsOverwriteId<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -5678,7 +5610,7 @@ export function injectPutChannelsChannelIdPermissionsOverwriteId<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getDeleteChannelsChannelIdPermissionsOverwriteIdMutationKey() {
@@ -5757,7 +5689,6 @@ export function injectDeleteChannelsChannelIdPermissionsOverwriteId<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -5770,7 +5701,7 @@ export function injectDeleteChannelsChannelIdPermissionsOverwriteId<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getChannelsChannelIdPinsQueryKey(params: Parameters<typeof client.channels>[0]) {
@@ -5836,7 +5767,6 @@ export function injectChannelsChannelIdPins<
     >
     options?: Parameters<ReturnType<typeof client.channels>['pins']['get']>[0]
   },
-  injectOptions?: InjectQueryOptions,
 ) {
   return injectQuery(() => {
     const { query, options: clientOptions } = options?.() ?? {}
@@ -5844,7 +5774,7 @@ export function injectChannelsChannelIdPins<
       ...getChannelsChannelIdPinsQueryOptions<TData, TError>(params(), clientOptions),
       ...query,
     }
-  }, injectOptions)
+  })
 }
 
 export function getPutChannelsChannelIdPinsMessageIdMutationKey() {
@@ -5908,7 +5838,6 @@ export function injectPutChannelsChannelIdPinsMessageId<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -5921,7 +5850,7 @@ export function injectPutChannelsChannelIdPinsMessageId<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getDeleteChannelsChannelIdPinsMessageIdMutationKey() {
@@ -5985,7 +5914,6 @@ export function injectDeleteChannelsChannelIdPinsMessageId<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -5998,7 +5926,7 @@ export function injectDeleteChannelsChannelIdPinsMessageId<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getChannelsChannelIdPollsMessageIdAnswersAnswerIdQueryKey(
@@ -6118,7 +6046,6 @@ export function injectChannelsChannelIdPollsMessageIdAnswersAnswerId<
       ReturnType<ReturnType<ReturnType<typeof client.channels>['polls']>['answers']>['get']
     >[0]
   },
-  injectOptions?: InjectQueryOptions,
 ) {
   return injectQuery(() => {
     const { query, options: clientOptions } = options?.() ?? {}
@@ -6131,7 +6058,7 @@ export function injectChannelsChannelIdPollsMessageIdAnswersAnswerId<
       ),
       ...query,
     }
-  }, injectOptions)
+  })
 }
 
 export function getPostChannelsChannelIdPollsMessageIdExpireMutationKey() {
@@ -6214,7 +6141,6 @@ export function injectPostChannelsChannelIdPollsMessageIdExpire<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -6227,7 +6153,7 @@ export function injectPostChannelsChannelIdPollsMessageIdExpire<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getPutChannelsChannelIdRecipientsUserIdMutationKey() {
@@ -6297,7 +6223,6 @@ export function injectPutChannelsChannelIdRecipientsUserId<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -6310,7 +6235,7 @@ export function injectPutChannelsChannelIdRecipientsUserId<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getDeleteChannelsChannelIdRecipientsUserIdMutationKey() {
@@ -6389,7 +6314,6 @@ export function injectDeleteChannelsChannelIdRecipientsUserId<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -6402,7 +6326,7 @@ export function injectDeleteChannelsChannelIdRecipientsUserId<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getPostChannelsChannelIdSendSoundboardSoundMutationKey() {
@@ -6470,7 +6394,6 @@ export function injectPostChannelsChannelIdSendSoundboardSound<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -6483,7 +6406,7 @@ export function injectPostChannelsChannelIdSendSoundboardSound<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getChannelsChannelIdThreadMembersQueryKey(
@@ -6553,7 +6476,6 @@ export function injectChannelsChannelIdThreadMembers<
     >
     options?: Parameters<ReturnType<typeof client.channels>['thread-members']['get']>[0]
   },
-  injectOptions?: InjectQueryOptions,
 ) {
   return injectQuery(() => {
     const { query, options: clientOptions } = options?.() ?? {}
@@ -6561,7 +6483,7 @@ export function injectChannelsChannelIdThreadMembers<
       ...getChannelsChannelIdThreadMembersQueryOptions<TData, TError>(params(), clientOptions),
       ...query,
     }
-  }, injectOptions)
+  })
 }
 
 export function getPutChannelsChannelIdThreadMembersMeMutationKey() {
@@ -6629,7 +6551,6 @@ export function injectPutChannelsChannelIdThreadMembersMe<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -6642,7 +6563,7 @@ export function injectPutChannelsChannelIdThreadMembersMe<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getDeleteChannelsChannelIdThreadMembersMeMutationKey() {
@@ -6714,7 +6635,6 @@ export function injectDeleteChannelsChannelIdThreadMembersMe<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -6727,7 +6647,7 @@ export function injectDeleteChannelsChannelIdThreadMembersMe<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getChannelsChannelIdThreadMembersUserIdQueryKey(
@@ -6813,7 +6733,6 @@ export function injectChannelsChannelIdThreadMembersUserId<
     >
     options?: Parameters<ReturnType<ReturnType<typeof client.channels>['thread-members']>['get']>[0]
   },
-  injectOptions?: InjectQueryOptions,
 ) {
   return injectQuery(() => {
     const { query, options: clientOptions } = options?.() ?? {}
@@ -6825,7 +6744,7 @@ export function injectChannelsChannelIdThreadMembersUserId<
       ),
       ...query,
     }
-  }, injectOptions)
+  })
 }
 
 export function getPutChannelsChannelIdThreadMembersUserIdMutationKey() {
@@ -6904,7 +6823,6 @@ export function injectPutChannelsChannelIdThreadMembersUserId<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -6917,7 +6835,7 @@ export function injectPutChannelsChannelIdThreadMembersUserId<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getDeleteChannelsChannelIdThreadMembersUserIdMutationKey() {
@@ -7000,7 +6918,6 @@ export function injectDeleteChannelsChannelIdThreadMembersUserId<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -7013,7 +6930,7 @@ export function injectDeleteChannelsChannelIdThreadMembersUserId<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getPostChannelsChannelIdThreadsMutationKey() {
@@ -7073,7 +6990,6 @@ export function injectPostChannelsChannelIdThreads<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -7086,7 +7002,7 @@ export function injectPostChannelsChannelIdThreads<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getChannelsChannelIdThreadsArchivedPrivateQueryKey(
@@ -7174,7 +7090,6 @@ export function injectChannelsChannelIdThreadsArchivedPrivate<
       ReturnType<typeof client.channels>['threads']['archived']['private']['get']
     >[0]
   },
-  injectOptions?: InjectQueryOptions,
 ) {
   return injectQuery(() => {
     const { query, options: clientOptions } = options?.() ?? {}
@@ -7185,7 +7100,7 @@ export function injectChannelsChannelIdThreadsArchivedPrivate<
       ),
       ...query,
     }
-  }, injectOptions)
+  })
 }
 
 export function getChannelsChannelIdThreadsArchivedPublicQueryKey(
@@ -7269,7 +7184,6 @@ export function injectChannelsChannelIdThreadsArchivedPublic<
       ReturnType<typeof client.channels>['threads']['archived']['public']['get']
     >[0]
   },
-  injectOptions?: InjectQueryOptions,
 ) {
   return injectQuery(() => {
     const { query, options: clientOptions } = options?.() ?? {}
@@ -7280,7 +7194,7 @@ export function injectChannelsChannelIdThreadsArchivedPublic<
       ),
       ...query,
     }
-  }, injectOptions)
+  })
 }
 
 export function getChannelsChannelIdThreadsSearchQueryKey(
@@ -7350,7 +7264,6 @@ export function injectChannelsChannelIdThreadsSearch<
     >
     options?: Parameters<ReturnType<typeof client.channels>['threads']['search']['get']>[0]
   },
-  injectOptions?: InjectQueryOptions,
 ) {
   return injectQuery(() => {
     const { query, options: clientOptions } = options?.() ?? {}
@@ -7358,7 +7271,7 @@ export function injectChannelsChannelIdThreadsSearch<
       ...getChannelsChannelIdThreadsSearchQueryOptions<TData, TError>(params(), clientOptions),
       ...query,
     }
-  }, injectOptions)
+  })
 }
 
 export function getPostChannelsChannelIdTypingMutationKey() {
@@ -7418,7 +7331,6 @@ export function injectPostChannelsChannelIdTyping<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -7430,7 +7342,7 @@ export function injectPostChannelsChannelIdTyping<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getChannelsChannelIdUsersMeThreadsArchivedPrivateQueryKey(
@@ -7542,7 +7454,6 @@ export function injectChannelsChannelIdUsersMeThreadsArchivedPrivate<
       ReturnType<typeof client.channels>['users']['@me']['threads']['archived']['private']['get']
     >[0]
   },
-  injectOptions?: InjectQueryOptions,
 ) {
   return injectQuery(() => {
     const { query, options: clientOptions } = options?.() ?? {}
@@ -7553,7 +7464,7 @@ export function injectChannelsChannelIdUsersMeThreadsArchivedPrivate<
       ),
       ...query,
     }
-  }, injectOptions)
+  })
 }
 
 export function getPutChannelsChannelIdVoiceStatusMutationKey() {
@@ -7613,7 +7524,6 @@ export function injectPutChannelsChannelIdVoiceStatus<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -7626,7 +7536,7 @@ export function injectPutChannelsChannelIdVoiceStatus<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getChannelsChannelIdWebhooksQueryKey(
@@ -7694,7 +7604,6 @@ export function injectChannelsChannelIdWebhooks<
     >
     options?: Parameters<ReturnType<typeof client.channels>['webhooks']['get']>[0]
   },
-  injectOptions?: InjectQueryOptions,
 ) {
   return injectQuery(() => {
     const { query, options: clientOptions } = options?.() ?? {}
@@ -7702,7 +7611,7 @@ export function injectChannelsChannelIdWebhooks<
       ...getChannelsChannelIdWebhooksQueryOptions<TData, TError>(params(), clientOptions),
       ...query,
     }
-  }, injectOptions)
+  })
 }
 
 export function getPostChannelsChannelIdWebhooksMutationKey() {
@@ -7762,7 +7671,6 @@ export function injectPostChannelsChannelIdWebhooks<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -7775,7 +7683,7 @@ export function injectPostChannelsChannelIdWebhooks<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getGatewayQueryKey() {
@@ -7820,12 +7728,11 @@ export function injectGateway<
     >
     options?: Parameters<typeof client.gateway.get>[0]
   },
-  injectOptions?: InjectQueryOptions,
 ) {
   return injectQuery(() => {
     const { query, options: clientOptions } = options?.() ?? {}
     return { ...getGatewayQueryOptions<TData, TError>(clientOptions), ...query }
-  }, injectOptions)
+  })
 }
 
 export function getGatewayBotQueryKey() {
@@ -7870,12 +7777,11 @@ export function injectGatewayBot<
     >
     options?: Parameters<typeof client.gateway.bot.get>[0]
   },
-  injectOptions?: InjectQueryOptions,
 ) {
   return injectQuery(() => {
     const { query, options: clientOptions } = options?.() ?? {}
     return { ...getGatewayBotQueryOptions<TData, TError>(clientOptions), ...query }
-  }, injectOptions)
+  })
 }
 
 export function getGuildsTemplatesCodeQueryKey(
@@ -7943,7 +7849,6 @@ export function injectGuildsTemplatesCode<
     >
     options?: Parameters<ReturnType<typeof client.guilds.templates>['get']>[0]
   },
-  injectOptions?: InjectQueryOptions,
 ) {
   return injectQuery(() => {
     const { query, options: clientOptions } = options?.() ?? {}
@@ -7951,7 +7856,7 @@ export function injectGuildsTemplatesCode<
       ...getGuildsTemplatesCodeQueryOptions<TData, TError>(params(), clientOptions),
       ...query,
     }
-  }, injectOptions)
+  })
 }
 
 export function getGuildsGuildIdQueryKey(
@@ -8012,12 +7917,11 @@ export function injectGuildsGuildId<
     >
     options?: Parameters<ReturnType<typeof client.guilds>['get']>[0]
   },
-  injectOptions?: InjectQueryOptions,
 ) {
   return injectQuery(() => {
     const { query, options: clientOptions } = options?.() ?? {}
     return { ...getGuildsGuildIdQueryOptions<TData, TError>(params(), clientOptions), ...query }
-  }, injectOptions)
+  })
 }
 
 export function getPatchGuildsGuildIdMutationKey() {
@@ -8071,7 +7975,6 @@ export function injectPatchGuildsGuildId<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -8081,7 +7984,7 @@ export function injectPatchGuildsGuildId<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getGuildsGuildIdAuditLogsQueryKey(
@@ -8151,7 +8054,6 @@ export function injectGuildsGuildIdAuditLogs<
     >
     options?: Parameters<ReturnType<typeof client.guilds>['audit-logs']['get']>[0]
   },
-  injectOptions?: InjectQueryOptions,
 ) {
   return injectQuery(() => {
     const { query, options: clientOptions } = options?.() ?? {}
@@ -8159,7 +8061,7 @@ export function injectGuildsGuildIdAuditLogs<
       ...getGuildsGuildIdAuditLogsQueryOptions<TData, TError>(params(), clientOptions),
       ...query,
     }
-  }, injectOptions)
+  })
 }
 
 export function getGuildsGuildIdAutoModerationRulesQueryKey(
@@ -8231,7 +8133,6 @@ export function injectGuildsGuildIdAutoModerationRules<
     >
     options?: Parameters<ReturnType<typeof client.guilds>['auto-moderation']['rules']['get']>[0]
   },
-  injectOptions?: InjectQueryOptions,
 ) {
   return injectQuery(() => {
     const { query, options: clientOptions } = options?.() ?? {}
@@ -8239,7 +8140,7 @@ export function injectGuildsGuildIdAutoModerationRules<
       ...getGuildsGuildIdAutoModerationRulesQueryOptions<TData, TError>(params(), clientOptions),
       ...query,
     }
-  }, injectOptions)
+  })
 }
 
 export function getPostGuildsGuildIdAutoModerationRulesMutationKey() {
@@ -8307,7 +8208,6 @@ export function injectPostGuildsGuildIdAutoModerationRules<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -8320,7 +8220,7 @@ export function injectPostGuildsGuildIdAutoModerationRules<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getGuildsGuildIdAutoModerationRulesRuleIdQueryKey(
@@ -8410,7 +8310,6 @@ export function injectGuildsGuildIdAutoModerationRulesRuleId<
       ReturnType<ReturnType<typeof client.guilds>['auto-moderation']['rules']>['get']
     >[0]
   },
-  injectOptions?: InjectQueryOptions,
 ) {
   return injectQuery(() => {
     const { query, options: clientOptions } = options?.() ?? {}
@@ -8422,7 +8321,7 @@ export function injectGuildsGuildIdAutoModerationRulesRuleId<
       ),
       ...query,
     }
-  }, injectOptions)
+  })
 }
 
 export function getDeleteGuildsGuildIdAutoModerationRulesRuleIdMutationKey() {
@@ -8509,7 +8408,6 @@ export function injectDeleteGuildsGuildIdAutoModerationRulesRuleId<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -8522,7 +8420,7 @@ export function injectDeleteGuildsGuildIdAutoModerationRulesRuleId<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getPatchGuildsGuildIdAutoModerationRulesRuleIdMutationKey() {
@@ -8609,7 +8507,6 @@ export function injectPatchGuildsGuildIdAutoModerationRulesRuleId<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -8622,7 +8519,7 @@ export function injectPatchGuildsGuildIdAutoModerationRulesRuleId<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getGuildsGuildIdBansQueryKey(
@@ -8692,12 +8589,11 @@ export function injectGuildsGuildIdBans<
     >
     options?: Parameters<ReturnType<typeof client.guilds>['bans']['get']>[0]
   },
-  injectOptions?: InjectQueryOptions,
 ) {
   return injectQuery(() => {
     const { query, options: clientOptions } = options?.() ?? {}
     return { ...getGuildsGuildIdBansQueryOptions<TData, TError>(params(), clientOptions), ...query }
-  }, injectOptions)
+  })
 }
 
 export function getGuildsGuildIdBansUserIdQueryKey(
@@ -8769,7 +8665,6 @@ export function injectGuildsGuildIdBansUserId<
     >
     options?: Parameters<ReturnType<ReturnType<typeof client.guilds>['bans']>['get']>[0]
   },
-  injectOptions?: InjectQueryOptions,
 ) {
   return injectQuery(() => {
     const { query, options: clientOptions } = options?.() ?? {}
@@ -8777,7 +8672,7 @@ export function injectGuildsGuildIdBansUserId<
       ...getGuildsGuildIdBansUserIdQueryOptions<TData, TError>(params(), params2(), clientOptions),
       ...query,
     }
-  }, injectOptions)
+  })
 }
 
 export function getPutGuildsGuildIdBansUserIdMutationKey() {
@@ -8841,7 +8736,6 @@ export function injectPutGuildsGuildIdBansUserId<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -8854,7 +8748,7 @@ export function injectPutGuildsGuildIdBansUserId<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getDeleteGuildsGuildIdBansUserIdMutationKey() {
@@ -8918,7 +8812,6 @@ export function injectDeleteGuildsGuildIdBansUserId<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -8931,7 +8824,7 @@ export function injectDeleteGuildsGuildIdBansUserId<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getPostGuildsGuildIdBulkBanMutationKey() {
@@ -8991,7 +8884,6 @@ export function injectPostGuildsGuildIdBulkBan<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -9003,7 +8895,7 @@ export function injectPostGuildsGuildIdBulkBan<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getGuildsGuildIdChannelsQueryKey(params: Parameters<typeof client.guilds>[0]) {
@@ -9069,7 +8961,6 @@ export function injectGuildsGuildIdChannels<
     >
     options?: Parameters<ReturnType<typeof client.guilds>['channels']['get']>[0]
   },
-  injectOptions?: InjectQueryOptions,
 ) {
   return injectQuery(() => {
     const { query, options: clientOptions } = options?.() ?? {}
@@ -9077,7 +8968,7 @@ export function injectGuildsGuildIdChannels<
       ...getGuildsGuildIdChannelsQueryOptions<TData, TError>(params(), clientOptions),
       ...query,
     }
-  }, injectOptions)
+  })
 }
 
 export function getPostGuildsGuildIdChannelsMutationKey() {
@@ -9137,7 +9028,6 @@ export function injectPostGuildsGuildIdChannels<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -9149,7 +9039,7 @@ export function injectPostGuildsGuildIdChannels<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getPatchGuildsGuildIdChannelsMutationKey() {
@@ -9209,7 +9099,6 @@ export function injectPatchGuildsGuildIdChannels<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -9221,7 +9110,7 @@ export function injectPatchGuildsGuildIdChannels<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getGuildsGuildIdEmojisQueryKey(params: Parameters<typeof client.guilds>[0]) {
@@ -9287,7 +9176,6 @@ export function injectGuildsGuildIdEmojis<
     >
     options?: Parameters<ReturnType<typeof client.guilds>['emojis']['get']>[0]
   },
-  injectOptions?: InjectQueryOptions,
 ) {
   return injectQuery(() => {
     const { query, options: clientOptions } = options?.() ?? {}
@@ -9295,7 +9183,7 @@ export function injectGuildsGuildIdEmojis<
       ...getGuildsGuildIdEmojisQueryOptions<TData, TError>(params(), clientOptions),
       ...query,
     }
-  }, injectOptions)
+  })
 }
 
 export function getPostGuildsGuildIdEmojisMutationKey() {
@@ -9355,7 +9243,6 @@ export function injectPostGuildsGuildIdEmojis<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -9367,7 +9254,7 @@ export function injectPostGuildsGuildIdEmojis<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getGuildsGuildIdEmojisEmojiIdQueryKey(
@@ -9439,7 +9326,6 @@ export function injectGuildsGuildIdEmojisEmojiId<
     >
     options?: Parameters<ReturnType<ReturnType<typeof client.guilds>['emojis']>['get']>[0]
   },
-  injectOptions?: InjectQueryOptions,
 ) {
   return injectQuery(() => {
     const { query, options: clientOptions } = options?.() ?? {}
@@ -9451,7 +9337,7 @@ export function injectGuildsGuildIdEmojisEmojiId<
       ),
       ...query,
     }
-  }, injectOptions)
+  })
 }
 
 export function getDeleteGuildsGuildIdEmojisEmojiIdMutationKey() {
@@ -9515,7 +9401,6 @@ export function injectDeleteGuildsGuildIdEmojisEmojiId<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -9528,7 +9413,7 @@ export function injectDeleteGuildsGuildIdEmojisEmojiId<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getPatchGuildsGuildIdEmojisEmojiIdMutationKey() {
@@ -9592,7 +9477,6 @@ export function injectPatchGuildsGuildIdEmojisEmojiId<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -9605,7 +9489,7 @@ export function injectPatchGuildsGuildIdEmojisEmojiId<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getPutGuildsGuildIdIncidentActionsMutationKey() {
@@ -9665,7 +9549,6 @@ export function injectPutGuildsGuildIdIncidentActions<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -9678,7 +9561,7 @@ export function injectPutGuildsGuildIdIncidentActions<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getGuildsGuildIdIntegrationsQueryKey(params: Parameters<typeof client.guilds>[0]) {
@@ -9744,7 +9627,6 @@ export function injectGuildsGuildIdIntegrations<
     >
     options?: Parameters<ReturnType<typeof client.guilds>['integrations']['get']>[0]
   },
-  injectOptions?: InjectQueryOptions,
 ) {
   return injectQuery(() => {
     const { query, options: clientOptions } = options?.() ?? {}
@@ -9752,7 +9634,7 @@ export function injectGuildsGuildIdIntegrations<
       ...getGuildsGuildIdIntegrationsQueryOptions<TData, TError>(params(), clientOptions),
       ...query,
     }
-  }, injectOptions)
+  })
 }
 
 export function getDeleteGuildsGuildIdIntegrationsIntegrationIdMutationKey() {
@@ -9831,7 +9713,6 @@ export function injectDeleteGuildsGuildIdIntegrationsIntegrationId<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -9844,7 +9725,7 @@ export function injectDeleteGuildsGuildIdIntegrationsIntegrationId<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getGuildsGuildIdInvitesQueryKey(params: Parameters<typeof client.guilds>[0]) {
@@ -9910,7 +9791,6 @@ export function injectGuildsGuildIdInvites<
     >
     options?: Parameters<ReturnType<typeof client.guilds>['invites']['get']>[0]
   },
-  injectOptions?: InjectQueryOptions,
 ) {
   return injectQuery(() => {
     const { query, options: clientOptions } = options?.() ?? {}
@@ -9918,7 +9798,7 @@ export function injectGuildsGuildIdInvites<
       ...getGuildsGuildIdInvitesQueryOptions<TData, TError>(params(), clientOptions),
       ...query,
     }
-  }, injectOptions)
+  })
 }
 
 export function getGuildsGuildIdMembersQueryKey(
@@ -9988,7 +9868,6 @@ export function injectGuildsGuildIdMembers<
     >
     options?: Parameters<ReturnType<typeof client.guilds>['members']['get']>[0]
   },
-  injectOptions?: InjectQueryOptions,
 ) {
   return injectQuery(() => {
     const { query, options: clientOptions } = options?.() ?? {}
@@ -9996,7 +9875,7 @@ export function injectGuildsGuildIdMembers<
       ...getGuildsGuildIdMembersQueryOptions<TData, TError>(params(), clientOptions),
       ...query,
     }
-  }, injectOptions)
+  })
 }
 
 export function getPatchGuildsGuildIdMembersMeMutationKey() {
@@ -10056,7 +9935,6 @@ export function injectPatchGuildsGuildIdMembersMe<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -10068,7 +9946,7 @@ export function injectPatchGuildsGuildIdMembersMe<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getGuildsGuildIdMembersSearchQueryKey(
@@ -10138,7 +10016,6 @@ export function injectGuildsGuildIdMembersSearch<
     >
     options: Parameters<ReturnType<typeof client.guilds>['members']['search']['get']>[0]
   },
-  injectOptions?: InjectQueryOptions,
 ) {
   return injectQuery(() => {
     const { query, options: clientOptions } = options()
@@ -10146,7 +10023,7 @@ export function injectGuildsGuildIdMembersSearch<
       ...getGuildsGuildIdMembersSearchQueryOptions<TData, TError>(params(), clientOptions),
       ...query,
     }
-  }, injectOptions)
+  })
 }
 
 export function getGuildsGuildIdMembersUserIdQueryKey(
@@ -10218,7 +10095,6 @@ export function injectGuildsGuildIdMembersUserId<
     >
     options?: Parameters<ReturnType<ReturnType<typeof client.guilds>['members']>['get']>[0]
   },
-  injectOptions?: InjectQueryOptions,
 ) {
   return injectQuery(() => {
     const { query, options: clientOptions } = options?.() ?? {}
@@ -10230,7 +10106,7 @@ export function injectGuildsGuildIdMembersUserId<
       ),
       ...query,
     }
-  }, injectOptions)
+  })
 }
 
 export function getPutGuildsGuildIdMembersUserIdMutationKey() {
@@ -10294,7 +10170,6 @@ export function injectPutGuildsGuildIdMembersUserId<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -10307,7 +10182,7 @@ export function injectPutGuildsGuildIdMembersUserId<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getDeleteGuildsGuildIdMembersUserIdMutationKey() {
@@ -10371,7 +10246,6 @@ export function injectDeleteGuildsGuildIdMembersUserId<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -10384,7 +10258,7 @@ export function injectDeleteGuildsGuildIdMembersUserId<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getPatchGuildsGuildIdMembersUserIdMutationKey() {
@@ -10448,7 +10322,6 @@ export function injectPatchGuildsGuildIdMembersUserId<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -10461,7 +10334,7 @@ export function injectPatchGuildsGuildIdMembersUserId<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getPutGuildsGuildIdMembersUserIdRolesRoleIdMutationKey() {
@@ -10555,7 +10428,6 @@ export function injectPutGuildsGuildIdMembersUserIdRolesRoleId<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -10568,7 +10440,7 @@ export function injectPutGuildsGuildIdMembersUserIdRolesRoleId<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getDeleteGuildsGuildIdMembersUserIdRolesRoleIdMutationKey() {
@@ -10662,7 +10534,6 @@ export function injectDeleteGuildsGuildIdMembersUserIdRolesRoleId<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -10675,7 +10546,7 @@ export function injectDeleteGuildsGuildIdMembersUserIdRolesRoleId<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getGuildsGuildIdMessagesSearchQueryKey(
@@ -10745,7 +10616,6 @@ export function injectGuildsGuildIdMessagesSearch<
     >
     options?: Parameters<ReturnType<typeof client.guilds>['messages']['search']['get']>[0]
   },
-  injectOptions?: InjectQueryOptions,
 ) {
   return injectQuery(() => {
     const { query, options: clientOptions } = options?.() ?? {}
@@ -10753,7 +10623,7 @@ export function injectGuildsGuildIdMessagesSearch<
       ...getGuildsGuildIdMessagesSearchQueryOptions<TData, TError>(params(), clientOptions),
       ...query,
     }
-  }, injectOptions)
+  })
 }
 
 export function getGuildsGuildIdNewMemberWelcomeQueryKey(
@@ -10821,7 +10691,6 @@ export function injectGuildsGuildIdNewMemberWelcome<
     >
     options?: Parameters<ReturnType<typeof client.guilds>['new-member-welcome']['get']>[0]
   },
-  injectOptions?: InjectQueryOptions,
 ) {
   return injectQuery(() => {
     const { query, options: clientOptions } = options?.() ?? {}
@@ -10829,7 +10698,7 @@ export function injectGuildsGuildIdNewMemberWelcome<
       ...getGuildsGuildIdNewMemberWelcomeQueryOptions<TData, TError>(params(), clientOptions),
       ...query,
     }
-  }, injectOptions)
+  })
 }
 
 export function getGuildsGuildIdOnboardingQueryKey(params: Parameters<typeof client.guilds>[0]) {
@@ -10895,7 +10764,6 @@ export function injectGuildsGuildIdOnboarding<
     >
     options?: Parameters<ReturnType<typeof client.guilds>['onboarding']['get']>[0]
   },
-  injectOptions?: InjectQueryOptions,
 ) {
   return injectQuery(() => {
     const { query, options: clientOptions } = options?.() ?? {}
@@ -10903,7 +10771,7 @@ export function injectGuildsGuildIdOnboarding<
       ...getGuildsGuildIdOnboardingQueryOptions<TData, TError>(params(), clientOptions),
       ...query,
     }
-  }, injectOptions)
+  })
 }
 
 export function getPutGuildsGuildIdOnboardingMutationKey() {
@@ -10963,7 +10831,6 @@ export function injectPutGuildsGuildIdOnboarding<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -10975,7 +10842,7 @@ export function injectPutGuildsGuildIdOnboarding<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getGuildsGuildIdPermissionsMemberUserIdQueryKey(
@@ -11063,7 +10930,6 @@ export function injectGuildsGuildIdPermissionsMemberUserId<
       ReturnType<ReturnType<typeof client.guilds>['permissions']['member']>['get']
     >[0]
   },
-  injectOptions?: InjectQueryOptions,
 ) {
   return injectQuery(() => {
     const { query, options: clientOptions } = options?.() ?? {}
@@ -11075,7 +10941,7 @@ export function injectGuildsGuildIdPermissionsMemberUserId<
       ),
       ...query,
     }
-  }, injectOptions)
+  })
 }
 
 export function getGuildsGuildIdPermissionsRoleRoleIdQueryKey(
@@ -11159,7 +11025,6 @@ export function injectGuildsGuildIdPermissionsRoleRoleId<
       ReturnType<ReturnType<typeof client.guilds>['permissions']['role']>['get']
     >[0]
   },
-  injectOptions?: InjectQueryOptions,
 ) {
   return injectQuery(() => {
     const { query, options: clientOptions } = options?.() ?? {}
@@ -11171,7 +11036,7 @@ export function injectGuildsGuildIdPermissionsRoleRoleId<
       ),
       ...query,
     }
-  }, injectOptions)
+  })
 }
 
 export function getGuildsGuildIdPreviewQueryKey(params: Parameters<typeof client.guilds>[0]) {
@@ -11237,7 +11102,6 @@ export function injectGuildsGuildIdPreview<
     >
     options?: Parameters<ReturnType<typeof client.guilds>['preview']['get']>[0]
   },
-  injectOptions?: InjectQueryOptions,
 ) {
   return injectQuery(() => {
     const { query, options: clientOptions } = options?.() ?? {}
@@ -11245,7 +11109,7 @@ export function injectGuildsGuildIdPreview<
       ...getGuildsGuildIdPreviewQueryOptions<TData, TError>(params(), clientOptions),
       ...query,
     }
-  }, injectOptions)
+  })
 }
 
 export function getGuildsGuildIdPruneQueryKey(
@@ -11315,7 +11179,6 @@ export function injectGuildsGuildIdPrune<
     >
     options?: Parameters<ReturnType<typeof client.guilds>['prune']['get']>[0]
   },
-  injectOptions?: InjectQueryOptions,
 ) {
   return injectQuery(() => {
     const { query, options: clientOptions } = options?.() ?? {}
@@ -11323,7 +11186,7 @@ export function injectGuildsGuildIdPrune<
       ...getGuildsGuildIdPruneQueryOptions<TData, TError>(params(), clientOptions),
       ...query,
     }
-  }, injectOptions)
+  })
 }
 
 export function getPostGuildsGuildIdPruneMutationKey() {
@@ -11383,7 +11246,6 @@ export function injectPostGuildsGuildIdPrune<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -11395,7 +11257,7 @@ export function injectPostGuildsGuildIdPrune<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getGuildsGuildIdRegionsQueryKey(params: Parameters<typeof client.guilds>[0]) {
@@ -11461,7 +11323,6 @@ export function injectGuildsGuildIdRegions<
     >
     options?: Parameters<ReturnType<typeof client.guilds>['regions']['get']>[0]
   },
-  injectOptions?: InjectQueryOptions,
 ) {
   return injectQuery(() => {
     const { query, options: clientOptions } = options?.() ?? {}
@@ -11469,7 +11330,7 @@ export function injectGuildsGuildIdRegions<
       ...getGuildsGuildIdRegionsQueryOptions<TData, TError>(params(), clientOptions),
       ...query,
     }
-  }, injectOptions)
+  })
 }
 
 export function getGuildsGuildIdRequestsQueryKey(
@@ -11539,7 +11400,6 @@ export function injectGuildsGuildIdRequests<
     >
     options?: Parameters<ReturnType<typeof client.guilds>['requests']['get']>[0]
   },
-  injectOptions?: InjectQueryOptions,
 ) {
   return injectQuery(() => {
     const { query, options: clientOptions } = options?.() ?? {}
@@ -11547,7 +11407,7 @@ export function injectGuildsGuildIdRequests<
       ...getGuildsGuildIdRequestsQueryOptions<TData, TError>(params(), clientOptions),
       ...query,
     }
-  }, injectOptions)
+  })
 }
 
 export function getPatchGuildsGuildIdRequestsRequestIdMutationKey() {
@@ -11611,7 +11471,6 @@ export function injectPatchGuildsGuildIdRequestsRequestId<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -11624,7 +11483,7 @@ export function injectPatchGuildsGuildIdRequestsRequestId<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getGuildsGuildIdRolesQueryKey(params: Parameters<typeof client.guilds>[0]) {
@@ -11690,7 +11549,6 @@ export function injectGuildsGuildIdRoles<
     >
     options?: Parameters<ReturnType<typeof client.guilds>['roles']['get']>[0]
   },
-  injectOptions?: InjectQueryOptions,
 ) {
   return injectQuery(() => {
     const { query, options: clientOptions } = options?.() ?? {}
@@ -11698,7 +11556,7 @@ export function injectGuildsGuildIdRoles<
       ...getGuildsGuildIdRolesQueryOptions<TData, TError>(params(), clientOptions),
       ...query,
     }
-  }, injectOptions)
+  })
 }
 
 export function getPostGuildsGuildIdRolesMutationKey() {
@@ -11758,7 +11616,6 @@ export function injectPostGuildsGuildIdRoles<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -11770,7 +11627,7 @@ export function injectPostGuildsGuildIdRoles<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getPatchGuildsGuildIdRolesMutationKey() {
@@ -11830,7 +11687,6 @@ export function injectPatchGuildsGuildIdRoles<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -11842,7 +11698,7 @@ export function injectPatchGuildsGuildIdRoles<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getGuildsGuildIdRolesMemberCountsQueryKey(
@@ -11910,7 +11766,6 @@ export function injectGuildsGuildIdRolesMemberCounts<
     >
     options?: Parameters<ReturnType<typeof client.guilds>['roles']['member-counts']['get']>[0]
   },
-  injectOptions?: InjectQueryOptions,
 ) {
   return injectQuery(() => {
     const { query, options: clientOptions } = options?.() ?? {}
@@ -11918,7 +11773,7 @@ export function injectGuildsGuildIdRolesMemberCounts<
       ...getGuildsGuildIdRolesMemberCountsQueryOptions<TData, TError>(params(), clientOptions),
       ...query,
     }
-  }, injectOptions)
+  })
 }
 
 export function getGuildsGuildIdRolesRoleIdQueryKey(
@@ -11990,7 +11845,6 @@ export function injectGuildsGuildIdRolesRoleId<
     >
     options?: Parameters<ReturnType<ReturnType<typeof client.guilds>['roles']>['get']>[0]
   },
-  injectOptions?: InjectQueryOptions,
 ) {
   return injectQuery(() => {
     const { query, options: clientOptions } = options?.() ?? {}
@@ -11998,7 +11852,7 @@ export function injectGuildsGuildIdRolesRoleId<
       ...getGuildsGuildIdRolesRoleIdQueryOptions<TData, TError>(params(), params2(), clientOptions),
       ...query,
     }
-  }, injectOptions)
+  })
 }
 
 export function getDeleteGuildsGuildIdRolesRoleIdMutationKey() {
@@ -12062,7 +11916,6 @@ export function injectDeleteGuildsGuildIdRolesRoleId<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -12075,7 +11928,7 @@ export function injectDeleteGuildsGuildIdRolesRoleId<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getPatchGuildsGuildIdRolesRoleIdMutationKey() {
@@ -12139,7 +11992,6 @@ export function injectPatchGuildsGuildIdRolesRoleId<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -12152,7 +12004,7 @@ export function injectPatchGuildsGuildIdRolesRoleId<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getGuildsGuildIdScheduledEventsQueryKey(
@@ -12222,7 +12074,6 @@ export function injectGuildsGuildIdScheduledEvents<
     >
     options?: Parameters<ReturnType<typeof client.guilds>['scheduled-events']['get']>[0]
   },
-  injectOptions?: InjectQueryOptions,
 ) {
   return injectQuery(() => {
     const { query, options: clientOptions } = options?.() ?? {}
@@ -12230,7 +12081,7 @@ export function injectGuildsGuildIdScheduledEvents<
       ...getGuildsGuildIdScheduledEventsQueryOptions<TData, TError>(params(), clientOptions),
       ...query,
     }
-  }, injectOptions)
+  })
 }
 
 export function getPostGuildsGuildIdScheduledEventsMutationKey() {
@@ -12290,7 +12141,6 @@ export function injectPostGuildsGuildIdScheduledEvents<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -12303,7 +12153,7 @@ export function injectPostGuildsGuildIdScheduledEvents<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getGuildsGuildIdScheduledEventsGuildScheduledEventIdQueryKey(
@@ -12393,7 +12243,6 @@ export function injectGuildsGuildIdScheduledEventsGuildScheduledEventId<
     >
     options?: Parameters<ReturnType<ReturnType<typeof client.guilds>['scheduled-events']>['get']>[0]
   },
-  injectOptions?: InjectQueryOptions,
 ) {
   return injectQuery(() => {
     const { query, options: clientOptions } = options?.() ?? {}
@@ -12405,7 +12254,7 @@ export function injectGuildsGuildIdScheduledEventsGuildScheduledEventId<
       ),
       ...query,
     }
-  }, injectOptions)
+  })
 }
 
 export function getDeleteGuildsGuildIdScheduledEventsGuildScheduledEventIdMutationKey() {
@@ -12492,7 +12341,6 @@ export function injectDeleteGuildsGuildIdScheduledEventsGuildScheduledEventId<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -12506,7 +12354,7 @@ export function injectDeleteGuildsGuildIdScheduledEventsGuildScheduledEventId<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getPatchGuildsGuildIdScheduledEventsGuildScheduledEventIdMutationKey() {
@@ -12591,7 +12439,6 @@ export function injectPatchGuildsGuildIdScheduledEventsGuildScheduledEventId<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -12605,7 +12452,7 @@ export function injectPatchGuildsGuildIdScheduledEventsGuildScheduledEventId<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getPostGuildsGuildIdScheduledEventsGuildScheduledEventIdExceptionsMutationKey() {
@@ -12700,7 +12547,6 @@ export function injectPostGuildsGuildIdScheduledEventsGuildScheduledEventIdExcep
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -12714,7 +12560,7 @@ export function injectPostGuildsGuildIdScheduledEventsGuildScheduledEventIdExcep
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getDeleteGuildsGuildIdScheduledEventsGuildScheduledEventIdExceptionsExceptionIdMutationKey() {
@@ -12833,7 +12679,6 @@ export function injectDeleteGuildsGuildIdScheduledEventsGuildScheduledEventIdExc
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -12847,7 +12692,7 @@ export function injectDeleteGuildsGuildIdScheduledEventsGuildScheduledEventIdExc
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getPatchGuildsGuildIdScheduledEventsGuildScheduledEventIdExceptionsExceptionIdMutationKey() {
@@ -12966,7 +12811,6 @@ export function injectPatchGuildsGuildIdScheduledEventsGuildScheduledEventIdExce
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -12980,7 +12824,7 @@ export function injectPatchGuildsGuildIdScheduledEventsGuildScheduledEventIdExce
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getGuildsGuildIdScheduledEventsGuildScheduledEventIdUsersQueryKey(
@@ -13084,7 +12928,6 @@ export function injectGuildsGuildIdScheduledEventsGuildScheduledEventIdUsers<
       ReturnType<ReturnType<typeof client.guilds>['scheduled-events']>['users']['get']
     >[0]
   },
-  injectOptions?: InjectQueryOptions,
 ) {
   return injectQuery(() => {
     const { query, options: clientOptions } = options?.() ?? {}
@@ -13096,7 +12939,7 @@ export function injectGuildsGuildIdScheduledEventsGuildScheduledEventIdUsers<
       ),
       ...query,
     }
-  }, injectOptions)
+  })
 }
 
 export function getGuildsGuildIdScheduledEventsGuildScheduledEventIdUsersCountsQueryKey(
@@ -13212,7 +13055,6 @@ export function injectGuildsGuildIdScheduledEventsGuildScheduledEventIdUsersCoun
       ReturnType<ReturnType<typeof client.guilds>['scheduled-events']>['users']['counts']['get']
     >[0]
   },
-  injectOptions?: InjectQueryOptions,
 ) {
   return injectQuery(() => {
     const { query, options: clientOptions } = options?.() ?? {}
@@ -13224,7 +13066,7 @@ export function injectGuildsGuildIdScheduledEventsGuildScheduledEventIdUsersCoun
       ),
       ...query,
     }
-  }, injectOptions)
+  })
 }
 
 export function getGuildsGuildIdScheduledEventsGuildScheduledEventIdGuildScheduledEventExceptionIdUsersQueryKey(
@@ -13352,7 +13194,6 @@ export function injectGuildsGuildIdScheduledEventsGuildScheduledEventIdGuildSche
       ReturnType<ReturnType<ReturnType<typeof client.guilds>['scheduled-events']>>['users']['get']
     >[0]
   },
-  injectOptions?: InjectQueryOptions,
 ) {
   return injectQuery(() => {
     const { query, options: clientOptions } = options?.() ?? {}
@@ -13363,7 +13204,7 @@ export function injectGuildsGuildIdScheduledEventsGuildScheduledEventIdGuildSche
       >(params(), params2(), params3(), clientOptions),
       ...query,
     }
-  }, injectOptions)
+  })
 }
 
 export function getGuildsGuildIdSoundboardSoundsQueryKey(
@@ -13431,7 +13272,6 @@ export function injectGuildsGuildIdSoundboardSounds<
     >
     options?: Parameters<ReturnType<typeof client.guilds>['soundboard-sounds']['get']>[0]
   },
-  injectOptions?: InjectQueryOptions,
 ) {
   return injectQuery(() => {
     const { query, options: clientOptions } = options?.() ?? {}
@@ -13439,7 +13279,7 @@ export function injectGuildsGuildIdSoundboardSounds<
       ...getGuildsGuildIdSoundboardSoundsQueryOptions<TData, TError>(params(), clientOptions),
       ...query,
     }
-  }, injectOptions)
+  })
 }
 
 export function getPostGuildsGuildIdSoundboardSoundsMutationKey() {
@@ -13499,7 +13339,6 @@ export function injectPostGuildsGuildIdSoundboardSounds<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -13512,7 +13351,7 @@ export function injectPostGuildsGuildIdSoundboardSounds<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getGuildsGuildIdSoundboardSoundsSoundIdQueryKey(
@@ -13592,7 +13431,6 @@ export function injectGuildsGuildIdSoundboardSoundsSoundId<
       ReturnType<ReturnType<typeof client.guilds>['soundboard-sounds']>['get']
     >[0]
   },
-  injectOptions?: InjectQueryOptions,
 ) {
   return injectQuery(() => {
     const { query, options: clientOptions } = options?.() ?? {}
@@ -13604,7 +13442,7 @@ export function injectGuildsGuildIdSoundboardSoundsSoundId<
       ),
       ...query,
     }
-  }, injectOptions)
+  })
 }
 
 export function getDeleteGuildsGuildIdSoundboardSoundsSoundIdMutationKey() {
@@ -13687,7 +13525,6 @@ export function injectDeleteGuildsGuildIdSoundboardSoundsSoundId<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -13700,7 +13537,7 @@ export function injectDeleteGuildsGuildIdSoundboardSoundsSoundId<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getPatchGuildsGuildIdSoundboardSoundsSoundIdMutationKey() {
@@ -13783,7 +13620,6 @@ export function injectPatchGuildsGuildIdSoundboardSoundsSoundId<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -13796,7 +13632,7 @@ export function injectPatchGuildsGuildIdSoundboardSoundsSoundId<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getGuildsGuildIdStickersQueryKey(params: Parameters<typeof client.guilds>[0]) {
@@ -13862,7 +13698,6 @@ export function injectGuildsGuildIdStickers<
     >
     options?: Parameters<ReturnType<typeof client.guilds>['stickers']['get']>[0]
   },
-  injectOptions?: InjectQueryOptions,
 ) {
   return injectQuery(() => {
     const { query, options: clientOptions } = options?.() ?? {}
@@ -13870,7 +13705,7 @@ export function injectGuildsGuildIdStickers<
       ...getGuildsGuildIdStickersQueryOptions<TData, TError>(params(), clientOptions),
       ...query,
     }
-  }, injectOptions)
+  })
 }
 
 export function getPostGuildsGuildIdStickersMutationKey() {
@@ -13930,7 +13765,6 @@ export function injectPostGuildsGuildIdStickers<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -13942,7 +13776,7 @@ export function injectPostGuildsGuildIdStickers<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getGuildsGuildIdStickersStickerIdQueryKey(
@@ -14014,7 +13848,6 @@ export function injectGuildsGuildIdStickersStickerId<
     >
     options?: Parameters<ReturnType<ReturnType<typeof client.guilds>['stickers']>['get']>[0]
   },
-  injectOptions?: InjectQueryOptions,
 ) {
   return injectQuery(() => {
     const { query, options: clientOptions } = options?.() ?? {}
@@ -14026,7 +13859,7 @@ export function injectGuildsGuildIdStickersStickerId<
       ),
       ...query,
     }
-  }, injectOptions)
+  })
 }
 
 export function getDeleteGuildsGuildIdStickersStickerIdMutationKey() {
@@ -14096,7 +13929,6 @@ export function injectDeleteGuildsGuildIdStickersStickerId<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -14109,7 +13941,7 @@ export function injectDeleteGuildsGuildIdStickersStickerId<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getPatchGuildsGuildIdStickersStickerIdMutationKey() {
@@ -14173,7 +14005,6 @@ export function injectPatchGuildsGuildIdStickersStickerId<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -14186,7 +14017,7 @@ export function injectPatchGuildsGuildIdStickersStickerId<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getGuildsGuildIdTemplatesQueryKey(params: Parameters<typeof client.guilds>[0]) {
@@ -14252,7 +14083,6 @@ export function injectGuildsGuildIdTemplates<
     >
     options?: Parameters<ReturnType<typeof client.guilds>['templates']['get']>[0]
   },
-  injectOptions?: InjectQueryOptions,
 ) {
   return injectQuery(() => {
     const { query, options: clientOptions } = options?.() ?? {}
@@ -14260,7 +14090,7 @@ export function injectGuildsGuildIdTemplates<
       ...getGuildsGuildIdTemplatesQueryOptions<TData, TError>(params(), clientOptions),
       ...query,
     }
-  }, injectOptions)
+  })
 }
 
 export function getPostGuildsGuildIdTemplatesMutationKey() {
@@ -14320,7 +14150,6 @@ export function injectPostGuildsGuildIdTemplates<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -14332,7 +14161,7 @@ export function injectPostGuildsGuildIdTemplates<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getPutGuildsGuildIdTemplatesCodeMutationKey() {
@@ -14396,7 +14225,6 @@ export function injectPutGuildsGuildIdTemplatesCode<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -14409,7 +14237,7 @@ export function injectPutGuildsGuildIdTemplatesCode<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getDeleteGuildsGuildIdTemplatesCodeMutationKey() {
@@ -14479,7 +14307,6 @@ export function injectDeleteGuildsGuildIdTemplatesCode<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -14492,7 +14319,7 @@ export function injectDeleteGuildsGuildIdTemplatesCode<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getPatchGuildsGuildIdTemplatesCodeMutationKey() {
@@ -14562,7 +14389,6 @@ export function injectPatchGuildsGuildIdTemplatesCode<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -14575,7 +14401,7 @@ export function injectPatchGuildsGuildIdTemplatesCode<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getGuildsGuildIdThreadsActiveQueryKey(params: Parameters<typeof client.guilds>[0]) {
@@ -14641,7 +14467,6 @@ export function injectGuildsGuildIdThreadsActive<
     >
     options?: Parameters<ReturnType<typeof client.guilds>['threads']['active']['get']>[0]
   },
-  injectOptions?: InjectQueryOptions,
 ) {
   return injectQuery(() => {
     const { query, options: clientOptions } = options?.() ?? {}
@@ -14649,7 +14474,7 @@ export function injectGuildsGuildIdThreadsActive<
       ...getGuildsGuildIdThreadsActiveQueryOptions<TData, TError>(params(), clientOptions),
       ...query,
     }
-  }, injectOptions)
+  })
 }
 
 export function getGuildsGuildIdVanityUrlQueryKey(params: Parameters<typeof client.guilds>[0]) {
@@ -14715,7 +14540,6 @@ export function injectGuildsGuildIdVanityUrl<
     >
     options?: Parameters<ReturnType<typeof client.guilds>['vanity-url']['get']>[0]
   },
-  injectOptions?: InjectQueryOptions,
 ) {
   return injectQuery(() => {
     const { query, options: clientOptions } = options?.() ?? {}
@@ -14723,7 +14547,7 @@ export function injectGuildsGuildIdVanityUrl<
       ...getGuildsGuildIdVanityUrlQueryOptions<TData, TError>(params(), clientOptions),
       ...query,
     }
-  }, injectOptions)
+  })
 }
 
 export function getGuildsGuildIdVoiceStatesMeQueryKey(params: Parameters<typeof client.guilds>[0]) {
@@ -14789,7 +14613,6 @@ export function injectGuildsGuildIdVoiceStatesMe<
     >
     options?: Parameters<ReturnType<typeof client.guilds>['voice-states']['@me']['get']>[0]
   },
-  injectOptions?: InjectQueryOptions,
 ) {
   return injectQuery(() => {
     const { query, options: clientOptions } = options?.() ?? {}
@@ -14797,7 +14620,7 @@ export function injectGuildsGuildIdVoiceStatesMe<
       ...getGuildsGuildIdVoiceStatesMeQueryOptions<TData, TError>(params(), clientOptions),
       ...query,
     }
-  }, injectOptions)
+  })
 }
 
 export function getPatchGuildsGuildIdVoiceStatesMeMutationKey() {
@@ -14859,7 +14682,6 @@ export function injectPatchGuildsGuildIdVoiceStatesMe<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -14872,7 +14694,7 @@ export function injectPatchGuildsGuildIdVoiceStatesMe<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getGuildsGuildIdVoiceStatesUserIdQueryKey(
@@ -14948,7 +14770,6 @@ export function injectGuildsGuildIdVoiceStatesUserId<
     >
     options?: Parameters<ReturnType<ReturnType<typeof client.guilds>['voice-states']>['get']>[0]
   },
-  injectOptions?: InjectQueryOptions,
 ) {
   return injectQuery(() => {
     const { query, options: clientOptions } = options?.() ?? {}
@@ -14960,7 +14781,7 @@ export function injectGuildsGuildIdVoiceStatesUserId<
       ),
       ...query,
     }
-  }, injectOptions)
+  })
 }
 
 export function getPatchGuildsGuildIdVoiceStatesUserIdMutationKey() {
@@ -15035,7 +14856,6 @@ export function injectPatchGuildsGuildIdVoiceStatesUserId<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -15048,7 +14868,7 @@ export function injectPatchGuildsGuildIdVoiceStatesUserId<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getGuildsGuildIdWebhooksQueryKey(params: Parameters<typeof client.guilds>[0]) {
@@ -15114,7 +14934,6 @@ export function injectGuildsGuildIdWebhooks<
     >
     options?: Parameters<ReturnType<typeof client.guilds>['webhooks']['get']>[0]
   },
-  injectOptions?: InjectQueryOptions,
 ) {
   return injectQuery(() => {
     const { query, options: clientOptions } = options?.() ?? {}
@@ -15122,7 +14941,7 @@ export function injectGuildsGuildIdWebhooks<
       ...getGuildsGuildIdWebhooksQueryOptions<TData, TError>(params(), clientOptions),
       ...query,
     }
-  }, injectOptions)
+  })
 }
 
 export function getGuildsGuildIdWelcomeScreenQueryKey(params: Parameters<typeof client.guilds>[0]) {
@@ -15188,7 +15007,6 @@ export function injectGuildsGuildIdWelcomeScreen<
     >
     options?: Parameters<ReturnType<typeof client.guilds>['welcome-screen']['get']>[0]
   },
-  injectOptions?: InjectQueryOptions,
 ) {
   return injectQuery(() => {
     const { query, options: clientOptions } = options?.() ?? {}
@@ -15196,7 +15014,7 @@ export function injectGuildsGuildIdWelcomeScreen<
       ...getGuildsGuildIdWelcomeScreenQueryOptions<TData, TError>(params(), clientOptions),
       ...query,
     }
-  }, injectOptions)
+  })
 }
 
 export function getPatchGuildsGuildIdWelcomeScreenMutationKey() {
@@ -15256,7 +15074,6 @@ export function injectPatchGuildsGuildIdWelcomeScreen<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -15269,7 +15086,7 @@ export function injectPatchGuildsGuildIdWelcomeScreen<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getGuildsGuildIdWidgetQueryKey(params: Parameters<typeof client.guilds>[0]) {
@@ -15335,7 +15152,6 @@ export function injectGuildsGuildIdWidget<
     >
     options?: Parameters<ReturnType<typeof client.guilds>['widget']['get']>[0]
   },
-  injectOptions?: InjectQueryOptions,
 ) {
   return injectQuery(() => {
     const { query, options: clientOptions } = options?.() ?? {}
@@ -15343,7 +15159,7 @@ export function injectGuildsGuildIdWidget<
       ...getGuildsGuildIdWidgetQueryOptions<TData, TError>(params(), clientOptions),
       ...query,
     }
-  }, injectOptions)
+  })
 }
 
 export function getPatchGuildsGuildIdWidgetMutationKey() {
@@ -15403,7 +15219,6 @@ export function injectPatchGuildsGuildIdWidget<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -15415,26 +15230,26 @@ export function injectPatchGuildsGuildIdWidget<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
-export function getGuildsGuildIdWidgetJsonQueryKey(guild_id: string) {
-  return ['guilds', '/guilds/{guild_id}/widget.json', guild_id] as const
+export function getGuildsGuildIdWidgetJsonQueryKey(params: string) {
+  return ['guilds', '/guilds/{guild_id}/widget.json', params] as const
 }
 
-export function getGuildsGuildIdWidgetJsonQueryOptions<TData = WidgetResponse, TError = unknown>(
-  guild_id: string,
-  options?: { headers?: Record<string, string> },
-) {
+export function getGuildsGuildIdWidgetJsonQueryOptions<
+  TData = Static<typeof WidgetResponseSchema>,
+  TError = unknown,
+>(params: string, options?: { headers?: Record<string, string> }) {
   return queryOptions<
-    WidgetResponse,
+    Static<typeof WidgetResponseSchema>,
     TError,
     TData,
     ReturnType<typeof getGuildsGuildIdWidgetJsonQueryKey>
   >({
-    queryKey: getGuildsGuildIdWidgetJsonQueryKey(guild_id),
+    queryKey: getGuildsGuildIdWidgetJsonQueryKey(params),
     queryFn: async ({ signal }) => {
-      const res = await fetch(`/guilds/${encodeURIComponent(guild_id)}/widget.json`, {
+      const res = await fetch(`${clientOrigin}/guilds/${encodeURIComponent(params)}/widget.json`, {
         headers: options?.headers,
         signal,
       })
@@ -15444,12 +15259,15 @@ export function getGuildsGuildIdWidgetJsonQueryOptions<TData = WidgetResponse, T
   })
 }
 
-export function injectGuildsGuildIdWidgetJson<TData = WidgetResponse, TError = unknown>(
-  guild_id: () => string,
+export function injectGuildsGuildIdWidgetJson<
+  TData = Static<typeof WidgetResponseSchema>,
+  TError = unknown,
+>(
+  params: () => string,
   options?: () => {
     query?: Omit<
       CreateQueryOptions<
-        WidgetResponse,
+        Static<typeof WidgetResponseSchema>,
         TError,
         TData,
         ReturnType<typeof getGuildsGuildIdWidgetJsonQueryKey>
@@ -15458,31 +15276,30 @@ export function injectGuildsGuildIdWidgetJson<TData = WidgetResponse, TError = u
     >
     options?: { headers?: Record<string, string> }
   },
-  injectOptions?: InjectQueryOptions,
 ) {
   return injectQuery(() => {
     const { query, options: clientOptions } = options?.() ?? {}
     return {
-      ...getGuildsGuildIdWidgetJsonQueryOptions<TData, TError>(guild_id(), clientOptions),
+      ...getGuildsGuildIdWidgetJsonQueryOptions<TData, TError>(params(), clientOptions),
       ...query,
     }
-  }, injectOptions)
+  })
 }
 
 export function getGuildsGuildIdWidgetPngQueryKey(
-  guild_id: string,
+  params: string,
   options?: { headers?: Record<string, string>; query?: Record<string, unknown> },
 ) {
   const { headers: _a, ...keyArgs } = options ?? {}
-  return ['guilds', '/guilds/{guild_id}/widget.png', guild_id, keyArgs] as const
+  return ['guilds', '/guilds/{guild_id}/widget.png', params, keyArgs] as const
 }
 
 export function getGuildsGuildIdWidgetPngQueryOptions<TData = void, TError = unknown>(
-  guild_id: string,
+  params: string,
   options?: { headers?: Record<string, string>; query?: Record<string, unknown> },
 ) {
   return queryOptions<void, TError, TData, ReturnType<typeof getGuildsGuildIdWidgetPngQueryKey>>({
-    queryKey: getGuildsGuildIdWidgetPngQueryKey(guild_id, options),
+    queryKey: getGuildsGuildIdWidgetPngQueryKey(params, options),
     queryFn: async ({ signal }) => {
       const search = new URLSearchParams()
       for (const [k, v] of Object.entries(options?.query ?? {})) {
@@ -15496,7 +15313,7 @@ export function getGuildsGuildIdWidgetPngQueryOptions<TData = void, TError = unk
         }
       }
       const res = await fetch(
-        `/guilds/${encodeURIComponent(guild_id)}/widget.png${search.size ? `?${search}` : ''}`,
+        `${clientOrigin}/guilds/${encodeURIComponent(params)}/widget.png${search.size ? `?${search}` : ''}`,
         { headers: options?.headers, signal },
       )
       if (!res.ok) throw await res.json()
@@ -15506,7 +15323,7 @@ export function getGuildsGuildIdWidgetPngQueryOptions<TData = void, TError = unk
 }
 
 export function injectGuildsGuildIdWidgetPng<TData = void, TError = unknown>(
-  guild_id: () => string,
+  params: () => string,
   options?: () => {
     query?: Omit<
       CreateQueryOptions<void, TError, TData, ReturnType<typeof getGuildsGuildIdWidgetPngQueryKey>>,
@@ -15514,15 +15331,14 @@ export function injectGuildsGuildIdWidgetPng<TData = void, TError = unknown>(
     >
     options?: { headers?: Record<string, string>; query?: Record<string, unknown> }
   },
-  injectOptions?: InjectQueryOptions,
 ) {
   return injectQuery(() => {
     const { query, options: clientOptions } = options?.() ?? {}
     return {
-      ...getGuildsGuildIdWidgetPngQueryOptions<TData, TError>(guild_id(), clientOptions),
+      ...getGuildsGuildIdWidgetPngQueryOptions<TData, TError>(params(), clientOptions),
       ...query,
     }
-  }, injectOptions)
+  })
 }
 
 export function getPostInteractionsInteractionIdInteractionTokenCallbackMutationKey() {
@@ -15604,7 +15420,6 @@ export function injectPostInteractionsInteractionIdInteractionTokenCallback<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -15618,7 +15433,7 @@ export function injectPostInteractionsInteractionIdInteractionTokenCallback<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getInvitesCodeQueryKey(
@@ -15679,12 +15494,11 @@ export function injectInvitesCode<
     >
     options?: Parameters<ReturnType<typeof client.invites>['get']>[0]
   },
-  injectOptions?: InjectQueryOptions,
 ) {
   return injectQuery(() => {
     const { query, options: clientOptions } = options?.() ?? {}
     return { ...getInvitesCodeQueryOptions<TData, TError>(params(), clientOptions), ...query }
-  }, injectOptions)
+  })
 }
 
 export function getDeleteInvitesCodeMutationKey() {
@@ -15738,7 +15552,6 @@ export function injectDeleteInvitesCode<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -15748,7 +15561,7 @@ export function injectDeleteInvitesCode<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getInvitesCodeTargetUsersQueryKey(params: Parameters<typeof client.invites>[0]) {
@@ -15814,7 +15627,6 @@ export function injectInvitesCodeTargetUsers<
     >
     options?: Parameters<ReturnType<typeof client.invites>['target-users']['get']>[0]
   },
-  injectOptions?: InjectQueryOptions,
 ) {
   return injectQuery(() => {
     const { query, options: clientOptions } = options?.() ?? {}
@@ -15822,7 +15634,7 @@ export function injectInvitesCodeTargetUsers<
       ...getInvitesCodeTargetUsersQueryOptions<TData, TError>(params(), clientOptions),
       ...query,
     }
-  }, injectOptions)
+  })
 }
 
 export function getPutInvitesCodeTargetUsersMutationKey() {
@@ -15882,7 +15694,6 @@ export function injectPutInvitesCodeTargetUsers<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -15894,7 +15705,7 @@ export function injectPutInvitesCodeTargetUsers<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getPostInvitesCodeTargetUsersBulkAddMutationKey() {
@@ -15964,7 +15775,6 @@ export function injectPostInvitesCodeTargetUsersBulkAdd<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -15977,7 +15787,7 @@ export function injectPostInvitesCodeTargetUsersBulkAdd<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getPostInvitesCodeTargetUsersBulkDeleteMutationKey() {
@@ -16051,7 +15861,6 @@ export function injectPostInvitesCodeTargetUsersBulkDelete<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -16064,7 +15873,7 @@ export function injectPostInvitesCodeTargetUsersBulkDelete<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getInvitesCodeTargetUsersJobStatusQueryKey(
@@ -16138,7 +15947,6 @@ export function injectInvitesCodeTargetUsersJobStatus<
     >
     options?: Parameters<ReturnType<typeof client.invites>['target-users']['job-status']['get']>[0]
   },
-  injectOptions?: InjectQueryOptions,
 ) {
   return injectQuery(() => {
     const { query, options: clientOptions } = options?.() ?? {}
@@ -16146,7 +15954,7 @@ export function injectInvitesCodeTargetUsersJobStatus<
       ...getInvitesCodeTargetUsersJobStatusQueryOptions<TData, TError>(params(), clientOptions),
       ...query,
     }
-  }, injectOptions)
+  })
 }
 
 export function getPutInvitesCodeTargetUsersUserIdMutationKey() {
@@ -16219,7 +16027,6 @@ export function injectPutInvitesCodeTargetUsersUserId<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -16232,7 +16039,7 @@ export function injectPutInvitesCodeTargetUsersUserId<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getDeleteInvitesCodeTargetUsersUserIdMutationKey() {
@@ -16311,7 +16118,6 @@ export function injectDeleteInvitesCodeTargetUsersUserId<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -16324,7 +16130,7 @@ export function injectDeleteInvitesCodeTargetUsersUserId<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getPutLobbiesMutationKey() {
@@ -16371,7 +16177,6 @@ export function injectPutLobbies<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -16381,7 +16186,7 @@ export function injectPutLobbies<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getPostLobbiesMutationKey() {
@@ -16428,7 +16233,6 @@ export function injectPostLobbies<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -16438,7 +16242,7 @@ export function injectPostLobbies<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getLobbiesLobbyIdQueryKey(params: Parameters<typeof client.lobbies>[0]) {
@@ -16495,12 +16299,11 @@ export function injectLobbiesLobbyId<
     >
     options?: Parameters<ReturnType<typeof client.lobbies>['get']>[0]
   },
-  injectOptions?: InjectQueryOptions,
 ) {
   return injectQuery(() => {
     const { query, options: clientOptions } = options?.() ?? {}
     return { ...getLobbiesLobbyIdQueryOptions<TData, TError>(params(), clientOptions), ...query }
-  }, injectOptions)
+  })
 }
 
 export function getDeleteLobbiesLobbyIdMutationKey() {
@@ -16554,7 +16357,6 @@ export function injectDeleteLobbiesLobbyId<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -16566,7 +16368,7 @@ export function injectDeleteLobbiesLobbyId<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getPatchLobbiesLobbyIdMutationKey() {
@@ -16620,7 +16422,6 @@ export function injectPatchLobbiesLobbyId<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -16632,7 +16433,7 @@ export function injectPatchLobbiesLobbyId<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getPatchLobbiesLobbyIdChannelLinkingMutationKey() {
@@ -16692,7 +16493,6 @@ export function injectPatchLobbiesLobbyIdChannelLinking<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -16705,7 +16505,7 @@ export function injectPatchLobbiesLobbyIdChannelLinking<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getDeleteLobbiesLobbyIdMembersMeMutationKey() {
@@ -16765,7 +16565,6 @@ export function injectDeleteLobbiesLobbyIdMembersMe<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -16778,7 +16577,7 @@ export function injectDeleteLobbiesLobbyIdMembersMe<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getPostLobbiesLobbyIdMembersMeInvitesMutationKey() {
@@ -16852,7 +16651,6 @@ export function injectPostLobbiesLobbyIdMembersMeInvites<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -16865,7 +16663,7 @@ export function injectPostLobbiesLobbyIdMembersMeInvites<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getPostLobbiesLobbyIdMembersBulkMutationKey() {
@@ -16925,7 +16723,6 @@ export function injectPostLobbiesLobbyIdMembersBulk<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -16938,7 +16735,7 @@ export function injectPostLobbiesLobbyIdMembersBulk<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getPutLobbiesLobbyIdMembersUserIdMutationKey() {
@@ -17002,7 +16799,6 @@ export function injectPutLobbiesLobbyIdMembersUserId<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -17015,7 +16811,7 @@ export function injectPutLobbiesLobbyIdMembersUserId<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getDeleteLobbiesLobbyIdMembersUserIdMutationKey() {
@@ -17085,7 +16881,6 @@ export function injectDeleteLobbiesLobbyIdMembersUserId<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -17098,7 +16893,7 @@ export function injectDeleteLobbiesLobbyIdMembersUserId<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getPostLobbiesLobbyIdMembersUserIdInvitesMutationKey() {
@@ -17181,7 +16976,6 @@ export function injectPostLobbiesLobbyIdMembersUserIdInvites<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -17194,7 +16988,7 @@ export function injectPostLobbiesLobbyIdMembersUserIdInvites<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getLobbiesLobbyIdMessagesQueryKey(
@@ -17264,7 +17058,6 @@ export function injectLobbiesLobbyIdMessages<
     >
     options?: Parameters<ReturnType<typeof client.lobbies>['messages']['get']>[0]
   },
-  injectOptions?: InjectQueryOptions,
 ) {
   return injectQuery(() => {
     const { query, options: clientOptions } = options?.() ?? {}
@@ -17272,7 +17065,7 @@ export function injectLobbiesLobbyIdMessages<
       ...getLobbiesLobbyIdMessagesQueryOptions<TData, TError>(params(), clientOptions),
       ...query,
     }
-  }, injectOptions)
+  })
 }
 
 export function getPostLobbiesLobbyIdMessagesMutationKey() {
@@ -17332,7 +17125,6 @@ export function injectPostLobbiesLobbyIdMessages<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -17344,7 +17136,7 @@ export function injectPostLobbiesLobbyIdMessages<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getPutLobbiesLobbyIdMessagesMessageIdModerationMetadataMutationKey() {
@@ -17441,7 +17233,6 @@ export function injectPutLobbiesLobbyIdMessagesMessageIdModerationMetadata<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -17454,7 +17245,7 @@ export function injectPutLobbiesLobbyIdMessagesMessageIdModerationMetadata<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getOauth2MeQueryKey() {
@@ -17505,12 +17296,11 @@ export function injectOauth2Me<
     >
     options?: Parameters<(typeof client.oauth2)['@me']['get']>[0]
   },
-  injectOptions?: InjectQueryOptions,
 ) {
   return injectQuery(() => {
     const { query, options: clientOptions } = options?.() ?? {}
     return { ...getOauth2MeQueryOptions<TData, TError>(clientOptions), ...query }
-  }, injectOptions)
+  })
 }
 
 export function getOauth2ApplicationsMeQueryKey() {
@@ -17573,12 +17363,11 @@ export function injectOauth2ApplicationsMe<
     >
     options?: Parameters<(typeof client.oauth2.applications)['@me']['get']>[0]
   },
-  injectOptions?: InjectQueryOptions,
 ) {
   return injectQuery(() => {
     const { query, options: clientOptions } = options?.() ?? {}
     return { ...getOauth2ApplicationsMeQueryOptions<TData, TError>(clientOptions), ...query }
-  }, injectOptions)
+  })
 }
 
 export function getOauth2KeysQueryKey() {
@@ -17623,12 +17412,11 @@ export function injectOauth2Keys<
     >
     options?: Parameters<typeof client.oauth2.keys.get>[0]
   },
-  injectOptions?: InjectQueryOptions,
 ) {
   return injectQuery(() => {
     const { query, options: clientOptions } = options?.() ?? {}
     return { ...getOauth2KeysQueryOptions<TData, TError>(clientOptions), ...query }
-  }, injectOptions)
+  })
 }
 
 export function getOauth2UserinfoQueryKey() {
@@ -17673,12 +17461,11 @@ export function injectOauth2Userinfo<
     >
     options?: Parameters<typeof client.oauth2.userinfo.get>[0]
   },
-  injectOptions?: InjectQueryOptions,
 ) {
   return injectQuery(() => {
     const { query, options: clientOptions } = options?.() ?? {}
     return { ...getOauth2UserinfoQueryOptions<TData, TError>(clientOptions), ...query }
-  }, injectOptions)
+  })
 }
 
 export function getPutPartnerSdkDmsUserId1UserId2MessagesMessageIdModerationMetadataMutationKey() {
@@ -17793,7 +17580,6 @@ export function injectPutPartnerSdkDmsUserId1UserId2MessagesMessageIdModerationM
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -17807,7 +17593,7 @@ export function injectPutPartnerSdkDmsUserId1UserId2MessagesMessageIdModerationM
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getPostPartnerSdkProvisionalAccountsUnmergeMutationKey() {
@@ -17883,7 +17669,6 @@ export function injectPostPartnerSdkProvisionalAccountsUnmerge<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -17896,7 +17681,7 @@ export function injectPostPartnerSdkProvisionalAccountsUnmerge<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getPostPartnerSdkProvisionalAccountsUnmergeBotMutationKey() {
@@ -17976,7 +17761,6 @@ export function injectPostPartnerSdkProvisionalAccountsUnmergeBot<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -17989,7 +17773,7 @@ export function injectPostPartnerSdkProvisionalAccountsUnmergeBot<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getPostPartnerSdkTokenMutationKey() {
@@ -18048,7 +17832,6 @@ export function injectPostPartnerSdkToken<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -18058,7 +17841,7 @@ export function injectPostPartnerSdkToken<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getPostPartnerSdkTokenBotMutationKey() {
@@ -18117,7 +17900,6 @@ export function injectPostPartnerSdkTokenBot<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -18127,7 +17909,7 @@ export function injectPostPartnerSdkTokenBot<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getSkusSkuIdSubscriptionsQueryKey(
@@ -18197,7 +17979,6 @@ export function injectSkusSkuIdSubscriptions<
     >
     options?: Parameters<ReturnType<typeof client.skus>['subscriptions']['get']>[0]
   },
-  injectOptions?: InjectQueryOptions,
 ) {
   return injectQuery(() => {
     const { query, options: clientOptions } = options?.() ?? {}
@@ -18205,7 +17986,7 @@ export function injectSkusSkuIdSubscriptions<
       ...getSkusSkuIdSubscriptionsQueryOptions<TData, TError>(params(), clientOptions),
       ...query,
     }
-  }, injectOptions)
+  })
 }
 
 export function getSkusSkuIdSubscriptionsSubscriptionIdQueryKey(
@@ -18289,7 +18070,6 @@ export function injectSkusSkuIdSubscriptionsSubscriptionId<
     >
     options?: Parameters<ReturnType<ReturnType<typeof client.skus>['subscriptions']>['get']>[0]
   },
-  injectOptions?: InjectQueryOptions,
 ) {
   return injectQuery(() => {
     const { query, options: clientOptions } = options?.() ?? {}
@@ -18301,7 +18081,7 @@ export function injectSkusSkuIdSubscriptionsSubscriptionId<
       ),
       ...query,
     }
-  }, injectOptions)
+  })
 }
 
 export function getSoundboardDefaultSoundsQueryKey() {
@@ -18364,12 +18144,11 @@ export function injectSoundboardDefaultSounds<
     >
     options?: Parameters<(typeof client)['soundboard-default-sounds']['get']>[0]
   },
-  injectOptions?: InjectQueryOptions,
 ) {
   return injectQuery(() => {
     const { query, options: clientOptions } = options?.() ?? {}
     return { ...getSoundboardDefaultSoundsQueryOptions<TData, TError>(clientOptions), ...query }
-  }, injectOptions)
+  })
 }
 
 export function getPostStageInstancesMutationKey() {
@@ -18422,7 +18201,6 @@ export function injectPostStageInstances<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -18432,7 +18210,7 @@ export function injectPostStageInstances<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getStageInstancesChannelIdQueryKey(
@@ -18501,7 +18279,6 @@ export function injectStageInstancesChannelId<
     >
     options?: Parameters<ReturnType<(typeof client)['stage-instances']>['get']>[0]
   },
-  injectOptions?: InjectQueryOptions,
 ) {
   return injectQuery(() => {
     const { query, options: clientOptions } = options?.() ?? {}
@@ -18509,7 +18286,7 @@ export function injectStageInstancesChannelId<
       ...getStageInstancesChannelIdQueryOptions<TData, TError>(params(), clientOptions),
       ...query,
     }
-  }, injectOptions)
+  })
 }
 
 export function getDeleteStageInstancesChannelIdMutationKey() {
@@ -18569,7 +18346,6 @@ export function injectDeleteStageInstancesChannelId<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -18582,7 +18358,7 @@ export function injectDeleteStageInstancesChannelId<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getPatchStageInstancesChannelIdMutationKey() {
@@ -18642,7 +18418,6 @@ export function injectPatchStageInstancesChannelId<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -18655,7 +18430,7 @@ export function injectPatchStageInstancesChannelId<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getStickerPacksQueryKey() {
@@ -18709,12 +18484,11 @@ export function injectStickerPacks<
     >
     options?: Parameters<(typeof client)['sticker-packs']['get']>[0]
   },
-  injectOptions?: InjectQueryOptions,
 ) {
   return injectQuery(() => {
     const { query, options: clientOptions } = options?.() ?? {}
     return { ...getStickerPacksQueryOptions<TData, TError>(clientOptions), ...query }
-  }, injectOptions)
+  })
 }
 
 export function getStickerPacksPackIdQueryKey(
@@ -18783,7 +18557,6 @@ export function injectStickerPacksPackId<
     >
     options?: Parameters<ReturnType<(typeof client)['sticker-packs']>['get']>[0]
   },
-  injectOptions?: InjectQueryOptions,
 ) {
   return injectQuery(() => {
     const { query, options: clientOptions } = options?.() ?? {}
@@ -18791,7 +18564,7 @@ export function injectStickerPacksPackId<
       ...getStickerPacksPackIdQueryOptions<TData, TError>(params(), clientOptions),
       ...query,
     }
-  }, injectOptions)
+  })
 }
 
 export function getStickersStickerIdQueryKey(params: Parameters<typeof client.stickers>[0]) {
@@ -18851,12 +18624,11 @@ export function injectStickersStickerId<
     >
     options?: Parameters<ReturnType<typeof client.stickers>['get']>[0]
   },
-  injectOptions?: InjectQueryOptions,
 ) {
   return injectQuery(() => {
     const { query, options: clientOptions } = options?.() ?? {}
     return { ...getStickersStickerIdQueryOptions<TData, TError>(params(), clientOptions), ...query }
-  }, injectOptions)
+  })
 }
 
 export function getUsersMeQueryKey() {
@@ -18907,12 +18679,11 @@ export function injectUsersMe<
     >
     options?: Parameters<(typeof client.users)['@me']['get']>[0]
   },
-  injectOptions?: InjectQueryOptions,
 ) {
   return injectQuery(() => {
     const { query, options: clientOptions } = options?.() ?? {}
     return { ...getUsersMeQueryOptions<TData, TError>(clientOptions), ...query }
-  }, injectOptions)
+  })
 }
 
 export function getPatchUsersMeMutationKey() {
@@ -18962,7 +18733,6 @@ export function injectPatchUsersMe<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -18972,7 +18742,7 @@ export function injectPatchUsersMe<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getUsersMeApplicationsApplicationIdEntitlementsQueryKey(
@@ -19067,7 +18837,6 @@ export function injectUsersMeApplicationsApplicationIdEntitlements<
       ReturnType<(typeof client.users)['@me']['applications']>['entitlements']['get']
     >[0]
   },
-  injectOptions?: InjectQueryOptions,
 ) {
   return injectQuery(() => {
     const { query, options: clientOptions } = options?.() ?? {}
@@ -19078,7 +18847,7 @@ export function injectUsersMeApplicationsApplicationIdEntitlements<
       ),
       ...query,
     }
-  }, injectOptions)
+  })
 }
 
 export function getUsersMeApplicationsApplicationIdRoleConnectionQueryKey(
@@ -19166,7 +18935,6 @@ export function injectUsersMeApplicationsApplicationIdRoleConnection<
       ReturnType<(typeof client.users)['@me']['applications']>['role-connection']['get']
     >[0]
   },
-  injectOptions?: InjectQueryOptions,
 ) {
   return injectQuery(() => {
     const { query, options: clientOptions } = options?.() ?? {}
@@ -19177,7 +18945,7 @@ export function injectUsersMeApplicationsApplicationIdRoleConnection<
       ),
       ...query,
     }
-  }, injectOptions)
+  })
 }
 
 export function getPutUsersMeApplicationsApplicationIdRoleConnectionMutationKey() {
@@ -19259,7 +19027,6 @@ export function injectPutUsersMeApplicationsApplicationIdRoleConnection<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -19272,7 +19039,7 @@ export function injectPutUsersMeApplicationsApplicationIdRoleConnection<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getDeleteUsersMeApplicationsApplicationIdRoleConnectionMutationKey() {
@@ -19358,7 +19125,6 @@ export function injectDeleteUsersMeApplicationsApplicationIdRoleConnection<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -19371,7 +19137,7 @@ export function injectDeleteUsersMeApplicationsApplicationIdRoleConnection<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getPostUsersMeChannelsMutationKey() {
@@ -19430,7 +19196,6 @@ export function injectPostUsersMeChannels<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -19440,7 +19205,7 @@ export function injectPostUsersMeChannels<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getUsersMeConnectionsQueryKey() {
@@ -19503,12 +19268,11 @@ export function injectUsersMeConnections<
     >
     options?: Parameters<(typeof client.users)['@me']['connections']['get']>[0]
   },
-  injectOptions?: InjectQueryOptions,
 ) {
   return injectQuery(() => {
     const { query, options: clientOptions } = options?.() ?? {}
     return { ...getUsersMeConnectionsQueryOptions<TData, TError>(clientOptions), ...query }
-  }, injectOptions)
+  })
 }
 
 export function getUsersMeGuildsQueryKey(
@@ -19574,12 +19338,11 @@ export function injectUsersMeGuilds<
     >
     options?: Parameters<(typeof client.users)['@me']['guilds']['get']>[0]
   },
-  injectOptions?: InjectQueryOptions,
 ) {
   return injectQuery(() => {
     const { query, options: clientOptions } = options?.() ?? {}
     return { ...getUsersMeGuildsQueryOptions<TData, TError>(clientOptions), ...query }
-  }, injectOptions)
+  })
 }
 
 export function getDeleteUsersMeGuildsGuildIdMutationKey() {
@@ -19639,7 +19402,6 @@ export function injectDeleteUsersMeGuildsGuildId<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -19651,7 +19413,7 @@ export function injectDeleteUsersMeGuildsGuildId<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getUsersMeGuildsGuildIdMemberQueryKey(
@@ -19723,7 +19485,6 @@ export function injectUsersMeGuildsGuildIdMember<
     >
     options?: Parameters<ReturnType<(typeof client.users)['@me']['guilds']>['member']['get']>[0]
   },
-  injectOptions?: InjectQueryOptions,
 ) {
   return injectQuery(() => {
     const { query, options: clientOptions } = options?.() ?? {}
@@ -19731,7 +19492,7 @@ export function injectUsersMeGuildsGuildIdMember<
       ...getUsersMeGuildsGuildIdMemberQueryOptions<TData, TError>(params(), clientOptions),
       ...query,
     }
-  }, injectOptions)
+  })
 }
 
 export function getUsersUserIdQueryKey(params: Parameters<typeof client.users>[0]) {
@@ -19788,12 +19549,11 @@ export function injectUsersUserId<
     >
     options?: Parameters<ReturnType<typeof client.users>['get']>[0]
   },
-  injectOptions?: InjectQueryOptions,
 ) {
   return injectQuery(() => {
     const { query, options: clientOptions } = options?.() ?? {}
     return { ...getUsersUserIdQueryOptions<TData, TError>(params(), clientOptions), ...query }
-  }, injectOptions)
+  })
 }
 
 export function getVoiceRegionsQueryKey() {
@@ -19838,12 +19598,11 @@ export function injectVoiceRegions<
     >
     options?: Parameters<typeof client.voice.regions.get>[0]
   },
-  injectOptions?: InjectQueryOptions,
 ) {
   return injectQuery(() => {
     const { query, options: clientOptions } = options?.() ?? {}
     return { ...getVoiceRegionsQueryOptions<TData, TError>(clientOptions), ...query }
-  }, injectOptions)
+  })
 }
 
 export function getWebhooksWebhookIdQueryKey(params: Parameters<typeof client.webhooks>[0]) {
@@ -19903,12 +19662,11 @@ export function injectWebhooksWebhookId<
     >
     options?: Parameters<ReturnType<typeof client.webhooks>['get']>[0]
   },
-  injectOptions?: InjectQueryOptions,
 ) {
   return injectQuery(() => {
     const { query, options: clientOptions } = options?.() ?? {}
     return { ...getWebhooksWebhookIdQueryOptions<TData, TError>(params(), clientOptions), ...query }
-  }, injectOptions)
+  })
 }
 
 export function getDeleteWebhooksWebhookIdMutationKey() {
@@ -19968,7 +19726,6 @@ export function injectDeleteWebhooksWebhookId<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -19980,7 +19737,7 @@ export function injectDeleteWebhooksWebhookId<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getPatchWebhooksWebhookIdMutationKey() {
@@ -20034,7 +19791,6 @@ export function injectPatchWebhooksWebhookId<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -20046,7 +19802,7 @@ export function injectPatchWebhooksWebhookId<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getWebhooksWebhookIdWebhookTokenQueryKey(
@@ -20117,7 +19873,6 @@ export function injectWebhooksWebhookIdWebhookToken<
     >
     options?: Parameters<ReturnType<ReturnType<typeof client.webhooks>>['get']>[0]
   },
-  injectOptions?: InjectQueryOptions,
 ) {
   return injectQuery(() => {
     const { query, options: clientOptions } = options?.() ?? {}
@@ -20129,7 +19884,7 @@ export function injectWebhooksWebhookIdWebhookToken<
       ),
       ...query,
     }
-  }, injectOptions)
+  })
 }
 
 export function getPostWebhooksWebhookIdWebhookTokenMutationKey() {
@@ -20193,7 +19948,6 @@ export function injectPostWebhooksWebhookIdWebhookToken<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -20206,7 +19960,7 @@ export function injectPostWebhooksWebhookIdWebhookToken<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getDeleteWebhooksWebhookIdWebhookTokenMutationKey() {
@@ -20270,7 +20024,6 @@ export function injectDeleteWebhooksWebhookIdWebhookToken<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -20283,7 +20036,7 @@ export function injectDeleteWebhooksWebhookIdWebhookToken<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getPatchWebhooksWebhookIdWebhookTokenMutationKey() {
@@ -20347,7 +20100,6 @@ export function injectPatchWebhooksWebhookIdWebhookToken<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -20360,7 +20112,7 @@ export function injectPatchWebhooksWebhookIdWebhookToken<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getPostWebhooksWebhookIdWebhookTokenGithubMutationKey() {
@@ -20424,7 +20176,6 @@ export function injectPostWebhooksWebhookIdWebhookTokenGithub<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -20437,7 +20188,7 @@ export function injectPostWebhooksWebhookIdWebhookTokenGithub<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getWebhooksWebhookIdWebhookTokenMessagesOriginalQueryKey(
@@ -20536,7 +20287,6 @@ export function injectWebhooksWebhookIdWebhookTokenMessagesOriginal<
       ReturnType<ReturnType<typeof client.webhooks>>['messages']['@original']['get']
     >[0]
   },
-  injectOptions?: InjectQueryOptions,
 ) {
   return injectQuery(() => {
     const { query, options: clientOptions } = options?.() ?? {}
@@ -20548,7 +20298,7 @@ export function injectWebhooksWebhookIdWebhookTokenMessagesOriginal<
       ),
       ...query,
     }
-  }, injectOptions)
+  })
 }
 
 export function getDeleteWebhooksWebhookIdWebhookTokenMessagesOriginalMutationKey() {
@@ -20638,7 +20388,6 @@ export function injectDeleteWebhooksWebhookIdWebhookTokenMessagesOriginal<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -20651,7 +20400,7 @@ export function injectDeleteWebhooksWebhookIdWebhookTokenMessagesOriginal<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getPatchWebhooksWebhookIdWebhookTokenMessagesOriginalMutationKey() {
@@ -20735,7 +20484,6 @@ export function injectPatchWebhooksWebhookIdWebhookTokenMessagesOriginal<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -20748,7 +20496,7 @@ export function injectPatchWebhooksWebhookIdWebhookTokenMessagesOriginal<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getWebhooksWebhookIdWebhookTokenMessagesMessageIdQueryKey(
@@ -20857,7 +20605,6 @@ export function injectWebhooksWebhookIdWebhookTokenMessagesMessageId<
       ReturnType<ReturnType<ReturnType<typeof client.webhooks>>['messages']>['get']
     >[0]
   },
-  injectOptions?: InjectQueryOptions,
 ) {
   return injectQuery(() => {
     const { query, options: clientOptions } = options?.() ?? {}
@@ -20870,7 +20617,7 @@ export function injectWebhooksWebhookIdWebhookTokenMessagesMessageId<
       ),
       ...query,
     }
-  }, injectOptions)
+  })
 }
 
 export function getDeleteWebhooksWebhookIdWebhookTokenMessagesMessageIdMutationKey() {
@@ -20961,7 +20708,6 @@ export function injectDeleteWebhooksWebhookIdWebhookTokenMessagesMessageId<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -20974,7 +20720,7 @@ export function injectDeleteWebhooksWebhookIdWebhookTokenMessagesMessageId<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getPatchWebhooksWebhookIdWebhookTokenMessagesMessageIdMutationKey() {
@@ -21065,7 +20811,6 @@ export function injectPatchWebhooksWebhookIdWebhookTokenMessagesMessageId<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -21078,7 +20823,7 @@ export function injectPatchWebhooksWebhookIdWebhookTokenMessagesMessageId<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }
 
 export function getPostWebhooksWebhookIdWebhookTokenSlackMutationKey() {
@@ -21142,7 +20887,6 @@ export function injectPostWebhooksWebhookIdWebhookTokenSlack<
       'mutationFn'
     >
   },
-  injectOptions?: InjectMutationOptions,
 ) {
   return injectMutation(() => {
     const { mutation } = options?.() ?? {}
@@ -21155,5 +20899,5 @@ export function injectPostWebhooksWebhookIdWebhookTokenSlack<
       ...mutationDefaults,
       mutationKey: mutation?.mutationKey ?? mutationDefaults.mutationKey,
     }
-  }, injectOptions)
+  })
 }

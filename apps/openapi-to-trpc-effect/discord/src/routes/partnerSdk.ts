@@ -35,7 +35,7 @@ export const partnerSdkRouter = t.router({
       Schema.toStandardSchemaV1(
         Schema.Struct({
           client_id: SnowflakeTypeSchema,
-          client_secret: Schema.optional(
+          client_secret: Schema.optionalKey(
             Schema.NullOr(
               Schema.String.check(
                 Schema.makeFilter((input) => [...input].length <= 1024, {
@@ -82,7 +82,7 @@ export const partnerSdkRouter = t.router({
       Schema.toStandardSchemaV1(
         Schema.Struct({
           client_id: SnowflakeTypeSchema,
-          client_secret: Schema.optional(
+          client_secret: Schema.optionalKey(
             Schema.NullOr(
               Schema.String.check(
                 Schema.makeFilter((input) => [...input].length <= 1024, {
@@ -111,9 +111,7 @@ export const partnerSdkRouter = t.router({
     .input(
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          provisional_user_id: Schema.optional(
-            Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema]),
-          ),
+          provisional_user_id: Schema.optionalKey(Schema.Union([Schema.Null, SnowflakeTypeSchema])),
           external_user_id: Schema.String.check(
             Schema.makeFilter((input) => [...input].length >= 1, {
               expected: 'a string of at least 1 character',
@@ -122,7 +120,7 @@ export const partnerSdkRouter = t.router({
               expected: 'a string of at most 1024 characters',
             }),
           ),
-          preferred_global_name: Schema.optional(
+          preferred_global_name: Schema.optionalKey(
             Schema.NullOr(
               Schema.String.check(
                 Schema.makeFilter((input) => [...input].length >= 1, {

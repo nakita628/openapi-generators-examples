@@ -713,11 +713,17 @@ export const PlaylistTrackObjectSchema = z.object({
     })
     .exactOptional(),
   item: z
-    .xor([TrackObjectSchema, EpisodeObjectSchema])
+    .xor([
+      z.intersection(TrackObjectSchema, z.object({ type: z.literal('TrackObject') })),
+      z.intersection(EpisodeObjectSchema, z.object({ type: z.literal('EpisodeObject') })),
+    ])
     .meta({ description: 'Information about the track or episode.' })
     .exactOptional(),
   track: z
-    .xor([TrackObjectSchema, EpisodeObjectSchema])
+    .xor([
+      z.intersection(TrackObjectSchema, z.object({ type: z.literal('TrackObject') })),
+      z.intersection(EpisodeObjectSchema, z.object({ type: z.literal('EpisodeObject') })),
+    ])
     .meta({
       description: '**Deprecated:** Use `item` instead. Information about the track or episode.\n',
       deprecated: true,
@@ -729,11 +735,19 @@ export type PlaylistTrackObject = z.infer<typeof PlaylistTrackObjectSchema>
 
 export const QueueObjectSchema = z.object({
   currently_playing: z
-    .xor([TrackObjectSchema, EpisodeObjectSchema])
+    .xor([
+      z.intersection(TrackObjectSchema, z.object({ type: z.literal('TrackObject') })),
+      z.intersection(EpisodeObjectSchema, z.object({ type: z.literal('EpisodeObject') })),
+    ])
     .meta({ description: 'The currently playing track or episode. Can be `null`.' })
     .exactOptional(),
   queue: z
-    .array(z.xor([TrackObjectSchema, EpisodeObjectSchema]))
+    .array(
+      z.xor([
+        z.intersection(TrackObjectSchema, z.object({ type: z.literal('TrackObject') })),
+        z.intersection(EpisodeObjectSchema, z.object({ type: z.literal('EpisodeObject') })),
+      ]),
+    )
     .meta({ description: 'The tracks or episodes in the queue. Can be empty.' })
     .exactOptional(),
 })
@@ -860,7 +874,10 @@ export const CurrentlyPlayingContextObjectSchema = z.object({
     .meta({ description: 'If something is currently playing, return `true`.' })
     .exactOptional(),
   item: z
-    .xor([TrackObjectSchema, EpisodeObjectSchema])
+    .xor([
+      z.intersection(TrackObjectSchema, z.object({ type: z.literal('TrackObject') })),
+      z.intersection(EpisodeObjectSchema, z.object({ type: z.literal('EpisodeObject') })),
+    ])
     .meta({ description: 'The currently playing track or episode. Can be `null`.' })
     .exactOptional(),
   currently_playing_type: z
@@ -1781,44 +1798,46 @@ export type CursorPagingSimplifiedArtistObject = z.infer<
   typeof CursorPagingSimplifiedArtistObjectSchema
 >
 
-export const PagingObjectSchema = z.object({
-  href: z
-    .string()
-    .meta({
-      description: 'A link to the Web API endpoint returning the full result of the request\n',
-      examples: ['https://api.spotify.com/v1/me/shows?offset=0&limit=20\n'],
-    }),
-  limit: z
-    .int()
-    .meta({
-      description:
-        'The maximum number of items in the response (as set in the query or by default).\n',
-      examples: [20],
-    }),
-  next: z
-    .string()
-    .nullable()
-    .meta({
-      description: 'URL to the next page of items. ( `null` if none)\n',
-      examples: ['https://api.spotify.com/v1/me/shows?offset=1&limit=1'],
-    }),
-  offset: z
-    .int()
-    .meta({
-      description: 'The offset of the items returned (as set in the query or by default)\n',
-      examples: [0],
-    }),
-  previous: z
-    .string()
-    .nullable()
-    .meta({
-      description: 'URL to the previous page of items. ( `null` if none)\n',
-      examples: ['https://api.spotify.com/v1/me/shows?offset=1&limit=1'],
-    }),
-  total: z
-    .int()
-    .meta({ description: 'The total number of items available to return.\n', examples: [4] }),
-})
+export const PagingObjectSchema = z
+  .looseObject({
+    href: z
+      .string()
+      .meta({
+        description: 'A link to the Web API endpoint returning the full result of the request\n',
+        examples: ['https://api.spotify.com/v1/me/shows?offset=0&limit=20\n'],
+      }),
+    limit: z
+      .int()
+      .meta({
+        description:
+          'The maximum number of items in the response (as set in the query or by default).\n',
+        examples: [20],
+      }),
+    next: z
+      .string()
+      .nullable()
+      .meta({
+        description: 'URL to the next page of items. ( `null` if none)\n',
+        examples: ['https://api.spotify.com/v1/me/shows?offset=1&limit=1'],
+      }),
+    offset: z
+      .int()
+      .meta({
+        description: 'The offset of the items returned (as set in the query or by default)\n',
+        examples: [0],
+      }),
+    previous: z
+      .string()
+      .nullable()
+      .meta({
+        description: 'URL to the previous page of items. ( `null` if none)\n',
+        examples: ['https://api.spotify.com/v1/me/shows?offset=1&limit=1'],
+      }),
+    total: z
+      .int()
+      .meta({ description: 'The total number of items available to return.\n', examples: [4] }),
+  })
+  .refine((val) => ['items'].every((key) => key in val))
 
 export type PagingObject = z.infer<typeof PagingObjectSchema>
 
@@ -2569,7 +2588,10 @@ export const CurrentlyPlayingObjectSchema = z.object({
     .meta({ description: 'If something is currently playing, return `true`.' })
     .exactOptional(),
   item: z
-    .xor([TrackObjectSchema, EpisodeObjectSchema])
+    .xor([
+      z.intersection(TrackObjectSchema, z.object({ type: z.literal('TrackObject') })),
+      z.intersection(EpisodeObjectSchema, z.object({ type: z.literal('EpisodeObject') })),
+    ])
     .meta({ description: 'The currently playing track or episode. Can be `null`.' })
     .exactOptional(),
   currently_playing_type: z
@@ -2630,19 +2652,21 @@ export const QueryMarketParamsSchema = z
       'An [ISO 3166-1 alpha-2 country code](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2).\n  If a country code is specified, only content that is available in that market will be returned.<br/>\n  If a valid user access token is specified in the request header, the country associated with\n  the user account will take priority over this parameter.<br/>\n  _**Note**: If neither market or user country are provided, the content is considered unavailable for the client._<br/>\n  Users can view the country that is associated with their account in the [account settings](https://www.spotify.com/account/overview/).\n',
     examples: ['ES'],
   })
-export const QueryLimitParamsSchema = z.coerce
-  .number()
-  .int()
-  .min(1)
-  .max(50)
+export const QueryLimitParamsSchema = z
+  .preprocess(
+    (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+    z.number().int().min(1).max(50),
+  )
   .default(20)
   .meta({
     description: 'The maximum number of items to return. Default: 20. Minimum: 1. Maximum: 50.\n',
     examples: [10],
   })
-export const QueryOffsetParamsSchema = z.coerce
-  .number()
-  .int()
+export const QueryOffsetParamsSchema = z
+  .preprocess(
+    (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+    z.number().int(),
+  )
   .default(0)
   .meta({
     description:
@@ -3121,11 +3145,11 @@ export const getAlbumsIdTracksHandler = defineHandler({
         examples: ['ES'],
       })
       .exactOptional(),
-    limit: z.coerce
-      .number()
-      .int()
-      .min(1)
-      .max(50)
+    limit: z
+      .preprocess(
+        (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+        z.number().int().min(1).max(50),
+      )
       .default(20)
       .meta({
         description:
@@ -3133,9 +3157,11 @@ export const getAlbumsIdTracksHandler = defineHandler({
         examples: [10],
       })
       .exactOptional(),
-    offset: z.coerce
-      .number()
-      .int()
+    offset: z
+      .preprocess(
+        (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+        z.number().int(),
+      )
       .default(0)
       .meta({
         description:
@@ -3200,11 +3226,11 @@ export const getArtistsIdAlbumsHandler = defineHandler({
         examples: ['ES'],
       })
       .exactOptional(),
-    limit: z.coerce
-      .number()
-      .int()
-      .min(0)
-      .max(10)
+    limit: z
+      .preprocess(
+        (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+        z.number().int().min(0).max(10),
+      )
       .default(5)
       .meta({
         description:
@@ -3212,9 +3238,11 @@ export const getArtistsIdAlbumsHandler = defineHandler({
         examples: [5],
       })
       .exactOptional(),
-    offset: z.coerce
-      .number()
-      .int()
+    offset: z
+      .preprocess(
+        (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+        z.number().int(),
+      )
       .default(0)
       .meta({
         description:
@@ -3325,11 +3353,11 @@ export const getShowsIdEpisodesHandler = defineHandler({
         examples: ['ES'],
       })
       .exactOptional(),
-    limit: z.coerce
-      .number()
-      .int()
-      .min(1)
-      .max(50)
+    limit: z
+      .preprocess(
+        (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+        z.number().int().min(1).max(50),
+      )
       .default(20)
       .meta({
         description:
@@ -3337,9 +3365,11 @@ export const getShowsIdEpisodesHandler = defineHandler({
         examples: [10],
       })
       .exactOptional(),
-    offset: z.coerce
-      .number()
-      .int()
+    offset: z
+      .preprocess(
+        (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+        z.number().int(),
+      )
       .default(0)
       .meta({
         description:
@@ -3458,11 +3488,11 @@ export const getAudiobooksIdChaptersHandler = defineHandler({
         examples: ['ES'],
       })
       .exactOptional(),
-    limit: z.coerce
-      .number()
-      .int()
-      .min(1)
-      .max(50)
+    limit: z
+      .preprocess(
+        (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+        z.number().int().min(1).max(50),
+      )
       .default(20)
       .meta({
         description:
@@ -3470,9 +3500,11 @@ export const getAudiobooksIdChaptersHandler = defineHandler({
         examples: [10],
       })
       .exactOptional(),
-    offset: z.coerce
-      .number()
-      .int()
+    offset: z
+      .preprocess(
+        (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+        z.number().int(),
+      )
       .default(0)
       .meta({
         description:
@@ -3486,11 +3518,11 @@ export const getAudiobooksIdChaptersHandler = defineHandler({
 
 export const getMeAudiobooksHandler = defineHandler({
   query: z.object({
-    limit: z.coerce
-      .number()
-      .int()
-      .min(1)
-      .max(50)
+    limit: z
+      .preprocess(
+        (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+        z.number().int().min(1).max(50),
+      )
       .default(20)
       .meta({
         description:
@@ -3498,9 +3530,11 @@ export const getMeAudiobooksHandler = defineHandler({
         examples: [10],
       })
       .exactOptional(),
-    offset: z.coerce
-      .number()
-      .int()
+    offset: z
+      .preprocess(
+        (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+        z.number().int(),
+      )
       .default(0)
       .meta({
         description:
@@ -3553,11 +3587,11 @@ export const getMeHandler = defineHandler({ response: PrivateUserObjectSchema })
 
 export const getMePlaylistsHandler = defineHandler({
   query: z.object({
-    limit: z.coerce
-      .number()
-      .int()
-      .min(1)
-      .max(50)
+    limit: z
+      .preprocess(
+        (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+        z.number().int().min(1).max(50),
+      )
       .default(20)
       .meta({
         description:
@@ -3565,9 +3599,11 @@ export const getMePlaylistsHandler = defineHandler({
         examples: [10],
       })
       .exactOptional(),
-    offset: z.coerce
-      .number()
-      .int()
+    offset: z
+      .preprocess(
+        (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+        z.number().int(),
+      )
       .default(0)
       .meta({
         description:
@@ -3657,11 +3693,11 @@ export const getMeLibraryContainsHandler = defineHandler({
 
 export const getMeAlbumsHandler = defineHandler({
   query: z.object({
-    limit: z.coerce
-      .number()
-      .int()
-      .min(1)
-      .max(50)
+    limit: z
+      .preprocess(
+        (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+        z.number().int().min(1).max(50),
+      )
       .default(20)
       .meta({
         description:
@@ -3669,9 +3705,11 @@ export const getMeAlbumsHandler = defineHandler({
         examples: [10],
       })
       .exactOptional(),
-    offset: z.coerce
-      .number()
-      .int()
+    offset: z
+      .preprocess(
+        (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+        z.number().int(),
+      )
       .default(0)
       .meta({
         description:
@@ -3756,11 +3794,11 @@ export const getMeTracksHandler = defineHandler({
         examples: ['ES'],
       })
       .exactOptional(),
-    limit: z.coerce
-      .number()
-      .int()
-      .min(1)
-      .max(50)
+    limit: z
+      .preprocess(
+        (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+        z.number().int().min(1).max(50),
+      )
       .default(20)
       .meta({
         description:
@@ -3768,9 +3806,11 @@ export const getMeTracksHandler = defineHandler({
         examples: [10],
       })
       .exactOptional(),
-    offset: z.coerce
-      .number()
-      .int()
+    offset: z
+      .preprocess(
+        (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+        z.number().int(),
+      )
       .default(0)
       .meta({
         description:
@@ -3859,11 +3899,11 @@ export const getMeEpisodesHandler = defineHandler({
         examples: ['ES'],
       })
       .exactOptional(),
-    limit: z.coerce
-      .number()
-      .int()
-      .min(1)
-      .max(50)
+    limit: z
+      .preprocess(
+        (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+        z.number().int().min(1).max(50),
+      )
       .default(20)
       .meta({
         description:
@@ -3871,9 +3911,11 @@ export const getMeEpisodesHandler = defineHandler({
         examples: [10],
       })
       .exactOptional(),
-    offset: z.coerce
-      .number()
-      .int()
+    offset: z
+      .preprocess(
+        (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+        z.number().int(),
+      )
       .default(0)
       .meta({
         description:
@@ -3941,11 +3983,11 @@ export const getMeEpisodesContainsHandler = defineHandler({
 
 export const getMeShowsHandler = defineHandler({
   query: z.object({
-    limit: z.coerce
-      .number()
-      .int()
-      .min(1)
-      .max(50)
+    limit: z
+      .preprocess(
+        (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+        z.number().int().min(1).max(50),
+      )
       .default(20)
       .meta({
         description:
@@ -3953,9 +3995,11 @@ export const getMeShowsHandler = defineHandler({
         examples: [10],
       })
       .exactOptional(),
-    offset: z.coerce
-      .number()
-      .int()
+    offset: z
+      .preprocess(
+        (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+        z.number().int(),
+      )
       .default(0)
       .meta({
         description:
@@ -4045,11 +4089,11 @@ export const getMeFollowingHandler = defineHandler({
         examples: ['0I2XqVXqHScXjHhk6AYYRe'],
       })
       .exactOptional(),
-    limit: z.coerce
-      .number()
-      .int()
-      .min(1)
-      .max(50)
+    limit: z
+      .preprocess(
+        (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+        z.number().int().min(1).max(50),
+      )
       .default(20)
       .meta({
         description:
@@ -4282,9 +4326,11 @@ export const postMePlayerPreviousHandler = defineHandler({
 
 export const putMePlayerSeekHandler = defineHandler({
   query: z.object({
-    position_ms: z.coerce
-      .number()
-      .int()
+    position_ms: z
+      .preprocess(
+        (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+        z.number().int(),
+      )
       .meta({
         description:
           'The position in milliseconds to seek to. Must be a\npositive number. Passing in a position that is greater than the length of\nthe track will cause the player to start playing the next song.\n',
@@ -4323,9 +4369,11 @@ export const putMePlayerRepeatHandler = defineHandler({
 
 export const putMePlayerVolumeHandler = defineHandler({
   query: z.object({
-    volume_percent: z.coerce
-      .number()
-      .int()
+    volume_percent: z
+      .preprocess(
+        (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+        z.number().int(),
+      )
       .meta({
         description: 'The volume to set. Must be a value from 0 to 100 inclusive.\n',
         examples: [50],
@@ -4363,11 +4411,11 @@ export const putMePlayerShuffleHandler = defineHandler({
 
 export const getMePlayerRecentlyPlayedHandler = defineHandler({
   query: z.object({
-    limit: z.coerce
-      .number()
-      .int()
-      .min(1)
-      .max(50)
+    limit: z
+      .preprocess(
+        (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+        z.number().int().min(1).max(50),
+      )
       .default(20)
       .meta({
         description:
@@ -4375,18 +4423,22 @@ export const getMePlayerRecentlyPlayedHandler = defineHandler({
         examples: [10],
       })
       .exactOptional(),
-    after: z.coerce
-      .number()
-      .int()
+    after: z
+      .preprocess(
+        (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+        z.number().int(),
+      )
       .meta({
         description:
           'A Unix timestamp in milliseconds. Returns all items\nafter (but not including) this cursor position. If `after` is specified, `before`\nmust not be specified.\n',
         examples: [1484811043508],
       })
       .exactOptional(),
-    before: z.coerce
-      .number()
-      .int()
+    before: z
+      .preprocess(
+        (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+        z.number().int(),
+      )
       .meta({
         description:
           'A Unix timestamp in milliseconds. Returns all items\nbefore (but not including) this cursor position. If `before` is specified,\n`after` must not be specified.\n',
@@ -4429,11 +4481,11 @@ export const getMeTopArtistsHandler = defineHandler({
         examples: ['medium_term'],
       })
       .exactOptional(),
-    limit: z.coerce
-      .number()
-      .int()
-      .min(1)
-      .max(50)
+    limit: z
+      .preprocess(
+        (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+        z.number().int().min(1).max(50),
+      )
       .default(20)
       .meta({
         description:
@@ -4441,9 +4493,11 @@ export const getMeTopArtistsHandler = defineHandler({
         examples: [10],
       })
       .exactOptional(),
-    offset: z.coerce
-      .number()
-      .int()
+    offset: z
+      .preprocess(
+        (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+        z.number().int(),
+      )
       .default(0)
       .meta({
         description:
@@ -4466,11 +4520,11 @@ export const getMeTopTracksHandler = defineHandler({
         examples: ['medium_term'],
       })
       .exactOptional(),
-    limit: z.coerce
-      .number()
-      .int()
-      .min(1)
-      .max(50)
+    limit: z
+      .preprocess(
+        (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+        z.number().int().min(1).max(50),
+      )
       .default(20)
       .meta({
         description:
@@ -4478,9 +4532,11 @@ export const getMeTopTracksHandler = defineHandler({
         examples: [10],
       })
       .exactOptional(),
-    offset: z.coerce
-      .number()
-      .int()
+    offset: z
+      .preprocess(
+        (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+        z.number().int(),
+      )
       .default(0)
       .meta({
         description:
@@ -4606,22 +4662,22 @@ export const getSearchHandler = defineHandler({
         examples: ['ES'],
       })
       .exactOptional(),
-    limit: z.coerce
-      .number()
-      .int()
-      .min(1)
-      .max(10)
+    limit: z
+      .preprocess(
+        (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+        z.number().int().min(1).max(10),
+      )
       .default(5)
       .meta({
         description: 'The maximum number of results to return in each item type.\n',
         examples: [10],
       })
       .exactOptional(),
-    offset: z.coerce
-      .number()
-      .int()
-      .min(0)
-      .max(1000)
+    offset: z
+      .preprocess(
+        (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+        z.number().int().min(0).max(1000),
+      )
       .default(0)
       .meta({
         description:
@@ -4764,11 +4820,11 @@ export const getPlaylistsPlaylistIdTracksHandler = defineHandler({
         examples: ['items(added_by.id,track(name,href,album(name,href)))'],
       })
       .exactOptional(),
-    limit: z.coerce
-      .number()
-      .int()
-      .min(1)
-      .max(100)
+    limit: z
+      .preprocess(
+        (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+        z.number().int().min(1).max(100),
+      )
       .default(20)
       .meta({
         description:
@@ -4776,9 +4832,11 @@ export const getPlaylistsPlaylistIdTracksHandler = defineHandler({
         examples: [10],
       })
       .exactOptional(),
-    offset: z.coerce
-      .number()
-      .int()
+    offset: z
+      .preprocess(
+        (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+        z.number().int(),
+      )
       .default(0)
       .meta({
         description:
@@ -4864,9 +4922,11 @@ export const postPlaylistsPlaylistIdTracksHandler = defineHandler({
       }),
   }),
   query: z.object({
-    position: z.coerce
-      .number()
-      .int()
+    position: z
+      .preprocess(
+        (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+        z.number().int(),
+      )
       .meta({
         description:
           'The position to insert the items, a zero-based index. For example, to insert the items in the first position: `position=0`; to insert the items in the third position: `position=2`. If omitted, the items will be appended to the playlist. Items are added in the order they are listed in the query string or request body.\n',
@@ -4966,11 +5026,11 @@ export const getPlaylistsPlaylistIdItemsHandler = defineHandler({
         examples: ['items(added_by.id,track(name,href,album(name,href)))'],
       })
       .exactOptional(),
-    limit: z.coerce
-      .number()
-      .int()
-      .min(1)
-      .max(50)
+    limit: z
+      .preprocess(
+        (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+        z.number().int().min(1).max(50),
+      )
       .default(20)
       .meta({
         description:
@@ -4978,9 +5038,11 @@ export const getPlaylistsPlaylistIdItemsHandler = defineHandler({
         examples: [10],
       })
       .exactOptional(),
-    offset: z.coerce
-      .number()
-      .int()
+    offset: z
+      .preprocess(
+        (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+        z.number().int(),
+      )
       .default(0)
       .meta({
         description:
@@ -5066,9 +5128,11 @@ export const postPlaylistsPlaylistIdItemsHandler = defineHandler({
       }),
   }),
   query: z.object({
-    position: z.coerce
-      .number()
-      .int()
+    position: z
+      .preprocess(
+        (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+        z.number().int(),
+      )
       .meta({
         description:
           'The position to insert the items, a zero-based index. For example, to insert the items in the first position: `position=0`; to insert the items in the third position: `position=2`. If omitted, the items will be appended to the playlist. Items are added in the order they are listed in the query string or request body.\n',
@@ -5248,11 +5312,11 @@ export const getUsersUserIdPlaylistsHandler = defineHandler({
       }),
   }),
   query: z.object({
-    limit: z.coerce
-      .number()
-      .int()
-      .min(1)
-      .max(50)
+    limit: z
+      .preprocess(
+        (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+        z.number().int().min(1).max(50),
+      )
       .default(20)
       .meta({
         description:
@@ -5260,9 +5324,11 @@ export const getUsersUserIdPlaylistsHandler = defineHandler({
         examples: [10],
       })
       .exactOptional(),
-    offset: z.coerce
-      .number()
-      .int()
+    offset: z
+      .preprocess(
+        (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+        z.number().int(),
+      )
       .default(0)
       .meta({
         description:
@@ -5330,11 +5396,11 @@ export const getBrowseFeaturedPlaylistsHandler = defineHandler({
         examples: ['sv_SE'],
       })
       .exactOptional(),
-    limit: z.coerce
-      .number()
-      .int()
-      .min(1)
-      .max(50)
+    limit: z
+      .preprocess(
+        (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+        z.number().int().min(1).max(50),
+      )
       .default(20)
       .meta({
         description:
@@ -5342,9 +5408,11 @@ export const getBrowseFeaturedPlaylistsHandler = defineHandler({
         examples: [10],
       })
       .exactOptional(),
-    offset: z.coerce
-      .number()
-      .int()
+    offset: z
+      .preprocess(
+        (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+        z.number().int(),
+      )
       .default(0)
       .meta({
         description:
@@ -5366,11 +5434,11 @@ export const getBrowseCategoriesHandler = defineHandler({
         examples: ['sv_SE'],
       })
       .exactOptional(),
-    limit: z.coerce
-      .number()
-      .int()
-      .min(1)
-      .max(50)
+    limit: z
+      .preprocess(
+        (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+        z.number().int().min(1).max(50),
+      )
       .default(20)
       .meta({
         description:
@@ -5378,9 +5446,11 @@ export const getBrowseCategoriesHandler = defineHandler({
         examples: [10],
       })
       .exactOptional(),
-    offset: z.coerce
-      .number()
-      .int()
+    offset: z
+      .preprocess(
+        (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+        z.number().int(),
+      )
       .default(0)
       .meta({
         description:
@@ -5431,11 +5501,11 @@ export const getBrowseCategoriesCategoryIdPlaylistsHandler = defineHandler({
       }),
   }),
   query: z.object({
-    limit: z.coerce
-      .number()
-      .int()
-      .min(1)
-      .max(50)
+    limit: z
+      .preprocess(
+        (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+        z.number().int().min(1).max(50),
+      )
       .default(20)
       .meta({
         description:
@@ -5443,9 +5513,11 @@ export const getBrowseCategoriesCategoryIdPlaylistsHandler = defineHandler({
         examples: [10],
       })
       .exactOptional(),
-    offset: z.coerce
-      .number()
-      .int()
+    offset: z
+      .preprocess(
+        (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+        z.number().int(),
+      )
       .default(0)
       .meta({
         description:
@@ -5459,11 +5531,11 @@ export const getBrowseCategoriesCategoryIdPlaylistsHandler = defineHandler({
 
 export const getBrowseNewReleasesHandler = defineHandler({
   query: z.object({
-    limit: z.coerce
-      .number()
-      .int()
-      .min(1)
-      .max(50)
+    limit: z
+      .preprocess(
+        (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+        z.number().int().min(1).max(50),
+      )
       .default(20)
       .meta({
         description:
@@ -5471,9 +5543,11 @@ export const getBrowseNewReleasesHandler = defineHandler({
         examples: [10],
       })
       .exactOptional(),
-    offset: z.coerce
-      .number()
-      .int()
+    offset: z
+      .preprocess(
+        (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+        z.number().int(),
+      )
       .default(0)
       .meta({
         description:
@@ -5526,11 +5600,11 @@ export const getAudioAnalysisIdHandler = defineHandler({
 
 export const getRecommendationsHandler = defineHandler({
   query: z.object({
-    limit: z.coerce
-      .number()
-      .int()
-      .min(1)
-      .max(100)
+    limit: z
+      .preprocess(
+        (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+        z.number().int().min(1).max(100),
+      )
       .default(20)
       .meta({
         description:
@@ -5570,362 +5644,496 @@ export const getRecommendationsHandler = defineHandler({
         examples: ['0c6xIDDpzE81m2q797ordA'],
       })
       .exactOptional(),
-    min_acousticness: z.coerce
-      .number()
-      .min(0)
-      .max(1)
+    min_acousticness: z
+      .preprocess(
+        (val) =>
+          typeof val === 'string' && /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(val)
+            ? Number(val)
+            : val,
+        z.number().min(0).max(1),
+      )
       .meta({
         description:
           'For each tunable track attribute, a hard floor on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `min_tempo=140` would restrict results to only those tracks with a tempo of greater than 140 beats per minute.\n',
       })
       .exactOptional(),
-    max_acousticness: z.coerce
-      .number()
-      .min(0)
-      .max(1)
+    max_acousticness: z
+      .preprocess(
+        (val) =>
+          typeof val === 'string' && /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(val)
+            ? Number(val)
+            : val,
+        z.number().min(0).max(1),
+      )
       .meta({
         description:
           'For each tunable track attribute, a hard ceiling on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `max_instrumentalness=0.35` would filter out most tracks that are likely to be instrumental.\n',
       })
       .exactOptional(),
-    target_acousticness: z.coerce
-      .number()
-      .min(0)
-      .max(1)
+    target_acousticness: z
+      .preprocess(
+        (val) =>
+          typeof val === 'string' && /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(val)
+            ? Number(val)
+            : val,
+        z.number().min(0).max(1),
+      )
       .meta({
         description:
           'For each of the tunable track attributes (below) a target value may be provided. Tracks with the attribute values nearest to the target values will be preferred. For example, you might request `target_energy=0.6` and `target_danceability=0.8`. All target values will be weighed equally in ranking results.\n',
       })
       .exactOptional(),
-    min_danceability: z.coerce
-      .number()
-      .min(0)
-      .max(1)
+    min_danceability: z
+      .preprocess(
+        (val) =>
+          typeof val === 'string' && /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(val)
+            ? Number(val)
+            : val,
+        z.number().min(0).max(1),
+      )
       .meta({
         description:
           'For each tunable track attribute, a hard floor on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `min_tempo=140` would restrict results to only those tracks with a tempo of greater than 140 beats per minute.\n',
       })
       .exactOptional(),
-    max_danceability: z.coerce
-      .number()
-      .min(0)
-      .max(1)
+    max_danceability: z
+      .preprocess(
+        (val) =>
+          typeof val === 'string' && /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(val)
+            ? Number(val)
+            : val,
+        z.number().min(0).max(1),
+      )
       .meta({
         description:
           'For each tunable track attribute, a hard ceiling on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `max_instrumentalness=0.35` would filter out most tracks that are likely to be instrumental.\n',
       })
       .exactOptional(),
-    target_danceability: z.coerce
-      .number()
-      .min(0)
-      .max(1)
+    target_danceability: z
+      .preprocess(
+        (val) =>
+          typeof val === 'string' && /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(val)
+            ? Number(val)
+            : val,
+        z.number().min(0).max(1),
+      )
       .meta({
         description:
           'For each of the tunable track attributes (below) a target value may be provided. Tracks with the attribute values nearest to the target values will be preferred. For example, you might request `target_energy=0.6` and `target_danceability=0.8`. All target values will be weighed equally in ranking results.\n',
       })
       .exactOptional(),
-    min_duration_ms: z.coerce
-      .number()
-      .int()
+    min_duration_ms: z
+      .preprocess(
+        (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+        z.number().int(),
+      )
       .meta({
         description:
           'For each tunable track attribute, a hard floor on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `min_tempo=140` would restrict results to only those tracks with a tempo of greater than 140 beats per minute.\n',
       })
       .exactOptional(),
-    max_duration_ms: z.coerce
-      .number()
-      .int()
+    max_duration_ms: z
+      .preprocess(
+        (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+        z.number().int(),
+      )
       .meta({
         description:
           'For each tunable track attribute, a hard ceiling on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `max_instrumentalness=0.35` would filter out most tracks that are likely to be instrumental.\n',
       })
       .exactOptional(),
-    target_duration_ms: z.coerce
-      .number()
-      .int()
+    target_duration_ms: z
+      .preprocess(
+        (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+        z.number().int(),
+      )
       .meta({ description: 'Target duration of the track (ms)' })
       .exactOptional(),
-    min_energy: z.coerce
-      .number()
-      .min(0)
-      .max(1)
+    min_energy: z
+      .preprocess(
+        (val) =>
+          typeof val === 'string' && /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(val)
+            ? Number(val)
+            : val,
+        z.number().min(0).max(1),
+      )
       .meta({
         description:
           'For each tunable track attribute, a hard floor on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `min_tempo=140` would restrict results to only those tracks with a tempo of greater than 140 beats per minute.\n',
       })
       .exactOptional(),
-    max_energy: z.coerce
-      .number()
-      .min(0)
-      .max(1)
+    max_energy: z
+      .preprocess(
+        (val) =>
+          typeof val === 'string' && /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(val)
+            ? Number(val)
+            : val,
+        z.number().min(0).max(1),
+      )
       .meta({
         description:
           'For each tunable track attribute, a hard ceiling on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `max_instrumentalness=0.35` would filter out most tracks that are likely to be instrumental.\n',
       })
       .exactOptional(),
-    target_energy: z.coerce
-      .number()
-      .min(0)
-      .max(1)
+    target_energy: z
+      .preprocess(
+        (val) =>
+          typeof val === 'string' && /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(val)
+            ? Number(val)
+            : val,
+        z.number().min(0).max(1),
+      )
       .meta({
         description:
           'For each of the tunable track attributes (below) a target value may be provided. Tracks with the attribute values nearest to the target values will be preferred. For example, you might request `target_energy=0.6` and `target_danceability=0.8`. All target values will be weighed equally in ranking results.\n',
       })
       .exactOptional(),
-    min_instrumentalness: z.coerce
-      .number()
-      .min(0)
-      .max(1)
+    min_instrumentalness: z
+      .preprocess(
+        (val) =>
+          typeof val === 'string' && /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(val)
+            ? Number(val)
+            : val,
+        z.number().min(0).max(1),
+      )
       .meta({
         description:
           'For each tunable track attribute, a hard floor on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `min_tempo=140` would restrict results to only those tracks with a tempo of greater than 140 beats per minute.\n',
       })
       .exactOptional(),
-    max_instrumentalness: z.coerce
-      .number()
-      .min(0)
-      .max(1)
+    max_instrumentalness: z
+      .preprocess(
+        (val) =>
+          typeof val === 'string' && /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(val)
+            ? Number(val)
+            : val,
+        z.number().min(0).max(1),
+      )
       .meta({
         description:
           'For each tunable track attribute, a hard ceiling on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `max_instrumentalness=0.35` would filter out most tracks that are likely to be instrumental.\n',
       })
       .exactOptional(),
-    target_instrumentalness: z.coerce
-      .number()
-      .min(0)
-      .max(1)
+    target_instrumentalness: z
+      .preprocess(
+        (val) =>
+          typeof val === 'string' && /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(val)
+            ? Number(val)
+            : val,
+        z.number().min(0).max(1),
+      )
       .meta({
         description:
           'For each of the tunable track attributes (below) a target value may be provided. Tracks with the attribute values nearest to the target values will be preferred. For example, you might request `target_energy=0.6` and `target_danceability=0.8`. All target values will be weighed equally in ranking results.\n',
       })
       .exactOptional(),
-    min_key: z.coerce
-      .number()
-      .int()
-      .min(0)
-      .max(11)
+    min_key: z
+      .preprocess(
+        (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+        z.number().int().min(0).max(11),
+      )
       .meta({
         description:
           'For each tunable track attribute, a hard floor on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `min_tempo=140` would restrict results to only those tracks with a tempo of greater than 140 beats per minute.\n',
       })
       .exactOptional(),
-    max_key: z.coerce
-      .number()
-      .int()
-      .min(0)
-      .max(11)
+    max_key: z
+      .preprocess(
+        (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+        z.number().int().min(0).max(11),
+      )
       .meta({
         description:
           'For each tunable track attribute, a hard ceiling on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `max_instrumentalness=0.35` would filter out most tracks that are likely to be instrumental.\n',
       })
       .exactOptional(),
-    target_key: z.coerce
-      .number()
-      .int()
-      .min(0)
-      .max(11)
+    target_key: z
+      .preprocess(
+        (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+        z.number().int().min(0).max(11),
+      )
       .meta({
         description:
           'For each of the tunable track attributes (below) a target value may be provided. Tracks with the attribute values nearest to the target values will be preferred. For example, you might request `target_energy=0.6` and `target_danceability=0.8`. All target values will be weighed equally in ranking results.\n',
       })
       .exactOptional(),
-    min_liveness: z.coerce
-      .number()
-      .min(0)
-      .max(1)
+    min_liveness: z
+      .preprocess(
+        (val) =>
+          typeof val === 'string' && /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(val)
+            ? Number(val)
+            : val,
+        z.number().min(0).max(1),
+      )
       .meta({
         description:
           'For each tunable track attribute, a hard floor on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `min_tempo=140` would restrict results to only those tracks with a tempo of greater than 140 beats per minute.\n',
       })
       .exactOptional(),
-    max_liveness: z.coerce
-      .number()
-      .min(0)
-      .max(1)
+    max_liveness: z
+      .preprocess(
+        (val) =>
+          typeof val === 'string' && /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(val)
+            ? Number(val)
+            : val,
+        z.number().min(0).max(1),
+      )
       .meta({
         description:
           'For each tunable track attribute, a hard ceiling on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `max_instrumentalness=0.35` would filter out most tracks that are likely to be instrumental.\n',
       })
       .exactOptional(),
-    target_liveness: z.coerce
-      .number()
-      .min(0)
-      .max(1)
+    target_liveness: z
+      .preprocess(
+        (val) =>
+          typeof val === 'string' && /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(val)
+            ? Number(val)
+            : val,
+        z.number().min(0).max(1),
+      )
       .meta({
         description:
           'For each of the tunable track attributes (below) a target value may be provided. Tracks with the attribute values nearest to the target values will be preferred. For example, you might request `target_energy=0.6` and `target_danceability=0.8`. All target values will be weighed equally in ranking results.\n',
       })
       .exactOptional(),
-    min_loudness: z.coerce
-      .number()
+    min_loudness: z
+      .preprocess(
+        (val) =>
+          typeof val === 'string' && /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(val)
+            ? Number(val)
+            : val,
+        z.number(),
+      )
       .meta({
         description:
           'For each tunable track attribute, a hard floor on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `min_tempo=140` would restrict results to only those tracks with a tempo of greater than 140 beats per minute.\n',
       })
       .exactOptional(),
-    max_loudness: z.coerce
-      .number()
+    max_loudness: z
+      .preprocess(
+        (val) =>
+          typeof val === 'string' && /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(val)
+            ? Number(val)
+            : val,
+        z.number(),
+      )
       .meta({
         description:
           'For each tunable track attribute, a hard ceiling on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `max_instrumentalness=0.35` would filter out most tracks that are likely to be instrumental.\n',
       })
       .exactOptional(),
-    target_loudness: z.coerce
-      .number()
+    target_loudness: z
+      .preprocess(
+        (val) =>
+          typeof val === 'string' && /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(val)
+            ? Number(val)
+            : val,
+        z.number(),
+      )
       .meta({
         description:
           'For each of the tunable track attributes (below) a target value may be provided. Tracks with the attribute values nearest to the target values will be preferred. For example, you might request `target_energy=0.6` and `target_danceability=0.8`. All target values will be weighed equally in ranking results.\n',
       })
       .exactOptional(),
-    min_mode: z.coerce
-      .number()
-      .int()
-      .min(0)
-      .max(1)
+    min_mode: z
+      .preprocess(
+        (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+        z.number().int().min(0).max(1),
+      )
       .meta({
         description:
           'For each tunable track attribute, a hard floor on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `min_tempo=140` would restrict results to only those tracks with a tempo of greater than 140 beats per minute.\n',
       })
       .exactOptional(),
-    max_mode: z.coerce
-      .number()
-      .int()
-      .min(0)
-      .max(1)
+    max_mode: z
+      .preprocess(
+        (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+        z.number().int().min(0).max(1),
+      )
       .meta({
         description:
           'For each tunable track attribute, a hard ceiling on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `max_instrumentalness=0.35` would filter out most tracks that are likely to be instrumental.\n',
       })
       .exactOptional(),
-    target_mode: z.coerce
-      .number()
-      .int()
-      .min(0)
-      .max(1)
+    target_mode: z
+      .preprocess(
+        (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+        z.number().int().min(0).max(1),
+      )
       .meta({
         description:
           'For each of the tunable track attributes (below) a target value may be provided. Tracks with the attribute values nearest to the target values will be preferred. For example, you might request `target_energy=0.6` and `target_danceability=0.8`. All target values will be weighed equally in ranking results.\n',
       })
       .exactOptional(),
-    min_popularity: z.coerce
-      .number()
-      .int()
-      .min(0)
-      .max(100)
+    min_popularity: z
+      .preprocess(
+        (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+        z.number().int().min(0).max(100),
+      )
       .meta({
         description:
           'For each tunable track attribute, a hard floor on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `min_tempo=140` would restrict results to only those tracks with a tempo of greater than 140 beats per minute.\n',
       })
       .exactOptional(),
-    max_popularity: z.coerce
-      .number()
-      .int()
-      .min(0)
-      .max(100)
+    max_popularity: z
+      .preprocess(
+        (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+        z.number().int().min(0).max(100),
+      )
       .meta({
         description:
           'For each tunable track attribute, a hard ceiling on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `max_instrumentalness=0.35` would filter out most tracks that are likely to be instrumental.\n',
       })
       .exactOptional(),
-    target_popularity: z.coerce
-      .number()
-      .int()
-      .min(0)
-      .max(100)
+    target_popularity: z
+      .preprocess(
+        (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+        z.number().int().min(0).max(100),
+      )
       .meta({
         description:
           'For each of the tunable track attributes (below) a target value may be provided. Tracks with the attribute values nearest to the target values will be preferred. For example, you might request `target_energy=0.6` and `target_danceability=0.8`. All target values will be weighed equally in ranking results.\n',
       })
       .exactOptional(),
-    min_speechiness: z.coerce
-      .number()
-      .min(0)
-      .max(1)
+    min_speechiness: z
+      .preprocess(
+        (val) =>
+          typeof val === 'string' && /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(val)
+            ? Number(val)
+            : val,
+        z.number().min(0).max(1),
+      )
       .meta({
         description:
           'For each tunable track attribute, a hard floor on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `min_tempo=140` would restrict results to only those tracks with a tempo of greater than 140 beats per minute.\n',
       })
       .exactOptional(),
-    max_speechiness: z.coerce
-      .number()
-      .min(0)
-      .max(1)
+    max_speechiness: z
+      .preprocess(
+        (val) =>
+          typeof val === 'string' && /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(val)
+            ? Number(val)
+            : val,
+        z.number().min(0).max(1),
+      )
       .meta({
         description:
           'For each tunable track attribute, a hard ceiling on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `max_instrumentalness=0.35` would filter out most tracks that are likely to be instrumental.\n',
       })
       .exactOptional(),
-    target_speechiness: z.coerce
-      .number()
-      .min(0)
-      .max(1)
+    target_speechiness: z
+      .preprocess(
+        (val) =>
+          typeof val === 'string' && /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(val)
+            ? Number(val)
+            : val,
+        z.number().min(0).max(1),
+      )
       .meta({
         description:
           'For each of the tunable track attributes (below) a target value may be provided. Tracks with the attribute values nearest to the target values will be preferred. For example, you might request `target_energy=0.6` and `target_danceability=0.8`. All target values will be weighed equally in ranking results.\n',
       })
       .exactOptional(),
-    min_tempo: z.coerce
-      .number()
+    min_tempo: z
+      .preprocess(
+        (val) =>
+          typeof val === 'string' && /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(val)
+            ? Number(val)
+            : val,
+        z.number(),
+      )
       .meta({
         description:
           'For each tunable track attribute, a hard floor on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `min_tempo=140` would restrict results to only those tracks with a tempo of greater than 140 beats per minute.\n',
       })
       .exactOptional(),
-    max_tempo: z.coerce
-      .number()
+    max_tempo: z
+      .preprocess(
+        (val) =>
+          typeof val === 'string' && /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(val)
+            ? Number(val)
+            : val,
+        z.number(),
+      )
       .meta({
         description:
           'For each tunable track attribute, a hard ceiling on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `max_instrumentalness=0.35` would filter out most tracks that are likely to be instrumental.\n',
       })
       .exactOptional(),
-    target_tempo: z.coerce.number().meta({ description: 'Target tempo (BPM)' }).exactOptional(),
-    min_time_signature: z.coerce
-      .number()
-      .int()
-      .max(11)
+    target_tempo: z
+      .preprocess(
+        (val) =>
+          typeof val === 'string' && /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(val)
+            ? Number(val)
+            : val,
+        z.number(),
+      )
+      .meta({ description: 'Target tempo (BPM)' })
+      .exactOptional(),
+    min_time_signature: z
+      .preprocess(
+        (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+        z.number().int().max(11),
+      )
       .meta({
         description:
           'For each tunable track attribute, a hard floor on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `min_tempo=140` would restrict results to only those tracks with a tempo of greater than 140 beats per minute.\n',
       })
       .exactOptional(),
-    max_time_signature: z.coerce
-      .number()
-      .int()
+    max_time_signature: z
+      .preprocess(
+        (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+        z.number().int(),
+      )
       .meta({
         description:
           'For each tunable track attribute, a hard ceiling on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `max_instrumentalness=0.35` would filter out most tracks that are likely to be instrumental.\n',
       })
       .exactOptional(),
-    target_time_signature: z.coerce
-      .number()
-      .int()
+    target_time_signature: z
+      .preprocess(
+        (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+        z.number().int(),
+      )
       .meta({
         description:
           'For each of the tunable track attributes (below) a target value may be provided. Tracks with the attribute values nearest to the target values will be preferred. For example, you might request `target_energy=0.6` and `target_danceability=0.8`. All target values will be weighed equally in ranking results.\n',
       })
       .exactOptional(),
-    min_valence: z.coerce
-      .number()
-      .min(0)
-      .max(1)
+    min_valence: z
+      .preprocess(
+        (val) =>
+          typeof val === 'string' && /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(val)
+            ? Number(val)
+            : val,
+        z.number().min(0).max(1),
+      )
       .meta({
         description:
           'For each tunable track attribute, a hard floor on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `min_tempo=140` would restrict results to only those tracks with a tempo of greater than 140 beats per minute.\n',
       })
       .exactOptional(),
-    max_valence: z.coerce
-      .number()
-      .min(0)
-      .max(1)
+    max_valence: z
+      .preprocess(
+        (val) =>
+          typeof val === 'string' && /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(val)
+            ? Number(val)
+            : val,
+        z.number().min(0).max(1),
+      )
       .meta({
         description:
           'For each tunable track attribute, a hard ceiling on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `max_instrumentalness=0.35` would filter out most tracks that are likely to be instrumental.\n',
       })
       .exactOptional(),
-    target_valence: z.coerce
-      .number()
-      .min(0)
-      .max(1)
+    target_valence: z
+      .preprocess(
+        (val) =>
+          typeof val === 'string' && /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(val)
+            ? Number(val)
+            : val,
+        z.number().min(0).max(1),
+      )
       .meta({
         description:
           'For each of the tunable track attributes (below) a target value may be provided. Tracks with the attribute values nearest to the target values will be preferred. For example, you might request `target_energy=0.6` and `target_danceability=0.8`. All target values will be weighed equally in ranking results.\n',

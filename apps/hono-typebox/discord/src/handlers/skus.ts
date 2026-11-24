@@ -13,8 +13,18 @@ export const skusHandler = new Hono()
         before: Type.Optional(SnowflakeTypeSchema),
         after: Type.Optional(SnowflakeTypeSchema),
         limit: Type.Optional(
-          Codec(Type.String())
-            .Decode((value) => Number.parseInt(value, 10))
+          Codec(
+            Type.Refine(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                (value) => Number(value) >= 1,
+                () => 'must be >= 1',
+              ),
+              (value) => Number(value) <= 100,
+              () => 'must be <= 100',
+            ),
+          )
+            .Decode((value) => Number(value))
             .Encode((value) => String(value)),
         ),
         user_id: Type.Optional(SnowflakeTypeSchema),

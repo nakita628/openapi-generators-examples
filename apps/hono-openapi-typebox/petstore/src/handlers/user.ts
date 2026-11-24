@@ -1,8 +1,33 @@
 import { Hono } from 'hono'
 import { describeRoute, resolver, validator } from 'hono-openapi'
-import { Type, Codec } from 'typebox'
+import { Type, Codec, type StaticDecode, type StaticEncode, type TSchema } from 'typebox'
 import { Compile } from 'typebox/compile'
 import { UserSchema } from '../components'
+
+const toStandardSchemaV1 = <T extends TSchema>(schema: T) => {
+  const validator = Compile(schema)
+  return Object.assign(validator, {
+    '~standard': {
+      version: 1 as const,
+      vendor: 'typebox',
+      validate: (value: unknown) =>
+        validator.Check(value)
+          ? { value: validator.Decode(value) }
+          : {
+              issues: validator.Errors(value).map((error) => ({
+                message: error.message,
+                path: error.instancePath
+                  .split('/')
+                  .slice(1)
+                  .map((key) => key.replaceAll('~1', '/').replaceAll('~0', '~')),
+              })),
+            },
+      types: undefined as
+        | { readonly input: StaticEncode<T>; readonly output: StaticDecode<T> }
+        | undefined,
+    },
+  })
+}
 
 export const userHandler = new Hono()
   .post(
@@ -16,21 +41,21 @@ export const userHandler = new Hono()
         '200': {
           description: 'successful operation',
           content: {
-            'application/json': { schema: resolver(Compile(UserSchema)) },
-            'application/xml': { schema: resolver(Compile(UserSchema)) },
+            'application/json': { schema: resolver(toStandardSchemaV1(UserSchema)) },
+            'application/xml': { schema: resolver(toStandardSchemaV1(UserSchema)) },
           },
         },
         default: { description: 'Unexpected error' },
       },
     }),
-    validator('json', Compile(UserSchema)),
+    validator('json', toStandardSchemaV1(UserSchema)),
     validator(
       'form',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           id: Type.Optional(
-            Codec(Type.String())
-              .Decode((value) => Number.parseInt(value, 10))
+            Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+              .Decode((value) => Number(value))
               .Encode((value) => String(value)),
           ),
           username: Type.Optional(Type.String({ examples: ['theUser'] })),
@@ -40,8 +65,8 @@ export const userHandler = new Hono()
           password: Type.Optional(Type.String({ examples: ['12345'] })),
           phone: Type.Optional(Type.String({ examples: ['12345'] })),
           userStatus: Type.Optional(
-            Codec(Type.String())
-              .Decode((value) => Number.parseInt(value, 10))
+            Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+              .Decode((value) => Number(value))
               .Encode((value) => String(value)),
           ),
         }),
@@ -60,14 +85,14 @@ export const userHandler = new Hono()
         '200': {
           description: 'Successful operation',
           content: {
-            'application/json': { schema: resolver(Compile(UserSchema)) },
-            'application/xml': { schema: resolver(Compile(UserSchema)) },
+            'application/json': { schema: resolver(toStandardSchemaV1(UserSchema)) },
+            'application/xml': { schema: resolver(toStandardSchemaV1(UserSchema)) },
           },
         },
         default: { description: 'Unexpected error' },
       },
     }),
-    validator('json', Compile(Type.Array(UserSchema))),
+    validator('json', toStandardSchemaV1(Type.Array(UserSchema))),
     (c) => { throw new Error('Not implemented') },
   )
   .get(
@@ -91,8 +116,8 @@ export const userHandler = new Hono()
             },
           },
           content: {
-            'application/xml': { schema: resolver(Compile(Type.String())) },
-            'application/json': { schema: resolver(Compile(Type.String())) },
+            'application/xml': { schema: resolver(toStandardSchemaV1(Type.String())) },
+            'application/json': { schema: resolver(toStandardSchemaV1(Type.String())) },
           },
         },
         '400': { description: 'Invalid username/password supplied' },
@@ -101,7 +126,7 @@ export const userHandler = new Hono()
     }),
     validator(
       'query',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           username: Type.Optional(Type.String()),
           password: Type.Optional(Type.String()),
@@ -135,8 +160,8 @@ export const userHandler = new Hono()
         '200': {
           description: 'successful operation',
           content: {
-            'application/json': { schema: resolver(Compile(UserSchema)) },
-            'application/xml': { schema: resolver(Compile(UserSchema)) },
+            'application/json': { schema: resolver(toStandardSchemaV1(UserSchema)) },
+            'application/xml': { schema: resolver(toStandardSchemaV1(UserSchema)) },
           },
         },
         '400': { description: 'Invalid username supplied' },
@@ -144,7 +169,7 @@ export const userHandler = new Hono()
         default: { description: 'Unexpected error' },
       },
     }),
-    validator('param', Compile(Type.Object({ username: Type.String() }))),
+    validator('param', toStandardSchemaV1(Type.Object({ username: Type.String() }))),
     (c) => { throw new Error('Not implemented') },
   )
   .put(
@@ -161,15 +186,15 @@ export const userHandler = new Hono()
         default: { description: 'Unexpected error' },
       },
     }),
-    validator('param', Compile(Type.Object({ username: Type.String() }))),
-    validator('json', Compile(UserSchema)),
+    validator('param', toStandardSchemaV1(Type.Object({ username: Type.String() }))),
+    validator('json', toStandardSchemaV1(UserSchema)),
     validator(
       'form',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           id: Type.Optional(
-            Codec(Type.String())
-              .Decode((value) => Number.parseInt(value, 10))
+            Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+              .Decode((value) => Number(value))
               .Encode((value) => String(value)),
           ),
           username: Type.Optional(Type.String({ examples: ['theUser'] })),
@@ -179,8 +204,8 @@ export const userHandler = new Hono()
           password: Type.Optional(Type.String({ examples: ['12345'] })),
           phone: Type.Optional(Type.String({ examples: ['12345'] })),
           userStatus: Type.Optional(
-            Codec(Type.String())
-              .Decode((value) => Number.parseInt(value, 10))
+            Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+              .Decode((value) => Number(value))
               .Encode((value) => String(value)),
           ),
         }),
@@ -202,6 +227,6 @@ export const userHandler = new Hono()
         default: { description: 'Unexpected error' },
       },
     }),
-    validator('param', Compile(Type.Object({ username: Type.String() }))),
+    validator('param', toStandardSchemaV1(Type.Object({ username: Type.String() }))),
     (c) => { throw new Error('Not implemented') },
   )

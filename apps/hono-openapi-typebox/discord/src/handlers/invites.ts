@@ -1,6 +1,6 @@
 import { Hono } from 'hono'
 import { describeRoute, resolver, validator } from 'hono-openapi'
-import { Type, Codec } from 'typebox'
+import { Type, Codec, type StaticDecode, type StaticEncode, type TSchema } from 'typebox'
 import { Compile } from 'typebox/compile'
 import {
   FriendInviteResponseSchema,
@@ -11,6 +11,31 @@ import {
   ClientErrorResponseResponse,
   ClientRatelimitedResponseResponse,
 } from '../components'
+
+const toStandardSchemaV1 = <T extends TSchema>(schema: T) => {
+  const validator = Compile(schema)
+  return Object.assign(validator, {
+    '~standard': {
+      version: 1 as const,
+      vendor: 'typebox',
+      validate: (value: unknown) =>
+        validator.Check(value)
+          ? { value: validator.Decode(value) }
+          : {
+              issues: validator.Errors(value).map((error) => ({
+                message: error.message,
+                path: error.instancePath
+                  .split('/')
+                  .slice(1)
+                  .map((key) => key.replaceAll('~1', '/').replaceAll('~0', '~')),
+              })),
+            },
+      types: undefined as
+        | { readonly input: StaticEncode<T>; readonly output: StaticDecode<T> }
+        | undefined,
+    },
+  })
+}
 
 export const invitesHandler = new Hono()
   .get(
@@ -30,7 +55,7 @@ export const invitesHandler = new Hono()
           content: {
             'application/json': {
               schema: resolver(
-                Compile(
+                toStandardSchemaV1(
                   Type.Union([
                     FriendInviteResponseSchema,
                     GroupDMInviteResponseSchema,
@@ -46,14 +71,19 @@ export const invitesHandler = new Hono()
       },
       security: [{}, { BotToken: [] }],
     }),
-    validator('param', Compile(Type.Object({ code: Type.String({ maxLength: 152133 }) }))),
+    validator(
+      'param',
+      toStandardSchemaV1(Type.Object({ code: Type.String({ maxLength: 152133 }) })),
+    ),
     validator(
       'query',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           with_counts: Type.Optional(
-            Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-              .Decode((value) => value === 'true')
+            Codec(
+              Type.String({ pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i }),
+            )
+              .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
               .Encode((value) => (value ? 'true' : 'false')),
           ),
           guild_scheduled_event_id: Type.Optional(SnowflakeTypeSchema),
@@ -81,7 +111,7 @@ export const invitesHandler = new Hono()
           content: {
             'application/json': {
               schema: resolver(
-                Compile(
+                toStandardSchemaV1(
                   Type.Union([
                     FriendInviteResponseSchema,
                     GroupDMInviteResponseSchema,
@@ -97,7 +127,10 @@ export const invitesHandler = new Hono()
       },
       security: [{ BotToken: [] }],
     }),
-    validator('param', Compile(Type.Object({ code: Type.String({ maxLength: 152133 }) }))),
+    validator(
+      'param',
+      toStandardSchemaV1(Type.Object({ code: Type.String({ maxLength: 152133 }) })),
+    ),
     (c) => { throw new Error('Not implemented') },
   )
   .get(
@@ -118,7 +151,7 @@ export const invitesHandler = new Hono()
           content: {
             'text/csv': {
               schema: resolver(
-                Compile(
+                toStandardSchemaV1(
                   Type.String({ description: 'CSV file containing target users for the invite.' }),
                 ),
               ),
@@ -130,7 +163,10 @@ export const invitesHandler = new Hono()
       },
       security: [{ BotToken: [] }],
     }),
-    validator('param', Compile(Type.Object({ code: Type.String({ maxLength: 152133 }) }))),
+    validator(
+      'param',
+      toStandardSchemaV1(Type.Object({ code: Type.String({ maxLength: 152133 }) })),
+    ),
     (c) => { throw new Error('Not implemented') },
   )
   .put(
@@ -154,8 +190,11 @@ export const invitesHandler = new Hono()
       },
       security: [{ BotToken: [] }],
     }),
-    validator('param', Compile(Type.Object({ code: Type.String({ maxLength: 152133 }) }))),
-    validator('form', Compile(Type.Object({ target_users_file: Type.String() }))),
+    validator(
+      'param',
+      toStandardSchemaV1(Type.Object({ code: Type.String({ maxLength: 152133 }) })),
+    ),
+    validator('form', toStandardSchemaV1(Type.Object({ target_users_file: Type.String() }))),
     (c) => { throw new Error('Not implemented') },
   )
   .post(
@@ -179,10 +218,13 @@ export const invitesHandler = new Hono()
       },
       security: [{ BotToken: [] }],
     }),
-    validator('param', Compile(Type.Object({ code: Type.String({ maxLength: 152133 }) }))),
+    validator(
+      'param',
+      toStandardSchemaV1(Type.Object({ code: Type.String({ maxLength: 152133 }) })),
+    ),
     validator(
       'json',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           user_ids: Type.Array(SnowflakeTypeSchema, {
             minItems: 1,
@@ -215,10 +257,13 @@ export const invitesHandler = new Hono()
       },
       security: [{ BotToken: [] }],
     }),
-    validator('param', Compile(Type.Object({ code: Type.String({ maxLength: 152133 }) }))),
+    validator(
+      'param',
+      toStandardSchemaV1(Type.Object({ code: Type.String({ maxLength: 152133 }) })),
+    ),
     validator(
       'json',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           user_ids: Type.Array(SnowflakeTypeSchema, {
             minItems: 1,
@@ -246,7 +291,9 @@ export const invitesHandler = new Hono()
             'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
           },
           content: {
-            'application/json': { schema: resolver(Compile(TargetUsersJobStatusResponseSchema)) },
+            'application/json': {
+              schema: resolver(toStandardSchemaV1(TargetUsersJobStatusResponseSchema)),
+            },
           },
         },
         '429': ClientRatelimitedResponseResponse,
@@ -254,7 +301,10 @@ export const invitesHandler = new Hono()
       },
       security: [{ BotToken: [] }],
     }),
-    validator('param', Compile(Type.Object({ code: Type.String({ maxLength: 152133 }) }))),
+    validator(
+      'param',
+      toStandardSchemaV1(Type.Object({ code: Type.String({ maxLength: 152133 }) })),
+    ),
     (c) => { throw new Error('Not implemented') },
   )
   .put(
@@ -280,7 +330,7 @@ export const invitesHandler = new Hono()
     }),
     validator(
       'param',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({ code: Type.String({ maxLength: 152133 }), user_id: SnowflakeTypeSchema }),
       ),
     ),
@@ -309,7 +359,7 @@ export const invitesHandler = new Hono()
     }),
     validator(
       'param',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({ code: Type.String({ maxLength: 152133 }), user_id: SnowflakeTypeSchema }),
       ),
     ),

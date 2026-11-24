@@ -1,6 +1,6 @@
 import { Hono } from 'hono'
 import { describeRoute, resolver, validator } from 'hono-openapi'
-import { Schema } from 'effect'
+import { Schema, SchemaTransformation } from 'effect'
 import {
   SnowflakeTypeSchema,
   SubscriptionResponseSchema,
@@ -80,16 +80,26 @@ export const skusHandler = new Hono()
       'query',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          before: Schema.optional(SnowflakeTypeSchema),
-          after: Schema.optional(SnowflakeTypeSchema),
-          limit: Schema.optional(
-            Schema.FiniteFromString.check(
-              Schema.isInt(),
-              Schema.isGreaterThanOrEqualTo(1),
-              Schema.isLessThanOrEqualTo(100),
-            ),
+          before: Schema.optionalKey(SnowflakeTypeSchema),
+          after: Schema.optionalKey(SnowflakeTypeSchema),
+          limit: Schema.optionalKey(
+            Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+              .pipe(
+                Schema.decodeTo(
+                  Schema.Finite,
+                  SchemaTransformation.transform({
+                    decode: (input) => Number(input),
+                    encode: (output) => String(output),
+                  }),
+                ),
+              )
+              .check(
+                Schema.isInt(),
+                Schema.isGreaterThanOrEqualTo(1),
+                Schema.isLessThanOrEqualTo(100),
+              ),
           ),
-          user_id: Schema.optional(SnowflakeTypeSchema),
+          user_id: Schema.optionalKey(SnowflakeTypeSchema),
         }),
       ),
     ),
@@ -169,7 +179,9 @@ export const skusHandler = new Hono()
     ),
     validator(
       'query',
-      Schema.toStandardSchemaV1(Schema.Struct({ user_id: Schema.optional(SnowflakeTypeSchema) })),
+      Schema.toStandardSchemaV1(
+        Schema.Struct({ user_id: Schema.optionalKey(SnowflakeTypeSchema) }),
+      ),
     ),
     (c) => { throw new Error('Not implemented') },
   )

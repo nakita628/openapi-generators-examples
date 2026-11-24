@@ -1,5 +1,5 @@
 import { initTRPC, TRPCError } from '@trpc/server'
-import { Schema } from 'effect'
+import { Effect, Schema, SchemaGetter, SchemaIssue, SchemaTransformation } from 'effect'
 import {
   BookingPaymentSchema,
   BookingSchema,
@@ -15,22 +15,73 @@ export const bookingsRouter = t.router({
   getBookings: t.procedure
     .output(
       Schema.toStandardSchemaV1(
-        WrapperCollectionSchema.check(
-          Schema.makeFilter((input) =>
-            Schema.is(Schema.Struct({ data: Schema.optional(Schema.Array(BookingSchema)) }))(input),
-          ),
-          Schema.makeFilter((input) =>
-            Schema.is(
-              Schema.Struct({
-                links: Schema.optional(
-                  LinksSelfSchema.check(
-                    Schema.makeFilter((input) => Schema.is(LinksPaginationSchema)(input)),
-                  ),
+        (() => {
+          const M0 = WrapperCollectionSchema
+          const M1 = Schema.Struct({ data: Schema.optionalKey(Schema.Array(BookingSchema)) })
+          const M2 = Schema.Struct({
+            links: Schema.optionalKey(
+              (() => {
+                const M0 = LinksSelfSchema
+                const M1 = LinksPaginationSchema
+                const isAll = (input: unknown): input is typeof M0.Type & typeof M1.Type =>
+                  Schema.is(M0)(input) && Schema.is(M1)(input)
+                return Schema.Unknown.pipe(
+                  Schema.decodeTo(Schema.declare(isAll), {
+                    decode: SchemaGetter.transformEffect((input) =>
+                      Effect.all([
+                        Schema.decodeUnknownEffect(M0)(input),
+                        Schema.decodeUnknownEffect(M1)(input),
+                      ]).pipe(
+                        Effect.mapError((error) => error.issue),
+                        Effect.flatMap((values) => {
+                          const merged = values.every(
+                            (value) =>
+                              typeof value === 'object' && value !== null && !Array.isArray(value),
+                          )
+                            ? Object.assign({}, ...values)
+                            : values[0]
+                          return isAll(merged)
+                            ? Effect.succeed(merged)
+                            : Effect.fail(new SchemaIssue.InvalidValue(undefined, merged))
+                        }),
+                      ),
+                    ),
+                    encode: SchemaGetter.passthrough({ strict: false }),
+                  }),
+                )
+              })(),
+            ),
+          })
+          const isAll = (
+            input: unknown,
+          ): input is typeof M0.Type & typeof M1.Type & typeof M2.Type =>
+            Schema.is(M0)(input) && Schema.is(M1)(input) && Schema.is(M2)(input)
+          return Schema.Unknown.pipe(
+            Schema.decodeTo(Schema.declare(isAll), {
+              decode: SchemaGetter.transformEffect((input) =>
+                Effect.all([
+                  Schema.decodeUnknownEffect(M0)(input),
+                  Schema.decodeUnknownEffect(M1)(input),
+                  Schema.decodeUnknownEffect(M2)(input),
+                ]).pipe(
+                  Effect.mapError((error) => error.issue),
+                  Effect.flatMap((values) => {
+                    const merged = values.every(
+                      (value) =>
+                        typeof value === 'object' && value !== null && !Array.isArray(value),
+                    )
+                      ? Object.assign({}, ...values)
+                      : values[0]
+                    return isAll(merged)
+                      ? Effect.succeed(merged)
+                      : Effect.fail(new SchemaIssue.InvalidValue(undefined, merged))
+                  }),
                 ),
-              }),
-            )(input),
-          ),
-        ),
+              ),
+              encode: SchemaGetter.passthrough({ strict: false }),
+            }),
+          )
+        })(),
       ),
     )
     .query(() => {
@@ -40,11 +91,36 @@ export const bookingsRouter = t.router({
     .input(Schema.toStandardSchemaV1(BookingSchema))
     .output(
       Schema.toStandardSchemaV1(
-        BookingSchema.check(
-          Schema.makeFilter((input) =>
-            Schema.is(Schema.Struct({ links: Schema.optional(LinksSelfSchema) }))(input),
-          ),
-        ),
+        (() => {
+          const M0 = BookingSchema
+          const M1 = Schema.Struct({ links: Schema.optionalKey(LinksSelfSchema) })
+          const isAll = (input: unknown): input is typeof M0.Type & typeof M1.Type =>
+            Schema.is(M0)(input) && Schema.is(M1)(input)
+          return Schema.Unknown.pipe(
+            Schema.decodeTo(Schema.declare(isAll), {
+              decode: SchemaGetter.transformEffect((input) =>
+                Effect.all([
+                  Schema.decodeUnknownEffect(M0)(input),
+                  Schema.decodeUnknownEffect(M1)(input),
+                ]).pipe(
+                  Effect.mapError((error) => error.issue),
+                  Effect.flatMap((values) => {
+                    const merged = values.every(
+                      (value) =>
+                        typeof value === 'object' && value !== null && !Array.isArray(value),
+                    )
+                      ? Object.assign({}, ...values)
+                      : values[0]
+                    return isAll(merged)
+                      ? Effect.succeed(merged)
+                      : Effect.fail(new SchemaIssue.InvalidValue(undefined, merged))
+                  }),
+                ),
+              ),
+              encode: SchemaGetter.passthrough({ strict: false }),
+            }),
+          )
+        })(),
       ),
     )
     .mutation(() => {
@@ -56,11 +132,36 @@ export const bookingsRouter = t.router({
     )
     .output(
       Schema.toStandardSchemaV1(
-        BookingSchema.check(
-          Schema.makeFilter((input) =>
-            Schema.is(Schema.Struct({ links: Schema.optional(LinksSelfSchema) }))(input),
-          ),
-        ),
+        (() => {
+          const M0 = BookingSchema
+          const M1 = Schema.Struct({ links: Schema.optionalKey(LinksSelfSchema) })
+          const isAll = (input: unknown): input is typeof M0.Type & typeof M1.Type =>
+            Schema.is(M0)(input) && Schema.is(M1)(input)
+          return Schema.Unknown.pipe(
+            Schema.decodeTo(Schema.declare(isAll), {
+              decode: SchemaGetter.transformEffect((input) =>
+                Effect.all([
+                  Schema.decodeUnknownEffect(M0)(input),
+                  Schema.decodeUnknownEffect(M1)(input),
+                ]).pipe(
+                  Effect.mapError((error) => error.issue),
+                  Effect.flatMap((values) => {
+                    const merged = values.every(
+                      (value) =>
+                        typeof value === 'object' && value !== null && !Array.isArray(value),
+                    )
+                      ? Object.assign({}, ...values)
+                      : values[0]
+                    return isAll(merged)
+                      ? Effect.succeed(merged)
+                      : Effect.fail(new SchemaIssue.InvalidValue(undefined, merged))
+                  }),
+                ),
+              ),
+              encode: SchemaGetter.passthrough({ strict: false }),
+            }),
+          )
+        })(),
       ),
     )
     .query(() => {
@@ -78,30 +179,30 @@ export const bookingsRouter = t.router({
       Schema.toStandardSchemaV1(
         Schema.Struct({
           bookingId: Schema.String.check(Schema.isUUID()),
-          id: Schema.optional(
+          id: Schema.optionalKey(
             Schema.String.check(Schema.isUUID()).annotate({
               description:
                 'Unique identifier for the payment. This will be a unique identifier for the payment, and is used to reference the payment in other objects.',
               readOnly: true,
             }),
           ),
-          amount: Schema.optional(
+          amount: Schema.optionalKey(
             Schema.Number.check(Schema.isGreaterThan(0)).annotate({
               description:
                 'Amount intended to be collected by this payment. A positive decimal figure describing the amount to be collected.',
               jsonSchemaExamples: [49.99],
             }),
           ),
-          currency: Schema.optional(
+          currency: Schema.optionalKey(
             Schema.Literals(['bam', 'bgn', 'chf', 'eur', 'gbp', 'nok', 'sek', 'try']).annotate({
               description:
                 'Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase.',
             }),
           ),
-          source: Schema.optional(
+          source: Schema.optionalKey(
             Schema.Union([
               Schema.Struct({
-                object: Schema.optional(Schema.Literal('card')),
+                object: Schema.optionalKey(Schema.Literal('card')),
                 name: Schema.String.annotate({
                   description: "Cardholder's full name as it appears on the card.",
                   jsonSchemaExamples: ['Francis Bourgeois'],
@@ -165,20 +266,20 @@ export const bookingsRouter = t.router({
                     description: "Four-digit number representing the card's expiration year.",
                     jsonSchemaExamples: [2025],
                   }),
-                address_line1: Schema.optional(Schema.String.annotate({ writeOnly: true })),
-                address_line2: Schema.optional(Schema.String.annotate({ writeOnly: true })),
-                address_city: Schema.optional(Schema.String),
+                address_line1: Schema.optionalKey(Schema.String.annotate({ writeOnly: true })),
+                address_line2: Schema.optionalKey(Schema.String.annotate({ writeOnly: true })),
+                address_city: Schema.optionalKey(Schema.String),
                 address_country: Schema.String,
-                address_post_code: Schema.optional(Schema.String),
+                address_post_code: Schema.optionalKey(Schema.String),
               }).annotate({ description: 'A card (debit or credit) to take payment from.' }),
               Schema.Struct({
-                object: Schema.optional(Schema.Literal('bank_account')),
+                object: Schema.optionalKey(Schema.Literal('bank_account')),
                 name: Schema.String,
                 number: Schema.String.annotate({
                   description:
                     'The account number for the bank account, in string form. Must be a current account.',
                 }),
-                sort_code: Schema.optional(
+                sort_code: Schema.optionalKey(
                   Schema.String.annotate({
                     description:
                       'The sort code for the bank account, in string form. Must be a six-digit number.',
@@ -204,7 +305,7 @@ export const bookingsRouter = t.router({
                 'The payment source to take the payment from. This can be a card or a bank account. Some of these properties will be hidden on read to protect PII leaking.',
             }),
           ),
-          status: Schema.optional(
+          status: Schema.optionalKey(
             Schema.Literals(['pending', 'succeeded', 'failed']).annotate({
               description: 'The status of the payment, one of `pending`, `succeeded`, or `failed`.',
               readOnly: true,
@@ -215,11 +316,36 @@ export const bookingsRouter = t.router({
     )
     .output(
       Schema.toStandardSchemaV1(
-        BookingPaymentSchema.check(
-          Schema.makeFilter((input) =>
-            Schema.is(Schema.Struct({ links: Schema.optional(LinksBookingSchema) }))(input),
-          ),
-        ),
+        (() => {
+          const M0 = BookingPaymentSchema
+          const M1 = Schema.Struct({ links: Schema.optionalKey(LinksBookingSchema) })
+          const isAll = (input: unknown): input is typeof M0.Type & typeof M1.Type =>
+            Schema.is(M0)(input) && Schema.is(M1)(input)
+          return Schema.Unknown.pipe(
+            Schema.decodeTo(Schema.declare(isAll), {
+              decode: SchemaGetter.transformEffect((input) =>
+                Effect.all([
+                  Schema.decodeUnknownEffect(M0)(input),
+                  Schema.decodeUnknownEffect(M1)(input),
+                ]).pipe(
+                  Effect.mapError((error) => error.issue),
+                  Effect.flatMap((values) => {
+                    const merged = values.every(
+                      (value) =>
+                        typeof value === 'object' && value !== null && !Array.isArray(value),
+                    )
+                      ? Object.assign({}, ...values)
+                      : values[0]
+                    return isAll(merged)
+                      ? Effect.succeed(merged)
+                      : Effect.fail(new SchemaIssue.InvalidValue(undefined, merged))
+                  }),
+                ),
+              ),
+              encode: SchemaGetter.passthrough({ strict: false }),
+            }),
+          )
+        })(),
       ),
     )
     .mutation(() => {

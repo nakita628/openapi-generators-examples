@@ -42,7 +42,8 @@ export const skillsHandler = new Hono()
         v.object({
           limit: v.pipe(
             v.string(),
-            v.transform(Number),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
             v.minValue(0),
@@ -249,7 +250,8 @@ export const skillsHandler = new Hono()
         v.object({
           limit: v.pipe(
             v.string(),
-            v.transform(Number),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
             v.minValue(0),

@@ -32,16 +32,16 @@ export const usersRouter = t.router({
       Schema.toStandardSchemaV1(
         Schema.Struct({
           application_id: SnowflakeTypeSchema,
-          sku_ids: Schema.optional(
+          sku_ids: Schema.optionalKey(
             Schema.Union([
               Schema.String,
-              Schema.Array(Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema])).check(
+              Schema.Array(Schema.Union([Schema.Null, SnowflakeTypeSchema])).check(
                 Schema.isMaxLength(100),
                 Schema.isUnique(),
               ),
             ]),
           ),
-          exclude_consumed: Schema.optional(Schema.Boolean),
+          exclude_consumed: Schema.optionalKey(Schema.Boolean),
         }),
       ),
     )
@@ -60,7 +60,7 @@ export const usersRouter = t.router({
       Schema.toStandardSchemaV1(
         Schema.Struct({
           application_id: SnowflakeTypeSchema,
-          platform_name: Schema.optional(
+          platform_name: Schema.optionalKey(
             Schema.NullOr(
               Schema.String.check(
                 Schema.makeFilter((input) => [...input].length <= 50, {
@@ -69,7 +69,7 @@ export const usersRouter = t.router({
               ),
             ),
           ),
-          platform_username: Schema.optional(
+          platform_username: Schema.optionalKey(
             Schema.NullOr(
               Schema.String.check(
                 Schema.makeFilter((input) => [...input].length <= 100, {
@@ -78,7 +78,7 @@ export const usersRouter = t.router({
               ),
             ),
           ),
-          metadata: Schema.optional(
+          metadata: Schema.optionalKey(
             Schema.NullOr(
               Schema.Record(
                 Schema.String,
@@ -124,19 +124,19 @@ export const usersRouter = t.router({
     .input(
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          before: Schema.optional(SnowflakeTypeSchema),
-          after: Schema.optional(SnowflakeTypeSchema),
-          limit: Schema.optional(
+          before: Schema.optionalKey(SnowflakeTypeSchema),
+          after: Schema.optionalKey(SnowflakeTypeSchema),
+          limit: Schema.optionalKey(
             Schema.Number.check(
               Schema.isInt(),
               Schema.isGreaterThanOrEqualTo(1),
               Schema.isLessThanOrEqualTo(200),
             ),
           ),
-          shard: Schema.optional(
+          shard: Schema.optionalKey(
             Schema.Number.check(Schema.isInt(), Schema.isGreaterThanOrEqualTo(0)),
           ),
-          with_counts: Schema.optional(Schema.Boolean),
+          with_counts: Schema.optionalKey(Schema.Boolean),
         }),
       ),
     )

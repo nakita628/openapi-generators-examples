@@ -169,7 +169,16 @@ export const organizationHandler = new Hono()
           v.description('Order results by creation time, ascending or descending.'),
         ),
         limit: v.pipe(
-          v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()), '20'),
+          v.optional(
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+            ),
+            '20',
+          ),
           v.description('Maximum number of keys to return.'),
         ),
       }),
@@ -322,25 +331,49 @@ export const organizationHandler = new Hono()
           v.partial(
             v.object({
               gt: v.pipe(
-                v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
+                v.pipe(
+                  v.string(),
+                  v.regex(/^-?(?:0|[1-9]\d*)$/),
+                  v.transform((input) => Number(input)),
+                  v.number(),
+                  v.safeInteger(),
+                ),
                 v.description(
                   'Return only events whose `effective_at` (Unix seconds) is greater than this value.',
                 ),
               ),
               gte: v.pipe(
-                v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
+                v.pipe(
+                  v.string(),
+                  v.regex(/^-?(?:0|[1-9]\d*)$/),
+                  v.transform((input) => Number(input)),
+                  v.number(),
+                  v.safeInteger(),
+                ),
                 v.description(
                   'Return only events whose `effective_at` (Unix seconds) is greater than or equal to this value.',
                 ),
               ),
               lt: v.pipe(
-                v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
+                v.pipe(
+                  v.string(),
+                  v.regex(/^-?(?:0|[1-9]\d*)$/),
+                  v.transform((input) => Number(input)),
+                  v.number(),
+                  v.safeInteger(),
+                ),
                 v.description(
                   'Return only events whose `effective_at` (Unix seconds) is less than this value.',
                 ),
               ),
               lte: v.pipe(
-                v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
+                v.pipe(
+                  v.string(),
+                  v.regex(/^-?(?:0|[1-9]\d*)$/),
+                  v.transform((input) => Number(input)),
+                  v.number(),
+                  v.safeInteger(),
+                ),
                 v.description(
                   'Return only events whose `effective_at` (Unix seconds) is less than or equal to this value.',
                 ),
@@ -392,7 +425,13 @@ export const organizationHandler = new Hono()
           'false',
         ),
         limit: v.optional(
-          v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
+          v.pipe(
+            v.string(),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
+            v.number(),
+            v.safeInteger(),
+          ),
           '20',
         ),
         after: v.optional(v.string()),
@@ -430,7 +469,13 @@ export const organizationHandler = new Hono()
       'query',
       v.object({
         limit: v.optional(
-          v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
+          v.pipe(
+            v.string(),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
+            v.number(),
+            v.safeInteger(),
+          ),
           '20',
         ),
         after: v.optional(v.string()),
@@ -693,8 +738,22 @@ export const organizationHandler = new Hono()
     validator(
       'query',
       v.object({
-        start_time: v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
-        end_time: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger())),
+        start_time: v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
+        end_time: v.optional(
+          v.pipe(
+            v.string(),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
+            v.number(),
+            v.safeInteger(),
+          ),
+        ),
         bucket_width: v.optional(v.literal('1d'), '1d'),
         project_ids: v.optional(
           v.pipe(
@@ -725,7 +784,13 @@ export const organizationHandler = new Hono()
           ),
         ),
         limit: v.optional(
-          v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
+          v.pipe(
+            v.string(),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
+            v.number(),
+            v.safeInteger(),
+          ),
           '7',
         ),
         page: v.optional(v.string()),
@@ -824,7 +889,8 @@ export const organizationHandler = new Hono()
         limit: v.optional(
           v.pipe(
             v.string(),
-            v.transform(Number),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
             v.minValue(0),
@@ -1023,7 +1089,8 @@ export const organizationHandler = new Hono()
         v.object({
           limit: v.pipe(
             v.string(),
-            v.transform(Number),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
             v.minValue(0),
@@ -1179,7 +1246,8 @@ export const organizationHandler = new Hono()
         limit: v.optional(
           v.pipe(
             v.string(),
-            v.transform(Number),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
             v.minValue(0),
@@ -1336,7 +1404,13 @@ export const organizationHandler = new Hono()
       'query',
       v.object({
         limit: v.optional(
-          v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
+          v.pipe(
+            v.string(),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
+            v.number(),
+            v.safeInteger(),
+          ),
           '20',
         ),
         after: v.optional(v.string()),
@@ -1489,7 +1563,13 @@ export const organizationHandler = new Hono()
       'query',
       v.object({
         limit: v.optional(
-          v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
+          v.pipe(
+            v.string(),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
+            v.number(),
+            v.safeInteger(),
+          ),
           '20',
         ),
         after: v.optional(v.string()),
@@ -1641,7 +1721,13 @@ export const organizationHandler = new Hono()
       'query',
       v.object({
         limit: v.optional(
-          v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
+          v.pipe(
+            v.string(),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
+            v.number(),
+            v.safeInteger(),
+          ),
           '20',
         ),
         after: v.optional(v.string()),
@@ -1824,7 +1910,13 @@ export const organizationHandler = new Hono()
       'query',
       v.object({
         limit: v.optional(
-          v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
+          v.pipe(
+            v.string(),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
+            v.number(),
+            v.safeInteger(),
+          ),
           '20',
         ),
         after: v.optional(v.string()),
@@ -2015,7 +2107,8 @@ export const organizationHandler = new Hono()
         limit: v.optional(
           v.pipe(
             v.string(),
-            v.transform(Number),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
             v.minValue(0),
@@ -2359,7 +2452,13 @@ export const organizationHandler = new Hono()
       'query',
       v.object({
         limit: v.optional(
-          v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
+          v.pipe(
+            v.string(),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
+            v.number(),
+            v.safeInteger(),
+          ),
           '100',
         ),
         after: v.optional(v.string()),
@@ -2449,7 +2548,13 @@ export const organizationHandler = new Hono()
       'query',
       v.object({
         limit: v.optional(
-          v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
+          v.pipe(
+            v.string(),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
+            v.number(),
+            v.safeInteger(),
+          ),
           '20',
         ),
         after: v.optional(v.string()),
@@ -2644,7 +2749,8 @@ export const organizationHandler = new Hono()
         limit: v.optional(
           v.pipe(
             v.string(),
-            v.transform(Number),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
             v.minValue(0),
@@ -2818,7 +2924,13 @@ export const organizationHandler = new Hono()
       'query',
       v.object({
         limit: v.optional(
-          v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
+          v.pipe(
+            v.string(),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
+            v.number(),
+            v.safeInteger(),
+          ),
           '20',
         ),
         after: v.optional(v.string()),
@@ -3011,7 +3123,8 @@ export const organizationHandler = new Hono()
         limit: v.optional(
           v.pipe(
             v.string(),
-            v.transform(Number),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
             v.minValue(0),
@@ -3188,7 +3301,8 @@ export const organizationHandler = new Hono()
         limit: v.optional(
           v.pipe(
             v.string(),
-            v.transform(Number),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
             v.minValue(0),
@@ -3341,8 +3455,22 @@ export const organizationHandler = new Hono()
     validator(
       'query',
       v.object({
-        start_time: v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
-        end_time: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger())),
+        start_time: v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
+        end_time: v.optional(
+          v.pipe(
+            v.string(),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
+            v.number(),
+            v.safeInteger(),
+          ),
+        ),
         bucket_width: v.optional(v.picklist(['1m', '1h', '1d']), '1d'),
         project_ids: v.optional(
           v.pipe(
@@ -3379,7 +3507,15 @@ export const organizationHandler = new Hono()
             v.array(v.picklist(['project_id', 'user_id', 'api_key_id', 'model'])),
           ),
         ),
-        limit: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger())),
+        limit: v.optional(
+          v.pipe(
+            v.string(),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
+            v.number(),
+            v.safeInteger(),
+          ),
+        ),
         page: v.optional(v.string()),
       }),
     ),
@@ -3413,8 +3549,22 @@ export const organizationHandler = new Hono()
     validator(
       'query',
       v.object({
-        start_time: v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
-        end_time: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger())),
+        start_time: v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
+        end_time: v.optional(
+          v.pipe(
+            v.string(),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
+            v.number(),
+            v.safeInteger(),
+          ),
+        ),
         bucket_width: v.optional(v.picklist(['1m', '1h', '1d']), '1d'),
         project_ids: v.optional(
           v.pipe(
@@ -3451,7 +3601,15 @@ export const organizationHandler = new Hono()
             v.array(v.picklist(['project_id', 'user_id', 'api_key_id', 'model'])),
           ),
         ),
-        limit: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger())),
+        limit: v.optional(
+          v.pipe(
+            v.string(),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
+            v.number(),
+            v.safeInteger(),
+          ),
+        ),
         page: v.optional(v.string()),
       }),
     ),
@@ -3485,8 +3643,22 @@ export const organizationHandler = new Hono()
     validator(
       'query',
       v.object({
-        start_time: v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
-        end_time: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger())),
+        start_time: v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
+        end_time: v.optional(
+          v.pipe(
+            v.string(),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
+            v.number(),
+            v.safeInteger(),
+          ),
+        ),
         bucket_width: v.optional(v.picklist(['1m', '1h', '1d']), '1d'),
         project_ids: v.optional(
           v.pipe(
@@ -3502,7 +3674,15 @@ export const organizationHandler = new Hono()
             v.array(v.literal('project_id')),
           ),
         ),
-        limit: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger())),
+        limit: v.optional(
+          v.pipe(
+            v.string(),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
+            v.number(),
+            v.safeInteger(),
+          ),
+        ),
         page: v.optional(v.string()),
       }),
     ),
@@ -3536,8 +3716,22 @@ export const organizationHandler = new Hono()
     validator(
       'query',
       v.object({
-        start_time: v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
-        end_time: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger())),
+        start_time: v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
+        end_time: v.optional(
+          v.pipe(
+            v.string(),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
+            v.number(),
+            v.safeInteger(),
+          ),
+        ),
         bucket_width: v.optional(v.picklist(['1m', '1h', '1d']), '1d'),
         project_ids: v.optional(
           v.pipe(
@@ -3591,7 +3785,15 @@ export const organizationHandler = new Hono()
             ),
           ),
         ),
-        limit: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger())),
+        limit: v.optional(
+          v.pipe(
+            v.string(),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
+            v.number(),
+            v.safeInteger(),
+          ),
+        ),
         page: v.optional(v.string()),
       }),
     ),
@@ -3625,8 +3827,22 @@ export const organizationHandler = new Hono()
     validator(
       'query',
       v.object({
-        start_time: v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
-        end_time: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger())),
+        start_time: v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
+        end_time: v.optional(
+          v.pipe(
+            v.string(),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
+            v.number(),
+            v.safeInteger(),
+          ),
+        ),
         bucket_width: v.optional(v.picklist(['1m', '1h', '1d']), '1d'),
         project_ids: v.optional(
           v.pipe(
@@ -3663,7 +3879,15 @@ export const organizationHandler = new Hono()
             v.array(v.picklist(['project_id', 'user_id', 'api_key_id', 'model'])),
           ),
         ),
-        limit: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger())),
+        limit: v.optional(
+          v.pipe(
+            v.string(),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
+            v.number(),
+            v.safeInteger(),
+          ),
+        ),
         page: v.optional(v.string()),
       }),
     ),
@@ -3697,8 +3921,22 @@ export const organizationHandler = new Hono()
     validator(
       'query',
       v.object({
-        start_time: v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
-        end_time: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger())),
+        start_time: v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
+        end_time: v.optional(
+          v.pipe(
+            v.string(),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
+            v.number(),
+            v.safeInteger(),
+          ),
+        ),
         bucket_width: v.optional(v.picklist(['1m', '1h', '1d']), '1d'),
         project_ids: v.optional(
           v.pipe(
@@ -3735,7 +3973,15 @@ export const organizationHandler = new Hono()
             v.array(v.picklist(['project_id', 'user_id', 'api_key_id', 'vector_store_id'])),
           ),
         ),
-        limit: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger())),
+        limit: v.optional(
+          v.pipe(
+            v.string(),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
+            v.number(),
+            v.safeInteger(),
+          ),
+        ),
         page: v.optional(v.string()),
       }),
     ),
@@ -3769,8 +4015,22 @@ export const organizationHandler = new Hono()
     validator(
       'query',
       v.object({
-        start_time: v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
-        end_time: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger())),
+        start_time: v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
+        end_time: v.optional(
+          v.pipe(
+            v.string(),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
+            v.number(),
+            v.safeInteger(),
+          ),
+        ),
         bucket_width: v.optional(v.picklist(['1m', '1h', '1d']), '1d'),
         sources: v.optional(
           v.pipe(
@@ -3821,7 +4081,15 @@ export const organizationHandler = new Hono()
             v.array(v.picklist(['project_id', 'user_id', 'api_key_id', 'model', 'size', 'source'])),
           ),
         ),
-        limit: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger())),
+        limit: v.optional(
+          v.pipe(
+            v.string(),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
+            v.number(),
+            v.safeInteger(),
+          ),
+        ),
         page: v.optional(v.string()),
       }),
     ),
@@ -3855,8 +4123,22 @@ export const organizationHandler = new Hono()
     validator(
       'query',
       v.object({
-        start_time: v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
-        end_time: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger())),
+        start_time: v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
+        end_time: v.optional(
+          v.pipe(
+            v.string(),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
+            v.number(),
+            v.safeInteger(),
+          ),
+        ),
         bucket_width: v.optional(v.picklist(['1m', '1h', '1d']), '1d'),
         project_ids: v.optional(
           v.pipe(
@@ -3893,7 +4175,15 @@ export const organizationHandler = new Hono()
             v.array(v.picklist(['project_id', 'user_id', 'api_key_id', 'model'])),
           ),
         ),
-        limit: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger())),
+        limit: v.optional(
+          v.pipe(
+            v.string(),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
+            v.number(),
+            v.safeInteger(),
+          ),
+        ),
         page: v.optional(v.string()),
       }),
     ),
@@ -3927,8 +4217,22 @@ export const organizationHandler = new Hono()
     validator(
       'query',
       v.object({
-        start_time: v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
-        end_time: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger())),
+        start_time: v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
+        end_time: v.optional(
+          v.pipe(
+            v.string(),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
+            v.number(),
+            v.safeInteger(),
+          ),
+        ),
         bucket_width: v.optional(v.picklist(['1m', '1h', '1d']), '1d'),
         project_ids: v.optional(
           v.pipe(
@@ -3944,7 +4248,15 @@ export const organizationHandler = new Hono()
             v.array(v.literal('project_id')),
           ),
         ),
-        limit: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger())),
+        limit: v.optional(
+          v.pipe(
+            v.string(),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
+            v.number(),
+            v.safeInteger(),
+          ),
+        ),
         page: v.optional(v.string()),
       }),
     ),
@@ -3978,8 +4290,22 @@ export const organizationHandler = new Hono()
     validator(
       'query',
       v.object({
-        start_time: v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
-        end_time: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger())),
+        start_time: v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
+        end_time: v.optional(
+          v.pipe(
+            v.string(),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
+            v.number(),
+            v.safeInteger(),
+          ),
+        ),
         bucket_width: v.optional(v.picklist(['1m', '1h', '1d']), '1d'),
         project_ids: v.optional(
           v.pipe(
@@ -4032,7 +4358,15 @@ export const organizationHandler = new Hono()
             ),
           ),
         ),
-        limit: v.optional(v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger())),
+        limit: v.optional(
+          v.pipe(
+            v.string(),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
+            v.number(),
+            v.safeInteger(),
+          ),
+        ),
         page: v.optional(v.string()),
       }),
     ),
@@ -4069,7 +4403,13 @@ export const organizationHandler = new Hono()
       'query',
       v.object({
         limit: v.optional(
-          v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
+          v.pipe(
+            v.string(),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
+            v.number(),
+            v.safeInteger(),
+          ),
           '20',
         ),
         after: v.optional(v.string()),
@@ -4221,7 +4561,8 @@ export const organizationHandler = new Hono()
         v.object({
           limit: v.pipe(
             v.string(),
-            v.transform(Number),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
             v.minValue(0),
@@ -4356,7 +4697,8 @@ export const organizationHandler = new Hono()
         v.object({
           limit: v.pipe(
             v.string(),
-            v.transform(Number),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
             v.minValue(0),
@@ -4368,7 +4710,7 @@ export const organizationHandler = new Hono()
             v.pipe(
               v.unknown(),
               v.transform((input) => (input === 'null' ? null : input)),
-              v.nullable(v.null()),
+              v.null(),
             ),
           ]),
           purpose: ExternalKeyPurposeSchema,
@@ -4465,7 +4807,8 @@ export const organizationHandler = new Hono()
         v.object({
           limit: v.pipe(
             v.string(),
-            v.transform(Number),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
             v.minValue(1),
@@ -4587,7 +4930,8 @@ export const organizationHandler = new Hono()
         v.object({
           limit: v.pipe(
             v.string(),
-            v.transform(Number),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
             v.minValue(1),
@@ -4729,18 +5073,30 @@ export const organizationHandler = new Hono()
     validator(
       'query',
       v.object({
-        start_time: v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
+        start_time: v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
         end_time: v.optional(
           v.pipe(
             v.unknown(),
             v.transform((input) => (input === 'null' ? null : input)),
             v.nullable(
               v.union([
-                v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
+                v.pipe(
+                  v.string(),
+                  v.regex(/^-?(?:0|[1-9]\d*)$/),
+                  v.transform((input) => Number(input)),
+                  v.number(),
+                  v.safeInteger(),
+                ),
                 v.pipe(
                   v.unknown(),
                   v.transform((input) => (input === 'null' ? null : input)),
-                  v.nullable(v.null()),
+                  v.null(),
                 ),
               ]),
             ),
@@ -4761,7 +5117,7 @@ export const organizationHandler = new Hono()
                 v.pipe(
                   v.unknown(),
                   v.transform((input) => (input === 'null' ? null : input)),
-                  v.nullable(v.null()),
+                  v.null(),
                 ),
               ]),
             ),
@@ -4773,11 +5129,17 @@ export const organizationHandler = new Hono()
             v.transform((input) => (input === 'null' ? null : input)),
             v.nullable(
               v.union([
-                v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
+                v.pipe(
+                  v.string(),
+                  v.regex(/^-?(?:0|[1-9]\d*)$/),
+                  v.transform((input) => Number(input)),
+                  v.number(),
+                  v.safeInteger(),
+                ),
                 v.pipe(
                   v.unknown(),
                   v.transform((input) => (input === 'null' ? null : input)),
-                  v.nullable(v.null()),
+                  v.null(),
                 ),
               ]),
             ),
@@ -4794,7 +5156,7 @@ export const organizationHandler = new Hono()
             v.pipe(
               v.unknown(),
               v.transform((input) => (input === 'null' ? null : input)),
-              v.nullable(v.null()),
+              v.null(),
             ),
           ]),
         ),
@@ -4819,7 +5181,7 @@ export const organizationHandler = new Hono()
                 v.pipe(
                   v.unknown(),
                   v.transform((input) => (input === 'null' ? null : input)),
-                  v.nullable(v.null()),
+                  v.null(),
                 ),
               ]),
             ),
@@ -4848,7 +5210,7 @@ export const organizationHandler = new Hono()
                 v.pipe(
                   v.unknown(),
                   v.transform((input) => (input === 'null' ? null : input)),
-                  v.nullable(v.null()),
+                  v.null(),
                 ),
               ]),
             ),
@@ -4875,7 +5237,7 @@ export const organizationHandler = new Hono()
                 v.pipe(
                   v.unknown(),
                   v.transform((input) => (input === 'null' ? null : input)),
-                  v.nullable(v.null()),
+                  v.null(),
                 ),
               ]),
             ),
@@ -4902,7 +5264,7 @@ export const organizationHandler = new Hono()
                 v.pipe(
                   v.unknown(),
                   v.transform((input) => (input === 'null' ? null : input)),
-                  v.nullable(v.null()),
+                  v.null(),
                 ),
               ]),
             ),
@@ -4929,7 +5291,7 @@ export const organizationHandler = new Hono()
                 v.pipe(
                   v.unknown(),
                   v.transform((input) => (input === 'null' ? null : input)),
-                  v.nullable(v.null()),
+                  v.null(),
                 ),
               ]),
             ),
@@ -4949,7 +5311,7 @@ export const organizationHandler = new Hono()
                 v.pipe(
                   v.unknown(),
                   v.transform((input) => (input === 'null' ? null : input)),
-                  v.nullable(v.null()),
+                  v.null(),
                 ),
               ]),
             ),
@@ -4995,7 +5357,7 @@ export const organizationHandler = new Hono()
             v.pipe(
               v.unknown(),
               v.transform((input) => (input === 'null' ? null : input)),
-              v.nullable(v.null()),
+              v.null(),
             ),
           ]),
           after: v.union([
@@ -5006,13 +5368,14 @@ export const organizationHandler = new Hono()
             v.pipe(
               v.unknown(),
               v.transform((input) => (input === 'null' ? null : input)),
-              v.nullable(v.null()),
+              v.null(),
             ),
           ]),
           order: ExternalStorageOrderSchema,
           limit: v.pipe(
             v.string(),
-            v.transform(Number),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
             v.minValue(1),

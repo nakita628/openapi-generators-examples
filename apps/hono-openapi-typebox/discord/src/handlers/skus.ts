@@ -1,6 +1,6 @@
 import { Hono } from 'hono'
 import { describeRoute, resolver, validator } from 'hono-openapi'
-import { Type, Codec } from 'typebox'
+import { Type, Codec, type StaticDecode, type StaticEncode, type TSchema } from 'typebox'
 import { Compile } from 'typebox/compile'
 import {
   SnowflakeTypeSchema,
@@ -8,6 +8,31 @@ import {
   ClientErrorResponseResponse,
   ClientRatelimitedResponseResponse,
 } from '../components'
+
+const toStandardSchemaV1 = <T extends TSchema>(schema: T) => {
+  const validator = Compile(schema)
+  return Object.assign(validator, {
+    '~standard': {
+      version: 1 as const,
+      vendor: 'typebox',
+      validate: (value: unknown) =>
+        validator.Check(value)
+          ? { value: validator.Decode(value) }
+          : {
+              issues: validator.Errors(value).map((error) => ({
+                message: error.message,
+                path: error.instancePath
+                  .split('/')
+                  .slice(1)
+                  .map((key) => key.replaceAll('~1', '/').replaceAll('~0', '~')),
+              })),
+            },
+      types: undefined as
+        | { readonly input: StaticEncode<T>; readonly output: StaticDecode<T> }
+        | undefined,
+    },
+  })
+}
 
 export const skusHandler = new Hono()
   .get(
@@ -27,7 +52,7 @@ export const skusHandler = new Hono()
           },
           content: {
             'application/json': {
-              schema: resolver(Compile(Type.Array(SubscriptionResponseSchema))),
+              schema: resolver(toStandardSchemaV1(Type.Array(SubscriptionResponseSchema))),
             },
           },
         },
@@ -76,16 +101,26 @@ export const skusHandler = new Hono()
         },
       ],
     }),
-    validator('param', Compile(Type.Object({ sku_id: SnowflakeTypeSchema }))),
+    validator('param', toStandardSchemaV1(Type.Object({ sku_id: SnowflakeTypeSchema }))),
     validator(
       'query',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           before: Type.Optional(SnowflakeTypeSchema),
           after: Type.Optional(SnowflakeTypeSchema),
           limit: Type.Optional(
-            Codec(Type.String())
-              .Decode((value) => Number.parseInt(value, 10))
+            Codec(
+              Type.Refine(
+                Type.Refine(
+                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                  (value) => Number(value) >= 1,
+                  () => 'must be >= 1',
+                ),
+                (value) => Number(value) <= 100,
+                () => 'must be <= 100',
+              ),
+            )
+              .Decode((value) => Number(value))
               .Encode((value) => String(value)),
           ),
           user_id: Type.Optional(SnowflakeTypeSchema),
@@ -110,7 +145,9 @@ export const skusHandler = new Hono()
             'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
           },
           content: {
-            'application/json': { schema: resolver(Compile(SubscriptionResponseSchema)) },
+            'application/json': {
+              schema: resolver(toStandardSchemaV1(SubscriptionResponseSchema)),
+            },
           },
         },
         '429': ClientRatelimitedResponseResponse,
@@ -160,8 +197,13 @@ export const skusHandler = new Hono()
     }),
     validator(
       'param',
-      Compile(Type.Object({ sku_id: SnowflakeTypeSchema, subscription_id: SnowflakeTypeSchema })),
+      toStandardSchemaV1(
+        Type.Object({ sku_id: SnowflakeTypeSchema, subscription_id: SnowflakeTypeSchema }),
+      ),
     ),
-    validator('query', Compile(Type.Object({ user_id: Type.Optional(SnowflakeTypeSchema) }))),
+    validator(
+      'query',
+      toStandardSchemaV1(Type.Object({ user_id: Type.Optional(SnowflakeTypeSchema) })),
+    ),
     (c) => { throw new Error('Not implemented') },
   )

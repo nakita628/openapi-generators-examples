@@ -63,9 +63,12 @@ export const organizationHandler = new Hono()
           .default('asc')
           .meta({ description: 'Order results by creation time, ascending or descending.' })
           .exactOptional(),
-        limit: z.coerce
-          .number()
-          .int()
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
           .default(20)
           .meta({ description: 'Maximum number of keys to return.' })
           .exactOptional(),
@@ -118,33 +121,45 @@ export const organizationHandler = new Hono()
       z.object({
         effective_at: z
           .object({
-            gt: z.coerce
-              .number()
-              .int()
+            gt: z
+              .preprocess(
+                (val) =>
+                  typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+                z.number().int(),
+              )
               .meta({
                 description:
                   'Return only events whose `effective_at` (Unix seconds) is greater than this value.',
               })
               .exactOptional(),
-            gte: z.coerce
-              .number()
-              .int()
+            gte: z
+              .preprocess(
+                (val) =>
+                  typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+                z.number().int(),
+              )
               .meta({
                 description:
                   'Return only events whose `effective_at` (Unix seconds) is greater than or equal to this value.',
               })
               .exactOptional(),
-            lt: z.coerce
-              .number()
-              .int()
+            lt: z
+              .preprocess(
+                (val) =>
+                  typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+                z.number().int(),
+              )
               .meta({
                 description:
                   'Return only events whose `effective_at` (Unix seconds) is less than this value.',
               })
               .exactOptional(),
-            lte: z.coerce
-              .number()
-              .int()
+            lte: z
+              .preprocess(
+                (val) =>
+                  typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+                z.number().int(),
+              )
               .meta({
                 description:
                   'Return only events whose `effective_at` (Unix seconds) is less than or equal to this value.',
@@ -183,7 +198,14 @@ export const organizationHandler = new Hono()
           )
           .exactOptional(),
         tenant_only: z.stringbool().default(false).exactOptional(),
-        limit: z.coerce.number().int().default(20).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
+          .default(20)
+          .exactOptional(),
         after: z.string().exactOptional(),
         before: z.string().exactOptional(),
       }),
@@ -195,7 +217,14 @@ export const organizationHandler = new Hono()
     sValidator(
       'query',
       z.object({
-        limit: z.coerce.number().int().default(20).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
+          .default(20)
+          .exactOptional(),
         after: z.string().exactOptional(),
         order: z.enum(['asc', 'desc']).default('desc').exactOptional(),
       }),
@@ -245,8 +274,17 @@ export const organizationHandler = new Hono()
     sValidator(
       'query',
       z.object({
-        start_time: z.coerce.number().int(),
-        end_time: z.coerce.number().int().exactOptional(),
+        start_time: z.preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int(),
+        ),
+        end_time: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
+          .exactOptional(),
         bucket_width: z.literal('1d').default('1d').exactOptional(),
         project_ids: z
           .preprocess(
@@ -272,7 +310,14 @@ export const organizationHandler = new Hono()
             z.array(z.enum(['project_id', 'user_id', 'line_item', 'api_key_id', 'api_source'])),
           )
           .exactOptional(),
-        limit: z.coerce.number().int().default(7).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
+          .default(7)
+          .exactOptional(),
         page: z.string().exactOptional(),
       }),
     ),
@@ -289,7 +334,14 @@ export const organizationHandler = new Hono()
     sValidator(
       'query',
       z.object({
-        limit: z.coerce.number().int().min(0).max(1000).default(100).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(0).max(1000),
+          )
+          .default(100)
+          .exactOptional(),
         after: z.string().exactOptional(),
         order: z.enum(['asc', 'desc']).default('asc').exactOptional(),
       }),
@@ -319,7 +371,13 @@ export const organizationHandler = new Hono()
     sValidator(
       'query',
       z.object({
-        limit: z.coerce.number().int().min(0).max(1000).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(0).max(1000),
+          )
+          .exactOptional(),
         after: z.string().exactOptional(),
         order: z.enum(['asc', 'desc']).exactOptional(),
       }),
@@ -348,7 +406,14 @@ export const organizationHandler = new Hono()
     sValidator(
       'query',
       z.object({
-        limit: z.coerce.number().int().min(0).max(1000).default(100).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(0).max(1000),
+          )
+          .default(100)
+          .exactOptional(),
         after: z.string().exactOptional(),
         order: z.enum(['asc', 'desc']).default('desc').exactOptional(),
       }),
@@ -376,7 +441,14 @@ export const organizationHandler = new Hono()
     sValidator(
       'query',
       z.object({
-        limit: z.coerce.number().int().default(20).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
+          .default(20)
+          .exactOptional(),
         after: z.string().exactOptional(),
       }),
     ),
@@ -398,7 +470,14 @@ export const organizationHandler = new Hono()
     sValidator(
       'query',
       z.object({
-        limit: z.coerce.number().int().default(20).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
+          .default(20)
+          .exactOptional(),
         after: z.string().exactOptional(),
         include_archived: z.stringbool().default(false).exactOptional(),
       }),
@@ -423,7 +502,14 @@ export const organizationHandler = new Hono()
     sValidator(
       'query',
       z.object({
-        limit: z.coerce.number().int().default(20).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
+          .default(20)
+          .exactOptional(),
         after: z.string().exactOptional(),
         owner_project_access: z.enum(['active', 'inactive', 'any']).exactOptional(),
       }),
@@ -457,7 +543,14 @@ export const organizationHandler = new Hono()
     sValidator(
       'query',
       z.object({
-        limit: z.coerce.number().int().default(20).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
+          .default(20)
+          .exactOptional(),
         after: z.string().exactOptional(),
         order: z.enum(['asc', 'desc']).default('desc').exactOptional(),
       }),
@@ -493,7 +586,14 @@ export const organizationHandler = new Hono()
     sValidator(
       'query',
       z.object({
-        limit: z.coerce.number().int().min(0).max(100).default(20).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(0).max(100),
+          )
+          .default(20)
+          .exactOptional(),
         after: z.string().exactOptional(),
         order: z.enum(['asc', 'desc']).default('asc').exactOptional(),
       }),
@@ -553,7 +653,14 @@ export const organizationHandler = new Hono()
     sValidator(
       'query',
       z.object({
-        limit: z.coerce.number().int().default(100).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
+          .default(100)
+          .exactOptional(),
         after: z.string().exactOptional(),
         before: z.string().exactOptional(),
       }),
@@ -572,7 +679,14 @@ export const organizationHandler = new Hono()
     sValidator(
       'query',
       z.object({
-        limit: z.coerce.number().int().default(20).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
+          .default(20)
+          .exactOptional(),
         after: z.string().exactOptional(),
       }),
     ),
@@ -606,7 +720,13 @@ export const organizationHandler = new Hono()
     sValidator(
       'query',
       z.object({
-        limit: z.coerce.number().int().min(0).max(100).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(0).max(100),
+          )
+          .exactOptional(),
         order: z.enum(['asc', 'desc']).default('asc').exactOptional(),
         after: z.string().exactOptional(),
         before: z.string().exactOptional(),
@@ -642,7 +762,14 @@ export const organizationHandler = new Hono()
     sValidator(
       'query',
       z.object({
-        limit: z.coerce.number().int().default(20).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
+          .default(20)
+          .exactOptional(),
         after: z.string().exactOptional(),
       }),
     ),
@@ -675,7 +802,14 @@ export const organizationHandler = new Hono()
     sValidator(
       'query',
       z.object({
-        limit: z.coerce.number().int().min(0).max(1000).default(1000).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(0).max(1000),
+          )
+          .default(1000)
+          .exactOptional(),
         after: z.string().exactOptional(),
         order: z.enum(['asc', 'desc']).default('asc').exactOptional(),
       }),
@@ -708,7 +842,13 @@ export const organizationHandler = new Hono()
     sValidator(
       'query',
       z.object({
-        limit: z.coerce.number().int().min(0).max(100).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(0).max(100),
+          )
+          .exactOptional(),
         order: z.enum(['asc', 'desc']).default('asc').exactOptional(),
         after: z.string().exactOptional(),
         before: z.string().exactOptional(),
@@ -738,8 +878,17 @@ export const organizationHandler = new Hono()
     sValidator(
       'query',
       z.object({
-        start_time: z.coerce.number().int(),
-        end_time: z.coerce.number().int().exactOptional(),
+        start_time: z.preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int(),
+        ),
+        end_time: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
+          .exactOptional(),
         bucket_width: z.enum(['1m', '1h', '1d']).default('1d').exactOptional(),
         project_ids: z
           .preprocess(
@@ -771,7 +920,13 @@ export const organizationHandler = new Hono()
             z.array(z.enum(['project_id', 'user_id', 'api_key_id', 'model'])),
           )
           .exactOptional(),
-        limit: z.coerce.number().int().exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
+          .exactOptional(),
         page: z.string().exactOptional(),
       }),
     ),
@@ -782,8 +937,17 @@ export const organizationHandler = new Hono()
     sValidator(
       'query',
       z.object({
-        start_time: z.coerce.number().int(),
-        end_time: z.coerce.number().int().exactOptional(),
+        start_time: z.preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int(),
+        ),
+        end_time: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
+          .exactOptional(),
         bucket_width: z.enum(['1m', '1h', '1d']).default('1d').exactOptional(),
         project_ids: z
           .preprocess(
@@ -815,7 +979,13 @@ export const organizationHandler = new Hono()
             z.array(z.enum(['project_id', 'user_id', 'api_key_id', 'model'])),
           )
           .exactOptional(),
-        limit: z.coerce.number().int().exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
+          .exactOptional(),
         page: z.string().exactOptional(),
       }),
     ),
@@ -826,8 +996,17 @@ export const organizationHandler = new Hono()
     sValidator(
       'query',
       z.object({
-        start_time: z.coerce.number().int(),
-        end_time: z.coerce.number().int().exactOptional(),
+        start_time: z.preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int(),
+        ),
+        end_time: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
+          .exactOptional(),
         bucket_width: z.enum(['1m', '1h', '1d']).default('1d').exactOptional(),
         project_ids: z
           .preprocess(
@@ -841,7 +1020,13 @@ export const organizationHandler = new Hono()
             z.array(z.literal('project_id')),
           )
           .exactOptional(),
-        limit: z.coerce.number().int().exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
+          .exactOptional(),
         page: z.string().exactOptional(),
       }),
     ),
@@ -852,8 +1037,17 @@ export const organizationHandler = new Hono()
     sValidator(
       'query',
       z.object({
-        start_time: z.coerce.number().int(),
-        end_time: z.coerce.number().int().exactOptional(),
+        start_time: z.preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int(),
+        ),
+        end_time: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
+          .exactOptional(),
         bucket_width: z.enum(['1m', '1h', '1d']).default('1d').exactOptional(),
         project_ids: z
           .preprocess(
@@ -896,7 +1090,13 @@ export const organizationHandler = new Hono()
             ),
           )
           .exactOptional(),
-        limit: z.coerce.number().int().exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
+          .exactOptional(),
         page: z.string().exactOptional(),
       }),
     ),
@@ -907,8 +1107,17 @@ export const organizationHandler = new Hono()
     sValidator(
       'query',
       z.object({
-        start_time: z.coerce.number().int(),
-        end_time: z.coerce.number().int().exactOptional(),
+        start_time: z.preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int(),
+        ),
+        end_time: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
+          .exactOptional(),
         bucket_width: z.enum(['1m', '1h', '1d']).default('1d').exactOptional(),
         project_ids: z
           .preprocess(
@@ -940,7 +1149,13 @@ export const organizationHandler = new Hono()
             z.array(z.enum(['project_id', 'user_id', 'api_key_id', 'model'])),
           )
           .exactOptional(),
-        limit: z.coerce.number().int().exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
+          .exactOptional(),
         page: z.string().exactOptional(),
       }),
     ),
@@ -951,8 +1166,17 @@ export const organizationHandler = new Hono()
     sValidator(
       'query',
       z.object({
-        start_time: z.coerce.number().int(),
-        end_time: z.coerce.number().int().exactOptional(),
+        start_time: z.preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int(),
+        ),
+        end_time: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
+          .exactOptional(),
         bucket_width: z.enum(['1m', '1h', '1d']).default('1d').exactOptional(),
         project_ids: z
           .preprocess(
@@ -984,7 +1208,13 @@ export const organizationHandler = new Hono()
             z.array(z.enum(['project_id', 'user_id', 'api_key_id', 'vector_store_id'])),
           )
           .exactOptional(),
-        limit: z.coerce.number().int().exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
+          .exactOptional(),
         page: z.string().exactOptional(),
       }),
     ),
@@ -995,8 +1225,17 @@ export const organizationHandler = new Hono()
     sValidator(
       'query',
       z.object({
-        start_time: z.coerce.number().int(),
-        end_time: z.coerce.number().int().exactOptional(),
+        start_time: z.preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int(),
+        ),
+        end_time: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
+          .exactOptional(),
         bucket_width: z.enum(['1m', '1h', '1d']).default('1d').exactOptional(),
         sources: z
           .preprocess(
@@ -1040,7 +1279,13 @@ export const organizationHandler = new Hono()
             z.array(z.enum(['project_id', 'user_id', 'api_key_id', 'model', 'size', 'source'])),
           )
           .exactOptional(),
-        limit: z.coerce.number().int().exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
+          .exactOptional(),
         page: z.string().exactOptional(),
       }),
     ),
@@ -1051,8 +1296,17 @@ export const organizationHandler = new Hono()
     sValidator(
       'query',
       z.object({
-        start_time: z.coerce.number().int(),
-        end_time: z.coerce.number().int().exactOptional(),
+        start_time: z.preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int(),
+        ),
+        end_time: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
+          .exactOptional(),
         bucket_width: z.enum(['1m', '1h', '1d']).default('1d').exactOptional(),
         project_ids: z
           .preprocess(
@@ -1084,7 +1338,13 @@ export const organizationHandler = new Hono()
             z.array(z.enum(['project_id', 'user_id', 'api_key_id', 'model'])),
           )
           .exactOptional(),
-        limit: z.coerce.number().int().exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
+          .exactOptional(),
         page: z.string().exactOptional(),
       }),
     ),
@@ -1095,8 +1355,17 @@ export const organizationHandler = new Hono()
     sValidator(
       'query',
       z.object({
-        start_time: z.coerce.number().int(),
-        end_time: z.coerce.number().int().exactOptional(),
+        start_time: z.preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int(),
+        ),
+        end_time: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
+          .exactOptional(),
         bucket_width: z.enum(['1m', '1h', '1d']).default('1d').exactOptional(),
         project_ids: z
           .preprocess(
@@ -1110,7 +1379,13 @@ export const organizationHandler = new Hono()
             z.array(z.literal('project_id')),
           )
           .exactOptional(),
-        limit: z.coerce.number().int().exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
+          .exactOptional(),
         page: z.string().exactOptional(),
       }),
     ),
@@ -1121,8 +1396,17 @@ export const organizationHandler = new Hono()
     sValidator(
       'query',
       z.object({
-        start_time: z.coerce.number().int(),
-        end_time: z.coerce.number().int().exactOptional(),
+        start_time: z.preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int(),
+        ),
+        end_time: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
+          .exactOptional(),
         bucket_width: z.enum(['1m', '1h', '1d']).default('1d').exactOptional(),
         project_ids: z
           .preprocess(
@@ -1169,7 +1453,13 @@ export const organizationHandler = new Hono()
             ),
           )
           .exactOptional(),
-        limit: z.coerce.number().int().exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
+          .exactOptional(),
         page: z.string().exactOptional(),
       }),
     ),
@@ -1180,7 +1470,14 @@ export const organizationHandler = new Hono()
     sValidator(
       'query',
       z.object({
-        limit: z.coerce.number().int().default(20).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
+          .default(20)
+          .exactOptional(),
         after: z.string().exactOptional(),
         emails: z
           .preprocess(
@@ -1214,7 +1511,13 @@ export const organizationHandler = new Hono()
     sValidator(
       'query',
       z.object({
-        limit: z.coerce.number().int().min(0).max(1000).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(0).max(1000),
+          )
+          .exactOptional(),
         after: z.string().exactOptional(),
         order: z.enum(['asc', 'desc']).exactOptional(),
       }),
@@ -1242,13 +1545,16 @@ export const organizationHandler = new Hono()
     sValidator(
       'query',
       z.object({
-        limit: z.coerce.number().int().min(0).max(100).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(0).max(100),
+          )
+          .exactOptional(),
         order: OrderEnumSchema.exactOptional(),
         after: z
-          .union([
-            z.string(),
-            z.preprocess((val) => (val === 'null' ? null : val), z.null().nullable()),
-          ])
+          .union([z.string(), z.preprocess((val) => (val === 'null' ? null : val), z.null())])
           .exactOptional(),
         purpose: ExternalKeyPurposeSchema.exactOptional(),
       }),
@@ -1280,7 +1586,13 @@ export const organizationHandler = new Hono()
     sValidator(
       'query',
       z.object({
-        limit: z.coerce.number().int().min(1).max(100).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(1).max(100),
+          )
+          .exactOptional(),
         order: z
           .union([z.literal('asc').default('asc'), z.literal('desc').default('desc')])
           .exactOptional(),
@@ -1316,7 +1628,13 @@ export const organizationHandler = new Hono()
     sValidator(
       'query',
       z.object({
-        limit: z.coerce.number().int().min(1).max(100).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(1).max(100),
+          )
+          .exactOptional(),
         order: z
           .union([z.literal('asc').default('asc'), z.literal('desc').default('desc')])
           .exactOptional(),
@@ -1371,14 +1689,21 @@ export const organizationHandler = new Hono()
     sValidator(
       'query',
       z.object({
-        start_time: z.coerce.number().int(),
+        start_time: z.preprocess(
+          (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+          z.number().int(),
+        ),
         end_time: z
           .preprocess(
             (val) => (val === 'null' ? null : val),
             z
               .union([
-                z.coerce.number().int(),
-                z.preprocess((val) => (val === 'null' ? null : val), z.null().nullable()),
+                z.preprocess(
+                  (val) =>
+                    typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+                  z.number().int(),
+                ),
+                z.preprocess((val) => (val === 'null' ? null : val), z.null()),
               ])
               .nullable(),
           )
@@ -1394,7 +1719,7 @@ export const organizationHandler = new Hono()
                     description:
                       'Width of each time bucket in response. Currently `1m`, `1h` and `1d` are supported, default to `1d`.',
                   }),
-                z.preprocess((val) => (val === 'null' ? null : val), z.null().nullable()),
+                z.preprocess((val) => (val === 'null' ? null : val), z.null()),
               ])
               .nullable(),
           )
@@ -1404,8 +1729,12 @@ export const organizationHandler = new Hono()
             (val) => (val === 'null' ? null : val),
             z
               .union([
-                z.coerce.number().int(),
-                z.preprocess((val) => (val === 'null' ? null : val), z.null().nullable()),
+                z.preprocess(
+                  (val) =>
+                    typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+                  z.number().int(),
+                ),
+                z.preprocess((val) => (val === 'null' ? null : val), z.null()),
               ])
               .nullable(),
           )
@@ -1418,7 +1747,7 @@ export const organizationHandler = new Hono()
                 description:
                   'A cursor for use in pagination. Corresponding to the `next_page` field from the previous response.',
               }),
-            z.preprocess((val) => (val === 'null' ? null : val), z.null().nullable()),
+            z.preprocess((val) => (val === 'null' ? null : val), z.null()),
           ])
           .exactOptional(),
         project_ids: z
@@ -1434,7 +1763,7 @@ export const organizationHandler = new Hono()
                     ),
                   ])
                   .meta({ description: 'Return only usage for these projects.' }),
-                z.preprocess((val) => (val === 'null' ? null : val), z.null().nullable()),
+                z.preprocess((val) => (val === 'null' ? null : val), z.null()),
               ])
               .nullable(),
           )
@@ -1455,7 +1784,7 @@ export const organizationHandler = new Hono()
                     description:
                       'Group the usage data by the specified fields. Support fields include `project_id`, `user_id`, `api_key_id`, `model`, `batch`, `service_tier`, `api_source` or any combination of them. When grouped by `api_source`, results use `agents_api` for attributed Agents API activity and `unlabeled` for all other activity. Without source grouping, `api_source` is null.',
                   }),
-                z.preprocess((val) => (val === 'null' ? null : val), z.null().nullable()),
+                z.preprocess((val) => (val === 'null' ? null : val), z.null()),
               ])
               .nullable(),
           )
@@ -1473,7 +1802,7 @@ export const organizationHandler = new Hono()
                     ),
                   ])
                   .meta({ description: 'Return only usage for these users.' }),
-                z.preprocess((val) => (val === 'null' ? null : val), z.null().nullable()),
+                z.preprocess((val) => (val === 'null' ? null : val), z.null()),
               ])
               .nullable(),
           )
@@ -1491,7 +1820,7 @@ export const organizationHandler = new Hono()
                     ),
                   ])
                   .meta({ description: 'Return only usage for these API keys.' }),
-                z.preprocess((val) => (val === 'null' ? null : val), z.null().nullable()),
+                z.preprocess((val) => (val === 'null' ? null : val), z.null()),
               ])
               .nullable(),
           )
@@ -1509,7 +1838,7 @@ export const organizationHandler = new Hono()
                     ),
                   ])
                   .meta({ description: 'Return only usage for these models.' }),
-                z.preprocess((val) => (val === 'null' ? null : val), z.null().nullable()),
+                z.preprocess((val) => (val === 'null' ? null : val), z.null()),
               ])
               .nullable(),
           )
@@ -1520,7 +1849,7 @@ export const organizationHandler = new Hono()
             z
               .union([
                 z.stringbool(),
-                z.preprocess((val) => (val === 'null' ? null : val), z.null().nullable()),
+                z.preprocess((val) => (val === 'null' ? null : val), z.null()),
               ])
               .nullable(),
           )
@@ -1537,7 +1866,7 @@ export const organizationHandler = new Hono()
         project_id: z
           .union([
             z.string().meta({ examples: ['proj_123'] }),
-            z.preprocess((val) => (val === 'null' ? null : val), z.null().nullable()),
+            z.preprocess((val) => (val === 'null' ? null : val), z.null()),
           ])
           .exactOptional(),
         after: z
@@ -1545,11 +1874,17 @@ export const organizationHandler = new Hono()
             z
               .string()
               .meta({ description: 'Return external storage configurations after this ID.' }),
-            z.preprocess((val) => (val === 'null' ? null : val), z.null().nullable()),
+            z.preprocess((val) => (val === 'null' ? null : val), z.null()),
           ])
           .exactOptional(),
         order: ExternalStorageOrderSchema.exactOptional(),
-        limit: z.coerce.number().int().min(1).max(100).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(1).max(100),
+          )
+          .exactOptional(),
       }),
     ),
     (c) => { throw new Error('Not implemented') },

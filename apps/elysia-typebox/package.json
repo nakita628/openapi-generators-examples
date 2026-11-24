@@ -11,6 +11,7 @@
     "@angular/core": "catalog:",
     "@elysiajs/eden": "catalog:",
     "@sinclair/typebox": "catalog:",
+    "@tanstack/angular-query": "catalog:",
     "@tanstack/angular-query-experimental": "catalog:",
     "@tanstack/preact-query": "catalog:",
     "@tanstack/react-query": "catalog:",

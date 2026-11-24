@@ -32,7 +32,7 @@ export const usersRouter = t.router({
       type({
         application_id: SnowflakeTypeSchema,
         'sku_ids?': type('string').or(
-          type(type(type('null | null').or(SnowflakeTypeSchema)).array())
+          type(type(type('null').or(SnowflakeTypeSchema)).array())
             .and(type('unknown[] <= 100'))
             .narrow((data: unknown[], ctx) => new Set(data).size === data.length),
         ),

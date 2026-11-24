@@ -52,7 +52,7 @@ export type SnowflakeType = v.InferOutput<typeof SnowflakeTypeSchema>
 
 export const ComponentEmojiForRequestSchema = v.pipe(
   v.object({
-    id: v.optional(v.union([v.nullable(v.null()), SnowflakeTypeSchema])),
+    id: v.optional(v.union([v.null(), SnowflakeTypeSchema])),
     name: v.pipe(v.string(), v.maxCodePoints(32)),
   }),
   v.metadata({ ref: 'ComponentEmojiForRequest' }),
@@ -79,8 +79,8 @@ export const ButtonComponentForMessageRequestSchema = v.pipe(
     label: v.optional(v.nullable(v.pipe(v.string(), v.maxCodePoints(80)))),
     disabled: v.optional(v.nullable(v.boolean())),
     url: v.optional(v.nullable(v.pipe(v.string(), v.url(), v.maxCodePoints(512)))),
-    sku_id: v.optional(v.union([v.nullable(v.null()), SnowflakeTypeSchema])),
-    emoji: v.optional(v.union([v.nullable(v.null()), ComponentEmojiForRequestSchema])),
+    sku_id: v.optional(v.union([v.null(), SnowflakeTypeSchema])),
+    emoji: v.optional(v.union([v.null(), ComponentEmojiForRequestSchema])),
   }),
   v.metadata({ ref: 'ButtonComponentForMessageRequest' }),
 )
@@ -284,7 +284,7 @@ export const StringSelectOptionForRequestSchema = v.pipe(
     value: v.pipe(v.string(), v.minCodePoints(1), v.maxCodePoints(100)),
     description: v.optional(v.nullable(v.pipe(v.string(), v.maxCodePoints(100)))),
     default: v.optional(v.nullable(v.boolean())),
-    emoji: v.optional(v.union([v.nullable(v.null()), ComponentEmojiForRequestSchema])),
+    emoji: v.optional(v.union([v.null(), ComponentEmojiForRequestSchema])),
   }),
   v.metadata({ ref: 'StringSelectOptionForRequest' }),
 )
@@ -896,7 +896,7 @@ export const UserAvatarDecorationResponseSchema = v.pipe(
   v.object({
     asset: v.pipe(v.string(), v.description('the avatar decoration hash')),
     sku_id: v.pipe(
-      v.union([v.nullable(v.null()), SnowflakeTypeSchema]),
+      v.union([v.null(), SnowflakeTypeSchema]),
       v.description("id of the avatar decoration's SKU"),
     ),
   }),
@@ -928,7 +928,7 @@ export type NameplatePalette = v.InferOutput<typeof NameplatePaletteSchema>
 export const UserNameplateResponseSchema = v.pipe(
   v.object({
     sku_id: v.pipe(
-      v.union([v.nullable(v.null()), SnowflakeTypeSchema]),
+      v.union([v.null(), SnowflakeTypeSchema]),
       v.description('ID of the nameplate SKU'),
     ),
     asset: v.pipe(v.string(), v.description('Path to the nameplate asset')),
@@ -943,7 +943,7 @@ export type UserNameplateResponse = v.InferOutput<typeof UserNameplateResponseSc
 export const UserCollectiblesResponseSchema = v.pipe(
   v.object({
     nameplate: v.pipe(
-      v.union([v.nullable(v.null()), UserNameplateResponseSchema]),
+      v.union([v.null(), UserNameplateResponseSchema]),
       v.description('Object mapping of nameplate data'),
     ),
   }),
@@ -955,7 +955,7 @@ export type UserCollectiblesResponse = v.InferOutput<typeof UserCollectiblesResp
 export const UserPrimaryGuildResponseSchema = v.pipe(
   v.object({
     identity_guild_id: v.pipe(
-      v.union([v.nullable(v.null()), SnowflakeTypeSchema]),
+      v.union([v.null(), SnowflakeTypeSchema]),
       v.description("the id of the user's primary guild"),
     ),
     identity_enabled: v.pipe(
@@ -1015,18 +1015,18 @@ export const UserResponseSchema = v.pipe(
     ),
     avatar_decoration_data: v.optional(
       v.pipe(
-        v.union([v.nullable(v.null()), UserAvatarDecorationResponseSchema]),
+        v.union([v.null(), UserAvatarDecorationResponseSchema]),
         v.description("data for the user's avatar decoration"),
       ),
     ),
     collectibles: v.optional(
       v.pipe(
-        v.union([v.nullable(v.null()), UserCollectiblesResponseSchema]),
+        v.union([v.null(), UserCollectiblesResponseSchema]),
         v.description("data for the user's collectibles"),
       ),
     ),
     primary_guild: v.pipe(
-      v.union([v.nullable(v.null()), UserPrimaryGuildResponseSchema]),
+      v.union([v.null(), UserPrimaryGuildResponseSchema]),
       v.description("the user's primary guild"),
     ),
   }),
@@ -1250,7 +1250,7 @@ export const ApplicationResponseSchema = v.pipe(
     name: v.string(),
     icon: v.nullable(v.string()),
     description: v.string(),
-    type: v.union([v.nullable(v.null()), ApplicationTypesSchema]),
+    type: v.union([v.null(), ApplicationTypesSchema]),
     cover_image: v.optional(v.string()),
     primary_sku_id: v.optional(SnowflakeTypeSchema),
     flags: v.pipe(v.number(), v.integer(), v.minValue(-2147483648), v.maxValue(2147483647)),
@@ -1496,7 +1496,7 @@ export const InteractionApplicationCommandAutocompleteCallbackIntegerDataSchema 
     v.object({
       choices: v.nullable(
         v.pipe(
-          v.array(v.union([v.nullable(v.null()), ApplicationCommandOptionIntegerChoiceSchema])),
+          v.array(v.union([v.null(), ApplicationCommandOptionIntegerChoiceSchema])),
           v.maxLength(25),
         ),
       ),
@@ -1531,7 +1531,7 @@ export const InteractionApplicationCommandAutocompleteCallbackNumberDataSchema =
     v.object({
       choices: v.nullable(
         v.pipe(
-          v.array(v.union([v.nullable(v.null()), ApplicationCommandOptionNumberChoiceSchema])),
+          v.array(v.union([v.null(), ApplicationCommandOptionNumberChoiceSchema])),
           v.maxLength(25),
         ),
       ),
@@ -1566,7 +1566,7 @@ export const InteractionApplicationCommandAutocompleteCallbackStringDataSchema =
     v.object({
       choices: v.nullable(
         v.pipe(
-          v.array(v.union([v.nullable(v.null()), ApplicationCommandOptionStringChoiceSchema])),
+          v.array(v.union([v.null(), ApplicationCommandOptionStringChoiceSchema])),
           v.maxLength(25),
         ),
       ),
@@ -1707,8 +1707,8 @@ export const ApplicationCommandIntegerOptionSchema = v.pipe(
     choices: v.optional(
       v.nullable(v.pipe(v.array(ApplicationCommandOptionIntegerChoiceSchema), v.maxLength(25))),
     ),
-    min_value: v.optional(v.union([v.nullable(v.null()), Int53TypeSchema])),
-    max_value: v.optional(v.union([v.nullable(v.null()), Int53TypeSchema])),
+    min_value: v.optional(v.union([v.null(), Int53TypeSchema])),
+    max_value: v.optional(v.union([v.null(), Int53TypeSchema])),
   }),
   v.metadata({ ref: 'ApplicationCommandIntegerOption' }),
 )
@@ -2035,13 +2035,13 @@ export const ApplicationCommandCreateRequestSchema = v.pipe(
     ),
     handler: v.optional(
       v.pipe(
-        v.union([v.nullable(v.null()), ApplicationCommandHandlerSchema]),
+        v.union([v.null(), ApplicationCommandHandlerSchema]),
         v.description(
           "Determines whether the interaction is handled by the app's interactions handler or by Discord",
         ),
       ),
     ),
-    type: v.optional(v.union([v.nullable(v.null()), ApplicationCommandTypeSchema])),
+    type: v.optional(v.union([v.null(), ApplicationCommandTypeSchema])),
   }),
   v.metadata({ ref: 'ApplicationCommandCreateRequest' }),
 )
@@ -2252,7 +2252,7 @@ export const ApplicationCommandPatchRequestPartialSchema = v.pipe(
         ),
       ),
       handler: v.pipe(
-        v.union([v.nullable(v.null()), ApplicationCommandHandlerSchema]),
+        v.union([v.null(), ApplicationCommandHandlerSchema]),
         v.description(
           "Determines whether the interaction is handled by the app's interactions handler or by Discord",
         ),
@@ -2523,14 +2523,14 @@ export const ApplicationCommandUpdateRequestSchema = v.pipe(
     ),
     handler: v.optional(
       v.pipe(
-        v.union([v.nullable(v.null()), ApplicationCommandHandlerSchema]),
+        v.union([v.null(), ApplicationCommandHandlerSchema]),
         v.description(
           "Determines whether the interaction is handled by the app's interactions handler or by Discord",
         ),
       ),
     ),
-    type: v.optional(v.union([v.nullable(v.null()), ApplicationCommandTypeSchema])),
-    id: v.optional(v.union([v.nullable(v.null()), SnowflakeTypeSchema])),
+    type: v.optional(v.union([v.null(), ApplicationCommandTypeSchema])),
+    id: v.optional(v.union([v.null(), SnowflakeTypeSchema])),
   }),
   v.metadata({ ref: 'ApplicationCommandUpdateRequest' }),
 )
@@ -2591,9 +2591,7 @@ export type ApplicationOAuth2InstallParams = v.InferOutput<
 
 export const ApplicationIntegrationTypeConfigurationSchema = v.pipe(
   v.partial(
-    v.object({
-      oauth2_install_params: v.union([v.nullable(v.null()), ApplicationOAuth2InstallParamsSchema]),
-    }),
+    v.object({ oauth2_install_params: v.union([v.null(), ApplicationOAuth2InstallParamsSchema]) }),
   ),
   v.metadata({ ref: 'ApplicationIntegrationTypeConfiguration' }),
 )
@@ -2615,13 +2613,10 @@ export const ApplicationFormPartialSchema = v.pipe(
       ),
       icon: v.nullable(v.string()),
       cover_image: v.nullable(v.string()),
-      team_id: v.union([v.nullable(v.null()), SnowflakeTypeSchema]),
+      team_id: v.union([v.null(), SnowflakeTypeSchema]),
       flags: v.nullable(v.pipe(v.number(), v.integer())),
       interactions_endpoint_url: v.nullable(v.pipe(v.string(), v.url(), v.maxCodePoints(2048))),
-      explicit_content_filter: v.union([
-        v.nullable(v.null()),
-        ApplicationExplicitContentFilterTypesSchema,
-      ]),
+      explicit_content_filter: v.union([v.null(), ApplicationExplicitContentFilterTypesSchema]),
       max_participants: v.nullable(
         v.pipe(
           v.number(),
@@ -2631,7 +2626,7 @@ export const ApplicationFormPartialSchema = v.pipe(
           v.minValue(-1),
         ),
       ),
-      type: v.union([v.nullable(v.null()), ApplicationTypesSchema]),
+      type: v.union([v.null(), ApplicationTypesSchema]),
       tags: v.nullable(
         v.pipe(
           v.array(v.pipe(v.string(), v.maxCodePoints(20))),
@@ -2640,17 +2635,14 @@ export const ApplicationFormPartialSchema = v.pipe(
         ),
       ),
       custom_install_url: v.nullable(v.pipe(v.string(), v.url(), v.maxCodePoints(2048))),
-      install_params: v.union([v.nullable(v.null()), ApplicationOAuth2InstallParamsSchema]),
+      install_params: v.union([v.null(), ApplicationOAuth2InstallParamsSchema]),
       role_connections_verification_url: v.nullable(
         v.pipe(v.string(), v.url(), v.maxCodePoints(2048)),
       ),
       integration_types_config: v.nullable(
-        v.record(
-          v.string(),
-          v.union([v.nullable(v.null()), ApplicationIntegrationTypeConfigurationSchema]),
-        ),
+        v.record(v.string(), v.union([v.null(), ApplicationIntegrationTypeConfigurationSchema])),
       ),
-      event_webhooks_status: v.union([v.nullable(v.null()), ApplicationEventWebhooksStatusSchema]),
+      event_webhooks_status: v.union([v.null(), ApplicationEventWebhooksStatusSchema]),
       event_webhooks_url: v.pipe(
         v.nullable(v.pipe(v.string(), v.url(), v.maxCodePoints(2048))),
         v.description('Event webhooks URL for the app to receive webhook events'),
@@ -2707,10 +2699,10 @@ export type WebhookTypes = v.InferOutput<typeof WebhookTypesSchema>
 
 export const ApplicationIncomingWebhookResponseSchema = v.pipe(
   v.object({
-    application_id: v.union([v.nullable(v.null()), SnowflakeTypeSchema]),
+    application_id: v.union([v.null(), SnowflakeTypeSchema]),
     avatar: v.nullable(v.string()),
-    channel_id: v.union([v.nullable(v.null()), SnowflakeTypeSchema]),
-    guild_id: v.optional(v.union([v.nullable(v.null()), SnowflakeTypeSchema])),
+    channel_id: v.union([v.null(), SnowflakeTypeSchema]),
+    guild_id: v.optional(v.union([v.null(), SnowflakeTypeSchema])),
     id: SnowflakeTypeSchema,
     name: v.string(),
     type: WebhookTypesSchema,
@@ -2941,8 +2933,8 @@ export const AuditLogEntryResponseSchema = v.pipe(
   v.object({
     id: SnowflakeTypeSchema,
     action_type: AuditLogActionTypesSchema,
-    user_id: v.union([v.nullable(v.null()), SnowflakeTypeSchema]),
-    target_id: v.union([v.nullable(v.null()), SnowflakeTypeSchema]),
+    user_id: v.union([v.null(), SnowflakeTypeSchema]),
+    target_id: v.union([v.null(), SnowflakeTypeSchema]),
     changes: v.optional(v.array(AuditLogObjectChangeResponseSchema)),
     options: v.optional(v.record(v.string(), v.string())),
     reason: v.optional(v.string()),
@@ -3241,14 +3233,14 @@ export const RichEmbedSchema = v.pipe(
         ),
       ),
       description: v.nullable(v.pipe(v.string(), v.maxCodePoints(4096))),
-      author: v.union([v.nullable(v.null()), RichEmbedAuthorSchema]),
-      image: v.union([v.nullable(v.null()), RichEmbedImageSchema]),
-      thumbnail: v.union([v.nullable(v.null()), RichEmbedThumbnailSchema]),
-      footer: v.union([v.nullable(v.null()), RichEmbedFooterSchema]),
+      author: v.union([v.null(), RichEmbedAuthorSchema]),
+      image: v.union([v.null(), RichEmbedImageSchema]),
+      thumbnail: v.union([v.null(), RichEmbedThumbnailSchema]),
+      footer: v.union([v.null(), RichEmbedFooterSchema]),
       fields: v.nullable(v.pipe(v.array(RichEmbedFieldSchema), v.maxLength(25))),
-      provider: v.union([v.nullable(v.null()), RichEmbedProviderSchema]),
-      video: v.union([v.nullable(v.null()), RichEmbedVideoSchema]),
-      audio: v.union([v.nullable(v.null()), RichEmbedAudioSchema]),
+      provider: v.union([v.null(), RichEmbedProviderSchema]),
+      video: v.union([v.null(), RichEmbedVideoSchema]),
+      audio: v.union([v.null(), RichEmbedAudioSchema]),
     }),
   ),
   v.metadata({ ref: 'RichEmbed' }),
@@ -3261,21 +3253,21 @@ export const MessageAllowedMentionsRequestSchema = v.pipe(
     v.object({
       parse: v.nullable(
         v.pipe(
-          v.array(v.union([v.nullable(v.null()), AllowedMentionTypesSchema])),
+          v.array(v.union([v.null(), AllowedMentionTypesSchema])),
           v.maxLength(1521),
           v.check((input) => new Set(input).size === input.length),
         ),
       ),
       users: v.nullable(
         v.pipe(
-          v.array(v.union([v.nullable(v.null()), SnowflakeTypeSchema])),
+          v.array(v.union([v.null(), SnowflakeTypeSchema])),
           v.maxLength(100),
           v.check((input) => new Set(input).size === input.length),
         ),
       ),
       roles: v.nullable(
         v.pipe(
-          v.array(v.union([v.nullable(v.null()), SnowflakeTypeSchema])),
+          v.array(v.union([v.null(), SnowflakeTypeSchema])),
           v.maxLength(100),
           v.check((input) => new Set(input).size === input.length),
         ),
@@ -3479,9 +3471,7 @@ export const SeparatorComponentForMessageRequestSchema = v.pipe(
         ),
       ),
     ),
-    spacing: v.optional(
-      v.union([v.nullable(v.null()), MessageComponentSeparatorSpacingSizeSchema]),
-    ),
+    spacing: v.optional(v.union([v.null(), MessageComponentSeparatorSpacingSizeSchema])),
     divider: v.optional(v.nullable(v.boolean())),
   }),
   v.metadata({ ref: 'SeparatorComponentForMessageRequest' }),
@@ -3552,7 +3542,7 @@ export const PollEmojiSchema = v.pipe(
   v.partial(
     v.object({
       id: v.pipe(
-        v.union([v.nullable(v.null()), SnowflakeTypeSchema]),
+        v.union([v.null(), SnowflakeTypeSchema]),
         v.description('The ID of the custom emoji'),
       ),
       name: v.pipe(
@@ -3574,10 +3564,7 @@ export const PollMediaSchema = v.pipe(
         v.nullable(v.pipe(v.string(), v.minCodePoints(1), v.maxCodePoints(300))),
         v.description('The text of the field'),
       ),
-      emoji: v.pipe(
-        v.union([v.nullable(v.null()), PollEmojiSchema]),
-        v.description('The emoji of the field'),
-      ),
+      emoji: v.pipe(v.union([v.null(), PollEmojiSchema]), v.description('The emoji of the field')),
     }),
   ),
   v.metadata({ ref: 'PollMedia' }),
@@ -3589,7 +3576,7 @@ export const PollEmojiCreateRequestSchema = v.pipe(
   v.partial(
     v.object({
       id: v.pipe(
-        v.union([v.nullable(v.null()), SnowflakeTypeSchema]),
+        v.union([v.null(), SnowflakeTypeSchema]),
         v.description('The ID of the custom emoji'),
       ),
       name: v.pipe(
@@ -3612,7 +3599,7 @@ export const PollMediaCreateRequestSchema = v.pipe(
         v.description('The text of the field'),
       ),
       emoji: v.pipe(
-        v.union([v.nullable(v.null()), PollEmojiCreateRequestSchema]),
+        v.union([v.null(), PollEmojiCreateRequestSchema]),
         v.description('The emoji of the field'),
       ),
     }),
@@ -3653,7 +3640,7 @@ export const PollCreateRequestSchema = v.pipe(
     ),
     layout_type: v.optional(
       v.pipe(
-        v.union([v.nullable(v.null()), PollLayoutTypesSchema]),
+        v.union([v.null(), PollLayoutTypesSchema]),
         v.description('The layout type of the poll. Defaults to... DEFAULT!'),
       ),
     ),
@@ -3712,9 +3699,7 @@ export const CustomClientThemeShareRequestSchema = v.pipe(
       v.minValue(0),
       v.maxValue(100),
     ),
-    base_theme: v.optional(
-      v.union([v.nullable(v.null()), MessageShareCustomUserThemeBaseThemeSchema]),
-    ),
+    base_theme: v.optional(v.union([v.null(), MessageShareCustomUserThemeBaseThemeSchema])),
   }),
   v.metadata({ ref: 'CustomClientThemeShareRequest' }),
 )
@@ -3728,7 +3713,7 @@ export const BaseCreateMessageCreateRequestSchema = v.pipe(
     v.object({
       content: v.nullable(v.pipe(v.string(), v.maxCodePoints(4000))),
       embeds: v.nullable(v.pipe(v.array(RichEmbedSchema), v.maxLength(10))),
-      allowed_mentions: v.union([v.nullable(v.null()), MessageAllowedMentionsRequestSchema]),
+      allowed_mentions: v.union([v.null(), MessageAllowedMentionsRequestSchema]),
       sticker_ids: v.nullable(v.pipe(v.array(SnowflakeTypeSchema), v.maxLength(3))),
       components: v.nullable(
         v.pipe(
@@ -3748,8 +3733,8 @@ export const BaseCreateMessageCreateRequestSchema = v.pipe(
       ),
       flags: v.nullable(v.pipe(v.number(), v.integer())),
       attachments: v.nullable(v.pipe(v.array(MessageAttachmentRequestSchema), v.maxLength(10))),
-      poll: v.union([v.nullable(v.null()), PollCreateRequestSchema]),
-      shared_client_theme: v.union([v.nullable(v.null()), CustomClientThemeShareRequestSchema]),
+      poll: v.union([v.null(), PollCreateRequestSchema]),
+      shared_client_theme: v.union([v.null(), CustomClientThemeShareRequestSchema]),
     }),
   ),
   v.metadata({ ref: 'BaseCreateMessageCreateRequest' }),
@@ -3765,7 +3750,7 @@ export const BasicApplicationResponseWithBotSchema = v.pipe(
     name: v.string(),
     icon: v.nullable(v.string()),
     description: v.string(),
-    type: v.union([v.nullable(v.null()), ApplicationTypesSchema]),
+    type: v.union([v.null(), ApplicationTypesSchema]),
     cover_image: v.optional(v.string()),
     primary_sku_id: v.optional(SnowflakeTypeSchema),
     flags: v.pipe(v.number(), v.integer(), v.minValue(-2147483648), v.maxValue(2147483647)),
@@ -3784,7 +3769,7 @@ export const BasicGuildMemberResponseSchema = v.pipe(
     avatar: v.pipe(v.nullable(v.string()), v.description("the member's guild avatar hash")),
     avatar_decoration_data: v.optional(
       v.pipe(
-        v.union([v.nullable(v.null()), UserAvatarDecorationResponseSchema]),
+        v.union([v.null(), UserAvatarDecorationResponseSchema]),
         v.description("data for the member's guild avatar decoration"),
       ),
     ),
@@ -3842,7 +3827,7 @@ export const BasicGuildMemberResponseSchema = v.pipe(
     ),
     collectibles: v.optional(
       v.pipe(
-        v.union([v.nullable(v.null()), UserCollectiblesResponseSchema]),
+        v.union([v.null(), UserCollectiblesResponseSchema]),
         v.description("data for the member's collectibles"),
       ),
     ),
@@ -4253,7 +4238,7 @@ export const GuildStickerResponseSchema = v.pipe(
     name: v.string(),
     tags: v.string(),
     type: StickerTypesSchema,
-    format_type: v.union([v.nullable(v.null()), StickerFormatTypesSchema]),
+    format_type: v.union([v.null(), StickerFormatTypesSchema]),
     description: v.nullable(v.string()),
     available: v.boolean(),
     guild_id: SnowflakeTypeSchema,
@@ -4270,7 +4255,7 @@ export const StandardStickerResponseSchema = v.pipe(
     name: v.string(),
     tags: v.string(),
     type: StickerTypesSchema,
-    format_type: v.union([v.nullable(v.null()), StickerFormatTypesSchema]),
+    format_type: v.union([v.null(), StickerFormatTypesSchema]),
     description: v.nullable(v.string()),
     pack_id: SnowflakeTypeSchema,
     sort_value: v.pipe(v.number(), v.integer(), v.minValue(-2147483648), v.maxValue(2147483647)),
@@ -4403,7 +4388,7 @@ export const GuildMemberResponseSchema = v.pipe(
     avatar: v.pipe(v.nullable(v.string()), v.description("the member's guild avatar hash")),
     avatar_decoration_data: v.optional(
       v.pipe(
-        v.union([v.nullable(v.null()), UserAvatarDecorationResponseSchema]),
+        v.union([v.null(), UserAvatarDecorationResponseSchema]),
         v.description("data for the member's guild avatar decoration"),
       ),
     ),
@@ -4461,7 +4446,7 @@ export const GuildMemberResponseSchema = v.pipe(
     ),
     collectibles: v.optional(
       v.pipe(
-        v.union([v.nullable(v.null()), UserCollectiblesResponseSchema]),
+        v.union([v.null(), UserCollectiblesResponseSchema]),
         v.description("data for the member's collectibles"),
       ),
     ),
@@ -4496,7 +4481,7 @@ export const ThreadResponseSchema = v.pipe(
   v.object({
     id: SnowflakeTypeSchema,
     type: ChannelTypesSchema,
-    last_message_id: v.optional(v.union([v.nullable(v.null()), SnowflakeTypeSchema])),
+    last_message_id: v.optional(v.union([v.null(), SnowflakeTypeSchema])),
     flags: v.pipe(v.number(), v.integer(), v.minValue(-2147483648), v.maxValue(2147483647)),
     last_pin_timestamp: v.optional(
       v.nullable(
@@ -4510,7 +4495,7 @@ export const ThreadResponseSchema = v.pipe(
     ),
     guild_id: SnowflakeTypeSchema,
     name: v.string(),
-    parent_id: v.optional(v.union([v.nullable(v.null()), SnowflakeTypeSchema])),
+    parent_id: v.optional(v.union([v.null(), SnowflakeTypeSchema])),
     rate_limit_per_user: v.optional(
       v.pipe(v.number(), v.integer(), v.minValue(-2147483648), v.maxValue(2147483647)),
     ),
@@ -4624,7 +4609,7 @@ export const ForumTagResponseSchema = v.pipe(
     id: SnowflakeTypeSchema,
     name: v.string(),
     moderated: v.boolean(),
-    emoji_id: v.union([v.nullable(v.null()), SnowflakeTypeSchema]),
+    emoji_id: v.union([v.null(), SnowflakeTypeSchema]),
     emoji_name: v.nullable(v.string()),
   }),
   v.metadata({ ref: 'ForumTagResponse' }),
@@ -4634,7 +4619,7 @@ export type ForumTagResponse = v.InferOutput<typeof ForumTagResponseSchema>
 
 export const DefaultReactionEmojiResponseSchema = v.pipe(
   v.object({
-    emoji_id: v.union([v.nullable(v.null()), SnowflakeTypeSchema]),
+    emoji_id: v.union([v.null(), SnowflakeTypeSchema]),
     emoji_name: v.nullable(v.string()),
   }),
   v.metadata({ ref: 'DefaultReactionEmojiResponse' }),
@@ -4686,7 +4671,7 @@ export const GuildChannelResponseSchema = v.pipe(
   v.object({
     id: SnowflakeTypeSchema,
     type: ChannelTypesSchema,
-    last_message_id: v.optional(v.union([v.nullable(v.null()), SnowflakeTypeSchema])),
+    last_message_id: v.optional(v.union([v.null(), SnowflakeTypeSchema])),
     flags: v.pipe(v.number(), v.integer(), v.minValue(-2147483648), v.maxValue(2147483647)),
     last_pin_timestamp: v.optional(
       v.nullable(
@@ -4700,7 +4685,7 @@ export const GuildChannelResponseSchema = v.pipe(
     ),
     guild_id: SnowflakeTypeSchema,
     name: v.string(),
-    parent_id: v.optional(v.union([v.nullable(v.null()), SnowflakeTypeSchema])),
+    parent_id: v.optional(v.union([v.null(), SnowflakeTypeSchema])),
     rate_limit_per_user: v.optional(
       v.pipe(v.number(), v.integer(), v.minValue(-2147483648), v.maxValue(2147483647)),
     ),
@@ -4722,12 +4707,10 @@ export const GuildChannelResponseSchema = v.pipe(
     permission_overwrites: v.optional(v.array(ChannelPermissionOverwriteResponseSchema)),
     nsfw: v.optional(v.boolean()),
     available_tags: v.optional(v.array(ForumTagResponseSchema)),
-    default_reaction_emoji: v.optional(
-      v.union([v.nullable(v.null()), DefaultReactionEmojiResponseSchema]),
-    ),
-    default_sort_order: v.optional(v.union([v.nullable(v.null()), ThreadSortOrderSchema])),
+    default_reaction_emoji: v.optional(v.union([v.null(), DefaultReactionEmojiResponseSchema])),
+    default_sort_order: v.optional(v.union([v.null(), ThreadSortOrderSchema])),
     default_forum_layout: v.optional(ForumLayoutSchema),
-    default_tag_setting: v.optional(v.union([v.nullable(v.null()), ThreadSearchTagSettingSchema])),
+    default_tag_setting: v.optional(v.union([v.null(), ThreadSearchTagSettingSchema])),
   }),
   v.metadata({ ref: 'GuildChannelResponse' }),
 )
@@ -4738,7 +4721,7 @@ export const PrivateChannelResponseSchema = v.pipe(
   v.object({
     id: SnowflakeTypeSchema,
     type: ChannelTypesSchema,
-    last_message_id: v.optional(v.union([v.nullable(v.null()), SnowflakeTypeSchema])),
+    last_message_id: v.optional(v.union([v.null(), SnowflakeTypeSchema])),
     flags: v.pipe(v.number(), v.integer(), v.minValue(-2147483648), v.maxValue(2147483647)),
     last_pin_timestamp: v.optional(
       v.nullable(
@@ -4761,7 +4744,7 @@ export const PrivateGroupChannelResponseSchema = v.pipe(
   v.object({
     id: SnowflakeTypeSchema,
     type: ChannelTypesSchema,
-    last_message_id: v.optional(v.union([v.nullable(v.null()), SnowflakeTypeSchema])),
+    last_message_id: v.optional(v.union([v.null(), SnowflakeTypeSchema])),
     flags: v.pipe(v.number(), v.integer(), v.minValue(-2147483648), v.maxValue(2147483647)),
     last_pin_timestamp: v.optional(
       v.nullable(
@@ -4803,12 +4786,12 @@ export type GuildRoleColorsResponse = v.InferOutput<typeof GuildRoleColorsRespon
 export const GuildRoleTagsResponseSchema = v.pipe(
   v.partial(
     v.object({
-      premium_subscriber: v.nullable(v.null()),
+      premium_subscriber: v.null(),
       bot_id: SnowflakeTypeSchema,
       integration_id: SnowflakeTypeSchema,
       subscription_listing_id: SnowflakeTypeSchema,
-      available_for_purchase: v.nullable(v.null()),
-      guild_connections: v.nullable(v.null()),
+      available_for_purchase: v.null(),
+      guild_connections: v.null(),
     }),
   ),
   v.metadata({ ref: 'GuildRoleTagsResponse' }),
@@ -4863,7 +4846,7 @@ export type ResolvedObjectsResponse = v.InferOutput<typeof ResolvedObjectsRespon
 
 export const MessageReactionEmojiResponseSchema = v.pipe(
   v.object({
-    id: v.union([v.nullable(v.null()), SnowflakeTypeSchema]),
+    id: v.union([v.null(), SnowflakeTypeSchema]),
     name: v.nullable(v.string()),
     animated: v.optional(v.boolean()),
   }),
@@ -5139,8 +5122,8 @@ export const BasicMessageResponseSchema = v.pipe(
           v.transform((input) => BigInt(input)),
           v.minValue(-9223372036854775808n),
           v.maxValue(9223372036854775807n),
-          v.minValue(-9223372036854776000n),
-          v.maxValue(9223372036854776000n),
+          v.minValue(-9223372036854775808n),
+          v.maxValue(9223372036854775808n),
         ),
         v.pipe(v.string(), v.maxCodePoints(25)),
       ]),
@@ -5183,7 +5166,7 @@ export type BlockMessageActionMetadata = v.InferOutput<typeof BlockMessageAction
 export const BlockMessageActionSchema = v.pipe(
   v.object({
     type: AutomodActionTypeSchema,
-    metadata: v.optional(v.union([v.nullable(v.null()), BlockMessageActionMetadataSchema])),
+    metadata: v.optional(v.union([v.null(), BlockMessageActionMetadataSchema])),
   }),
   v.metadata({ ref: 'BlockMessageAction' }),
 )
@@ -5271,7 +5254,7 @@ export const BulkLobbyMemberRequestSchema = v.pipe(
     metadata: v.optional(
       v.nullable(v.record(v.string(), v.pipe(v.string(), v.maxCodePoints(1024)))),
     ),
-    flags: v.optional(v.union([v.nullable(v.null()), v.literal(1)])),
+    flags: v.optional(v.union([v.null(), v.literal(1)])),
     additional_name: v.optional(
       v.nullable(v.pipe(v.string(), v.minCodePoints(1), v.maxCodePoints(80))),
     ),
@@ -5359,10 +5342,10 @@ export type WebhookSourceChannelResponse = v.InferOutput<typeof WebhookSourceCha
 
 export const ChannelFollowerWebhookResponseSchema = v.pipe(
   v.object({
-    application_id: v.union([v.nullable(v.null()), SnowflakeTypeSchema]),
+    application_id: v.union([v.null(), SnowflakeTypeSchema]),
     avatar: v.nullable(v.string()),
-    channel_id: v.union([v.nullable(v.null()), SnowflakeTypeSchema]),
-    guild_id: v.optional(v.union([v.nullable(v.null()), SnowflakeTypeSchema])),
+    channel_id: v.union([v.null(), SnowflakeTypeSchema]),
+    guild_id: v.optional(v.union([v.null(), SnowflakeTypeSchema])),
     id: SnowflakeTypeSchema,
     name: v.string(),
     type: WebhookTypesSchema,
@@ -5380,7 +5363,7 @@ export type ChannelFollowerWebhookResponse = v.InferOutput<
 export const ChannelPermissionOverwriteRequestSchema = v.pipe(
   v.object({
     id: SnowflakeTypeSchema,
-    type: v.optional(v.union([v.nullable(v.null()), ChannelPermissionOverwritesSchema])),
+    type: v.optional(v.union([v.null(), ChannelPermissionOverwritesSchema])),
     allow: v.optional(v.nullable(v.pipe(v.number(), v.integer()))),
     deny: v.optional(v.nullable(v.pipe(v.number(), v.integer()))),
   }),
@@ -5649,9 +5632,7 @@ export type CreateEntitlementRequestData = v.InferOutput<typeof CreateEntitlemen
 export const CreateForumThreadRequestSchema = v.pipe(
   v.object({
     name: v.pipe(v.string(), v.minCodePoints(1), v.maxCodePoints(100)),
-    auto_archive_duration: v.optional(
-      v.union([v.nullable(v.null()), ThreadAutoArchiveDurationSchema]),
-    ),
+    auto_archive_duration: v.optional(v.union([v.null(), ThreadAutoArchiveDurationSchema])),
     rate_limit_per_user: v.optional(
       v.nullable(
         v.pipe(
@@ -5686,7 +5667,7 @@ export type CreateGroupDMInviteRequest = v.InferOutput<typeof CreateGroupDMInvit
 export const UpdateDefaultReactionEmojiRequestSchema = v.pipe(
   v.partial(
     v.object({
-      emoji_id: v.union([v.nullable(v.null()), SnowflakeTypeSchema]),
+      emoji_id: v.union([v.null(), SnowflakeTypeSchema]),
       emoji_name: v.nullable(v.pipe(v.string(), v.maxCodePoints(100))),
     }),
   ),
@@ -5700,7 +5681,7 @@ export type UpdateDefaultReactionEmojiRequest = v.InferOutput<
 export const CreateOrUpdateThreadTagRequestSchema = v.pipe(
   v.object({
     name: v.pipe(v.string(), v.minCodePoints(0), v.maxCodePoints(50)),
-    emoji_id: v.optional(v.union([v.nullable(v.null()), SnowflakeTypeSchema])),
+    emoji_id: v.optional(v.union([v.null(), SnowflakeTypeSchema])),
     emoji_name: v.optional(v.nullable(v.pipe(v.string(), v.maxCodePoints(100)))),
     moderated: v.optional(v.nullable(v.boolean())),
   }),
@@ -5713,7 +5694,7 @@ export type CreateOrUpdateThreadTagRequest = v.InferOutput<
 
 export const CreateGuildChannelRequestSchema = v.pipe(
   v.object({
-    type: v.optional(v.union([v.nullable(v.null()), ChannelTypesSchema])),
+    type: v.optional(v.union([v.null(), ChannelTypesSchema])),
     name: v.pipe(v.string(), v.minCodePoints(1), v.maxCodePoints(100)),
     position: v.optional(
       v.nullable(
@@ -5753,30 +5734,25 @@ export const CreateGuildChannelRequestSchema = v.pipe(
     rate_limit_per_user: v.optional(
       v.nullable(v.pipe(v.number(), v.integer(), v.minValue(0), v.maxValue(21600))),
     ),
-    parent_id: v.optional(v.union([v.nullable(v.null()), SnowflakeTypeSchema])),
+    parent_id: v.optional(v.union([v.null(), SnowflakeTypeSchema])),
     permission_overwrites: v.optional(
       v.nullable(v.pipe(v.array(ChannelPermissionOverwriteRequestSchema), v.maxLength(100))),
     ),
     rtc_region: v.optional(v.nullable(v.string())),
-    video_quality_mode: v.optional(v.union([v.nullable(v.null()), VideoQualityModesSchema])),
-    default_auto_archive_duration: v.optional(
-      v.union([v.nullable(v.null()), ThreadAutoArchiveDurationSchema]),
-    ),
+    video_quality_mode: v.optional(v.union([v.null(), VideoQualityModesSchema])),
+    default_auto_archive_duration: v.optional(v.union([v.null(), ThreadAutoArchiveDurationSchema])),
     default_reaction_emoji: v.optional(
-      v.union([v.nullable(v.null()), UpdateDefaultReactionEmojiRequestSchema]),
+      v.union([v.null(), UpdateDefaultReactionEmojiRequestSchema]),
     ),
     default_thread_rate_limit_per_user: v.optional(
       v.nullable(v.pipe(v.number(), v.integer(), v.minValue(0), v.maxValue(21600))),
     ),
-    default_sort_order: v.optional(v.union([v.nullable(v.null()), ThreadSortOrderSchema])),
-    default_forum_layout: v.optional(v.union([v.nullable(v.null()), ForumLayoutSchema])),
-    default_tag_setting: v.optional(v.union([v.nullable(v.null()), ThreadSearchTagSettingSchema])),
+    default_sort_order: v.optional(v.union([v.null(), ThreadSortOrderSchema])),
+    default_forum_layout: v.optional(v.union([v.null(), ForumLayoutSchema])),
+    default_tag_setting: v.optional(v.union([v.null(), ThreadSearchTagSettingSchema])),
     available_tags: v.optional(
       v.nullable(
-        v.pipe(
-          v.array(v.union([v.nullable(v.null()), CreateOrUpdateThreadTagRequestSchema])),
-          v.maxLength(20),
-        ),
+        v.pipe(v.array(v.union([v.null(), CreateOrUpdateThreadTagRequestSchema])), v.maxLength(20)),
       ),
     ),
   }),
@@ -5799,9 +5775,9 @@ export const CreateGuildInviteRequestSchema = v.pipe(
       temporary: v.nullable(v.boolean()),
       max_uses: v.nullable(v.pipe(v.number(), v.integer(), v.minValue(0), v.maxValue(100))),
       unique: v.nullable(v.boolean()),
-      target_user_id: v.union([v.nullable(v.null()), SnowflakeTypeSchema]),
-      target_application_id: v.union([v.nullable(v.null()), SnowflakeTypeSchema]),
-      target_type: v.union([v.nullable(v.null()), InviteTargetTypesSchema]),
+      target_user_id: v.union([v.null(), SnowflakeTypeSchema]),
+      target_application_id: v.union([v.null(), SnowflakeTypeSchema]),
+      target_type: v.union([v.null(), InviteTargetTypesSchema]),
       role_ids: v.union([
         v.string(),
         v.pipe(
@@ -5809,7 +5785,7 @@ export const CreateGuildInviteRequestSchema = v.pipe(
           v.maxLength(250),
           v.check((input) => new Set(input).size === input.length),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
       target_user_ids: v.pipe(
         v.union([
@@ -5819,7 +5795,7 @@ export const CreateGuildInviteRequestSchema = v.pipe(
             v.maxLength(1000),
             v.check((input) => new Set(input).size === input.length),
           ),
-          v.nullable(v.null()),
+          v.null(),
         ]),
         v.description('The IDs of the users to target with this invite.'),
       ),
@@ -5835,7 +5811,7 @@ export const IncomingWebhookInteractionRequestSchema = v.pipe(
     v.object({
       content: v.nullable(v.pipe(v.string(), v.maxCodePoints(2000))),
       embeds: v.nullable(v.pipe(v.array(RichEmbedSchema), v.maxLength(10))),
-      allowed_mentions: v.union([v.nullable(v.null()), MessageAllowedMentionsRequestSchema]),
+      allowed_mentions: v.union([v.null(), MessageAllowedMentionsRequestSchema]),
       components: v.nullable(
         v.pipe(
           v.array(
@@ -5853,7 +5829,7 @@ export const IncomingWebhookInteractionRequestSchema = v.pipe(
         ),
       ),
       attachments: v.nullable(v.pipe(v.array(MessageAttachmentRequestSchema), v.maxLength(10))),
-      poll: v.union([v.nullable(v.null()), PollCreateRequestSchema]),
+      poll: v.union([v.null(), PollCreateRequestSchema]),
       tts: v.nullable(v.boolean()),
       flags: v.nullable(v.pipe(v.number(), v.integer())),
     }),
@@ -5868,7 +5844,7 @@ export type IncomingWebhookInteractionRequest = v.InferOutput<
 export const CreateMessageInteractionCallbackRequestSchema = v.pipe(
   v.object({
     type: InteractionCallbackTypesSchema,
-    data: v.optional(v.union([v.nullable(v.null()), IncomingWebhookInteractionRequestSchema])),
+    data: v.optional(v.union([v.null(), IncomingWebhookInteractionRequestSchema])),
   }),
   v.metadata({ ref: 'CreateMessageInteractionCallbackRequest' }),
 )
@@ -5966,8 +5942,8 @@ export const MessageResponseSchema = v.pipe(
           v.transform((input) => BigInt(input)),
           v.minValue(-9223372036854775808n),
           v.maxValue(9223372036854775807n),
-          v.minValue(-9223372036854776000n),
-          v.maxValue(9223372036854776000n),
+          v.minValue(-9223372036854775808n),
+          v.maxValue(9223372036854775808n),
         ),
         v.pipe(v.string(), v.maxCodePoints(25)),
       ]),
@@ -5995,7 +5971,7 @@ export const MessageResponseSchema = v.pipe(
     lobby_member: v.optional(MessageLobbyMemberResponseSchema),
     actor: v.optional(UserResponseSchema),
     reactions: v.optional(v.array(MessageReactionResponseSchema)),
-    referenced_message: v.optional(v.union([v.nullable(v.null()), BasicMessageResponseSchema])),
+    referenced_message: v.optional(v.union([v.null(), BasicMessageResponseSchema])),
   }),
   v.metadata({ ref: 'MessageResponse' }),
 )
@@ -6014,7 +5990,7 @@ export type CreateMessageInteractionCallbackResponse = v.InferOutput<
 export const CreatePrivateChannelRequestSchema = v.pipe(
   v.partial(
     v.object({
-      recipient_id: v.union([v.nullable(v.null()), SnowflakeTypeSchema]),
+      recipient_id: v.union([v.null(), SnowflakeTypeSchema]),
       access_tokens: v.nullable(
         v.pipe(
           v.array(v.pipe(v.string(), v.maxCodePoints(152133))),
@@ -6057,7 +6033,7 @@ export const CreateRoleRequestSchema = v.pipe(
       name: v.nullable(v.pipe(v.string(), v.minCodePoints(1), v.maxCodePoints(100))),
       permissions: v.nullable(v.pipe(v.number(), v.integer())),
       color: v.nullable(v.pipe(v.number(), v.integer(), v.minValue(0), v.maxValue(16777215))),
-      colors: v.union([v.nullable(v.null()), RoleColorsSchema]),
+      colors: v.union([v.null(), RoleColorsSchema]),
       hoist: v.nullable(v.boolean()),
       mentionable: v.nullable(v.boolean()),
       icon: v.nullable(v.string()),
@@ -6072,9 +6048,7 @@ export type CreateRoleRequest = v.InferOutput<typeof CreateRoleRequestSchema>
 export const CreateTextThreadWithMessageRequestSchema = v.pipe(
   v.object({
     name: v.pipe(v.string(), v.minCodePoints(1), v.maxCodePoints(100)),
-    auto_archive_duration: v.optional(
-      v.union([v.nullable(v.null()), ThreadAutoArchiveDurationSchema]),
-    ),
+    auto_archive_duration: v.optional(v.union([v.null(), ThreadAutoArchiveDurationSchema])),
     rate_limit_per_user: v.optional(
       v.nullable(
         v.pipe(
@@ -6098,9 +6072,7 @@ export type CreateTextThreadWithMessageRequest = v.InferOutput<
 export const CreateTextThreadWithoutMessageRequestSchema = v.pipe(
   v.object({
     name: v.pipe(v.string(), v.minCodePoints(1), v.maxCodePoints(100)),
-    auto_archive_duration: v.optional(
-      v.union([v.nullable(v.null()), ThreadAutoArchiveDurationSchema]),
-    ),
+    auto_archive_duration: v.optional(v.union([v.null(), ThreadAutoArchiveDurationSchema])),
     rate_limit_per_user: v.optional(
       v.nullable(
         v.pipe(
@@ -6113,7 +6085,7 @@ export const CreateTextThreadWithoutMessageRequestSchema = v.pipe(
         ),
       ),
     ),
-    type: v.optional(v.union([v.nullable(v.null()), ChannelTypesSchema])),
+    type: v.optional(v.union([v.null(), ChannelTypesSchema])),
     invitable: v.optional(v.nullable(v.boolean())),
   }),
   v.metadata({ ref: 'CreateTextThreadWithoutMessageRequest' }),
@@ -6127,7 +6099,7 @@ export const CreatedThreadResponseSchema = v.pipe(
   v.object({
     id: SnowflakeTypeSchema,
     type: ChannelTypesSchema,
-    last_message_id: v.optional(v.union([v.nullable(v.null()), SnowflakeTypeSchema])),
+    last_message_id: v.optional(v.union([v.null(), SnowflakeTypeSchema])),
     flags: v.pipe(v.number(), v.integer(), v.minValue(-2147483648), v.maxValue(2147483647)),
     last_pin_timestamp: v.optional(
       v.nullable(
@@ -6141,7 +6113,7 @@ export const CreatedThreadResponseSchema = v.pipe(
     ),
     guild_id: SnowflakeTypeSchema,
     name: v.string(),
-    parent_id: v.optional(v.union([v.nullable(v.null()), SnowflakeTypeSchema])),
+    parent_id: v.optional(v.union([v.null(), SnowflakeTypeSchema])),
     rate_limit_per_user: v.optional(
       v.pipe(v.number(), v.integer(), v.minValue(-2147483648), v.maxValue(2147483647)),
     ),
@@ -6235,7 +6207,7 @@ export type QuarantineUserActionMetadata = v.InferOutput<typeof QuarantineUserAc
 export const QuarantineUserActionSchema = v.pipe(
   v.object({
     type: AutomodActionTypeSchema,
-    metadata: v.optional(v.union([v.nullable(v.null()), QuarantineUserActionMetadataSchema])),
+    metadata: v.optional(v.union([v.null(), QuarantineUserActionMetadataSchema])),
   }),
   v.metadata({ ref: 'QuarantineUserAction' }),
 )
@@ -6461,7 +6433,7 @@ export const IntegrationApplicationResponseSchema = v.pipe(
     name: v.string(),
     icon: v.nullable(v.string()),
     description: v.string(),
-    type: v.union([v.nullable(v.null()), ApplicationTypesSchema]),
+    type: v.union([v.null(), ApplicationTypesSchema]),
     cover_image: v.optional(v.string()),
     primary_sku_id: v.optional(SnowflakeTypeSchema),
     flags: v.pipe(v.number(), v.integer(), v.minValue(-2147483648), v.maxValue(2147483647)),
@@ -6588,7 +6560,7 @@ export const EntitlementResponseSchema = v.pipe(
     sku_id: SnowflakeTypeSchema,
     application_id: SnowflakeTypeSchema,
     user_id: SnowflakeTypeSchema,
-    guild_id: v.optional(v.union([v.nullable(v.null()), SnowflakeTypeSchema])),
+    guild_id: v.optional(v.union([v.null(), SnowflakeTypeSchema])),
     deleted: v.boolean(),
     starts_at: v.nullable(
       v.pipe(
@@ -6618,11 +6590,11 @@ export const EntitlementResponseSchema = v.pipe(
       ),
     ),
     fulfillment_status: v.optional(
-      v.union([v.nullable(v.null()), EntitlementTenantFulfillmentStatusResponseSchema]),
+      v.union([v.null(), EntitlementTenantFulfillmentStatusResponseSchema]),
     ),
     consumed: v.optional(v.boolean()),
-    gifter_user_id: v.optional(v.union([v.nullable(v.null()), SnowflakeTypeSchema])),
-    parent_id: v.optional(v.union([v.nullable(v.null()), SnowflakeTypeSchema])),
+    gifter_user_id: v.optional(v.union([v.null(), SnowflakeTypeSchema])),
+    parent_id: v.optional(v.union([v.null(), SnowflakeTypeSchema])),
   }),
   v.metadata({ ref: 'EntitlementResponse' }),
 )
@@ -6724,7 +6696,7 @@ export const ExternalConnectionIntegrationResponseSchema = v.pipe(
         ),
       ),
     ),
-    role_id: v.optional(v.union([v.nullable(v.null()), SnowflakeTypeSchema])),
+    role_id: v.optional(v.union([v.null(), SnowflakeTypeSchema])),
     syncing: v.optional(v.boolean()),
     enable_emoticons: v.optional(v.boolean()),
   }),
@@ -6924,10 +6896,10 @@ export const ExternalScheduledEventCreateRequestSchema = v.pipe(
     ),
     privacy_level: GuildScheduledEventPrivacyLevelsSchema,
     entity_type: GuildScheduledEventEntityTypesSchema,
-    channel_id: v.optional(v.union([v.nullable(v.null()), SnowflakeTypeSchema])),
+    channel_id: v.optional(v.union([v.null(), SnowflakeTypeSchema])),
     recurrence_rule: v.optional(
       v.pipe(
-        v.union([v.nullable(v.null()), RecurrenceRuleSchema]),
+        v.union([v.null(), RecurrenceRuleSchema]),
         v.description('Recurrence rule for the scheduled event'),
       ),
     ),
@@ -6950,7 +6922,7 @@ export type GuildScheduledEventStatuses = v.InferOutput<typeof GuildScheduledEve
 export const ExternalScheduledEventPatchRequestPartialSchema = v.pipe(
   v.partial(
     v.object({
-      status: v.union([v.nullable(v.null()), GuildScheduledEventStatusesSchema]),
+      status: v.union([v.null(), GuildScheduledEventStatusesSchema]),
       name: v.pipe(v.string(), v.maxCodePoints(100)),
       description: v.nullable(v.pipe(v.string(), v.maxCodePoints(1000))),
       image: v.nullable(v.string()),
@@ -6968,11 +6940,11 @@ export const ExternalScheduledEventPatchRequestPartialSchema = v.pipe(
           ),
         ),
       ),
-      entity_type: v.union([v.nullable(v.null()), GuildScheduledEventEntityTypesSchema]),
+      entity_type: v.union([v.null(), GuildScheduledEventEntityTypesSchema]),
       privacy_level: GuildScheduledEventPrivacyLevelsSchema,
-      channel_id: v.union([v.nullable(v.null()), SnowflakeTypeSchema]),
+      channel_id: v.union([v.null(), SnowflakeTypeSchema]),
       recurrence_rule: v.pipe(
-        v.union([v.nullable(v.null()), RecurrenceRuleSchema]),
+        v.union([v.null(), RecurrenceRuleSchema]),
         v.description('Recurrence rule for the scheduled event'),
       ),
       entity_metadata: EntityMetadataExternalSchema,
@@ -7092,7 +7064,7 @@ export const ScheduledEventUserResponseSchema = v.pipe(
     ),
     guild_scheduled_event_exception_id: v.optional(
       v.pipe(
-        v.union([v.nullable(v.null()), SnowflakeTypeSchema]),
+        v.union([v.null(), SnowflakeTypeSchema]),
         v.description('ID of the scheduled event exception'),
       ),
     ),
@@ -7162,13 +7134,13 @@ export const ExternalScheduledEventResponseSchema = v.pipe(
       v.description('Description of the scheduled event'),
     ),
     channel_id: v.pipe(
-      v.union([v.nullable(v.null()), SnowflakeTypeSchema]),
+      v.union([v.null(), SnowflakeTypeSchema]),
       v.description(
         'Channel ID in which the scheduled event will be hosted, or null if entity type is EXTERNAL',
       ),
     ),
     creator_id: v.pipe(
-      v.union([v.nullable(v.null()), SnowflakeTypeSchema]),
+      v.union([v.null(), SnowflakeTypeSchema]),
       v.description('ID of the user that created the scheduled event'),
     ),
     creator: v.optional(
@@ -7204,11 +7176,11 @@ export const ExternalScheduledEventResponseSchema = v.pipe(
       v.description('Type of hosting entity associated with the scheduled event'),
     ),
     entity_id: v.pipe(
-      v.union([v.nullable(v.null()), SnowflakeTypeSchema]),
+      v.union([v.null(), SnowflakeTypeSchema]),
       v.description('ID of the hosting entity associated with the scheduled event'),
     ),
     recurrence_rule: v.pipe(
-      v.union([v.nullable(v.null()), RecurrenceRuleResponseSchema]),
+      v.union([v.null(), RecurrenceRuleResponseSchema]),
       v.description('Recurrence rule for the scheduled event, or null if not recurring'),
     ),
     user_count: v.optional(
@@ -7221,7 +7193,7 @@ export const ExternalScheduledEventResponseSchema = v.pipe(
       GuildScheduledEventPrivacyLevelsSchema,
       v.description('Privacy level of the scheduled event'),
     ),
-    user_rsvp: v.optional(v.union([v.nullable(v.null()), ScheduledEventUserResponseSchema])),
+    user_rsvp: v.optional(v.union([v.null(), ScheduledEventUserResponseSchema])),
     guild_scheduled_event_exceptions: v.array(GuildScheduledEventExceptionResponseSchema),
     entity_metadata: EntityMetadataExternalResponseSchema,
   }),
@@ -7328,7 +7300,7 @@ export const FriendInviteResponseSchema = v.pipe(
     friends_count: v.optional(
       v.pipe(v.number(), v.integer(), v.minValue(-2147483648), v.maxValue(2147483647)),
     ),
-    channel: v.union([v.nullable(v.null()), InviteChannelResponseSchema]),
+    channel: v.union([v.null(), InviteChannelResponseSchema]),
     is_contact: v.optional(v.boolean()),
     uses: v.optional(
       v.pipe(v.number(), v.integer(), v.minValue(-2147483648), v.maxValue(2147483647)),
@@ -7440,7 +7412,7 @@ export const GithubCheckRunSchema = v.pipe(
     html_url: v.pipe(v.string(), v.url(), v.maxCodePoints(2048)),
     check_suite: GithubCheckSuiteSchema,
     details_url: v.optional(v.nullable(v.pipe(v.string(), v.url(), v.maxCodePoints(2048)))),
-    output: v.optional(v.union([v.nullable(v.null()), GithubCheckRunOutputSchema])),
+    output: v.optional(v.union([v.null(), GithubCheckRunOutputSchema])),
     pull_requests: v.optional(
       v.nullable(v.pipe(v.array(GithubCheckPullRequestSchema), v.maxLength(1521))),
     ),
@@ -7557,23 +7529,23 @@ export const GithubWebhookSchema = v.pipe(
     action: v.optional(v.nullable(v.pipe(v.string(), v.maxCodePoints(152133)))),
     ref: v.optional(v.nullable(v.pipe(v.string(), v.maxCodePoints(152133)))),
     ref_type: v.optional(v.nullable(v.pipe(v.string(), v.maxCodePoints(152133)))),
-    comment: v.optional(v.union([v.nullable(v.null()), GithubCommentSchema])),
-    issue: v.optional(v.union([v.nullable(v.null()), GithubIssueSchema])),
-    pull_request: v.optional(v.union([v.nullable(v.null()), GithubIssueSchema])),
-    repository: v.optional(v.union([v.nullable(v.null()), GithubRepositorySchema])),
-    forkee: v.optional(v.union([v.nullable(v.null()), GithubRepositorySchema])),
+    comment: v.optional(v.union([v.null(), GithubCommentSchema])),
+    issue: v.optional(v.union([v.null(), GithubIssueSchema])),
+    pull_request: v.optional(v.union([v.null(), GithubIssueSchema])),
+    repository: v.optional(v.union([v.null(), GithubRepositorySchema])),
+    forkee: v.optional(v.union([v.null(), GithubRepositorySchema])),
     sender: GithubUserSchema,
-    member: v.optional(v.union([v.nullable(v.null()), GithubUserSchema])),
-    release: v.optional(v.union([v.nullable(v.null()), GithubReleaseSchema])),
-    head_commit: v.optional(v.union([v.nullable(v.null()), GithubCommitSchema])),
+    member: v.optional(v.union([v.null(), GithubUserSchema])),
+    release: v.optional(v.union([v.null(), GithubReleaseSchema])),
+    head_commit: v.optional(v.union([v.null(), GithubCommitSchema])),
     commits: v.optional(v.nullable(v.pipe(v.array(GithubCommitSchema), v.maxLength(1521)))),
     forced: v.optional(v.nullable(v.boolean())),
     compare: v.optional(v.nullable(v.pipe(v.string(), v.url(), v.maxCodePoints(2048)))),
-    review: v.optional(v.union([v.nullable(v.null()), GithubReviewSchema])),
-    check_run: v.optional(v.union([v.nullable(v.null()), GithubCheckRunSchema])),
-    check_suite: v.optional(v.union([v.nullable(v.null()), GithubCheckSuiteSchema])),
-    discussion: v.optional(v.union([v.nullable(v.null()), GithubDiscussionSchema])),
-    answer: v.optional(v.union([v.nullable(v.null()), GithubCommentSchema])),
+    review: v.optional(v.union([v.null(), GithubReviewSchema])),
+    check_run: v.optional(v.union([v.null(), GithubCheckRunSchema])),
+    check_suite: v.optional(v.union([v.null(), GithubCheckSuiteSchema])),
+    discussion: v.optional(v.union([v.null(), GithubDiscussionSchema])),
+    answer: v.optional(v.union([v.null(), GithubCommentSchema])),
   }),
   v.metadata({ ref: 'GithubWebhook' }),
 )
@@ -7659,10 +7631,10 @@ export type PartialGuildSubscriptionIntegrationResponse = v.InferOutput<
 
 export const GuildIncomingWebhookResponseSchema = v.pipe(
   v.object({
-    application_id: v.union([v.nullable(v.null()), SnowflakeTypeSchema]),
+    application_id: v.union([v.null(), SnowflakeTypeSchema]),
     avatar: v.nullable(v.string()),
-    channel_id: v.union([v.nullable(v.null()), SnowflakeTypeSchema]),
-    guild_id: v.optional(v.union([v.nullable(v.null()), SnowflakeTypeSchema])),
+    channel_id: v.union([v.null(), SnowflakeTypeSchema]),
+    guild_id: v.optional(v.union([v.null(), SnowflakeTypeSchema])),
     id: SnowflakeTypeSchema,
     name: v.string(),
     type: WebhookTypesSchema,
@@ -7688,13 +7660,13 @@ export const StageScheduledEventResponseSchema = v.pipe(
       v.description('Description of the scheduled event'),
     ),
     channel_id: v.pipe(
-      v.union([v.nullable(v.null()), SnowflakeTypeSchema]),
+      v.union([v.null(), SnowflakeTypeSchema]),
       v.description(
         'Channel ID in which the scheduled event will be hosted, or null if entity type is EXTERNAL',
       ),
     ),
     creator_id: v.pipe(
-      v.union([v.nullable(v.null()), SnowflakeTypeSchema]),
+      v.union([v.null(), SnowflakeTypeSchema]),
       v.description('ID of the user that created the scheduled event'),
     ),
     creator: v.optional(
@@ -7730,11 +7702,11 @@ export const StageScheduledEventResponseSchema = v.pipe(
       v.description('Type of hosting entity associated with the scheduled event'),
     ),
     entity_id: v.pipe(
-      v.union([v.nullable(v.null()), SnowflakeTypeSchema]),
+      v.union([v.null(), SnowflakeTypeSchema]),
       v.description('ID of the hosting entity associated with the scheduled event'),
     ),
     recurrence_rule: v.pipe(
-      v.union([v.nullable(v.null()), RecurrenceRuleResponseSchema]),
+      v.union([v.null(), RecurrenceRuleResponseSchema]),
       v.description('Recurrence rule for the scheduled event, or null if not recurring'),
     ),
     user_count: v.optional(
@@ -7747,9 +7719,9 @@ export const StageScheduledEventResponseSchema = v.pipe(
       GuildScheduledEventPrivacyLevelsSchema,
       v.description('Privacy level of the scheduled event'),
     ),
-    user_rsvp: v.optional(v.union([v.nullable(v.null()), ScheduledEventUserResponseSchema])),
+    user_rsvp: v.optional(v.union([v.null(), ScheduledEventUserResponseSchema])),
     guild_scheduled_event_exceptions: v.array(GuildScheduledEventExceptionResponseSchema),
-    entity_metadata: v.union([v.nullable(v.null()), EntityMetadataStageInstanceResponseSchema]),
+    entity_metadata: v.union([v.null(), EntityMetadataStageInstanceResponseSchema]),
   }),
   v.metadata({ ref: 'StageScheduledEventResponse' }),
 )
@@ -7769,13 +7741,13 @@ export const VoiceScheduledEventResponseSchema = v.pipe(
       v.description('Description of the scheduled event'),
     ),
     channel_id: v.pipe(
-      v.union([v.nullable(v.null()), SnowflakeTypeSchema]),
+      v.union([v.null(), SnowflakeTypeSchema]),
       v.description(
         'Channel ID in which the scheduled event will be hosted, or null if entity type is EXTERNAL',
       ),
     ),
     creator_id: v.pipe(
-      v.union([v.nullable(v.null()), SnowflakeTypeSchema]),
+      v.union([v.null(), SnowflakeTypeSchema]),
       v.description('ID of the user that created the scheduled event'),
     ),
     creator: v.optional(
@@ -7811,11 +7783,11 @@ export const VoiceScheduledEventResponseSchema = v.pipe(
       v.description('Type of hosting entity associated with the scheduled event'),
     ),
     entity_id: v.pipe(
-      v.union([v.nullable(v.null()), SnowflakeTypeSchema]),
+      v.union([v.null(), SnowflakeTypeSchema]),
       v.description('ID of the hosting entity associated with the scheduled event'),
     ),
     recurrence_rule: v.pipe(
-      v.union([v.nullable(v.null()), RecurrenceRuleResponseSchema]),
+      v.union([v.null(), RecurrenceRuleResponseSchema]),
       v.description('Recurrence rule for the scheduled event, or null if not recurring'),
     ),
     user_count: v.optional(
@@ -7828,9 +7800,9 @@ export const VoiceScheduledEventResponseSchema = v.pipe(
       GuildScheduledEventPrivacyLevelsSchema,
       v.description('Privacy level of the scheduled event'),
     ),
-    user_rsvp: v.optional(v.union([v.nullable(v.null()), ScheduledEventUserResponseSchema])),
+    user_rsvp: v.optional(v.union([v.null(), ScheduledEventUserResponseSchema])),
     guild_scheduled_event_exceptions: v.array(GuildScheduledEventExceptionResponseSchema),
-    entity_metadata: v.union([v.nullable(v.null()), EntityMetadataVoiceResponseSchema]),
+    entity_metadata: v.union([v.null(), EntityMetadataVoiceResponseSchema]),
   }),
   v.metadata({ ref: 'VoiceScheduledEventResponse' }),
 )
@@ -8049,7 +8021,7 @@ export const GuildAuditLogResponseSchema = v.pipe(
         MLSpamRuleResponseSchema,
         MentionSpamRuleResponseSchema,
         UserProfileRuleResponseSchema,
-        v.nullable(v.null()),
+        v.null(),
       ]),
     ),
   }),
@@ -8200,7 +8172,7 @@ export type NewMemberActionType = v.InferOutput<typeof NewMemberActionTypeSchema
 
 export const SettingsEmojiResponseSchema = v.pipe(
   v.object({
-    id: v.union([v.nullable(v.null()), SnowflakeTypeSchema]),
+    id: v.union([v.null(), SnowflakeTypeSchema]),
     name: v.nullable(v.string()),
     animated: v.boolean(),
   }),
@@ -8346,9 +8318,9 @@ export const InviteGuildResponseSchema = v.pipe(
       v.array(GuildFeaturesSchema),
       v.check((input) => new Set(input).size === input.length),
     ),
-    verification_level: v.union([v.nullable(v.null()), VerificationLevelsSchema]),
+    verification_level: v.union([v.null(), VerificationLevelsSchema]),
     vanity_url_code: v.nullable(v.string()),
-    nsfw_level: v.union([v.nullable(v.null()), GuildNSFWContentLevelSchema]),
+    nsfw_level: v.union([v.null(), GuildNSFWContentLevelSchema]),
     nsfw: v.nullable(v.boolean()),
     premium_subscription_count: v.pipe(
       v.number(),
@@ -8368,7 +8340,7 @@ export const InviteApplicationResponseSchema = v.pipe(
     name: v.string(),
     icon: v.nullable(v.string()),
     description: v.string(),
-    type: v.union([v.nullable(v.null()), ApplicationTypesSchema]),
+    type: v.union([v.null(), ApplicationTypesSchema]),
     cover_image: v.optional(v.string()),
     primary_sku_id: v.optional(SnowflakeTypeSchema),
     flags: v.pipe(v.number(), v.integer(), v.minValue(-2147483648), v.maxValue(2147483647)),
@@ -8417,13 +8389,13 @@ export const ScheduledEventResponseSchema = v.pipe(
       v.description('Description of the scheduled event'),
     ),
     channel_id: v.pipe(
-      v.union([v.nullable(v.null()), SnowflakeTypeSchema]),
+      v.union([v.null(), SnowflakeTypeSchema]),
       v.description(
         'Channel ID in which the scheduled event will be hosted, or null if entity type is EXTERNAL',
       ),
     ),
     creator_id: v.pipe(
-      v.union([v.nullable(v.null()), SnowflakeTypeSchema]),
+      v.union([v.null(), SnowflakeTypeSchema]),
       v.description('ID of the user that created the scheduled event'),
     ),
     creator: v.optional(
@@ -8459,11 +8431,11 @@ export const ScheduledEventResponseSchema = v.pipe(
       v.description('Type of hosting entity associated with the scheduled event'),
     ),
     entity_id: v.pipe(
-      v.union([v.nullable(v.null()), SnowflakeTypeSchema]),
+      v.union([v.null(), SnowflakeTypeSchema]),
       v.description('ID of the hosting entity associated with the scheduled event'),
     ),
     recurrence_rule: v.pipe(
-      v.union([v.nullable(v.null()), RecurrenceRuleResponseSchema]),
+      v.union([v.null(), RecurrenceRuleResponseSchema]),
       v.description('Recurrence rule for the scheduled event, or null if not recurring'),
     ),
     user_count: v.optional(
@@ -8476,7 +8448,7 @@ export const ScheduledEventResponseSchema = v.pipe(
       GuildScheduledEventPrivacyLevelsSchema,
       v.description('Privacy level of the scheduled event'),
     ),
-    user_rsvp: v.optional(v.union([v.nullable(v.null()), ScheduledEventUserResponseSchema])),
+    user_rsvp: v.optional(v.union([v.null(), ScheduledEventUserResponseSchema])),
     guild_scheduled_event_exceptions: v.array(GuildScheduledEventExceptionResponseSchema),
   }),
   v.metadata({ ref: 'ScheduledEventResponse' }),
@@ -8710,14 +8682,14 @@ export const GuildJoinRequestResponseSchema = v.pipe(
         ),
       ),
     ),
-    application_status: v.union([v.nullable(v.null()), GuildJoinRequestApplicationStatusSchema]),
+    application_status: v.union([v.null(), GuildJoinRequestApplicationStatusSchema]),
     rejection_reason: v.pipe(
       v.nullable(v.string()),
       v.description('Reason request was rejected. Only set when application_status is REJECTED'),
     ),
     guild_id: SnowflakeTypeSchema,
     user_id: SnowflakeTypeSchema,
-    user: v.optional(v.union([v.nullable(v.null()), UserResponseSchema])),
+    user: v.optional(v.union([v.null(), UserResponseSchema])),
     form_responses: v.optional(
       v.pipe(
         v.nullable(
@@ -8733,7 +8705,7 @@ export const GuildJoinRequestResponseSchema = v.pipe(
         v.description("Applicant's responses on join request form"),
       ),
     ),
-    actioned_by_user: v.optional(v.union([v.nullable(v.null()), UserResponseSchema])),
+    actioned_by_user: v.optional(v.union([v.null(), UserResponseSchema])),
   }),
   v.metadata({ ref: 'GuildJoinRequestResponse' }),
 )
@@ -8865,19 +8837,13 @@ export const GuildPatchRequestPartialSchema = v.pipe(
       description: v.nullable(v.pipe(v.string(), v.minCodePoints(0), v.maxCodePoints(300))),
       region: v.nullable(v.string()),
       icon: v.nullable(v.string()),
-      verification_level: v.union([v.nullable(v.null()), VerificationLevelsSchema]),
-      default_message_notifications: v.union([
-        v.nullable(v.null()),
-        UserNotificationSettingsSchema,
-      ]),
-      explicit_content_filter: v.union([
-        v.nullable(v.null()),
-        GuildExplicitContentFilterTypesSchema,
-      ]),
-      preferred_locale: v.union([v.nullable(v.null()), AvailableLocalesEnumSchema]),
-      afk_timeout: v.union([v.nullable(v.null()), AfkTimeoutsSchema]),
-      afk_channel_id: v.union([v.nullable(v.null()), SnowflakeTypeSchema]),
-      system_channel_id: v.union([v.nullable(v.null()), SnowflakeTypeSchema]),
+      verification_level: v.union([v.null(), VerificationLevelsSchema]),
+      default_message_notifications: v.union([v.null(), UserNotificationSettingsSchema]),
+      explicit_content_filter: v.union([v.null(), GuildExplicitContentFilterTypesSchema]),
+      preferred_locale: v.union([v.null(), AvailableLocalesEnumSchema]),
+      afk_timeout: v.union([v.null(), AfkTimeoutsSchema]),
+      afk_channel_id: v.union([v.null(), SnowflakeTypeSchema]),
+      system_channel_id: v.union([v.null(), SnowflakeTypeSchema]),
       splash: v.nullable(v.string()),
       banner: v.nullable(v.string()),
       system_channel_flags: v.nullable(v.pipe(v.number(), v.integer())),
@@ -8890,9 +8856,9 @@ export const GuildPatchRequestPartialSchema = v.pipe(
       ),
       discovery_splash: v.nullable(v.string()),
       home_header: v.nullable(v.string()),
-      rules_channel_id: v.union([v.nullable(v.null()), SnowflakeTypeSchema]),
-      safety_alerts_channel_id: v.union([v.nullable(v.null()), SnowflakeTypeSchema]),
-      public_updates_channel_id: v.union([v.nullable(v.null()), SnowflakeTypeSchema]),
+      rules_channel_id: v.union([v.null(), SnowflakeTypeSchema]),
+      safety_alerts_channel_id: v.union([v.null(), SnowflakeTypeSchema]),
+      public_updates_channel_id: v.union([v.null(), SnowflakeTypeSchema]),
       premium_progress_bar_enabled: v.nullable(v.boolean()),
     }),
   ),
@@ -8972,11 +8938,11 @@ export const GuildResponseSchema = v.pipe(
     ),
     banner: v.nullable(v.string()),
     owner_id: SnowflakeTypeSchema,
-    application_id: v.union([v.nullable(v.null()), SnowflakeTypeSchema]),
+    application_id: v.union([v.null(), SnowflakeTypeSchema]),
     region: v.string(),
-    afk_channel_id: v.union([v.nullable(v.null()), SnowflakeTypeSchema]),
+    afk_channel_id: v.union([v.null(), SnowflakeTypeSchema]),
     afk_timeout: AfkTimeoutsSchema,
-    system_channel_id: v.union([v.nullable(v.null()), SnowflakeTypeSchema]),
+    system_channel_id: v.union([v.null(), SnowflakeTypeSchema]),
     system_channel_flags: v.pipe(
       v.number(),
       v.integer(),
@@ -8984,7 +8950,7 @@ export const GuildResponseSchema = v.pipe(
       v.maxValue(2147483647),
     ),
     widget_enabled: v.boolean(),
-    widget_channel_id: v.union([v.nullable(v.null()), SnowflakeTypeSchema]),
+    widget_channel_id: v.union([v.null(), SnowflakeTypeSchema]),
     verification_level: VerificationLevelsSchema,
     roles: v.array(GuildRoleResponseSchema),
     default_message_notifications: UserNotificationSettingsSchema,
@@ -9015,9 +8981,9 @@ export const GuildResponseSchema = v.pipe(
       v.maxValue(2147483647),
     ),
     preferred_locale: AvailableLocalesEnumSchema,
-    rules_channel_id: v.union([v.nullable(v.null()), SnowflakeTypeSchema]),
-    safety_alerts_channel_id: v.union([v.nullable(v.null()), SnowflakeTypeSchema]),
-    public_updates_channel_id: v.union([v.nullable(v.null()), SnowflakeTypeSchema]),
+    rules_channel_id: v.union([v.null(), SnowflakeTypeSchema]),
+    safety_alerts_channel_id: v.union([v.null(), SnowflakeTypeSchema]),
+    public_updates_channel_id: v.union([v.null(), SnowflakeTypeSchema]),
     premium_progress_bar_enabled: v.boolean(),
     premium_progress_bar_enabled_user_updated_at: v.optional(
       v.nullable(
@@ -9033,7 +8999,7 @@ export const GuildResponseSchema = v.pipe(
     nsfw_level: GuildNSFWContentLevelSchema,
     emojis: v.array(EmojiResponseSchema),
     stickers: v.array(GuildStickerResponseSchema),
-    incidents_data: v.union([v.nullable(v.null()), GuildIncidentsDataResponseSchema]),
+    incidents_data: v.union([v.null(), GuildIncidentsDataResponseSchema]),
   }),
   v.metadata({ ref: 'GuildResponse' }),
 )
@@ -9189,8 +9155,8 @@ export const SearchMessageResponseSchema = v.pipe(
           v.transform((input) => BigInt(input)),
           v.minValue(-9223372036854775808n),
           v.maxValue(9223372036854775807n),
-          v.minValue(-9223372036854776000n),
-          v.maxValue(9223372036854776000n),
+          v.minValue(-9223372036854775808n),
+          v.maxValue(9223372036854775808n),
         ),
         v.pipe(v.string(), v.maxCodePoints(25)),
       ]),
@@ -9218,7 +9184,7 @@ export const SearchMessageResponseSchema = v.pipe(
     lobby_member: v.optional(MessageLobbyMemberResponseSchema),
     actor: v.optional(UserResponseSchema),
     reactions: v.optional(v.array(MessageReactionResponseSchema)),
-    referenced_message: v.optional(v.union([v.nullable(v.null()), BasicMessageResponseSchema])),
+    referenced_message: v.optional(v.union([v.null(), BasicMessageResponseSchema])),
     hit: v.boolean(),
     restriction_count: v.optional(
       v.pipe(v.number(), v.integer(), v.minValue(-2147483648), v.maxValue(2147483647)),
@@ -9273,7 +9239,7 @@ export const GuildTemplateChannelTagsSchema = v.pipe(
       v.pipe(v.number(), v.integer(), v.minValue(-2147483648), v.maxValue(2147483647)),
     ),
     name: v.string(),
-    emoji_id: v.union([v.nullable(v.null()), SnowflakeTypeSchema]),
+    emoji_id: v.union([v.null(), SnowflakeTypeSchema]),
     emoji_name: v.nullable(v.string()),
     moderated: v.nullable(v.boolean()),
   }),
@@ -9302,18 +9268,18 @@ export const GuildTemplateChannelResponseSchema = v.pipe(
       v.minValue(-2147483648),
       v.maxValue(2147483647),
     ),
-    parent_id: v.union([v.nullable(v.null()), SnowflakeTypeSchema]),
-    default_auto_archive_duration: v.union([v.nullable(v.null()), ThreadAutoArchiveDurationSchema]),
+    parent_id: v.union([v.null(), SnowflakeTypeSchema]),
+    default_auto_archive_duration: v.union([v.null(), ThreadAutoArchiveDurationSchema]),
     permission_overwrites: v.array(ChannelPermissionOverwriteResponseSchema),
     available_tags: v.nullable(v.array(GuildTemplateChannelTagsSchema)),
     template: v.string(),
-    default_reaction_emoji: v.union([v.nullable(v.null()), DefaultReactionEmojiResponseSchema]),
+    default_reaction_emoji: v.union([v.null(), DefaultReactionEmojiResponseSchema]),
     default_thread_rate_limit_per_user: v.nullable(
       v.pipe(v.number(), v.integer(), v.minValue(-2147483648), v.maxValue(2147483647)),
     ),
-    default_sort_order: v.union([v.nullable(v.null()), ThreadSortOrderSchema]),
-    default_forum_layout: v.union([v.nullable(v.null()), ForumLayoutSchema]),
-    default_tag_setting: v.union([v.nullable(v.null()), ThreadSearchTagSettingSchema]),
+    default_sort_order: v.union([v.null(), ThreadSortOrderSchema]),
+    default_forum_layout: v.union([v.null(), ForumLayoutSchema]),
+    default_tag_setting: v.union([v.null(), ThreadSearchTagSettingSchema]),
     theme_color: v.nullable(
       v.pipe(v.number(), v.integer(), v.minValue(-2147483648), v.maxValue(2147483647)),
     ),
@@ -9346,7 +9312,7 @@ export const GuildTemplateRoleResponseSchema = v.pipe(
     name: v.string(),
     permissions: v.string(),
     color: v.pipe(v.number(), v.integer(), v.minValue(-2147483648), v.maxValue(2147483647)),
-    colors: v.union([v.nullable(v.null()), GuildTemplateRoleColorsResponseSchema]),
+    colors: v.union([v.null(), GuildTemplateRoleColorsResponseSchema]),
     hoist: v.boolean(),
     mentionable: v.boolean(),
     icon: v.nullable(v.string()),
@@ -9366,9 +9332,9 @@ export const GuildTemplateSnapshotResponseSchema = v.pipe(
     default_message_notifications: UserNotificationSettingsSchema,
     explicit_content_filter: GuildExplicitContentFilterTypesSchema,
     preferred_locale: AvailableLocalesEnumSchema,
-    afk_channel_id: v.union([v.nullable(v.null()), SnowflakeTypeSchema]),
+    afk_channel_id: v.union([v.null(), SnowflakeTypeSchema]),
     afk_timeout: AfkTimeoutsSchema,
-    system_channel_id: v.union([v.nullable(v.null()), SnowflakeTypeSchema]),
+    system_channel_id: v.union([v.null(), SnowflakeTypeSchema]),
     system_channel_flags: v.pipe(
       v.number(),
       v.integer(),
@@ -9392,7 +9358,7 @@ export const GuildTemplateResponseSchema = v.pipe(
     description: v.nullable(v.string()),
     usage_count: v.pipe(v.number(), v.integer(), v.minValue(-2147483648), v.maxValue(2147483647)),
     creator_id: SnowflakeTypeSchema,
-    creator: v.union([v.nullable(v.null()), UserResponseSchema]),
+    creator: v.union([v.null(), UserResponseSchema]),
     created_at: v.pipe(
       v.string(),
       v.regex(
@@ -9418,7 +9384,7 @@ export const GuildWelcomeChannelSchema = v.pipe(
   v.object({
     channel_id: SnowflakeTypeSchema,
     description: v.pipe(v.string(), v.minCodePoints(1), v.maxCodePoints(50)),
-    emoji_id: v.optional(v.union([v.nullable(v.null()), SnowflakeTypeSchema])),
+    emoji_id: v.optional(v.union([v.null(), SnowflakeTypeSchema])),
     emoji_name: v.optional(v.nullable(v.pipe(v.string(), v.maxCodePoints(152133)))),
   }),
   v.metadata({ ref: 'GuildWelcomeChannel' }),
@@ -9430,7 +9396,7 @@ export const GuildWelcomeScreenChannelResponseSchema = v.pipe(
   v.object({
     channel_id: SnowflakeTypeSchema,
     description: v.string(),
-    emoji_id: v.union([v.nullable(v.null()), SnowflakeTypeSchema]),
+    emoji_id: v.union([v.null(), SnowflakeTypeSchema]),
     emoji_name: v.nullable(v.string()),
   }),
   v.metadata({ ref: 'GuildWelcomeScreenChannelResponse' }),
@@ -9465,11 +9431,11 @@ export const GuildWithCountsResponseSchema = v.pipe(
     ),
     banner: v.nullable(v.string()),
     owner_id: SnowflakeTypeSchema,
-    application_id: v.union([v.nullable(v.null()), SnowflakeTypeSchema]),
+    application_id: v.union([v.null(), SnowflakeTypeSchema]),
     region: v.string(),
-    afk_channel_id: v.union([v.nullable(v.null()), SnowflakeTypeSchema]),
+    afk_channel_id: v.union([v.null(), SnowflakeTypeSchema]),
     afk_timeout: AfkTimeoutsSchema,
-    system_channel_id: v.union([v.nullable(v.null()), SnowflakeTypeSchema]),
+    system_channel_id: v.union([v.null(), SnowflakeTypeSchema]),
     system_channel_flags: v.pipe(
       v.number(),
       v.integer(),
@@ -9477,7 +9443,7 @@ export const GuildWithCountsResponseSchema = v.pipe(
       v.maxValue(2147483647),
     ),
     widget_enabled: v.boolean(),
-    widget_channel_id: v.union([v.nullable(v.null()), SnowflakeTypeSchema]),
+    widget_channel_id: v.union([v.null(), SnowflakeTypeSchema]),
     verification_level: VerificationLevelsSchema,
     roles: v.array(GuildRoleResponseSchema),
     default_message_notifications: UserNotificationSettingsSchema,
@@ -9508,9 +9474,9 @@ export const GuildWithCountsResponseSchema = v.pipe(
       v.maxValue(2147483647),
     ),
     preferred_locale: AvailableLocalesEnumSchema,
-    rules_channel_id: v.union([v.nullable(v.null()), SnowflakeTypeSchema]),
-    safety_alerts_channel_id: v.union([v.nullable(v.null()), SnowflakeTypeSchema]),
-    public_updates_channel_id: v.union([v.nullable(v.null()), SnowflakeTypeSchema]),
+    rules_channel_id: v.union([v.null(), SnowflakeTypeSchema]),
+    safety_alerts_channel_id: v.union([v.null(), SnowflakeTypeSchema]),
+    public_updates_channel_id: v.union([v.null(), SnowflakeTypeSchema]),
     premium_progress_bar_enabled: v.boolean(),
     premium_progress_bar_enabled_user_updated_at: v.optional(
       v.nullable(
@@ -9526,7 +9492,7 @@ export const GuildWithCountsResponseSchema = v.pipe(
     nsfw_level: GuildNSFWContentLevelSchema,
     emojis: v.array(EmojiResponseSchema),
     stickers: v.array(GuildStickerResponseSchema),
-    incidents_data: v.union([v.nullable(v.null()), GuildIncidentsDataResponseSchema]),
+    incidents_data: v.union([v.null(), GuildIncidentsDataResponseSchema]),
     approximate_member_count: v.optional(
       v.nullable(v.pipe(v.number(), v.integer(), v.minValue(-2147483648), v.maxValue(2147483647))),
     ),
@@ -9570,7 +9536,7 @@ export const IncomingWebhookRequestPartialSchema = v.pipe(
     v.object({
       content: v.nullable(v.pipe(v.string(), v.maxCodePoints(2000))),
       embeds: v.nullable(v.pipe(v.array(RichEmbedSchema), v.maxLength(10))),
-      allowed_mentions: v.union([v.nullable(v.null()), MessageAllowedMentionsRequestSchema]),
+      allowed_mentions: v.union([v.null(), MessageAllowedMentionsRequestSchema]),
       components: v.nullable(
         v.pipe(
           v.array(
@@ -9588,7 +9554,7 @@ export const IncomingWebhookRequestPartialSchema = v.pipe(
         ),
       ),
       attachments: v.nullable(v.pipe(v.array(MessageAttachmentRequestSchema), v.maxLength(10))),
-      poll: v.union([v.nullable(v.null()), PollCreateRequestSchema]),
+      poll: v.union([v.null(), PollCreateRequestSchema]),
       tts: v.nullable(v.boolean()),
       flags: v.nullable(v.pipe(v.number(), v.integer())),
       username: v.nullable(v.pipe(v.string(), v.minCodePoints(1), v.maxCodePoints(80))),
@@ -9609,7 +9575,7 @@ export const IncomingWebhookUpdateForInteractionCallbackRequestPartialSchema = v
     v.object({
       content: v.nullable(v.pipe(v.string(), v.maxCodePoints(2000))),
       embeds: v.nullable(v.pipe(v.array(RichEmbedSchema), v.maxLength(10))),
-      allowed_mentions: v.union([v.nullable(v.null()), MessageAllowedMentionsRequestSchema]),
+      allowed_mentions: v.union([v.null(), MessageAllowedMentionsRequestSchema]),
       components: v.nullable(
         v.pipe(
           v.array(
@@ -9642,7 +9608,7 @@ export const IncomingWebhookUpdateRequestPartialSchema = v.pipe(
     v.object({
       content: v.nullable(v.pipe(v.string(), v.maxCodePoints(2000))),
       embeds: v.nullable(v.pipe(v.array(RichEmbedSchema), v.maxLength(10))),
-      allowed_mentions: v.union([v.nullable(v.null()), MessageAllowedMentionsRequestSchema]),
+      allowed_mentions: v.union([v.null(), MessageAllowedMentionsRequestSchema]),
       components: v.nullable(
         v.pipe(
           v.array(
@@ -9660,7 +9626,7 @@ export const IncomingWebhookUpdateRequestPartialSchema = v.pipe(
         ),
       ),
       attachments: v.nullable(v.pipe(v.array(MessageAttachmentRequestSchema), v.maxLength(10))),
-      poll: v.union([v.nullable(v.null()), PollCreateRequestSchema]),
+      poll: v.union([v.null(), PollCreateRequestSchema]),
       flags: v.nullable(v.pipe(v.number(), v.integer())),
     }),
   ),
@@ -9792,7 +9758,7 @@ export const KeywordUpsertRequestSchema = v.pipe(
       ),
     ),
     trigger_type: AutomodTriggerTypeSchema,
-    trigger_metadata: v.optional(v.union([v.nullable(v.null()), KeywordTriggerMetadataSchema])),
+    trigger_metadata: v.optional(v.union([v.null(), KeywordTriggerMetadataSchema])),
   }),
   v.metadata({ ref: 'KeywordUpsertRequest' }),
 )
@@ -9834,7 +9800,7 @@ export const KeywordUpsertRequestPartialSchema = v.pipe(
         ),
       ),
       trigger_type: AutomodTriggerTypeSchema,
-      trigger_metadata: v.union([v.nullable(v.null()), KeywordTriggerMetadataSchema]),
+      trigger_metadata: v.union([v.null(), KeywordTriggerMetadataSchema]),
     }),
   ),
   v.metadata({ ref: 'KeywordUpsertRequestPartial' }),
@@ -10083,7 +10049,7 @@ export const SoundboardSoundResponseSchema = v.pipe(
     name: v.string(),
     sound_id: SnowflakeTypeSchema,
     volume: v.number(),
-    emoji_id: v.union([v.nullable(v.null()), SnowflakeTypeSchema]),
+    emoji_id: v.union([v.null(), SnowflakeTypeSchema]),
     emoji_name: v.nullable(v.string()),
     guild_id: v.optional(SnowflakeTypeSchema),
     available: v.boolean(),
@@ -10116,7 +10082,7 @@ export const LobbyMemberRequestSchema = v.pipe(
     metadata: v.optional(
       v.nullable(v.record(v.string(), v.pipe(v.string(), v.maxCodePoints(1024)))),
     ),
-    flags: v.optional(v.union([v.nullable(v.null()), v.literal(1)])),
+    flags: v.optional(v.union([v.null(), v.literal(1)])),
     additional_name: v.optional(
       v.nullable(v.pipe(v.string(), v.minCodePoints(1), v.maxCodePoints(80))),
     ),
@@ -10219,7 +10185,7 @@ export const MLSpamUpsertRequestSchema = v.pipe(
       ),
     ),
     trigger_type: AutomodTriggerTypeSchema,
-    trigger_metadata: v.optional(v.union([v.nullable(v.null()), MLSpamTriggerMetadataSchema])),
+    trigger_metadata: v.optional(v.union([v.null(), MLSpamTriggerMetadataSchema])),
   }),
   v.metadata({ ref: 'MLSpamUpsertRequest' }),
 )
@@ -10261,7 +10227,7 @@ export const MLSpamUpsertRequestPartialSchema = v.pipe(
         ),
       ),
       trigger_type: AutomodTriggerTypeSchema,
-      trigger_metadata: v.union([v.nullable(v.null()), MLSpamTriggerMetadataSchema]),
+      trigger_metadata: v.union([v.null(), MLSpamTriggerMetadataSchema]),
     }),
   ),
   v.metadata({ ref: 'MLSpamUpsertRequestPartial' }),
@@ -10323,7 +10289,7 @@ export const MentionSpamUpsertRequestSchema = v.pipe(
       ),
     ),
     trigger_type: AutomodTriggerTypeSchema,
-    trigger_metadata: v.optional(v.union([v.nullable(v.null()), MentionSpamTriggerMetadataSchema])),
+    trigger_metadata: v.optional(v.union([v.null(), MentionSpamTriggerMetadataSchema])),
   }),
   v.metadata({ ref: 'MentionSpamUpsertRequest' }),
 )
@@ -10365,7 +10331,7 @@ export const MentionSpamUpsertRequestPartialSchema = v.pipe(
         ),
       ),
       trigger_type: AutomodTriggerTypeSchema,
-      trigger_metadata: v.union([v.nullable(v.null()), MentionSpamTriggerMetadataSchema]),
+      trigger_metadata: v.union([v.null(), MentionSpamTriggerMetadataSchema]),
     }),
   ),
   v.metadata({ ref: 'MentionSpamUpsertRequestPartial' }),
@@ -10377,11 +10343,11 @@ export type MentionSpamUpsertRequestPartial = v.InferOutput<
 
 export const MessageReferenceRequestSchema = v.pipe(
   v.object({
-    guild_id: v.optional(v.union([v.nullable(v.null()), SnowflakeTypeSchema])),
-    channel_id: v.optional(v.union([v.nullable(v.null()), SnowflakeTypeSchema])),
+    guild_id: v.optional(v.union([v.null(), SnowflakeTypeSchema])),
+    channel_id: v.optional(v.union([v.null(), SnowflakeTypeSchema])),
     message_id: SnowflakeTypeSchema,
     fail_if_not_exists: v.optional(v.nullable(v.boolean())),
-    type: v.optional(v.union([v.nullable(v.null()), MessageReferenceTypeSchema])),
+    type: v.optional(v.union([v.null(), MessageReferenceTypeSchema])),
   }),
   v.metadata({ ref: 'MessageReferenceRequest' }),
 )
@@ -10393,7 +10359,7 @@ export const MessageCreateRequestSchema = v.pipe(
     v.object({
       content: v.nullable(v.pipe(v.string(), v.maxCodePoints(4000))),
       embeds: v.nullable(v.pipe(v.array(RichEmbedSchema), v.maxLength(10))),
-      allowed_mentions: v.union([v.nullable(v.null()), MessageAllowedMentionsRequestSchema]),
+      allowed_mentions: v.union([v.null(), MessageAllowedMentionsRequestSchema]),
       sticker_ids: v.nullable(v.pipe(v.array(SnowflakeTypeSchema), v.maxLength(3))),
       components: v.nullable(
         v.pipe(
@@ -10413,9 +10379,9 @@ export const MessageCreateRequestSchema = v.pipe(
       ),
       flags: v.nullable(v.pipe(v.number(), v.integer())),
       attachments: v.nullable(v.pipe(v.array(MessageAttachmentRequestSchema), v.maxLength(10))),
-      poll: v.union([v.nullable(v.null()), PollCreateRequestSchema]),
-      shared_client_theme: v.union([v.nullable(v.null()), CustomClientThemeShareRequestSchema]),
-      message_reference: v.union([v.nullable(v.null()), MessageReferenceRequestSchema]),
+      poll: v.union([v.null(), PollCreateRequestSchema]),
+      shared_client_theme: v.union([v.null(), CustomClientThemeShareRequestSchema]),
+      message_reference: v.union([v.null(), MessageReferenceRequestSchema]),
       nonce: v.union([
         v.pipe(
           v.union([
@@ -10426,11 +10392,11 @@ export const MessageCreateRequestSchema = v.pipe(
           v.transform((input) => BigInt(input)),
           v.minValue(-9223372036854775808n),
           v.maxValue(9223372036854775807n),
-          v.minValue(-9223372036854776000n),
-          v.maxValue(9223372036854776000n),
+          v.minValue(-9223372036854775808n),
+          v.maxValue(9223372036854775808n),
         ),
         v.pipe(v.string(), v.maxCodePoints(25)),
-        v.nullable(v.null()),
+        v.null(),
       ]),
       enforce_nonce: v.nullable(v.boolean()),
       tts: v.nullable(v.boolean()),
@@ -10447,7 +10413,7 @@ export const MessageEditRequestPartialSchema = v.pipe(
       content: v.nullable(v.pipe(v.string(), v.maxCodePoints(4000))),
       embeds: v.nullable(v.pipe(v.array(RichEmbedSchema), v.maxLength(10))),
       flags: v.nullable(v.pipe(v.number(), v.integer())),
-      allowed_mentions: v.union([v.nullable(v.null()), MessageAllowedMentionsRequestSchema]),
+      allowed_mentions: v.union([v.null(), MessageAllowedMentionsRequestSchema]),
       sticker_ids: v.nullable(v.pipe(v.array(SnowflakeTypeSchema), v.maxLength(1521))),
       components: v.nullable(
         v.pipe(
@@ -10617,10 +10583,10 @@ export type OAuth2GetOpenIDConnectUserInfoResponse = v.InferOutput<
 
 export const OnboardingPromptOptionRequestSchema = v.pipe(
   v.object({
-    id: v.optional(v.union([v.nullable(v.null()), SnowflakeTypeSchema])),
+    id: v.optional(v.union([v.null(), SnowflakeTypeSchema])),
     title: v.pipe(v.string(), v.minCodePoints(1), v.maxCodePoints(50)),
     description: v.optional(v.nullable(v.pipe(v.string(), v.maxCodePoints(100)))),
-    emoji_id: v.optional(v.union([v.nullable(v.null()), SnowflakeTypeSchema])),
+    emoji_id: v.optional(v.union([v.null(), SnowflakeTypeSchema])),
     emoji_name: v.optional(v.nullable(v.pipe(v.string(), v.maxCodePoints(100)))),
     emoji_animated: v.optional(v.nullable(v.boolean())),
     role_ids: v.optional(
@@ -10779,7 +10745,7 @@ export const PrivateApplicationResponseSchema = v.pipe(
     name: v.string(),
     icon: v.nullable(v.string()),
     description: v.string(),
-    type: v.union([v.nullable(v.null()), ApplicationTypesSchema]),
+    type: v.union([v.null(), ApplicationTypesSchema]),
     cover_image: v.optional(v.string()),
     primary_sku_id: v.optional(SnowflakeTypeSchema),
     flags: v.pipe(v.number(), v.integer(), v.minValue(-2147483648), v.maxValue(2147483647)),
@@ -10840,7 +10806,7 @@ export const PrivateApplicationResponseSchema = v.pipe(
       ),
     ),
     explicit_content_filter: ApplicationExplicitContentFilterTypesSchema,
-    team: v.union([v.nullable(v.null()), TeamResponseSchema]),
+    team: v.union([v.null(), TeamResponseSchema]),
     eligible_oauth2_scopes: v.array(OAuth2ScopesSchema),
   }),
   v.metadata({ ref: 'PrivateApplicationResponse' }),
@@ -10853,7 +10819,7 @@ export const PrivateGuildMemberResponseSchema = v.pipe(
     avatar: v.pipe(v.nullable(v.string()), v.description("the member's guild avatar hash")),
     avatar_decoration_data: v.optional(
       v.pipe(
-        v.union([v.nullable(v.null()), UserAvatarDecorationResponseSchema]),
+        v.union([v.null(), UserAvatarDecorationResponseSchema]),
         v.description("data for the member's guild avatar decoration"),
       ),
     ),
@@ -10911,7 +10877,7 @@ export const PrivateGuildMemberResponseSchema = v.pipe(
     ),
     collectibles: v.optional(
       v.pipe(
-        v.union([v.nullable(v.null()), UserCollectiblesResponseSchema]),
+        v.union([v.null(), UserCollectiblesResponseSchema]),
         v.description("data for the member's collectibles"),
       ),
     ),
@@ -10955,7 +10921,7 @@ export const PruneGuildRequestSchema = v.pipe(
           v.maxLength(100),
           v.check((input) => new Set(input).size === input.length),
         ),
-        v.nullable(v.null()),
+        v.null(),
       ]),
     }),
   ),
@@ -10979,7 +10945,7 @@ export const SDKMessageRequestSchema = v.pipe(
     v.object({
       content: v.nullable(v.pipe(v.string(), v.maxCodePoints(4000))),
       embeds: v.nullable(v.pipe(v.array(RichEmbedSchema), v.maxLength(10))),
-      allowed_mentions: v.union([v.nullable(v.null()), MessageAllowedMentionsRequestSchema]),
+      allowed_mentions: v.union([v.null(), MessageAllowedMentionsRequestSchema]),
       sticker_ids: v.nullable(v.pipe(v.array(SnowflakeTypeSchema), v.maxLength(3))),
       components: v.nullable(
         v.pipe(
@@ -10999,9 +10965,9 @@ export const SDKMessageRequestSchema = v.pipe(
       ),
       flags: v.nullable(v.pipe(v.number(), v.integer())),
       attachments: v.nullable(v.pipe(v.array(MessageAttachmentRequestSchema), v.maxLength(10))),
-      poll: v.union([v.nullable(v.null()), PollCreateRequestSchema]),
-      shared_client_theme: v.union([v.nullable(v.null()), CustomClientThemeShareRequestSchema]),
-      message_reference: v.union([v.nullable(v.null()), MessageReferenceRequestSchema]),
+      poll: v.union([v.null(), PollCreateRequestSchema]),
+      shared_client_theme: v.union([v.null(), CustomClientThemeShareRequestSchema]),
+      message_reference: v.union([v.null(), MessageReferenceRequestSchema]),
       nonce: v.union([
         v.pipe(
           v.union([
@@ -11012,11 +10978,11 @@ export const SDKMessageRequestSchema = v.pipe(
           v.transform((input) => BigInt(input)),
           v.minValue(-9223372036854775808n),
           v.maxValue(9223372036854775807n),
-          v.minValue(-9223372036854776000n),
-          v.maxValue(9223372036854776000n),
+          v.minValue(-9223372036854775808n),
+          v.maxValue(9223372036854775808n),
         ),
         v.pipe(v.string(), v.maxCodePoints(25)),
-        v.nullable(v.null()),
+        v.null(),
       ]),
       enforce_nonce: v.nullable(v.boolean()),
       tts: v.nullable(v.boolean()),
@@ -11149,7 +11115,7 @@ export type SlackWebhook = v.InferOutput<typeof SlackWebhookSchema>
 export const SocialLayerSKUPurchaseEligibilityCallbackDataSchema = v.pipe(
   v.object({
     eligible: v.boolean(),
-    ineligible_reason: v.optional(v.union([v.nullable(v.null()), SKUIneligibilityReasonSchema])),
+    ineligible_reason: v.optional(v.union([v.null(), SKUIneligibilityReasonSchema])),
     ineligible_reason_description: v.optional(v.nullable(v.pipe(v.string(), v.maxCodePoints(255)))),
   }),
   v.metadata({ ref: 'SocialLayerSKUPurchaseEligibilityCallbackData' }),
@@ -11189,7 +11155,7 @@ export const SoundboardCreateRequestSchema = v.pipe(
   v.object({
     name: v.pipe(v.string(), v.minCodePoints(2), v.maxCodePoints(32)),
     volume: v.optional(v.nullable(v.pipe(v.number(), v.minValue(0), v.maxValue(1)))),
-    emoji_id: v.optional(v.union([v.nullable(v.null()), SnowflakeTypeSchema])),
+    emoji_id: v.optional(v.union([v.null(), SnowflakeTypeSchema])),
     emoji_name: v.optional(v.nullable(v.pipe(v.string(), v.minCodePoints(1), v.maxCodePoints(32)))),
     sound: v.string(),
   }),
@@ -11203,7 +11169,7 @@ export const SoundboardPatchRequestPartialSchema = v.pipe(
     v.object({
       name: v.pipe(v.string(), v.minCodePoints(2), v.maxCodePoints(32)),
       volume: v.nullable(v.pipe(v.number(), v.minValue(0), v.maxValue(1))),
-      emoji_id: v.union([v.nullable(v.null()), SnowflakeTypeSchema]),
+      emoji_id: v.union([v.null(), SnowflakeTypeSchema]),
       emoji_name: v.nullable(v.pipe(v.string(), v.minCodePoints(1), v.maxCodePoints(32))),
     }),
   ),
@@ -11217,7 +11183,7 @@ export type SoundboardPatchRequestPartial = v.InferOutput<
 export const SoundboardSoundSendRequestSchema = v.pipe(
   v.object({
     sound_id: SnowflakeTypeSchema,
-    source_guild_id: v.optional(v.union([v.nullable(v.null()), SnowflakeTypeSchema])),
+    source_guild_id: v.optional(v.union([v.null(), SnowflakeTypeSchema])),
   }),
   v.metadata({ ref: 'SoundboardSoundSendRequest' }),
 )
@@ -11242,7 +11208,7 @@ export const StageInstanceResponseSchema = v.pipe(
     privacy_level: StageInstancesPrivacyLevelsSchema,
     id: SnowflakeTypeSchema,
     discoverable_disabled: v.boolean(),
-    guild_scheduled_event_id: v.union([v.nullable(v.null()), SnowflakeTypeSchema]),
+    guild_scheduled_event_id: v.union([v.null(), SnowflakeTypeSchema]),
   }),
   v.metadata({ ref: 'StageInstanceResponse' }),
 )
@@ -11272,14 +11238,14 @@ export const StageScheduledEventCreateRequestSchema = v.pipe(
     ),
     privacy_level: GuildScheduledEventPrivacyLevelsSchema,
     entity_type: GuildScheduledEventEntityTypesSchema,
-    channel_id: v.optional(v.union([v.nullable(v.null()), SnowflakeTypeSchema])),
+    channel_id: v.optional(v.union([v.null(), SnowflakeTypeSchema])),
     recurrence_rule: v.optional(
       v.pipe(
-        v.union([v.nullable(v.null()), RecurrenceRuleSchema]),
+        v.union([v.null(), RecurrenceRuleSchema]),
         v.description('Recurrence rule for the scheduled event'),
       ),
     ),
-    entity_metadata: v.optional(v.union([v.nullable(v.null()), EntityMetadataStageInstanceSchema])),
+    entity_metadata: v.optional(v.union([v.null(), EntityMetadataStageInstanceSchema])),
   }),
   v.metadata({ ref: 'StageScheduledEventCreateRequest' }),
 )
@@ -11291,7 +11257,7 @@ export type StageScheduledEventCreateRequest = v.InferOutput<
 export const StageScheduledEventPatchRequestPartialSchema = v.pipe(
   v.partial(
     v.object({
-      status: v.union([v.nullable(v.null()), GuildScheduledEventStatusesSchema]),
+      status: v.union([v.null(), GuildScheduledEventStatusesSchema]),
       name: v.pipe(v.string(), v.maxCodePoints(100)),
       description: v.nullable(v.pipe(v.string(), v.maxCodePoints(1000))),
       image: v.nullable(v.string()),
@@ -11309,14 +11275,14 @@ export const StageScheduledEventPatchRequestPartialSchema = v.pipe(
           ),
         ),
       ),
-      entity_type: v.union([v.nullable(v.null()), GuildScheduledEventEntityTypesSchema]),
+      entity_type: v.union([v.null(), GuildScheduledEventEntityTypesSchema]),
       privacy_level: GuildScheduledEventPrivacyLevelsSchema,
-      channel_id: v.union([v.nullable(v.null()), SnowflakeTypeSchema]),
+      channel_id: v.union([v.null(), SnowflakeTypeSchema]),
       recurrence_rule: v.pipe(
-        v.union([v.nullable(v.null()), RecurrenceRuleSchema]),
+        v.union([v.null(), RecurrenceRuleSchema]),
         v.description('Recurrence rule for the scheduled event'),
       ),
-      entity_metadata: v.union([v.nullable(v.null()), EntityMetadataStageInstanceSchema]),
+      entity_metadata: v.union([v.null(), EntityMetadataStageInstanceSchema]),
     }),
   ),
   v.metadata({ ref: 'StageScheduledEventPatchRequestPartial' }),
@@ -11590,10 +11556,10 @@ export type UpdateGroupDMRequestPartial = v.InferOutput<typeof UpdateGroupDMRequ
 export const UpdateThreadTagRequestSchema = v.pipe(
   v.object({
     name: v.pipe(v.string(), v.minCodePoints(0), v.maxCodePoints(50)),
-    emoji_id: v.optional(v.union([v.nullable(v.null()), SnowflakeTypeSchema])),
+    emoji_id: v.optional(v.union([v.null(), SnowflakeTypeSchema])),
     emoji_name: v.optional(v.nullable(v.pipe(v.string(), v.maxCodePoints(100)))),
     moderated: v.optional(v.nullable(v.boolean())),
-    id: v.optional(v.union([v.nullable(v.null()), SnowflakeTypeSchema])),
+    id: v.optional(v.union([v.null(), SnowflakeTypeSchema])),
   }),
   v.metadata({ ref: 'UpdateThreadTagRequest' }),
 )
@@ -11603,7 +11569,7 @@ export type UpdateThreadTagRequest = v.InferOutput<typeof UpdateThreadTagRequest
 export const UpdateGuildChannelRequestPartialSchema = v.pipe(
   v.partial(
     v.object({
-      type: v.union([v.nullable(v.null()), ChannelTypesSchema]),
+      type: v.union([v.null(), ChannelTypesSchema]),
       name: v.pipe(v.string(), v.minCodePoints(1), v.maxCodePoints(100)),
       position: v.nullable(
         v.pipe(
@@ -11637,26 +11603,20 @@ export const UpdateGuildChannelRequestPartialSchema = v.pipe(
       rate_limit_per_user: v.nullable(
         v.pipe(v.number(), v.integer(), v.minValue(0), v.maxValue(21600)),
       ),
-      parent_id: v.union([v.nullable(v.null()), SnowflakeTypeSchema]),
+      parent_id: v.union([v.null(), SnowflakeTypeSchema]),
       permission_overwrites: v.nullable(
         v.pipe(v.array(ChannelPermissionOverwriteRequestSchema), v.maxLength(100)),
       ),
       rtc_region: v.nullable(v.string()),
-      video_quality_mode: v.union([v.nullable(v.null()), VideoQualityModesSchema]),
-      default_auto_archive_duration: v.union([
-        v.nullable(v.null()),
-        ThreadAutoArchiveDurationSchema,
-      ]),
-      default_reaction_emoji: v.union([
-        v.nullable(v.null()),
-        UpdateDefaultReactionEmojiRequestSchema,
-      ]),
+      video_quality_mode: v.union([v.null(), VideoQualityModesSchema]),
+      default_auto_archive_duration: v.union([v.null(), ThreadAutoArchiveDurationSchema]),
+      default_reaction_emoji: v.union([v.null(), UpdateDefaultReactionEmojiRequestSchema]),
       default_thread_rate_limit_per_user: v.nullable(
         v.pipe(v.number(), v.integer(), v.minValue(0), v.maxValue(21600)),
       ),
-      default_sort_order: v.union([v.nullable(v.null()), ThreadSortOrderSchema]),
-      default_forum_layout: v.union([v.nullable(v.null()), ForumLayoutSchema]),
-      default_tag_setting: v.union([v.nullable(v.null()), ThreadSearchTagSettingSchema]),
+      default_sort_order: v.union([v.null(), ThreadSortOrderSchema]),
+      default_forum_layout: v.union([v.null(), ForumLayoutSchema]),
+      default_tag_setting: v.union([v.null(), ThreadSearchTagSettingSchema]),
       flags: v.nullable(v.pipe(v.number(), v.integer())),
       available_tags: v.nullable(v.pipe(v.array(UpdateThreadTagRequestSchema), v.maxLength(20))),
     }),
@@ -11675,7 +11635,7 @@ export const UpdateOnboardingPromptRequestSchema = v.pipe(
     single_select: v.optional(v.nullable(v.boolean())),
     required: v.optional(v.nullable(v.boolean())),
     in_onboarding: v.optional(v.nullable(v.boolean())),
-    type: v.optional(v.union([v.nullable(v.null()), OnboardingPromptTypeSchema])),
+    type: v.optional(v.union([v.null(), OnboardingPromptTypeSchema])),
     id: SnowflakeTypeSchema,
   }),
   v.metadata({ ref: 'UpdateOnboardingPromptRequest' }),
@@ -11697,7 +11657,7 @@ export const UpdateGuildOnboardingRequestSchema = v.pipe(
           v.check((input) => new Set(input).size === input.length),
         ),
       ),
-      mode: v.union([v.nullable(v.null()), GuildOnboardingModeSchema]),
+      mode: v.union([v.null(), GuildOnboardingModeSchema]),
     }),
   ),
   v.metadata({ ref: 'UpdateGuildOnboardingRequest' }),
@@ -11709,10 +11669,7 @@ export const UpdateMessageInteractionCallbackRequestSchema = v.pipe(
   v.object({
     type: InteractionCallbackTypesSchema,
     data: v.optional(
-      v.union([
-        v.nullable(v.null()),
-        IncomingWebhookUpdateForInteractionCallbackRequestPartialSchema,
-      ]),
+      v.union([v.null(), IncomingWebhookUpdateForInteractionCallbackRequestPartialSchema]),
     ),
   }),
   v.metadata({ ref: 'UpdateMessageInteractionCallbackRequest' }),
@@ -11725,7 +11682,7 @@ export type UpdateMessageInteractionCallbackRequest = v.InferOutput<
 export const UpdateRolePositionsRequestSchema = v.pipe(
   v.partial(
     v.object({
-      id: v.union([v.nullable(v.null()), SnowflakeTypeSchema]),
+      id: v.union([v.null(), SnowflakeTypeSchema]),
       position: v.nullable(
         v.pipe(v.number(), v.integer(), v.minValue(-2147483648), v.maxValue(2147483647)),
       ),
@@ -11742,7 +11699,7 @@ export const UpdateRoleRequestPartialSchema = v.pipe(
       name: v.nullable(v.pipe(v.string(), v.minCodePoints(1), v.maxCodePoints(100))),
       permissions: v.nullable(v.pipe(v.number(), v.integer())),
       color: v.nullable(v.pipe(v.number(), v.integer(), v.minValue(0), v.maxValue(16777215))),
-      colors: v.union([v.nullable(v.null()), RoleColorsSchema]),
+      colors: v.union([v.null(), RoleColorsSchema]),
       hoist: v.nullable(v.boolean()),
       mentionable: v.nullable(v.boolean()),
       icon: v.nullable(v.string()),
@@ -11766,7 +11723,7 @@ export const UpdateSelfVoiceStateRequestPartialSchema = v.pipe(
         ),
       ),
       suppress: v.nullable(v.boolean()),
-      channel_id: v.union([v.nullable(v.null()), SnowflakeTypeSchema]),
+      channel_id: v.union([v.null(), SnowflakeTypeSchema]),
     }),
   ),
   v.metadata({ ref: 'UpdateSelfVoiceStateRequestPartial' }),
@@ -11783,7 +11740,7 @@ export const UpdateThreadRequestPartialSchema = v.pipe(
       archived: v.nullable(v.boolean()),
       locked: v.nullable(v.boolean()),
       invitable: v.nullable(v.boolean()),
-      auto_archive_duration: v.union([v.nullable(v.null()), ThreadAutoArchiveDurationSchema]),
+      auto_archive_duration: v.union([v.null(), ThreadAutoArchiveDurationSchema]),
       rate_limit_per_user: v.nullable(
         v.pipe(
           v.number(),
@@ -11807,7 +11764,7 @@ export const UpdateThreadRequestPartialSchema = v.pipe(
       ),
       user_limit: v.nullable(v.pipe(v.number(), v.integer(), v.minValue(0), v.maxValue(99))),
       rtc_region: v.nullable(v.string()),
-      video_quality_mode: v.union([v.nullable(v.null()), VideoQualityModesSchema]),
+      video_quality_mode: v.union([v.null(), VideoQualityModesSchema]),
     }),
   ),
   v.metadata({ ref: 'UpdateThreadRequestPartial' }),
@@ -11819,7 +11776,7 @@ export const UpdateVoiceStateRequestPartialSchema = v.pipe(
   v.partial(
     v.object({
       suppress: v.nullable(v.boolean()),
-      channel_id: v.union([v.nullable(v.null()), SnowflakeTypeSchema]),
+      channel_id: v.union([v.null(), SnowflakeTypeSchema]),
     }),
   ),
   v.metadata({ ref: 'UpdateVoiceStateRequestPartial' }),
@@ -11887,17 +11844,17 @@ export const UserPIIResponseSchema = v.pipe(
     ),
     avatar_decoration_data: v.optional(
       v.pipe(
-        v.union([v.nullable(v.null()), UserAvatarDecorationResponseSchema]),
+        v.union([v.null(), UserAvatarDecorationResponseSchema]),
         v.description("data for the user's avatar decoration"),
       ),
     ),
     collectibles: v.optional(
       v.pipe(
-        v.union([v.nullable(v.null()), UserCollectiblesResponseSchema]),
+        v.union([v.null(), UserCollectiblesResponseSchema]),
         v.description("data for the user's collectibles"),
       ),
     ),
-    primary_guild: v.optional(v.union([v.nullable(v.null()), UserPrimaryGuildResponseSchema])),
+    primary_guild: v.optional(v.union([v.null(), UserPrimaryGuildResponseSchema])),
     mfa_enabled: v.boolean(),
     locale: AvailableLocalesEnumSchema,
     premium_type: v.optional(PremiumTypesSchema),
@@ -12043,7 +12000,7 @@ export const VanityURLResponseSchema = v.pipe(
   v.object({
     code: v.nullable(v.string()),
     uses: v.pipe(v.number(), v.integer(), v.minValue(-2147483648), v.maxValue(2147483647)),
-    error: v.optional(v.union([v.nullable(v.null()), VanityURLErrorResponseSchema])),
+    error: v.optional(v.union([v.null(), VanityURLErrorResponseSchema])),
   }),
   v.metadata({ ref: 'VanityURLResponse' }),
 )
@@ -12086,14 +12043,14 @@ export const VoiceScheduledEventCreateRequestSchema = v.pipe(
     ),
     privacy_level: GuildScheduledEventPrivacyLevelsSchema,
     entity_type: GuildScheduledEventEntityTypesSchema,
-    channel_id: v.optional(v.union([v.nullable(v.null()), SnowflakeTypeSchema])),
+    channel_id: v.optional(v.union([v.null(), SnowflakeTypeSchema])),
     recurrence_rule: v.optional(
       v.pipe(
-        v.union([v.nullable(v.null()), RecurrenceRuleSchema]),
+        v.union([v.null(), RecurrenceRuleSchema]),
         v.description('Recurrence rule for the scheduled event'),
       ),
     ),
-    entity_metadata: v.optional(v.union([v.nullable(v.null()), EntityMetadataVoiceSchema])),
+    entity_metadata: v.optional(v.union([v.null(), EntityMetadataVoiceSchema])),
   }),
   v.metadata({ ref: 'VoiceScheduledEventCreateRequest' }),
 )
@@ -12105,7 +12062,7 @@ export type VoiceScheduledEventCreateRequest = v.InferOutput<
 export const VoiceScheduledEventPatchRequestPartialSchema = v.pipe(
   v.partial(
     v.object({
-      status: v.union([v.nullable(v.null()), GuildScheduledEventStatusesSchema]),
+      status: v.union([v.null(), GuildScheduledEventStatusesSchema]),
       name: v.pipe(v.string(), v.maxCodePoints(100)),
       description: v.nullable(v.pipe(v.string(), v.maxCodePoints(1000))),
       image: v.nullable(v.string()),
@@ -12123,14 +12080,14 @@ export const VoiceScheduledEventPatchRequestPartialSchema = v.pipe(
           ),
         ),
       ),
-      entity_type: v.union([v.nullable(v.null()), GuildScheduledEventEntityTypesSchema]),
+      entity_type: v.union([v.null(), GuildScheduledEventEntityTypesSchema]),
       privacy_level: GuildScheduledEventPrivacyLevelsSchema,
-      channel_id: v.union([v.nullable(v.null()), SnowflakeTypeSchema]),
+      channel_id: v.union([v.null(), SnowflakeTypeSchema]),
       recurrence_rule: v.pipe(
-        v.union([v.nullable(v.null()), RecurrenceRuleSchema]),
+        v.union([v.null(), RecurrenceRuleSchema]),
         v.description('Recurrence rule for the scheduled event'),
       ),
-      entity_metadata: v.union([v.nullable(v.null()), EntityMetadataVoiceSchema]),
+      entity_metadata: v.union([v.null(), EntityMetadataVoiceSchema]),
     }),
   ),
   v.metadata({ ref: 'VoiceScheduledEventPatchRequestPartial' }),
@@ -12142,9 +12099,9 @@ export type VoiceScheduledEventPatchRequestPartial = v.InferOutput<
 
 export const VoiceStateResponseSchema = v.pipe(
   v.object({
-    channel_id: v.union([v.nullable(v.null()), SnowflakeTypeSchema]),
+    channel_id: v.union([v.null(), SnowflakeTypeSchema]),
     deaf: v.boolean(),
-    guild_id: v.union([v.nullable(v.null()), SnowflakeTypeSchema]),
+    guild_id: v.union([v.null(), SnowflakeTypeSchema]),
     member: v.optional(GuildMemberResponseSchema),
     mute: v.boolean(),
     request_to_speak_timestamp: v.nullable(
@@ -12249,7 +12206,7 @@ export const WidgetMemberSchema = v.pipe(
     id: v.string(),
     username: v.string(),
     discriminator: WidgetUserDiscriminatorSchema,
-    avatar: v.nullable(v.null()),
+    avatar: v.null(),
     status: v.string(),
     avatar_url: v.pipe(v.string(), v.url()),
     activity: v.optional(WidgetActivitySchema),
@@ -12285,10 +12242,7 @@ export const WidgetResponseSchema = v.pipe(
 export type WidgetResponse = v.InferOutput<typeof WidgetResponseSchema>
 
 export const WidgetSettingsResponseSchema = v.pipe(
-  v.object({
-    enabled: v.boolean(),
-    channel_id: v.union([v.nullable(v.null()), SnowflakeTypeSchema]),
-  }),
+  v.object({ enabled: v.boolean(), channel_id: v.union([v.null(), SnowflakeTypeSchema]) }),
   v.metadata({ ref: 'WidgetSettingsResponse' }),
 )
 

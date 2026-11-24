@@ -1,6 +1,6 @@
 import { Hono } from 'hono'
 import { describeRoute, validator } from 'hono-openapi'
-import { Type, Codec } from 'typebox'
+import { Type, Codec, type StaticDecode, type StaticEncode, type TSchema } from 'typebox'
 import { Compile } from 'typebox/compile'
 import {
   UnauthorizedResponse,
@@ -11,6 +11,31 @@ import {
   ManyTracksResponse,
   PagingArtistDiscographyAlbumObjectResponse,
 } from '../components'
+
+const toStandardSchemaV1 = <T extends TSchema>(schema: T) => {
+  const validator = Compile(schema)
+  return Object.assign(validator, {
+    '~standard': {
+      version: 1 as const,
+      vendor: 'typebox',
+      validate: (value: unknown) =>
+        validator.Check(value)
+          ? { value: validator.Decode(value) }
+          : {
+              issues: validator.Errors(value).map((error) => ({
+                message: error.message,
+                path: error.instancePath
+                  .split('/')
+                  .slice(1)
+                  .map((key) => key.replaceAll('~1', '/').replaceAll('~0', '~')),
+              })),
+            },
+      types: undefined as
+        | { readonly input: StaticEncode<T>; readonly output: StaticDecode<T> }
+        | undefined,
+    },
+  })
+}
 
 export const artistsHandler = new Hono()
   .get(
@@ -31,7 +56,7 @@ export const artistsHandler = new Hono()
     }),
     validator(
       'param',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           id: Type.String({
             description:
@@ -62,7 +87,7 @@ export const artistsHandler = new Hono()
     }),
     validator(
       'query',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           ids: Type.String({
             description:
@@ -91,7 +116,7 @@ export const artistsHandler = new Hono()
     }),
     validator(
       'param',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           id: Type.String({
             description:
@@ -103,7 +128,7 @@ export const artistsHandler = new Hono()
     ),
     validator(
       'query',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           include_groups: Type.Optional(
             Type.String({
@@ -120,13 +145,23 @@ export const artistsHandler = new Hono()
             }),
           ),
           limit: Type.Optional(
-            Codec(Type.String({ default: '5' }))
-              .Decode((value) => Number.parseInt(value, 10))
+            Codec(
+              Type.Refine(
+                Type.Refine(
+                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '5' }),
+                  (value) => Number(value) >= 0,
+                  () => 'must be >= 0',
+                ),
+                (value) => Number(value) <= 10,
+                () => 'must be <= 10',
+              ),
+            )
+              .Decode((value) => Number(value))
               .Encode((value) => String(value)),
           ),
           offset: Type.Optional(
-            Codec(Type.String({ default: '0' }))
-              .Decode((value) => Number.parseInt(value, 10))
+            Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '0' }))
+              .Decode((value) => Number(value))
               .Encode((value) => String(value)),
           ),
         }),
@@ -152,7 +187,7 @@ export const artistsHandler = new Hono()
     }),
     validator(
       'param',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           id: Type.String({
             description:
@@ -164,7 +199,7 @@ export const artistsHandler = new Hono()
     ),
     validator(
       'query',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           market: Type.Optional(
             Type.String({
@@ -197,7 +232,7 @@ export const artistsHandler = new Hono()
     }),
     validator(
       'param',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           id: Type.String({
             description:

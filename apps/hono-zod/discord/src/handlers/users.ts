@@ -28,7 +28,7 @@ export const usersHandler = new Hono()
                     (val) => (val === 'null' ? null : val),
                     z
                       .union([
-                        z.preprocess((val) => (val === 'null' ? null : val), z.null().nullable()),
+                        z.preprocess((val) => (val === 'null' ? null : val), z.null()),
                         SnowflakeTypeSchema,
                       ])
                       .nullable(),
@@ -69,8 +69,20 @@ export const usersHandler = new Hono()
       z.object({
         before: SnowflakeTypeSchema.exactOptional(),
         after: SnowflakeTypeSchema.exactOptional(),
-        limit: z.coerce.number().int().min(1).max(200).exactOptional(),
-        shard: z.coerce.number().int().min(0).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(1).max(200),
+          )
+          .exactOptional(),
+        shard: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(0),
+          )
+          .exactOptional(),
         with_counts: z.stringbool().exactOptional(),
       }),
     ),

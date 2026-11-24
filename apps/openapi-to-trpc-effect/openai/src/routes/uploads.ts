@@ -31,7 +31,7 @@ export const uploadsRouter = t.router({
           part_ids: Schema.Array(Schema.String).annotate({
             description: 'The ordered list of Part IDs.\n',
           }),
-          md5: Schema.optional(
+          md5: Schema.optionalKey(
             Schema.String.annotate({
               description:
                 'The optional md5 checksum for the file contents to verify if the bytes uploaded matches what you expect.\n',

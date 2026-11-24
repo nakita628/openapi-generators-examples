@@ -10,16 +10,16 @@ export const skusRouter = t.router({
       Schema.toStandardSchemaV1(
         Schema.Struct({
           sku_id: SnowflakeTypeSchema,
-          before: Schema.optional(SnowflakeTypeSchema),
-          after: Schema.optional(SnowflakeTypeSchema),
-          limit: Schema.optional(
+          before: Schema.optionalKey(SnowflakeTypeSchema),
+          after: Schema.optionalKey(SnowflakeTypeSchema),
+          limit: Schema.optionalKey(
             Schema.Number.check(
               Schema.isInt(),
               Schema.isGreaterThanOrEqualTo(1),
               Schema.isLessThanOrEqualTo(100),
             ),
           ),
-          user_id: Schema.optional(SnowflakeTypeSchema),
+          user_id: Schema.optionalKey(SnowflakeTypeSchema),
         }),
       ),
     )
@@ -33,7 +33,7 @@ export const skusRouter = t.router({
         Schema.Struct({
           sku_id: SnowflakeTypeSchema,
           subscription_id: SnowflakeTypeSchema,
-          user_id: Schema.optional(SnowflakeTypeSchema),
+          user_id: Schema.optionalKey(SnowflakeTypeSchema),
         }),
       ),
     )

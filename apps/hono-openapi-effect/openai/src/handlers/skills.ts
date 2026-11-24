@@ -48,15 +48,25 @@ export const skillsHandler = new Hono()
       'query',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          limit: Schema.optional(
-            Schema.FiniteFromString.check(
-              Schema.isInt(),
-              Schema.isGreaterThanOrEqualTo(0),
-              Schema.isLessThanOrEqualTo(100),
-            ),
+          limit: Schema.optionalKey(
+            Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+              .pipe(
+                Schema.decodeTo(
+                  Schema.Finite,
+                  SchemaTransformation.transform({
+                    decode: (input) => Number(input),
+                    encode: (output) => String(output),
+                  }),
+                ),
+              )
+              .check(
+                Schema.isInt(),
+                Schema.isGreaterThanOrEqualTo(0),
+                Schema.isLessThanOrEqualTo(100),
+              ),
           ),
-          order: Schema.optional(OrderEnumSchema),
-          after: Schema.optional(
+          order: Schema.optionalKey(OrderEnumSchema),
+          after: Schema.optionalKey(
             Schema.String.annotate({
               description: 'Identifier for the last item from the previous pagination request',
             }),
@@ -325,15 +335,27 @@ export const skillsHandler = new Hono()
       'query',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          limit: Schema.optional(
-            Schema.FiniteFromString.check(
-              Schema.isInt(),
-              Schema.isGreaterThanOrEqualTo(0),
-              Schema.isLessThanOrEqualTo(100),
-            ),
+          limit: Schema.optionalKey(
+            Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+              .pipe(
+                Schema.decodeTo(
+                  Schema.Finite,
+                  SchemaTransformation.transform({
+                    decode: (input) => Number(input),
+                    encode: (output) => String(output),
+                  }),
+                ),
+              )
+              .check(
+                Schema.isInt(),
+                Schema.isGreaterThanOrEqualTo(0),
+                Schema.isLessThanOrEqualTo(100),
+              ),
           ),
-          order: Schema.optional(OrderEnumSchema),
-          after: Schema.optional(Schema.String.annotate({ jsonSchemaExamples: ['skillver_123'] })),
+          order: Schema.optionalKey(OrderEnumSchema),
+          after: Schema.optionalKey(
+            Schema.String.annotate({ jsonSchemaExamples: ['skillver_123'] }),
+          ),
         }),
       ),
     ),
@@ -409,7 +431,7 @@ export const skillsHandler = new Hono()
             }),
             Schema.instanceOf(File).annotate({ description: 'Skill zip file to upload.' }),
           ]),
-          default: Schema.optional(
+          default: Schema.optionalKey(
             Schema.String.check(
               Schema.isPattern(/^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i),
             )

@@ -3,8 +3,9 @@ import useSWRImmutable from 'swr/immutable'
 import type { Key, SWRConfiguration } from 'swr'
 import useSWRMutation from 'swr/mutation'
 import type { SWRMutationConfiguration } from 'swr/mutation'
-import type { BetaResponse } from '../components/schemas'
-import { client } from '../lib'
+import type { Static } from 'elysia'
+import type { BetaResponseSchema } from '../components/schemas'
+import { client, clientOrigin } from '../lib'
 
 export function getAgentsKey() {
   return ['agents'] as const
@@ -31842,17 +31843,20 @@ export function usePostResponsesBetaTrue<
 }
 
 export function getGetResponsesResponseIdBetaTrueKey(
-  response_id: string,
+  params: string,
   options?: { headers?: Record<string, string>; query?: Record<string, unknown> },
 ) {
   const { headers: _a, ...keyArgs } = options ?? {}
-  return ['responses', '/responses/{response_id}?beta=true', response_id, keyArgs] as const
+  return ['responses', '/responses/{response_id}?beta=true', params, keyArgs] as const
 }
 
 export function useGetResponsesResponseIdBetaTrue<TError = unknown>(
-  response_id: string,
+  params: string,
   options?: {
-    swr?: SWRConfiguration<BetaResponse, TError> & { swrKey?: Key; enabled?: boolean }
+    swr?: SWRConfiguration<Static<typeof BetaResponseSchema>, TError> & {
+      swrKey?: Key
+      enabled?: boolean
+    }
     options?: { headers?: Record<string, string>; query?: Record<string, unknown> }
   },
 ) {
@@ -31861,12 +31865,12 @@ export function useGetResponsesResponseIdBetaTrue<TError = unknown>(
   const swrKey =
     enabled !== false
       ? customKey === undefined
-        ? getGetResponsesResponseIdBetaTrueKey(response_id, clientOptions)
+        ? getGetResponsesResponseIdBetaTrueKey(params, clientOptions)
         : customKey
       : null
   return {
     swrKey,
-    ...useSWR<BetaResponse, TError>(
+    ...useSWR<Static<typeof BetaResponseSchema>, TError>(
       swrKey,
       async () => {
         const search = new URLSearchParams()
@@ -31881,7 +31885,7 @@ export function useGetResponsesResponseIdBetaTrue<TError = unknown>(
           }
         }
         const res = await fetch(
-          `/responses/${encodeURIComponent(response_id)}?beta=true${search.size ? `?${search}` : ''}`,
+          `${clientOrigin}/responses/${encodeURIComponent(params)}?beta=true${search.size ? `?${search}` : ''}`,
           { headers: clientOptions?.headers },
         )
         if (!res.ok) throw await res.json()
@@ -31893,9 +31897,12 @@ export function useGetResponsesResponseIdBetaTrue<TError = unknown>(
 }
 
 export function useImmutableGetResponsesResponseIdBetaTrue<TError = unknown>(
-  response_id: string,
+  params: string,
   options?: {
-    swr?: SWRConfiguration<BetaResponse, TError> & { swrKey?: Key; enabled?: boolean }
+    swr?: SWRConfiguration<Static<typeof BetaResponseSchema>, TError> & {
+      swrKey?: Key
+      enabled?: boolean
+    }
     options?: { headers?: Record<string, string>; query?: Record<string, unknown> }
   },
 ) {
@@ -31904,12 +31911,12 @@ export function useImmutableGetResponsesResponseIdBetaTrue<TError = unknown>(
   const swrKey =
     enabled !== false
       ? customKey === undefined
-        ? getGetResponsesResponseIdBetaTrueKey(response_id, clientOptions)
+        ? getGetResponsesResponseIdBetaTrueKey(params, clientOptions)
         : customKey
       : null
   return {
     swrKey,
-    ...useSWRImmutable<BetaResponse, TError>(
+    ...useSWRImmutable<Static<typeof BetaResponseSchema>, TError>(
       swrKey,
       async () => {
         const search = new URLSearchParams()
@@ -31924,7 +31931,7 @@ export function useImmutableGetResponsesResponseIdBetaTrue<TError = unknown>(
           }
         }
         const res = await fetch(
-          `/responses/${encodeURIComponent(response_id)}?beta=true${search.size ? `?${search}` : ''}`,
+          `${clientOrigin}/responses/${encodeURIComponent(params)}?beta=true${search.size ? `?${search}` : ''}`,
           { headers: clientOptions?.headers },
         )
         if (!res.ok) throw await res.json()
@@ -31940,7 +31947,7 @@ export function getDeleteResponsesResponseIdBetaTrueKey() {
 }
 
 export function useDeleteResponsesResponseIdBetaTrue<TError = unknown>(
-  response_id: string,
+  params: string,
   options?: {
     mutation?: SWRMutationConfiguration<
       unknown,
@@ -31966,11 +31973,14 @@ export function useDeleteResponsesResponseIdBetaTrue<TError = unknown>(
         _key: Key,
         { arg }: { arg: { body?: unknown; options?: { headers?: Record<string, string> } } },
       ) => {
-        const res = await fetch(`/responses/${encodeURIComponent(response_id)}?beta=true`, {
-          method: 'DELETE',
-          headers: { 'content-type': 'application/json', ...arg.options?.headers },
-          body: arg.body === undefined ? undefined : JSON.stringify(arg.body),
-        })
+        const res = await fetch(
+          `${clientOrigin}/responses/${encodeURIComponent(params)}?beta=true`,
+          {
+            method: 'DELETE',
+            headers: { 'content-type': 'application/json', ...arg.options?.headers },
+            body: arg.body === undefined ? undefined : JSON.stringify(arg.body),
+          },
+        )
         if (!res.ok) throw await res.json()
         return JSON.parse(await res.text())
       },

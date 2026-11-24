@@ -21211,7 +21211,7 @@ export const IdleTimeoutSSchema = z
   .max(60)
   .meta({
     description:
-      'Whole seconds of inactivity after which a Live WebRTC session with a speech wake policy pauses inference. The connection and conversation history are retained. Omit to keep inference active after the first wake until the session ends.',
+      'Whole seconds of inactivity after which a Live WebRTC or SIP session with a speech wake policy pauses inference. The connection and conversation history are retained. Omit to keep inference active after the first wake until the session ends.',
   })
 
 export type IdleTimeoutSSchema = z.infer<typeof IdleTimeoutSSchema>
@@ -38519,6 +38519,17 @@ export const CompactResponseMethodPublicBodySchema = z.object({
       z.null(),
     ])
     .exactOptional(),
+  safety_identifier: z
+    .union([
+      z
+        .string()
+        .max(128)
+        .meta({
+          description: 'A stable identifier used for safety monitoring and abuse detection.',
+        }),
+      z.null(),
+    ])
+    .exactOptional(),
   image: ImageOptionsParamSchema.meta({
     description: 'Request level image options.',
   }).exactOptional(),
@@ -38629,12 +38640,27 @@ export const CompactResourceSchema = z
       .literal('response.compaction')
       .default('response.compaction')
       .meta({ description: 'The object type. Always `response.compaction`.' }),
+    safety_identifier: z
+      .union([
+        z
+          .string()
+          .meta({
+            description:
+              'A stable identifier that was used for safety monitoring and abuse detection.',
+          }),
+        z.null(),
+      ])
+      .exactOptional(),
     output: z.array(ItemFieldSchema).meta({ description: 'The compacted list of output items.' }),
     created_at: z
       .int()
       .meta({
         description: 'Unix timestamp (in seconds) when the compacted conversation was created.',
       }),
+    service_tier: z
+      .string()
+      .meta({ description: 'The service tier used for compaction, when reported.' })
+      .exactOptional(),
     usage: ResponseUsageSchema.meta({
       description:
         'Token accounting for the compaction pass, including cached, reasoning, and total tokens.',
@@ -38645,6 +38671,7 @@ export const CompactResourceSchema = z
       {
         id: 'resp_001',
         object: 'response.compaction',
+        safety_identifier: 'compact-review-example-001',
         image: { context_compression: 'disabled' },
         output: [
           {
@@ -54557,6 +54584,17 @@ export const BetaCompactResponseMethodPublicBodySchema = z.object({
       z.null(),
     ])
     .exactOptional(),
+  safety_identifier: z
+    .union([
+      z
+        .string()
+        .max(128)
+        .meta({
+          description: 'A stable identifier used for safety monitoring and abuse detection.',
+        }),
+      z.null(),
+    ])
+    .exactOptional(),
   image: BetaImageOptionsParamSchema.meta({
     description: 'Request level image options.',
   }).exactOptional(),
@@ -56019,6 +56057,17 @@ export const BetaCompactResourceSchema = z
       .literal('response.compaction')
       .default('response.compaction')
       .meta({ description: 'The object type. Always `response.compaction`.' }),
+    safety_identifier: z
+      .union([
+        z
+          .string()
+          .meta({
+            description:
+              'A stable identifier that was used for safety monitoring and abuse detection.',
+          }),
+        z.null(),
+      ])
+      .exactOptional(),
     output: z
       .array(BetaItemFieldSchema)
       .meta({ description: 'The compacted list of output items.' }),
@@ -56027,6 +56076,10 @@ export const BetaCompactResourceSchema = z
       .meta({
         description: 'Unix timestamp (in seconds) when the compacted conversation was created.',
       }),
+    service_tier: z
+      .string()
+      .meta({ description: 'The service tier used for compaction, when reported.' })
+      .exactOptional(),
     usage: BetaResponseUsageSchema.meta({
       description:
         'Token accounting for the compaction pass, including cached, reasoning, and total tokens.',
@@ -56037,6 +56090,7 @@ export const BetaCompactResourceSchema = z
       {
         id: 'resp_001',
         object: 'response.compaction',
+        safety_identifier: 'compact-review-example-001',
         image: { context_compression: 'disabled' },
         output: [
           {

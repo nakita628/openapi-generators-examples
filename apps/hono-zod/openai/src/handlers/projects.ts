@@ -14,7 +14,13 @@ export const projectsHandler = new Hono()
     sValidator(
       'query',
       z.object({
-        limit: z.coerce.number().int().min(0).max(1000).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(0).max(1000),
+          )
+          .exactOptional(),
         after: z.string().exactOptional(),
         order: z.enum(['asc', 'desc']).exactOptional(),
       }),
@@ -49,7 +55,14 @@ export const projectsHandler = new Hono()
     sValidator(
       'query',
       z.object({
-        limit: z.coerce.number().int().min(0).max(1000).default(1000).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(0).max(1000),
+          )
+          .default(1000)
+          .exactOptional(),
         after: z.string().exactOptional(),
         order: z.enum(['asc', 'desc']).default('asc').exactOptional(),
       }),
@@ -84,7 +97,13 @@ export const projectsHandler = new Hono()
     sValidator(
       'query',
       z.object({
-        limit: z.coerce.number().int().min(0).max(1000).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(0).max(1000),
+          )
+          .exactOptional(),
         after: z.string().exactOptional(),
         order: z.enum(['asc', 'desc']).exactOptional(),
       }),

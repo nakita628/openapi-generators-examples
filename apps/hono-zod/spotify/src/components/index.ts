@@ -712,11 +712,17 @@ export const PlaylistTrackObjectSchema = z.object({
     })
     .exactOptional(),
   item: z
-    .xor([TrackObjectSchema, EpisodeObjectSchema])
+    .xor([
+      z.intersection(TrackObjectSchema, z.object({ type: z.literal('TrackObject') })),
+      z.intersection(EpisodeObjectSchema, z.object({ type: z.literal('EpisodeObject') })),
+    ])
     .meta({ description: 'Information about the track or episode.' })
     .exactOptional(),
   track: z
-    .xor([TrackObjectSchema, EpisodeObjectSchema])
+    .xor([
+      z.intersection(TrackObjectSchema, z.object({ type: z.literal('TrackObject') })),
+      z.intersection(EpisodeObjectSchema, z.object({ type: z.literal('EpisodeObject') })),
+    ])
     .meta({
       description: '**Deprecated:** Use `item` instead. Information about the track or episode.\n',
       deprecated: true,
@@ -728,11 +734,19 @@ export type PlaylistTrackObject = z.infer<typeof PlaylistTrackObjectSchema>
 
 export const QueueObjectSchema = z.object({
   currently_playing: z
-    .xor([TrackObjectSchema, EpisodeObjectSchema])
+    .xor([
+      z.intersection(TrackObjectSchema, z.object({ type: z.literal('TrackObject') })),
+      z.intersection(EpisodeObjectSchema, z.object({ type: z.literal('EpisodeObject') })),
+    ])
     .meta({ description: 'The currently playing track or episode. Can be `null`.' })
     .exactOptional(),
   queue: z
-    .array(z.xor([TrackObjectSchema, EpisodeObjectSchema]))
+    .array(
+      z.xor([
+        z.intersection(TrackObjectSchema, z.object({ type: z.literal('TrackObject') })),
+        z.intersection(EpisodeObjectSchema, z.object({ type: z.literal('EpisodeObject') })),
+      ]),
+    )
     .meta({ description: 'The tracks or episodes in the queue. Can be empty.' })
     .exactOptional(),
 })
@@ -859,7 +873,10 @@ export const CurrentlyPlayingContextObjectSchema = z.object({
     .meta({ description: 'If something is currently playing, return `true`.' })
     .exactOptional(),
   item: z
-    .xor([TrackObjectSchema, EpisodeObjectSchema])
+    .xor([
+      z.intersection(TrackObjectSchema, z.object({ type: z.literal('TrackObject') })),
+      z.intersection(EpisodeObjectSchema, z.object({ type: z.literal('EpisodeObject') })),
+    ])
     .meta({ description: 'The currently playing track or episode. Can be `null`.' })
     .exactOptional(),
   currently_playing_type: z
@@ -1780,44 +1797,46 @@ export type CursorPagingSimplifiedArtistObject = z.infer<
   typeof CursorPagingSimplifiedArtistObjectSchema
 >
 
-export const PagingObjectSchema = z.object({
-  href: z
-    .string()
-    .meta({
-      description: 'A link to the Web API endpoint returning the full result of the request\n',
-      examples: ['https://api.spotify.com/v1/me/shows?offset=0&limit=20\n'],
-    }),
-  limit: z
-    .int()
-    .meta({
-      description:
-        'The maximum number of items in the response (as set in the query or by default).\n',
-      examples: [20],
-    }),
-  next: z
-    .string()
-    .nullable()
-    .meta({
-      description: 'URL to the next page of items. ( `null` if none)\n',
-      examples: ['https://api.spotify.com/v1/me/shows?offset=1&limit=1'],
-    }),
-  offset: z
-    .int()
-    .meta({
-      description: 'The offset of the items returned (as set in the query or by default)\n',
-      examples: [0],
-    }),
-  previous: z
-    .string()
-    .nullable()
-    .meta({
-      description: 'URL to the previous page of items. ( `null` if none)\n',
-      examples: ['https://api.spotify.com/v1/me/shows?offset=1&limit=1'],
-    }),
-  total: z
-    .int()
-    .meta({ description: 'The total number of items available to return.\n', examples: [4] }),
-})
+export const PagingObjectSchema = z
+  .looseObject({
+    href: z
+      .string()
+      .meta({
+        description: 'A link to the Web API endpoint returning the full result of the request\n',
+        examples: ['https://api.spotify.com/v1/me/shows?offset=0&limit=20\n'],
+      }),
+    limit: z
+      .int()
+      .meta({
+        description:
+          'The maximum number of items in the response (as set in the query or by default).\n',
+        examples: [20],
+      }),
+    next: z
+      .string()
+      .nullable()
+      .meta({
+        description: 'URL to the next page of items. ( `null` if none)\n',
+        examples: ['https://api.spotify.com/v1/me/shows?offset=1&limit=1'],
+      }),
+    offset: z
+      .int()
+      .meta({
+        description: 'The offset of the items returned (as set in the query or by default)\n',
+        examples: [0],
+      }),
+    previous: z
+      .string()
+      .nullable()
+      .meta({
+        description: 'URL to the previous page of items. ( `null` if none)\n',
+        examples: ['https://api.spotify.com/v1/me/shows?offset=1&limit=1'],
+      }),
+    total: z
+      .int()
+      .meta({ description: 'The total number of items available to return.\n', examples: [4] }),
+  })
+  .refine((val) => ['items'].every((key) => key in val))
 
 export type PagingObject = z.infer<typeof PagingObjectSchema>
 
@@ -2568,7 +2587,10 @@ export const CurrentlyPlayingObjectSchema = z.object({
     .meta({ description: 'If something is currently playing, return `true`.' })
     .exactOptional(),
   item: z
-    .xor([TrackObjectSchema, EpisodeObjectSchema])
+    .xor([
+      z.intersection(TrackObjectSchema, z.object({ type: z.literal('TrackObject') })),
+      z.intersection(EpisodeObjectSchema, z.object({ type: z.literal('EpisodeObject') })),
+    ])
     .meta({ description: 'The currently playing track or episode. Can be `null`.' })
     .exactOptional(),
   currently_playing_type: z
@@ -2629,19 +2651,21 @@ export const QueryMarketParamsSchema = z
       'An [ISO 3166-1 alpha-2 country code](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2).\n  If a country code is specified, only content that is available in that market will be returned.<br/>\n  If a valid user access token is specified in the request header, the country associated with\n  the user account will take priority over this parameter.<br/>\n  _**Note**: If neither market or user country are provided, the content is considered unavailable for the client._<br/>\n  Users can view the country that is associated with their account in the [account settings](https://www.spotify.com/account/overview/).\n',
     examples: ['ES'],
   })
-export const QueryLimitParamsSchema = z.coerce
-  .number()
-  .int()
-  .min(1)
-  .max(50)
+export const QueryLimitParamsSchema = z
+  .preprocess(
+    (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+    z.number().int().min(1).max(50),
+  )
   .default(20)
   .meta({
     description: 'The maximum number of items to return. Default: 20. Minimum: 1. Maximum: 50.\n',
     examples: [10],
   })
-export const QueryOffsetParamsSchema = z.coerce
-  .number()
-  .int()
+export const QueryOffsetParamsSchema = z
+  .preprocess(
+    (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+    z.number().int(),
+  )
   .default(0)
   .meta({
     description:

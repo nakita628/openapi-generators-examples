@@ -1,5 +1,5 @@
 import { initTRPC, TRPCError } from '@trpc/server'
-import { Schema } from 'effect'
+import { Effect, Schema } from 'effect'
 import {
   ConversationItemListSchema,
   ConversationItemSchema,
@@ -22,9 +22,9 @@ export const conversationsRouter = t.router({
           limit: Schema.Number.check(Schema.isInt()).pipe(
             Schema.withDecodingDefault(Effect.succeed(20)),
           ),
-          order: Schema.optional(Schema.Literals(['asc', 'desc'])),
-          after: Schema.optional(Schema.String),
-          include: Schema.optional(Schema.Array(IncludeEnumSchema)),
+          order: Schema.optionalKey(Schema.Literals(['asc', 'desc'])),
+          after: Schema.optionalKey(Schema.String),
+          include: Schema.optionalKey(Schema.Array(IncludeEnumSchema)),
         }),
       ),
     )
@@ -37,7 +37,7 @@ export const conversationsRouter = t.router({
       Schema.toStandardSchemaV1(
         Schema.Struct({
           conversation_id: Schema.String.annotate({ jsonSchemaExamples: ['conv_123'] }),
-          include: Schema.optional(Schema.Array(IncludeEnumSchema)),
+          include: Schema.optionalKey(Schema.Array(IncludeEnumSchema)),
           items: Schema.Array(InputItemSchema)
             .check(Schema.isMaxLength(20))
             .annotate({
@@ -57,7 +57,7 @@ export const conversationsRouter = t.router({
         Schema.Struct({
           conversation_id: Schema.String.annotate({ jsonSchemaExamples: ['conv_123'] }),
           item_id: Schema.String.annotate({ jsonSchemaExamples: ['msg_abc'] }),
-          include: Schema.optional(Schema.Array(IncludeEnumSchema)),
+          include: Schema.optionalKey(Schema.Array(IncludeEnumSchema)),
         }),
       ),
     )

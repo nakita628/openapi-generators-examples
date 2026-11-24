@@ -54,7 +54,7 @@ export const storeHandler = new Hono()
       'form',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          id: Schema.optional(
+          id: Schema.optionalKey(
             Schema.BigIntFromString.check(
               Schema.isBetweenBigInt({
                 minimum: -9223372036854775808n,
@@ -62,7 +62,7 @@ export const storeHandler = new Hono()
               }),
             ).annotate({ jsonSchemaExamples: [10] }),
           ),
-          petId: Schema.optional(
+          petId: Schema.optionalKey(
             Schema.BigIntFromString.check(
               Schema.isBetweenBigInt({
                 minimum: -9223372036854775808n,
@@ -70,23 +70,34 @@ export const storeHandler = new Hono()
               }),
             ).annotate({ jsonSchemaExamples: [198772] }),
           ),
-          quantity: Schema.optional(
-            Schema.FiniteFromString.check(Schema.isInt32()).annotate({ jsonSchemaExamples: [7] }),
+          quantity: Schema.optionalKey(
+            Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+              .pipe(
+                Schema.decodeTo(
+                  Schema.Finite,
+                  SchemaTransformation.transform({
+                    decode: (input) => Number(input),
+                    encode: (output) => String(output),
+                  }),
+                ),
+              )
+              .check(Schema.isInt32())
+              .annotate({ jsonSchemaExamples: [7] }),
           ),
-          shipDate: Schema.optional(
+          shipDate: Schema.optionalKey(
             Schema.String.check(
               Schema.isPattern(
                 /^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z|([+-](?:[01]\d|2[0-3]):[0-5]\d)))$/,
               ),
             ),
           ),
-          status: Schema.optional(
+          status: Schema.optionalKey(
             Schema.Literals(['placed', 'approved', 'delivered']).annotate({
               description: 'Order Status',
               jsonSchemaExamples: ['approved'],
             }),
           ),
-          complete: Schema.optional(
+          complete: Schema.optionalKey(
             Schema.String.check(
               Schema.isPattern(/^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i),
             ).pipe(

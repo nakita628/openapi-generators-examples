@@ -11,12 +11,8 @@ export const stageInstancesHandler = new Hono()
       Type.Object({
         topic: Type.String({ minLength: 1, maxLength: 120 }),
         channel_id: SnowflakeTypeSchema,
-        privacy_level: Type.Optional(
-          Type.Union([Type.Union([Type.Null(), Type.Null()]), StageInstancesPrivacyLevelsSchema]),
-        ),
-        guild_scheduled_event_id: Type.Optional(
-          Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
-        ),
+        privacy_level: Type.Optional(Type.Union([Type.Null(), StageInstancesPrivacyLevelsSchema])),
+        guild_scheduled_event_id: Type.Optional(Type.Union([Type.Null(), SnowflakeTypeSchema])),
         send_start_notification: Type.Optional(Type.Union([Type.Boolean(), Type.Null()])),
       }),
     ),

@@ -14,11 +14,17 @@ export const webhookEndpointsHandler = new Hono()
     sValidator(
       'query',
       z.object({
-        limit: z.coerce.number().int().min(1).max(100).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(1).max(100),
+          )
+          .exactOptional(),
         after: z
           .union([
             z.string().meta({ examples: ['whe_123'] }),
-            z.preprocess((val) => (val === 'null' ? null : val), z.null().nullable()),
+            z.preprocess((val) => (val === 'null' ? null : val), z.null()),
           ])
           .exactOptional(),
       }),

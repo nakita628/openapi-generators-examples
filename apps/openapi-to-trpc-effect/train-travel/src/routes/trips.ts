@@ -1,5 +1,5 @@
 import { initTRPC, TRPCError } from '@trpc/server'
-import { Schema } from 'effect'
+import { Effect, Schema, SchemaGetter, SchemaIssue } from 'effect'
 import {
   LinksPaginationSchema,
   LinksSelfSchema,
@@ -28,22 +28,73 @@ export const tripsRouter = t.router({
     )
     .output(
       Schema.toStandardSchemaV1(
-        WrapperCollectionSchema.check(
-          Schema.makeFilter((input) =>
-            Schema.is(Schema.Struct({ data: Schema.optional(Schema.Array(TripSchema)) }))(input),
-          ),
-          Schema.makeFilter((input) =>
-            Schema.is(
-              Schema.Struct({
-                links: Schema.optional(
-                  LinksSelfSchema.check(
-                    Schema.makeFilter((input) => Schema.is(LinksPaginationSchema)(input)),
-                  ),
+        (() => {
+          const M0 = WrapperCollectionSchema
+          const M1 = Schema.Struct({ data: Schema.optionalKey(Schema.Array(TripSchema)) })
+          const M2 = Schema.Struct({
+            links: Schema.optionalKey(
+              (() => {
+                const M0 = LinksSelfSchema
+                const M1 = LinksPaginationSchema
+                const isAll = (input: unknown): input is typeof M0.Type & typeof M1.Type =>
+                  Schema.is(M0)(input) && Schema.is(M1)(input)
+                return Schema.Unknown.pipe(
+                  Schema.decodeTo(Schema.declare(isAll), {
+                    decode: SchemaGetter.transformEffect((input) =>
+                      Effect.all([
+                        Schema.decodeUnknownEffect(M0)(input),
+                        Schema.decodeUnknownEffect(M1)(input),
+                      ]).pipe(
+                        Effect.mapError((error) => error.issue),
+                        Effect.flatMap((values) => {
+                          const merged = values.every(
+                            (value) =>
+                              typeof value === 'object' && value !== null && !Array.isArray(value),
+                          )
+                            ? Object.assign({}, ...values)
+                            : values[0]
+                          return isAll(merged)
+                            ? Effect.succeed(merged)
+                            : Effect.fail(new SchemaIssue.InvalidValue(undefined, merged))
+                        }),
+                      ),
+                    ),
+                    encode: SchemaGetter.passthrough({ strict: false }),
+                  }),
+                )
+              })(),
+            ),
+          })
+          const isAll = (
+            input: unknown,
+          ): input is typeof M0.Type & typeof M1.Type & typeof M2.Type =>
+            Schema.is(M0)(input) && Schema.is(M1)(input) && Schema.is(M2)(input)
+          return Schema.Unknown.pipe(
+            Schema.decodeTo(Schema.declare(isAll), {
+              decode: SchemaGetter.transformEffect((input) =>
+                Effect.all([
+                  Schema.decodeUnknownEffect(M0)(input),
+                  Schema.decodeUnknownEffect(M1)(input),
+                  Schema.decodeUnknownEffect(M2)(input),
+                ]).pipe(
+                  Effect.mapError((error) => error.issue),
+                  Effect.flatMap((values) => {
+                    const merged = values.every(
+                      (value) =>
+                        typeof value === 'object' && value !== null && !Array.isArray(value),
+                    )
+                      ? Object.assign({}, ...values)
+                      : values[0]
+                    return isAll(merged)
+                      ? Effect.succeed(merged)
+                      : Effect.fail(new SchemaIssue.InvalidValue(undefined, merged))
+                  }),
                 ),
-              }),
-            )(input),
-          ),
-        ),
+              ),
+              encode: SchemaGetter.passthrough({ strict: false }),
+            }),
+          )
+        })(),
       ),
     )
     .query(() => {

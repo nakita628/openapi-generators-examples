@@ -69,9 +69,7 @@ export const partnerSdkHandler = new Hono()
     tbValidator(
       'json',
       Type.Object({
-        provisional_user_id: Type.Optional(
-          Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
-        ),
+        provisional_user_id: Type.Optional(Type.Union([Type.Null(), SnowflakeTypeSchema])),
         external_user_id: Type.String({ minLength: 1, maxLength: 1024 }),
         preferred_global_name: Type.Optional(
           Type.Union([Type.String({ minLength: 1, maxLength: 32 }), Type.Null()]),

@@ -72,7 +72,7 @@ export const projectsRouter = t.router({
         role_name: z.string().meta({ description: 'Unique name for the role.' }),
         permissions: z.array(z.string()).meta({ description: 'Permissions to grant to the role.' }),
         description: z
-          .union([z.string(), z.null().nullable()])
+          .union([z.string(), z.null()])
           .meta({ description: 'Optional description of the role.' })
           .exactOptional(),
       }),
@@ -93,15 +93,15 @@ export const projectsRouter = t.router({
         project_id: z.string(),
         role_id: z.string(),
         permissions: z
-          .union([z.array(z.string()), z.null().nullable()])
+          .union([z.array(z.string()), z.null()])
           .meta({ description: 'Updated set of permissions for the role.' })
           .exactOptional(),
         description: z
-          .union([z.string(), z.null().nullable()])
+          .union([z.string(), z.null()])
           .meta({ description: 'New description for the role.' })
           .exactOptional(),
         role_name: z
-          .union([z.string(), z.null().nullable()])
+          .union([z.string(), z.null()])
           .meta({ description: 'New name for the role.' })
           .exactOptional(),
       }),

@@ -104,7 +104,13 @@ export const responsesHandler = new Hono()
             v.regex(/^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i),
             v.transform((input) => /^(?:true|1|yes|on|y|enabled)$/i.test(input)),
           ),
-          starting_after: v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
+          starting_after: v.pipe(
+            v.string(),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
+            v.number(),
+            v.safeInteger(),
+          ),
           include_obfuscation: v.pipe(
             v.string(),
             v.regex(/^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i),
@@ -210,7 +216,13 @@ export const responsesHandler = new Hono()
       'query',
       v.object({
         limit: v.optional(
-          v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
+          v.pipe(
+            v.string(),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
+            v.number(),
+            v.safeInteger(),
+          ),
           '20',
         ),
         order: v.optional(v.picklist(['asc', 'desc'])),
@@ -319,7 +331,13 @@ export const responsesHandler = new Hono()
             v.regex(/^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i),
             v.transform((input) => /^(?:true|1|yes|on|y|enabled)$/i.test(input)),
           ),
-          starting_after: v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
+          starting_after: v.pipe(
+            v.string(),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
+            v.number(),
+            v.safeInteger(),
+          ),
           include_obfuscation: v.pipe(
             v.string(),
             v.regex(/^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i),
@@ -497,7 +515,13 @@ export const responsesHandler = new Hono()
       'query',
       v.object({
         limit: v.optional(
-          v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
+          v.pipe(
+            v.string(),
+            v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.transform((input) => Number(input)),
+            v.number(),
+            v.safeInteger(),
+          ),
           '20',
         ),
         order: v.optional(v.picklist(['asc', 'desc'])),

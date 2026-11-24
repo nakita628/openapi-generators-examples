@@ -2,7 +2,7 @@ import { defineHandler } from 'hono/factory'
 import { Effect, Schema, SchemaTransformation } from 'effect'
 
 export const OrderSchema = Schema.Struct({
-  id: Schema.optional(
+  id: Schema.optionalKey(
     Schema.Union([
       Schema.BigInt,
       Schema.Number.check(Schema.isInt()),
@@ -22,7 +22,7 @@ export const OrderSchema = Schema.Struct({
       )
       .annotate({ jsonSchemaExamples: [10] }),
   ),
-  petId: Schema.optional(
+  petId: Schema.optionalKey(
     Schema.Union([
       Schema.BigInt,
       Schema.Number.check(Schema.isInt()),
@@ -42,29 +42,29 @@ export const OrderSchema = Schema.Struct({
       )
       .annotate({ jsonSchemaExamples: [198772] }),
   ),
-  quantity: Schema.optional(
+  quantity: Schema.optionalKey(
     Schema.Number.check(Schema.isInt32()).annotate({ jsonSchemaExamples: [7] }),
   ),
-  shipDate: Schema.optional(
+  shipDate: Schema.optionalKey(
     Schema.String.check(
       Schema.isPattern(
         /^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z|([+-](?:[01]\d|2[0-3]):[0-5]\d)))$/,
       ),
     ),
   ),
-  status: Schema.optional(
+  status: Schema.optionalKey(
     Schema.Literals(['placed', 'approved', 'delivered']).annotate({
       description: 'Order Status',
       jsonSchemaExamples: ['approved'],
     }),
   ),
-  complete: Schema.optional(Schema.Boolean),
+  complete: Schema.optionalKey(Schema.Boolean),
 })
 
 export type Order = Schema.Schema.Type<typeof OrderSchema>
 
 export const CategorySchema = Schema.Struct({
-  id: Schema.optional(
+  id: Schema.optionalKey(
     Schema.Union([
       Schema.BigInt,
       Schema.Number.check(Schema.isInt()),
@@ -84,13 +84,13 @@ export const CategorySchema = Schema.Struct({
       )
       .annotate({ jsonSchemaExamples: [1] }),
   ),
-  name: Schema.optional(Schema.String.annotate({ jsonSchemaExamples: ['Dogs'] })),
+  name: Schema.optionalKey(Schema.String.annotate({ jsonSchemaExamples: ['Dogs'] })),
 })
 
 export type Category = Schema.Schema.Type<typeof CategorySchema>
 
 export const UserSchema = Schema.Struct({
-  id: Schema.optional(
+  id: Schema.optionalKey(
     Schema.Union([
       Schema.BigInt,
       Schema.Number.check(Schema.isInt()),
@@ -110,13 +110,13 @@ export const UserSchema = Schema.Struct({
       )
       .annotate({ jsonSchemaExamples: [10] }),
   ),
-  username: Schema.optional(Schema.String.annotate({ jsonSchemaExamples: ['theUser'] })),
-  firstName: Schema.optional(Schema.String.annotate({ jsonSchemaExamples: ['John'] })),
-  lastName: Schema.optional(Schema.String.annotate({ jsonSchemaExamples: ['James'] })),
-  email: Schema.optional(Schema.String.annotate({ jsonSchemaExamples: ['john@email.com'] })),
-  password: Schema.optional(Schema.String.annotate({ jsonSchemaExamples: ['12345'] })),
-  phone: Schema.optional(Schema.String.annotate({ jsonSchemaExamples: ['12345'] })),
-  userStatus: Schema.optional(
+  username: Schema.optionalKey(Schema.String.annotate({ jsonSchemaExamples: ['theUser'] })),
+  firstName: Schema.optionalKey(Schema.String.annotate({ jsonSchemaExamples: ['John'] })),
+  lastName: Schema.optionalKey(Schema.String.annotate({ jsonSchemaExamples: ['James'] })),
+  email: Schema.optionalKey(Schema.String.annotate({ jsonSchemaExamples: ['john@email.com'] })),
+  password: Schema.optionalKey(Schema.String.annotate({ jsonSchemaExamples: ['12345'] })),
+  phone: Schema.optionalKey(Schema.String.annotate({ jsonSchemaExamples: ['12345'] })),
+  userStatus: Schema.optionalKey(
     Schema.Number.check(Schema.isInt32()).annotate({
       description: 'User Status',
       jsonSchemaExamples: [1],
@@ -127,7 +127,7 @@ export const UserSchema = Schema.Struct({
 export type User = Schema.Schema.Type<typeof UserSchema>
 
 export const TagSchema = Schema.Struct({
-  id: Schema.optional(
+  id: Schema.optionalKey(
     Schema.Union([
       Schema.BigInt,
       Schema.Number.check(Schema.isInt()),
@@ -146,13 +146,13 @@ export const TagSchema = Schema.Struct({
         Schema.isBetweenBigInt({ minimum: -9223372036854775808n, maximum: 9223372036854775807n }),
       ),
   ),
-  name: Schema.optional(Schema.String),
+  name: Schema.optionalKey(Schema.String),
 })
 
 export type Tag = Schema.Schema.Type<typeof TagSchema>
 
 export const PetSchema = Schema.Struct({
-  id: Schema.optional(
+  id: Schema.optionalKey(
     Schema.Union([
       Schema.BigInt,
       Schema.Number.check(Schema.isInt()),
@@ -173,10 +173,10 @@ export const PetSchema = Schema.Struct({
       .annotate({ jsonSchemaExamples: [10] }),
   ),
   name: Schema.String.annotate({ jsonSchemaExamples: ['doggie'] }),
-  category: Schema.optional(CategorySchema),
+  category: Schema.optionalKey(CategorySchema),
   photoUrls: Schema.Array(Schema.String),
-  tags: Schema.optional(Schema.Array(TagSchema)),
-  status: Schema.optional(
+  tags: Schema.optionalKey(Schema.Array(TagSchema)),
+  status: Schema.optionalKey(
     Schema.Literals(['available', 'pending', 'sold']).annotate({
       description: 'pet status in the store',
     }),
@@ -186,9 +186,9 @@ export const PetSchema = Schema.Struct({
 export type Pet = Schema.Schema.Type<typeof PetSchema>
 
 export const ApiResponseSchema = Schema.Struct({
-  code: Schema.optional(Schema.Number.check(Schema.isInt32())),
-  type: Schema.optional(Schema.String),
-  message: Schema.optional(Schema.String),
+  code: Schema.optionalKey(Schema.Number.check(Schema.isInt32())),
+  type: Schema.optionalKey(Schema.String),
+  message: Schema.optionalKey(Schema.String),
 })
 
 export type ApiResponse = Schema.Schema.Type<typeof ApiResponseSchema>
@@ -216,15 +216,15 @@ export const UserArrayRequestBody = {
 export const putPetHandler = defineHandler({
   form: Schema.toStandardSchemaV1(
     Schema.Struct({
-      id: Schema.optional(
+      id: Schema.optionalKey(
         Schema.BigIntFromString.check(
           Schema.isBetweenBigInt({ minimum: -9223372036854775808n, maximum: 9223372036854775807n }),
         ).annotate({ jsonSchemaExamples: [10] }),
       ),
       name: Schema.String.annotate({ jsonSchemaExamples: ['doggie'] }),
-      category: Schema.optional(
+      category: Schema.optionalKey(
         Schema.Struct({
-          id: Schema.optional(
+          id: Schema.optionalKey(
             Schema.BigIntFromString.check(
               Schema.isBetweenBigInt({
                 minimum: -9223372036854775808n,
@@ -232,7 +232,7 @@ export const putPetHandler = defineHandler({
               }),
             ).annotate({ jsonSchemaExamples: [1] }),
           ),
-          name: Schema.optional(Schema.String.annotate({ jsonSchemaExamples: ['Dogs'] })),
+          name: Schema.optionalKey(Schema.String.annotate({ jsonSchemaExamples: ['Dogs'] })),
         }),
       ),
       photoUrls: Schema.Unknown.pipe(
@@ -245,7 +245,7 @@ export const putPetHandler = defineHandler({
         ),
         Schema.decodeTo(Schema.Array(Schema.String)),
       ),
-      tags: Schema.optional(
+      tags: Schema.optionalKey(
         Schema.Unknown.pipe(
           Schema.decodeTo(
             Schema.Unknown,
@@ -257,7 +257,7 @@ export const putPetHandler = defineHandler({
           Schema.decodeTo(
             Schema.Array(
               Schema.Struct({
-                id: Schema.optional(
+                id: Schema.optionalKey(
                   Schema.BigIntFromString.check(
                     Schema.isBetweenBigInt({
                       minimum: -9223372036854775808n,
@@ -265,13 +265,13 @@ export const putPetHandler = defineHandler({
                     }),
                   ),
                 ),
-                name: Schema.optional(Schema.String),
+                name: Schema.optionalKey(Schema.String),
               }),
             ),
           ),
         ),
       ),
-      status: Schema.optional(
+      status: Schema.optionalKey(
         Schema.Literals(['available', 'pending', 'sold']).annotate({
           description: 'pet status in the store',
         }),
@@ -285,15 +285,15 @@ export const putPetHandler = defineHandler({
 export const postPetHandler = defineHandler({
   form: Schema.toStandardSchemaV1(
     Schema.Struct({
-      id: Schema.optional(
+      id: Schema.optionalKey(
         Schema.BigIntFromString.check(
           Schema.isBetweenBigInt({ minimum: -9223372036854775808n, maximum: 9223372036854775807n }),
         ).annotate({ jsonSchemaExamples: [10] }),
       ),
       name: Schema.String.annotate({ jsonSchemaExamples: ['doggie'] }),
-      category: Schema.optional(
+      category: Schema.optionalKey(
         Schema.Struct({
-          id: Schema.optional(
+          id: Schema.optionalKey(
             Schema.BigIntFromString.check(
               Schema.isBetweenBigInt({
                 minimum: -9223372036854775808n,
@@ -301,7 +301,7 @@ export const postPetHandler = defineHandler({
               }),
             ).annotate({ jsonSchemaExamples: [1] }),
           ),
-          name: Schema.optional(Schema.String.annotate({ jsonSchemaExamples: ['Dogs'] })),
+          name: Schema.optionalKey(Schema.String.annotate({ jsonSchemaExamples: ['Dogs'] })),
         }),
       ),
       photoUrls: Schema.Unknown.pipe(
@@ -314,7 +314,7 @@ export const postPetHandler = defineHandler({
         ),
         Schema.decodeTo(Schema.Array(Schema.String)),
       ),
-      tags: Schema.optional(
+      tags: Schema.optionalKey(
         Schema.Unknown.pipe(
           Schema.decodeTo(
             Schema.Unknown,
@@ -326,7 +326,7 @@ export const postPetHandler = defineHandler({
           Schema.decodeTo(
             Schema.Array(
               Schema.Struct({
-                id: Schema.optional(
+                id: Schema.optionalKey(
                   Schema.BigIntFromString.check(
                     Schema.isBetweenBigInt({
                       minimum: -9223372036854775808n,
@@ -334,13 +334,13 @@ export const postPetHandler = defineHandler({
                     }),
                   ),
                 ),
-                name: Schema.optional(Schema.String),
+                name: Schema.optionalKey(Schema.String),
               }),
             ),
           ),
         ),
       ),
-      status: Schema.optional(
+      status: Schema.optionalKey(
         Schema.Literals(['available', 'pending', 'sold']).annotate({
           description: 'pet status in the store',
         }),
@@ -400,7 +400,10 @@ export const postPetPetIdHandler = defineHandler({
     }),
   ),
   query: Schema.toStandardSchemaV1(
-    Schema.Struct({ name: Schema.optional(Schema.String), status: Schema.optional(Schema.String) }),
+    Schema.Struct({
+      name: Schema.optionalKey(Schema.String),
+      status: Schema.optionalKey(Schema.String),
+    }),
   ),
   response: Schema.toStandardSchemaV1(PetSchema),
 })
@@ -413,7 +416,7 @@ export const deletePetPetIdHandler = defineHandler({
       ),
     }),
   ),
-  header: Schema.toStandardSchemaV1(Schema.Struct({ api_key: Schema.optional(Schema.String) })),
+  header: Schema.toStandardSchemaV1(Schema.Struct({ api_key: Schema.optionalKey(Schema.String) })),
 })
 
 export const postPetPetIdUploadImageHandler = defineHandler({
@@ -425,7 +428,7 @@ export const postPetPetIdUploadImageHandler = defineHandler({
     }),
   ),
   query: Schema.toStandardSchemaV1(
-    Schema.Struct({ additionalMetadata: Schema.optional(Schema.String) }),
+    Schema.Struct({ additionalMetadata: Schema.optionalKey(Schema.String) }),
   ),
   response: Schema.toStandardSchemaV1(ApiResponseSchema),
 })
@@ -439,33 +442,44 @@ export const getStoreInventoryHandler = defineHandler({
 export const postStoreOrderHandler = defineHandler({
   form: Schema.toStandardSchemaV1(
     Schema.Struct({
-      id: Schema.optional(
+      id: Schema.optionalKey(
         Schema.BigIntFromString.check(
           Schema.isBetweenBigInt({ minimum: -9223372036854775808n, maximum: 9223372036854775807n }),
         ).annotate({ jsonSchemaExamples: [10] }),
       ),
-      petId: Schema.optional(
+      petId: Schema.optionalKey(
         Schema.BigIntFromString.check(
           Schema.isBetweenBigInt({ minimum: -9223372036854775808n, maximum: 9223372036854775807n }),
         ).annotate({ jsonSchemaExamples: [198772] }),
       ),
-      quantity: Schema.optional(
-        Schema.FiniteFromString.check(Schema.isInt32()).annotate({ jsonSchemaExamples: [7] }),
+      quantity: Schema.optionalKey(
+        Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+          .pipe(
+            Schema.decodeTo(
+              Schema.Finite,
+              SchemaTransformation.transform({
+                decode: (input) => Number(input),
+                encode: (output) => String(output),
+              }),
+            ),
+          )
+          .check(Schema.isInt32())
+          .annotate({ jsonSchemaExamples: [7] }),
       ),
-      shipDate: Schema.optional(
+      shipDate: Schema.optionalKey(
         Schema.String.check(
           Schema.isPattern(
             /^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z|([+-](?:[01]\d|2[0-3]):[0-5]\d)))$/,
           ),
         ),
       ),
-      status: Schema.optional(
+      status: Schema.optionalKey(
         Schema.Literals(['placed', 'approved', 'delivered']).annotate({
           description: 'Order Status',
           jsonSchemaExamples: ['approved'],
         }),
       ),
-      complete: Schema.optional(
+      complete: Schema.optionalKey(
         Schema.String.check(
           Schema.isPattern(/^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i),
         ).pipe(
@@ -508,22 +522,30 @@ export const deleteStoreOrderOrderIdHandler = defineHandler({
 export const postUserHandler = defineHandler({
   form: Schema.toStandardSchemaV1(
     Schema.Struct({
-      id: Schema.optional(
+      id: Schema.optionalKey(
         Schema.BigIntFromString.check(
           Schema.isBetweenBigInt({ minimum: -9223372036854775808n, maximum: 9223372036854775807n }),
         ).annotate({ jsonSchemaExamples: [10] }),
       ),
-      username: Schema.optional(Schema.String.annotate({ jsonSchemaExamples: ['theUser'] })),
-      firstName: Schema.optional(Schema.String.annotate({ jsonSchemaExamples: ['John'] })),
-      lastName: Schema.optional(Schema.String.annotate({ jsonSchemaExamples: ['James'] })),
-      email: Schema.optional(Schema.String.annotate({ jsonSchemaExamples: ['john@email.com'] })),
-      password: Schema.optional(Schema.String.annotate({ jsonSchemaExamples: ['12345'] })),
-      phone: Schema.optional(Schema.String.annotate({ jsonSchemaExamples: ['12345'] })),
-      userStatus: Schema.optional(
-        Schema.FiniteFromString.check(Schema.isInt32()).annotate({
-          description: 'User Status',
-          jsonSchemaExamples: [1],
-        }),
+      username: Schema.optionalKey(Schema.String.annotate({ jsonSchemaExamples: ['theUser'] })),
+      firstName: Schema.optionalKey(Schema.String.annotate({ jsonSchemaExamples: ['John'] })),
+      lastName: Schema.optionalKey(Schema.String.annotate({ jsonSchemaExamples: ['James'] })),
+      email: Schema.optionalKey(Schema.String.annotate({ jsonSchemaExamples: ['john@email.com'] })),
+      password: Schema.optionalKey(Schema.String.annotate({ jsonSchemaExamples: ['12345'] })),
+      phone: Schema.optionalKey(Schema.String.annotate({ jsonSchemaExamples: ['12345'] })),
+      userStatus: Schema.optionalKey(
+        Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+          .pipe(
+            Schema.decodeTo(
+              Schema.Finite,
+              SchemaTransformation.transform({
+                decode: (input) => Number(input),
+                encode: (output) => String(output),
+              }),
+            ),
+          )
+          .check(Schema.isInt32())
+          .annotate({ description: 'User Status', jsonSchemaExamples: [1] }),
       ),
     }),
   ),
@@ -539,8 +561,8 @@ export const postUserCreateWithListHandler = defineHandler({
 export const getUserLoginHandler = defineHandler({
   query: Schema.toStandardSchemaV1(
     Schema.Struct({
-      username: Schema.optional(Schema.String),
-      password: Schema.optional(Schema.String),
+      username: Schema.optionalKey(Schema.String),
+      password: Schema.optionalKey(Schema.String),
     }),
   ),
   response: Schema.toStandardSchemaV1(Schema.String),
@@ -557,22 +579,30 @@ export const putUserUsernameHandler = defineHandler({
   param: Schema.toStandardSchemaV1(Schema.Struct({ username: Schema.String })),
   form: Schema.toStandardSchemaV1(
     Schema.Struct({
-      id: Schema.optional(
+      id: Schema.optionalKey(
         Schema.BigIntFromString.check(
           Schema.isBetweenBigInt({ minimum: -9223372036854775808n, maximum: 9223372036854775807n }),
         ).annotate({ jsonSchemaExamples: [10] }),
       ),
-      username: Schema.optional(Schema.String.annotate({ jsonSchemaExamples: ['theUser'] })),
-      firstName: Schema.optional(Schema.String.annotate({ jsonSchemaExamples: ['John'] })),
-      lastName: Schema.optional(Schema.String.annotate({ jsonSchemaExamples: ['James'] })),
-      email: Schema.optional(Schema.String.annotate({ jsonSchemaExamples: ['john@email.com'] })),
-      password: Schema.optional(Schema.String.annotate({ jsonSchemaExamples: ['12345'] })),
-      phone: Schema.optional(Schema.String.annotate({ jsonSchemaExamples: ['12345'] })),
-      userStatus: Schema.optional(
-        Schema.FiniteFromString.check(Schema.isInt32()).annotate({
-          description: 'User Status',
-          jsonSchemaExamples: [1],
-        }),
+      username: Schema.optionalKey(Schema.String.annotate({ jsonSchemaExamples: ['theUser'] })),
+      firstName: Schema.optionalKey(Schema.String.annotate({ jsonSchemaExamples: ['John'] })),
+      lastName: Schema.optionalKey(Schema.String.annotate({ jsonSchemaExamples: ['James'] })),
+      email: Schema.optionalKey(Schema.String.annotate({ jsonSchemaExamples: ['john@email.com'] })),
+      password: Schema.optionalKey(Schema.String.annotate({ jsonSchemaExamples: ['12345'] })),
+      phone: Schema.optionalKey(Schema.String.annotate({ jsonSchemaExamples: ['12345'] })),
+      userStatus: Schema.optionalKey(
+        Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+          .pipe(
+            Schema.decodeTo(
+              Schema.Finite,
+              SchemaTransformation.transform({
+                decode: (input) => Number(input),
+                encode: (output) => String(output),
+              }),
+            ),
+          )
+          .check(Schema.isInt32())
+          .annotate({ description: 'User Status', jsonSchemaExamples: [1] }),
       ),
     }),
   ),

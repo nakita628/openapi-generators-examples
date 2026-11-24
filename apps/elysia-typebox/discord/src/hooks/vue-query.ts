@@ -7,8 +7,9 @@ import type {
 } from '@tanstack/vue-query'
 import { computed, toValue } from 'vue'
 import type { MaybeRefOrGetter } from 'vue'
-import type { WidgetResponse } from '../components/schemas'
-import { client } from '../lib'
+import type { Static } from 'elysia'
+import type { WidgetResponseSchema } from '../components/schemas'
+import { client, clientOrigin } from '../lib'
 
 export function getApplicationsKey() {
   return ['applications'] as const
@@ -15986,37 +15987,40 @@ export function usePatchGuildsGuildIdWidget<
   )
 }
 
-export function getGuildsGuildIdWidgetJsonQueryKey(guild_id: MaybeRefOrGetter<string>) {
-  return ['guilds', '/guilds/{guild_id}/widget.json', toValue(guild_id)] as const
+export function getGuildsGuildIdWidgetJsonQueryKey(params: MaybeRefOrGetter<string>) {
+  return ['guilds', '/guilds/{guild_id}/widget.json', toValue(params)] as const
 }
 
 export function getGuildsGuildIdWidgetJsonQueryOptions(
-  guild_id: MaybeRefOrGetter<string>,
+  params: MaybeRefOrGetter<string>,
   options?: { headers?: Record<string, string> },
 ) {
   return {
-    queryKey: computed(() => getGuildsGuildIdWidgetJsonQueryKey(guild_id)),
+    queryKey: computed(() => getGuildsGuildIdWidgetJsonQueryKey(params)),
     queryFn: async ({ signal }: QueryFunctionContext) => {
-      const res = await fetch(`/guilds/${encodeURIComponent(toValue(guild_id))}/widget.json`, {
-        headers: options?.headers,
-        signal,
-      })
+      const res = await fetch(
+        `${clientOrigin}/guilds/${encodeURIComponent(toValue(params))}/widget.json`,
+        { headers: options?.headers, signal },
+      )
       if (!res.ok) throw await res.json()
       return JSON.parse(await res.text())
     },
   }
 }
 
-export function useGuildsGuildIdWidgetJson<TData = WidgetResponse, TError = unknown>(
-  guild_id: MaybeRefOrGetter<string>,
+export function useGuildsGuildIdWidgetJson<
+  TData = Static<typeof WidgetResponseSchema>,
+  TError = unknown,
+>(
+  params: MaybeRefOrGetter<string>,
   options?: {
     query?: Omit<
       Extract<
         UseQueryOptions<
-          WidgetResponse,
+          Static<typeof WidgetResponseSchema>,
           TError,
           TData,
-          WidgetResponse,
+          Static<typeof WidgetResponseSchema>,
           ReturnType<typeof getGuildsGuildIdWidgetJsonQueryKey>
         >,
         { queryKey: unknown }
@@ -16031,12 +16035,12 @@ export function useGuildsGuildIdWidgetJson<TData = WidgetResponse, TError = unkn
   return useQuery(
     {
       ...queryOptions,
-      queryKey: computed(() => getGuildsGuildIdWidgetJsonQueryKey(guild_id)),
+      queryKey: computed(() => getGuildsGuildIdWidgetJsonQueryKey(params)),
       queryFn: async ({ signal }) => {
-        const res = await fetch(`/guilds/${encodeURIComponent(toValue(guild_id))}/widget.json`, {
-          headers: clientOptions?.headers,
-          signal,
-        })
+        const res = await fetch(
+          `${clientOrigin}/guilds/${encodeURIComponent(toValue(params))}/widget.json`,
+          { headers: clientOptions?.headers, signal },
+        )
         if (!res.ok) throw await res.json()
         return JSON.parse(await res.text())
       },
@@ -16046,19 +16050,19 @@ export function useGuildsGuildIdWidgetJson<TData = WidgetResponse, TError = unkn
 }
 
 export function getGuildsGuildIdWidgetPngQueryKey(
-  guild_id: MaybeRefOrGetter<string>,
+  params: MaybeRefOrGetter<string>,
   options?: { headers?: Record<string, string>; query?: Record<string, unknown> },
 ) {
   const { headers: _a, ...keyArgs } = options ?? {}
-  return ['guilds', '/guilds/{guild_id}/widget.png', toValue(guild_id), keyArgs] as const
+  return ['guilds', '/guilds/{guild_id}/widget.png', toValue(params), keyArgs] as const
 }
 
 export function getGuildsGuildIdWidgetPngQueryOptions(
-  guild_id: MaybeRefOrGetter<string>,
+  params: MaybeRefOrGetter<string>,
   options?: { headers?: Record<string, string>; query?: Record<string, unknown> },
 ) {
   return {
-    queryKey: computed(() => getGuildsGuildIdWidgetPngQueryKey(guild_id, options)),
+    queryKey: computed(() => getGuildsGuildIdWidgetPngQueryKey(params, options)),
     queryFn: async ({ signal }: QueryFunctionContext) => {
       const search = new URLSearchParams()
       for (const [k, v] of Object.entries(options?.query ?? {})) {
@@ -16072,7 +16076,7 @@ export function getGuildsGuildIdWidgetPngQueryOptions(
         }
       }
       const res = await fetch(
-        `/guilds/${encodeURIComponent(toValue(guild_id))}/widget.png${search.size ? `?${search}` : ''}`,
+        `${clientOrigin}/guilds/${encodeURIComponent(toValue(params))}/widget.png${search.size ? `?${search}` : ''}`,
         { headers: options?.headers, signal },
       )
       if (!res.ok) throw await res.json()
@@ -16082,7 +16086,7 @@ export function getGuildsGuildIdWidgetPngQueryOptions(
 }
 
 export function useGuildsGuildIdWidgetPng<TData = void, TError = unknown>(
-  guild_id: MaybeRefOrGetter<string>,
+  params: MaybeRefOrGetter<string>,
   options?: {
     query?: Omit<
       Extract<
@@ -16105,7 +16109,7 @@ export function useGuildsGuildIdWidgetPng<TData = void, TError = unknown>(
   return useQuery(
     {
       ...queryOptions,
-      queryKey: computed(() => getGuildsGuildIdWidgetPngQueryKey(guild_id, clientOptions)),
+      queryKey: computed(() => getGuildsGuildIdWidgetPngQueryKey(params, clientOptions)),
       queryFn: async ({ signal }) => {
         const search = new URLSearchParams()
         for (const [k, v] of Object.entries(clientOptions?.query ?? {})) {
@@ -16119,7 +16123,7 @@ export function useGuildsGuildIdWidgetPng<TData = void, TError = unknown>(
           }
         }
         const res = await fetch(
-          `/guilds/${encodeURIComponent(toValue(guild_id))}/widget.png${search.size ? `?${search}` : ''}`,
+          `${clientOrigin}/guilds/${encodeURIComponent(toValue(params))}/widget.png${search.size ? `?${search}` : ''}`,
           { headers: clientOptions?.headers, signal },
         )
         if (!res.ok) throw await res.json()

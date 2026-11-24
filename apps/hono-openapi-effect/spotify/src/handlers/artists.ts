@@ -1,6 +1,6 @@
 import { Hono } from 'hono'
 import { describeRoute, validator } from 'hono-openapi'
-import { Effect, Schema } from 'effect'
+import { Effect, Schema, SchemaTransformation } from 'effect'
 import {
   UnauthorizedResponse,
   ForbiddenResponse,
@@ -106,32 +106,48 @@ export const artistsHandler = new Hono()
       'query',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          include_groups: Schema.optional(
+          include_groups: Schema.optionalKey(
             Schema.String.annotate({
               description:
                 'A comma-separated list of keywords that will be used to filter the response. If not supplied, all album types will be returned. <br/>\nValid values are:<br/>- `album`<br/>- `single`<br/>- `appears_on`<br/>- `compilation`<br/>For example: `include_groups=album,single`.\n',
               jsonSchemaExamples: ['single,appears_on'],
             }),
           ),
-          market: Schema.optional(
+          market: Schema.optionalKey(
             Schema.String.annotate({
               description:
                 'An [ISO 3166-1 alpha-2 country code](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2).\n  If a country code is specified, only content that is available in that market will be returned.<br/>\n  If a valid user access token is specified in the request header, the country associated with\n  the user account will take priority over this parameter.<br/>\n  _**Note**: If neither market or user country are provided, the content is considered unavailable for the client._<br/>\n  Users can view the country that is associated with their account in the [account settings](https://www.spotify.com/account/overview/).\n',
               jsonSchemaExamples: ['ES'],
             }),
           ),
-          limit: Schema.FiniteFromString.check(
-            Schema.isInt(),
-            Schema.isGreaterThanOrEqualTo(0),
-            Schema.isLessThanOrEqualTo(10),
-          )
+          limit: Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+            .pipe(
+              Schema.decodeTo(
+                Schema.Finite,
+                SchemaTransformation.transform({
+                  decode: (input) => Number(input),
+                  encode: (output) => String(output),
+                }),
+              ),
+            )
+            .check(Schema.isInt(), Schema.isGreaterThanOrEqualTo(0), Schema.isLessThanOrEqualTo(10))
             .pipe(Schema.withDecodingDefaultType(Effect.succeed(5)))
             .annotate({
               description:
                 'The maximum number of items to return. Default: 5. Minimum: 1. Maximum: 10.\n',
               jsonSchemaExamples: [5],
             }),
-          offset: Schema.FiniteFromString.check(Schema.isInt())
+          offset: Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+            .pipe(
+              Schema.decodeTo(
+                Schema.Finite,
+                SchemaTransformation.transform({
+                  decode: (input) => Number(input),
+                  encode: (output) => String(output),
+                }),
+              ),
+            )
+            .check(Schema.isInt())
             .pipe(Schema.withDecodingDefaultType(Effect.succeed(0)))
             .annotate({
               description:
@@ -175,7 +191,7 @@ export const artistsHandler = new Hono()
       'query',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          market: Schema.optional(
+          market: Schema.optionalKey(
             Schema.String.annotate({
               description:
                 'An [ISO 3166-1 alpha-2 country code](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2).\n  If a country code is specified, only content that is available in that market will be returned.<br/>\n  If a valid user access token is specified in the request header, the country associated with\n  the user account will take priority over this parameter.<br/>\n  _**Note**: If neither market or user country are provided, the content is considered unavailable for the client._<br/>\n  Users can view the country that is associated with their account in the [account settings](https://www.spotify.com/account/overview/).\n',

@@ -20,7 +20,7 @@ export const chatHandler = new Hono()
                 ),
                 type('unknown')
                   .pipe((data) => (data === 'null' ? null : data))
-                  .to('null | null'),
+                  .to('null'),
               ]) {
                 const out = branch(data)
                 if (!(out instanceof type.errors)) return out
@@ -31,7 +31,7 @@ export const chatHandler = new Hono()
         ),
         'after?': 'string',
         'limit?': type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'order?': "'asc' | 'desc'",
@@ -64,7 +64,7 @@ export const chatHandler = new Hono()
       type({
         'after?': 'string',
         'limit?': type('string').pipe((data, ctx) => {
-          const value = Number(data)
+          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'order?': "'asc' | 'desc'",

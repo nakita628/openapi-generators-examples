@@ -145,8 +145,8 @@ export const realtimeRouter = t.router({
             ),
           ),
         ),
-        tracing: v.optional(
-          v.pipe(
+        tracing: v.pipe(
+          v.optional(
             v.union([
               v.pipe(
                 v.optional(v.literal('auto'), 'auto'),
@@ -179,11 +179,12 @@ export const realtimeRouter = t.router({
                 ),
                 v.description('Granular configuration for tracing.\n'),
               ),
-              v.nullable(v.null()),
+              v.null(),
             ]),
-            v.description(
-              'Realtime API can write session traces to the [Traces Dashboard](https://platform.openai.com/logs?api=traces). Set to null to disable tracing. Once\ntracing is enabled for a session, the configuration cannot be modified.\n\n`auto` will create a trace for the session with default values for the\nworkflow name, group id, and metadata.\n',
-            ),
+            null,
+          ),
+          v.description(
+            'Realtime API can write session traces to the [Traces Dashboard](https://platform.openai.com/logs?api=traces). Set to null to disable tracing. Once\ntracing is enabled for a session, the configuration cannot be modified.\n\n`auto` will create a trace for the session with default values for the\nworkflow name, group id, and metadata.\n',
           ),
         ),
         tools: v.optional(

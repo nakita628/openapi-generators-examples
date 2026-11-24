@@ -18,10 +18,7 @@ export const webhookEndpointsRouter = t.router({
       v.partial(
         v.object({
           limit: v.pipe(v.number(), v.integer(), v.minValue(1), v.maxValue(100)),
-          after: v.union([
-            v.pipe(v.string(), v.metadata({ examples: ['whe_123'] })),
-            v.nullable(v.null()),
-          ]),
+          after: v.union([v.pipe(v.string(), v.metadata({ examples: ['whe_123'] })), v.null()]),
         }),
       ),
     )

@@ -12,7 +12,8 @@ export const recommendationsHandler = new Hono()
           v.optional(
             v.pipe(
               v.string(),
-              v.transform(Number),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
               v.number(),
               v.safeInteger(),
               v.minValue(1),
@@ -65,7 +66,8 @@ export const recommendationsHandler = new Hono()
           v.pipe(
             v.pipe(
               v.string(),
-              v.transform(Number),
+              v.regex(/^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/),
+              v.transform((input) => Number(input)),
               v.number(),
               v.finite(),
               v.minValue(0),
@@ -80,7 +82,8 @@ export const recommendationsHandler = new Hono()
           v.pipe(
             v.pipe(
               v.string(),
-              v.transform(Number),
+              v.regex(/^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/),
+              v.transform((input) => Number(input)),
               v.number(),
               v.finite(),
               v.minValue(0),
@@ -95,7 +98,8 @@ export const recommendationsHandler = new Hono()
           v.pipe(
             v.pipe(
               v.string(),
-              v.transform(Number),
+              v.regex(/^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/),
+              v.transform((input) => Number(input)),
               v.number(),
               v.finite(),
               v.minValue(0),
@@ -110,7 +114,8 @@ export const recommendationsHandler = new Hono()
           v.pipe(
             v.pipe(
               v.string(),
-              v.transform(Number),
+              v.regex(/^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/),
+              v.transform((input) => Number(input)),
               v.number(),
               v.finite(),
               v.minValue(0),
@@ -125,7 +130,8 @@ export const recommendationsHandler = new Hono()
           v.pipe(
             v.pipe(
               v.string(),
-              v.transform(Number),
+              v.regex(/^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/),
+              v.transform((input) => Number(input)),
               v.number(),
               v.finite(),
               v.minValue(0),
@@ -140,7 +146,8 @@ export const recommendationsHandler = new Hono()
           v.pipe(
             v.pipe(
               v.string(),
-              v.transform(Number),
+              v.regex(/^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/),
+              v.transform((input) => Number(input)),
               v.number(),
               v.finite(),
               v.minValue(0),
@@ -153,7 +160,13 @@ export const recommendationsHandler = new Hono()
         ),
         min_duration_ms: v.optional(
           v.pipe(
-            v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+            ),
             v.description(
               'For each tunable track attribute, a hard floor on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `min_tempo=140` would restrict results to only those tracks with a tempo of greater than 140 beats per minute.\n',
             ),
@@ -161,7 +174,13 @@ export const recommendationsHandler = new Hono()
         ),
         max_duration_ms: v.optional(
           v.pipe(
-            v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+            ),
             v.description(
               'For each tunable track attribute, a hard ceiling on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `max_instrumentalness=0.35` would filter out most tracks that are likely to be instrumental.\n',
             ),
@@ -169,7 +188,13 @@ export const recommendationsHandler = new Hono()
         ),
         target_duration_ms: v.optional(
           v.pipe(
-            v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+            ),
             v.description('Target duration of the track (ms)'),
           ),
         ),
@@ -177,7 +202,8 @@ export const recommendationsHandler = new Hono()
           v.pipe(
             v.pipe(
               v.string(),
-              v.transform(Number),
+              v.regex(/^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/),
+              v.transform((input) => Number(input)),
               v.number(),
               v.finite(),
               v.minValue(0),
@@ -192,7 +218,8 @@ export const recommendationsHandler = new Hono()
           v.pipe(
             v.pipe(
               v.string(),
-              v.transform(Number),
+              v.regex(/^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/),
+              v.transform((input) => Number(input)),
               v.number(),
               v.finite(),
               v.minValue(0),
@@ -207,7 +234,8 @@ export const recommendationsHandler = new Hono()
           v.pipe(
             v.pipe(
               v.string(),
-              v.transform(Number),
+              v.regex(/^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/),
+              v.transform((input) => Number(input)),
               v.number(),
               v.finite(),
               v.minValue(0),
@@ -222,7 +250,8 @@ export const recommendationsHandler = new Hono()
           v.pipe(
             v.pipe(
               v.string(),
-              v.transform(Number),
+              v.regex(/^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/),
+              v.transform((input) => Number(input)),
               v.number(),
               v.finite(),
               v.minValue(0),
@@ -237,7 +266,8 @@ export const recommendationsHandler = new Hono()
           v.pipe(
             v.pipe(
               v.string(),
-              v.transform(Number),
+              v.regex(/^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/),
+              v.transform((input) => Number(input)),
               v.number(),
               v.finite(),
               v.minValue(0),
@@ -252,7 +282,8 @@ export const recommendationsHandler = new Hono()
           v.pipe(
             v.pipe(
               v.string(),
-              v.transform(Number),
+              v.regex(/^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/),
+              v.transform((input) => Number(input)),
               v.number(),
               v.finite(),
               v.minValue(0),
@@ -267,7 +298,8 @@ export const recommendationsHandler = new Hono()
           v.pipe(
             v.pipe(
               v.string(),
-              v.transform(Number),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
               v.number(),
               v.safeInteger(),
               v.minValue(0),
@@ -282,7 +314,8 @@ export const recommendationsHandler = new Hono()
           v.pipe(
             v.pipe(
               v.string(),
-              v.transform(Number),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
               v.number(),
               v.safeInteger(),
               v.minValue(0),
@@ -297,7 +330,8 @@ export const recommendationsHandler = new Hono()
           v.pipe(
             v.pipe(
               v.string(),
-              v.transform(Number),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
               v.number(),
               v.safeInteger(),
               v.minValue(0),
@@ -312,7 +346,8 @@ export const recommendationsHandler = new Hono()
           v.pipe(
             v.pipe(
               v.string(),
-              v.transform(Number),
+              v.regex(/^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/),
+              v.transform((input) => Number(input)),
               v.number(),
               v.finite(),
               v.minValue(0),
@@ -327,7 +362,8 @@ export const recommendationsHandler = new Hono()
           v.pipe(
             v.pipe(
               v.string(),
-              v.transform(Number),
+              v.regex(/^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/),
+              v.transform((input) => Number(input)),
               v.number(),
               v.finite(),
               v.minValue(0),
@@ -342,7 +378,8 @@ export const recommendationsHandler = new Hono()
           v.pipe(
             v.pipe(
               v.string(),
-              v.transform(Number),
+              v.regex(/^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/),
+              v.transform((input) => Number(input)),
               v.number(),
               v.finite(),
               v.minValue(0),
@@ -355,7 +392,13 @@ export const recommendationsHandler = new Hono()
         ),
         min_loudness: v.optional(
           v.pipe(
-            v.pipe(v.string(), v.transform(Number), v.number(), v.finite()),
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.finite(),
+            ),
             v.description(
               'For each tunable track attribute, a hard floor on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `min_tempo=140` would restrict results to only those tracks with a tempo of greater than 140 beats per minute.\n',
             ),
@@ -363,7 +406,13 @@ export const recommendationsHandler = new Hono()
         ),
         max_loudness: v.optional(
           v.pipe(
-            v.pipe(v.string(), v.transform(Number), v.number(), v.finite()),
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.finite(),
+            ),
             v.description(
               'For each tunable track attribute, a hard ceiling on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `max_instrumentalness=0.35` would filter out most tracks that are likely to be instrumental.\n',
             ),
@@ -371,7 +420,13 @@ export const recommendationsHandler = new Hono()
         ),
         target_loudness: v.optional(
           v.pipe(
-            v.pipe(v.string(), v.transform(Number), v.number(), v.finite()),
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.finite(),
+            ),
             v.description(
               'For each of the tunable track attributes (below) a target value may be provided. Tracks with the attribute values nearest to the target values will be preferred. For example, you might request `target_energy=0.6` and `target_danceability=0.8`. All target values will be weighed equally in ranking results.\n',
             ),
@@ -381,7 +436,8 @@ export const recommendationsHandler = new Hono()
           v.pipe(
             v.pipe(
               v.string(),
-              v.transform(Number),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
               v.number(),
               v.safeInteger(),
               v.minValue(0),
@@ -396,7 +452,8 @@ export const recommendationsHandler = new Hono()
           v.pipe(
             v.pipe(
               v.string(),
-              v.transform(Number),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
               v.number(),
               v.safeInteger(),
               v.minValue(0),
@@ -411,7 +468,8 @@ export const recommendationsHandler = new Hono()
           v.pipe(
             v.pipe(
               v.string(),
-              v.transform(Number),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
               v.number(),
               v.safeInteger(),
               v.minValue(0),
@@ -426,7 +484,8 @@ export const recommendationsHandler = new Hono()
           v.pipe(
             v.pipe(
               v.string(),
-              v.transform(Number),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
               v.number(),
               v.safeInteger(),
               v.minValue(0),
@@ -441,7 +500,8 @@ export const recommendationsHandler = new Hono()
           v.pipe(
             v.pipe(
               v.string(),
-              v.transform(Number),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
               v.number(),
               v.safeInteger(),
               v.minValue(0),
@@ -456,7 +516,8 @@ export const recommendationsHandler = new Hono()
           v.pipe(
             v.pipe(
               v.string(),
-              v.transform(Number),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
               v.number(),
               v.safeInteger(),
               v.minValue(0),
@@ -471,7 +532,8 @@ export const recommendationsHandler = new Hono()
           v.pipe(
             v.pipe(
               v.string(),
-              v.transform(Number),
+              v.regex(/^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/),
+              v.transform((input) => Number(input)),
               v.number(),
               v.finite(),
               v.minValue(0),
@@ -486,7 +548,8 @@ export const recommendationsHandler = new Hono()
           v.pipe(
             v.pipe(
               v.string(),
-              v.transform(Number),
+              v.regex(/^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/),
+              v.transform((input) => Number(input)),
               v.number(),
               v.finite(),
               v.minValue(0),
@@ -501,7 +564,8 @@ export const recommendationsHandler = new Hono()
           v.pipe(
             v.pipe(
               v.string(),
-              v.transform(Number),
+              v.regex(/^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/),
+              v.transform((input) => Number(input)),
               v.number(),
               v.finite(),
               v.minValue(0),
@@ -514,7 +578,13 @@ export const recommendationsHandler = new Hono()
         ),
         min_tempo: v.optional(
           v.pipe(
-            v.pipe(v.string(), v.transform(Number), v.number(), v.finite()),
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.finite(),
+            ),
             v.description(
               'For each tunable track attribute, a hard floor on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `min_tempo=140` would restrict results to only those tracks with a tempo of greater than 140 beats per minute.\n',
             ),
@@ -522,7 +592,13 @@ export const recommendationsHandler = new Hono()
         ),
         max_tempo: v.optional(
           v.pipe(
-            v.pipe(v.string(), v.transform(Number), v.number(), v.finite()),
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.finite(),
+            ),
             v.description(
               'For each tunable track attribute, a hard ceiling on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `max_instrumentalness=0.35` would filter out most tracks that are likely to be instrumental.\n',
             ),
@@ -530,13 +606,26 @@ export const recommendationsHandler = new Hono()
         ),
         target_tempo: v.optional(
           v.pipe(
-            v.pipe(v.string(), v.transform(Number), v.number(), v.finite()),
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.finite(),
+            ),
             v.description('Target tempo (BPM)'),
           ),
         ),
         min_time_signature: v.optional(
           v.pipe(
-            v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger(), v.maxValue(11)),
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+              v.maxValue(11),
+            ),
             v.description(
               'For each tunable track attribute, a hard floor on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `min_tempo=140` would restrict results to only those tracks with a tempo of greater than 140 beats per minute.\n',
             ),
@@ -544,7 +633,13 @@ export const recommendationsHandler = new Hono()
         ),
         max_time_signature: v.optional(
           v.pipe(
-            v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+            ),
             v.description(
               'For each tunable track attribute, a hard ceiling on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `max_instrumentalness=0.35` would filter out most tracks that are likely to be instrumental.\n',
             ),
@@ -552,7 +647,13 @@ export const recommendationsHandler = new Hono()
         ),
         target_time_signature: v.optional(
           v.pipe(
-            v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+            ),
             v.description(
               'For each of the tunable track attributes (below) a target value may be provided. Tracks with the attribute values nearest to the target values will be preferred. For example, you might request `target_energy=0.6` and `target_danceability=0.8`. All target values will be weighed equally in ranking results.\n',
             ),
@@ -562,7 +663,8 @@ export const recommendationsHandler = new Hono()
           v.pipe(
             v.pipe(
               v.string(),
-              v.transform(Number),
+              v.regex(/^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/),
+              v.transform((input) => Number(input)),
               v.number(),
               v.finite(),
               v.minValue(0),
@@ -577,7 +679,8 @@ export const recommendationsHandler = new Hono()
           v.pipe(
             v.pipe(
               v.string(),
-              v.transform(Number),
+              v.regex(/^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/),
+              v.transform((input) => Number(input)),
               v.number(),
               v.finite(),
               v.minValue(0),
@@ -592,7 +695,8 @@ export const recommendationsHandler = new Hono()
           v.pipe(
             v.pipe(
               v.string(),
-              v.transform(Number),
+              v.regex(/^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/),
+              v.transform((input) => Number(input)),
               v.number(),
               v.finite(),
               v.minValue(0),

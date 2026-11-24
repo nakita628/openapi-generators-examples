@@ -14,6 +14,7 @@
       "@orpc/contract": "1.16.4",
       "@orpc/server": "1.16.4",
       "@sinclair/typebox": "0.34.52",
+      "@tanstack/angular-query": "5.108.4",
       "@tanstack/angular-query-experimental": "5.107.2",
       "@tanstack/preact-query": "5.108.2",
       "@tanstack/react-query": "5.108.2",
@@ -51,9 +52,9 @@
   },
   "devDependencies": {
     "@bazel/bazelisk": "1.28.1",
-    "asphodelos": "0.3.1",
-    "openapi-to-trpc": "0.3.0",
-    "takibi-hono": "0.8.0",
+    "asphodelos": "0.5.1",
+    "openapi-to-trpc": "0.3.1",
+    "takibi-hono": "0.10.2",
     "typescript": "catalog:",
     "wakusei": "0.1.0"
   },

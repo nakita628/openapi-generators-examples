@@ -64,7 +64,7 @@ export const applicationsRouter = t.router({
       Schema.toStandardSchemaV1(
         Schema.Struct({
           application_id: SnowflakeTypeSchema,
-          description: Schema.optional(
+          description: Schema.optionalKey(
             Schema.NullOr(
               Schema.Struct({
                 default: Schema.String.check(
@@ -72,7 +72,7 @@ export const applicationsRouter = t.router({
                     expected: 'a string of at most 400 characters',
                   }),
                 ),
-                localizations: Schema.optional(
+                localizations: Schema.optionalKey(
                   Schema.NullOr(
                     Schema.Record(
                       Schema.String,
@@ -87,11 +87,11 @@ export const applicationsRouter = t.router({
               }),
             ),
           ),
-          icon: Schema.optional(Schema.NullOr(Schema.String)),
-          cover_image: Schema.optional(Schema.NullOr(Schema.String)),
-          team_id: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema])),
-          flags: Schema.optional(Schema.NullOr(Schema.Number.check(Schema.isInt()))),
-          interactions_endpoint_url: Schema.optional(
+          icon: Schema.optionalKey(Schema.NullOr(Schema.String)),
+          cover_image: Schema.optionalKey(Schema.NullOr(Schema.String)),
+          team_id: Schema.optionalKey(Schema.Union([Schema.Null, SnowflakeTypeSchema])),
+          flags: Schema.optionalKey(Schema.NullOr(Schema.Number.check(Schema.isInt()))),
+          interactions_endpoint_url: Schema.optionalKey(
             Schema.NullOr(
               Schema.String.check(
                 Schema.makeFilter((input) => URL.canParse(input)),
@@ -101,14 +101,14 @@ export const applicationsRouter = t.router({
               ),
             ),
           ),
-          explicit_content_filter: Schema.optional(
-            Schema.Union([Schema.NullOr(Schema.Null), ApplicationExplicitContentFilterTypesSchema]),
+          explicit_content_filter: Schema.optionalKey(
+            Schema.Union([Schema.Null, ApplicationExplicitContentFilterTypesSchema]),
           ),
-          max_participants: Schema.optional(
+          max_participants: Schema.optionalKey(
             Schema.NullOr(Schema.Number.check(Schema.isInt32(), Schema.isGreaterThanOrEqualTo(-1))),
           ),
-          type: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), ApplicationTypesSchema])),
-          tags: Schema.optional(
+          type: Schema.optionalKey(Schema.Union([Schema.Null, ApplicationTypesSchema])),
+          tags: Schema.optionalKey(
             Schema.NullOr(
               Schema.Array(
                 Schema.String.check(
@@ -119,7 +119,7 @@ export const applicationsRouter = t.router({
               ).check(Schema.isMaxLength(5), Schema.isUnique()),
             ),
           ),
-          custom_install_url: Schema.optional(
+          custom_install_url: Schema.optionalKey(
             Schema.NullOr(
               Schema.String.check(
                 Schema.makeFilter((input) => URL.canParse(input)),
@@ -129,10 +129,10 @@ export const applicationsRouter = t.router({
               ),
             ),
           ),
-          install_params: Schema.optional(
-            Schema.Union([Schema.NullOr(Schema.Null), ApplicationOAuth2InstallParamsSchema]),
+          install_params: Schema.optionalKey(
+            Schema.Union([Schema.Null, ApplicationOAuth2InstallParamsSchema]),
           ),
-          role_connections_verification_url: Schema.optional(
+          role_connections_verification_url: Schema.optionalKey(
             Schema.NullOr(
               Schema.String.check(
                 Schema.makeFilter((input) => URL.canParse(input)),
@@ -142,21 +142,18 @@ export const applicationsRouter = t.router({
               ),
             ),
           ),
-          integration_types_config: Schema.optional(
+          integration_types_config: Schema.optionalKey(
             Schema.NullOr(
               Schema.Record(
                 Schema.String,
-                Schema.Union([
-                  Schema.NullOr(Schema.Null),
-                  ApplicationIntegrationTypeConfigurationSchema,
-                ]),
+                Schema.Union([Schema.Null, ApplicationIntegrationTypeConfigurationSchema]),
               ),
             ),
           ),
-          event_webhooks_status: Schema.optional(
-            Schema.Union([Schema.NullOr(Schema.Null), ApplicationEventWebhooksStatusSchema]),
+          event_webhooks_status: Schema.optionalKey(
+            Schema.Union([Schema.Null, ApplicationEventWebhooksStatusSchema]),
           ),
-          event_webhooks_url: Schema.optional(
+          event_webhooks_url: Schema.optionalKey(
             Schema.NullOr(
               Schema.String.check(
                 Schema.makeFilter((input) => URL.canParse(input)),
@@ -166,7 +163,7 @@ export const applicationsRouter = t.router({
               ),
             ).annotate({ description: 'Event webhooks URL for the app to receive webhook events' }),
           ),
-          event_webhooks_types: Schema.optional(
+          event_webhooks_types: Schema.optionalKey(
             Schema.NullOr(Schema.Array(ActionTypesSchema).check(Schema.isUnique())),
           ),
         }),
@@ -204,7 +201,7 @@ export const applicationsRouter = t.router({
       Schema.toStandardSchemaV1(
         Schema.Struct({
           application_id: SnowflakeTypeSchema,
-          with_localizations: Schema.optional(Schema.Boolean),
+          with_localizations: Schema.optionalKey(Schema.Boolean),
         }),
       ),
     )
@@ -244,7 +241,7 @@ export const applicationsRouter = t.router({
               expected: 'a string of at most 32 characters',
             }),
           ),
-          name_localizations: Schema.optional(
+          name_localizations: Schema.optionalKey(
             Schema.NullOr(
               Schema.Record(
                 Schema.String,
@@ -259,7 +256,7 @@ export const applicationsRouter = t.router({
               ),
             ),
           ),
-          description: Schema.optional(
+          description: Schema.optionalKey(
             Schema.NullOr(
               Schema.String.check(
                 Schema.makeFilter((input) => [...input].length <= 100, {
@@ -268,7 +265,7 @@ export const applicationsRouter = t.router({
               ),
             ),
           ),
-          description_localizations: Schema.optional(
+          description_localizations: Schema.optionalKey(
             Schema.NullOr(
               Schema.Record(
                 Schema.String,
@@ -283,7 +280,7 @@ export const applicationsRouter = t.router({
               ),
             ),
           ),
-          options: Schema.optional(
+          options: Schema.optionalKey(
             Schema.NullOr(
               Schema.Array(
                 Schema.Union([
@@ -302,7 +299,7 @@ export const applicationsRouter = t.router({
               ).check(Schema.isMaxLength(25)),
             ),
           ),
-          default_member_permissions: Schema.optional(
+          default_member_permissions: Schema.optionalKey(
             Schema.NullOr(
               Schema.Number.check(
                 Schema.isInt(),
@@ -311,8 +308,8 @@ export const applicationsRouter = t.router({
               ),
             ),
           ),
-          dm_permission: Schema.optional(Schema.NullOr(Schema.Boolean)),
-          contexts: Schema.optional(
+          dm_permission: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
+          contexts: Schema.optionalKey(
             Schema.NullOr(
               Schema.Array(InteractionContextTypeSchema).check(
                 Schema.isMinLength(1),
@@ -320,7 +317,7 @@ export const applicationsRouter = t.router({
               ),
             ),
           ),
-          integration_types: Schema.optional(
+          integration_types: Schema.optionalKey(
             Schema.NullOr(
               Schema.Array(ApplicationIntegrationTypeSchema).check(
                 Schema.isMinLength(1),
@@ -328,15 +325,13 @@ export const applicationsRouter = t.router({
               ),
             ),
           ),
-          handler: Schema.optional(
-            Schema.Union([Schema.NullOr(Schema.Null), ApplicationCommandHandlerSchema]).annotate({
+          handler: Schema.optionalKey(
+            Schema.Union([Schema.Null, ApplicationCommandHandlerSchema]).annotate({
               description:
                 "Determines whether the interaction is handled by the app's interactions handler or by Discord",
             }),
           ),
-          type: Schema.optional(
-            Schema.Union([Schema.NullOr(Schema.Null), ApplicationCommandTypeSchema]),
-          ),
+          type: Schema.optionalKey(Schema.Union([Schema.Null, ApplicationCommandTypeSchema])),
         }),
       ),
     )
@@ -369,7 +364,7 @@ export const applicationsRouter = t.router({
         Schema.Struct({
           application_id: SnowflakeTypeSchema,
           command_id: SnowflakeTypeSchema,
-          name: Schema.optional(
+          name: Schema.optionalKey(
             Schema.String.check(
               Schema.makeFilter((input) => [...input].length >= 1, {
                 expected: 'a string of at least 1 character',
@@ -379,7 +374,7 @@ export const applicationsRouter = t.router({
               }),
             ),
           ),
-          name_localizations: Schema.optional(
+          name_localizations: Schema.optionalKey(
             Schema.NullOr(
               Schema.Record(
                 Schema.String,
@@ -394,7 +389,7 @@ export const applicationsRouter = t.router({
               ),
             ),
           ),
-          description: Schema.optional(
+          description: Schema.optionalKey(
             Schema.NullOr(
               Schema.String.check(
                 Schema.makeFilter((input) => [...input].length <= 100, {
@@ -403,7 +398,7 @@ export const applicationsRouter = t.router({
               ),
             ),
           ),
-          description_localizations: Schema.optional(
+          description_localizations: Schema.optionalKey(
             Schema.NullOr(
               Schema.Record(
                 Schema.String,
@@ -418,7 +413,7 @@ export const applicationsRouter = t.router({
               ),
             ),
           ),
-          options: Schema.optional(
+          options: Schema.optionalKey(
             Schema.NullOr(
               Schema.Array(
                 Schema.Union([
@@ -437,7 +432,7 @@ export const applicationsRouter = t.router({
               ).check(Schema.isMaxLength(25)),
             ),
           ),
-          default_member_permissions: Schema.optional(
+          default_member_permissions: Schema.optionalKey(
             Schema.NullOr(
               Schema.Number.check(
                 Schema.isInt(),
@@ -446,8 +441,8 @@ export const applicationsRouter = t.router({
               ),
             ),
           ),
-          dm_permission: Schema.optional(Schema.NullOr(Schema.Boolean)),
-          contexts: Schema.optional(
+          dm_permission: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
+          contexts: Schema.optionalKey(
             Schema.NullOr(
               Schema.Array(InteractionContextTypeSchema).check(
                 Schema.isMinLength(1),
@@ -455,7 +450,7 @@ export const applicationsRouter = t.router({
               ),
             ),
           ),
-          integration_types: Schema.optional(
+          integration_types: Schema.optionalKey(
             Schema.NullOr(
               Schema.Array(ApplicationIntegrationTypeSchema).check(
                 Schema.isMinLength(1),
@@ -463,8 +458,8 @@ export const applicationsRouter = t.router({
               ),
             ),
           ),
-          handler: Schema.optional(
-            Schema.Union([Schema.NullOr(Schema.Null), ApplicationCommandHandlerSchema]).annotate({
+          handler: Schema.optionalKey(
+            Schema.Union([Schema.Null, ApplicationCommandHandlerSchema]).annotate({
               description:
                 "Determines whether the interaction is handled by the app's interactions handler or by Discord",
             }),
@@ -528,7 +523,7 @@ export const applicationsRouter = t.router({
         Schema.Struct({
           application_id: SnowflakeTypeSchema,
           emoji_id: SnowflakeTypeSchema,
-          name: Schema.optional(
+          name: Schema.optionalKey(
             Schema.String.check(
               Schema.makeFilter((input) => [...input].length >= 2, {
                 expected: 'a string of at least 2 characters',
@@ -550,29 +545,29 @@ export const applicationsRouter = t.router({
       Schema.toStandardSchemaV1(
         Schema.Struct({
           application_id: SnowflakeTypeSchema,
-          user_id: Schema.optional(SnowflakeTypeSchema),
-          sku_ids: Schema.optional(
+          user_id: Schema.optionalKey(SnowflakeTypeSchema),
+          sku_ids: Schema.optionalKey(
             Schema.Union([
               Schema.String,
-              Schema.Array(Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema])).check(
+              Schema.Array(Schema.Union([Schema.Null, SnowflakeTypeSchema])).check(
                 Schema.isMaxLength(100),
                 Schema.isUnique(),
               ),
             ]),
           ),
-          guild_id: Schema.optional(SnowflakeTypeSchema),
-          before: Schema.optional(SnowflakeTypeSchema),
-          after: Schema.optional(SnowflakeTypeSchema),
-          limit: Schema.optional(
+          guild_id: Schema.optionalKey(SnowflakeTypeSchema),
+          before: Schema.optionalKey(SnowflakeTypeSchema),
+          after: Schema.optionalKey(SnowflakeTypeSchema),
+          limit: Schema.optionalKey(
             Schema.Number.check(
               Schema.isInt(),
               Schema.isGreaterThanOrEqualTo(1),
               Schema.isLessThanOrEqualTo(100),
             ),
           ),
-          exclude_ended: Schema.optional(Schema.Boolean),
-          exclude_deleted: Schema.optional(Schema.Boolean),
-          only_active: Schema.optional(Schema.Boolean),
+          exclude_ended: Schema.optionalKey(Schema.Boolean),
+          exclude_deleted: Schema.optionalKey(Schema.Boolean),
+          only_active: Schema.optionalKey(Schema.Boolean),
         }),
       ),
     )
@@ -635,7 +630,7 @@ export const applicationsRouter = t.router({
         Schema.Struct({
           application_id: SnowflakeTypeSchema,
           guild_id: SnowflakeTypeSchema,
-          with_localizations: Schema.optional(Schema.Boolean),
+          with_localizations: Schema.optionalKey(Schema.Boolean),
         }),
       ),
     )
@@ -677,7 +672,7 @@ export const applicationsRouter = t.router({
               expected: 'a string of at most 32 characters',
             }),
           ),
-          name_localizations: Schema.optional(
+          name_localizations: Schema.optionalKey(
             Schema.NullOr(
               Schema.Record(
                 Schema.String,
@@ -692,7 +687,7 @@ export const applicationsRouter = t.router({
               ),
             ),
           ),
-          description: Schema.optional(
+          description: Schema.optionalKey(
             Schema.NullOr(
               Schema.String.check(
                 Schema.makeFilter((input) => [...input].length <= 100, {
@@ -701,7 +696,7 @@ export const applicationsRouter = t.router({
               ),
             ),
           ),
-          description_localizations: Schema.optional(
+          description_localizations: Schema.optionalKey(
             Schema.NullOr(
               Schema.Record(
                 Schema.String,
@@ -716,7 +711,7 @@ export const applicationsRouter = t.router({
               ),
             ),
           ),
-          options: Schema.optional(
+          options: Schema.optionalKey(
             Schema.NullOr(
               Schema.Array(
                 Schema.Union([
@@ -735,7 +730,7 @@ export const applicationsRouter = t.router({
               ).check(Schema.isMaxLength(25)),
             ),
           ),
-          default_member_permissions: Schema.optional(
+          default_member_permissions: Schema.optionalKey(
             Schema.NullOr(
               Schema.Number.check(
                 Schema.isInt(),
@@ -744,8 +739,8 @@ export const applicationsRouter = t.router({
               ),
             ),
           ),
-          dm_permission: Schema.optional(Schema.NullOr(Schema.Boolean)),
-          contexts: Schema.optional(
+          dm_permission: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
+          contexts: Schema.optionalKey(
             Schema.NullOr(
               Schema.Array(InteractionContextTypeSchema).check(
                 Schema.isMinLength(1),
@@ -753,7 +748,7 @@ export const applicationsRouter = t.router({
               ),
             ),
           ),
-          integration_types: Schema.optional(
+          integration_types: Schema.optionalKey(
             Schema.NullOr(
               Schema.Array(ApplicationIntegrationTypeSchema).check(
                 Schema.isMinLength(1),
@@ -761,15 +756,13 @@ export const applicationsRouter = t.router({
               ),
             ),
           ),
-          handler: Schema.optional(
-            Schema.Union([Schema.NullOr(Schema.Null), ApplicationCommandHandlerSchema]).annotate({
+          handler: Schema.optionalKey(
+            Schema.Union([Schema.Null, ApplicationCommandHandlerSchema]).annotate({
               description:
                 "Determines whether the interaction is handled by the app's interactions handler or by Discord",
             }),
           ),
-          type: Schema.optional(
-            Schema.Union([Schema.NullOr(Schema.Null), ApplicationCommandTypeSchema]),
-          ),
+          type: Schema.optionalKey(Schema.Union([Schema.Null, ApplicationCommandTypeSchema])),
         }),
       ),
     )
@@ -821,7 +814,7 @@ export const applicationsRouter = t.router({
           application_id: SnowflakeTypeSchema,
           guild_id: SnowflakeTypeSchema,
           command_id: SnowflakeTypeSchema,
-          name: Schema.optional(
+          name: Schema.optionalKey(
             Schema.String.check(
               Schema.makeFilter((input) => [...input].length >= 1, {
                 expected: 'a string of at least 1 character',
@@ -831,7 +824,7 @@ export const applicationsRouter = t.router({
               }),
             ),
           ),
-          name_localizations: Schema.optional(
+          name_localizations: Schema.optionalKey(
             Schema.NullOr(
               Schema.Record(
                 Schema.String,
@@ -846,7 +839,7 @@ export const applicationsRouter = t.router({
               ),
             ),
           ),
-          description: Schema.optional(
+          description: Schema.optionalKey(
             Schema.NullOr(
               Schema.String.check(
                 Schema.makeFilter((input) => [...input].length <= 100, {
@@ -855,7 +848,7 @@ export const applicationsRouter = t.router({
               ),
             ),
           ),
-          description_localizations: Schema.optional(
+          description_localizations: Schema.optionalKey(
             Schema.NullOr(
               Schema.Record(
                 Schema.String,
@@ -870,7 +863,7 @@ export const applicationsRouter = t.router({
               ),
             ),
           ),
-          options: Schema.optional(
+          options: Schema.optionalKey(
             Schema.NullOr(
               Schema.Array(
                 Schema.Union([
@@ -889,7 +882,7 @@ export const applicationsRouter = t.router({
               ).check(Schema.isMaxLength(25)),
             ),
           ),
-          default_member_permissions: Schema.optional(
+          default_member_permissions: Schema.optionalKey(
             Schema.NullOr(
               Schema.Number.check(
                 Schema.isInt(),
@@ -898,8 +891,8 @@ export const applicationsRouter = t.router({
               ),
             ),
           ),
-          dm_permission: Schema.optional(Schema.NullOr(Schema.Boolean)),
-          contexts: Schema.optional(
+          dm_permission: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
+          contexts: Schema.optionalKey(
             Schema.NullOr(
               Schema.Array(InteractionContextTypeSchema).check(
                 Schema.isMinLength(1),
@@ -907,7 +900,7 @@ export const applicationsRouter = t.router({
               ),
             ),
           ),
-          integration_types: Schema.optional(
+          integration_types: Schema.optionalKey(
             Schema.NullOr(
               Schema.Array(ApplicationIntegrationTypeSchema).check(
                 Schema.isMinLength(1),
@@ -915,8 +908,8 @@ export const applicationsRouter = t.router({
               ),
             ),
           ),
-          handler: Schema.optional(
-            Schema.Union([Schema.NullOr(Schema.Null), ApplicationCommandHandlerSchema]).annotate({
+          handler: Schema.optionalKey(
+            Schema.Union([Schema.Null, ApplicationCommandHandlerSchema]).annotate({
               description:
                 "Determines whether the interaction is handled by the app's interactions handler or by Discord",
             }),
@@ -949,7 +942,7 @@ export const applicationsRouter = t.router({
           application_id: SnowflakeTypeSchema,
           guild_id: SnowflakeTypeSchema,
           command_id: SnowflakeTypeSchema,
-          permissions: Schema.optional(
+          permissions: Schema.optionalKey(
             Schema.NullOr(
               Schema.Array(ApplicationCommandPermissionSchema).check(Schema.isMaxLength(100)),
             ),

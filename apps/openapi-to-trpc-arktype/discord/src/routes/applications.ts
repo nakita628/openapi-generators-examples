@@ -77,19 +77,17 @@ export const applicationsRouter = t.router({
         ).or('null'),
         'icon?': 'string | null',
         'cover_image?': 'string | null',
-        'team_id?': type('null | null').or(SnowflakeTypeSchema),
+        'team_id?': type('null').or(SnowflakeTypeSchema),
         'flags?': 'number.integer | null',
         'interactions_endpoint_url?': type(
           type('string.url').narrow(
             (data, ctx) => [...data].length <= 2048 || ctx.mustBe('at most 2048 characters'),
           ),
         ).or('null'),
-        'explicit_content_filter?': type('null | null').or(
-          ApplicationExplicitContentFilterTypesSchema,
-        ),
+        'explicit_content_filter?': type('null').or(ApplicationExplicitContentFilterTypesSchema),
         'max_participants?':
           'number.integer >= -2147483648 & number.integer <= 2147483647 & number.integer >= -1 | null',
-        'type?': type('null | null').or(ApplicationTypesSchema),
+        'type?': type('null').or(ApplicationTypesSchema),
         'tags?': type(
           type(
             type(
@@ -106,18 +104,16 @@ export const applicationsRouter = t.router({
             (data, ctx) => [...data].length <= 2048 || ctx.mustBe('at most 2048 characters'),
           ),
         ).or('null'),
-        'install_params?': type('null | null').or(ApplicationOAuth2InstallParamsSchema),
+        'install_params?': type('null').or(ApplicationOAuth2InstallParamsSchema),
         'role_connections_verification_url?': type(
           type('string.url').narrow(
             (data, ctx) => [...data].length <= 2048 || ctx.mustBe('at most 2048 characters'),
           ),
         ).or('null'),
         'integration_types_config?': type(
-          type({
-            '[string]': type('null | null').or(ApplicationIntegrationTypeConfigurationSchema),
-          }),
+          type({ '[string]': type('null').or(ApplicationIntegrationTypeConfigurationSchema) }),
         ).or('null'),
-        'event_webhooks_status?': type('null | null').or(ApplicationEventWebhooksStatusSchema),
+        'event_webhooks_status?': type('null').or(ApplicationEventWebhooksStatusSchema),
         'event_webhooks_url?': type(
           type('string.url').narrow(
             (data, ctx) => [...data].length <= 2048 || ctx.mustBe('at most 2048 characters'),
@@ -242,12 +238,12 @@ export const applicationsRouter = t.router({
             .and(type('unknown[] >= 1'))
             .narrow((data: unknown[], ctx) => new Set(data).size === data.length),
         ).or('null'),
-        'handler?': type('null | null')
+        'handler?': type('null')
           .or(ApplicationCommandHandlerSchema)
           .describe(
             "Determines whether the interaction is handled by the app's interactions handler or by Discord",
           ),
-        'type?': type('null | null').or(ApplicationCommandTypeSchema),
+        'type?': type('null').or(ApplicationCommandTypeSchema),
       }),
     )
     .output(ApplicationCommandResponseSchema)
@@ -334,7 +330,7 @@ export const applicationsRouter = t.router({
             .and(type('unknown[] >= 1'))
             .narrow((data: unknown[], ctx) => new Set(data).size === data.length),
         ).or('null'),
-        'handler?': type('null | null')
+        'handler?': type('null')
           .or(ApplicationCommandHandlerSchema)
           .describe(
             "Determines whether the interaction is handled by the app's interactions handler or by Discord",
@@ -396,7 +392,7 @@ export const applicationsRouter = t.router({
         application_id: SnowflakeTypeSchema,
         'user_id?': SnowflakeTypeSchema,
         'sku_ids?': type('string').or(
-          type(type(type('null | null').or(SnowflakeTypeSchema)).array())
+          type(type(type('null').or(SnowflakeTypeSchema)).array())
             .and(type('unknown[] <= 100'))
             .narrow((data: unknown[], ctx) => new Set(data).size === data.length),
         ),
@@ -541,12 +537,12 @@ export const applicationsRouter = t.router({
             .and(type('unknown[] >= 1'))
             .narrow((data: unknown[], ctx) => new Set(data).size === data.length),
         ).or('null'),
-        'handler?': type('null | null')
+        'handler?': type('null')
           .or(ApplicationCommandHandlerSchema)
           .describe(
             "Determines whether the interaction is handled by the app's interactions handler or by Discord",
           ),
-        'type?': type('null | null').or(ApplicationCommandTypeSchema),
+        'type?': type('null').or(ApplicationCommandTypeSchema),
       }),
     )
     .output(ApplicationCommandResponseSchema)
@@ -652,7 +648,7 @@ export const applicationsRouter = t.router({
             .and(type('unknown[] >= 1'))
             .narrow((data: unknown[], ctx) => new Set(data).size === data.length),
         ).or('null'),
-        'handler?': type('null | null')
+        'handler?': type('null')
           .or(ApplicationCommandHandlerSchema)
           .describe(
             "Determines whether the interaction is handled by the app's interactions handler or by Discord",

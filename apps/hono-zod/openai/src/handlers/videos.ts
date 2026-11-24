@@ -22,7 +22,13 @@ export const videosHandler = new Hono()
     sValidator(
       'query',
       z.object({
-        limit: z.coerce.number().int().min(0).max(100).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(0).max(100),
+          )
+          .exactOptional(),
         order: OrderEnumSchema.exactOptional(),
         after: z
           .string()

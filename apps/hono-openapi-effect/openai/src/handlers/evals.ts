@@ -1,6 +1,6 @@
 import { Hono } from 'hono'
 import { describeRoute, resolver, validator } from 'hono-openapi'
-import { Effect, Schema } from 'effect'
+import { Effect, Schema, SchemaTransformation } from 'effect'
 import {
   CreateEvalRequestSchema,
   CreateEvalRunRequestSchema,
@@ -37,10 +37,19 @@ export const evalsHandler = new Hono()
       'query',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          after: Schema.optional(Schema.String),
-          limit: Schema.FiniteFromString.check(Schema.isInt()).pipe(
-            Schema.withDecodingDefaultType(Effect.succeed(20)),
-          ),
+          after: Schema.optionalKey(Schema.String),
+          limit: Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+            .pipe(
+              Schema.decodeTo(
+                Schema.Finite,
+                SchemaTransformation.transform({
+                  decode: (input) => Number(input),
+                  encode: (output) => String(output),
+                }),
+              ),
+            )
+            .check(Schema.isInt())
+            .pipe(Schema.withDecodingDefaultType(Effect.succeed(20))),
           order: Schema.Literals(['asc', 'desc']).pipe(
             Schema.withDecodingDefaultType(Effect.succeed('asc')),
           ),
@@ -147,8 +156,10 @@ export const evalsHandler = new Hono()
       'json',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          name: Schema.optional(Schema.String.annotate({ description: 'Rename the evaluation.' })),
-          metadata: Schema.optional(MetadataSchema),
+          name: Schema.optionalKey(
+            Schema.String.annotate({ description: 'Rename the evaluation.' }),
+          ),
+          metadata: Schema.optionalKey(MetadataSchema),
         }),
       ),
     ),
@@ -238,14 +249,23 @@ export const evalsHandler = new Hono()
       'query',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          after: Schema.optional(Schema.String),
-          limit: Schema.FiniteFromString.check(Schema.isInt()).pipe(
-            Schema.withDecodingDefaultType(Effect.succeed(20)),
-          ),
+          after: Schema.optionalKey(Schema.String),
+          limit: Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+            .pipe(
+              Schema.decodeTo(
+                Schema.Finite,
+                SchemaTransformation.transform({
+                  decode: (input) => Number(input),
+                  encode: (output) => String(output),
+                }),
+              ),
+            )
+            .check(Schema.isInt())
+            .pipe(Schema.withDecodingDefaultType(Effect.succeed(20))),
           order: Schema.Literals(['asc', 'desc']).pipe(
             Schema.withDecodingDefaultType(Effect.succeed('asc')),
           ),
-          status: Schema.optional(
+          status: Schema.optionalKey(
             Schema.Literals(['queued', 'in_progress', 'completed', 'canceled', 'failed']),
           ),
         }),
@@ -353,13 +373,13 @@ export const evalsHandler = new Hono()
               schema: resolver(
                 Schema.toStandardSchemaV1(
                   Schema.Struct({
-                    object: Schema.optional(
+                    object: Schema.optionalKey(
                       Schema.String.annotate({ jsonSchemaExamples: ['eval.run.deleted'] }),
                     ),
-                    deleted: Schema.optional(
+                    deleted: Schema.optionalKey(
                       Schema.Boolean.annotate({ jsonSchemaExamples: [true] }),
                     ),
-                    run_id: Schema.optional(
+                    run_id: Schema.optionalKey(
                       Schema.String.annotate({
                         jsonSchemaExamples: ['evalrun_677469f564d48190807532a852da3afb'],
                       }),
@@ -461,11 +481,20 @@ export const evalsHandler = new Hono()
       'query',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          after: Schema.optional(Schema.String),
-          limit: Schema.FiniteFromString.check(Schema.isInt()).pipe(
-            Schema.withDecodingDefaultType(Effect.succeed(20)),
-          ),
-          status: Schema.optional(Schema.Literals(['fail', 'pass'])),
+          after: Schema.optionalKey(Schema.String),
+          limit: Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+            .pipe(
+              Schema.decodeTo(
+                Schema.Finite,
+                SchemaTransformation.transform({
+                  decode: (input) => Number(input),
+                  encode: (output) => String(output),
+                }),
+              ),
+            )
+            .check(Schema.isInt())
+            .pipe(Schema.withDecodingDefaultType(Effect.succeed(20))),
+          status: Schema.optionalKey(Schema.Literals(['fail', 'pass'])),
           order: Schema.Literals(['asc', 'desc']).pipe(
             Schema.withDecodingDefaultType(Effect.succeed('asc')),
           ),

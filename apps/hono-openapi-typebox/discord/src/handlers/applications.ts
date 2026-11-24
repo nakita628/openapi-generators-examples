@@ -1,6 +1,6 @@
 import { Hono } from 'hono'
 import { describeRoute, resolver, validator } from 'hono-openapi'
-import { Type, Codec } from 'typebox'
+import { Type, Codec, type StaticDecode, type StaticEncode, type TSchema } from 'typebox'
 import { Compile } from 'typebox/compile'
 import {
   ActivitiesAttachmentResponseSchema,
@@ -24,6 +24,31 @@ import {
   ClientRatelimitedResponseResponse,
 } from '../components'
 
+const toStandardSchemaV1 = <T extends TSchema>(schema: T) => {
+  const validator = Compile(schema)
+  return Object.assign(validator, {
+    '~standard': {
+      version: 1 as const,
+      vendor: 'typebox',
+      validate: (value: unknown) =>
+        validator.Check(value)
+          ? { value: validator.Decode(value) }
+          : {
+              issues: validator.Errors(value).map((error) => ({
+                message: error.message,
+                path: error.instancePath
+                  .split('/')
+                  .slice(1)
+                  .map((key) => key.replaceAll('~1', '/').replaceAll('~0', '~')),
+              })),
+            },
+      types: undefined as
+        | { readonly input: StaticEncode<T>; readonly output: StaticDecode<T> }
+        | undefined,
+    },
+  })
+}
+
 export const applicationsHandler = new Hono()
   .get(
     '/applications/@me',
@@ -40,7 +65,9 @@ export const applicationsHandler = new Hono()
             'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
           },
           content: {
-            'application/json': { schema: resolver(Compile(PrivateApplicationResponseSchema)) },
+            'application/json': {
+              schema: resolver(toStandardSchemaV1(PrivateApplicationResponseSchema)),
+            },
           },
         },
         '429': ClientRatelimitedResponseResponse,
@@ -65,7 +92,9 @@ export const applicationsHandler = new Hono()
             'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
           },
           content: {
-            'application/json': { schema: resolver(Compile(PrivateApplicationResponseSchema)) },
+            'application/json': {
+              schema: resolver(toStandardSchemaV1(PrivateApplicationResponseSchema)),
+            },
           },
         },
         '429': ClientRatelimitedResponseResponse,
@@ -73,7 +102,7 @@ export const applicationsHandler = new Hono()
       },
       security: [{ BotToken: [] }],
     }),
-    validator('json', Compile(ApplicationFormPartialSchema)),
+    validator('json', toStandardSchemaV1(ApplicationFormPartialSchema)),
     (c) => { throw new Error('Not implemented') },
   )
   .get(
@@ -91,7 +120,9 @@ export const applicationsHandler = new Hono()
             'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
           },
           content: {
-            'application/json': { schema: resolver(Compile(PrivateApplicationResponseSchema)) },
+            'application/json': {
+              schema: resolver(toStandardSchemaV1(PrivateApplicationResponseSchema)),
+            },
           },
         },
         '429': ClientRatelimitedResponseResponse,
@@ -99,7 +130,7 @@ export const applicationsHandler = new Hono()
       },
       security: [{ BotToken: [] }],
     }),
-    validator('param', Compile(Type.Object({ application_id: SnowflakeTypeSchema }))),
+    validator('param', toStandardSchemaV1(Type.Object({ application_id: SnowflakeTypeSchema }))),
     (c) => { throw new Error('Not implemented') },
   )
   .patch(
@@ -117,7 +148,9 @@ export const applicationsHandler = new Hono()
             'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
           },
           content: {
-            'application/json': { schema: resolver(Compile(PrivateApplicationResponseSchema)) },
+            'application/json': {
+              schema: resolver(toStandardSchemaV1(PrivateApplicationResponseSchema)),
+            },
           },
         },
         '429': ClientRatelimitedResponseResponse,
@@ -125,8 +158,8 @@ export const applicationsHandler = new Hono()
       },
       security: [{ BotToken: [] }],
     }),
-    validator('param', Compile(Type.Object({ application_id: SnowflakeTypeSchema }))),
-    validator('json', Compile(ApplicationFormPartialSchema)),
+    validator('param', toStandardSchemaV1(Type.Object({ application_id: SnowflakeTypeSchema }))),
+    validator('json', toStandardSchemaV1(ApplicationFormPartialSchema)),
     (c) => { throw new Error('Not implemented') },
   )
   .get(
@@ -144,7 +177,9 @@ export const applicationsHandler = new Hono()
             'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
           },
           content: {
-            'application/json': { schema: resolver(Compile(EmbeddedActivityInstanceSchema)) },
+            'application/json': {
+              schema: resolver(toStandardSchemaV1(EmbeddedActivityInstanceSchema)),
+            },
           },
         },
         '429': ClientRatelimitedResponseResponse,
@@ -154,7 +189,7 @@ export const applicationsHandler = new Hono()
     }),
     validator(
       'param',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           application_id: SnowflakeTypeSchema,
           instance_id: Type.String({ maxLength: 152133 }),
@@ -178,7 +213,9 @@ export const applicationsHandler = new Hono()
             'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
           },
           content: {
-            'application/json': { schema: resolver(Compile(ActivitiesAttachmentResponseSchema)) },
+            'application/json': {
+              schema: resolver(toStandardSchemaV1(ActivitiesAttachmentResponseSchema)),
+            },
           },
         },
         '429': ClientRatelimitedResponseResponse,
@@ -226,8 +263,8 @@ export const applicationsHandler = new Hono()
         },
       ],
     }),
-    validator('param', Compile(Type.Object({ application_id: SnowflakeTypeSchema }))),
-    validator('form', Compile(Type.Object({ file: Type.String() }))),
+    validator('param', toStandardSchemaV1(Type.Object({ application_id: SnowflakeTypeSchema }))),
+    validator('form', toStandardSchemaV1(Type.Object({ file: Type.String() }))),
     (c) => { throw new Error('Not implemented') },
   )
   .get(
@@ -247,7 +284,9 @@ export const applicationsHandler = new Hono()
           content: {
             'application/json': {
               schema: resolver(
-                Compile(Type.Union([Type.Array(ApplicationCommandResponseSchema), Type.Null()])),
+                toStandardSchemaV1(
+                  Type.Union([Type.Array(ApplicationCommandResponseSchema), Type.Null()]),
+                ),
               ),
             },
           },
@@ -257,14 +296,16 @@ export const applicationsHandler = new Hono()
       },
       security: [{ BotToken: [] }, { OAuth2: ['applications.commands.update'] }],
     }),
-    validator('param', Compile(Type.Object({ application_id: SnowflakeTypeSchema }))),
+    validator('param', toStandardSchemaV1(Type.Object({ application_id: SnowflakeTypeSchema }))),
     validator(
       'query',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           with_localizations: Type.Optional(
-            Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-              .Decode((value) => value === 'true')
+            Codec(
+              Type.String({ pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i }),
+            )
+              .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
               .Encode((value) => (value ? 'true' : 'false')),
           ),
         }),
@@ -289,7 +330,9 @@ export const applicationsHandler = new Hono()
           content: {
             'application/json': {
               schema: resolver(
-                Compile(Type.Union([Type.Array(ApplicationCommandResponseSchema), Type.Null()])),
+                toStandardSchemaV1(
+                  Type.Union([Type.Array(ApplicationCommandResponseSchema), Type.Null()]),
+                ),
               ),
             },
           },
@@ -299,10 +342,10 @@ export const applicationsHandler = new Hono()
       },
       security: [{ BotToken: [] }, { OAuth2: ['applications.commands.update'] }],
     }),
-    validator('param', Compile(Type.Object({ application_id: SnowflakeTypeSchema }))),
+    validator('param', toStandardSchemaV1(Type.Object({ application_id: SnowflakeTypeSchema }))),
     validator(
       'json',
-      Compile(
+      toStandardSchemaV1(
         Type.Union([
           Type.Array(ApplicationCommandUpdateRequestSchema, { maxItems: 130 }),
           Type.Null(),
@@ -326,7 +369,9 @@ export const applicationsHandler = new Hono()
             'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
           },
           content: {
-            'application/json': { schema: resolver(Compile(ApplicationCommandResponseSchema)) },
+            'application/json': {
+              schema: resolver(toStandardSchemaV1(ApplicationCommandResponseSchema)),
+            },
           },
         },
         '201': {
@@ -339,7 +384,9 @@ export const applicationsHandler = new Hono()
             'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
           },
           content: {
-            'application/json': { schema: resolver(Compile(ApplicationCommandResponseSchema)) },
+            'application/json': {
+              schema: resolver(toStandardSchemaV1(ApplicationCommandResponseSchema)),
+            },
           },
         },
         '429': ClientRatelimitedResponseResponse,
@@ -347,8 +394,8 @@ export const applicationsHandler = new Hono()
       },
       security: [{ BotToken: [] }, { OAuth2: ['applications.commands.update'] }],
     }),
-    validator('param', Compile(Type.Object({ application_id: SnowflakeTypeSchema }))),
-    validator('json', Compile(ApplicationCommandCreateRequestSchema)),
+    validator('param', toStandardSchemaV1(Type.Object({ application_id: SnowflakeTypeSchema }))),
+    validator('json', toStandardSchemaV1(ApplicationCommandCreateRequestSchema)),
     (c) => { throw new Error('Not implemented') },
   )
   .get(
@@ -366,7 +413,9 @@ export const applicationsHandler = new Hono()
             'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
           },
           content: {
-            'application/json': { schema: resolver(Compile(ApplicationCommandResponseSchema)) },
+            'application/json': {
+              schema: resolver(toStandardSchemaV1(ApplicationCommandResponseSchema)),
+            },
           },
         },
         '429': ClientRatelimitedResponseResponse,
@@ -376,7 +425,7 @@ export const applicationsHandler = new Hono()
     }),
     validator(
       'param',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({ application_id: SnowflakeTypeSchema, command_id: SnowflakeTypeSchema }),
       ),
     ),
@@ -404,7 +453,7 @@ export const applicationsHandler = new Hono()
     }),
     validator(
       'param',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({ application_id: SnowflakeTypeSchema, command_id: SnowflakeTypeSchema }),
       ),
     ),
@@ -425,7 +474,9 @@ export const applicationsHandler = new Hono()
             'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
           },
           content: {
-            'application/json': { schema: resolver(Compile(ApplicationCommandResponseSchema)) },
+            'application/json': {
+              schema: resolver(toStandardSchemaV1(ApplicationCommandResponseSchema)),
+            },
           },
         },
         '429': ClientRatelimitedResponseResponse,
@@ -435,11 +486,11 @@ export const applicationsHandler = new Hono()
     }),
     validator(
       'param',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({ application_id: SnowflakeTypeSchema, command_id: SnowflakeTypeSchema }),
       ),
     ),
-    validator('json', Compile(ApplicationCommandPatchRequestPartialSchema)),
+    validator('json', toStandardSchemaV1(ApplicationCommandPatchRequestPartialSchema)),
     (c) => { throw new Error('Not implemented') },
   )
   .get(
@@ -457,7 +508,9 @@ export const applicationsHandler = new Hono()
             'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
           },
           content: {
-            'application/json': { schema: resolver(Compile(ListApplicationEmojisResponseSchema)) },
+            'application/json': {
+              schema: resolver(toStandardSchemaV1(ListApplicationEmojisResponseSchema)),
+            },
           },
         },
         '429': ClientRatelimitedResponseResponse,
@@ -465,7 +518,7 @@ export const applicationsHandler = new Hono()
       },
       security: [{ BotToken: [] }],
     }),
-    validator('param', Compile(Type.Object({ application_id: SnowflakeTypeSchema }))),
+    validator('param', toStandardSchemaV1(Type.Object({ application_id: SnowflakeTypeSchema }))),
     (c) => { throw new Error('Not implemented') },
   )
   .post(
@@ -482,17 +535,19 @@ export const applicationsHandler = new Hono()
             'X-RateLimit-Reset-After': { $ref: '#/components/headers/X-RateLimit-Reset-After' },
             'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
           },
-          content: { 'application/json': { schema: resolver(Compile(EmojiResponseSchema)) } },
+          content: {
+            'application/json': { schema: resolver(toStandardSchemaV1(EmojiResponseSchema)) },
+          },
         },
         '429': ClientRatelimitedResponseResponse,
         '4XX': ClientErrorResponseResponse,
       },
       security: [{ BotToken: [] }],
     }),
-    validator('param', Compile(Type.Object({ application_id: SnowflakeTypeSchema }))),
+    validator('param', toStandardSchemaV1(Type.Object({ application_id: SnowflakeTypeSchema }))),
     validator(
       'json',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({ name: Type.String({ minLength: 2, maxLength: 32 }), image: Type.String() }),
       ),
     ),
@@ -512,7 +567,9 @@ export const applicationsHandler = new Hono()
             'X-RateLimit-Reset-After': { $ref: '#/components/headers/X-RateLimit-Reset-After' },
             'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
           },
-          content: { 'application/json': { schema: resolver(Compile(EmojiResponseSchema)) } },
+          content: {
+            'application/json': { schema: resolver(toStandardSchemaV1(EmojiResponseSchema)) },
+          },
         },
         '429': ClientRatelimitedResponseResponse,
         '4XX': ClientErrorResponseResponse,
@@ -521,7 +578,9 @@ export const applicationsHandler = new Hono()
     }),
     validator(
       'param',
-      Compile(Type.Object({ application_id: SnowflakeTypeSchema, emoji_id: SnowflakeTypeSchema })),
+      toStandardSchemaV1(
+        Type.Object({ application_id: SnowflakeTypeSchema, emoji_id: SnowflakeTypeSchema }),
+      ),
     ),
     (c) => { throw new Error('Not implemented') },
   )
@@ -547,7 +606,9 @@ export const applicationsHandler = new Hono()
     }),
     validator(
       'param',
-      Compile(Type.Object({ application_id: SnowflakeTypeSchema, emoji_id: SnowflakeTypeSchema })),
+      toStandardSchemaV1(
+        Type.Object({ application_id: SnowflakeTypeSchema, emoji_id: SnowflakeTypeSchema }),
+      ),
     ),
     (c) => { throw new Error('Not implemented') },
   )
@@ -565,7 +626,9 @@ export const applicationsHandler = new Hono()
             'X-RateLimit-Reset-After': { $ref: '#/components/headers/X-RateLimit-Reset-After' },
             'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
           },
-          content: { 'application/json': { schema: resolver(Compile(EmojiResponseSchema)) } },
+          content: {
+            'application/json': { schema: resolver(toStandardSchemaV1(EmojiResponseSchema)) },
+          },
         },
         '429': ClientRatelimitedResponseResponse,
         '4XX': ClientErrorResponseResponse,
@@ -574,11 +637,15 @@ export const applicationsHandler = new Hono()
     }),
     validator(
       'param',
-      Compile(Type.Object({ application_id: SnowflakeTypeSchema, emoji_id: SnowflakeTypeSchema })),
+      toStandardSchemaV1(
+        Type.Object({ application_id: SnowflakeTypeSchema, emoji_id: SnowflakeTypeSchema }),
+      ),
     ),
     validator(
       'json',
-      Compile(Type.Object({ name: Type.Optional(Type.String({ minLength: 2, maxLength: 32 })) })),
+      toStandardSchemaV1(
+        Type.Object({ name: Type.Optional(Type.String({ minLength: 2, maxLength: 32 })) }),
+      ),
     ),
     (c) => { throw new Error('Not implemented') },
   )
@@ -598,7 +665,7 @@ export const applicationsHandler = new Hono()
           },
           content: {
             'application/json': {
-              schema: resolver(Compile(Type.Array(EntitlementResponseSchema))),
+              schema: resolver(toStandardSchemaV1(Type.Array(EntitlementResponseSchema))),
             },
           },
         },
@@ -607,42 +674,58 @@ export const applicationsHandler = new Hono()
       },
       security: [{ BotToken: [] }, { OAuth2: ['applications.entitlements'] }],
     }),
-    validator('param', Compile(Type.Object({ application_id: SnowflakeTypeSchema }))),
+    validator('param', toStandardSchemaV1(Type.Object({ application_id: SnowflakeTypeSchema }))),
     validator(
       'query',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           user_id: Type.Optional(SnowflakeTypeSchema),
           sku_ids: Type.Optional(
             Type.Union([
               Type.String(),
-              Type.Array(
-                Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
-                { maxItems: 100, uniqueItems: true },
-              ),
+              Type.Array(Type.Union([Type.Null(), SnowflakeTypeSchema]), {
+                maxItems: 100,
+                uniqueItems: true,
+              }),
             ]),
           ),
           guild_id: Type.Optional(SnowflakeTypeSchema),
           before: Type.Optional(SnowflakeTypeSchema),
           after: Type.Optional(SnowflakeTypeSchema),
           limit: Type.Optional(
-            Codec(Type.String())
-              .Decode((value) => Number.parseInt(value, 10))
+            Codec(
+              Type.Refine(
+                Type.Refine(
+                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                  (value) => Number(value) >= 1,
+                  () => 'must be >= 1',
+                ),
+                (value) => Number(value) <= 100,
+                () => 'must be <= 100',
+              ),
+            )
+              .Decode((value) => Number(value))
               .Encode((value) => String(value)),
           ),
           exclude_ended: Type.Optional(
-            Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-              .Decode((value) => value === 'true')
+            Codec(
+              Type.String({ pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i }),
+            )
+              .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
               .Encode((value) => (value ? 'true' : 'false')),
           ),
           exclude_deleted: Type.Optional(
-            Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-              .Decode((value) => value === 'true')
+            Codec(
+              Type.String({ pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i }),
+            )
+              .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
               .Encode((value) => (value ? 'true' : 'false')),
           ),
           only_active: Type.Optional(
-            Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-              .Decode((value) => value === 'true')
+            Codec(
+              Type.String({ pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i }),
+            )
+              .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
               .Encode((value) => (value ? 'true' : 'false')),
           ),
         }),
@@ -664,15 +747,17 @@ export const applicationsHandler = new Hono()
             'X-RateLimit-Reset-After': { $ref: '#/components/headers/X-RateLimit-Reset-After' },
             'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
           },
-          content: { 'application/json': { schema: resolver(Compile(EntitlementResponseSchema)) } },
+          content: {
+            'application/json': { schema: resolver(toStandardSchemaV1(EntitlementResponseSchema)) },
+          },
         },
         '429': ClientRatelimitedResponseResponse,
         '4XX': ClientErrorResponseResponse,
       },
       security: [{ BotToken: [] }],
     }),
-    validator('param', Compile(Type.Object({ application_id: SnowflakeTypeSchema }))),
-    validator('json', Compile(CreateEntitlementRequestDataSchema)),
+    validator('param', toStandardSchemaV1(Type.Object({ application_id: SnowflakeTypeSchema }))),
+    validator('json', toStandardSchemaV1(CreateEntitlementRequestDataSchema)),
     (c) => { throw new Error('Not implemented') },
   )
   .get(
@@ -689,7 +774,9 @@ export const applicationsHandler = new Hono()
             'X-RateLimit-Reset-After': { $ref: '#/components/headers/X-RateLimit-Reset-After' },
             'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
           },
-          content: { 'application/json': { schema: resolver(Compile(EntitlementResponseSchema)) } },
+          content: {
+            'application/json': { schema: resolver(toStandardSchemaV1(EntitlementResponseSchema)) },
+          },
         },
         '429': ClientRatelimitedResponseResponse,
         '4XX': ClientErrorResponseResponse,
@@ -698,7 +785,7 @@ export const applicationsHandler = new Hono()
     }),
     validator(
       'param',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({ application_id: SnowflakeTypeSchema, entitlement_id: SnowflakeTypeSchema }),
       ),
     ),
@@ -726,7 +813,7 @@ export const applicationsHandler = new Hono()
     }),
     validator(
       'param',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({ application_id: SnowflakeTypeSchema, entitlement_id: SnowflakeTypeSchema }),
       ),
     ),
@@ -754,7 +841,7 @@ export const applicationsHandler = new Hono()
     }),
     validator(
       'param',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({ application_id: SnowflakeTypeSchema, entitlement_id: SnowflakeTypeSchema }),
       ),
     ),
@@ -777,7 +864,9 @@ export const applicationsHandler = new Hono()
           content: {
             'application/json': {
               schema: resolver(
-                Compile(Type.Union([Type.Array(ApplicationCommandResponseSchema), Type.Null()])),
+                toStandardSchemaV1(
+                  Type.Union([Type.Array(ApplicationCommandResponseSchema), Type.Null()]),
+                ),
               ),
             },
           },
@@ -789,15 +878,19 @@ export const applicationsHandler = new Hono()
     }),
     validator(
       'param',
-      Compile(Type.Object({ application_id: SnowflakeTypeSchema, guild_id: SnowflakeTypeSchema })),
+      toStandardSchemaV1(
+        Type.Object({ application_id: SnowflakeTypeSchema, guild_id: SnowflakeTypeSchema }),
+      ),
     ),
     validator(
       'query',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           with_localizations: Type.Optional(
-            Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-              .Decode((value) => value === 'true')
+            Codec(
+              Type.String({ pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i }),
+            )
+              .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
               .Encode((value) => (value ? 'true' : 'false')),
           ),
         }),
@@ -822,7 +915,9 @@ export const applicationsHandler = new Hono()
           content: {
             'application/json': {
               schema: resolver(
-                Compile(Type.Union([Type.Array(ApplicationCommandResponseSchema), Type.Null()])),
+                toStandardSchemaV1(
+                  Type.Union([Type.Array(ApplicationCommandResponseSchema), Type.Null()]),
+                ),
               ),
             },
           },
@@ -834,11 +929,13 @@ export const applicationsHandler = new Hono()
     }),
     validator(
       'param',
-      Compile(Type.Object({ application_id: SnowflakeTypeSchema, guild_id: SnowflakeTypeSchema })),
+      toStandardSchemaV1(
+        Type.Object({ application_id: SnowflakeTypeSchema, guild_id: SnowflakeTypeSchema }),
+      ),
     ),
     validator(
       'json',
-      Compile(
+      toStandardSchemaV1(
         Type.Union([
           Type.Array(ApplicationCommandUpdateRequestSchema, { maxItems: 130 }),
           Type.Null(),
@@ -862,7 +959,9 @@ export const applicationsHandler = new Hono()
             'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
           },
           content: {
-            'application/json': { schema: resolver(Compile(ApplicationCommandResponseSchema)) },
+            'application/json': {
+              schema: resolver(toStandardSchemaV1(ApplicationCommandResponseSchema)),
+            },
           },
         },
         '201': {
@@ -875,7 +974,9 @@ export const applicationsHandler = new Hono()
             'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
           },
           content: {
-            'application/json': { schema: resolver(Compile(ApplicationCommandResponseSchema)) },
+            'application/json': {
+              schema: resolver(toStandardSchemaV1(ApplicationCommandResponseSchema)),
+            },
           },
         },
         '429': ClientRatelimitedResponseResponse,
@@ -885,9 +986,11 @@ export const applicationsHandler = new Hono()
     }),
     validator(
       'param',
-      Compile(Type.Object({ application_id: SnowflakeTypeSchema, guild_id: SnowflakeTypeSchema })),
+      toStandardSchemaV1(
+        Type.Object({ application_id: SnowflakeTypeSchema, guild_id: SnowflakeTypeSchema }),
+      ),
     ),
-    validator('json', Compile(ApplicationCommandCreateRequestSchema)),
+    validator('json', toStandardSchemaV1(ApplicationCommandCreateRequestSchema)),
     (c) => { throw new Error('Not implemented') },
   )
   .get(
@@ -906,7 +1009,7 @@ export const applicationsHandler = new Hono()
           },
           content: {
             'application/json': {
-              schema: resolver(Compile(Type.Array(CommandPermissionsResponseSchema))),
+              schema: resolver(toStandardSchemaV1(Type.Array(CommandPermissionsResponseSchema))),
             },
           },
         },
@@ -917,7 +1020,9 @@ export const applicationsHandler = new Hono()
     }),
     validator(
       'param',
-      Compile(Type.Object({ application_id: SnowflakeTypeSchema, guild_id: SnowflakeTypeSchema })),
+      toStandardSchemaV1(
+        Type.Object({ application_id: SnowflakeTypeSchema, guild_id: SnowflakeTypeSchema }),
+      ),
     ),
     (c) => { throw new Error('Not implemented') },
   )
@@ -936,7 +1041,9 @@ export const applicationsHandler = new Hono()
             'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
           },
           content: {
-            'application/json': { schema: resolver(Compile(ApplicationCommandResponseSchema)) },
+            'application/json': {
+              schema: resolver(toStandardSchemaV1(ApplicationCommandResponseSchema)),
+            },
           },
         },
         '429': ClientRatelimitedResponseResponse,
@@ -946,7 +1053,7 @@ export const applicationsHandler = new Hono()
     }),
     validator(
       'param',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           application_id: SnowflakeTypeSchema,
           guild_id: SnowflakeTypeSchema,
@@ -978,7 +1085,7 @@ export const applicationsHandler = new Hono()
     }),
     validator(
       'param',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           application_id: SnowflakeTypeSchema,
           guild_id: SnowflakeTypeSchema,
@@ -1003,7 +1110,9 @@ export const applicationsHandler = new Hono()
             'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
           },
           content: {
-            'application/json': { schema: resolver(Compile(ApplicationCommandResponseSchema)) },
+            'application/json': {
+              schema: resolver(toStandardSchemaV1(ApplicationCommandResponseSchema)),
+            },
           },
         },
         '429': ClientRatelimitedResponseResponse,
@@ -1013,7 +1122,7 @@ export const applicationsHandler = new Hono()
     }),
     validator(
       'param',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           application_id: SnowflakeTypeSchema,
           guild_id: SnowflakeTypeSchema,
@@ -1021,7 +1130,7 @@ export const applicationsHandler = new Hono()
         }),
       ),
     ),
-    validator('json', Compile(ApplicationCommandPatchRequestPartialSchema)),
+    validator('json', toStandardSchemaV1(ApplicationCommandPatchRequestPartialSchema)),
     (c) => { throw new Error('Not implemented') },
   )
   .get(
@@ -1039,7 +1148,9 @@ export const applicationsHandler = new Hono()
             'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
           },
           content: {
-            'application/json': { schema: resolver(Compile(CommandPermissionsResponseSchema)) },
+            'application/json': {
+              schema: resolver(toStandardSchemaV1(CommandPermissionsResponseSchema)),
+            },
           },
         },
         '429': ClientRatelimitedResponseResponse,
@@ -1049,7 +1160,7 @@ export const applicationsHandler = new Hono()
     }),
     validator(
       'param',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           application_id: SnowflakeTypeSchema,
           guild_id: SnowflakeTypeSchema,
@@ -1074,7 +1185,9 @@ export const applicationsHandler = new Hono()
             'X-RateLimit-Bucket': { $ref: '#/components/headers/X-RateLimit-Bucket' },
           },
           content: {
-            'application/json': { schema: resolver(Compile(CommandPermissionsResponseSchema)) },
+            'application/json': {
+              schema: resolver(toStandardSchemaV1(CommandPermissionsResponseSchema)),
+            },
           },
         },
         '429': ClientRatelimitedResponseResponse,
@@ -1084,7 +1197,7 @@ export const applicationsHandler = new Hono()
     }),
     validator(
       'param',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           application_id: SnowflakeTypeSchema,
           guild_id: SnowflakeTypeSchema,
@@ -1094,7 +1207,7 @@ export const applicationsHandler = new Hono()
     ),
     validator(
       'json',
-      Compile(
+      toStandardSchemaV1(
         Type.Object({
           permissions: Type.Optional(
             Type.Union([
@@ -1124,7 +1237,7 @@ export const applicationsHandler = new Hono()
           content: {
             'application/json': {
               schema: resolver(
-                Compile(
+                toStandardSchemaV1(
                   Type.Union([
                     Type.Array(ApplicationRoleConnectionsMetadataItemResponseSchema),
                     Type.Null(),
@@ -1139,7 +1252,7 @@ export const applicationsHandler = new Hono()
       },
       security: [{ BotToken: [] }],
     }),
-    validator('param', Compile(Type.Object({ application_id: SnowflakeTypeSchema }))),
+    validator('param', toStandardSchemaV1(Type.Object({ application_id: SnowflakeTypeSchema }))),
     (c) => { throw new Error('Not implemented') },
   )
   .put(
@@ -1159,7 +1272,7 @@ export const applicationsHandler = new Hono()
           content: {
             'application/json': {
               schema: resolver(
-                Compile(
+                toStandardSchemaV1(
                   Type.Union([
                     Type.Array(ApplicationRoleConnectionsMetadataItemResponseSchema),
                     Type.Null(),
@@ -1174,10 +1287,10 @@ export const applicationsHandler = new Hono()
       },
       security: [{ BotToken: [] }],
     }),
-    validator('param', Compile(Type.Object({ application_id: SnowflakeTypeSchema }))),
+    validator('param', toStandardSchemaV1(Type.Object({ application_id: SnowflakeTypeSchema }))),
     validator(
       'json',
-      Compile(
+      toStandardSchemaV1(
         Type.Union([
           Type.Array(ApplicationRoleConnectionsMetadataItemRequestSchema, { maxItems: 5 }),
           Type.Null(),

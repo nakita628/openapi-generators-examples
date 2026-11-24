@@ -1,5 +1,5 @@
 import { initTRPC, TRPCError } from '@trpc/server'
-import { Schema } from 'effect'
+import { Schema, SchemaTransformation } from 'effect'
 import { UserSchema } from '../components'
 
 const t = initTRPC.create()
@@ -21,8 +21,8 @@ export const userRouter = t.router({
     .input(
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          username: Schema.optional(Schema.String),
-          password: Schema.optional(Schema.String),
+          username: Schema.optionalKey(Schema.String),
+          password: Schema.optionalKey(Schema.String),
         }),
       ),
     )
@@ -44,7 +44,7 @@ export const userRouter = t.router({
       Schema.toStandardSchemaV1(
         Schema.Struct({
           username: Schema.String,
-          id: Schema.optional(
+          id: Schema.optionalKey(
             Schema.Union([
               Schema.BigInt,
               Schema.Number.check(Schema.isInt()),
@@ -67,14 +67,14 @@ export const userRouter = t.router({
               )
               .annotate({ jsonSchemaExamples: [10] }),
           ),
-          firstName: Schema.optional(Schema.String.annotate({ jsonSchemaExamples: ['John'] })),
-          lastName: Schema.optional(Schema.String.annotate({ jsonSchemaExamples: ['James'] })),
-          email: Schema.optional(
+          firstName: Schema.optionalKey(Schema.String.annotate({ jsonSchemaExamples: ['John'] })),
+          lastName: Schema.optionalKey(Schema.String.annotate({ jsonSchemaExamples: ['James'] })),
+          email: Schema.optionalKey(
             Schema.String.annotate({ jsonSchemaExamples: ['john@email.com'] }),
           ),
-          password: Schema.optional(Schema.String.annotate({ jsonSchemaExamples: ['12345'] })),
-          phone: Schema.optional(Schema.String.annotate({ jsonSchemaExamples: ['12345'] })),
-          userStatus: Schema.optional(
+          password: Schema.optionalKey(Schema.String.annotate({ jsonSchemaExamples: ['12345'] })),
+          phone: Schema.optionalKey(Schema.String.annotate({ jsonSchemaExamples: ['12345'] })),
+          userStatus: Schema.optionalKey(
             Schema.Number.check(Schema.isInt32()).annotate({
               description: 'User Status',
               jsonSchemaExamples: [1],

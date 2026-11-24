@@ -56,12 +56,12 @@ export const assistantsRouter = t.router({
           type('string')
             .narrow((data, ctx) => [...data].length <= 256 || ctx.mustBe('at most 256 characters'))
             .describe('The name of the assistant. The maximum length is 256 characters.\n'),
-        ).or('null | null'),
+        ).or('null'),
         'description?': type(
           type('string')
             .narrow((data, ctx) => [...data].length <= 512 || ctx.mustBe('at most 512 characters'))
             .describe('The description of the assistant. The maximum length is 512 characters.\n'),
-        ).or('null | null'),
+        ).or('null'),
         'instructions?': type(
           type('string')
             .narrow(
@@ -70,7 +70,7 @@ export const assistantsRouter = t.router({
             .describe(
               'The system instructions that the assistant uses. The maximum length is 256,000 characters.\n',
             ),
-        ).or('null | null'),
+        ).or('null'),
         'tools?': type(
           type(
             type(type(AssistantToolsCodeSchema).or(AssistantToolsFileSearchSchema)).or(
@@ -101,19 +101,19 @@ export const assistantsRouter = t.router({
           }).describe(
             "A set of resources that are used by the assistant's tools. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.\n",
           ),
-        ).or('null | null'),
+        ).or('null'),
         'metadata?': MetadataSchema,
         'temperature?': type(
           type('number >= 0 & number <= 2').describe(
             'What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic.\n',
           ),
-        ).or('null | null'),
+        ).or('null'),
         'top_p?': type(
           type('number >= 0 & number <= 1').describe(
             'An alternative to sampling with temperature, called nucleus sampling, where the model considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens comprising the top 10% probability mass are considered.\n\nWe generally recommend altering this or temperature but not both.\n',
           ),
-        ).or('null | null'),
-        'response_format?': type(AssistantsApiResponseFormatOptionSchema).or('null | null'),
+        ).or('null'),
+        'response_format?': type(AssistantsApiResponseFormatOptionSchema).or('null'),
       }),
     )
     .output(AssistantObjectSchema)

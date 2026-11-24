@@ -22501,7 +22501,7 @@ export type LiveSpeechWakePolicyParamSchema = v.InferOutput<typeof LiveSpeechWak
 export const IdleTimeoutSSchema = v.pipe(
   v.pipe(v.number(), v.integer(), v.minValue(5), v.maxValue(60)),
   v.description(
-    'Whole seconds of inactivity after which a Live WebRTC session with a speech wake policy pauses inference. The connection and conversation history are retained. Omit to keep inference active after the first wake until the session ends.',
+    'Whole seconds of inactivity after which a Live WebRTC or SIP session with a speech wake policy pauses inference. The connection and conversation history are retained. Omit to keep inference active after the first wake until the session ends.',
   ),
 )
 
@@ -41571,6 +41571,15 @@ export const CompactResponseMethodPublicBodySchema = v.object({
       v.null(),
     ]),
   ),
+  safety_identifier: v.optional(
+    v.union([
+      v.pipe(
+        v.pipe(v.string(), v.maxCodePoints(128)),
+        v.description('A stable identifier used for safety monitoring and abuse detection.'),
+      ),
+      v.null(),
+    ]),
+  ),
   image: v.optional(v.pipe(ImageOptionsParamSchema, v.description('Request level image options.'))),
   prompt_cache_key: v.optional(
     v.union([
@@ -41682,10 +41691,24 @@ export const CompactResourceSchema = v.pipe(
       v.optional(v.literal('response.compaction'), 'response.compaction'),
       v.description('The object type. Always `response.compaction`.'),
     ),
+    safety_identifier: v.optional(
+      v.union([
+        v.pipe(
+          v.string(),
+          v.description(
+            'A stable identifier that was used for safety monitoring and abuse detection.',
+          ),
+        ),
+        v.null(),
+      ]),
+    ),
     output: v.pipe(v.array(ItemFieldSchema), v.description('The compacted list of output items.')),
     created_at: v.pipe(
       v.pipe(v.number(), v.integer()),
       v.description('Unix timestamp (in seconds) when the compacted conversation was created.'),
+    ),
+    service_tier: v.optional(
+      v.pipe(v.string(), v.description('The service tier used for compaction, when reported.')),
     ),
     usage: v.pipe(
       ResponseUsageSchema,
@@ -41699,6 +41722,7 @@ export const CompactResourceSchema = v.pipe(
       {
         id: 'resp_001',
         object: 'response.compaction',
+        safety_identifier: 'compact-review-example-001',
         image: { context_compression: 'disabled' },
         output: [
           {
@@ -59500,6 +59524,15 @@ export const BetaCompactResponseMethodPublicBodySchema = v.object({
       v.null(),
     ]),
   ),
+  safety_identifier: v.optional(
+    v.union([
+      v.pipe(
+        v.pipe(v.string(), v.maxCodePoints(128)),
+        v.description('A stable identifier used for safety monitoring and abuse detection.'),
+      ),
+      v.null(),
+    ]),
+  ),
   image: v.optional(
     v.pipe(BetaImageOptionsParamSchema, v.description('Request level image options.')),
   ),
@@ -61105,6 +61138,17 @@ export const BetaCompactResourceSchema = v.pipe(
       v.optional(v.literal('response.compaction'), 'response.compaction'),
       v.description('The object type. Always `response.compaction`.'),
     ),
+    safety_identifier: v.optional(
+      v.union([
+        v.pipe(
+          v.string(),
+          v.description(
+            'A stable identifier that was used for safety monitoring and abuse detection.',
+          ),
+        ),
+        v.null(),
+      ]),
+    ),
     output: v.pipe(
       v.array(BetaItemFieldSchema),
       v.description('The compacted list of output items.'),
@@ -61112,6 +61156,9 @@ export const BetaCompactResourceSchema = v.pipe(
     created_at: v.pipe(
       v.pipe(v.number(), v.integer()),
       v.description('Unix timestamp (in seconds) when the compacted conversation was created.'),
+    ),
+    service_tier: v.optional(
+      v.pipe(v.string(), v.description('The service tier used for compaction, when reported.')),
     ),
     usage: v.pipe(
       BetaResponseUsageSchema,
@@ -61125,6 +61172,7 @@ export const BetaCompactResourceSchema = v.pipe(
       {
         id: 'resp_001',
         object: 'response.compaction',
+        safety_identifier: 'compact-review-example-001',
         image: { context_compression: 'disabled' },
         output: [
           {

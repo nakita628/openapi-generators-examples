@@ -24,7 +24,7 @@ export const lobbiesHandler = new Hono()
         lobby_metadata: z.record(z.string(), z.string().max(1024)).nullable().exactOptional(),
         member_metadata: z.record(z.string(), z.string().max(1024)).nullable().exactOptional(),
         secret: z.string().max(250),
-        flags: z.xor([z.null().nullable(), z.literal(1)]).exactOptional(),
+        flags: z.xor([z.null(), z.literal(1)]).exactOptional(),
         name: z.string().min(1).max(100).nullable().exactOptional(),
       }),
     ),
@@ -38,7 +38,7 @@ export const lobbiesHandler = new Hono()
         idle_timeout_seconds: z.int32().min(5).max(604800).nullable().exactOptional(),
         members: z.array(LobbyMemberRequestSchema).max(25).nullable().exactOptional(),
         metadata: z.record(z.string(), z.string().max(1024)).nullable().exactOptional(),
-        flags: z.xor([z.null().nullable(), z.literal(1)]).exactOptional(),
+        flags: z.xor([z.null(), z.literal(1)]).exactOptional(),
         override_event_webhooks_url: z.url().max(512).nullable().exactOptional(),
         name: z.string().min(1).max(100).nullable().exactOptional(),
       }),
@@ -64,7 +64,7 @@ export const lobbiesHandler = new Hono()
         idle_timeout_seconds: z.int32().min(5).max(604800).nullable().exactOptional(),
         metadata: z.record(z.string(), z.string().max(1024)).nullable().exactOptional(),
         members: z.array(LobbyMemberRequestSchema).max(25).nullable().exactOptional(),
-        flags: z.xor([z.null().nullable(), z.literal(1)]).exactOptional(),
+        flags: z.xor([z.null(), z.literal(1)]).exactOptional(),
         override_event_webhooks_url: z.url().max(512).nullable().exactOptional(),
         name: z.string().min(1).max(100).nullable().exactOptional(),
       }),
@@ -76,7 +76,7 @@ export const lobbiesHandler = new Hono()
     sValidator('param', z.object({ lobby_id: SnowflakeTypeSchema })),
     sValidator(
       'json',
-      z.object({ channel_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]).exactOptional() }),
+      z.object({ channel_id: z.xor([z.null(), SnowflakeTypeSchema]).exactOptional() }),
     ),
     (c) => { throw new Error('Not implemented') },
   )
@@ -103,7 +103,7 @@ export const lobbiesHandler = new Hono()
       'json',
       z.object({
         metadata: z.record(z.string(), z.string().max(1024)).nullable().exactOptional(),
-        flags: z.xor([z.null().nullable(), z.literal(1)]).exactOptional(),
+        flags: z.xor([z.null(), z.literal(1)]).exactOptional(),
         additional_name: z.string().min(1).max(80).nullable().exactOptional(),
       }),
     ),
@@ -124,7 +124,15 @@ export const lobbiesHandler = new Hono()
     sValidator('param', z.object({ lobby_id: SnowflakeTypeSchema })),
     sValidator(
       'query',
-      z.object({ limit: z.coerce.number().int().min(1).max(200).exactOptional() }),
+      z.object({
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(1).max(200),
+          )
+          .exactOptional(),
+      }),
     ),
     (c) => { throw new Error('Not implemented') },
   )
@@ -151,7 +159,15 @@ export const lobbiesHandler = new Hono()
                       color: z
                         .preprocess(
                           (val) => (val === 'null' ? null : val),
-                          z.coerce.number().int().min(0).max(16777215).nullable(),
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.number().int().min(0).max(16777215),
+                            )
+                            .nullable(),
                         )
                         .exactOptional(),
                       timestamp: z.iso.datetime({ offset: true }).nullable().exactOptional(),
@@ -161,10 +177,7 @@ export const lobbiesHandler = new Hono()
                           (val) => (val === 'null' ? null : val),
                           z
                             .union([
-                              z.preprocess(
-                                (val) => (val === 'null' ? null : val),
-                                z.null().nullable(),
-                              ),
+                              z.preprocess((val) => (val === 'null' ? null : val), z.null()),
                               RichEmbedAuthorSchema,
                             ])
                             .nullable(),
@@ -175,29 +188,50 @@ export const lobbiesHandler = new Hono()
                           (val) => (val === 'null' ? null : val),
                           z
                             .union([
-                              z.preprocess(
-                                (val) => (val === 'null' ? null : val),
-                                z.null().nullable(),
-                              ),
+                              z.preprocess((val) => (val === 'null' ? null : val), z.null()),
                               z.object({
                                 url: z.url().max(2048).nullable().exactOptional(),
                                 width: z
                                   .preprocess(
                                     (val) => (val === 'null' ? null : val),
-                                    z.coerce.number().int().nullable(),
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.number().int(),
+                                      )
+                                      .nullable(),
                                   )
                                   .exactOptional(),
                                 height: z
                                   .preprocess(
                                     (val) => (val === 'null' ? null : val),
-                                    z.coerce.number().int().nullable(),
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.number().int(),
+                                      )
+                                      .nullable(),
                                   )
                                   .exactOptional(),
                                 placeholder: z.string().max(64).nullable().exactOptional(),
                                 placeholder_version: z
                                   .preprocess(
                                     (val) => (val === 'null' ? null : val),
-                                    z.coerce.number().int().min(0).max(2147483647).nullable(),
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.number().int().min(0).max(2147483647),
+                                      )
+                                      .nullable(),
                                   )
                                   .exactOptional(),
                                 is_animated: z
@@ -217,29 +251,50 @@ export const lobbiesHandler = new Hono()
                           (val) => (val === 'null' ? null : val),
                           z
                             .union([
-                              z.preprocess(
-                                (val) => (val === 'null' ? null : val),
-                                z.null().nullable(),
-                              ),
+                              z.preprocess((val) => (val === 'null' ? null : val), z.null()),
                               z.object({
                                 url: z.url().max(2048).nullable().exactOptional(),
                                 width: z
                                   .preprocess(
                                     (val) => (val === 'null' ? null : val),
-                                    z.coerce.number().int().nullable(),
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.number().int(),
+                                      )
+                                      .nullable(),
                                   )
                                   .exactOptional(),
                                 height: z
                                   .preprocess(
                                     (val) => (val === 'null' ? null : val),
-                                    z.coerce.number().int().nullable(),
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.number().int(),
+                                      )
+                                      .nullable(),
                                   )
                                   .exactOptional(),
                                 placeholder: z.string().max(64).nullable().exactOptional(),
                                 placeholder_version: z
                                   .preprocess(
                                     (val) => (val === 'null' ? null : val),
-                                    z.coerce.number().int().min(0).max(2147483647).nullable(),
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.number().int().min(0).max(2147483647),
+                                      )
+                                      .nullable(),
                                   )
                                   .exactOptional(),
                                 is_animated: z
@@ -259,10 +314,7 @@ export const lobbiesHandler = new Hono()
                           (val) => (val === 'null' ? null : val),
                           z
                             .union([
-                              z.preprocess(
-                                (val) => (val === 'null' ? null : val),
-                                z.null().nullable(),
-                              ),
+                              z.preprocess((val) => (val === 'null' ? null : val), z.null()),
                               RichEmbedFooterSchema,
                             ])
                             .nullable(),
@@ -297,10 +349,7 @@ export const lobbiesHandler = new Hono()
                           (val) => (val === 'null' ? null : val),
                           z
                             .union([
-                              z.preprocess(
-                                (val) => (val === 'null' ? null : val),
-                                z.null().nullable(),
-                              ),
+                              z.preprocess((val) => (val === 'null' ? null : val), z.null()),
                               RichEmbedProviderSchema,
                             ])
                             .nullable(),
@@ -311,29 +360,50 @@ export const lobbiesHandler = new Hono()
                           (val) => (val === 'null' ? null : val),
                           z
                             .union([
-                              z.preprocess(
-                                (val) => (val === 'null' ? null : val),
-                                z.null().nullable(),
-                              ),
+                              z.preprocess((val) => (val === 'null' ? null : val), z.null()),
                               z.object({
                                 url: z.url().max(2048).nullable().exactOptional(),
                                 width: z
                                   .preprocess(
                                     (val) => (val === 'null' ? null : val),
-                                    z.coerce.number().int().nullable(),
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.number().int(),
+                                      )
+                                      .nullable(),
                                   )
                                   .exactOptional(),
                                 height: z
                                   .preprocess(
                                     (val) => (val === 'null' ? null : val),
-                                    z.coerce.number().int().nullable(),
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.number().int(),
+                                      )
+                                      .nullable(),
                                   )
                                   .exactOptional(),
                                 placeholder: z.string().max(64).nullable().exactOptional(),
                                 placeholder_version: z
                                   .preprocess(
                                     (val) => (val === 'null' ? null : val),
-                                    z.coerce.number().int().min(0).max(2147483647).nullable(),
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.number().int().min(0).max(2147483647),
+                                      )
+                                      .nullable(),
                                   )
                                   .exactOptional(),
                                 is_animated: z
@@ -353,10 +423,7 @@ export const lobbiesHandler = new Hono()
                           (val) => (val === 'null' ? null : val),
                           z
                             .union([
-                              z.preprocess(
-                                (val) => (val === 'null' ? null : val),
-                                z.null().nullable(),
-                              ),
+                              z.preprocess((val) => (val === 'null' ? null : val), z.null()),
                               RichEmbedAudioSchema,
                             ])
                             .nullable(),
@@ -374,7 +441,7 @@ export const lobbiesHandler = new Hono()
             (val) => (val === 'null' ? null : val),
             z
               .union([
-                z.preprocess((val) => (val === 'null' ? null : val), z.null().nullable()),
+                z.preprocess((val) => (val === 'null' ? null : val), z.null()),
                 z.object({
                   parse: z
                     .preprocess(
@@ -385,10 +452,7 @@ export const lobbiesHandler = new Hono()
                           z
                             .array(
                               z.union([
-                                z.preprocess(
-                                  (val) => (val === 'null' ? null : val),
-                                  z.null().nullable(),
-                                ),
+                                z.preprocess((val) => (val === 'null' ? null : val), z.null()),
                                 z.union([
                                   z
                                     .literal('users')
@@ -420,10 +484,7 @@ export const lobbiesHandler = new Hono()
                                 (val) => (val === 'null' ? null : val),
                                 z
                                   .union([
-                                    z.preprocess(
-                                      (val) => (val === 'null' ? null : val),
-                                      z.null().nullable(),
-                                    ),
+                                    z.preprocess((val) => (val === 'null' ? null : val), z.null()),
                                     SnowflakeTypeSchema,
                                   ])
                                   .nullable(),
@@ -447,10 +508,7 @@ export const lobbiesHandler = new Hono()
                                 (val) => (val === 'null' ? null : val),
                                 z
                                   .union([
-                                    z.preprocess(
-                                      (val) => (val === 'null' ? null : val),
-                                      z.null().nullable(),
-                                    ),
+                                    z.preprocess((val) => (val === 'null' ? null : val), z.null()),
                                     SnowflakeTypeSchema,
                                   ])
                                   .nullable(),
@@ -492,95 +550,203 @@ export const lobbiesHandler = new Hono()
                     z.union([
                       z.object({
                         type: z.union([
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(1))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(1),
+                            )
                             .meta({ description: 'Container for other components' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(2))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(2),
+                            )
                             .meta({ description: 'Button object' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(3))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(3),
+                            )
                             .meta({
                               description: 'Select menu for picking from defined text options',
                             }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(4))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(4),
+                            )
                             .meta({ description: 'Text input object' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(5))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(5),
+                            )
                             .meta({ description: 'Select menu for users' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(6))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(6),
+                            )
                             .meta({ description: 'Select menu for roles' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(7))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(7),
+                            )
                             .meta({
                               description: 'Select menu for mentionables (users and roles)',
                             }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(8))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(8),
+                            )
                             .meta({ description: 'Select menu for channels' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(9))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(9),
+                            )
                             .meta({ description: 'Section component' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(10))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(10),
+                            )
                             .meta({ description: 'Text component' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(11))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(11),
+                            )
                             .meta({ description: 'Thumbnail component' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(12))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(12),
+                            )
                             .meta({ description: 'Media gallery component' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(13))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(13),
+                            )
                             .meta({ description: 'File component' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(14))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(14),
+                            )
                             .meta({ description: 'Separator component' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(17))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(17),
+                            )
                             .meta({ description: 'Container component' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(18))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(18),
+                            )
                             .meta({ description: 'Label component' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(19))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(19),
+                            )
                             .meta({ description: 'File upload component' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(21))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(21),
+                            )
                             .meta({ description: 'Radio group component' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(22))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(22),
+                            )
                             .meta({ description: 'Checkbox group component' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(23))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(23),
+                            )
                             .meta({ description: 'Checkbox component' }),
                         ]),
                         id: z
                           .preprocess(
                             (val) => (val === 'null' ? null : val),
-                            z.coerce.number().pipe(z.int32().min(0)).nullable(),
+                            z
+                              .preprocess(
+                                (val) =>
+                                  typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                    ? Number(val)
+                                    : val,
+                                z.int32().min(0),
+                              )
+                              .nullable(),
                           )
                           .exactOptional(),
                         components: z.preprocess(
@@ -590,107 +756,252 @@ export const lobbiesHandler = new Hono()
                               z.union([
                                 z.object({
                                   type: z.union([
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(1))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(1),
+                                      )
                                       .meta({ description: 'Container for other components' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(2))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(2),
+                                      )
                                       .meta({ description: 'Button object' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(3))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(3),
+                                      )
                                       .meta({
                                         description:
                                           'Select menu for picking from defined text options',
                                       }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(4))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(4),
+                                      )
                                       .meta({ description: 'Text input object' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(5))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(5),
+                                      )
                                       .meta({ description: 'Select menu for users' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(6))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(6),
+                                      )
                                       .meta({ description: 'Select menu for roles' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(7))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(7),
+                                      )
                                       .meta({
                                         description:
                                           'Select menu for mentionables (users and roles)',
                                       }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(8))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(8),
+                                      )
                                       .meta({ description: 'Select menu for channels' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(9))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(9),
+                                      )
                                       .meta({ description: 'Section component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(10))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(10),
+                                      )
                                       .meta({ description: 'Text component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(11))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(11),
+                                      )
                                       .meta({ description: 'Thumbnail component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(12))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(12),
+                                      )
                                       .meta({ description: 'Media gallery component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(13))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(13),
+                                      )
                                       .meta({ description: 'File component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(14))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(14),
+                                      )
                                       .meta({ description: 'Separator component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(17))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(17),
+                                      )
                                       .meta({ description: 'Container component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(18))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(18),
+                                      )
                                       .meta({ description: 'Label component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(19))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(19),
+                                      )
                                       .meta({ description: 'File upload component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(21))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(21),
+                                      )
                                       .meta({ description: 'Radio group component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(22))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(22),
+                                      )
                                       .meta({ description: 'Checkbox group component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(23))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(23),
+                                      )
                                       .meta({ description: 'Checkbox component' }),
                                   ]),
                                   id: z
                                     .preprocess(
                                       (val) => (val === 'null' ? null : val),
-                                      z.coerce.number().pipe(z.int32().min(0)).nullable(),
+                                      z
+                                        .preprocess(
+                                          (val) =>
+                                            typeof val === 'string' &&
+                                            /^-?(?:0|[1-9]\d*)$/.test(val)
+                                              ? Number(val)
+                                              : val,
+                                          z.int32().min(0),
+                                        )
+                                        .nullable(),
                                     )
                                     .exactOptional(),
                                   custom_id: z.string().min(1).max(100).nullable().exactOptional(),
                                   style: z.union([
-                                    z.coerce.number().pipe(z.literal(1)),
-                                    z.coerce.number().pipe(z.literal(2)),
-                                    z.coerce.number().pipe(z.literal(3)),
-                                    z.coerce.number().pipe(z.literal(4)),
-                                    z.coerce.number().pipe(z.literal(5)),
-                                    z.coerce.number().pipe(z.literal(6)),
+                                    z.preprocess(
+                                      (val) =>
+                                        typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                          ? Number(val)
+                                          : val,
+                                      z.literal(1),
+                                    ),
+                                    z.preprocess(
+                                      (val) =>
+                                        typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                          ? Number(val)
+                                          : val,
+                                      z.literal(2),
+                                    ),
+                                    z.preprocess(
+                                      (val) =>
+                                        typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                          ? Number(val)
+                                          : val,
+                                      z.literal(3),
+                                    ),
+                                    z.preprocess(
+                                      (val) =>
+                                        typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                          ? Number(val)
+                                          : val,
+                                      z.literal(4),
+                                    ),
+                                    z.preprocess(
+                                      (val) =>
+                                        typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                          ? Number(val)
+                                          : val,
+                                      z.literal(5),
+                                    ),
+                                    z.preprocess(
+                                      (val) =>
+                                        typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                          ? Number(val)
+                                          : val,
+                                      z.literal(6),
+                                    ),
                                   ]),
                                   label: z.string().max(80).nullable().exactOptional(),
                                   disabled: z
@@ -707,7 +1018,7 @@ export const lobbiesHandler = new Hono()
                                         .union([
                                           z.preprocess(
                                             (val) => (val === 'null' ? null : val),
-                                            z.null().nullable(),
+                                            z.null(),
                                           ),
                                           SnowflakeTypeSchema,
                                         ])
@@ -721,7 +1032,7 @@ export const lobbiesHandler = new Hono()
                                         .union([
                                           z.preprocess(
                                             (val) => (val === 'null' ? null : val),
-                                            z.null().nullable(),
+                                            z.null(),
                                           ),
                                           z.object({
                                             id: z
@@ -731,7 +1042,7 @@ export const lobbiesHandler = new Hono()
                                                   .union([
                                                     z.preprocess(
                                                       (val) => (val === 'null' ? null : val),
-                                                      z.null().nullable(),
+                                                      z.null(),
                                                     ),
                                                     SnowflakeTypeSchema,
                                                   ])
@@ -747,97 +1058,206 @@ export const lobbiesHandler = new Hono()
                                 }),
                                 z.object({
                                   type: z.union([
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(1))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(1),
+                                      )
                                       .meta({ description: 'Container for other components' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(2))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(2),
+                                      )
                                       .meta({ description: 'Button object' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(3))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(3),
+                                      )
                                       .meta({
                                         description:
                                           'Select menu for picking from defined text options',
                                       }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(4))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(4),
+                                      )
                                       .meta({ description: 'Text input object' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(5))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(5),
+                                      )
                                       .meta({ description: 'Select menu for users' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(6))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(6),
+                                      )
                                       .meta({ description: 'Select menu for roles' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(7))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(7),
+                                      )
                                       .meta({
                                         description:
                                           'Select menu for mentionables (users and roles)',
                                       }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(8))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(8),
+                                      )
                                       .meta({ description: 'Select menu for channels' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(9))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(9),
+                                      )
                                       .meta({ description: 'Section component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(10))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(10),
+                                      )
                                       .meta({ description: 'Text component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(11))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(11),
+                                      )
                                       .meta({ description: 'Thumbnail component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(12))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(12),
+                                      )
                                       .meta({ description: 'Media gallery component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(13))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(13),
+                                      )
                                       .meta({ description: 'File component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(14))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(14),
+                                      )
                                       .meta({ description: 'Separator component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(17))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(17),
+                                      )
                                       .meta({ description: 'Container component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(18))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(18),
+                                      )
                                       .meta({ description: 'Label component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(19))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(19),
+                                      )
                                       .meta({ description: 'File upload component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(21))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(21),
+                                      )
                                       .meta({ description: 'Radio group component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(22))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(22),
+                                      )
                                       .meta({ description: 'Checkbox group component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(23))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(23),
+                                      )
                                       .meta({ description: 'Checkbox component' }),
                                   ]),
                                   id: z
                                     .preprocess(
                                       (val) => (val === 'null' ? null : val),
-                                      z.coerce.number().pipe(z.int32().min(0)).nullable(),
+                                      z
+                                        .preprocess(
+                                          (val) =>
+                                            typeof val === 'string' &&
+                                            /^-?(?:0|[1-9]\d*)$/.test(val)
+                                              ? Number(val)
+                                              : val,
+                                          z.int32().min(0),
+                                        )
+                                        .nullable(),
                                     )
                                     .exactOptional(),
                                   custom_id: z.string().min(1).max(100),
@@ -845,13 +1265,31 @@ export const lobbiesHandler = new Hono()
                                   min_values: z
                                     .preprocess(
                                       (val) => (val === 'null' ? null : val),
-                                      z.coerce.number().int().min(0).max(25).nullable(),
+                                      z
+                                        .preprocess(
+                                          (val) =>
+                                            typeof val === 'string' &&
+                                            /^-?(?:0|[1-9]\d*)$/.test(val)
+                                              ? Number(val)
+                                              : val,
+                                          z.number().int().min(0).max(25),
+                                        )
+                                        .nullable(),
                                     )
                                     .exactOptional(),
                                   max_values: z
                                     .preprocess(
                                       (val) => (val === 'null' ? null : val),
-                                      z.coerce.number().int().min(1).max(25).nullable(),
+                                      z
+                                        .preprocess(
+                                          (val) =>
+                                            typeof val === 'string' &&
+                                            /^-?(?:0|[1-9]\d*)$/.test(val)
+                                              ? Number(val)
+                                              : val,
+                                          z.number().int().min(1).max(25),
+                                        )
+                                        .nullable(),
                                     )
                                     .exactOptional(),
                                   disabled: z
@@ -899,83 +1337,155 @@ export const lobbiesHandler = new Hono()
                                           z
                                             .array(
                                               z.union([
-                                                z.coerce
-                                                  .number()
-                                                  .pipe(z.literal(1))
+                                                z
+                                                  .preprocess(
+                                                    (val) =>
+                                                      typeof val === 'string' &&
+                                                      /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                        ? Number(val)
+                                                        : val,
+                                                    z.literal(1),
+                                                  )
                                                   .meta({
                                                     description: 'A direct message between users',
                                                   }),
-                                                z.coerce
-                                                  .number()
-                                                  .pipe(z.literal(3))
+                                                z
+                                                  .preprocess(
+                                                    (val) =>
+                                                      typeof val === 'string' &&
+                                                      /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                        ? Number(val)
+                                                        : val,
+                                                    z.literal(3),
+                                                  )
                                                   .meta({
                                                     description:
                                                       'A direct message between multiple users',
                                                   }),
-                                                z.coerce
-                                                  .number()
-                                                  .pipe(z.literal(0))
+                                                z
+                                                  .preprocess(
+                                                    (val) =>
+                                                      typeof val === 'string' &&
+                                                      /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                        ? Number(val)
+                                                        : val,
+                                                    z.literal(0),
+                                                  )
                                                   .meta({
                                                     description: 'A text channel within a server',
                                                   }),
-                                                z.coerce
-                                                  .number()
-                                                  .pipe(z.literal(2))
+                                                z
+                                                  .preprocess(
+                                                    (val) =>
+                                                      typeof val === 'string' &&
+                                                      /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                        ? Number(val)
+                                                        : val,
+                                                    z.literal(2),
+                                                  )
                                                   .meta({
                                                     description: 'A voice channel within a server',
                                                   }),
-                                                z.coerce
-                                                  .number()
-                                                  .pipe(z.literal(4))
+                                                z
+                                                  .preprocess(
+                                                    (val) =>
+                                                      typeof val === 'string' &&
+                                                      /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                        ? Number(val)
+                                                        : val,
+                                                    z.literal(4),
+                                                  )
                                                   .meta({
                                                     description:
                                                       'An organizational category that contains up to 50 channels',
                                                   }),
-                                                z.coerce
-                                                  .number()
-                                                  .pipe(z.literal(5))
+                                                z
+                                                  .preprocess(
+                                                    (val) =>
+                                                      typeof val === 'string' &&
+                                                      /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                        ? Number(val)
+                                                        : val,
+                                                    z.literal(5),
+                                                  )
                                                   .meta({
                                                     description:
                                                       'A channel that users can follow and crosspost into their own server (formerly news channels)',
                                                   }),
-                                                z.coerce
-                                                  .number()
-                                                  .pipe(z.literal(10))
+                                                z
+                                                  .preprocess(
+                                                    (val) =>
+                                                      typeof val === 'string' &&
+                                                      /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                        ? Number(val)
+                                                        : val,
+                                                    z.literal(10),
+                                                  )
                                                   .meta({
                                                     description:
                                                       'A temporary sub-channel within a GUILD_ANNOUNCEMENT channel',
                                                   }),
-                                                z.coerce
-                                                  .number()
-                                                  .pipe(z.literal(11))
+                                                z
+                                                  .preprocess(
+                                                    (val) =>
+                                                      typeof val === 'string' &&
+                                                      /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                        ? Number(val)
+                                                        : val,
+                                                    z.literal(11),
+                                                  )
                                                   .meta({
                                                     description:
                                                       'A temporary sub-channel within a GUILD_TEXT or GUILD_THREADS_ONLY channel type set',
                                                   }),
-                                                z.coerce
-                                                  .number()
-                                                  .pipe(z.literal(12))
+                                                z
+                                                  .preprocess(
+                                                    (val) =>
+                                                      typeof val === 'string' &&
+                                                      /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                        ? Number(val)
+                                                        : val,
+                                                    z.literal(12),
+                                                  )
                                                   .meta({
                                                     description:
                                                       'A temporary sub-channel within a GUILD_TEXT channel that is only viewable by those invited and those with the MANAGE_THREADS permission',
                                                   }),
-                                                z.coerce
-                                                  .number()
-                                                  .pipe(z.literal(13))
+                                                z
+                                                  .preprocess(
+                                                    (val) =>
+                                                      typeof val === 'string' &&
+                                                      /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                        ? Number(val)
+                                                        : val,
+                                                    z.literal(13),
+                                                  )
                                                   .meta({
                                                     description:
                                                       'A voice channel for hosting events with an audience',
                                                   }),
-                                                z.coerce
-                                                  .number()
-                                                  .pipe(z.literal(14))
+                                                z
+                                                  .preprocess(
+                                                    (val) =>
+                                                      typeof val === 'string' &&
+                                                      /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                        ? Number(val)
+                                                        : val,
+                                                    z.literal(14),
+                                                  )
                                                   .meta({
                                                     description:
                                                       'The channel in a hub containing the listed servers',
                                                   }),
-                                                z.coerce
-                                                  .number()
-                                                  .pipe(z.literal(15))
+                                                z
+                                                  .preprocess(
+                                                    (val) =>
+                                                      typeof val === 'string' &&
+                                                      /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                        ? Number(val)
+                                                        : val,
+                                                    z.literal(15),
+                                                  )
                                                   .meta({
                                                     description:
                                                       'Channel that can only contain threads',
@@ -990,97 +1500,206 @@ export const lobbiesHandler = new Hono()
                                 }),
                                 z.object({
                                   type: z.union([
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(1))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(1),
+                                      )
                                       .meta({ description: 'Container for other components' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(2))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(2),
+                                      )
                                       .meta({ description: 'Button object' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(3))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(3),
+                                      )
                                       .meta({
                                         description:
                                           'Select menu for picking from defined text options',
                                       }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(4))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(4),
+                                      )
                                       .meta({ description: 'Text input object' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(5))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(5),
+                                      )
                                       .meta({ description: 'Select menu for users' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(6))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(6),
+                                      )
                                       .meta({ description: 'Select menu for roles' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(7))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(7),
+                                      )
                                       .meta({
                                         description:
                                           'Select menu for mentionables (users and roles)',
                                       }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(8))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(8),
+                                      )
                                       .meta({ description: 'Select menu for channels' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(9))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(9),
+                                      )
                                       .meta({ description: 'Section component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(10))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(10),
+                                      )
                                       .meta({ description: 'Text component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(11))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(11),
+                                      )
                                       .meta({ description: 'Thumbnail component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(12))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(12),
+                                      )
                                       .meta({ description: 'Media gallery component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(13))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(13),
+                                      )
                                       .meta({ description: 'File component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(14))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(14),
+                                      )
                                       .meta({ description: 'Separator component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(17))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(17),
+                                      )
                                       .meta({ description: 'Container component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(18))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(18),
+                                      )
                                       .meta({ description: 'Label component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(19))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(19),
+                                      )
                                       .meta({ description: 'File upload component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(21))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(21),
+                                      )
                                       .meta({ description: 'Radio group component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(22))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(22),
+                                      )
                                       .meta({ description: 'Checkbox group component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(23))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(23),
+                                      )
                                       .meta({ description: 'Checkbox component' }),
                                   ]),
                                   id: z
                                     .preprocess(
                                       (val) => (val === 'null' ? null : val),
-                                      z.coerce.number().pipe(z.int32().min(0)).nullable(),
+                                      z
+                                        .preprocess(
+                                          (val) =>
+                                            typeof val === 'string' &&
+                                            /^-?(?:0|[1-9]\d*)$/.test(val)
+                                              ? Number(val)
+                                              : val,
+                                          z.int32().min(0),
+                                        )
+                                        .nullable(),
                                     )
                                     .exactOptional(),
                                   custom_id: z.string().min(1).max(100),
@@ -1088,13 +1707,31 @@ export const lobbiesHandler = new Hono()
                                   min_values: z
                                     .preprocess(
                                       (val) => (val === 'null' ? null : val),
-                                      z.coerce.number().int().min(0).max(25).nullable(),
+                                      z
+                                        .preprocess(
+                                          (val) =>
+                                            typeof val === 'string' &&
+                                            /^-?(?:0|[1-9]\d*)$/.test(val)
+                                              ? Number(val)
+                                              : val,
+                                          z.number().int().min(0).max(25),
+                                        )
+                                        .nullable(),
                                     )
                                     .exactOptional(),
                                   max_values: z
                                     .preprocess(
                                       (val) => (val === 'null' ? null : val),
-                                      z.coerce.number().int().min(1).max(25).nullable(),
+                                      z
+                                        .preprocess(
+                                          (val) =>
+                                            typeof val === 'string' &&
+                                            /^-?(?:0|[1-9]\d*)$/.test(val)
+                                              ? Number(val)
+                                              : val,
+                                          z.number().int().min(1).max(25),
+                                        )
+                                        .nullable(),
                                     )
                                     .exactOptional(),
                                   disabled: z
@@ -1145,97 +1782,206 @@ export const lobbiesHandler = new Hono()
                                 }),
                                 z.object({
                                   type: z.union([
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(1))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(1),
+                                      )
                                       .meta({ description: 'Container for other components' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(2))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(2),
+                                      )
                                       .meta({ description: 'Button object' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(3))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(3),
+                                      )
                                       .meta({
                                         description:
                                           'Select menu for picking from defined text options',
                                       }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(4))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(4),
+                                      )
                                       .meta({ description: 'Text input object' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(5))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(5),
+                                      )
                                       .meta({ description: 'Select menu for users' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(6))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(6),
+                                      )
                                       .meta({ description: 'Select menu for roles' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(7))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(7),
+                                      )
                                       .meta({
                                         description:
                                           'Select menu for mentionables (users and roles)',
                                       }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(8))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(8),
+                                      )
                                       .meta({ description: 'Select menu for channels' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(9))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(9),
+                                      )
                                       .meta({ description: 'Section component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(10))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(10),
+                                      )
                                       .meta({ description: 'Text component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(11))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(11),
+                                      )
                                       .meta({ description: 'Thumbnail component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(12))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(12),
+                                      )
                                       .meta({ description: 'Media gallery component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(13))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(13),
+                                      )
                                       .meta({ description: 'File component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(14))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(14),
+                                      )
                                       .meta({ description: 'Separator component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(17))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(17),
+                                      )
                                       .meta({ description: 'Container component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(18))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(18),
+                                      )
                                       .meta({ description: 'Label component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(19))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(19),
+                                      )
                                       .meta({ description: 'File upload component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(21))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(21),
+                                      )
                                       .meta({ description: 'Radio group component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(22))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(22),
+                                      )
                                       .meta({ description: 'Checkbox group component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(23))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(23),
+                                      )
                                       .meta({ description: 'Checkbox component' }),
                                   ]),
                                   id: z
                                     .preprocess(
                                       (val) => (val === 'null' ? null : val),
-                                      z.coerce.number().pipe(z.int32().min(0)).nullable(),
+                                      z
+                                        .preprocess(
+                                          (val) =>
+                                            typeof val === 'string' &&
+                                            /^-?(?:0|[1-9]\d*)$/.test(val)
+                                              ? Number(val)
+                                              : val,
+                                          z.int32().min(0),
+                                        )
+                                        .nullable(),
                                     )
                                     .exactOptional(),
                                   custom_id: z.string().min(1).max(100),
@@ -1243,13 +1989,31 @@ export const lobbiesHandler = new Hono()
                                   min_values: z
                                     .preprocess(
                                       (val) => (val === 'null' ? null : val),
-                                      z.coerce.number().int().min(0).max(25).nullable(),
+                                      z
+                                        .preprocess(
+                                          (val) =>
+                                            typeof val === 'string' &&
+                                            /^-?(?:0|[1-9]\d*)$/.test(val)
+                                              ? Number(val)
+                                              : val,
+                                          z.number().int().min(0).max(25),
+                                        )
+                                        .nullable(),
                                     )
                                     .exactOptional(),
                                   max_values: z
                                     .preprocess(
                                       (val) => (val === 'null' ? null : val),
-                                      z.coerce.number().int().min(1).max(25).nullable(),
+                                      z
+                                        .preprocess(
+                                          (val) =>
+                                            typeof val === 'string' &&
+                                            /^-?(?:0|[1-9]\d*)$/.test(val)
+                                              ? Number(val)
+                                              : val,
+                                          z.number().int().min(1).max(25),
+                                        )
+                                        .nullable(),
                                     )
                                     .exactOptional(),
                                   disabled: z
@@ -1290,97 +2054,206 @@ export const lobbiesHandler = new Hono()
                                 }),
                                 z.object({
                                   type: z.union([
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(1))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(1),
+                                      )
                                       .meta({ description: 'Container for other components' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(2))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(2),
+                                      )
                                       .meta({ description: 'Button object' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(3))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(3),
+                                      )
                                       .meta({
                                         description:
                                           'Select menu for picking from defined text options',
                                       }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(4))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(4),
+                                      )
                                       .meta({ description: 'Text input object' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(5))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(5),
+                                      )
                                       .meta({ description: 'Select menu for users' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(6))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(6),
+                                      )
                                       .meta({ description: 'Select menu for roles' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(7))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(7),
+                                      )
                                       .meta({
                                         description:
                                           'Select menu for mentionables (users and roles)',
                                       }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(8))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(8),
+                                      )
                                       .meta({ description: 'Select menu for channels' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(9))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(9),
+                                      )
                                       .meta({ description: 'Section component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(10))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(10),
+                                      )
                                       .meta({ description: 'Text component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(11))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(11),
+                                      )
                                       .meta({ description: 'Thumbnail component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(12))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(12),
+                                      )
                                       .meta({ description: 'Media gallery component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(13))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(13),
+                                      )
                                       .meta({ description: 'File component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(14))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(14),
+                                      )
                                       .meta({ description: 'Separator component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(17))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(17),
+                                      )
                                       .meta({ description: 'Container component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(18))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(18),
+                                      )
                                       .meta({ description: 'Label component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(19))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(19),
+                                      )
                                       .meta({ description: 'File upload component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(21))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(21),
+                                      )
                                       .meta({ description: 'Radio group component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(22))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(22),
+                                      )
                                       .meta({ description: 'Checkbox group component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(23))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(23),
+                                      )
                                       .meta({ description: 'Checkbox component' }),
                                   ]),
                                   id: z
                                     .preprocess(
                                       (val) => (val === 'null' ? null : val),
-                                      z.coerce.number().pipe(z.int32().min(0)).nullable(),
+                                      z
+                                        .preprocess(
+                                          (val) =>
+                                            typeof val === 'string' &&
+                                            /^-?(?:0|[1-9]\d*)$/.test(val)
+                                              ? Number(val)
+                                              : val,
+                                          z.int32().min(0),
+                                        )
+                                        .nullable(),
                                     )
                                     .exactOptional(),
                                   custom_id: z.string().min(1).max(100),
@@ -1388,13 +2261,31 @@ export const lobbiesHandler = new Hono()
                                   min_values: z
                                     .preprocess(
                                       (val) => (val === 'null' ? null : val),
-                                      z.coerce.number().int().min(0).max(25).nullable(),
+                                      z
+                                        .preprocess(
+                                          (val) =>
+                                            typeof val === 'string' &&
+                                            /^-?(?:0|[1-9]\d*)$/.test(val)
+                                              ? Number(val)
+                                              : val,
+                                          z.number().int().min(0).max(25),
+                                        )
+                                        .nullable(),
                                     )
                                     .exactOptional(),
                                   max_values: z
                                     .preprocess(
                                       (val) => (val === 'null' ? null : val),
-                                      z.coerce.number().int().min(1).max(25).nullable(),
+                                      z
+                                        .preprocess(
+                                          (val) =>
+                                            typeof val === 'string' &&
+                                            /^-?(?:0|[1-9]\d*)$/.test(val)
+                                              ? Number(val)
+                                              : val,
+                                          z.number().int().min(1).max(25),
+                                        )
+                                        .nullable(),
                                     )
                                     .exactOptional(),
                                   disabled: z
@@ -1435,7 +2326,7 @@ export const lobbiesHandler = new Hono()
                                                 .union([
                                                   z.preprocess(
                                                     (val) => (val === 'null' ? null : val),
-                                                    z.null().nullable(),
+                                                    z.null(),
                                                   ),
                                                   z.object({
                                                     id: z
@@ -1446,7 +2337,7 @@ export const lobbiesHandler = new Hono()
                                                             z.preprocess(
                                                               (val) =>
                                                                 val === 'null' ? null : val,
-                                                              z.null().nullable(),
+                                                              z.null(),
                                                             ),
                                                             SnowflakeTypeSchema,
                                                           ])
@@ -1467,97 +2358,206 @@ export const lobbiesHandler = new Hono()
                                 }),
                                 z.object({
                                   type: z.union([
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(1))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(1),
+                                      )
                                       .meta({ description: 'Container for other components' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(2))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(2),
+                                      )
                                       .meta({ description: 'Button object' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(3))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(3),
+                                      )
                                       .meta({
                                         description:
                                           'Select menu for picking from defined text options',
                                       }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(4))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(4),
+                                      )
                                       .meta({ description: 'Text input object' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(5))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(5),
+                                      )
                                       .meta({ description: 'Select menu for users' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(6))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(6),
+                                      )
                                       .meta({ description: 'Select menu for roles' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(7))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(7),
+                                      )
                                       .meta({
                                         description:
                                           'Select menu for mentionables (users and roles)',
                                       }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(8))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(8),
+                                      )
                                       .meta({ description: 'Select menu for channels' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(9))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(9),
+                                      )
                                       .meta({ description: 'Section component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(10))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(10),
+                                      )
                                       .meta({ description: 'Text component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(11))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(11),
+                                      )
                                       .meta({ description: 'Thumbnail component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(12))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(12),
+                                      )
                                       .meta({ description: 'Media gallery component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(13))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(13),
+                                      )
                                       .meta({ description: 'File component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(14))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(14),
+                                      )
                                       .meta({ description: 'Separator component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(17))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(17),
+                                      )
                                       .meta({ description: 'Container component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(18))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(18),
+                                      )
                                       .meta({ description: 'Label component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(19))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(19),
+                                      )
                                       .meta({ description: 'File upload component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(21))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(21),
+                                      )
                                       .meta({ description: 'Radio group component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(22))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(22),
+                                      )
                                       .meta({ description: 'Checkbox group component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(23))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(23),
+                                      )
                                       .meta({ description: 'Checkbox component' }),
                                   ]),
                                   id: z
                                     .preprocess(
                                       (val) => (val === 'null' ? null : val),
-                                      z.coerce.number().pipe(z.int32().min(0)).nullable(),
+                                      z
+                                        .preprocess(
+                                          (val) =>
+                                            typeof val === 'string' &&
+                                            /^-?(?:0|[1-9]\d*)$/.test(val)
+                                              ? Number(val)
+                                              : val,
+                                          z.int32().min(0),
+                                        )
+                                        .nullable(),
                                     )
                                     .exactOptional(),
                                   custom_id: z.string().min(1).max(100),
@@ -1565,13 +2565,31 @@ export const lobbiesHandler = new Hono()
                                   min_values: z
                                     .preprocess(
                                       (val) => (val === 'null' ? null : val),
-                                      z.coerce.number().int().min(0).max(25).nullable(),
+                                      z
+                                        .preprocess(
+                                          (val) =>
+                                            typeof val === 'string' &&
+                                            /^-?(?:0|[1-9]\d*)$/.test(val)
+                                              ? Number(val)
+                                              : val,
+                                          z.number().int().min(0).max(25),
+                                        )
+                                        .nullable(),
                                     )
                                     .exactOptional(),
                                   max_values: z
                                     .preprocess(
                                       (val) => (val === 'null' ? null : val),
-                                      z.coerce.number().int().min(1).max(25).nullable(),
+                                      z
+                                        .preprocess(
+                                          (val) =>
+                                            typeof val === 'string' &&
+                                            /^-?(?:0|[1-9]\d*)$/.test(val)
+                                              ? Number(val)
+                                              : val,
+                                          z.number().int().min(1).max(25),
+                                        )
+                                        .nullable(),
                                     )
                                     .exactOptional(),
                                   disabled: z
@@ -1618,101 +2636,217 @@ export const lobbiesHandler = new Hono()
                       }),
                       z.object({
                         type: z.union([
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(1))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(1),
+                            )
                             .meta({ description: 'Container for other components' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(2))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(2),
+                            )
                             .meta({ description: 'Button object' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(3))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(3),
+                            )
                             .meta({
                               description: 'Select menu for picking from defined text options',
                             }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(4))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(4),
+                            )
                             .meta({ description: 'Text input object' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(5))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(5),
+                            )
                             .meta({ description: 'Select menu for users' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(6))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(6),
+                            )
                             .meta({ description: 'Select menu for roles' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(7))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(7),
+                            )
                             .meta({
                               description: 'Select menu for mentionables (users and roles)',
                             }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(8))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(8),
+                            )
                             .meta({ description: 'Select menu for channels' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(9))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(9),
+                            )
                             .meta({ description: 'Section component' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(10))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(10),
+                            )
                             .meta({ description: 'Text component' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(11))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(11),
+                            )
                             .meta({ description: 'Thumbnail component' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(12))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(12),
+                            )
                             .meta({ description: 'Media gallery component' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(13))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(13),
+                            )
                             .meta({ description: 'File component' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(14))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(14),
+                            )
                             .meta({ description: 'Separator component' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(17))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(17),
+                            )
                             .meta({ description: 'Container component' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(18))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(18),
+                            )
                             .meta({ description: 'Label component' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(19))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(19),
+                            )
                             .meta({ description: 'File upload component' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(21))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(21),
+                            )
                             .meta({ description: 'Radio group component' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(22))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(22),
+                            )
                             .meta({ description: 'Checkbox group component' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(23))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(23),
+                            )
                             .meta({ description: 'Checkbox component' }),
                         ]),
                         id: z
                           .preprocess(
                             (val) => (val === 'null' ? null : val),
-                            z.coerce.number().pipe(z.int32().min(0)).nullable(),
+                            z
+                              .preprocess(
+                                (val) =>
+                                  typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                    ? Number(val)
+                                    : val,
+                                z.int32().min(0),
+                              )
+                              .nullable(),
                           )
                           .exactOptional(),
                         accent_color: z
                           .preprocess(
                             (val) => (val === 'null' ? null : val),
-                            z.coerce.number().int().min(0).max(16777215).nullable(),
+                            z
+                              .preprocess(
+                                (val) =>
+                                  typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                    ? Number(val)
+                                    : val,
+                                z.number().int().min(0).max(16777215),
+                              )
+                              .nullable(),
                           )
                           .exactOptional(),
                         components: z.preprocess(
@@ -1722,97 +2856,206 @@ export const lobbiesHandler = new Hono()
                               z.union([
                                 z.object({
                                   type: z.union([
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(1))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(1),
+                                      )
                                       .meta({ description: 'Container for other components' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(2))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(2),
+                                      )
                                       .meta({ description: 'Button object' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(3))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(3),
+                                      )
                                       .meta({
                                         description:
                                           'Select menu for picking from defined text options',
                                       }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(4))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(4),
+                                      )
                                       .meta({ description: 'Text input object' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(5))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(5),
+                                      )
                                       .meta({ description: 'Select menu for users' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(6))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(6),
+                                      )
                                       .meta({ description: 'Select menu for roles' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(7))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(7),
+                                      )
                                       .meta({
                                         description:
                                           'Select menu for mentionables (users and roles)',
                                       }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(8))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(8),
+                                      )
                                       .meta({ description: 'Select menu for channels' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(9))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(9),
+                                      )
                                       .meta({ description: 'Section component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(10))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(10),
+                                      )
                                       .meta({ description: 'Text component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(11))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(11),
+                                      )
                                       .meta({ description: 'Thumbnail component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(12))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(12),
+                                      )
                                       .meta({ description: 'Media gallery component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(13))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(13),
+                                      )
                                       .meta({ description: 'File component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(14))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(14),
+                                      )
                                       .meta({ description: 'Separator component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(17))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(17),
+                                      )
                                       .meta({ description: 'Container component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(18))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(18),
+                                      )
                                       .meta({ description: 'Label component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(19))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(19),
+                                      )
                                       .meta({ description: 'File upload component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(21))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(21),
+                                      )
                                       .meta({ description: 'Radio group component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(22))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(22),
+                                      )
                                       .meta({ description: 'Checkbox group component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(23))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(23),
+                                      )
                                       .meta({ description: 'Checkbox component' }),
                                   ]),
                                   id: z
                                     .preprocess(
                                       (val) => (val === 'null' ? null : val),
-                                      z.coerce.number().pipe(z.int32().min(0)).nullable(),
+                                      z
+                                        .preprocess(
+                                          (val) =>
+                                            typeof val === 'string' &&
+                                            /^-?(?:0|[1-9]\d*)$/.test(val)
+                                              ? Number(val)
+                                              : val,
+                                          z.int32().min(0),
+                                        )
+                                        .nullable(),
                                     )
                                     .exactOptional(),
                                   components: z.preprocess(
@@ -1823,99 +3066,228 @@ export const lobbiesHandler = new Hono()
                                         z.union([
                                           z.object({
                                             type: z.union([
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(1))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(1),
+                                                )
                                                 .meta({
                                                   description: 'Container for other components',
                                                 }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(2))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(2),
+                                                )
                                                 .meta({ description: 'Button object' }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(3))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(3),
+                                                )
                                                 .meta({
                                                   description:
                                                     'Select menu for picking from defined text options',
                                                 }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(4))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(4),
+                                                )
                                                 .meta({ description: 'Text input object' }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(5))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(5),
+                                                )
                                                 .meta({ description: 'Select menu for users' }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(6))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(6),
+                                                )
                                                 .meta({ description: 'Select menu for roles' }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(7))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(7),
+                                                )
                                                 .meta({
                                                   description:
                                                     'Select menu for mentionables (users and roles)',
                                                 }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(8))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(8),
+                                                )
                                                 .meta({ description: 'Select menu for channels' }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(9))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(9),
+                                                )
                                                 .meta({ description: 'Section component' }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(10))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(10),
+                                                )
                                                 .meta({ description: 'Text component' }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(11))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(11),
+                                                )
                                                 .meta({ description: 'Thumbnail component' }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(12))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(12),
+                                                )
                                                 .meta({ description: 'Media gallery component' }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(13))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(13),
+                                                )
                                                 .meta({ description: 'File component' }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(14))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(14),
+                                                )
                                                 .meta({ description: 'Separator component' }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(17))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(17),
+                                                )
                                                 .meta({ description: 'Container component' }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(18))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(18),
+                                                )
                                                 .meta({ description: 'Label component' }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(19))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(19),
+                                                )
                                                 .meta({ description: 'File upload component' }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(21))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(21),
+                                                )
                                                 .meta({ description: 'Radio group component' }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(22))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(22),
+                                                )
                                                 .meta({ description: 'Checkbox group component' }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(23))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(23),
+                                                )
                                                 .meta({ description: 'Checkbox component' }),
                                             ]),
                                             id: z
                                               .preprocess(
                                                 (val) => (val === 'null' ? null : val),
-                                                z.coerce.number().pipe(z.int32().min(0)).nullable(),
+                                                z
+                                                  .preprocess(
+                                                    (val) =>
+                                                      typeof val === 'string' &&
+                                                      /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                        ? Number(val)
+                                                        : val,
+                                                    z.int32().min(0),
+                                                  )
+                                                  .nullable(),
                                               )
                                               .exactOptional(),
                                             custom_id: z
@@ -1925,12 +3297,54 @@ export const lobbiesHandler = new Hono()
                                               .nullable()
                                               .exactOptional(),
                                             style: z.union([
-                                              z.coerce.number().pipe(z.literal(1)),
-                                              z.coerce.number().pipe(z.literal(2)),
-                                              z.coerce.number().pipe(z.literal(3)),
-                                              z.coerce.number().pipe(z.literal(4)),
-                                              z.coerce.number().pipe(z.literal(5)),
-                                              z.coerce.number().pipe(z.literal(6)),
+                                              z.preprocess(
+                                                (val) =>
+                                                  typeof val === 'string' &&
+                                                  /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                    ? Number(val)
+                                                    : val,
+                                                z.literal(1),
+                                              ),
+                                              z.preprocess(
+                                                (val) =>
+                                                  typeof val === 'string' &&
+                                                  /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                    ? Number(val)
+                                                    : val,
+                                                z.literal(2),
+                                              ),
+                                              z.preprocess(
+                                                (val) =>
+                                                  typeof val === 'string' &&
+                                                  /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                    ? Number(val)
+                                                    : val,
+                                                z.literal(3),
+                                              ),
+                                              z.preprocess(
+                                                (val) =>
+                                                  typeof val === 'string' &&
+                                                  /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                    ? Number(val)
+                                                    : val,
+                                                z.literal(4),
+                                              ),
+                                              z.preprocess(
+                                                (val) =>
+                                                  typeof val === 'string' &&
+                                                  /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                    ? Number(val)
+                                                    : val,
+                                                z.literal(5),
+                                              ),
+                                              z.preprocess(
+                                                (val) =>
+                                                  typeof val === 'string' &&
+                                                  /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                    ? Number(val)
+                                                    : val,
+                                                z.literal(6),
+                                              ),
                                             ]),
                                             label: z.string().max(80).nullable().exactOptional(),
                                             disabled: z
@@ -1947,7 +3361,7 @@ export const lobbiesHandler = new Hono()
                                                   .union([
                                                     z.preprocess(
                                                       (val) => (val === 'null' ? null : val),
-                                                      z.null().nullable(),
+                                                      z.null(),
                                                     ),
                                                     SnowflakeTypeSchema,
                                                   ])
@@ -1961,7 +3375,7 @@ export const lobbiesHandler = new Hono()
                                                   .union([
                                                     z.preprocess(
                                                       (val) => (val === 'null' ? null : val),
-                                                      z.null().nullable(),
+                                                      z.null(),
                                                     ),
                                                     z.object({
                                                       id: z
@@ -1972,7 +3386,7 @@ export const lobbiesHandler = new Hono()
                                                               z.preprocess(
                                                                 (val) =>
                                                                   val === 'null' ? null : val,
-                                                                z.null().nullable(),
+                                                                z.null(),
                                                               ),
                                                               SnowflakeTypeSchema,
                                                             ])
@@ -1988,99 +3402,228 @@ export const lobbiesHandler = new Hono()
                                           }),
                                           z.object({
                                             type: z.union([
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(1))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(1),
+                                                )
                                                 .meta({
                                                   description: 'Container for other components',
                                                 }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(2))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(2),
+                                                )
                                                 .meta({ description: 'Button object' }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(3))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(3),
+                                                )
                                                 .meta({
                                                   description:
                                                     'Select menu for picking from defined text options',
                                                 }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(4))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(4),
+                                                )
                                                 .meta({ description: 'Text input object' }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(5))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(5),
+                                                )
                                                 .meta({ description: 'Select menu for users' }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(6))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(6),
+                                                )
                                                 .meta({ description: 'Select menu for roles' }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(7))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(7),
+                                                )
                                                 .meta({
                                                   description:
                                                     'Select menu for mentionables (users and roles)',
                                                 }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(8))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(8),
+                                                )
                                                 .meta({ description: 'Select menu for channels' }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(9))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(9),
+                                                )
                                                 .meta({ description: 'Section component' }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(10))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(10),
+                                                )
                                                 .meta({ description: 'Text component' }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(11))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(11),
+                                                )
                                                 .meta({ description: 'Thumbnail component' }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(12))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(12),
+                                                )
                                                 .meta({ description: 'Media gallery component' }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(13))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(13),
+                                                )
                                                 .meta({ description: 'File component' }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(14))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(14),
+                                                )
                                                 .meta({ description: 'Separator component' }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(17))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(17),
+                                                )
                                                 .meta({ description: 'Container component' }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(18))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(18),
+                                                )
                                                 .meta({ description: 'Label component' }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(19))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(19),
+                                                )
                                                 .meta({ description: 'File upload component' }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(21))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(21),
+                                                )
                                                 .meta({ description: 'Radio group component' }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(22))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(22),
+                                                )
                                                 .meta({ description: 'Checkbox group component' }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(23))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(23),
+                                                )
                                                 .meta({ description: 'Checkbox component' }),
                                             ]),
                                             id: z
                                               .preprocess(
                                                 (val) => (val === 'null' ? null : val),
-                                                z.coerce.number().pipe(z.int32().min(0)).nullable(),
+                                                z
+                                                  .preprocess(
+                                                    (val) =>
+                                                      typeof val === 'string' &&
+                                                      /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                        ? Number(val)
+                                                        : val,
+                                                    z.int32().min(0),
+                                                  )
+                                                  .nullable(),
                                               )
                                               .exactOptional(),
                                             custom_id: z.string().min(1).max(100),
@@ -2092,13 +3635,31 @@ export const lobbiesHandler = new Hono()
                                             min_values: z
                                               .preprocess(
                                                 (val) => (val === 'null' ? null : val),
-                                                z.coerce.number().int().min(0).max(25).nullable(),
+                                                z
+                                                  .preprocess(
+                                                    (val) =>
+                                                      typeof val === 'string' &&
+                                                      /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                        ? Number(val)
+                                                        : val,
+                                                    z.number().int().min(0).max(25),
+                                                  )
+                                                  .nullable(),
                                               )
                                               .exactOptional(),
                                             max_values: z
                                               .preprocess(
                                                 (val) => (val === 'null' ? null : val),
-                                                z.coerce.number().int().min(1).max(25).nullable(),
+                                                z
+                                                  .preprocess(
+                                                    (val) =>
+                                                      typeof val === 'string' &&
+                                                      /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                        ? Number(val)
+                                                        : val,
+                                                    z.number().int().min(1).max(25),
+                                                  )
+                                                  .nullable(),
                                               )
                                               .exactOptional(),
                                             disabled: z
@@ -2150,86 +3711,158 @@ export const lobbiesHandler = new Hono()
                                                     z
                                                       .array(
                                                         z.union([
-                                                          z.coerce
-                                                            .number()
-                                                            .pipe(z.literal(1))
+                                                          z
+                                                            .preprocess(
+                                                              (val) =>
+                                                                typeof val === 'string' &&
+                                                                /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                                  ? Number(val)
+                                                                  : val,
+                                                              z.literal(1),
+                                                            )
                                                             .meta({
                                                               description:
                                                                 'A direct message between users',
                                                             }),
-                                                          z.coerce
-                                                            .number()
-                                                            .pipe(z.literal(3))
+                                                          z
+                                                            .preprocess(
+                                                              (val) =>
+                                                                typeof val === 'string' &&
+                                                                /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                                  ? Number(val)
+                                                                  : val,
+                                                              z.literal(3),
+                                                            )
                                                             .meta({
                                                               description:
                                                                 'A direct message between multiple users',
                                                             }),
-                                                          z.coerce
-                                                            .number()
-                                                            .pipe(z.literal(0))
+                                                          z
+                                                            .preprocess(
+                                                              (val) =>
+                                                                typeof val === 'string' &&
+                                                                /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                                  ? Number(val)
+                                                                  : val,
+                                                              z.literal(0),
+                                                            )
                                                             .meta({
                                                               description:
                                                                 'A text channel within a server',
                                                             }),
-                                                          z.coerce
-                                                            .number()
-                                                            .pipe(z.literal(2))
+                                                          z
+                                                            .preprocess(
+                                                              (val) =>
+                                                                typeof val === 'string' &&
+                                                                /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                                  ? Number(val)
+                                                                  : val,
+                                                              z.literal(2),
+                                                            )
                                                             .meta({
                                                               description:
                                                                 'A voice channel within a server',
                                                             }),
-                                                          z.coerce
-                                                            .number()
-                                                            .pipe(z.literal(4))
+                                                          z
+                                                            .preprocess(
+                                                              (val) =>
+                                                                typeof val === 'string' &&
+                                                                /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                                  ? Number(val)
+                                                                  : val,
+                                                              z.literal(4),
+                                                            )
                                                             .meta({
                                                               description:
                                                                 'An organizational category that contains up to 50 channels',
                                                             }),
-                                                          z.coerce
-                                                            .number()
-                                                            .pipe(z.literal(5))
+                                                          z
+                                                            .preprocess(
+                                                              (val) =>
+                                                                typeof val === 'string' &&
+                                                                /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                                  ? Number(val)
+                                                                  : val,
+                                                              z.literal(5),
+                                                            )
                                                             .meta({
                                                               description:
                                                                 'A channel that users can follow and crosspost into their own server (formerly news channels)',
                                                             }),
-                                                          z.coerce
-                                                            .number()
-                                                            .pipe(z.literal(10))
+                                                          z
+                                                            .preprocess(
+                                                              (val) =>
+                                                                typeof val === 'string' &&
+                                                                /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                                  ? Number(val)
+                                                                  : val,
+                                                              z.literal(10),
+                                                            )
                                                             .meta({
                                                               description:
                                                                 'A temporary sub-channel within a GUILD_ANNOUNCEMENT channel',
                                                             }),
-                                                          z.coerce
-                                                            .number()
-                                                            .pipe(z.literal(11))
+                                                          z
+                                                            .preprocess(
+                                                              (val) =>
+                                                                typeof val === 'string' &&
+                                                                /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                                  ? Number(val)
+                                                                  : val,
+                                                              z.literal(11),
+                                                            )
                                                             .meta({
                                                               description:
                                                                 'A temporary sub-channel within a GUILD_TEXT or GUILD_THREADS_ONLY channel type set',
                                                             }),
-                                                          z.coerce
-                                                            .number()
-                                                            .pipe(z.literal(12))
+                                                          z
+                                                            .preprocess(
+                                                              (val) =>
+                                                                typeof val === 'string' &&
+                                                                /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                                  ? Number(val)
+                                                                  : val,
+                                                              z.literal(12),
+                                                            )
                                                             .meta({
                                                               description:
                                                                 'A temporary sub-channel within a GUILD_TEXT channel that is only viewable by those invited and those with the MANAGE_THREADS permission',
                                                             }),
-                                                          z.coerce
-                                                            .number()
-                                                            .pipe(z.literal(13))
+                                                          z
+                                                            .preprocess(
+                                                              (val) =>
+                                                                typeof val === 'string' &&
+                                                                /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                                  ? Number(val)
+                                                                  : val,
+                                                              z.literal(13),
+                                                            )
                                                             .meta({
                                                               description:
                                                                 'A voice channel for hosting events with an audience',
                                                             }),
-                                                          z.coerce
-                                                            .number()
-                                                            .pipe(z.literal(14))
+                                                          z
+                                                            .preprocess(
+                                                              (val) =>
+                                                                typeof val === 'string' &&
+                                                                /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                                  ? Number(val)
+                                                                  : val,
+                                                              z.literal(14),
+                                                            )
                                                             .meta({
                                                               description:
                                                                 'The channel in a hub containing the listed servers',
                                                             }),
-                                                          z.coerce
-                                                            .number()
-                                                            .pipe(z.literal(15))
+                                                          z
+                                                            .preprocess(
+                                                              (val) =>
+                                                                typeof val === 'string' &&
+                                                                /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                                  ? Number(val)
+                                                                  : val,
+                                                              z.literal(15),
+                                                            )
                                                             .meta({
                                                               description:
                                                                 'Channel that can only contain threads',
@@ -2246,99 +3879,228 @@ export const lobbiesHandler = new Hono()
                                           }),
                                           z.object({
                                             type: z.union([
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(1))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(1),
+                                                )
                                                 .meta({
                                                   description: 'Container for other components',
                                                 }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(2))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(2),
+                                                )
                                                 .meta({ description: 'Button object' }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(3))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(3),
+                                                )
                                                 .meta({
                                                   description:
                                                     'Select menu for picking from defined text options',
                                                 }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(4))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(4),
+                                                )
                                                 .meta({ description: 'Text input object' }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(5))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(5),
+                                                )
                                                 .meta({ description: 'Select menu for users' }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(6))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(6),
+                                                )
                                                 .meta({ description: 'Select menu for roles' }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(7))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(7),
+                                                )
                                                 .meta({
                                                   description:
                                                     'Select menu for mentionables (users and roles)',
                                                 }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(8))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(8),
+                                                )
                                                 .meta({ description: 'Select menu for channels' }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(9))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(9),
+                                                )
                                                 .meta({ description: 'Section component' }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(10))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(10),
+                                                )
                                                 .meta({ description: 'Text component' }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(11))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(11),
+                                                )
                                                 .meta({ description: 'Thumbnail component' }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(12))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(12),
+                                                )
                                                 .meta({ description: 'Media gallery component' }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(13))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(13),
+                                                )
                                                 .meta({ description: 'File component' }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(14))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(14),
+                                                )
                                                 .meta({ description: 'Separator component' }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(17))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(17),
+                                                )
                                                 .meta({ description: 'Container component' }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(18))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(18),
+                                                )
                                                 .meta({ description: 'Label component' }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(19))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(19),
+                                                )
                                                 .meta({ description: 'File upload component' }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(21))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(21),
+                                                )
                                                 .meta({ description: 'Radio group component' }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(22))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(22),
+                                                )
                                                 .meta({ description: 'Checkbox group component' }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(23))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(23),
+                                                )
                                                 .meta({ description: 'Checkbox component' }),
                                             ]),
                                             id: z
                                               .preprocess(
                                                 (val) => (val === 'null' ? null : val),
-                                                z.coerce.number().pipe(z.int32().min(0)).nullable(),
+                                                z
+                                                  .preprocess(
+                                                    (val) =>
+                                                      typeof val === 'string' &&
+                                                      /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                        ? Number(val)
+                                                        : val,
+                                                    z.int32().min(0),
+                                                  )
+                                                  .nullable(),
                                               )
                                               .exactOptional(),
                                             custom_id: z.string().min(1).max(100),
@@ -2350,13 +4112,31 @@ export const lobbiesHandler = new Hono()
                                             min_values: z
                                               .preprocess(
                                                 (val) => (val === 'null' ? null : val),
-                                                z.coerce.number().int().min(0).max(25).nullable(),
+                                                z
+                                                  .preprocess(
+                                                    (val) =>
+                                                      typeof val === 'string' &&
+                                                      /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                        ? Number(val)
+                                                        : val,
+                                                    z.number().int().min(0).max(25),
+                                                  )
+                                                  .nullable(),
                                               )
                                               .exactOptional(),
                                             max_values: z
                                               .preprocess(
                                                 (val) => (val === 'null' ? null : val),
-                                                z.coerce.number().int().min(1).max(25).nullable(),
+                                                z
+                                                  .preprocess(
+                                                    (val) =>
+                                                      typeof val === 'string' &&
+                                                      /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                        ? Number(val)
+                                                        : val,
+                                                    z.number().int().min(1).max(25),
+                                                  )
+                                                  .nullable(),
                                               )
                                               .exactOptional(),
                                             disabled: z
@@ -2409,99 +4189,228 @@ export const lobbiesHandler = new Hono()
                                           }),
                                           z.object({
                                             type: z.union([
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(1))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(1),
+                                                )
                                                 .meta({
                                                   description: 'Container for other components',
                                                 }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(2))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(2),
+                                                )
                                                 .meta({ description: 'Button object' }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(3))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(3),
+                                                )
                                                 .meta({
                                                   description:
                                                     'Select menu for picking from defined text options',
                                                 }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(4))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(4),
+                                                )
                                                 .meta({ description: 'Text input object' }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(5))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(5),
+                                                )
                                                 .meta({ description: 'Select menu for users' }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(6))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(6),
+                                                )
                                                 .meta({ description: 'Select menu for roles' }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(7))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(7),
+                                                )
                                                 .meta({
                                                   description:
                                                     'Select menu for mentionables (users and roles)',
                                                 }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(8))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(8),
+                                                )
                                                 .meta({ description: 'Select menu for channels' }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(9))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(9),
+                                                )
                                                 .meta({ description: 'Section component' }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(10))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(10),
+                                                )
                                                 .meta({ description: 'Text component' }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(11))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(11),
+                                                )
                                                 .meta({ description: 'Thumbnail component' }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(12))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(12),
+                                                )
                                                 .meta({ description: 'Media gallery component' }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(13))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(13),
+                                                )
                                                 .meta({ description: 'File component' }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(14))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(14),
+                                                )
                                                 .meta({ description: 'Separator component' }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(17))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(17),
+                                                )
                                                 .meta({ description: 'Container component' }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(18))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(18),
+                                                )
                                                 .meta({ description: 'Label component' }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(19))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(19),
+                                                )
                                                 .meta({ description: 'File upload component' }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(21))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(21),
+                                                )
                                                 .meta({ description: 'Radio group component' }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(22))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(22),
+                                                )
                                                 .meta({ description: 'Checkbox group component' }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(23))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(23),
+                                                )
                                                 .meta({ description: 'Checkbox component' }),
                                             ]),
                                             id: z
                                               .preprocess(
                                                 (val) => (val === 'null' ? null : val),
-                                                z.coerce.number().pipe(z.int32().min(0)).nullable(),
+                                                z
+                                                  .preprocess(
+                                                    (val) =>
+                                                      typeof val === 'string' &&
+                                                      /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                        ? Number(val)
+                                                        : val,
+                                                    z.int32().min(0),
+                                                  )
+                                                  .nullable(),
                                               )
                                               .exactOptional(),
                                             custom_id: z.string().min(1).max(100),
@@ -2513,13 +4422,31 @@ export const lobbiesHandler = new Hono()
                                             min_values: z
                                               .preprocess(
                                                 (val) => (val === 'null' ? null : val),
-                                                z.coerce.number().int().min(0).max(25).nullable(),
+                                                z
+                                                  .preprocess(
+                                                    (val) =>
+                                                      typeof val === 'string' &&
+                                                      /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                        ? Number(val)
+                                                        : val,
+                                                    z.number().int().min(0).max(25),
+                                                  )
+                                                  .nullable(),
                                               )
                                               .exactOptional(),
                                             max_values: z
                                               .preprocess(
                                                 (val) => (val === 'null' ? null : val),
-                                                z.coerce.number().int().min(1).max(25).nullable(),
+                                                z
+                                                  .preprocess(
+                                                    (val) =>
+                                                      typeof val === 'string' &&
+                                                      /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                        ? Number(val)
+                                                        : val,
+                                                    z.number().int().min(1).max(25),
+                                                  )
+                                                  .nullable(),
                                               )
                                               .exactOptional(),
                                             disabled: z
@@ -2562,99 +4489,228 @@ export const lobbiesHandler = new Hono()
                                           }),
                                           z.object({
                                             type: z.union([
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(1))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(1),
+                                                )
                                                 .meta({
                                                   description: 'Container for other components',
                                                 }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(2))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(2),
+                                                )
                                                 .meta({ description: 'Button object' }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(3))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(3),
+                                                )
                                                 .meta({
                                                   description:
                                                     'Select menu for picking from defined text options',
                                                 }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(4))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(4),
+                                                )
                                                 .meta({ description: 'Text input object' }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(5))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(5),
+                                                )
                                                 .meta({ description: 'Select menu for users' }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(6))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(6),
+                                                )
                                                 .meta({ description: 'Select menu for roles' }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(7))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(7),
+                                                )
                                                 .meta({
                                                   description:
                                                     'Select menu for mentionables (users and roles)',
                                                 }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(8))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(8),
+                                                )
                                                 .meta({ description: 'Select menu for channels' }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(9))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(9),
+                                                )
                                                 .meta({ description: 'Section component' }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(10))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(10),
+                                                )
                                                 .meta({ description: 'Text component' }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(11))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(11),
+                                                )
                                                 .meta({ description: 'Thumbnail component' }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(12))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(12),
+                                                )
                                                 .meta({ description: 'Media gallery component' }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(13))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(13),
+                                                )
                                                 .meta({ description: 'File component' }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(14))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(14),
+                                                )
                                                 .meta({ description: 'Separator component' }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(17))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(17),
+                                                )
                                                 .meta({ description: 'Container component' }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(18))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(18),
+                                                )
                                                 .meta({ description: 'Label component' }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(19))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(19),
+                                                )
                                                 .meta({ description: 'File upload component' }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(21))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(21),
+                                                )
                                                 .meta({ description: 'Radio group component' }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(22))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(22),
+                                                )
                                                 .meta({ description: 'Checkbox group component' }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(23))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(23),
+                                                )
                                                 .meta({ description: 'Checkbox component' }),
                                             ]),
                                             id: z
                                               .preprocess(
                                                 (val) => (val === 'null' ? null : val),
-                                                z.coerce.number().pipe(z.int32().min(0)).nullable(),
+                                                z
+                                                  .preprocess(
+                                                    (val) =>
+                                                      typeof val === 'string' &&
+                                                      /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                        ? Number(val)
+                                                        : val,
+                                                    z.int32().min(0),
+                                                  )
+                                                  .nullable(),
                                               )
                                               .exactOptional(),
                                             custom_id: z.string().min(1).max(100),
@@ -2666,13 +4722,31 @@ export const lobbiesHandler = new Hono()
                                             min_values: z
                                               .preprocess(
                                                 (val) => (val === 'null' ? null : val),
-                                                z.coerce.number().int().min(0).max(25).nullable(),
+                                                z
+                                                  .preprocess(
+                                                    (val) =>
+                                                      typeof val === 'string' &&
+                                                      /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                        ? Number(val)
+                                                        : val,
+                                                    z.number().int().min(0).max(25),
+                                                  )
+                                                  .nullable(),
                                               )
                                               .exactOptional(),
                                             max_values: z
                                               .preprocess(
                                                 (val) => (val === 'null' ? null : val),
-                                                z.coerce.number().int().min(1).max(25).nullable(),
+                                                z
+                                                  .preprocess(
+                                                    (val) =>
+                                                      typeof val === 'string' &&
+                                                      /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                        ? Number(val)
+                                                        : val,
+                                                    z.number().int().min(1).max(25),
+                                                  )
+                                                  .nullable(),
                                               )
                                               .exactOptional(),
                                             disabled: z
@@ -2716,7 +4790,7 @@ export const lobbiesHandler = new Hono()
                                                             z.preprocess(
                                                               (val) =>
                                                                 val === 'null' ? null : val,
-                                                              z.null().nullable(),
+                                                              z.null(),
                                                             ),
                                                             z.object({
                                                               id: z
@@ -2730,7 +4804,7 @@ export const lobbiesHandler = new Hono()
                                                                           val === 'null'
                                                                             ? null
                                                                             : val,
-                                                                        z.null().nullable(),
+                                                                        z.null(),
                                                                       ),
                                                                       SnowflakeTypeSchema,
                                                                     ])
@@ -2751,99 +4825,228 @@ export const lobbiesHandler = new Hono()
                                           }),
                                           z.object({
                                             type: z.union([
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(1))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(1),
+                                                )
                                                 .meta({
                                                   description: 'Container for other components',
                                                 }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(2))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(2),
+                                                )
                                                 .meta({ description: 'Button object' }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(3))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(3),
+                                                )
                                                 .meta({
                                                   description:
                                                     'Select menu for picking from defined text options',
                                                 }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(4))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(4),
+                                                )
                                                 .meta({ description: 'Text input object' }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(5))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(5),
+                                                )
                                                 .meta({ description: 'Select menu for users' }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(6))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(6),
+                                                )
                                                 .meta({ description: 'Select menu for roles' }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(7))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(7),
+                                                )
                                                 .meta({
                                                   description:
                                                     'Select menu for mentionables (users and roles)',
                                                 }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(8))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(8),
+                                                )
                                                 .meta({ description: 'Select menu for channels' }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(9))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(9),
+                                                )
                                                 .meta({ description: 'Section component' }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(10))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(10),
+                                                )
                                                 .meta({ description: 'Text component' }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(11))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(11),
+                                                )
                                                 .meta({ description: 'Thumbnail component' }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(12))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(12),
+                                                )
                                                 .meta({ description: 'Media gallery component' }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(13))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(13),
+                                                )
                                                 .meta({ description: 'File component' }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(14))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(14),
+                                                )
                                                 .meta({ description: 'Separator component' }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(17))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(17),
+                                                )
                                                 .meta({ description: 'Container component' }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(18))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(18),
+                                                )
                                                 .meta({ description: 'Label component' }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(19))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(19),
+                                                )
                                                 .meta({ description: 'File upload component' }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(21))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(21),
+                                                )
                                                 .meta({ description: 'Radio group component' }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(22))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(22),
+                                                )
                                                 .meta({ description: 'Checkbox group component' }),
-                                              z.coerce
-                                                .number()
-                                                .pipe(z.literal(23))
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.literal(23),
+                                                )
                                                 .meta({ description: 'Checkbox component' }),
                                             ]),
                                             id: z
                                               .preprocess(
                                                 (val) => (val === 'null' ? null : val),
-                                                z.coerce.number().pipe(z.int32().min(0)).nullable(),
+                                                z
+                                                  .preprocess(
+                                                    (val) =>
+                                                      typeof val === 'string' &&
+                                                      /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                        ? Number(val)
+                                                        : val,
+                                                    z.int32().min(0),
+                                                  )
+                                                  .nullable(),
                                               )
                                               .exactOptional(),
                                             custom_id: z.string().min(1).max(100),
@@ -2855,13 +5058,31 @@ export const lobbiesHandler = new Hono()
                                             min_values: z
                                               .preprocess(
                                                 (val) => (val === 'null' ? null : val),
-                                                z.coerce.number().int().min(0).max(25).nullable(),
+                                                z
+                                                  .preprocess(
+                                                    (val) =>
+                                                      typeof val === 'string' &&
+                                                      /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                        ? Number(val)
+                                                        : val,
+                                                    z.number().int().min(0).max(25),
+                                                  )
+                                                  .nullable(),
                                               )
                                               .exactOptional(),
                                             max_values: z
                                               .preprocess(
                                                 (val) => (val === 'null' ? null : val),
-                                                z.coerce.number().int().min(1).max(25).nullable(),
+                                                z
+                                                  .preprocess(
+                                                    (val) =>
+                                                      typeof val === 'string' &&
+                                                      /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                        ? Number(val)
+                                                        : val,
+                                                    z.number().int().min(1).max(25),
+                                                  )
+                                                  .nullable(),
                                               )
                                               .exactOptional(),
                                             disabled: z
@@ -2910,97 +5131,206 @@ export const lobbiesHandler = new Hono()
                                 }),
                                 z.object({
                                   type: z.union([
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(1))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(1),
+                                      )
                                       .meta({ description: 'Container for other components' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(2))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(2),
+                                      )
                                       .meta({ description: 'Button object' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(3))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(3),
+                                      )
                                       .meta({
                                         description:
                                           'Select menu for picking from defined text options',
                                       }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(4))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(4),
+                                      )
                                       .meta({ description: 'Text input object' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(5))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(5),
+                                      )
                                       .meta({ description: 'Select menu for users' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(6))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(6),
+                                      )
                                       .meta({ description: 'Select menu for roles' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(7))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(7),
+                                      )
                                       .meta({
                                         description:
                                           'Select menu for mentionables (users and roles)',
                                       }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(8))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(8),
+                                      )
                                       .meta({ description: 'Select menu for channels' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(9))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(9),
+                                      )
                                       .meta({ description: 'Section component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(10))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(10),
+                                      )
                                       .meta({ description: 'Text component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(11))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(11),
+                                      )
                                       .meta({ description: 'Thumbnail component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(12))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(12),
+                                      )
                                       .meta({ description: 'Media gallery component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(13))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(13),
+                                      )
                                       .meta({ description: 'File component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(14))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(14),
+                                      )
                                       .meta({ description: 'Separator component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(17))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(17),
+                                      )
                                       .meta({ description: 'Container component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(18))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(18),
+                                      )
                                       .meta({ description: 'Label component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(19))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(19),
+                                      )
                                       .meta({ description: 'File upload component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(21))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(21),
+                                      )
                                       .meta({ description: 'Radio group component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(22))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(22),
+                                      )
                                       .meta({ description: 'Checkbox group component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(23))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(23),
+                                      )
                                       .meta({ description: 'Checkbox component' }),
                                   ]),
                                   id: z
                                     .preprocess(
                                       (val) => (val === 'null' ? null : val),
-                                      z.coerce.number().pipe(z.int32().min(0)).nullable(),
+                                      z
+                                        .preprocess(
+                                          (val) =>
+                                            typeof val === 'string' &&
+                                            /^-?(?:0|[1-9]\d*)$/.test(val)
+                                              ? Number(val)
+                                              : val,
+                                          z.int32().min(0),
+                                        )
+                                        .nullable(),
                                     )
                                     .exactOptional(),
                                   spoiler: z
@@ -3013,97 +5343,206 @@ export const lobbiesHandler = new Hono()
                                 }),
                                 z.object({
                                   type: z.union([
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(1))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(1),
+                                      )
                                       .meta({ description: 'Container for other components' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(2))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(2),
+                                      )
                                       .meta({ description: 'Button object' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(3))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(3),
+                                      )
                                       .meta({
                                         description:
                                           'Select menu for picking from defined text options',
                                       }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(4))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(4),
+                                      )
                                       .meta({ description: 'Text input object' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(5))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(5),
+                                      )
                                       .meta({ description: 'Select menu for users' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(6))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(6),
+                                      )
                                       .meta({ description: 'Select menu for roles' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(7))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(7),
+                                      )
                                       .meta({
                                         description:
                                           'Select menu for mentionables (users and roles)',
                                       }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(8))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(8),
+                                      )
                                       .meta({ description: 'Select menu for channels' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(9))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(9),
+                                      )
                                       .meta({ description: 'Section component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(10))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(10),
+                                      )
                                       .meta({ description: 'Text component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(11))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(11),
+                                      )
                                       .meta({ description: 'Thumbnail component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(12))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(12),
+                                      )
                                       .meta({ description: 'Media gallery component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(13))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(13),
+                                      )
                                       .meta({ description: 'File component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(14))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(14),
+                                      )
                                       .meta({ description: 'Separator component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(17))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(17),
+                                      )
                                       .meta({ description: 'Container component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(18))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(18),
+                                      )
                                       .meta({ description: 'Label component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(19))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(19),
+                                      )
                                       .meta({ description: 'File upload component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(21))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(21),
+                                      )
                                       .meta({ description: 'Radio group component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(22))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(22),
+                                      )
                                       .meta({ description: 'Checkbox group component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(23))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(23),
+                                      )
                                       .meta({ description: 'Checkbox component' }),
                                   ]),
                                   id: z
                                     .preprocess(
                                       (val) => (val === 'null' ? null : val),
-                                      z.coerce.number().pipe(z.int32().min(0)).nullable(),
+                                      z
+                                        .preprocess(
+                                          (val) =>
+                                            typeof val === 'string' &&
+                                            /^-?(?:0|[1-9]\d*)$/.test(val)
+                                              ? Number(val)
+                                              : val,
+                                          z.int32().min(0),
+                                        )
+                                        .nullable(),
                                     )
                                     .exactOptional(),
                                   items: z.preprocess(
@@ -3133,97 +5572,206 @@ export const lobbiesHandler = new Hono()
                                 }),
                                 z.object({
                                   type: z.union([
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(1))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(1),
+                                      )
                                       .meta({ description: 'Container for other components' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(2))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(2),
+                                      )
                                       .meta({ description: 'Button object' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(3))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(3),
+                                      )
                                       .meta({
                                         description:
                                           'Select menu for picking from defined text options',
                                       }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(4))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(4),
+                                      )
                                       .meta({ description: 'Text input object' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(5))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(5),
+                                      )
                                       .meta({ description: 'Select menu for users' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(6))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(6),
+                                      )
                                       .meta({ description: 'Select menu for roles' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(7))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(7),
+                                      )
                                       .meta({
                                         description:
                                           'Select menu for mentionables (users and roles)',
                                       }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(8))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(8),
+                                      )
                                       .meta({ description: 'Select menu for channels' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(9))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(9),
+                                      )
                                       .meta({ description: 'Section component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(10))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(10),
+                                      )
                                       .meta({ description: 'Text component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(11))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(11),
+                                      )
                                       .meta({ description: 'Thumbnail component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(12))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(12),
+                                      )
                                       .meta({ description: 'Media gallery component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(13))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(13),
+                                      )
                                       .meta({ description: 'File component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(14))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(14),
+                                      )
                                       .meta({ description: 'Separator component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(17))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(17),
+                                      )
                                       .meta({ description: 'Container component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(18))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(18),
+                                      )
                                       .meta({ description: 'Label component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(19))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(19),
+                                      )
                                       .meta({ description: 'File upload component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(21))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(21),
+                                      )
                                       .meta({ description: 'Radio group component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(22))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(22),
+                                      )
                                       .meta({ description: 'Checkbox group component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(23))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(23),
+                                      )
                                       .meta({ description: 'Checkbox component' }),
                                   ]),
                                   id: z
                                     .preprocess(
                                       (val) => (val === 'null' ? null : val),
-                                      z.coerce.number().pipe(z.int32().min(0)).nullable(),
+                                      z
+                                        .preprocess(
+                                          (val) =>
+                                            typeof val === 'string' &&
+                                            /^-?(?:0|[1-9]\d*)$/.test(val)
+                                              ? Number(val)
+                                              : val,
+                                          z.int32().min(0),
+                                        )
+                                        .nullable(),
                                     )
                                     .exactOptional(),
                                   components: z.preprocess(
@@ -3233,99 +5781,228 @@ export const lobbiesHandler = new Hono()
                                       .array(
                                         z.object({
                                           type: z.union([
-                                            z.coerce
-                                              .number()
-                                              .pipe(z.literal(1))
+                                            z
+                                              .preprocess(
+                                                (val) =>
+                                                  typeof val === 'string' &&
+                                                  /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                    ? Number(val)
+                                                    : val,
+                                                z.literal(1),
+                                              )
                                               .meta({
                                                 description: 'Container for other components',
                                               }),
-                                            z.coerce
-                                              .number()
-                                              .pipe(z.literal(2))
+                                            z
+                                              .preprocess(
+                                                (val) =>
+                                                  typeof val === 'string' &&
+                                                  /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                    ? Number(val)
+                                                    : val,
+                                                z.literal(2),
+                                              )
                                               .meta({ description: 'Button object' }),
-                                            z.coerce
-                                              .number()
-                                              .pipe(z.literal(3))
+                                            z
+                                              .preprocess(
+                                                (val) =>
+                                                  typeof val === 'string' &&
+                                                  /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                    ? Number(val)
+                                                    : val,
+                                                z.literal(3),
+                                              )
                                               .meta({
                                                 description:
                                                   'Select menu for picking from defined text options',
                                               }),
-                                            z.coerce
-                                              .number()
-                                              .pipe(z.literal(4))
+                                            z
+                                              .preprocess(
+                                                (val) =>
+                                                  typeof val === 'string' &&
+                                                  /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                    ? Number(val)
+                                                    : val,
+                                                z.literal(4),
+                                              )
                                               .meta({ description: 'Text input object' }),
-                                            z.coerce
-                                              .number()
-                                              .pipe(z.literal(5))
+                                            z
+                                              .preprocess(
+                                                (val) =>
+                                                  typeof val === 'string' &&
+                                                  /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                    ? Number(val)
+                                                    : val,
+                                                z.literal(5),
+                                              )
                                               .meta({ description: 'Select menu for users' }),
-                                            z.coerce
-                                              .number()
-                                              .pipe(z.literal(6))
+                                            z
+                                              .preprocess(
+                                                (val) =>
+                                                  typeof val === 'string' &&
+                                                  /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                    ? Number(val)
+                                                    : val,
+                                                z.literal(6),
+                                              )
                                               .meta({ description: 'Select menu for roles' }),
-                                            z.coerce
-                                              .number()
-                                              .pipe(z.literal(7))
+                                            z
+                                              .preprocess(
+                                                (val) =>
+                                                  typeof val === 'string' &&
+                                                  /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                    ? Number(val)
+                                                    : val,
+                                                z.literal(7),
+                                              )
                                               .meta({
                                                 description:
                                                   'Select menu for mentionables (users and roles)',
                                               }),
-                                            z.coerce
-                                              .number()
-                                              .pipe(z.literal(8))
+                                            z
+                                              .preprocess(
+                                                (val) =>
+                                                  typeof val === 'string' &&
+                                                  /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                    ? Number(val)
+                                                    : val,
+                                                z.literal(8),
+                                              )
                                               .meta({ description: 'Select menu for channels' }),
-                                            z.coerce
-                                              .number()
-                                              .pipe(z.literal(9))
+                                            z
+                                              .preprocess(
+                                                (val) =>
+                                                  typeof val === 'string' &&
+                                                  /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                    ? Number(val)
+                                                    : val,
+                                                z.literal(9),
+                                              )
                                               .meta({ description: 'Section component' }),
-                                            z.coerce
-                                              .number()
-                                              .pipe(z.literal(10))
+                                            z
+                                              .preprocess(
+                                                (val) =>
+                                                  typeof val === 'string' &&
+                                                  /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                    ? Number(val)
+                                                    : val,
+                                                z.literal(10),
+                                              )
                                               .meta({ description: 'Text component' }),
-                                            z.coerce
-                                              .number()
-                                              .pipe(z.literal(11))
+                                            z
+                                              .preprocess(
+                                                (val) =>
+                                                  typeof val === 'string' &&
+                                                  /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                    ? Number(val)
+                                                    : val,
+                                                z.literal(11),
+                                              )
                                               .meta({ description: 'Thumbnail component' }),
-                                            z.coerce
-                                              .number()
-                                              .pipe(z.literal(12))
+                                            z
+                                              .preprocess(
+                                                (val) =>
+                                                  typeof val === 'string' &&
+                                                  /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                    ? Number(val)
+                                                    : val,
+                                                z.literal(12),
+                                              )
                                               .meta({ description: 'Media gallery component' }),
-                                            z.coerce
-                                              .number()
-                                              .pipe(z.literal(13))
+                                            z
+                                              .preprocess(
+                                                (val) =>
+                                                  typeof val === 'string' &&
+                                                  /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                    ? Number(val)
+                                                    : val,
+                                                z.literal(13),
+                                              )
                                               .meta({ description: 'File component' }),
-                                            z.coerce
-                                              .number()
-                                              .pipe(z.literal(14))
+                                            z
+                                              .preprocess(
+                                                (val) =>
+                                                  typeof val === 'string' &&
+                                                  /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                    ? Number(val)
+                                                    : val,
+                                                z.literal(14),
+                                              )
                                               .meta({ description: 'Separator component' }),
-                                            z.coerce
-                                              .number()
-                                              .pipe(z.literal(17))
+                                            z
+                                              .preprocess(
+                                                (val) =>
+                                                  typeof val === 'string' &&
+                                                  /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                    ? Number(val)
+                                                    : val,
+                                                z.literal(17),
+                                              )
                                               .meta({ description: 'Container component' }),
-                                            z.coerce
-                                              .number()
-                                              .pipe(z.literal(18))
+                                            z
+                                              .preprocess(
+                                                (val) =>
+                                                  typeof val === 'string' &&
+                                                  /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                    ? Number(val)
+                                                    : val,
+                                                z.literal(18),
+                                              )
                                               .meta({ description: 'Label component' }),
-                                            z.coerce
-                                              .number()
-                                              .pipe(z.literal(19))
+                                            z
+                                              .preprocess(
+                                                (val) =>
+                                                  typeof val === 'string' &&
+                                                  /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                    ? Number(val)
+                                                    : val,
+                                                z.literal(19),
+                                              )
                                               .meta({ description: 'File upload component' }),
-                                            z.coerce
-                                              .number()
-                                              .pipe(z.literal(21))
+                                            z
+                                              .preprocess(
+                                                (val) =>
+                                                  typeof val === 'string' &&
+                                                  /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                    ? Number(val)
+                                                    : val,
+                                                z.literal(21),
+                                              )
                                               .meta({ description: 'Radio group component' }),
-                                            z.coerce
-                                              .number()
-                                              .pipe(z.literal(22))
+                                            z
+                                              .preprocess(
+                                                (val) =>
+                                                  typeof val === 'string' &&
+                                                  /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                    ? Number(val)
+                                                    : val,
+                                                z.literal(22),
+                                              )
                                               .meta({ description: 'Checkbox group component' }),
-                                            z.coerce
-                                              .number()
-                                              .pipe(z.literal(23))
+                                            z
+                                              .preprocess(
+                                                (val) =>
+                                                  typeof val === 'string' &&
+                                                  /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                    ? Number(val)
+                                                    : val,
+                                                z.literal(23),
+                                              )
                                               .meta({ description: 'Checkbox component' }),
                                           ]),
                                           id: z
                                             .preprocess(
                                               (val) => (val === 'null' ? null : val),
-                                              z.coerce.number().pipe(z.int32().min(0)).nullable(),
+                                              z
+                                                .preprocess(
+                                                  (val) =>
+                                                    typeof val === 'string' &&
+                                                    /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                      ? Number(val)
+                                                      : val,
+                                                  z.int32().min(0),
+                                                )
+                                                .nullable(),
                                             )
                                             .exactOptional(),
                                           content: z.string().min(1).max(4000),
@@ -3337,97 +6014,226 @@ export const lobbiesHandler = new Hono()
                                   accessory: z.union([
                                     z.object({
                                       type: z.union([
-                                        z.coerce
-                                          .number()
-                                          .pipe(z.literal(1))
+                                        z
+                                          .preprocess(
+                                            (val) =>
+                                              typeof val === 'string' &&
+                                              /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                ? Number(val)
+                                                : val,
+                                            z.literal(1),
+                                          )
                                           .meta({ description: 'Container for other components' }),
-                                        z.coerce
-                                          .number()
-                                          .pipe(z.literal(2))
+                                        z
+                                          .preprocess(
+                                            (val) =>
+                                              typeof val === 'string' &&
+                                              /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                ? Number(val)
+                                                : val,
+                                            z.literal(2),
+                                          )
                                           .meta({ description: 'Button object' }),
-                                        z.coerce
-                                          .number()
-                                          .pipe(z.literal(3))
+                                        z
+                                          .preprocess(
+                                            (val) =>
+                                              typeof val === 'string' &&
+                                              /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                ? Number(val)
+                                                : val,
+                                            z.literal(3),
+                                          )
                                           .meta({
                                             description:
                                               'Select menu for picking from defined text options',
                                           }),
-                                        z.coerce
-                                          .number()
-                                          .pipe(z.literal(4))
+                                        z
+                                          .preprocess(
+                                            (val) =>
+                                              typeof val === 'string' &&
+                                              /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                ? Number(val)
+                                                : val,
+                                            z.literal(4),
+                                          )
                                           .meta({ description: 'Text input object' }),
-                                        z.coerce
-                                          .number()
-                                          .pipe(z.literal(5))
+                                        z
+                                          .preprocess(
+                                            (val) =>
+                                              typeof val === 'string' &&
+                                              /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                ? Number(val)
+                                                : val,
+                                            z.literal(5),
+                                          )
                                           .meta({ description: 'Select menu for users' }),
-                                        z.coerce
-                                          .number()
-                                          .pipe(z.literal(6))
+                                        z
+                                          .preprocess(
+                                            (val) =>
+                                              typeof val === 'string' &&
+                                              /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                ? Number(val)
+                                                : val,
+                                            z.literal(6),
+                                          )
                                           .meta({ description: 'Select menu for roles' }),
-                                        z.coerce
-                                          .number()
-                                          .pipe(z.literal(7))
+                                        z
+                                          .preprocess(
+                                            (val) =>
+                                              typeof val === 'string' &&
+                                              /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                ? Number(val)
+                                                : val,
+                                            z.literal(7),
+                                          )
                                           .meta({
                                             description:
                                               'Select menu for mentionables (users and roles)',
                                           }),
-                                        z.coerce
-                                          .number()
-                                          .pipe(z.literal(8))
+                                        z
+                                          .preprocess(
+                                            (val) =>
+                                              typeof val === 'string' &&
+                                              /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                ? Number(val)
+                                                : val,
+                                            z.literal(8),
+                                          )
                                           .meta({ description: 'Select menu for channels' }),
-                                        z.coerce
-                                          .number()
-                                          .pipe(z.literal(9))
+                                        z
+                                          .preprocess(
+                                            (val) =>
+                                              typeof val === 'string' &&
+                                              /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                ? Number(val)
+                                                : val,
+                                            z.literal(9),
+                                          )
                                           .meta({ description: 'Section component' }),
-                                        z.coerce
-                                          .number()
-                                          .pipe(z.literal(10))
+                                        z
+                                          .preprocess(
+                                            (val) =>
+                                              typeof val === 'string' &&
+                                              /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                ? Number(val)
+                                                : val,
+                                            z.literal(10),
+                                          )
                                           .meta({ description: 'Text component' }),
-                                        z.coerce
-                                          .number()
-                                          .pipe(z.literal(11))
+                                        z
+                                          .preprocess(
+                                            (val) =>
+                                              typeof val === 'string' &&
+                                              /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                ? Number(val)
+                                                : val,
+                                            z.literal(11),
+                                          )
                                           .meta({ description: 'Thumbnail component' }),
-                                        z.coerce
-                                          .number()
-                                          .pipe(z.literal(12))
+                                        z
+                                          .preprocess(
+                                            (val) =>
+                                              typeof val === 'string' &&
+                                              /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                ? Number(val)
+                                                : val,
+                                            z.literal(12),
+                                          )
                                           .meta({ description: 'Media gallery component' }),
-                                        z.coerce
-                                          .number()
-                                          .pipe(z.literal(13))
+                                        z
+                                          .preprocess(
+                                            (val) =>
+                                              typeof val === 'string' &&
+                                              /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                ? Number(val)
+                                                : val,
+                                            z.literal(13),
+                                          )
                                           .meta({ description: 'File component' }),
-                                        z.coerce
-                                          .number()
-                                          .pipe(z.literal(14))
+                                        z
+                                          .preprocess(
+                                            (val) =>
+                                              typeof val === 'string' &&
+                                              /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                ? Number(val)
+                                                : val,
+                                            z.literal(14),
+                                          )
                                           .meta({ description: 'Separator component' }),
-                                        z.coerce
-                                          .number()
-                                          .pipe(z.literal(17))
+                                        z
+                                          .preprocess(
+                                            (val) =>
+                                              typeof val === 'string' &&
+                                              /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                ? Number(val)
+                                                : val,
+                                            z.literal(17),
+                                          )
                                           .meta({ description: 'Container component' }),
-                                        z.coerce
-                                          .number()
-                                          .pipe(z.literal(18))
+                                        z
+                                          .preprocess(
+                                            (val) =>
+                                              typeof val === 'string' &&
+                                              /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                ? Number(val)
+                                                : val,
+                                            z.literal(18),
+                                          )
                                           .meta({ description: 'Label component' }),
-                                        z.coerce
-                                          .number()
-                                          .pipe(z.literal(19))
+                                        z
+                                          .preprocess(
+                                            (val) =>
+                                              typeof val === 'string' &&
+                                              /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                ? Number(val)
+                                                : val,
+                                            z.literal(19),
+                                          )
                                           .meta({ description: 'File upload component' }),
-                                        z.coerce
-                                          .number()
-                                          .pipe(z.literal(21))
+                                        z
+                                          .preprocess(
+                                            (val) =>
+                                              typeof val === 'string' &&
+                                              /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                ? Number(val)
+                                                : val,
+                                            z.literal(21),
+                                          )
                                           .meta({ description: 'Radio group component' }),
-                                        z.coerce
-                                          .number()
-                                          .pipe(z.literal(22))
+                                        z
+                                          .preprocess(
+                                            (val) =>
+                                              typeof val === 'string' &&
+                                              /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                ? Number(val)
+                                                : val,
+                                            z.literal(22),
+                                          )
                                           .meta({ description: 'Checkbox group component' }),
-                                        z.coerce
-                                          .number()
-                                          .pipe(z.literal(23))
+                                        z
+                                          .preprocess(
+                                            (val) =>
+                                              typeof val === 'string' &&
+                                              /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                ? Number(val)
+                                                : val,
+                                            z.literal(23),
+                                          )
                                           .meta({ description: 'Checkbox component' }),
                                       ]),
                                       id: z
                                         .preprocess(
                                           (val) => (val === 'null' ? null : val),
-                                          z.coerce.number().pipe(z.int32().min(0)).nullable(),
+                                          z
+                                            .preprocess(
+                                              (val) =>
+                                                typeof val === 'string' &&
+                                                /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                  ? Number(val)
+                                                  : val,
+                                              z.int32().min(0),
+                                            )
+                                            .nullable(),
                                         )
                                         .exactOptional(),
                                       custom_id: z
@@ -3437,12 +6243,54 @@ export const lobbiesHandler = new Hono()
                                         .nullable()
                                         .exactOptional(),
                                       style: z.union([
-                                        z.coerce.number().pipe(z.literal(1)),
-                                        z.coerce.number().pipe(z.literal(2)),
-                                        z.coerce.number().pipe(z.literal(3)),
-                                        z.coerce.number().pipe(z.literal(4)),
-                                        z.coerce.number().pipe(z.literal(5)),
-                                        z.coerce.number().pipe(z.literal(6)),
+                                        z.preprocess(
+                                          (val) =>
+                                            typeof val === 'string' &&
+                                            /^-?(?:0|[1-9]\d*)$/.test(val)
+                                              ? Number(val)
+                                              : val,
+                                          z.literal(1),
+                                        ),
+                                        z.preprocess(
+                                          (val) =>
+                                            typeof val === 'string' &&
+                                            /^-?(?:0|[1-9]\d*)$/.test(val)
+                                              ? Number(val)
+                                              : val,
+                                          z.literal(2),
+                                        ),
+                                        z.preprocess(
+                                          (val) =>
+                                            typeof val === 'string' &&
+                                            /^-?(?:0|[1-9]\d*)$/.test(val)
+                                              ? Number(val)
+                                              : val,
+                                          z.literal(3),
+                                        ),
+                                        z.preprocess(
+                                          (val) =>
+                                            typeof val === 'string' &&
+                                            /^-?(?:0|[1-9]\d*)$/.test(val)
+                                              ? Number(val)
+                                              : val,
+                                          z.literal(4),
+                                        ),
+                                        z.preprocess(
+                                          (val) =>
+                                            typeof val === 'string' &&
+                                            /^-?(?:0|[1-9]\d*)$/.test(val)
+                                              ? Number(val)
+                                              : val,
+                                          z.literal(5),
+                                        ),
+                                        z.preprocess(
+                                          (val) =>
+                                            typeof val === 'string' &&
+                                            /^-?(?:0|[1-9]\d*)$/.test(val)
+                                              ? Number(val)
+                                              : val,
+                                          z.literal(6),
+                                        ),
                                       ]),
                                       label: z.string().max(80).nullable().exactOptional(),
                                       disabled: z
@@ -3459,7 +6307,7 @@ export const lobbiesHandler = new Hono()
                                             .union([
                                               z.preprocess(
                                                 (val) => (val === 'null' ? null : val),
-                                                z.null().nullable(),
+                                                z.null(),
                                               ),
                                               SnowflakeTypeSchema,
                                             ])
@@ -3473,7 +6321,7 @@ export const lobbiesHandler = new Hono()
                                             .union([
                                               z.preprocess(
                                                 (val) => (val === 'null' ? null : val),
-                                                z.null().nullable(),
+                                                z.null(),
                                               ),
                                               z.object({
                                                 id: z
@@ -3483,7 +6331,7 @@ export const lobbiesHandler = new Hono()
                                                       .union([
                                                         z.preprocess(
                                                           (val) => (val === 'null' ? null : val),
-                                                          z.null().nullable(),
+                                                          z.null(),
                                                         ),
                                                         SnowflakeTypeSchema,
                                                       ])
@@ -3499,97 +6347,226 @@ export const lobbiesHandler = new Hono()
                                     }),
                                     z.object({
                                       type: z.union([
-                                        z.coerce
-                                          .number()
-                                          .pipe(z.literal(1))
+                                        z
+                                          .preprocess(
+                                            (val) =>
+                                              typeof val === 'string' &&
+                                              /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                ? Number(val)
+                                                : val,
+                                            z.literal(1),
+                                          )
                                           .meta({ description: 'Container for other components' }),
-                                        z.coerce
-                                          .number()
-                                          .pipe(z.literal(2))
+                                        z
+                                          .preprocess(
+                                            (val) =>
+                                              typeof val === 'string' &&
+                                              /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                ? Number(val)
+                                                : val,
+                                            z.literal(2),
+                                          )
                                           .meta({ description: 'Button object' }),
-                                        z.coerce
-                                          .number()
-                                          .pipe(z.literal(3))
+                                        z
+                                          .preprocess(
+                                            (val) =>
+                                              typeof val === 'string' &&
+                                              /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                ? Number(val)
+                                                : val,
+                                            z.literal(3),
+                                          )
                                           .meta({
                                             description:
                                               'Select menu for picking from defined text options',
                                           }),
-                                        z.coerce
-                                          .number()
-                                          .pipe(z.literal(4))
+                                        z
+                                          .preprocess(
+                                            (val) =>
+                                              typeof val === 'string' &&
+                                              /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                ? Number(val)
+                                                : val,
+                                            z.literal(4),
+                                          )
                                           .meta({ description: 'Text input object' }),
-                                        z.coerce
-                                          .number()
-                                          .pipe(z.literal(5))
+                                        z
+                                          .preprocess(
+                                            (val) =>
+                                              typeof val === 'string' &&
+                                              /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                ? Number(val)
+                                                : val,
+                                            z.literal(5),
+                                          )
                                           .meta({ description: 'Select menu for users' }),
-                                        z.coerce
-                                          .number()
-                                          .pipe(z.literal(6))
+                                        z
+                                          .preprocess(
+                                            (val) =>
+                                              typeof val === 'string' &&
+                                              /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                ? Number(val)
+                                                : val,
+                                            z.literal(6),
+                                          )
                                           .meta({ description: 'Select menu for roles' }),
-                                        z.coerce
-                                          .number()
-                                          .pipe(z.literal(7))
+                                        z
+                                          .preprocess(
+                                            (val) =>
+                                              typeof val === 'string' &&
+                                              /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                ? Number(val)
+                                                : val,
+                                            z.literal(7),
+                                          )
                                           .meta({
                                             description:
                                               'Select menu for mentionables (users and roles)',
                                           }),
-                                        z.coerce
-                                          .number()
-                                          .pipe(z.literal(8))
+                                        z
+                                          .preprocess(
+                                            (val) =>
+                                              typeof val === 'string' &&
+                                              /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                ? Number(val)
+                                                : val,
+                                            z.literal(8),
+                                          )
                                           .meta({ description: 'Select menu for channels' }),
-                                        z.coerce
-                                          .number()
-                                          .pipe(z.literal(9))
+                                        z
+                                          .preprocess(
+                                            (val) =>
+                                              typeof val === 'string' &&
+                                              /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                ? Number(val)
+                                                : val,
+                                            z.literal(9),
+                                          )
                                           .meta({ description: 'Section component' }),
-                                        z.coerce
-                                          .number()
-                                          .pipe(z.literal(10))
+                                        z
+                                          .preprocess(
+                                            (val) =>
+                                              typeof val === 'string' &&
+                                              /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                ? Number(val)
+                                                : val,
+                                            z.literal(10),
+                                          )
                                           .meta({ description: 'Text component' }),
-                                        z.coerce
-                                          .number()
-                                          .pipe(z.literal(11))
+                                        z
+                                          .preprocess(
+                                            (val) =>
+                                              typeof val === 'string' &&
+                                              /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                ? Number(val)
+                                                : val,
+                                            z.literal(11),
+                                          )
                                           .meta({ description: 'Thumbnail component' }),
-                                        z.coerce
-                                          .number()
-                                          .pipe(z.literal(12))
+                                        z
+                                          .preprocess(
+                                            (val) =>
+                                              typeof val === 'string' &&
+                                              /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                ? Number(val)
+                                                : val,
+                                            z.literal(12),
+                                          )
                                           .meta({ description: 'Media gallery component' }),
-                                        z.coerce
-                                          .number()
-                                          .pipe(z.literal(13))
+                                        z
+                                          .preprocess(
+                                            (val) =>
+                                              typeof val === 'string' &&
+                                              /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                ? Number(val)
+                                                : val,
+                                            z.literal(13),
+                                          )
                                           .meta({ description: 'File component' }),
-                                        z.coerce
-                                          .number()
-                                          .pipe(z.literal(14))
+                                        z
+                                          .preprocess(
+                                            (val) =>
+                                              typeof val === 'string' &&
+                                              /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                ? Number(val)
+                                                : val,
+                                            z.literal(14),
+                                          )
                                           .meta({ description: 'Separator component' }),
-                                        z.coerce
-                                          .number()
-                                          .pipe(z.literal(17))
+                                        z
+                                          .preprocess(
+                                            (val) =>
+                                              typeof val === 'string' &&
+                                              /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                ? Number(val)
+                                                : val,
+                                            z.literal(17),
+                                          )
                                           .meta({ description: 'Container component' }),
-                                        z.coerce
-                                          .number()
-                                          .pipe(z.literal(18))
+                                        z
+                                          .preprocess(
+                                            (val) =>
+                                              typeof val === 'string' &&
+                                              /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                ? Number(val)
+                                                : val,
+                                            z.literal(18),
+                                          )
                                           .meta({ description: 'Label component' }),
-                                        z.coerce
-                                          .number()
-                                          .pipe(z.literal(19))
+                                        z
+                                          .preprocess(
+                                            (val) =>
+                                              typeof val === 'string' &&
+                                              /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                ? Number(val)
+                                                : val,
+                                            z.literal(19),
+                                          )
                                           .meta({ description: 'File upload component' }),
-                                        z.coerce
-                                          .number()
-                                          .pipe(z.literal(21))
+                                        z
+                                          .preprocess(
+                                            (val) =>
+                                              typeof val === 'string' &&
+                                              /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                ? Number(val)
+                                                : val,
+                                            z.literal(21),
+                                          )
                                           .meta({ description: 'Radio group component' }),
-                                        z.coerce
-                                          .number()
-                                          .pipe(z.literal(22))
+                                        z
+                                          .preprocess(
+                                            (val) =>
+                                              typeof val === 'string' &&
+                                              /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                ? Number(val)
+                                                : val,
+                                            z.literal(22),
+                                          )
                                           .meta({ description: 'Checkbox group component' }),
-                                        z.coerce
-                                          .number()
-                                          .pipe(z.literal(23))
+                                        z
+                                          .preprocess(
+                                            (val) =>
+                                              typeof val === 'string' &&
+                                              /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                ? Number(val)
+                                                : val,
+                                            z.literal(23),
+                                          )
                                           .meta({ description: 'Checkbox component' }),
                                       ]),
                                       id: z
                                         .preprocess(
                                           (val) => (val === 'null' ? null : val),
-                                          z.coerce.number().pipe(z.int32().min(0)).nullable(),
+                                          z
+                                            .preprocess(
+                                              (val) =>
+                                                typeof val === 'string' &&
+                                                /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                  ? Number(val)
+                                                  : val,
+                                              z.int32().min(0),
+                                            )
+                                            .nullable(),
                                         )
                                         .exactOptional(),
                                       description: z
@@ -3610,97 +6587,206 @@ export const lobbiesHandler = new Hono()
                                 }),
                                 z.object({
                                   type: z.union([
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(1))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(1),
+                                      )
                                       .meta({ description: 'Container for other components' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(2))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(2),
+                                      )
                                       .meta({ description: 'Button object' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(3))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(3),
+                                      )
                                       .meta({
                                         description:
                                           'Select menu for picking from defined text options',
                                       }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(4))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(4),
+                                      )
                                       .meta({ description: 'Text input object' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(5))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(5),
+                                      )
                                       .meta({ description: 'Select menu for users' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(6))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(6),
+                                      )
                                       .meta({ description: 'Select menu for roles' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(7))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(7),
+                                      )
                                       .meta({
                                         description:
                                           'Select menu for mentionables (users and roles)',
                                       }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(8))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(8),
+                                      )
                                       .meta({ description: 'Select menu for channels' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(9))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(9),
+                                      )
                                       .meta({ description: 'Section component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(10))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(10),
+                                      )
                                       .meta({ description: 'Text component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(11))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(11),
+                                      )
                                       .meta({ description: 'Thumbnail component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(12))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(12),
+                                      )
                                       .meta({ description: 'Media gallery component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(13))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(13),
+                                      )
                                       .meta({ description: 'File component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(14))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(14),
+                                      )
                                       .meta({ description: 'Separator component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(17))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(17),
+                                      )
                                       .meta({ description: 'Container component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(18))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(18),
+                                      )
                                       .meta({ description: 'Label component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(19))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(19),
+                                      )
                                       .meta({ description: 'File upload component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(21))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(21),
+                                      )
                                       .meta({ description: 'Radio group component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(22))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(22),
+                                      )
                                       .meta({ description: 'Checkbox group component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(23))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(23),
+                                      )
                                       .meta({ description: 'Checkbox component' }),
                                   ]),
                                   id: z
                                     .preprocess(
                                       (val) => (val === 'null' ? null : val),
-                                      z.coerce.number().pipe(z.int32().min(0)).nullable(),
+                                      z
+                                        .preprocess(
+                                          (val) =>
+                                            typeof val === 'string' &&
+                                            /^-?(?:0|[1-9]\d*)$/.test(val)
+                                              ? Number(val)
+                                              : val,
+                                          z.int32().min(0),
+                                        )
+                                        .nullable(),
                                     )
                                     .exactOptional(),
                                   spacing: z
@@ -3710,16 +6796,28 @@ export const lobbiesHandler = new Hono()
                                         .union([
                                           z.preprocess(
                                             (val) => (val === 'null' ? null : val),
-                                            z.null().nullable(),
+                                            z.null(),
                                           ),
                                           z.union([
-                                            z.coerce
-                                              .number()
-                                              .pipe(z.literal(1))
+                                            z
+                                              .preprocess(
+                                                (val) =>
+                                                  typeof val === 'string' &&
+                                                  /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                    ? Number(val)
+                                                    : val,
+                                                z.literal(1),
+                                              )
                                               .meta({ description: 'Small spacing' }),
-                                            z.coerce
-                                              .number()
-                                              .pipe(z.literal(2))
+                                            z
+                                              .preprocess(
+                                                (val) =>
+                                                  typeof val === 'string' &&
+                                                  /^-?(?:0|[1-9]\d*)$/.test(val)
+                                                    ? Number(val)
+                                                    : val,
+                                                z.literal(2),
+                                              )
                                               .meta({ description: 'Large spacing' }),
                                           ]),
                                         ])
@@ -3735,97 +6833,206 @@ export const lobbiesHandler = new Hono()
                                 }),
                                 z.object({
                                   type: z.union([
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(1))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(1),
+                                      )
                                       .meta({ description: 'Container for other components' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(2))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(2),
+                                      )
                                       .meta({ description: 'Button object' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(3))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(3),
+                                      )
                                       .meta({
                                         description:
                                           'Select menu for picking from defined text options',
                                       }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(4))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(4),
+                                      )
                                       .meta({ description: 'Text input object' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(5))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(5),
+                                      )
                                       .meta({ description: 'Select menu for users' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(6))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(6),
+                                      )
                                       .meta({ description: 'Select menu for roles' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(7))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(7),
+                                      )
                                       .meta({
                                         description:
                                           'Select menu for mentionables (users and roles)',
                                       }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(8))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(8),
+                                      )
                                       .meta({ description: 'Select menu for channels' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(9))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(9),
+                                      )
                                       .meta({ description: 'Section component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(10))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(10),
+                                      )
                                       .meta({ description: 'Text component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(11))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(11),
+                                      )
                                       .meta({ description: 'Thumbnail component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(12))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(12),
+                                      )
                                       .meta({ description: 'Media gallery component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(13))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(13),
+                                      )
                                       .meta({ description: 'File component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(14))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(14),
+                                      )
                                       .meta({ description: 'Separator component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(17))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(17),
+                                      )
                                       .meta({ description: 'Container component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(18))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(18),
+                                      )
                                       .meta({ description: 'Label component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(19))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(19),
+                                      )
                                       .meta({ description: 'File upload component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(21))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(21),
+                                      )
                                       .meta({ description: 'Radio group component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(22))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(22),
+                                      )
                                       .meta({ description: 'Checkbox group component' }),
-                                    z.coerce
-                                      .number()
-                                      .pipe(z.literal(23))
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.literal(23),
+                                      )
                                       .meta({ description: 'Checkbox component' }),
                                   ]),
                                   id: z
                                     .preprocess(
                                       (val) => (val === 'null' ? null : val),
-                                      z.coerce.number().pipe(z.int32().min(0)).nullable(),
+                                      z
+                                        .preprocess(
+                                          (val) =>
+                                            typeof val === 'string' &&
+                                            /^-?(?:0|[1-9]\d*)$/.test(val)
+                                              ? Number(val)
+                                              : val,
+                                          z.int32().min(0),
+                                        )
+                                        .nullable(),
                                     )
                                     .exactOptional(),
                                   content: z.string().min(1).max(4000),
@@ -3844,95 +7051,203 @@ export const lobbiesHandler = new Hono()
                       }),
                       z.object({
                         type: z.union([
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(1))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(1),
+                            )
                             .meta({ description: 'Container for other components' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(2))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(2),
+                            )
                             .meta({ description: 'Button object' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(3))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(3),
+                            )
                             .meta({
                               description: 'Select menu for picking from defined text options',
                             }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(4))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(4),
+                            )
                             .meta({ description: 'Text input object' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(5))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(5),
+                            )
                             .meta({ description: 'Select menu for users' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(6))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(6),
+                            )
                             .meta({ description: 'Select menu for roles' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(7))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(7),
+                            )
                             .meta({
                               description: 'Select menu for mentionables (users and roles)',
                             }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(8))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(8),
+                            )
                             .meta({ description: 'Select menu for channels' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(9))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(9),
+                            )
                             .meta({ description: 'Section component' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(10))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(10),
+                            )
                             .meta({ description: 'Text component' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(11))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(11),
+                            )
                             .meta({ description: 'Thumbnail component' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(12))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(12),
+                            )
                             .meta({ description: 'Media gallery component' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(13))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(13),
+                            )
                             .meta({ description: 'File component' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(14))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(14),
+                            )
                             .meta({ description: 'Separator component' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(17))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(17),
+                            )
                             .meta({ description: 'Container component' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(18))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(18),
+                            )
                             .meta({ description: 'Label component' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(19))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(19),
+                            )
                             .meta({ description: 'File upload component' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(21))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(21),
+                            )
                             .meta({ description: 'Radio group component' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(22))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(22),
+                            )
                             .meta({ description: 'Checkbox group component' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(23))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(23),
+                            )
                             .meta({ description: 'Checkbox component' }),
                         ]),
                         id: z
                           .preprocess(
                             (val) => (val === 'null' ? null : val),
-                            z.coerce.number().pipe(z.int32().min(0)).nullable(),
+                            z
+                              .preprocess(
+                                (val) =>
+                                  typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                    ? Number(val)
+                                    : val,
+                                z.int32().min(0),
+                              )
+                              .nullable(),
                           )
                           .exactOptional(),
                         spoiler: z
@@ -3945,95 +7260,203 @@ export const lobbiesHandler = new Hono()
                       }),
                       z.object({
                         type: z.union([
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(1))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(1),
+                            )
                             .meta({ description: 'Container for other components' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(2))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(2),
+                            )
                             .meta({ description: 'Button object' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(3))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(3),
+                            )
                             .meta({
                               description: 'Select menu for picking from defined text options',
                             }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(4))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(4),
+                            )
                             .meta({ description: 'Text input object' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(5))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(5),
+                            )
                             .meta({ description: 'Select menu for users' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(6))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(6),
+                            )
                             .meta({ description: 'Select menu for roles' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(7))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(7),
+                            )
                             .meta({
                               description: 'Select menu for mentionables (users and roles)',
                             }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(8))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(8),
+                            )
                             .meta({ description: 'Select menu for channels' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(9))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(9),
+                            )
                             .meta({ description: 'Section component' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(10))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(10),
+                            )
                             .meta({ description: 'Text component' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(11))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(11),
+                            )
                             .meta({ description: 'Thumbnail component' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(12))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(12),
+                            )
                             .meta({ description: 'Media gallery component' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(13))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(13),
+                            )
                             .meta({ description: 'File component' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(14))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(14),
+                            )
                             .meta({ description: 'Separator component' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(17))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(17),
+                            )
                             .meta({ description: 'Container component' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(18))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(18),
+                            )
                             .meta({ description: 'Label component' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(19))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(19),
+                            )
                             .meta({ description: 'File upload component' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(21))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(21),
+                            )
                             .meta({ description: 'Radio group component' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(22))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(22),
+                            )
                             .meta({ description: 'Checkbox group component' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(23))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(23),
+                            )
                             .meta({ description: 'Checkbox component' }),
                         ]),
                         id: z
                           .preprocess(
                             (val) => (val === 'null' ? null : val),
-                            z.coerce.number().pipe(z.int32().min(0)).nullable(),
+                            z
+                              .preprocess(
+                                (val) =>
+                                  typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                    ? Number(val)
+                                    : val,
+                                z.int32().min(0),
+                              )
+                              .nullable(),
                           )
                           .exactOptional(),
                         items: z.preprocess(
@@ -4057,95 +7480,203 @@ export const lobbiesHandler = new Hono()
                       }),
                       z.object({
                         type: z.union([
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(1))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(1),
+                            )
                             .meta({ description: 'Container for other components' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(2))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(2),
+                            )
                             .meta({ description: 'Button object' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(3))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(3),
+                            )
                             .meta({
                               description: 'Select menu for picking from defined text options',
                             }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(4))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(4),
+                            )
                             .meta({ description: 'Text input object' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(5))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(5),
+                            )
                             .meta({ description: 'Select menu for users' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(6))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(6),
+                            )
                             .meta({ description: 'Select menu for roles' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(7))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(7),
+                            )
                             .meta({
                               description: 'Select menu for mentionables (users and roles)',
                             }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(8))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(8),
+                            )
                             .meta({ description: 'Select menu for channels' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(9))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(9),
+                            )
                             .meta({ description: 'Section component' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(10))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(10),
+                            )
                             .meta({ description: 'Text component' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(11))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(11),
+                            )
                             .meta({ description: 'Thumbnail component' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(12))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(12),
+                            )
                             .meta({ description: 'Media gallery component' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(13))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(13),
+                            )
                             .meta({ description: 'File component' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(14))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(14),
+                            )
                             .meta({ description: 'Separator component' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(17))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(17),
+                            )
                             .meta({ description: 'Container component' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(18))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(18),
+                            )
                             .meta({ description: 'Label component' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(19))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(19),
+                            )
                             .meta({ description: 'File upload component' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(21))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(21),
+                            )
                             .meta({ description: 'Radio group component' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(22))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(22),
+                            )
                             .meta({ description: 'Checkbox group component' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(23))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(23),
+                            )
                             .meta({ description: 'Checkbox component' }),
                         ]),
                         id: z
                           .preprocess(
                             (val) => (val === 'null' ? null : val),
-                            z.coerce.number().pipe(z.int32().min(0)).nullable(),
+                            z
+                              .preprocess(
+                                (val) =>
+                                  typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                    ? Number(val)
+                                    : val,
+                                z.int32().min(0),
+                              )
+                              .nullable(),
                           )
                           .exactOptional(),
                         components: z.preprocess(
@@ -4154,96 +7685,204 @@ export const lobbiesHandler = new Hono()
                             .array(
                               z.object({
                                 type: z.union([
-                                  z.coerce
-                                    .number()
-                                    .pipe(z.literal(1))
+                                  z
+                                    .preprocess(
+                                      (val) =>
+                                        typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                          ? Number(val)
+                                          : val,
+                                      z.literal(1),
+                                    )
                                     .meta({ description: 'Container for other components' }),
-                                  z.coerce
-                                    .number()
-                                    .pipe(z.literal(2))
+                                  z
+                                    .preprocess(
+                                      (val) =>
+                                        typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                          ? Number(val)
+                                          : val,
+                                      z.literal(2),
+                                    )
                                     .meta({ description: 'Button object' }),
-                                  z.coerce
-                                    .number()
-                                    .pipe(z.literal(3))
+                                  z
+                                    .preprocess(
+                                      (val) =>
+                                        typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                          ? Number(val)
+                                          : val,
+                                      z.literal(3),
+                                    )
                                     .meta({
                                       description:
                                         'Select menu for picking from defined text options',
                                     }),
-                                  z.coerce
-                                    .number()
-                                    .pipe(z.literal(4))
+                                  z
+                                    .preprocess(
+                                      (val) =>
+                                        typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                          ? Number(val)
+                                          : val,
+                                      z.literal(4),
+                                    )
                                     .meta({ description: 'Text input object' }),
-                                  z.coerce
-                                    .number()
-                                    .pipe(z.literal(5))
+                                  z
+                                    .preprocess(
+                                      (val) =>
+                                        typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                          ? Number(val)
+                                          : val,
+                                      z.literal(5),
+                                    )
                                     .meta({ description: 'Select menu for users' }),
-                                  z.coerce
-                                    .number()
-                                    .pipe(z.literal(6))
+                                  z
+                                    .preprocess(
+                                      (val) =>
+                                        typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                          ? Number(val)
+                                          : val,
+                                      z.literal(6),
+                                    )
                                     .meta({ description: 'Select menu for roles' }),
-                                  z.coerce
-                                    .number()
-                                    .pipe(z.literal(7))
+                                  z
+                                    .preprocess(
+                                      (val) =>
+                                        typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                          ? Number(val)
+                                          : val,
+                                      z.literal(7),
+                                    )
                                     .meta({
                                       description: 'Select menu for mentionables (users and roles)',
                                     }),
-                                  z.coerce
-                                    .number()
-                                    .pipe(z.literal(8))
+                                  z
+                                    .preprocess(
+                                      (val) =>
+                                        typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                          ? Number(val)
+                                          : val,
+                                      z.literal(8),
+                                    )
                                     .meta({ description: 'Select menu for channels' }),
-                                  z.coerce
-                                    .number()
-                                    .pipe(z.literal(9))
+                                  z
+                                    .preprocess(
+                                      (val) =>
+                                        typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                          ? Number(val)
+                                          : val,
+                                      z.literal(9),
+                                    )
                                     .meta({ description: 'Section component' }),
-                                  z.coerce
-                                    .number()
-                                    .pipe(z.literal(10))
+                                  z
+                                    .preprocess(
+                                      (val) =>
+                                        typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                          ? Number(val)
+                                          : val,
+                                      z.literal(10),
+                                    )
                                     .meta({ description: 'Text component' }),
-                                  z.coerce
-                                    .number()
-                                    .pipe(z.literal(11))
+                                  z
+                                    .preprocess(
+                                      (val) =>
+                                        typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                          ? Number(val)
+                                          : val,
+                                      z.literal(11),
+                                    )
                                     .meta({ description: 'Thumbnail component' }),
-                                  z.coerce
-                                    .number()
-                                    .pipe(z.literal(12))
+                                  z
+                                    .preprocess(
+                                      (val) =>
+                                        typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                          ? Number(val)
+                                          : val,
+                                      z.literal(12),
+                                    )
                                     .meta({ description: 'Media gallery component' }),
-                                  z.coerce
-                                    .number()
-                                    .pipe(z.literal(13))
+                                  z
+                                    .preprocess(
+                                      (val) =>
+                                        typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                          ? Number(val)
+                                          : val,
+                                      z.literal(13),
+                                    )
                                     .meta({ description: 'File component' }),
-                                  z.coerce
-                                    .number()
-                                    .pipe(z.literal(14))
+                                  z
+                                    .preprocess(
+                                      (val) =>
+                                        typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                          ? Number(val)
+                                          : val,
+                                      z.literal(14),
+                                    )
                                     .meta({ description: 'Separator component' }),
-                                  z.coerce
-                                    .number()
-                                    .pipe(z.literal(17))
+                                  z
+                                    .preprocess(
+                                      (val) =>
+                                        typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                          ? Number(val)
+                                          : val,
+                                      z.literal(17),
+                                    )
                                     .meta({ description: 'Container component' }),
-                                  z.coerce
-                                    .number()
-                                    .pipe(z.literal(18))
+                                  z
+                                    .preprocess(
+                                      (val) =>
+                                        typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                          ? Number(val)
+                                          : val,
+                                      z.literal(18),
+                                    )
                                     .meta({ description: 'Label component' }),
-                                  z.coerce
-                                    .number()
-                                    .pipe(z.literal(19))
+                                  z
+                                    .preprocess(
+                                      (val) =>
+                                        typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                          ? Number(val)
+                                          : val,
+                                      z.literal(19),
+                                    )
                                     .meta({ description: 'File upload component' }),
-                                  z.coerce
-                                    .number()
-                                    .pipe(z.literal(21))
+                                  z
+                                    .preprocess(
+                                      (val) =>
+                                        typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                          ? Number(val)
+                                          : val,
+                                      z.literal(21),
+                                    )
                                     .meta({ description: 'Radio group component' }),
-                                  z.coerce
-                                    .number()
-                                    .pipe(z.literal(22))
+                                  z
+                                    .preprocess(
+                                      (val) =>
+                                        typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                          ? Number(val)
+                                          : val,
+                                      z.literal(22),
+                                    )
                                     .meta({ description: 'Checkbox group component' }),
-                                  z.coerce
-                                    .number()
-                                    .pipe(z.literal(23))
+                                  z
+                                    .preprocess(
+                                      (val) =>
+                                        typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                          ? Number(val)
+                                          : val,
+                                      z.literal(23),
+                                    )
                                     .meta({ description: 'Checkbox component' }),
                                 ]),
                                 id: z
                                   .preprocess(
                                     (val) => (val === 'null' ? null : val),
-                                    z.coerce.number().pipe(z.int32().min(0)).nullable(),
+                                    z
+                                      .preprocess(
+                                        (val) =>
+                                          typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                            ? Number(val)
+                                            : val,
+                                        z.int32().min(0),
+                                      )
+                                      .nullable(),
                                   )
                                   .exactOptional(),
                                 content: z.string().min(1).max(4000),
@@ -4255,105 +7894,249 @@ export const lobbiesHandler = new Hono()
                         accessory: z.union([
                           z.object({
                             type: z.union([
-                              z.coerce
-                                .number()
-                                .pipe(z.literal(1))
+                              z
+                                .preprocess(
+                                  (val) =>
+                                    typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                      ? Number(val)
+                                      : val,
+                                  z.literal(1),
+                                )
                                 .meta({ description: 'Container for other components' }),
-                              z.coerce
-                                .number()
-                                .pipe(z.literal(2))
+                              z
+                                .preprocess(
+                                  (val) =>
+                                    typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                      ? Number(val)
+                                      : val,
+                                  z.literal(2),
+                                )
                                 .meta({ description: 'Button object' }),
-                              z.coerce
-                                .number()
-                                .pipe(z.literal(3))
+                              z
+                                .preprocess(
+                                  (val) =>
+                                    typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                      ? Number(val)
+                                      : val,
+                                  z.literal(3),
+                                )
                                 .meta({
                                   description: 'Select menu for picking from defined text options',
                                 }),
-                              z.coerce
-                                .number()
-                                .pipe(z.literal(4))
+                              z
+                                .preprocess(
+                                  (val) =>
+                                    typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                      ? Number(val)
+                                      : val,
+                                  z.literal(4),
+                                )
                                 .meta({ description: 'Text input object' }),
-                              z.coerce
-                                .number()
-                                .pipe(z.literal(5))
+                              z
+                                .preprocess(
+                                  (val) =>
+                                    typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                      ? Number(val)
+                                      : val,
+                                  z.literal(5),
+                                )
                                 .meta({ description: 'Select menu for users' }),
-                              z.coerce
-                                .number()
-                                .pipe(z.literal(6))
+                              z
+                                .preprocess(
+                                  (val) =>
+                                    typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                      ? Number(val)
+                                      : val,
+                                  z.literal(6),
+                                )
                                 .meta({ description: 'Select menu for roles' }),
-                              z.coerce
-                                .number()
-                                .pipe(z.literal(7))
+                              z
+                                .preprocess(
+                                  (val) =>
+                                    typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                      ? Number(val)
+                                      : val,
+                                  z.literal(7),
+                                )
                                 .meta({
                                   description: 'Select menu for mentionables (users and roles)',
                                 }),
-                              z.coerce
-                                .number()
-                                .pipe(z.literal(8))
+                              z
+                                .preprocess(
+                                  (val) =>
+                                    typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                      ? Number(val)
+                                      : val,
+                                  z.literal(8),
+                                )
                                 .meta({ description: 'Select menu for channels' }),
-                              z.coerce
-                                .number()
-                                .pipe(z.literal(9))
+                              z
+                                .preprocess(
+                                  (val) =>
+                                    typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                      ? Number(val)
+                                      : val,
+                                  z.literal(9),
+                                )
                                 .meta({ description: 'Section component' }),
-                              z.coerce
-                                .number()
-                                .pipe(z.literal(10))
+                              z
+                                .preprocess(
+                                  (val) =>
+                                    typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                      ? Number(val)
+                                      : val,
+                                  z.literal(10),
+                                )
                                 .meta({ description: 'Text component' }),
-                              z.coerce
-                                .number()
-                                .pipe(z.literal(11))
+                              z
+                                .preprocess(
+                                  (val) =>
+                                    typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                      ? Number(val)
+                                      : val,
+                                  z.literal(11),
+                                )
                                 .meta({ description: 'Thumbnail component' }),
-                              z.coerce
-                                .number()
-                                .pipe(z.literal(12))
+                              z
+                                .preprocess(
+                                  (val) =>
+                                    typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                      ? Number(val)
+                                      : val,
+                                  z.literal(12),
+                                )
                                 .meta({ description: 'Media gallery component' }),
-                              z.coerce
-                                .number()
-                                .pipe(z.literal(13))
+                              z
+                                .preprocess(
+                                  (val) =>
+                                    typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                      ? Number(val)
+                                      : val,
+                                  z.literal(13),
+                                )
                                 .meta({ description: 'File component' }),
-                              z.coerce
-                                .number()
-                                .pipe(z.literal(14))
+                              z
+                                .preprocess(
+                                  (val) =>
+                                    typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                      ? Number(val)
+                                      : val,
+                                  z.literal(14),
+                                )
                                 .meta({ description: 'Separator component' }),
-                              z.coerce
-                                .number()
-                                .pipe(z.literal(17))
+                              z
+                                .preprocess(
+                                  (val) =>
+                                    typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                      ? Number(val)
+                                      : val,
+                                  z.literal(17),
+                                )
                                 .meta({ description: 'Container component' }),
-                              z.coerce
-                                .number()
-                                .pipe(z.literal(18))
+                              z
+                                .preprocess(
+                                  (val) =>
+                                    typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                      ? Number(val)
+                                      : val,
+                                  z.literal(18),
+                                )
                                 .meta({ description: 'Label component' }),
-                              z.coerce
-                                .number()
-                                .pipe(z.literal(19))
+                              z
+                                .preprocess(
+                                  (val) =>
+                                    typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                      ? Number(val)
+                                      : val,
+                                  z.literal(19),
+                                )
                                 .meta({ description: 'File upload component' }),
-                              z.coerce
-                                .number()
-                                .pipe(z.literal(21))
+                              z
+                                .preprocess(
+                                  (val) =>
+                                    typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                      ? Number(val)
+                                      : val,
+                                  z.literal(21),
+                                )
                                 .meta({ description: 'Radio group component' }),
-                              z.coerce
-                                .number()
-                                .pipe(z.literal(22))
+                              z
+                                .preprocess(
+                                  (val) =>
+                                    typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                      ? Number(val)
+                                      : val,
+                                  z.literal(22),
+                                )
                                 .meta({ description: 'Checkbox group component' }),
-                              z.coerce
-                                .number()
-                                .pipe(z.literal(23))
+                              z
+                                .preprocess(
+                                  (val) =>
+                                    typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                      ? Number(val)
+                                      : val,
+                                  z.literal(23),
+                                )
                                 .meta({ description: 'Checkbox component' }),
                             ]),
                             id: z
                               .preprocess(
                                 (val) => (val === 'null' ? null : val),
-                                z.coerce.number().pipe(z.int32().min(0)).nullable(),
+                                z
+                                  .preprocess(
+                                    (val) =>
+                                      typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                        ? Number(val)
+                                        : val,
+                                    z.int32().min(0),
+                                  )
+                                  .nullable(),
                               )
                               .exactOptional(),
                             custom_id: z.string().min(1).max(100).nullable().exactOptional(),
                             style: z.union([
-                              z.coerce.number().pipe(z.literal(1)),
-                              z.coerce.number().pipe(z.literal(2)),
-                              z.coerce.number().pipe(z.literal(3)),
-                              z.coerce.number().pipe(z.literal(4)),
-                              z.coerce.number().pipe(z.literal(5)),
-                              z.coerce.number().pipe(z.literal(6)),
+                              z.preprocess(
+                                (val) =>
+                                  typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                    ? Number(val)
+                                    : val,
+                                z.literal(1),
+                              ),
+                              z.preprocess(
+                                (val) =>
+                                  typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                    ? Number(val)
+                                    : val,
+                                z.literal(2),
+                              ),
+                              z.preprocess(
+                                (val) =>
+                                  typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                    ? Number(val)
+                                    : val,
+                                z.literal(3),
+                              ),
+                              z.preprocess(
+                                (val) =>
+                                  typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                    ? Number(val)
+                                    : val,
+                                z.literal(4),
+                              ),
+                              z.preprocess(
+                                (val) =>
+                                  typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                    ? Number(val)
+                                    : val,
+                                z.literal(5),
+                              ),
+                              z.preprocess(
+                                (val) =>
+                                  typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                    ? Number(val)
+                                    : val,
+                                z.literal(6),
+                              ),
                             ]),
                             label: z.string().max(80).nullable().exactOptional(),
                             disabled: z
@@ -4368,10 +8151,7 @@ export const lobbiesHandler = new Hono()
                                 (val) => (val === 'null' ? null : val),
                                 z
                                   .union([
-                                    z.preprocess(
-                                      (val) => (val === 'null' ? null : val),
-                                      z.null().nullable(),
-                                    ),
+                                    z.preprocess((val) => (val === 'null' ? null : val), z.null()),
                                     SnowflakeTypeSchema,
                                   ])
                                   .nullable(),
@@ -4382,10 +8162,7 @@ export const lobbiesHandler = new Hono()
                                 (val) => (val === 'null' ? null : val),
                                 z
                                   .union([
-                                    z.preprocess(
-                                      (val) => (val === 'null' ? null : val),
-                                      z.null().nullable(),
-                                    ),
+                                    z.preprocess((val) => (val === 'null' ? null : val), z.null()),
                                     z.object({
                                       id: z
                                         .preprocess(
@@ -4394,7 +8171,7 @@ export const lobbiesHandler = new Hono()
                                             .union([
                                               z.preprocess(
                                                 (val) => (val === 'null' ? null : val),
-                                                z.null().nullable(),
+                                                z.null(),
                                               ),
                                               SnowflakeTypeSchema,
                                             ])
@@ -4410,95 +8187,203 @@ export const lobbiesHandler = new Hono()
                           }),
                           z.object({
                             type: z.union([
-                              z.coerce
-                                .number()
-                                .pipe(z.literal(1))
+                              z
+                                .preprocess(
+                                  (val) =>
+                                    typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                      ? Number(val)
+                                      : val,
+                                  z.literal(1),
+                                )
                                 .meta({ description: 'Container for other components' }),
-                              z.coerce
-                                .number()
-                                .pipe(z.literal(2))
+                              z
+                                .preprocess(
+                                  (val) =>
+                                    typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                      ? Number(val)
+                                      : val,
+                                  z.literal(2),
+                                )
                                 .meta({ description: 'Button object' }),
-                              z.coerce
-                                .number()
-                                .pipe(z.literal(3))
+                              z
+                                .preprocess(
+                                  (val) =>
+                                    typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                      ? Number(val)
+                                      : val,
+                                  z.literal(3),
+                                )
                                 .meta({
                                   description: 'Select menu for picking from defined text options',
                                 }),
-                              z.coerce
-                                .number()
-                                .pipe(z.literal(4))
+                              z
+                                .preprocess(
+                                  (val) =>
+                                    typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                      ? Number(val)
+                                      : val,
+                                  z.literal(4),
+                                )
                                 .meta({ description: 'Text input object' }),
-                              z.coerce
-                                .number()
-                                .pipe(z.literal(5))
+                              z
+                                .preprocess(
+                                  (val) =>
+                                    typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                      ? Number(val)
+                                      : val,
+                                  z.literal(5),
+                                )
                                 .meta({ description: 'Select menu for users' }),
-                              z.coerce
-                                .number()
-                                .pipe(z.literal(6))
+                              z
+                                .preprocess(
+                                  (val) =>
+                                    typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                      ? Number(val)
+                                      : val,
+                                  z.literal(6),
+                                )
                                 .meta({ description: 'Select menu for roles' }),
-                              z.coerce
-                                .number()
-                                .pipe(z.literal(7))
+                              z
+                                .preprocess(
+                                  (val) =>
+                                    typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                      ? Number(val)
+                                      : val,
+                                  z.literal(7),
+                                )
                                 .meta({
                                   description: 'Select menu for mentionables (users and roles)',
                                 }),
-                              z.coerce
-                                .number()
-                                .pipe(z.literal(8))
+                              z
+                                .preprocess(
+                                  (val) =>
+                                    typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                      ? Number(val)
+                                      : val,
+                                  z.literal(8),
+                                )
                                 .meta({ description: 'Select menu for channels' }),
-                              z.coerce
-                                .number()
-                                .pipe(z.literal(9))
+                              z
+                                .preprocess(
+                                  (val) =>
+                                    typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                      ? Number(val)
+                                      : val,
+                                  z.literal(9),
+                                )
                                 .meta({ description: 'Section component' }),
-                              z.coerce
-                                .number()
-                                .pipe(z.literal(10))
+                              z
+                                .preprocess(
+                                  (val) =>
+                                    typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                      ? Number(val)
+                                      : val,
+                                  z.literal(10),
+                                )
                                 .meta({ description: 'Text component' }),
-                              z.coerce
-                                .number()
-                                .pipe(z.literal(11))
+                              z
+                                .preprocess(
+                                  (val) =>
+                                    typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                      ? Number(val)
+                                      : val,
+                                  z.literal(11),
+                                )
                                 .meta({ description: 'Thumbnail component' }),
-                              z.coerce
-                                .number()
-                                .pipe(z.literal(12))
+                              z
+                                .preprocess(
+                                  (val) =>
+                                    typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                      ? Number(val)
+                                      : val,
+                                  z.literal(12),
+                                )
                                 .meta({ description: 'Media gallery component' }),
-                              z.coerce
-                                .number()
-                                .pipe(z.literal(13))
+                              z
+                                .preprocess(
+                                  (val) =>
+                                    typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                      ? Number(val)
+                                      : val,
+                                  z.literal(13),
+                                )
                                 .meta({ description: 'File component' }),
-                              z.coerce
-                                .number()
-                                .pipe(z.literal(14))
+                              z
+                                .preprocess(
+                                  (val) =>
+                                    typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                      ? Number(val)
+                                      : val,
+                                  z.literal(14),
+                                )
                                 .meta({ description: 'Separator component' }),
-                              z.coerce
-                                .number()
-                                .pipe(z.literal(17))
+                              z
+                                .preprocess(
+                                  (val) =>
+                                    typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                      ? Number(val)
+                                      : val,
+                                  z.literal(17),
+                                )
                                 .meta({ description: 'Container component' }),
-                              z.coerce
-                                .number()
-                                .pipe(z.literal(18))
+                              z
+                                .preprocess(
+                                  (val) =>
+                                    typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                      ? Number(val)
+                                      : val,
+                                  z.literal(18),
+                                )
                                 .meta({ description: 'Label component' }),
-                              z.coerce
-                                .number()
-                                .pipe(z.literal(19))
+                              z
+                                .preprocess(
+                                  (val) =>
+                                    typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                      ? Number(val)
+                                      : val,
+                                  z.literal(19),
+                                )
                                 .meta({ description: 'File upload component' }),
-                              z.coerce
-                                .number()
-                                .pipe(z.literal(21))
+                              z
+                                .preprocess(
+                                  (val) =>
+                                    typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                      ? Number(val)
+                                      : val,
+                                  z.literal(21),
+                                )
                                 .meta({ description: 'Radio group component' }),
-                              z.coerce
-                                .number()
-                                .pipe(z.literal(22))
+                              z
+                                .preprocess(
+                                  (val) =>
+                                    typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                      ? Number(val)
+                                      : val,
+                                  z.literal(22),
+                                )
                                 .meta({ description: 'Checkbox group component' }),
-                              z.coerce
-                                .number()
-                                .pipe(z.literal(23))
+                              z
+                                .preprocess(
+                                  (val) =>
+                                    typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                      ? Number(val)
+                                      : val,
+                                  z.literal(23),
+                                )
                                 .meta({ description: 'Checkbox component' }),
                             ]),
                             id: z
                               .preprocess(
                                 (val) => (val === 'null' ? null : val),
-                                z.coerce.number().pipe(z.int32().min(0)).nullable(),
+                                z
+                                  .preprocess(
+                                    (val) =>
+                                      typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                        ? Number(val)
+                                        : val,
+                                    z.int32().min(0),
+                                  )
+                                  .nullable(),
                               )
                               .exactOptional(),
                             description: z.string().min(1).max(1024).nullable().exactOptional(),
@@ -4514,95 +8399,203 @@ export const lobbiesHandler = new Hono()
                       }),
                       z.object({
                         type: z.union([
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(1))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(1),
+                            )
                             .meta({ description: 'Container for other components' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(2))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(2),
+                            )
                             .meta({ description: 'Button object' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(3))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(3),
+                            )
                             .meta({
                               description: 'Select menu for picking from defined text options',
                             }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(4))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(4),
+                            )
                             .meta({ description: 'Text input object' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(5))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(5),
+                            )
                             .meta({ description: 'Select menu for users' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(6))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(6),
+                            )
                             .meta({ description: 'Select menu for roles' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(7))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(7),
+                            )
                             .meta({
                               description: 'Select menu for mentionables (users and roles)',
                             }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(8))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(8),
+                            )
                             .meta({ description: 'Select menu for channels' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(9))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(9),
+                            )
                             .meta({ description: 'Section component' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(10))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(10),
+                            )
                             .meta({ description: 'Text component' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(11))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(11),
+                            )
                             .meta({ description: 'Thumbnail component' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(12))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(12),
+                            )
                             .meta({ description: 'Media gallery component' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(13))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(13),
+                            )
                             .meta({ description: 'File component' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(14))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(14),
+                            )
                             .meta({ description: 'Separator component' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(17))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(17),
+                            )
                             .meta({ description: 'Container component' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(18))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(18),
+                            )
                             .meta({ description: 'Label component' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(19))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(19),
+                            )
                             .meta({ description: 'File upload component' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(21))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(21),
+                            )
                             .meta({ description: 'Radio group component' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(22))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(22),
+                            )
                             .meta({ description: 'Checkbox group component' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(23))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(23),
+                            )
                             .meta({ description: 'Checkbox component' }),
                         ]),
                         id: z
                           .preprocess(
                             (val) => (val === 'null' ? null : val),
-                            z.coerce.number().pipe(z.int32().min(0)).nullable(),
+                            z
+                              .preprocess(
+                                (val) =>
+                                  typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                    ? Number(val)
+                                    : val,
+                                z.int32().min(0),
+                              )
+                              .nullable(),
                           )
                           .exactOptional(),
                         spacing: z
@@ -4610,18 +8603,25 @@ export const lobbiesHandler = new Hono()
                             (val) => (val === 'null' ? null : val),
                             z
                               .union([
-                                z.preprocess(
-                                  (val) => (val === 'null' ? null : val),
-                                  z.null().nullable(),
-                                ),
+                                z.preprocess((val) => (val === 'null' ? null : val), z.null()),
                                 z.union([
-                                  z.coerce
-                                    .number()
-                                    .pipe(z.literal(1))
+                                  z
+                                    .preprocess(
+                                      (val) =>
+                                        typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                          ? Number(val)
+                                          : val,
+                                      z.literal(1),
+                                    )
                                     .meta({ description: 'Small spacing' }),
-                                  z.coerce
-                                    .number()
-                                    .pipe(z.literal(2))
+                                  z
+                                    .preprocess(
+                                      (val) =>
+                                        typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                          ? Number(val)
+                                          : val,
+                                      z.literal(2),
+                                    )
                                     .meta({ description: 'Large spacing' }),
                                 ]),
                               ])
@@ -4637,95 +8637,203 @@ export const lobbiesHandler = new Hono()
                       }),
                       z.object({
                         type: z.union([
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(1))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(1),
+                            )
                             .meta({ description: 'Container for other components' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(2))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(2),
+                            )
                             .meta({ description: 'Button object' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(3))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(3),
+                            )
                             .meta({
                               description: 'Select menu for picking from defined text options',
                             }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(4))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(4),
+                            )
                             .meta({ description: 'Text input object' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(5))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(5),
+                            )
                             .meta({ description: 'Select menu for users' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(6))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(6),
+                            )
                             .meta({ description: 'Select menu for roles' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(7))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(7),
+                            )
                             .meta({
                               description: 'Select menu for mentionables (users and roles)',
                             }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(8))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(8),
+                            )
                             .meta({ description: 'Select menu for channels' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(9))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(9),
+                            )
                             .meta({ description: 'Section component' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(10))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(10),
+                            )
                             .meta({ description: 'Text component' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(11))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(11),
+                            )
                             .meta({ description: 'Thumbnail component' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(12))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(12),
+                            )
                             .meta({ description: 'Media gallery component' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(13))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(13),
+                            )
                             .meta({ description: 'File component' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(14))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(14),
+                            )
                             .meta({ description: 'Separator component' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(17))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(17),
+                            )
                             .meta({ description: 'Container component' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(18))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(18),
+                            )
                             .meta({ description: 'Label component' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(19))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(19),
+                            )
                             .meta({ description: 'File upload component' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(21))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(21),
+                            )
                             .meta({ description: 'Radio group component' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(22))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(22),
+                            )
                             .meta({ description: 'Checkbox group component' }),
-                          z.coerce
-                            .number()
-                            .pipe(z.literal(23))
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.literal(23),
+                            )
                             .meta({ description: 'Checkbox component' }),
                         ]),
                         id: z
                           .preprocess(
                             (val) => (val === 'null' ? null : val),
-                            z.coerce.number().pipe(z.int32().min(0)).nullable(),
+                            z
+                              .preprocess(
+                                (val) =>
+                                  typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                    ? Number(val)
+                                    : val,
+                                z.int32().min(0),
+                              )
+                              .nullable(),
                           )
                           .exactOptional(),
                         content: z.string().min(1).max(4000),
@@ -4738,7 +8846,16 @@ export const lobbiesHandler = new Hono()
           )
           .exactOptional(),
         flags: z
-          .preprocess((val) => (val === 'null' ? null : val), z.coerce.number().int().nullable())
+          .preprocess(
+            (val) => (val === 'null' ? null : val),
+            z
+              .preprocess(
+                (val) =>
+                  typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+                z.number().int(),
+              )
+              .nullable(),
+          )
           .exactOptional(),
         attachments: z
           .preprocess(
@@ -4755,7 +8872,16 @@ export const lobbiesHandler = new Hono()
                       duration_secs: z
                         .preprocess(
                           (val) => (val === 'null' ? null : val),
-                          z.coerce.number().min(0).max(2147483647).nullable(),
+                          z
+                            .preprocess(
+                              (val) =>
+                                typeof val === 'string' &&
+                                /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(val)
+                                  ? Number(val)
+                                  : val,
+                              z.number().min(0).max(2147483647),
+                            )
+                            .nullable(),
                         )
                         .exactOptional(),
                       waveform: z.string().max(400).nullable().exactOptional(),
@@ -4778,7 +8904,7 @@ export const lobbiesHandler = new Hono()
             (val) => (val === 'null' ? null : val),
             z
               .union([
-                z.preprocess((val) => (val === 'null' ? null : val), z.null().nullable()),
+                z.preprocess((val) => (val === 'null' ? null : val), z.null()),
                 z.object({
                   question: z
                     .object({
@@ -4794,10 +8920,7 @@ export const lobbiesHandler = new Hono()
                           (val) => (val === 'null' ? null : val),
                           z
                             .union([
-                              z.preprocess(
-                                (val) => (val === 'null' ? null : val),
-                                z.null().nullable(),
-                              ),
+                              z.preprocess((val) => (val === 'null' ? null : val), z.null()),
                               z.object({
                                 id: z
                                   .preprocess(
@@ -4806,7 +8929,7 @@ export const lobbiesHandler = new Hono()
                                       .union([
                                         z.preprocess(
                                           (val) => (val === 'null' ? null : val),
-                                          z.null().nullable(),
+                                          z.null(),
                                         ),
                                         SnowflakeTypeSchema,
                                       ])
@@ -4862,7 +8985,7 @@ export const lobbiesHandler = new Hono()
                                       .union([
                                         z.preprocess(
                                           (val) => (val === 'null' ? null : val),
-                                          z.null().nullable(),
+                                          z.null(),
                                         ),
                                         z.object({
                                           id: z
@@ -4872,7 +8995,7 @@ export const lobbiesHandler = new Hono()
                                                 .union([
                                                   z.preprocess(
                                                     (val) => (val === 'null' ? null : val),
-                                                    z.null().nullable(),
+                                                    z.null(),
                                                   ),
                                                   SnowflakeTypeSchema,
                                                 ])
@@ -4928,11 +9051,16 @@ export const lobbiesHandler = new Hono()
                       (val) => (val === 'null' ? null : val),
                       z
                         .union([
-                          z.preprocess((val) => (val === 'null' ? null : val), z.null().nullable()),
+                          z.preprocess((val) => (val === 'null' ? null : val), z.null()),
                           z.union([
-                            z.coerce
-                              .number()
-                              .pipe(z.literal(1))
+                            z
+                              .preprocess(
+                                (val) =>
+                                  typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                    ? Number(val)
+                                    : val,
+                                z.literal(1),
+                              )
                               .meta({ description: 'The, uhm, default layout type.' }),
                           ]),
                         ])
@@ -4945,9 +9073,14 @@ export const lobbiesHandler = new Hono()
                   duration: z
                     .preprocess(
                       (val) => (val === 'null' ? null : val),
-                      z.coerce
-                        .number()
-                        .pipe(z.int32().min(1).max(768))
+                      z
+                        .preprocess(
+                          (val) =>
+                            typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                              ? Number(val)
+                              : val,
+                          z.int32().min(1).max(768),
+                        )
                         .nullable()
                         .meta({
                           description:
@@ -4965,40 +9098,73 @@ export const lobbiesHandler = new Hono()
             (val) => (val === 'null' ? null : val),
             z
               .union([
-                z.preprocess((val) => (val === 'null' ? null : val), z.null().nullable()),
+                z.preprocess((val) => (val === 'null' ? null : val), z.null()),
                 z.object({
                   colors: z.preprocess(
                     (val) => (val === undefined || Array.isArray(val) ? val : [val]),
                     z.array(z.string().length(6)).min(1).max(5),
                   ),
-                  gradient_angle: z.coerce.number().pipe(z.int32().min(0).max(360)),
-                  base_mix: z.coerce.number().pipe(z.int32().min(0).max(100)),
+                  gradient_angle: z.preprocess(
+                    (val) =>
+                      typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+                    z.int32().min(0).max(360),
+                  ),
+                  base_mix: z.preprocess(
+                    (val) =>
+                      typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+                    z.int32().min(0).max(100),
+                  ),
                   base_theme: z
                     .preprocess(
                       (val) => (val === 'null' ? null : val),
                       z
                         .union([
-                          z.preprocess((val) => (val === 'null' ? null : val), z.null().nullable()),
+                          z.preprocess((val) => (val === 'null' ? null : val), z.null()),
                           z.union([
-                            z.coerce
-                              .number()
-                              .pipe(z.literal(0))
+                            z
+                              .preprocess(
+                                (val) =>
+                                  typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                    ? Number(val)
+                                    : val,
+                                z.literal(0),
+                              )
                               .meta({ description: 'No base theme' }),
-                            z.coerce
-                              .number()
-                              .pipe(z.literal(1))
+                            z
+                              .preprocess(
+                                (val) =>
+                                  typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                    ? Number(val)
+                                    : val,
+                                z.literal(1),
+                              )
                               .meta({ description: 'Dark base theme' }),
-                            z.coerce
-                              .number()
-                              .pipe(z.literal(2))
+                            z
+                              .preprocess(
+                                (val) =>
+                                  typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                    ? Number(val)
+                                    : val,
+                                z.literal(2),
+                              )
                               .meta({ description: 'Light base theme' }),
-                            z.coerce
-                              .number()
-                              .pipe(z.literal(3))
+                            z
+                              .preprocess(
+                                (val) =>
+                                  typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                    ? Number(val)
+                                    : val,
+                                z.literal(3),
+                              )
                               .meta({ description: 'Darker base theme' }),
-                            z.coerce
-                              .number()
-                              .pipe(z.literal(4))
+                            z
+                              .preprocess(
+                                (val) =>
+                                  typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                    ? Number(val)
+                                    : val,
+                                z.literal(4),
+                              )
                               .meta({ description: 'Midnight base theme' }),
                           ]),
                         ])
@@ -5015,14 +9181,14 @@ export const lobbiesHandler = new Hono()
             (val) => (val === 'null' ? null : val),
             z
               .union([
-                z.preprocess((val) => (val === 'null' ? null : val), z.null().nullable()),
+                z.preprocess((val) => (val === 'null' ? null : val), z.null()),
                 z.object({
                   guild_id: z
                     .preprocess(
                       (val) => (val === 'null' ? null : val),
                       z
                         .union([
-                          z.preprocess((val) => (val === 'null' ? null : val), z.null().nullable()),
+                          z.preprocess((val) => (val === 'null' ? null : val), z.null()),
                           SnowflakeTypeSchema,
                         ])
                         .nullable(),
@@ -5033,7 +9199,7 @@ export const lobbiesHandler = new Hono()
                       (val) => (val === 'null' ? null : val),
                       z
                         .union([
-                          z.preprocess((val) => (val === 'null' ? null : val), z.null().nullable()),
+                          z.preprocess((val) => (val === 'null' ? null : val), z.null()),
                           SnowflakeTypeSchema,
                         ])
                         .nullable(),
@@ -5048,11 +9214,16 @@ export const lobbiesHandler = new Hono()
                       (val) => (val === 'null' ? null : val),
                       z
                         .union([
-                          z.preprocess((val) => (val === 'null' ? null : val), z.null().nullable()),
+                          z.preprocess((val) => (val === 'null' ? null : val), z.null()),
                           z.union([
-                            z.coerce
-                              .number()
-                              .pipe(z.literal(0))
+                            z
+                              .preprocess(
+                                (val) =>
+                                  typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val)
+                                    ? Number(val)
+                                    : val,
+                                z.literal(0),
+                              )
                               .meta({ description: 'Reference to a message' }),
                           ]),
                         ])
@@ -5066,9 +9237,9 @@ export const lobbiesHandler = new Hono()
           .exactOptional(),
         nonce: z
           .union([
-            z.coerce.bigint().pipe(z.int64().min(-9223372036854776000n).max(9223372036854776000n)),
+            z.coerce.bigint().pipe(z.int64().min(-9223372036854775808n).max(9223372036854775808n)),
             z.string().max(25),
-            z.preprocess((val) => (val === 'null' ? null : val), z.null().nullable()),
+            z.preprocess((val) => (val === 'null' ? null : val), z.null()),
           ])
           .exactOptional(),
         enforce_nonce: z

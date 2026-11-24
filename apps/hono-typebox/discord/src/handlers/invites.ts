@@ -11,8 +11,10 @@ export const invitesHandler = new Hono()
       'query',
       Type.Object({
         with_counts: Type.Optional(
-          Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-            .Decode((value) => value === 'true')
+          Codec(
+            Type.String({ pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i }),
+          )
+            .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
             .Encode((value) => (value ? 'true' : 'false')),
         ),
         guild_scheduled_event_id: Type.Optional(SnowflakeTypeSchema),

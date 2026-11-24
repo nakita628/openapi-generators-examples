@@ -1,5 +1,5 @@
 import { initTRPC, TRPCError } from '@trpc/server'
-import { Schema } from 'effect'
+import { Effect, Schema } from 'effect'
 import {
   AssistantSupportedModelsSchema,
   AssistantToolsCodeSchema,
@@ -66,9 +66,9 @@ export const threadsRouter = t.router({
                       'A list of [file](https://developers.openai.com/api/reference/resources/files) IDs made available to the `code_interpreter` tool. There can be a maximum of 20 files associated with the tool.\n',
                   }),
               }),
-              file_search: Schema.optional(
+              file_search: Schema.optionalKey(
                 Schema.Struct({
-                  vector_store_ids: Schema.optional(
+                  vector_store_ids: Schema.optionalKey(
                     Schema.Array(Schema.String)
                       .check(Schema.isMaxLength(1))
                       .annotate({
@@ -82,9 +82,9 @@ export const threadsRouter = t.router({
               description:
                 "A set of resources that are made available to the assistant's tools in this thread. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.\n",
             }),
-            Schema.NullOr(Schema.Null),
+            Schema.Null,
           ]),
-          metadata: Schema.optional(MetadataSchema),
+          metadata: Schema.optionalKey(MetadataSchema),
         }),
       ),
     )
@@ -109,9 +109,9 @@ export const threadsRouter = t.router({
           order: Schema.Literals(['asc', 'desc']).pipe(
             Schema.withDecodingDefault(Effect.succeed('desc')),
           ),
-          after: Schema.optional(Schema.String),
-          before: Schema.optional(Schema.String),
-          run_id: Schema.optional(Schema.String),
+          after: Schema.optionalKey(Schema.String),
+          before: Schema.optionalKey(Schema.String),
+          run_id: Schema.optionalKey(Schema.String),
         }),
       ),
     )
@@ -143,16 +143,16 @@ export const threadsRouter = t.router({
                   'An array of content parts with a defined type, each can be of type `text` or images can be passed with `image_url` or `image_file`. Image types are only supported on [Vision-compatible models](https://developers.openai.com/api/docs/models).',
               }),
           ]),
-          attachments: Schema.optional(
+          attachments: Schema.optionalKey(
             Schema.Union([
               Schema.Array(
                 Schema.Struct({
-                  file_id: Schema.optional(
+                  file_id: Schema.optionalKey(
                     Schema.String.annotate({
                       description: 'The ID of the file to attach to the message.',
                     }),
                   ),
-                  tools: Schema.optional(
+                  tools: Schema.optionalKey(
                     Schema.Array(
                       Schema.Union([
                         AssistantToolsCodeSchema,
@@ -165,10 +165,10 @@ export const threadsRouter = t.router({
                 description:
                   'A list of files attached to the message, and the tools they should be added to.',
               }),
-              Schema.NullOr(Schema.Null),
+              Schema.Null,
             ]),
           ),
-          metadata: Schema.optional(MetadataSchema),
+          metadata: Schema.optionalKey(MetadataSchema),
         }),
       ),
     )
@@ -192,7 +192,7 @@ export const threadsRouter = t.router({
         Schema.Struct({
           thread_id: Schema.String,
           message_id: Schema.String,
-          metadata: Schema.optional(MetadataSchema),
+          metadata: Schema.optionalKey(MetadataSchema),
         }),
       ),
     )
@@ -221,8 +221,8 @@ export const threadsRouter = t.router({
           order: Schema.Literals(['asc', 'desc']).pipe(
             Schema.withDecodingDefault(Effect.succeed('desc')),
           ),
-          after: Schema.optional(Schema.String),
-          before: Schema.optional(Schema.String),
+          after: Schema.optionalKey(Schema.String),
+          before: Schema.optionalKey(Schema.String),
         }),
       ),
     )
@@ -235,7 +235,7 @@ export const threadsRouter = t.router({
       Schema.toStandardSchemaV1(
         Schema.Struct({
           thread_id: Schema.String,
-          'include[]': Schema.optional(
+          'include[]': Schema.optionalKey(
             Schema.Array(
               Schema.Literal('step_details.tool_calls[*].file_search.results[*].content'),
             ),
@@ -244,36 +244,32 @@ export const threadsRouter = t.router({
             description:
               'The ID of the [assistant](https://developers.openai.com/api/docs/assistants/migration) to use to execute this run.',
           }),
-          model: Schema.optional(
-            Schema.Union([
-              Schema.String,
-              AssistantSupportedModelsSchema,
-              Schema.NullOr(Schema.Null),
-            ]).annotate({
+          model: Schema.optionalKey(
+            Schema.Union([Schema.String, AssistantSupportedModelsSchema, Schema.Null]).annotate({
               description:
                 'The ID of the [Model](https://developers.openai.com/api/reference/resources/models) to be used to execute this run. If a value is provided here, it will override the model associated with the assistant. If not, the model associated with the assistant will be used.',
               jsonSchemaExamples: ['gpt-4.1'],
             }),
           ),
-          reasoning_effort: Schema.optional(ReasoningEffortSchema),
-          instructions: Schema.optional(
+          reasoning_effort: Schema.optionalKey(ReasoningEffortSchema),
+          instructions: Schema.optionalKey(
             Schema.NullOr(Schema.String).annotate({
               description:
                 'Overrides the [instructions](https://developers.openai.com/api/docs/assistants/migration) of the assistant. This is useful for modifying the behavior on a per-run basis.',
             }),
           ),
-          additional_instructions: Schema.optional(
+          additional_instructions: Schema.optionalKey(
             Schema.NullOr(Schema.String).annotate({
               description:
                 'Appends additional instructions at the end of the instructions for the run. This is useful for modifying the behavior on a per-run basis without overriding other instructions.',
             }),
           ),
-          additional_messages: Schema.optional(
+          additional_messages: Schema.optionalKey(
             Schema.NullOr(Schema.Array(CreateMessageRequestSchema)).annotate({
               description: 'Adds additional messages to the thread before creating the run.',
             }),
           ),
-          tools: Schema.optional(
+          tools: Schema.optionalKey(
             Schema.NullOr(
               Schema.Array(
                 Schema.Union([
@@ -287,7 +283,7 @@ export const threadsRouter = t.router({
                 'Override the tools the assistant can use for this run. This is useful for modifying the behavior on a per-run basis.',
             }),
           ),
-          metadata: Schema.optional(MetadataSchema),
+          metadata: Schema.optionalKey(MetadataSchema),
           temperature: Schema.NullOr(
             Schema.Number.check(Schema.isGreaterThanOrEqualTo(0), Schema.isLessThanOrEqualTo(2)),
           )
@@ -306,13 +302,13 @@ export const threadsRouter = t.router({
                 'An alternative to sampling with temperature, called nucleus sampling, where the model considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens comprising the top 10% probability mass are considered.\n\nWe generally recommend altering this or temperature but not both.\n',
               jsonSchemaExamples: [1],
             }),
-          stream: Schema.optional(
+          stream: Schema.optionalKey(
             Schema.NullOr(Schema.Boolean).annotate({
               description:
                 'If `true`, returns a stream of events that happen during the Run as server-sent events, terminating when the Run enters a terminal state with a `data: [DONE]` message.\n',
             }),
           ),
-          max_prompt_tokens: Schema.optional(
+          max_prompt_tokens: Schema.optionalKey(
             Schema.NullOr(
               Schema.Number.check(Schema.isInt(), Schema.isGreaterThanOrEqualTo(256)),
             ).annotate({
@@ -320,7 +316,7 @@ export const threadsRouter = t.router({
                 'The maximum number of prompt tokens that may be used over the course of the run. The run will make a best effort to use only the number of prompt tokens specified, across multiple turns of the run. If the run exceeds the number of prompt tokens specified, the run will end with status `incomplete`. See `incomplete_details` for more info.\n',
             }),
           ),
-          max_completion_tokens: Schema.optional(
+          max_completion_tokens: Schema.optionalKey(
             Schema.NullOr(
               Schema.Number.check(Schema.isInt(), Schema.isGreaterThanOrEqualTo(256)),
             ).annotate({
@@ -328,10 +324,12 @@ export const threadsRouter = t.router({
                 'The maximum number of completion tokens that may be used over the course of the run. The run will make a best effort to use only the number of completion tokens specified, across multiple turns of the run. If the run exceeds the number of completion tokens specified, the run will end with status `incomplete`. See `incomplete_details` for more info.\n',
             }),
           ),
-          truncation_strategy: Schema.optional(Schema.NullOr(TruncationObjectSchema)),
-          tool_choice: Schema.optional(Schema.NullOr(AssistantsApiToolChoiceOptionSchema)),
-          parallel_tool_calls: Schema.optional(ParallelToolCallsSchema),
-          response_format: Schema.optional(Schema.NullOr(AssistantsApiResponseFormatOptionSchema)),
+          truncation_strategy: Schema.optionalKey(Schema.NullOr(TruncationObjectSchema)),
+          tool_choice: Schema.optionalKey(Schema.NullOr(AssistantsApiToolChoiceOptionSchema)),
+          parallel_tool_calls: Schema.optionalKey(ParallelToolCallsSchema),
+          response_format: Schema.optionalKey(
+            Schema.NullOr(AssistantsApiResponseFormatOptionSchema),
+          ),
         }),
       ),
     )
@@ -353,7 +351,7 @@ export const threadsRouter = t.router({
         Schema.Struct({
           thread_id: Schema.String,
           run_id: Schema.String,
-          metadata: Schema.optional(MetadataSchema),
+          metadata: Schema.optionalKey(MetadataSchema),
         }),
       ),
     )
@@ -381,9 +379,9 @@ export const threadsRouter = t.router({
           order: Schema.Literals(['asc', 'desc']).pipe(
             Schema.withDecodingDefault(Effect.succeed('desc')),
           ),
-          after: Schema.optional(Schema.String),
-          before: Schema.optional(Schema.String),
-          'include[]': Schema.optional(
+          after: Schema.optionalKey(Schema.String),
+          before: Schema.optionalKey(Schema.String),
+          'include[]': Schema.optionalKey(
             Schema.Array(
               Schema.Literal('step_details.tool_calls[*].file_search.results[*].content'),
             ),
@@ -402,7 +400,7 @@ export const threadsRouter = t.router({
           thread_id: Schema.String,
           run_id: Schema.String,
           step_id: Schema.String,
-          'include[]': Schema.optional(
+          'include[]': Schema.optionalKey(
             Schema.Array(
               Schema.Literal('step_details.tool_calls[*].file_search.results[*].content'),
             ),
@@ -422,26 +420,26 @@ export const threadsRouter = t.router({
           run_id: Schema.String,
           tool_outputs: Schema.Array(
             Schema.Struct({
-              tool_call_id: Schema.optional(
+              tool_call_id: Schema.optionalKey(
                 Schema.String.annotate({
                   description:
                     'The ID of the tool call in the `required_action` object within the run object the output is being submitted for.',
                 }),
               ),
-              output: Schema.optional(
+              output: Schema.optionalKey(
                 Schema.String.annotate({
                   description: 'The output of the tool call to be submitted to continue the run.',
                 }),
               ),
             }),
           ).annotate({ description: 'A list of tools for which the outputs are being submitted.' }),
-          stream: Schema.optional(
+          stream: Schema.optionalKey(
             Schema.Union([
               Schema.Boolean.annotate({
                 description:
                   'If `true`, returns a stream of events that happen during the Run as server-sent events, terminating when the Run enters a terminal state with a `data: [DONE]` message.\n',
               }),
-              Schema.NullOr(Schema.Null),
+              Schema.Null,
             ]),
           ),
         }),

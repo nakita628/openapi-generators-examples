@@ -782,11 +782,17 @@ export const PlaylistTrackObjectSchema = z
       })
       .exactOptional(),
     item: z
-      .xor([TrackObjectSchema, EpisodeObjectSchema])
+      .xor([
+        z.intersection(TrackObjectSchema, z.object({ type: z.literal('TrackObject') })),
+        z.intersection(EpisodeObjectSchema, z.object({ type: z.literal('EpisodeObject') })),
+      ])
       .meta({ description: 'Information about the track or episode.' })
       .exactOptional(),
     track: z
-      .xor([TrackObjectSchema, EpisodeObjectSchema])
+      .xor([
+        z.intersection(TrackObjectSchema, z.object({ type: z.literal('TrackObject') })),
+        z.intersection(EpisodeObjectSchema, z.object({ type: z.literal('EpisodeObject') })),
+      ])
       .meta({
         description:
           '**Deprecated:** Use `item` instead. Information about the track or episode.\n',
@@ -801,11 +807,19 @@ export type PlaylistTrackObject = z.infer<typeof PlaylistTrackObjectSchema>
 export const QueueObjectSchema = z
   .object({
     currently_playing: z
-      .xor([TrackObjectSchema, EpisodeObjectSchema])
+      .xor([
+        z.intersection(TrackObjectSchema, z.object({ type: z.literal('TrackObject') })),
+        z.intersection(EpisodeObjectSchema, z.object({ type: z.literal('EpisodeObject') })),
+      ])
       .meta({ description: 'The currently playing track or episode. Can be `null`.' })
       .exactOptional(),
     queue: z
-      .array(z.xor([TrackObjectSchema, EpisodeObjectSchema]))
+      .array(
+        z.xor([
+          z.intersection(TrackObjectSchema, z.object({ type: z.literal('TrackObject') })),
+          z.intersection(EpisodeObjectSchema, z.object({ type: z.literal('EpisodeObject') })),
+        ]),
+      )
       .meta({ description: 'The tracks or episodes in the queue. Can be empty.' })
       .exactOptional(),
   })
@@ -938,7 +952,10 @@ export const CurrentlyPlayingContextObjectSchema = z
       .meta({ description: 'If something is currently playing, return `true`.' })
       .exactOptional(),
     item: z
-      .xor([TrackObjectSchema, EpisodeObjectSchema])
+      .xor([
+        z.intersection(TrackObjectSchema, z.object({ type: z.literal('TrackObject') })),
+        z.intersection(EpisodeObjectSchema, z.object({ type: z.literal('EpisodeObject') })),
+      ])
       .meta({ description: 'The currently playing track or episode. Can be `null`.' })
       .exactOptional(),
     currently_playing_type: z
@@ -1898,7 +1915,7 @@ export type CursorPagingSimplifiedArtistObject = z.infer<
 >
 
 export const PagingObjectSchema = z
-  .object({
+  .looseObject({
     href: z
       .string()
       .meta({
@@ -1936,6 +1953,7 @@ export const PagingObjectSchema = z
       .int()
       .meta({ description: 'The total number of items available to return.\n', examples: [4] }),
   })
+  .refine((val) => ['items'].every((key) => key in val))
   .meta({ ref: 'PagingObject' })
 
 export type PagingObject = z.infer<typeof PagingObjectSchema>
@@ -2761,7 +2779,10 @@ export const CurrentlyPlayingObjectSchema = z
       .meta({ description: 'If something is currently playing, return `true`.' })
       .exactOptional(),
     item: z
-      .xor([TrackObjectSchema, EpisodeObjectSchema])
+      .xor([
+        z.intersection(TrackObjectSchema, z.object({ type: z.literal('TrackObject') })),
+        z.intersection(EpisodeObjectSchema, z.object({ type: z.literal('EpisodeObject') })),
+      ])
       .meta({ description: 'The currently playing track or episode. Can be `null`.' })
       .exactOptional(),
     currently_playing_type: z
@@ -2834,11 +2855,11 @@ export const QueryMarketParamsSchema = resolver(
     }),
 )
 export const QueryLimitParamsSchema = resolver(
-  z.coerce
-    .number()
-    .int()
-    .min(1)
-    .max(50)
+  z
+    .preprocess(
+      (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+      z.number().int().min(1).max(50),
+    )
     .default(20)
     .meta({
       description: 'The maximum number of items to return. Default: 20. Minimum: 1. Maximum: 50.\n',
@@ -2846,9 +2867,11 @@ export const QueryLimitParamsSchema = resolver(
     }),
 )
 export const QueryOffsetParamsSchema = resolver(
-  z.coerce
-    .number()
-    .int()
+  z
+    .preprocess(
+      (val) => (typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val),
+      z.number().int(),
+    )
     .default(0)
     .meta({
       description:

@@ -18464,7 +18464,7 @@ export const IdleTimeoutSSchema = t.Integer({
   minimum: 5,
   maximum: 60,
   description:
-    'Whole seconds of inactivity after which a Live WebRTC session with a speech wake policy pauses inference. The connection and conversation history are retained. Omit to keep inference active after the first wake until the session ends.',
+    'Whole seconds of inactivity after which a Live WebRTC or SIP session with a speech wake policy pauses inference. The connection and conversation history are retained. Omit to keep inference active after the first wake until the session ends.',
 })
 
 export const LiveMediaSessionCreateParamsSchema = t.Object(
@@ -33960,6 +33960,15 @@ export const CompactResponseMethodPublicBodySchema = t.Object({
       t.Null(),
     ]),
   ),
+  safety_identifier: t.Optional(
+    t.Union([
+      t.String({
+        maxLength: 128,
+        description: 'A stable identifier used for safety monitoring and abuse detection.',
+      }),
+      t.Null(),
+    ]),
+  ),
   image: t.Optional(ImageOptionsParamSchema),
   prompt_cache_key: t.Optional(
     t.Union([
@@ -34020,18 +34029,31 @@ export const CompactResourceSchema = t.Object(
       description: 'The object type. Always `response.compaction`.',
       default: 'response.compaction',
     }),
+    safety_identifier: t.Optional(
+      t.Union([
+        t.String({
+          description:
+            'A stable identifier that was used for safety monitoring and abuse detection.',
+        }),
+        t.Null(),
+      ]),
+    ),
     output: t.Array(ItemFieldSchema, { description: 'The compacted list of output items.' }),
     created_at: t.Integer({
       format: 'unixtime',
       maximum: 9007199254740991,
       description: 'Unix timestamp (in seconds) when the compacted conversation was created.',
     }),
+    service_tier: t.Optional(
+      t.String({ description: 'The service tier used for compaction, when reported.' }),
+    ),
     usage: ResponseUsageSchema,
   },
   {
     example: {
       id: 'resp_001',
       object: 'response.compaction',
+      safety_identifier: 'compact-review-example-001',
       image: { context_compression: 'disabled' },
       output: [
         {
@@ -47559,6 +47581,15 @@ export const BetaCompactResponseMethodPublicBodySchema = t.Object({
       t.Null(),
     ]),
   ),
+  safety_identifier: t.Optional(
+    t.Union([
+      t.String({
+        maxLength: 128,
+        description: 'A stable identifier used for safety monitoring and abuse detection.',
+      }),
+      t.Null(),
+    ]),
+  ),
   image: t.Optional(BetaImageOptionsParamSchema),
   prompt_cache_key: t.Optional(
     t.Union([
@@ -48553,18 +48584,31 @@ export const BetaCompactResourceSchema = t.Object(
       description: 'The object type. Always `response.compaction`.',
       default: 'response.compaction',
     }),
+    safety_identifier: t.Optional(
+      t.Union([
+        t.String({
+          description:
+            'A stable identifier that was used for safety monitoring and abuse detection.',
+        }),
+        t.Null(),
+      ]),
+    ),
     output: t.Array(BetaItemFieldSchema, { description: 'The compacted list of output items.' }),
     created_at: t.Integer({
       format: 'unixtime',
       maximum: 9007199254740991,
       description: 'Unix timestamp (in seconds) when the compacted conversation was created.',
     }),
+    service_tier: t.Optional(
+      t.String({ description: 'The service tier used for compaction, when reported.' }),
+    ),
     usage: BetaResponseUsageSchema,
   },
   {
     example: {
       id: 'resp_001',
       object: 'response.compaction',
+      safety_identifier: 'compact-review-example-001',
       image: { context_compression: 'disabled' },
       output: [
         {

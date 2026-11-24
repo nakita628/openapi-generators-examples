@@ -16,8 +16,8 @@ export const stageInstancesRouter = t.router({
           .narrow((data, ctx) => [...data].length >= 1 || ctx.mustBe('at least 1 character'))
           .narrow((data, ctx) => [...data].length <= 120 || ctx.mustBe('at most 120 characters')),
         channel_id: SnowflakeTypeSchema,
-        'privacy_level?': type('null | null').or(StageInstancesPrivacyLevelsSchema),
-        'guild_scheduled_event_id?': type('null | null').or(SnowflakeTypeSchema),
+        'privacy_level?': type('null').or(StageInstancesPrivacyLevelsSchema),
+        'guild_scheduled_event_id?': type('null').or(SnowflakeTypeSchema),
         'send_start_notification?': 'boolean | null',
       }),
     )

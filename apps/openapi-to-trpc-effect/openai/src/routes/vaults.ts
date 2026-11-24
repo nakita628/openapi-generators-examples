@@ -1,5 +1,5 @@
 import { initTRPC, TRPCError } from '@trpc/server'
-import { Schema } from 'effect'
+import { Effect, Schema, SchemaTransformation } from 'effect'
 import {
   CreateVaultCredentialAuthParamSchema,
   CreateVaultParamsSchema,
@@ -45,7 +45,7 @@ export const vaultsRouter = t.router({
             )
             .pipe(Schema.withDecodingDefault(Effect.succeed(20n))),
           order: ListOrderParamSchema.pipe(Schema.withDecodingDefault(Effect.succeed('desc'))),
-          after: Schema.optional(
+          after: Schema.optionalKey(
             Schema.String.check(
               Schema.makeFilter((input) => [...input].length >= 0, {
                 expected: 'a string of at least 0 characters',
@@ -55,7 +55,7 @@ export const vaultsRouter = t.router({
               }),
             ),
           ),
-          metadata: Schema.optional(
+          metadata: Schema.optionalKey(
             Schema.Record(
               Schema.String,
               Schema.String.check(
@@ -68,7 +68,7 @@ export const vaultsRouter = t.router({
               ),
             ),
           ),
-          status: Schema.optional(VaultStatusFilterParamSchema),
+          status: Schema.optionalKey(VaultStatusFilterParamSchema),
         }),
       ),
     )
@@ -117,7 +117,7 @@ export const vaultsRouter = t.router({
               expected: 'a string of at most 1048576 characters',
             }),
           ),
-          metadata: Schema.optional(
+          metadata: Schema.optionalKey(
             Schema.Record(
               Schema.String,
               Schema.String.check(
@@ -133,7 +133,7 @@ export const vaultsRouter = t.router({
                 'Replaces all metadata. Omit to leave unchanged, or pass {} to clear it. Up to 16 string key-value pairs, with keys up to 64 and values up to 512 characters.',
             }),
           ),
-          name: Schema.optional(
+          name: Schema.optionalKey(
             Schema.NullOr(
               Schema.String.check(
                 Schema.makeFilter((input) => [...input].length >= 1, {
@@ -210,7 +210,7 @@ export const vaultsRouter = t.router({
             )
             .pipe(Schema.withDecodingDefault(Effect.succeed(20n))),
           order: ListOrderParamSchema.pipe(Schema.withDecodingDefault(Effect.succeed('desc'))),
-          after: Schema.optional(
+          after: Schema.optionalKey(
             Schema.String.check(
               Schema.makeFilter((input) => [...input].length >= 0, {
                 expected: 'a string of at least 0 characters',
@@ -220,7 +220,7 @@ export const vaultsRouter = t.router({
               }),
             ),
           ),
-          metadata: Schema.optional(
+          metadata: Schema.optionalKey(
             Schema.Record(
               Schema.String,
               Schema.String.check(
@@ -233,7 +233,7 @@ export const vaultsRouter = t.router({
               ),
             ),
           ),
-          status: Schema.optional(VaultStatusFilterParamSchema),
+          status: Schema.optionalKey(VaultStatusFilterParamSchema),
         }),
       ),
     )
@@ -273,7 +273,7 @@ export const vaultsRouter = t.router({
           auth: CreateVaultCredentialAuthParamSchema.annotate({
             description: 'The authentication method and write-only secret values to store.',
           }),
-          metadata: Schema.optional(
+          metadata: Schema.optionalKey(
             Schema.Record(
               Schema.String,
               Schema.String.check(
@@ -343,13 +343,13 @@ export const vaultsRouter = t.router({
               expected: 'a string of at most 1048576 characters',
             }),
           ),
-          auth: Schema.optional(
+          auth: Schema.optionalKey(
             RotateVaultCredentialAuthParamSchema.annotate({
               description:
                 "Replacement values for the credential's existing authentication method.",
             }),
           ),
-          metadata: Schema.optional(
+          metadata: Schema.optionalKey(
             Schema.Record(
               Schema.String,
               Schema.String.check(

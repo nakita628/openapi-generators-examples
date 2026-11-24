@@ -136,13 +136,13 @@ export const guildsRouter = t.router({
         ).or('null'),
         'region?': 'string | null',
         'icon?': 'string | null',
-        'verification_level?': type('null | null').or(VerificationLevelsSchema),
-        'default_message_notifications?': type('null | null').or(UserNotificationSettingsSchema),
-        'explicit_content_filter?': type('null | null').or(GuildExplicitContentFilterTypesSchema),
-        'preferred_locale?': type('null | null').or(AvailableLocalesEnumSchema),
-        'afk_timeout?': type('null | null').or(AfkTimeoutsSchema),
-        'afk_channel_id?': type('null | null').or(SnowflakeTypeSchema),
-        'system_channel_id?': type('null | null').or(SnowflakeTypeSchema),
+        'verification_level?': type('null').or(VerificationLevelsSchema),
+        'default_message_notifications?': type('null').or(UserNotificationSettingsSchema),
+        'explicit_content_filter?': type('null').or(GuildExplicitContentFilterTypesSchema),
+        'preferred_locale?': type('null').or(AvailableLocalesEnumSchema),
+        'afk_timeout?': type('null').or(AfkTimeoutsSchema),
+        'afk_channel_id?': type('null').or(SnowflakeTypeSchema),
+        'system_channel_id?': type('null').or(SnowflakeTypeSchema),
         'splash?': 'string | null',
         'banner?': 'string | null',
         'system_channel_flags?': 'number.integer | null',
@@ -162,9 +162,9 @@ export const guildsRouter = t.router({
         ).or('null'),
         'discovery_splash?': 'string | null',
         'home_header?': 'string | null',
-        'rules_channel_id?': type('null | null').or(SnowflakeTypeSchema),
-        'safety_alerts_channel_id?': type('null | null').or(SnowflakeTypeSchema),
-        'public_updates_channel_id?': type('null | null').or(SnowflakeTypeSchema),
+        'rules_channel_id?': type('null').or(SnowflakeTypeSchema),
+        'safety_alerts_channel_id?': type('null').or(SnowflakeTypeSchema),
+        'public_updates_channel_id?': type('null').or(SnowflakeTypeSchema),
         'premium_progress_bar_enabled?': 'boolean | null',
       }),
     )
@@ -201,7 +201,7 @@ export const guildsRouter = t.router({
                 ),
               ).or(MentionSpamRuleResponseSchema),
             ).or(UserProfileRuleResponseSchema),
-          ).or('null | null'),
+          ).or('null'),
         ).array(),
       ).or('null'),
     )
@@ -350,7 +350,7 @@ export const guildsRouter = t.router({
     .input(
       type({
         guild_id: SnowflakeTypeSchema,
-        'type?': type('null | null').or(ChannelTypesSchema),
+        'type?': type('null').or(ChannelTypesSchema),
         name: type('string')
           .narrow((data, ctx) => [...data].length >= 1 || ctx.mustBe('at least 1 character'))
           .narrow((data, ctx) => [...data].length <= 100 || ctx.mustBe('at most 100 characters')),
@@ -369,21 +369,21 @@ export const guildsRouter = t.router({
           'number.integer >= -2147483648 & number.integer <= 2147483647 & number.integer >= 0 | null',
         'nsfw?': 'boolean | null',
         'rate_limit_per_user?': 'number.integer >= 0 & number.integer <= 21600 | null',
-        'parent_id?': type('null | null').or(SnowflakeTypeSchema),
+        'parent_id?': type('null').or(SnowflakeTypeSchema),
         'permission_overwrites?': type(
           type(type(ChannelPermissionOverwriteRequestSchema).array()).and(type('unknown[] <= 100')),
         ).or('null'),
         'rtc_region?': 'string | null',
-        'video_quality_mode?': type('null | null').or(VideoQualityModesSchema),
-        'default_auto_archive_duration?': type('null | null').or(ThreadAutoArchiveDurationSchema),
-        'default_reaction_emoji?': type('null | null').or(UpdateDefaultReactionEmojiRequestSchema),
+        'video_quality_mode?': type('null').or(VideoQualityModesSchema),
+        'default_auto_archive_duration?': type('null').or(ThreadAutoArchiveDurationSchema),
+        'default_reaction_emoji?': type('null').or(UpdateDefaultReactionEmojiRequestSchema),
         'default_thread_rate_limit_per_user?':
           'number.integer >= 0 & number.integer <= 21600 | null',
-        'default_sort_order?': type('null | null').or(ThreadSortOrderSchema),
-        'default_forum_layout?': type('null | null').or(ForumLayoutSchema),
-        'default_tag_setting?': type('null | null').or(ThreadSearchTagSettingSchema),
+        'default_sort_order?': type('null').or(ThreadSortOrderSchema),
+        'default_forum_layout?': type('null').or(ForumLayoutSchema),
+        'default_tag_setting?': type('null').or(ThreadSearchTagSettingSchema),
         'available_tags?': type(
-          type(type(type('null | null').or(CreateOrUpdateThreadTagRequestSchema)).array()).and(
+          type(type(type('null').or(CreateOrUpdateThreadTagRequestSchema)).array()).and(
             type('unknown[] <= 20'),
           ),
         ).or('null'),
@@ -399,10 +399,10 @@ export const guildsRouter = t.router({
         guild_id: SnowflakeTypeSchema,
         body: type(
           type({
-            'id?': type('null | null').or(SnowflakeTypeSchema),
+            'id?': type('null').or(SnowflakeTypeSchema),
             'position?':
               'number.integer >= -2147483648 & number.integer <= 2147483647 & number.integer >= 0 | null',
-            'parent_id?': type('null | null').or(SnowflakeTypeSchema),
+            'parent_id?': type('null').or(SnowflakeTypeSchema),
             'lock_permissions?': 'boolean | null',
           }),
         ).array(),
@@ -426,7 +426,7 @@ export const guildsRouter = t.router({
           .narrow((data, ctx) => [...data].length <= 32 || ctx.mustBe('at most 32 characters')),
         image: 'string',
         'roles?': type(
-          type(type(type('null | null').or(SnowflakeTypeSchema)).array())
+          type(type(type('null').or(SnowflakeTypeSchema)).array())
             .and(type('unknown[] <= 1521'))
             .narrow((data: unknown[], ctx) => new Set(data).size === data.length),
         ).or('null'),
@@ -456,7 +456,7 @@ export const guildsRouter = t.router({
           .narrow((data, ctx) => [...data].length >= 2 || ctx.mustBe('at least 2 characters'))
           .narrow((data, ctx) => [...data].length <= 32 || ctx.mustBe('at most 32 characters')),
         'roles?': type(
-          type(type(type('null | null').or(SnowflakeTypeSchema)).array())
+          type(type(type('null').or(SnowflakeTypeSchema)).array())
             .and(type('unknown[] <= 1521'))
             .narrow((data: unknown[], ctx) => new Set(data).size === data.length),
         ).or('null'),
@@ -518,7 +518,7 @@ export const guildsRouter = t.router({
             type(type(FriendInviteResponseSchema).or(GroupDMInviteResponseSchema)).or(
               GuildInviteResponseSchema,
             ),
-          ).or('null | null'),
+          ).or('null'),
         ).array(),
       ).or('null'),
     )
@@ -622,13 +622,13 @@ export const guildsRouter = t.router({
           ),
         ).or('null'),
         'roles?': type(
-          type(type(type('null | null').or(SnowflakeTypeSchema)).array())
+          type(type(type('null').or(SnowflakeTypeSchema)).array())
             .and(type('unknown[] <= 350'))
             .narrow((data: unknown[], ctx) => new Set(data).size === data.length),
         ).or('null'),
         'mute?': 'boolean | null',
         'deaf?': 'boolean | null',
-        'channel_id?': type('null | null').or(SnowflakeTypeSchema),
+        'channel_id?': type('null').or(SnowflakeTypeSchema),
         'communication_disabled_until?': type(
           type(
             /^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z|([+-](?:[01]\d|2[0-3]):[0-5]\d)))$/,
@@ -774,7 +774,7 @@ export const guildsRouter = t.router({
             .and(type('unknown[] <= 500'))
             .narrow((data: unknown[], ctx) => new Set(data).size === data.length),
         ).or('null'),
-        'mode?': type('null | null').or(GuildOnboardingModeSchema),
+        'mode?': type('null').or(GuildOnboardingModeSchema),
       }),
     )
     .output(GuildOnboardingResponseSchema)
@@ -805,7 +805,7 @@ export const guildsRouter = t.router({
         guild_id: SnowflakeTypeSchema,
         'days?': 'number.integer >= 1 & number.integer <= 30',
         'include_roles?': type('string').or(
-          type(type(type('null | null').or(SnowflakeTypeSchema)).array())
+          type(type(type('null').or(SnowflakeTypeSchema)).array())
             .and(type('unknown[] <= 100'))
             .narrow((data: unknown[], ctx) => new Set(data).size === data.length),
         ),
@@ -827,7 +827,7 @@ export const guildsRouter = t.router({
               .and(type('unknown[] <= 100'))
               .narrow((data: unknown[], ctx) => new Set(data).size === data.length),
           ),
-        ).or('null | null'),
+        ).or('null'),
       }),
     )
     .output(GuildPruneResponseSchema)
@@ -892,7 +892,7 @@ export const guildsRouter = t.router({
         ).or('null'),
         'permissions?': 'number.integer | null',
         'color?': 'number.integer >= 0 & number.integer <= 16777215 | null',
-        'colors?': type('null | null').or(RoleColorsSchema),
+        'colors?': type('null').or(RoleColorsSchema),
         'hoist?': 'boolean | null',
         'mentionable?': 'boolean | null',
         'icon?': 'string | null',
@@ -944,7 +944,7 @@ export const guildsRouter = t.router({
         ).or('null'),
         'permissions?': 'number.integer | null',
         'color?': 'number.integer >= 0 & number.integer <= 16777215 | null',
-        'colors?': type('null | null').or(RoleColorsSchema),
+        'colors?': type('null').or(RoleColorsSchema),
         'hoist?': 'boolean | null',
         'mentionable?': 'boolean | null',
         'icon?': 'string | null',
@@ -1160,7 +1160,7 @@ export const guildsRouter = t.router({
           .narrow((data, ctx) => [...data].length >= 2 || ctx.mustBe('at least 2 characters'))
           .narrow((data, ctx) => [...data].length <= 32 || ctx.mustBe('at most 32 characters')),
         'volume?': 'number >= 0 & number <= 1 | null',
-        'emoji_id?': type('null | null').or(SnowflakeTypeSchema),
+        'emoji_id?': type('null').or(SnowflakeTypeSchema),
         'emoji_name?': type(
           type('string')
             .narrow((data, ctx) => [...data].length >= 1 || ctx.mustBe('at least 1 character'))
@@ -1193,7 +1193,7 @@ export const guildsRouter = t.router({
           .narrow((data, ctx) => [...data].length >= 2 || ctx.mustBe('at least 2 characters'))
           .narrow((data, ctx) => [...data].length <= 32 || ctx.mustBe('at most 32 characters')),
         'volume?': 'number >= 0 & number <= 1 | null',
-        'emoji_id?': type('null | null').or(SnowflakeTypeSchema),
+        'emoji_id?': type('null').or(SnowflakeTypeSchema),
         'emoji_name?': type(
           type('string')
             .narrow((data, ctx) => [...data].length >= 1 || ctx.mustBe('at least 1 character'))
@@ -1349,7 +1349,7 @@ export const guildsRouter = t.router({
           ),
         ).or('null'),
         'suppress?': 'boolean | null',
-        'channel_id?': type('null | null').or(SnowflakeTypeSchema),
+        'channel_id?': type('null').or(SnowflakeTypeSchema),
       }),
     )
     .mutation(() => {
@@ -1367,7 +1367,7 @@ export const guildsRouter = t.router({
         guild_id: SnowflakeTypeSchema,
         user_id: SnowflakeTypeSchema,
         'suppress?': 'boolean | null',
-        'channel_id?': type('null | null').or(SnowflakeTypeSchema),
+        'channel_id?': type('null').or(SnowflakeTypeSchema),
       }),
     )
     .mutation(() => {
@@ -1422,7 +1422,7 @@ export const guildsRouter = t.router({
     .input(
       type({
         guild_id: SnowflakeTypeSchema,
-        'channel_id?': type('null | null').or(SnowflakeTypeSchema),
+        'channel_id?': type('null').or(SnowflakeTypeSchema),
         'enabled?': 'boolean | null',
       }),
     )

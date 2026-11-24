@@ -76,7 +76,7 @@ export const SnowflakeTypeSchema = type('string')
 export type SnowflakeType = typeof SnowflakeTypeSchema.infer
 
 export const ComponentEmojiForRequestSchema = type({
-  'id?': type('null | null').or(SnowflakeTypeSchema),
+  'id?': type('null').or(SnowflakeTypeSchema),
   name: type('string').narrow(
     (data, ctx) => [...data].length <= 32 || ctx.mustBe('at most 32 characters'),
   ),
@@ -105,8 +105,8 @@ export const ButtonComponentForMessageRequestSchema = type({
       (data, ctx) => [...data].length <= 512 || ctx.mustBe('at most 512 characters'),
     ),
   ).or('null'),
-  'sku_id?': type('null | null').or(SnowflakeTypeSchema),
-  'emoji?': type('null | null').or(ComponentEmojiForRequestSchema),
+  'sku_id?': type('null').or(SnowflakeTypeSchema),
+  'emoji?': type('null').or(ComponentEmojiForRequestSchema),
 }).configure({ ref: 'ButtonComponentForMessageRequest' })
 
 export type ButtonComponentForMessageRequest = typeof ButtonComponentForMessageRequestSchema.infer
@@ -272,7 +272,7 @@ export const StringSelectOptionForRequestSchema = type({
     ),
   ).or('null'),
   'default?': 'boolean | null',
-  'emoji?': type('null | null').or(ComponentEmojiForRequestSchema),
+  'emoji?': type('null').or(ComponentEmojiForRequestSchema),
 }).configure({ ref: 'StringSelectOptionForRequest' })
 
 export type StringSelectOptionForRequest = typeof StringSelectOptionForRequestSchema.infer
@@ -1128,7 +1128,7 @@ export type Int53Type = typeof Int53TypeSchema.infer
 
 export const UserAvatarDecorationResponseSchema = type({
   asset: type('string').describe('the avatar decoration hash'),
-  sku_id: type('null | null').or(SnowflakeTypeSchema).describe("id of the avatar decoration's SKU"),
+  sku_id: type('null').or(SnowflakeTypeSchema).describe("id of the avatar decoration's SKU"),
 }).configure({ ref: 'UserAvatarDecorationResponse' })
 
 export type UserAvatarDecorationResponse = typeof UserAvatarDecorationResponseSchema.infer
@@ -1162,7 +1162,7 @@ export const NameplatePaletteSchema = type(
 export type NameplatePalette = typeof NameplatePaletteSchema.infer
 
 export const UserNameplateResponseSchema = type({
-  sku_id: type('null | null').or(SnowflakeTypeSchema).describe('ID of the nameplate SKU'),
+  sku_id: type('null').or(SnowflakeTypeSchema).describe('ID of the nameplate SKU'),
   asset: type('string').describe('Path to the nameplate asset'),
   label: type('string').describe('The label of this nameplate. Currently unused'),
   palette: NameplatePaletteSchema.describe('Background color of the nameplate'),
@@ -1171,7 +1171,7 @@ export const UserNameplateResponseSchema = type({
 export type UserNameplateResponse = typeof UserNameplateResponseSchema.infer
 
 export const UserCollectiblesResponseSchema = type({
-  nameplate: type('null | null')
+  nameplate: type('null')
     .or(UserNameplateResponseSchema)
     .describe('Object mapping of nameplate data'),
 }).configure({ ref: 'UserCollectiblesResponse' })
@@ -1179,7 +1179,7 @@ export const UserCollectiblesResponseSchema = type({
 export type UserCollectiblesResponse = typeof UserCollectiblesResponseSchema.infer
 
 export const UserPrimaryGuildResponseSchema = type({
-  identity_guild_id: type('null | null')
+  identity_guild_id: type('null')
     .or(SnowflakeTypeSchema)
     .describe("the id of the user's primary guild"),
   identity_enabled: type('boolean | null').describe(
@@ -1211,13 +1211,13 @@ export const UserResponseSchema = type({
     "the user's banner color encoded as an integer representation of hexadecimal color code",
   ),
   global_name: type('string | null').describe("the user's display name, if it is set"),
-  'avatar_decoration_data?': type('null | null')
+  'avatar_decoration_data?': type('null')
     .or(UserAvatarDecorationResponseSchema)
     .describe("data for the user's avatar decoration"),
-  'collectibles?': type('null | null')
+  'collectibles?': type('null')
     .or(UserCollectiblesResponseSchema)
     .describe("data for the user's collectibles"),
-  primary_guild: type('null | null')
+  primary_guild: type('null')
     .or(UserPrimaryGuildResponseSchema)
     .describe("the user's primary guild"),
 }).configure({ ref: 'UserResponse' })
@@ -1452,7 +1452,7 @@ export const ApplicationResponseSchema = type({
   name: 'string',
   icon: 'string | null',
   description: 'string',
-  type: type('null | null').or(ApplicationTypesSchema),
+  type: type('null').or(ApplicationTypesSchema),
   'cover_image?': 'string',
   'primary_sku_id?': SnowflakeTypeSchema,
   flags: 'number.integer >= -2147483648 & number.integer <= 2147483647',
@@ -1658,7 +1658,7 @@ export type ApplicationCommandOptionIntegerChoice =
 
 export const InteractionApplicationCommandAutocompleteCallbackIntegerDataSchema = type({
   'choices?': type(
-    type(type(type('null | null').or(ApplicationCommandOptionIntegerChoiceSchema)).array()).and(
+    type(type(type('null').or(ApplicationCommandOptionIntegerChoiceSchema)).array()).and(
       type('unknown[] <= 25'),
     ),
   ).or('null'),
@@ -1686,7 +1686,7 @@ export type ApplicationCommandOptionNumberChoice =
 
 export const InteractionApplicationCommandAutocompleteCallbackNumberDataSchema = type({
   'choices?': type(
-    type(type(type('null | null').or(ApplicationCommandOptionNumberChoiceSchema)).array()).and(
+    type(type(type('null').or(ApplicationCommandOptionNumberChoiceSchema)).array()).and(
       type('unknown[] <= 25'),
     ),
   ).or('null'),
@@ -1716,7 +1716,7 @@ export type ApplicationCommandOptionStringChoice =
 
 export const InteractionApplicationCommandAutocompleteCallbackStringDataSchema = type({
   'choices?': type(
-    type(type(type('null | null').or(ApplicationCommandOptionStringChoiceSchema)).array()).and(
+    type(type(type('null').or(ApplicationCommandOptionStringChoiceSchema)).array()).and(
       type('unknown[] <= 25'),
     ),
   ).or('null'),
@@ -1854,8 +1854,8 @@ export const ApplicationCommandIntegerOptionSchema = type({
   'choices?': type(
     type(type(ApplicationCommandOptionIntegerChoiceSchema).array()).and(type('unknown[] <= 25')),
   ).or('null'),
-  'min_value?': type('null | null').or(Int53TypeSchema),
-  'max_value?': type('null | null').or(Int53TypeSchema),
+  'min_value?': type('null').or(Int53TypeSchema),
+  'max_value?': type('null').or(Int53TypeSchema),
 }).configure({ ref: 'ApplicationCommandIntegerOption' })
 
 export type ApplicationCommandIntegerOption = typeof ApplicationCommandIntegerOptionSchema.infer
@@ -2200,12 +2200,12 @@ export const ApplicationCommandCreateRequestSchema = type({
       .and(type('unknown[] >= 1'))
       .narrow((data: unknown[], ctx) => new Set(data).size === data.length),
   ).or('null'),
-  'handler?': type('null | null')
+  'handler?': type('null')
     .or(ApplicationCommandHandlerSchema)
     .describe(
       "Determines whether the interaction is handled by the app's interactions handler or by Discord",
     ),
-  'type?': type('null | null').or(ApplicationCommandTypeSchema),
+  'type?': type('null').or(ApplicationCommandTypeSchema),
 }).configure({ ref: 'ApplicationCommandCreateRequest' })
 
 export type ApplicationCommandCreateRequest = typeof ApplicationCommandCreateRequestSchema.infer
@@ -2387,7 +2387,7 @@ export const ApplicationCommandPatchRequestPartialSchema = type({
       .and(type('unknown[] >= 1'))
       .narrow((data: unknown[], ctx) => new Set(data).size === data.length),
   ).or('null'),
-  'handler?': type('null | null')
+  'handler?': type('null')
     .or(ApplicationCommandHandlerSchema)
     .describe(
       "Determines whether the interaction is handled by the app's interactions handler or by Discord",
@@ -2624,13 +2624,13 @@ export const ApplicationCommandUpdateRequestSchema = type({
       .and(type('unknown[] >= 1'))
       .narrow((data: unknown[], ctx) => new Set(data).size === data.length),
   ).or('null'),
-  'handler?': type('null | null')
+  'handler?': type('null')
     .or(ApplicationCommandHandlerSchema)
     .describe(
       "Determines whether the interaction is handled by the app's interactions handler or by Discord",
     ),
-  'type?': type('null | null').or(ApplicationCommandTypeSchema),
-  'id?': type('null | null').or(SnowflakeTypeSchema),
+  'type?': type('null').or(ApplicationCommandTypeSchema),
+  'id?': type('null').or(SnowflakeTypeSchema),
 }).configure({ ref: 'ApplicationCommandUpdateRequest' })
 
 export type ApplicationCommandUpdateRequest = typeof ApplicationCommandUpdateRequestSchema.infer
@@ -2666,7 +2666,7 @@ export const ApplicationOAuth2InstallParamsSchema = type({
 export type ApplicationOAuth2InstallParams = typeof ApplicationOAuth2InstallParamsSchema.infer
 
 export const ApplicationIntegrationTypeConfigurationSchema = type({
-  'oauth2_install_params?': type('null | null').or(ApplicationOAuth2InstallParamsSchema),
+  'oauth2_install_params?': type('null').or(ApplicationOAuth2InstallParamsSchema),
 }).configure({ ref: 'ApplicationIntegrationTypeConfiguration' })
 
 export type ApplicationIntegrationTypeConfiguration =
@@ -2689,17 +2689,17 @@ export const ApplicationFormPartialSchema = type({
   ).or('null'),
   'icon?': 'string | null',
   'cover_image?': 'string | null',
-  'team_id?': type('null | null').or(SnowflakeTypeSchema),
+  'team_id?': type('null').or(SnowflakeTypeSchema),
   'flags?': 'number.integer | null',
   'interactions_endpoint_url?': type(
     type('string.url').narrow(
       (data, ctx) => [...data].length <= 2048 || ctx.mustBe('at most 2048 characters'),
     ),
   ).or('null'),
-  'explicit_content_filter?': type('null | null').or(ApplicationExplicitContentFilterTypesSchema),
+  'explicit_content_filter?': type('null').or(ApplicationExplicitContentFilterTypesSchema),
   'max_participants?':
     'number.integer >= -2147483648 & number.integer <= 2147483647 & number.integer >= -1 | null',
-  'type?': type('null | null').or(ApplicationTypesSchema),
+  'type?': type('null').or(ApplicationTypesSchema),
   'tags?': type(
     type(
       type(
@@ -2716,16 +2716,16 @@ export const ApplicationFormPartialSchema = type({
       (data, ctx) => [...data].length <= 2048 || ctx.mustBe('at most 2048 characters'),
     ),
   ).or('null'),
-  'install_params?': type('null | null').or(ApplicationOAuth2InstallParamsSchema),
+  'install_params?': type('null').or(ApplicationOAuth2InstallParamsSchema),
   'role_connections_verification_url?': type(
     type('string.url').narrow(
       (data, ctx) => [...data].length <= 2048 || ctx.mustBe('at most 2048 characters'),
     ),
   ).or('null'),
   'integration_types_config?': type(
-    type({ '[string]': type('null | null').or(ApplicationIntegrationTypeConfigurationSchema) }),
+    type({ '[string]': type('null').or(ApplicationIntegrationTypeConfigurationSchema) }),
   ).or('null'),
-  'event_webhooks_status?': type('null | null').or(ApplicationEventWebhooksStatusSchema),
+  'event_webhooks_status?': type('null').or(ApplicationEventWebhooksStatusSchema),
   'event_webhooks_url?': type(
     type('string.url').narrow(
       (data, ctx) => [...data].length <= 2048 || ctx.mustBe('at most 2048 characters'),
@@ -2764,10 +2764,10 @@ export const WebhookTypesSchema = type(
 export type WebhookTypes = typeof WebhookTypesSchema.infer
 
 export const ApplicationIncomingWebhookResponseSchema = type({
-  application_id: type('null | null').or(SnowflakeTypeSchema),
+  application_id: type('null').or(SnowflakeTypeSchema),
   avatar: 'string | null',
-  channel_id: type('null | null').or(SnowflakeTypeSchema),
-  'guild_id?': type('null | null').or(SnowflakeTypeSchema),
+  channel_id: type('null').or(SnowflakeTypeSchema),
+  'guild_id?': type('null').or(SnowflakeTypeSchema),
   id: SnowflakeTypeSchema,
   name: 'string',
   type: WebhookTypesSchema,
@@ -3125,8 +3125,8 @@ export type AuditLogObjectChangeResponse = typeof AuditLogObjectChangeResponseSc
 export const AuditLogEntryResponseSchema = type({
   id: SnowflakeTypeSchema,
   action_type: AuditLogActionTypesSchema,
-  user_id: type('null | null').or(SnowflakeTypeSchema),
-  target_id: type('null | null').or(SnowflakeTypeSchema),
+  user_id: type('null').or(SnowflakeTypeSchema),
+  target_id: type('null').or(SnowflakeTypeSchema),
   'changes?': type(AuditLogObjectChangeResponseSchema).array(),
   'options?': type({ '[string]': 'string' }),
   'reason?': 'string',
@@ -3485,31 +3485,31 @@ export const RichEmbedSchema = type({
       (data, ctx) => [...data].length <= 4096 || ctx.mustBe('at most 4096 characters'),
     ),
   ).or('null'),
-  'author?': type('null | null').or(RichEmbedAuthorSchema),
-  'image?': type('null | null').or(RichEmbedImageSchema),
-  'thumbnail?': type('null | null').or(RichEmbedThumbnailSchema),
-  'footer?': type('null | null').or(RichEmbedFooterSchema),
+  'author?': type('null').or(RichEmbedAuthorSchema),
+  'image?': type('null').or(RichEmbedImageSchema),
+  'thumbnail?': type('null').or(RichEmbedThumbnailSchema),
+  'footer?': type('null').or(RichEmbedFooterSchema),
   'fields?': type(type(type(RichEmbedFieldSchema).array()).and(type('unknown[] <= 25'))).or('null'),
-  'provider?': type('null | null').or(RichEmbedProviderSchema),
-  'video?': type('null | null').or(RichEmbedVideoSchema),
-  'audio?': type('null | null').or(RichEmbedAudioSchema),
+  'provider?': type('null').or(RichEmbedProviderSchema),
+  'video?': type('null').or(RichEmbedVideoSchema),
+  'audio?': type('null').or(RichEmbedAudioSchema),
 }).configure({ ref: 'RichEmbed' })
 
 export type RichEmbed = typeof RichEmbedSchema.infer
 
 export const MessageAllowedMentionsRequestSchema = type({
   'parse?': type(
-    type(type(type('null | null').or(AllowedMentionTypesSchema)).array())
+    type(type(type('null').or(AllowedMentionTypesSchema)).array())
       .and(type('unknown[] <= 1521'))
       .narrow((data: unknown[], ctx) => new Set(data).size === data.length),
   ).or('null'),
   'users?': type(
-    type(type(type('null | null').or(SnowflakeTypeSchema)).array())
+    type(type(type('null').or(SnowflakeTypeSchema)).array())
       .and(type('unknown[] <= 100'))
       .narrow((data: unknown[], ctx) => new Set(data).size === data.length),
   ).or('null'),
   'roles?': type(
-    type(type(type('null | null').or(SnowflakeTypeSchema)).array())
+    type(type(type('null').or(SnowflakeTypeSchema)).array())
       .and(type('unknown[] <= 100'))
       .narrow((data: unknown[], ctx) => new Set(data).size === data.length),
   ).or('null'),
@@ -3622,7 +3622,7 @@ export const SeparatorComponentForMessageRequestSchema = type({
   type: MessageComponentTypesSchema,
   'id?':
     'number.integer >= -2147483648 & number.integer <= 2147483647 & number.integer >= 0 | null',
-  'spacing?': type('null | null').or(MessageComponentSeparatorSpacingSizeSchema),
+  'spacing?': type('null').or(MessageComponentSeparatorSpacingSizeSchema),
   'divider?': 'boolean | null',
 }).configure({ ref: 'SeparatorComponentForMessageRequest' })
 
@@ -3684,7 +3684,7 @@ export const MessageAttachmentRequestSchema = type({
 export type MessageAttachmentRequest = typeof MessageAttachmentRequestSchema.infer
 
 export const PollEmojiSchema = type({
-  'id?': type('null | null').or(SnowflakeTypeSchema).describe('The ID of the custom emoji'),
+  'id?': type('null').or(SnowflakeTypeSchema).describe('The ID of the custom emoji'),
   'name?': type(
     type('string').narrow(
       (data, ctx) => [...data].length <= 32 || ctx.mustBe('at most 32 characters'),
@@ -3705,13 +3705,13 @@ export const PollMediaSchema = type({
   )
     .or('null')
     .describe('The text of the field'),
-  'emoji?': type('null | null').or(PollEmojiSchema).describe('The emoji of the field'),
+  'emoji?': type('null').or(PollEmojiSchema).describe('The emoji of the field'),
 }).configure({ ref: 'PollMedia' })
 
 export type PollMedia = typeof PollMediaSchema.infer
 
 export const PollEmojiCreateRequestSchema = type({
-  'id?': type('null | null').or(SnowflakeTypeSchema).describe('The ID of the custom emoji'),
+  'id?': type('null').or(SnowflakeTypeSchema).describe('The ID of the custom emoji'),
   'name?': type(
     type('string').narrow(
       (data, ctx) => [...data].length <= 32 || ctx.mustBe('at most 32 characters'),
@@ -3732,7 +3732,7 @@ export const PollMediaCreateRequestSchema = type({
   )
     .or('null')
     .describe('The text of the field'),
-  'emoji?': type('null | null').or(PollEmojiCreateRequestSchema).describe('The emoji of the field'),
+  'emoji?': type('null').or(PollEmojiCreateRequestSchema).describe('The emoji of the field'),
 }).configure({ ref: 'PollMediaCreateRequest' })
 
 export type PollMediaCreateRequest = typeof PollMediaCreateRequestSchema.infer
@@ -3757,7 +3757,7 @@ export const PollCreateRequestSchema = type({
   'allow_multiselect?': type('boolean | null').describe(
     'Whether a user can select multiple answers',
   ),
-  'layout_type?': type('null | null')
+  'layout_type?': type('null')
     .or(PollLayoutTypesSchema)
     .describe('The layout type of the poll. Defaults to... DEFAULT!'),
   'duration?': type(
@@ -3792,7 +3792,7 @@ export const CustomClientThemeShareRequestSchema = type({
     'number.integer >= -2147483648 & number.integer <= 2147483647 & number.integer >= 0 & number.integer <= 360',
   base_mix:
     'number.integer >= -2147483648 & number.integer <= 2147483647 & number.integer >= 0 & number.integer <= 100',
-  'base_theme?': type('null | null').or(MessageShareCustomUserThemeBaseThemeSchema),
+  'base_theme?': type('null').or(MessageShareCustomUserThemeBaseThemeSchema),
 }).configure({ ref: 'CustomClientThemeShareRequest' })
 
 export type CustomClientThemeShareRequest = typeof CustomClientThemeShareRequestSchema.infer
@@ -3804,7 +3804,7 @@ export const BaseCreateMessageCreateRequestSchema = type({
     ),
   ).or('null'),
   'embeds?': type(type(type(RichEmbedSchema).array()).and(type('unknown[] <= 10'))).or('null'),
-  'allowed_mentions?': type('null | null').or(MessageAllowedMentionsRequestSchema),
+  'allowed_mentions?': type('null').or(MessageAllowedMentionsRequestSchema),
   'sticker_ids?': type(type(type(SnowflakeTypeSchema).array()).and(type('unknown[] <= 3'))).or(
     'null',
   ),
@@ -3831,8 +3831,8 @@ export const BaseCreateMessageCreateRequestSchema = type({
   'attachments?': type(
     type(type(MessageAttachmentRequestSchema).array()).and(type('unknown[] <= 10')),
   ).or('null'),
-  'poll?': type('null | null').or(PollCreateRequestSchema),
-  'shared_client_theme?': type('null | null').or(CustomClientThemeShareRequestSchema),
+  'poll?': type('null').or(PollCreateRequestSchema),
+  'shared_client_theme?': type('null').or(CustomClientThemeShareRequestSchema),
 }).configure({ ref: 'BaseCreateMessageCreateRequest' })
 
 export type BaseCreateMessageCreateRequest = typeof BaseCreateMessageCreateRequestSchema.infer
@@ -3842,7 +3842,7 @@ export const BasicApplicationResponseWithBotSchema = type({
   name: 'string',
   icon: 'string | null',
   description: 'string',
-  type: type('null | null').or(ApplicationTypesSchema),
+  type: type('null').or(ApplicationTypesSchema),
   'cover_image?': 'string',
   'primary_sku_id?': SnowflakeTypeSchema,
   flags: 'number.integer >= -2147483648 & number.integer <= 2147483647',
@@ -3854,7 +3854,7 @@ export type BasicApplicationResponseWithBot = typeof BasicApplicationResponseWit
 
 export const BasicGuildMemberResponseSchema = type({
   avatar: type('string | null').describe("the member's guild avatar hash"),
-  'avatar_decoration_data?': type('null | null')
+  'avatar_decoration_data?': type('null')
     .or(UserAvatarDecorationResponseSchema)
     .describe("data for the member's guild avatar decoration"),
   banner: type('string | null').describe("the member's guild banner hash"),
@@ -3888,7 +3888,7 @@ export const BasicGuildMemberResponseSchema = type({
     .array()
     .narrow((data: unknown[], ctx) => new Set(data).size === data.length)
     .describe('array of role object ids'),
-  'collectibles?': type('null | null')
+  'collectibles?': type('null')
     .or(UserCollectiblesResponseSchema)
     .describe("data for the member's collectibles"),
 }).configure({ ref: 'BasicGuildMemberResponse' })
@@ -4230,7 +4230,7 @@ export const GuildStickerResponseSchema = type({
   name: 'string',
   tags: 'string',
   type: StickerTypesSchema,
-  format_type: type('null | null').or(StickerFormatTypesSchema),
+  format_type: type('null').or(StickerFormatTypesSchema),
   description: 'string | null',
   available: 'boolean',
   guild_id: SnowflakeTypeSchema,
@@ -4244,7 +4244,7 @@ export const StandardStickerResponseSchema = type({
   name: 'string',
   tags: 'string',
   type: StickerTypesSchema,
-  format_type: type('null | null').or(StickerFormatTypesSchema),
+  format_type: type('null').or(StickerFormatTypesSchema),
   description: 'string | null',
   pack_id: SnowflakeTypeSchema,
   sort_value: 'number.integer >= -2147483648 & number.integer <= 2147483647',
@@ -4342,7 +4342,7 @@ export type ThreadMetadataResponse = typeof ThreadMetadataResponseSchema.infer
 
 export const GuildMemberResponseSchema = type({
   avatar: type('string | null').describe("the member's guild avatar hash"),
-  'avatar_decoration_data?': type('null | null')
+  'avatar_decoration_data?': type('null')
     .or(UserAvatarDecorationResponseSchema)
     .describe("data for the member's guild avatar decoration"),
   banner: type('string | null').describe("the member's guild banner hash"),
@@ -4376,7 +4376,7 @@ export const GuildMemberResponseSchema = type({
     .array()
     .narrow((data: unknown[], ctx) => new Set(data).size === data.length)
     .describe('array of role object ids'),
-  'collectibles?': type('null | null')
+  'collectibles?': type('null')
     .or(UserCollectiblesResponseSchema)
     .describe("data for the member's collectibles"),
   user: UserResponseSchema.describe('the user this guild member represents'),
@@ -4401,7 +4401,7 @@ export type ThreadMemberResponse = typeof ThreadMemberResponseSchema.infer
 export const ThreadResponseSchema = type({
   id: SnowflakeTypeSchema,
   type: ChannelTypesSchema,
-  'last_message_id?': type('null | null').or(SnowflakeTypeSchema),
+  'last_message_id?': type('null').or(SnowflakeTypeSchema),
   flags: 'number.integer >= -2147483648 & number.integer <= 2147483647',
   'last_pin_timestamp?': type(
     type(
@@ -4410,7 +4410,7 @@ export const ThreadResponseSchema = type({
   ).or('null'),
   guild_id: SnowflakeTypeSchema,
   name: 'string',
-  'parent_id?': type('null | null').or(SnowflakeTypeSchema),
+  'parent_id?': type('null').or(SnowflakeTypeSchema),
   'rate_limit_per_user?': 'number.integer >= -2147483648 & number.integer <= 2147483647',
   'bitrate?': 'number.integer >= -2147483648 & number.integer <= 2147483647',
   'user_limit?': 'number.integer >= -2147483648 & number.integer <= 2147483647',
@@ -4485,14 +4485,14 @@ export const ForumTagResponseSchema = type({
   id: SnowflakeTypeSchema,
   name: 'string',
   moderated: 'boolean',
-  emoji_id: type('null | null').or(SnowflakeTypeSchema),
+  emoji_id: type('null').or(SnowflakeTypeSchema),
   emoji_name: 'string | null',
 }).configure({ ref: 'ForumTagResponse' })
 
 export type ForumTagResponse = typeof ForumTagResponseSchema.infer
 
 export const DefaultReactionEmojiResponseSchema = type({
-  emoji_id: type('null | null').or(SnowflakeTypeSchema),
+  emoji_id: type('null').or(SnowflakeTypeSchema),
   emoji_name: 'string | null',
 }).configure({ ref: 'DefaultReactionEmojiResponse' })
 
@@ -4529,7 +4529,7 @@ export type ThreadSearchTagSetting = typeof ThreadSearchTagSettingSchema.infer
 export const GuildChannelResponseSchema = type({
   id: SnowflakeTypeSchema,
   type: ChannelTypesSchema,
-  'last_message_id?': type('null | null').or(SnowflakeTypeSchema),
+  'last_message_id?': type('null').or(SnowflakeTypeSchema),
   flags: 'number.integer >= -2147483648 & number.integer <= 2147483647',
   'last_pin_timestamp?': type(
     type(
@@ -4538,7 +4538,7 @@ export const GuildChannelResponseSchema = type({
   ).or('null'),
   guild_id: SnowflakeTypeSchema,
   name: 'string',
-  'parent_id?': type('null | null').or(SnowflakeTypeSchema),
+  'parent_id?': type('null').or(SnowflakeTypeSchema),
   'rate_limit_per_user?': 'number.integer >= -2147483648 & number.integer <= 2147483647',
   'bitrate?': 'number.integer >= -2147483648 & number.integer <= 2147483647',
   'user_limit?': 'number.integer >= -2147483648 & number.integer <= 2147483647',
@@ -4553,10 +4553,10 @@ export const GuildChannelResponseSchema = type({
   'permission_overwrites?': type(ChannelPermissionOverwriteResponseSchema).array(),
   'nsfw?': 'boolean',
   'available_tags?': type(ForumTagResponseSchema).array(),
-  'default_reaction_emoji?': type('null | null').or(DefaultReactionEmojiResponseSchema),
-  'default_sort_order?': type('null | null').or(ThreadSortOrderSchema),
+  'default_reaction_emoji?': type('null').or(DefaultReactionEmojiResponseSchema),
+  'default_sort_order?': type('null').or(ThreadSortOrderSchema),
   'default_forum_layout?': ForumLayoutSchema,
-  'default_tag_setting?': type('null | null').or(ThreadSearchTagSettingSchema),
+  'default_tag_setting?': type('null').or(ThreadSearchTagSettingSchema),
 }).configure({ ref: 'GuildChannelResponse' })
 
 export type GuildChannelResponse = typeof GuildChannelResponseSchema.infer
@@ -4564,7 +4564,7 @@ export type GuildChannelResponse = typeof GuildChannelResponseSchema.infer
 export const PrivateChannelResponseSchema = type({
   id: SnowflakeTypeSchema,
   type: ChannelTypesSchema,
-  'last_message_id?': type('null | null').or(SnowflakeTypeSchema),
+  'last_message_id?': type('null').or(SnowflakeTypeSchema),
   flags: 'number.integer >= -2147483648 & number.integer <= 2147483647',
   'last_pin_timestamp?': type(
     type(
@@ -4579,7 +4579,7 @@ export type PrivateChannelResponse = typeof PrivateChannelResponseSchema.infer
 export const PrivateGroupChannelResponseSchema = type({
   id: SnowflakeTypeSchema,
   type: ChannelTypesSchema,
-  'last_message_id?': type('null | null').or(SnowflakeTypeSchema),
+  'last_message_id?': type('null').or(SnowflakeTypeSchema),
   flags: 'number.integer >= -2147483648 & number.integer <= 2147483647',
   'last_pin_timestamp?': type(
     type(
@@ -4605,12 +4605,12 @@ export const GuildRoleColorsResponseSchema = type({
 export type GuildRoleColorsResponse = typeof GuildRoleColorsResponseSchema.infer
 
 export const GuildRoleTagsResponseSchema = type({
-  'premium_subscriber?': 'null | null',
+  'premium_subscriber?': 'null',
   'bot_id?': SnowflakeTypeSchema,
   'integration_id?': SnowflakeTypeSchema,
   'subscription_listing_id?': SnowflakeTypeSchema,
-  'available_for_purchase?': 'null | null',
-  'guild_connections?': 'null | null',
+  'available_for_purchase?': 'null',
+  'guild_connections?': 'null',
 }).configure({ ref: 'GuildRoleTagsResponse' })
 
 export type GuildRoleTagsResponse = typeof GuildRoleTagsResponseSchema.infer
@@ -4651,7 +4651,7 @@ export const ResolvedObjectsResponseSchema = type({
 export type ResolvedObjectsResponse = typeof ResolvedObjectsResponseSchema.infer
 
 export const MessageReactionEmojiResponseSchema = type({
-  id: type('null | null').or(SnowflakeTypeSchema),
+  id: type('null').or(SnowflakeTypeSchema),
   name: 'string | null',
   'animated?': 'boolean',
 }).configure({ ref: 'MessageReactionEmojiResponse' })
@@ -4847,10 +4847,10 @@ export const BasicMessageResponseSchema = type({
           (data >= -9223372036854775808n && data <= 9223372036854775807n) || ctx.mustBe('an int64'),
       )
       .narrow(
-        (data, ctx) => data >= -9223372036854776000n || ctx.mustBe('at least -9223372036854776000'),
+        (data, ctx) => data >= -9223372036854775808n || ctx.mustBe('at least -9223372036854775808'),
       )
       .narrow(
-        (data, ctx) => data <= 9223372036854776000n || ctx.mustBe('at most 9223372036854776000'),
+        (data, ctx) => data <= 9223372036854775808n || ctx.mustBe('at most 9223372036854775808'),
       ),
   ).or(
     type('string').narrow(
@@ -4891,7 +4891,7 @@ export type BlockMessageActionMetadata = typeof BlockMessageActionMetadataSchema
 
 export const BlockMessageActionSchema = type({
   type: AutomodActionTypeSchema,
-  'metadata?': type('null | null').or(BlockMessageActionMetadataSchema),
+  'metadata?': type('null').or(BlockMessageActionMetadataSchema),
 }).configure({ ref: 'BlockMessageAction' })
 
 export type BlockMessageAction = typeof BlockMessageActionSchema.infer
@@ -4966,7 +4966,7 @@ export const BulkLobbyMemberRequestSchema = type({
       ),
     }),
   ).or('null'),
-  'flags?': 'null | null | 1',
+  'flags?': 'null | 1',
   'additional_name?': type(
     type('string')
       .narrow((data, ctx) => [...data].length >= 1 || ctx.mustBe('at least 1 character'))
@@ -5024,10 +5024,10 @@ export const WebhookSourceChannelResponseSchema = type({
 export type WebhookSourceChannelResponse = typeof WebhookSourceChannelResponseSchema.infer
 
 export const ChannelFollowerWebhookResponseSchema = type({
-  application_id: type('null | null').or(SnowflakeTypeSchema),
+  application_id: type('null').or(SnowflakeTypeSchema),
   avatar: 'string | null',
-  channel_id: type('null | null').or(SnowflakeTypeSchema),
-  'guild_id?': type('null | null').or(SnowflakeTypeSchema),
+  channel_id: type('null').or(SnowflakeTypeSchema),
+  'guild_id?': type('null').or(SnowflakeTypeSchema),
   id: SnowflakeTypeSchema,
   name: 'string',
   type: WebhookTypesSchema,
@@ -5040,7 +5040,7 @@ export type ChannelFollowerWebhookResponse = typeof ChannelFollowerWebhookRespon
 
 export const ChannelPermissionOverwriteRequestSchema = type({
   id: SnowflakeTypeSchema,
-  'type?': type('null | null').or(ChannelPermissionOverwritesSchema),
+  'type?': type('null').or(ChannelPermissionOverwritesSchema),
   'allow?': 'number.integer | null',
   'deny?': 'number.integer | null',
 }).configure({ ref: 'ChannelPermissionOverwriteRequest' })
@@ -5164,9 +5164,35 @@ export const ConnectedAccountIntegrationResponseSchema = type({
 export type ConnectedAccountIntegrationResponse =
   typeof ConnectedAccountIntegrationResponseSchema.infer
 
-export const ConnectedAccountProvidersSchema = type(
-  "'battlenet' | 'bluesky' | 'bungie' | 'ebay' | 'epicgames' | 'facebook' | 'github' | 'instagram' | 'letterboxd' | 'mastodon' | 'leagueoflegends' | 'paypal' | 'playstation' | 'reddit' | 'riotgames' | 'roblox' | 'skype' | 'spotify' | 'steam' | 'tiktok' | 'twitch' | 'twitter' | 'xbox' | 'youtube' | 'domain'",
-).configure({ ref: 'ConnectedAccountProviders' })
+export const ConnectedAccountProvidersSchema = type
+  .enumerated(
+    'battlenet',
+    'bluesky',
+    'bungie',
+    'ebay',
+    'epicgames',
+    'facebook',
+    'github',
+    'instagram',
+    'letterboxd',
+    'mastodon',
+    'leagueoflegends',
+    'paypal',
+    'playstation',
+    'reddit',
+    'riotgames',
+    'roblox',
+    'skype',
+    'spotify',
+    'steam',
+    'tiktok',
+    'twitch',
+    'twitter',
+    'xbox',
+    'youtube',
+    'domain',
+  )
+  .configure({ ref: 'ConnectedAccountProviders' })
 
 export type ConnectedAccountProviders = typeof ConnectedAccountProvidersSchema.infer
 
@@ -5211,7 +5237,7 @@ export const CreateForumThreadRequestSchema = type({
   name: type('string')
     .narrow((data, ctx) => [...data].length >= 1 || ctx.mustBe('at least 1 character'))
     .narrow((data, ctx) => [...data].length <= 100 || ctx.mustBe('at most 100 characters')),
-  'auto_archive_duration?': type('null | null').or(ThreadAutoArchiveDurationSchema),
+  'auto_archive_duration?': type('null').or(ThreadAutoArchiveDurationSchema),
   'rate_limit_per_user?':
     'number.integer >= -2147483648 & number.integer <= 2147483647 & number.integer >= 0 & number.integer <= 21600 | null',
   'applied_tags?': type(type(type(SnowflakeTypeSchema).array()).and(type('unknown[] <= 5'))).or(
@@ -5229,7 +5255,7 @@ export const CreateGroupDMInviteRequestSchema = type({
 export type CreateGroupDMInviteRequest = typeof CreateGroupDMInviteRequestSchema.infer
 
 export const UpdateDefaultReactionEmojiRequestSchema = type({
-  'emoji_id?': type('null | null').or(SnowflakeTypeSchema),
+  'emoji_id?': type('null').or(SnowflakeTypeSchema),
   'emoji_name?': type(
     type('string').narrow(
       (data, ctx) => [...data].length <= 100 || ctx.mustBe('at most 100 characters'),
@@ -5243,7 +5269,7 @@ export const CreateOrUpdateThreadTagRequestSchema = type({
   name: type('string')
     .narrow((data, ctx) => [...data].length >= 0 || ctx.mustBe('at least 0 characters'))
     .narrow((data, ctx) => [...data].length <= 50 || ctx.mustBe('at most 50 characters')),
-  'emoji_id?': type('null | null').or(SnowflakeTypeSchema),
+  'emoji_id?': type('null').or(SnowflakeTypeSchema),
   'emoji_name?': type(
     type('string').narrow(
       (data, ctx) => [...data].length <= 100 || ctx.mustBe('at most 100 characters'),
@@ -5255,7 +5281,7 @@ export const CreateOrUpdateThreadTagRequestSchema = type({
 export type CreateOrUpdateThreadTagRequest = typeof CreateOrUpdateThreadTagRequestSchema.infer
 
 export const CreateGuildChannelRequestSchema = type({
-  'type?': type('null | null').or(ChannelTypesSchema),
+  'type?': type('null').or(ChannelTypesSchema),
   name: type('string')
     .narrow((data, ctx) => [...data].length >= 1 || ctx.mustBe('at least 1 character'))
     .narrow((data, ctx) => [...data].length <= 100 || ctx.mustBe('at most 100 characters')),
@@ -5272,20 +5298,20 @@ export const CreateGuildChannelRequestSchema = type({
     'number.integer >= -2147483648 & number.integer <= 2147483647 & number.integer >= 0 | null',
   'nsfw?': 'boolean | null',
   'rate_limit_per_user?': 'number.integer >= 0 & number.integer <= 21600 | null',
-  'parent_id?': type('null | null').or(SnowflakeTypeSchema),
+  'parent_id?': type('null').or(SnowflakeTypeSchema),
   'permission_overwrites?': type(
     type(type(ChannelPermissionOverwriteRequestSchema).array()).and(type('unknown[] <= 100')),
   ).or('null'),
   'rtc_region?': 'string | null',
-  'video_quality_mode?': type('null | null').or(VideoQualityModesSchema),
-  'default_auto_archive_duration?': type('null | null').or(ThreadAutoArchiveDurationSchema),
-  'default_reaction_emoji?': type('null | null').or(UpdateDefaultReactionEmojiRequestSchema),
+  'video_quality_mode?': type('null').or(VideoQualityModesSchema),
+  'default_auto_archive_duration?': type('null').or(ThreadAutoArchiveDurationSchema),
+  'default_reaction_emoji?': type('null').or(UpdateDefaultReactionEmojiRequestSchema),
   'default_thread_rate_limit_per_user?': 'number.integer >= 0 & number.integer <= 21600 | null',
-  'default_sort_order?': type('null | null').or(ThreadSortOrderSchema),
-  'default_forum_layout?': type('null | null').or(ForumLayoutSchema),
-  'default_tag_setting?': type('null | null').or(ThreadSearchTagSettingSchema),
+  'default_sort_order?': type('null').or(ThreadSortOrderSchema),
+  'default_forum_layout?': type('null').or(ForumLayoutSchema),
+  'default_tag_setting?': type('null').or(ThreadSearchTagSettingSchema),
   'available_tags?': type(
-    type(type(type('null | null').or(CreateOrUpdateThreadTagRequestSchema)).array()).and(
+    type(type(type('null').or(CreateOrUpdateThreadTagRequestSchema)).array()).and(
       type('unknown[] <= 20'),
     ),
   ).or('null'),
@@ -5302,16 +5328,16 @@ export const CreateGuildInviteRequestSchema = type({
   'temporary?': 'boolean | null',
   'max_uses?': 'number.integer >= 0 & number.integer <= 100 | null',
   'unique?': 'boolean | null',
-  'target_user_id?': type('null | null').or(SnowflakeTypeSchema),
-  'target_application_id?': type('null | null').or(SnowflakeTypeSchema),
-  'target_type?': type('null | null').or(InviteTargetTypesSchema),
+  'target_user_id?': type('null').or(SnowflakeTypeSchema),
+  'target_application_id?': type('null').or(SnowflakeTypeSchema),
+  'target_type?': type('null').or(InviteTargetTypesSchema),
   'role_ids?': type(
     type('string').or(
       type(type(SnowflakeTypeSchema).array())
         .and(type('unknown[] <= 250'))
         .narrow((data: unknown[], ctx) => new Set(data).size === data.length),
     ),
-  ).or('null | null'),
+  ).or('null'),
   'target_user_ids?': type(
     type('string').or(
       type(type(SnowflakeTypeSchema).array())
@@ -5319,7 +5345,7 @@ export const CreateGuildInviteRequestSchema = type({
         .narrow((data: unknown[], ctx) => new Set(data).size === data.length),
     ),
   )
-    .or('null | null')
+    .or('null')
     .describe('The IDs of the users to target with this invite.'),
 }).configure({ ref: 'CreateGuildInviteRequest' })
 
@@ -5332,7 +5358,7 @@ export const IncomingWebhookInteractionRequestSchema = type({
     ),
   ).or('null'),
   'embeds?': type(type(type(RichEmbedSchema).array()).and(type('unknown[] <= 10'))).or('null'),
-  'allowed_mentions?': type('null | null').or(MessageAllowedMentionsRequestSchema),
+  'allowed_mentions?': type('null').or(MessageAllowedMentionsRequestSchema),
   'components?': type(
     type(
       type(
@@ -5355,7 +5381,7 @@ export const IncomingWebhookInteractionRequestSchema = type({
   'attachments?': type(
     type(type(MessageAttachmentRequestSchema).array()).and(type('unknown[] <= 10')),
   ).or('null'),
-  'poll?': type('null | null').or(PollCreateRequestSchema),
+  'poll?': type('null').or(PollCreateRequestSchema),
   'tts?': 'boolean | null',
   'flags?': 'number.integer | null',
 }).configure({ ref: 'IncomingWebhookInteractionRequest' })
@@ -5364,7 +5390,7 @@ export type IncomingWebhookInteractionRequest = typeof IncomingWebhookInteractio
 
 export const CreateMessageInteractionCallbackRequestSchema = type({
   type: InteractionCallbackTypesSchema,
-  'data?': type('null | null').or(IncomingWebhookInteractionRequestSchema),
+  'data?': type('null').or(IncomingWebhookInteractionRequestSchema),
 }).configure({ ref: 'CreateMessageInteractionCallbackRequest' })
 
 export type CreateMessageInteractionCallbackRequest =
@@ -5442,10 +5468,10 @@ export const MessageResponseSchema = type({
           (data >= -9223372036854775808n && data <= 9223372036854775807n) || ctx.mustBe('an int64'),
       )
       .narrow(
-        (data, ctx) => data >= -9223372036854776000n || ctx.mustBe('at least -9223372036854776000'),
+        (data, ctx) => data >= -9223372036854775808n || ctx.mustBe('at least -9223372036854775808'),
       )
       .narrow(
-        (data, ctx) => data <= 9223372036854776000n || ctx.mustBe('at most 9223372036854776000'),
+        (data, ctx) => data <= 9223372036854775808n || ctx.mustBe('at most 9223372036854775808'),
       ),
   ).or(
     type('string').narrow(
@@ -5471,7 +5497,7 @@ export const MessageResponseSchema = type({
   'lobby_member?': MessageLobbyMemberResponseSchema,
   'actor?': UserResponseSchema,
   'reactions?': type(MessageReactionResponseSchema).array(),
-  'referenced_message?': type('null | null').or(BasicMessageResponseSchema),
+  'referenced_message?': type('null').or(BasicMessageResponseSchema),
 }).configure({ ref: 'MessageResponse' })
 
 export type MessageResponse = typeof MessageResponseSchema.infer
@@ -5485,7 +5511,7 @@ export type CreateMessageInteractionCallbackResponse =
   typeof CreateMessageInteractionCallbackResponseSchema.infer
 
 export const CreatePrivateChannelRequestSchema = type({
-  'recipient_id?': type('null | null').or(SnowflakeTypeSchema),
+  'recipient_id?': type('null').or(SnowflakeTypeSchema),
   'access_tokens?': type(
     type(
       type(
@@ -5526,7 +5552,7 @@ export const CreateRoleRequestSchema = type({
   ).or('null'),
   'permissions?': 'number.integer | null',
   'color?': 'number.integer >= 0 & number.integer <= 16777215 | null',
-  'colors?': type('null | null').or(RoleColorsSchema),
+  'colors?': type('null').or(RoleColorsSchema),
   'hoist?': 'boolean | null',
   'mentionable?': 'boolean | null',
   'icon?': 'string | null',
@@ -5543,7 +5569,7 @@ export const CreateTextThreadWithMessageRequestSchema = type({
   name: type('string')
     .narrow((data, ctx) => [...data].length >= 1 || ctx.mustBe('at least 1 character'))
     .narrow((data, ctx) => [...data].length <= 100 || ctx.mustBe('at most 100 characters')),
-  'auto_archive_duration?': type('null | null').or(ThreadAutoArchiveDurationSchema),
+  'auto_archive_duration?': type('null').or(ThreadAutoArchiveDurationSchema),
   'rate_limit_per_user?':
     'number.integer >= -2147483648 & number.integer <= 2147483647 & number.integer >= 0 & number.integer <= 21600 | null',
 }).configure({ ref: 'CreateTextThreadWithMessageRequest' })
@@ -5555,10 +5581,10 @@ export const CreateTextThreadWithoutMessageRequestSchema = type({
   name: type('string')
     .narrow((data, ctx) => [...data].length >= 1 || ctx.mustBe('at least 1 character'))
     .narrow((data, ctx) => [...data].length <= 100 || ctx.mustBe('at most 100 characters')),
-  'auto_archive_duration?': type('null | null').or(ThreadAutoArchiveDurationSchema),
+  'auto_archive_duration?': type('null').or(ThreadAutoArchiveDurationSchema),
   'rate_limit_per_user?':
     'number.integer >= -2147483648 & number.integer <= 2147483647 & number.integer >= 0 & number.integer <= 21600 | null',
-  'type?': type('null | null').or(ChannelTypesSchema),
+  'type?': type('null').or(ChannelTypesSchema),
   'invitable?': 'boolean | null',
 }).configure({ ref: 'CreateTextThreadWithoutMessageRequest' })
 
@@ -5568,7 +5594,7 @@ export type CreateTextThreadWithoutMessageRequest =
 export const CreatedThreadResponseSchema = type({
   id: SnowflakeTypeSchema,
   type: ChannelTypesSchema,
-  'last_message_id?': type('null | null').or(SnowflakeTypeSchema),
+  'last_message_id?': type('null').or(SnowflakeTypeSchema),
   flags: 'number.integer >= -2147483648 & number.integer <= 2147483647',
   'last_pin_timestamp?': type(
     type(
@@ -5577,7 +5603,7 @@ export const CreatedThreadResponseSchema = type({
   ).or('null'),
   guild_id: SnowflakeTypeSchema,
   name: 'string',
-  'parent_id?': type('null | null').or(SnowflakeTypeSchema),
+  'parent_id?': type('null').or(SnowflakeTypeSchema),
   'rate_limit_per_user?': 'number.integer >= -2147483648 & number.integer <= 2147483647',
   'bitrate?': 'number.integer >= -2147483648 & number.integer <= 2147483647',
   'user_limit?': 'number.integer >= -2147483648 & number.integer <= 2147483647',
@@ -5645,7 +5671,7 @@ export type QuarantineUserActionMetadata = typeof QuarantineUserActionMetadataSc
 
 export const QuarantineUserActionSchema = type({
   type: AutomodActionTypeSchema,
-  'metadata?': type('null | null').or(QuarantineUserActionMetadataSchema),
+  'metadata?': type('null').or(QuarantineUserActionMetadataSchema),
 }).configure({ ref: 'QuarantineUserAction' })
 
 export type QuarantineUserAction = typeof QuarantineUserActionSchema.infer
@@ -5805,7 +5831,7 @@ export const IntegrationApplicationResponseSchema = type({
   name: 'string',
   icon: 'string | null',
   description: 'string',
-  type: type('null | null').or(ApplicationTypesSchema),
+  type: type('null').or(ApplicationTypesSchema),
   'cover_image?': 'string',
   'primary_sku_id?': SnowflakeTypeSchema,
   flags: 'number.integer >= -2147483648 & number.integer <= 2147483647',
@@ -5894,7 +5920,7 @@ export const EntitlementResponseSchema = type({
   sku_id: SnowflakeTypeSchema,
   application_id: SnowflakeTypeSchema,
   user_id: SnowflakeTypeSchema,
-  'guild_id?': type('null | null').or(SnowflakeTypeSchema),
+  'guild_id?': type('null').or(SnowflakeTypeSchema),
   deleted: 'boolean',
   starts_at: type(
     type(
@@ -5912,10 +5938,10 @@ export const EntitlementResponseSchema = type({
       /^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z|([+-](?:[01]\d|2[0-3]):[0-5]\d)))$/,
     ),
   ).or('null'),
-  'fulfillment_status?': type('null | null').or(EntitlementTenantFulfillmentStatusResponseSchema),
+  'fulfillment_status?': type('null').or(EntitlementTenantFulfillmentStatusResponseSchema),
   'consumed?': 'boolean',
-  'gifter_user_id?': type('null | null').or(SnowflakeTypeSchema),
-  'parent_id?': type('null | null').or(SnowflakeTypeSchema),
+  'gifter_user_id?': type('null').or(SnowflakeTypeSchema),
+  'parent_id?': type('null').or(SnowflakeTypeSchema),
 }).configure({ ref: 'EntitlementResponse' })
 
 export type EntitlementResponse = typeof EntitlementResponseSchema.infer
@@ -5989,7 +6015,7 @@ export const ExternalConnectionIntegrationResponseSchema = type({
   'synced_at?': type(
     /^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z|([+-](?:[01]\d|2[0-3]):[0-5]\d)))$/,
   ),
-  'role_id?': type('null | null').or(SnowflakeTypeSchema),
+  'role_id?': type('null').or(SnowflakeTypeSchema),
   'syncing?': 'boolean',
   'enable_emoticons?': 'boolean',
 }).configure({ ref: 'ExternalConnectionIntegrationResponse' })
@@ -6098,8 +6124,8 @@ export const ExternalScheduledEventCreateRequestSchema = type({
   ).or('null'),
   privacy_level: GuildScheduledEventPrivacyLevelsSchema,
   entity_type: GuildScheduledEventEntityTypesSchema,
-  'channel_id?': type('null | null').or(SnowflakeTypeSchema),
-  'recurrence_rule?': type('null | null')
+  'channel_id?': type('null').or(SnowflakeTypeSchema),
+  'recurrence_rule?': type('null')
     .or(RecurrenceRuleSchema)
     .describe('Recurrence rule for the scheduled event'),
   entity_metadata: EntityMetadataExternalSchema,
@@ -6115,7 +6141,7 @@ export const GuildScheduledEventStatusesSchema = type('1 | 2 | 3 | 4').configure
 export type GuildScheduledEventStatuses = typeof GuildScheduledEventStatusesSchema.infer
 
 export const ExternalScheduledEventPatchRequestPartialSchema = type({
-  'status?': type('null | null').or(GuildScheduledEventStatusesSchema),
+  'status?': type('null').or(GuildScheduledEventStatusesSchema),
   'name?': type('string').narrow(
     (data, ctx) => [...data].length <= 100 || ctx.mustBe('at most 100 characters'),
   ),
@@ -6133,10 +6159,10 @@ export const ExternalScheduledEventPatchRequestPartialSchema = type({
       /^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z|([+-](?:[01]\d|2[0-3]):[0-5]\d)))$/,
     ),
   ).or('null'),
-  'entity_type?': type('null | null').or(GuildScheduledEventEntityTypesSchema),
+  'entity_type?': type('null').or(GuildScheduledEventEntityTypesSchema),
   'privacy_level?': GuildScheduledEventPrivacyLevelsSchema,
-  'channel_id?': type('null | null').or(SnowflakeTypeSchema),
-  'recurrence_rule?': type('null | null')
+  'channel_id?': type('null').or(SnowflakeTypeSchema),
+  'recurrence_rule?': type('null')
     .or(RecurrenceRuleSchema)
     .describe('Recurrence rule for the scheduled event'),
   'entity_metadata?': EntityMetadataExternalSchema,
@@ -6208,7 +6234,7 @@ export type GuildScheduledEventUserResponses = typeof GuildScheduledEventUserRes
 
 export const ScheduledEventUserResponseSchema = type({
   guild_scheduled_event_id: SnowflakeTypeSchema.describe('ID of the scheduled event'),
-  'guild_scheduled_event_exception_id?': type('null | null')
+  'guild_scheduled_event_exception_id?': type('null')
     .or(SnowflakeTypeSchema)
     .describe('ID of the scheduled event exception'),
   user_id: SnowflakeTypeSchema.describe('ID of the user'),
@@ -6247,12 +6273,12 @@ export const ExternalScheduledEventResponseSchema = type({
   guild_id: SnowflakeTypeSchema.describe('ID of the guild the scheduled event belongs to'),
   name: type('string').describe('Name of the scheduled event'),
   description: type('string | null').describe('Description of the scheduled event'),
-  channel_id: type('null | null')
+  channel_id: type('null')
     .or(SnowflakeTypeSchema)
     .describe(
       'Channel ID in which the scheduled event will be hosted, or null if entity type is EXTERNAL',
     ),
-  creator_id: type('null | null')
+  creator_id: type('null')
     .or(SnowflakeTypeSchema)
     .describe('ID of the user that created the scheduled event'),
   'creator?': UserResponseSchema.describe('User that created the scheduled event'),
@@ -6271,10 +6297,10 @@ export const ExternalScheduledEventResponseSchema = type({
   entity_type: GuildScheduledEventEntityTypesSchema.describe(
     'Type of hosting entity associated with the scheduled event',
   ),
-  entity_id: type('null | null')
+  entity_id: type('null')
     .or(SnowflakeTypeSchema)
     .describe('ID of the hosting entity associated with the scheduled event'),
-  recurrence_rule: type('null | null')
+  recurrence_rule: type('null')
     .or(RecurrenceRuleResponseSchema)
     .describe('Recurrence rule for the scheduled event, or null if not recurring'),
   'user_count?': type('number.integer >= -2147483648 & number.integer <= 2147483647').describe(
@@ -6283,7 +6309,7 @@ export const ExternalScheduledEventResponseSchema = type({
   privacy_level: GuildScheduledEventPrivacyLevelsSchema.describe(
     'Privacy level of the scheduled event',
   ),
-  'user_rsvp?': type('null | null').or(ScheduledEventUserResponseSchema),
+  'user_rsvp?': type('null').or(ScheduledEventUserResponseSchema),
   guild_scheduled_event_exceptions: type(GuildScheduledEventExceptionResponseSchema).array(),
   entity_metadata: EntityMetadataExternalResponseSchema,
 }).configure({ ref: 'ExternalScheduledEventResponse' })
@@ -6353,7 +6379,7 @@ export const FriendInviteResponseSchema = type({
     ),
   ).or('null'),
   'friends_count?': 'number.integer >= -2147483648 & number.integer <= 2147483647',
-  channel: type('null | null').or(InviteChannelResponseSchema),
+  channel: type('null').or(InviteChannelResponseSchema),
   'is_contact?': 'boolean',
   'uses?': 'number.integer >= -2147483648 & number.integer <= 2147483647',
   'max_uses?': 'number.integer >= -2147483648 & number.integer <= 2147483647',
@@ -6468,7 +6494,7 @@ export const GithubCheckRunSchema = type({
       (data, ctx) => [...data].length <= 2048 || ctx.mustBe('at most 2048 characters'),
     ),
   ).or('null'),
-  'output?': type('null | null').or(GithubCheckRunOutputSchema),
+  'output?': type('null').or(GithubCheckRunOutputSchema),
   'pull_requests?': type(
     type(type(GithubCheckPullRequestSchema).array()).and(type('unknown[] <= 1521')),
   ).or('null'),
@@ -6628,15 +6654,15 @@ export const GithubWebhookSchema = type({
       (data, ctx) => [...data].length <= 152133 || ctx.mustBe('at most 152133 characters'),
     ),
   ).or('null'),
-  'comment?': type('null | null').or(GithubCommentSchema),
-  'issue?': type('null | null').or(GithubIssueSchema),
-  'pull_request?': type('null | null').or(GithubIssueSchema),
-  'repository?': type('null | null').or(GithubRepositorySchema),
-  'forkee?': type('null | null').or(GithubRepositorySchema),
+  'comment?': type('null').or(GithubCommentSchema),
+  'issue?': type('null').or(GithubIssueSchema),
+  'pull_request?': type('null').or(GithubIssueSchema),
+  'repository?': type('null').or(GithubRepositorySchema),
+  'forkee?': type('null').or(GithubRepositorySchema),
   sender: GithubUserSchema,
-  'member?': type('null | null').or(GithubUserSchema),
-  'release?': type('null | null').or(GithubReleaseSchema),
-  'head_commit?': type('null | null').or(GithubCommitSchema),
+  'member?': type('null').or(GithubUserSchema),
+  'release?': type('null').or(GithubReleaseSchema),
+  'head_commit?': type('null').or(GithubCommitSchema),
   'commits?': type(type(type(GithubCommitSchema).array()).and(type('unknown[] <= 1521'))).or(
     'null',
   ),
@@ -6646,11 +6672,11 @@ export const GithubWebhookSchema = type({
       (data, ctx) => [...data].length <= 2048 || ctx.mustBe('at most 2048 characters'),
     ),
   ).or('null'),
-  'review?': type('null | null').or(GithubReviewSchema),
-  'check_run?': type('null | null').or(GithubCheckRunSchema),
-  'check_suite?': type('null | null').or(GithubCheckSuiteSchema),
-  'discussion?': type('null | null').or(GithubDiscussionSchema),
-  'answer?': type('null | null').or(GithubCommentSchema),
+  'review?': type('null').or(GithubReviewSchema),
+  'check_run?': type('null').or(GithubCheckRunSchema),
+  'check_suite?': type('null').or(GithubCheckSuiteSchema),
+  'discussion?': type('null').or(GithubDiscussionSchema),
+  'answer?': type('null').or(GithubCommentSchema),
 }).configure({ ref: 'GithubWebhook' })
 
 export type GithubWebhook = typeof GithubWebhookSchema.infer
@@ -6706,10 +6732,10 @@ export type PartialGuildSubscriptionIntegrationResponse =
   typeof PartialGuildSubscriptionIntegrationResponseSchema.infer
 
 export const GuildIncomingWebhookResponseSchema = type({
-  application_id: type('null | null').or(SnowflakeTypeSchema),
+  application_id: type('null').or(SnowflakeTypeSchema),
   avatar: 'string | null',
-  channel_id: type('null | null').or(SnowflakeTypeSchema),
-  'guild_id?': type('null | null').or(SnowflakeTypeSchema),
+  channel_id: type('null').or(SnowflakeTypeSchema),
+  'guild_id?': type('null').or(SnowflakeTypeSchema),
   id: SnowflakeTypeSchema,
   name: 'string',
   type: WebhookTypesSchema,
@@ -6725,12 +6751,12 @@ export const StageScheduledEventResponseSchema = type({
   guild_id: SnowflakeTypeSchema.describe('ID of the guild the scheduled event belongs to'),
   name: type('string').describe('Name of the scheduled event'),
   description: type('string | null').describe('Description of the scheduled event'),
-  channel_id: type('null | null')
+  channel_id: type('null')
     .or(SnowflakeTypeSchema)
     .describe(
       'Channel ID in which the scheduled event will be hosted, or null if entity type is EXTERNAL',
     ),
-  creator_id: type('null | null')
+  creator_id: type('null')
     .or(SnowflakeTypeSchema)
     .describe('ID of the user that created the scheduled event'),
   'creator?': UserResponseSchema.describe('User that created the scheduled event'),
@@ -6749,10 +6775,10 @@ export const StageScheduledEventResponseSchema = type({
   entity_type: GuildScheduledEventEntityTypesSchema.describe(
     'Type of hosting entity associated with the scheduled event',
   ),
-  entity_id: type('null | null')
+  entity_id: type('null')
     .or(SnowflakeTypeSchema)
     .describe('ID of the hosting entity associated with the scheduled event'),
-  recurrence_rule: type('null | null')
+  recurrence_rule: type('null')
     .or(RecurrenceRuleResponseSchema)
     .describe('Recurrence rule for the scheduled event, or null if not recurring'),
   'user_count?': type('number.integer >= -2147483648 & number.integer <= 2147483647').describe(
@@ -6761,9 +6787,9 @@ export const StageScheduledEventResponseSchema = type({
   privacy_level: GuildScheduledEventPrivacyLevelsSchema.describe(
     'Privacy level of the scheduled event',
   ),
-  'user_rsvp?': type('null | null').or(ScheduledEventUserResponseSchema),
+  'user_rsvp?': type('null').or(ScheduledEventUserResponseSchema),
   guild_scheduled_event_exceptions: type(GuildScheduledEventExceptionResponseSchema).array(),
-  entity_metadata: type('null | null').or(EntityMetadataStageInstanceResponseSchema),
+  entity_metadata: type('null').or(EntityMetadataStageInstanceResponseSchema),
 }).configure({ ref: 'StageScheduledEventResponse' })
 
 export type StageScheduledEventResponse = typeof StageScheduledEventResponseSchema.infer
@@ -6773,12 +6799,12 @@ export const VoiceScheduledEventResponseSchema = type({
   guild_id: SnowflakeTypeSchema.describe('ID of the guild the scheduled event belongs to'),
   name: type('string').describe('Name of the scheduled event'),
   description: type('string | null').describe('Description of the scheduled event'),
-  channel_id: type('null | null')
+  channel_id: type('null')
     .or(SnowflakeTypeSchema)
     .describe(
       'Channel ID in which the scheduled event will be hosted, or null if entity type is EXTERNAL',
     ),
-  creator_id: type('null | null')
+  creator_id: type('null')
     .or(SnowflakeTypeSchema)
     .describe('ID of the user that created the scheduled event'),
   'creator?': UserResponseSchema.describe('User that created the scheduled event'),
@@ -6797,10 +6823,10 @@ export const VoiceScheduledEventResponseSchema = type({
   entity_type: GuildScheduledEventEntityTypesSchema.describe(
     'Type of hosting entity associated with the scheduled event',
   ),
-  entity_id: type('null | null')
+  entity_id: type('null')
     .or(SnowflakeTypeSchema)
     .describe('ID of the hosting entity associated with the scheduled event'),
-  recurrence_rule: type('null | null')
+  recurrence_rule: type('null')
     .or(RecurrenceRuleResponseSchema)
     .describe('Recurrence rule for the scheduled event, or null if not recurring'),
   'user_count?': type('number.integer >= -2147483648 & number.integer <= 2147483647').describe(
@@ -6809,9 +6835,9 @@ export const VoiceScheduledEventResponseSchema = type({
   privacy_level: GuildScheduledEventPrivacyLevelsSchema.describe(
     'Privacy level of the scheduled event',
   ),
-  'user_rsvp?': type('null | null').or(ScheduledEventUserResponseSchema),
+  'user_rsvp?': type('null').or(ScheduledEventUserResponseSchema),
   guild_scheduled_event_exceptions: type(GuildScheduledEventExceptionResponseSchema).array(),
-  entity_metadata: type('null | null').or(EntityMetadataVoiceResponseSchema),
+  entity_metadata: type('null').or(EntityMetadataVoiceResponseSchema),
 }).configure({ ref: 'VoiceScheduledEventResponse' })
 
 export type VoiceScheduledEventResponse = typeof VoiceScheduledEventResponseSchema.infer
@@ -6981,7 +7007,7 @@ export const GuildAuditLogResponseSchema = type({
           ),
         ).or(MentionSpamRuleResponseSchema),
       ).or(UserProfileRuleResponseSchema),
-    ).or('null | null'),
+    ).or('null'),
   ).array(),
 }).configure({ ref: 'GuildAuditLogResponse' })
 
@@ -7164,7 +7190,7 @@ export const NewMemberActionTypeSchema = type('0 | 1').configure({ ref: 'NewMemb
 export type NewMemberActionType = typeof NewMemberActionTypeSchema.infer
 
 export const SettingsEmojiResponseSchema = type({
-  id: type('null | null').or(SnowflakeTypeSchema),
+  id: type('null').or(SnowflakeTypeSchema),
   name: 'string | null',
   animated: 'boolean',
 }).configure({ ref: 'SettingsEmojiResponse' })
@@ -7270,9 +7296,9 @@ export const InviteGuildResponseSchema = type({
   features: type(GuildFeaturesSchema)
     .array()
     .narrow((data: unknown[], ctx) => new Set(data).size === data.length),
-  verification_level: type('null | null').or(VerificationLevelsSchema),
+  verification_level: type('null').or(VerificationLevelsSchema),
   vanity_url_code: 'string | null',
-  nsfw_level: type('null | null').or(GuildNSFWContentLevelSchema),
+  nsfw_level: type('null').or(GuildNSFWContentLevelSchema),
   nsfw: 'boolean | null',
   premium_subscription_count: 'number.integer >= -2147483648 & number.integer <= 2147483647',
 }).configure({ ref: 'InviteGuildResponse' })
@@ -7284,7 +7310,7 @@ export const InviteApplicationResponseSchema = type({
   name: 'string',
   icon: 'string | null',
   description: 'string',
-  type: type('null | null').or(ApplicationTypesSchema),
+  type: type('null').or(ApplicationTypesSchema),
   'cover_image?': 'string',
   'primary_sku_id?': SnowflakeTypeSchema,
   flags: 'number.integer >= -2147483648 & number.integer <= 2147483647',
@@ -7316,12 +7342,12 @@ export const ScheduledEventResponseSchema = type({
   guild_id: SnowflakeTypeSchema.describe('ID of the guild the scheduled event belongs to'),
   name: type('string').describe('Name of the scheduled event'),
   description: type('string | null').describe('Description of the scheduled event'),
-  channel_id: type('null | null')
+  channel_id: type('null')
     .or(SnowflakeTypeSchema)
     .describe(
       'Channel ID in which the scheduled event will be hosted, or null if entity type is EXTERNAL',
     ),
-  creator_id: type('null | null')
+  creator_id: type('null')
     .or(SnowflakeTypeSchema)
     .describe('ID of the user that created the scheduled event'),
   'creator?': UserResponseSchema.describe('User that created the scheduled event'),
@@ -7340,10 +7366,10 @@ export const ScheduledEventResponseSchema = type({
   entity_type: GuildScheduledEventEntityTypesSchema.describe(
     'Type of hosting entity associated with the scheduled event',
   ),
-  entity_id: type('null | null')
+  entity_id: type('null')
     .or(SnowflakeTypeSchema)
     .describe('ID of the hosting entity associated with the scheduled event'),
-  recurrence_rule: type('null | null')
+  recurrence_rule: type('null')
     .or(RecurrenceRuleResponseSchema)
     .describe('Recurrence rule for the scheduled event, or null if not recurring'),
   'user_count?': type('number.integer >= -2147483648 & number.integer <= 2147483647').describe(
@@ -7352,7 +7378,7 @@ export const ScheduledEventResponseSchema = type({
   privacy_level: GuildScheduledEventPrivacyLevelsSchema.describe(
     'Privacy level of the scheduled event',
   ),
-  'user_rsvp?': type('null | null').or(ScheduledEventUserResponseSchema),
+  'user_rsvp?': type('null').or(ScheduledEventUserResponseSchema),
   guild_scheduled_event_exceptions: type(GuildScheduledEventExceptionResponseSchema).array(),
 }).configure({ ref: 'ScheduledEventResponse' })
 
@@ -7489,13 +7515,13 @@ export const GuildJoinRequestResponseSchema = type({
       /^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z|([+-](?:[01]\d|2[0-3]):[0-5]\d)))$/,
     ),
   ).or('null'),
-  application_status: type('null | null').or(GuildJoinRequestApplicationStatusSchema),
+  application_status: type('null').or(GuildJoinRequestApplicationStatusSchema),
   rejection_reason: type('string | null').describe(
     'Reason request was rejected. Only set when application_status is REJECTED',
   ),
   guild_id: SnowflakeTypeSchema,
   user_id: SnowflakeTypeSchema,
-  'user?': type('null | null').or(UserResponseSchema),
+  'user?': type('null').or(UserResponseSchema),
   'form_responses?': type(
     type(
       type(
@@ -7507,7 +7533,7 @@ export const GuildJoinRequestResponseSchema = type({
   )
     .or('null')
     .describe("Applicant's responses on join request form"),
-  'actioned_by_user?': type('null | null').or(UserResponseSchema),
+  'actioned_by_user?': type('null').or(UserResponseSchema),
 }).configure({ ref: 'GuildJoinRequestResponse' })
 
 export type GuildJoinRequestResponse = typeof GuildJoinRequestResponseSchema.infer
@@ -7603,13 +7629,13 @@ export const GuildPatchRequestPartialSchema = type({
   ).or('null'),
   'region?': 'string | null',
   'icon?': 'string | null',
-  'verification_level?': type('null | null').or(VerificationLevelsSchema),
-  'default_message_notifications?': type('null | null').or(UserNotificationSettingsSchema),
-  'explicit_content_filter?': type('null | null').or(GuildExplicitContentFilterTypesSchema),
-  'preferred_locale?': type('null | null').or(AvailableLocalesEnumSchema),
-  'afk_timeout?': type('null | null').or(AfkTimeoutsSchema),
-  'afk_channel_id?': type('null | null').or(SnowflakeTypeSchema),
-  'system_channel_id?': type('null | null').or(SnowflakeTypeSchema),
+  'verification_level?': type('null').or(VerificationLevelsSchema),
+  'default_message_notifications?': type('null').or(UserNotificationSettingsSchema),
+  'explicit_content_filter?': type('null').or(GuildExplicitContentFilterTypesSchema),
+  'preferred_locale?': type('null').or(AvailableLocalesEnumSchema),
+  'afk_timeout?': type('null').or(AfkTimeoutsSchema),
+  'afk_channel_id?': type('null').or(SnowflakeTypeSchema),
+  'system_channel_id?': type('null').or(SnowflakeTypeSchema),
   'splash?': 'string | null',
   'banner?': 'string | null',
   'system_channel_flags?': 'number.integer | null',
@@ -7628,9 +7654,9 @@ export const GuildPatchRequestPartialSchema = type({
   ).or('null'),
   'discovery_splash?': 'string | null',
   'home_header?': 'string | null',
-  'rules_channel_id?': type('null | null').or(SnowflakeTypeSchema),
-  'safety_alerts_channel_id?': type('null | null').or(SnowflakeTypeSchema),
-  'public_updates_channel_id?': type('null | null').or(SnowflakeTypeSchema),
+  'rules_channel_id?': type('null').or(SnowflakeTypeSchema),
+  'safety_alerts_channel_id?': type('null').or(SnowflakeTypeSchema),
+  'public_updates_channel_id?': type('null').or(SnowflakeTypeSchema),
   'premium_progress_bar_enabled?': 'boolean | null',
 }).configure({ ref: 'GuildPatchRequestPartial' })
 
@@ -7686,14 +7712,14 @@ export const GuildResponseSchema = type({
     .narrow((data: unknown[], ctx) => new Set(data).size === data.length),
   banner: 'string | null',
   owner_id: SnowflakeTypeSchema,
-  application_id: type('null | null').or(SnowflakeTypeSchema),
+  application_id: type('null').or(SnowflakeTypeSchema),
   region: 'string',
-  afk_channel_id: type('null | null').or(SnowflakeTypeSchema),
+  afk_channel_id: type('null').or(SnowflakeTypeSchema),
   afk_timeout: AfkTimeoutsSchema,
-  system_channel_id: type('null | null').or(SnowflakeTypeSchema),
+  system_channel_id: type('null').or(SnowflakeTypeSchema),
   system_channel_flags: 'number.integer >= -2147483648 & number.integer <= 2147483647',
   widget_enabled: 'boolean',
-  widget_channel_id: type('null | null').or(SnowflakeTypeSchema),
+  widget_channel_id: type('null').or(SnowflakeTypeSchema),
   verification_level: VerificationLevelsSchema,
   roles: type(GuildRoleResponseSchema).array(),
   default_message_notifications: UserNotificationSettingsSchema,
@@ -7707,9 +7733,9 @@ export const GuildResponseSchema = type({
   premium_tier: PremiumGuildTiersSchema,
   premium_subscription_count: 'number.integer >= -2147483648 & number.integer <= 2147483647',
   preferred_locale: AvailableLocalesEnumSchema,
-  rules_channel_id: type('null | null').or(SnowflakeTypeSchema),
-  safety_alerts_channel_id: type('null | null').or(SnowflakeTypeSchema),
-  public_updates_channel_id: type('null | null').or(SnowflakeTypeSchema),
+  rules_channel_id: type('null').or(SnowflakeTypeSchema),
+  safety_alerts_channel_id: type('null').or(SnowflakeTypeSchema),
+  public_updates_channel_id: type('null').or(SnowflakeTypeSchema),
   premium_progress_bar_enabled: 'boolean',
   'premium_progress_bar_enabled_user_updated_at?': type(
     type(
@@ -7720,7 +7746,7 @@ export const GuildResponseSchema = type({
   nsfw_level: GuildNSFWContentLevelSchema,
   emojis: type(EmojiResponseSchema).array(),
   stickers: type(GuildStickerResponseSchema).array(),
-  incidents_data: type('null | null').or(GuildIncidentsDataResponseSchema),
+  incidents_data: type('null').or(GuildIncidentsDataResponseSchema),
 }).configure({ ref: 'GuildResponse' })
 
 export type GuildResponse = typeof GuildResponseSchema.infer
@@ -7823,10 +7849,10 @@ export const SearchMessageResponseSchema = type({
           (data >= -9223372036854775808n && data <= 9223372036854775807n) || ctx.mustBe('an int64'),
       )
       .narrow(
-        (data, ctx) => data >= -9223372036854776000n || ctx.mustBe('at least -9223372036854776000'),
+        (data, ctx) => data >= -9223372036854775808n || ctx.mustBe('at least -9223372036854775808'),
       )
       .narrow(
-        (data, ctx) => data <= 9223372036854776000n || ctx.mustBe('at most 9223372036854776000'),
+        (data, ctx) => data <= 9223372036854775808n || ctx.mustBe('at most 9223372036854775808'),
       ),
   ).or(
     type('string').narrow(
@@ -7852,7 +7878,7 @@ export const SearchMessageResponseSchema = type({
   'lobby_member?': MessageLobbyMemberResponseSchema,
   'actor?': UserResponseSchema,
   'reactions?': type(MessageReactionResponseSchema).array(),
-  'referenced_message?': type('null | null').or(BasicMessageResponseSchema),
+  'referenced_message?': type('null').or(BasicMessageResponseSchema),
   hit: 'boolean',
   'restriction_count?': 'number.integer >= -2147483648 & number.integer <= 2147483647',
   'author_restriction_count?': 'number.integer >= -2147483648 & number.integer <= 2147483647',
@@ -7888,7 +7914,7 @@ export type GuildSubscriptionIntegrationResponse =
 export const GuildTemplateChannelTagsSchema = type({
   id: 'number.integer >= -2147483648 & number.integer <= 2147483647 | null',
   name: 'string',
-  emoji_id: type('null | null').or(SnowflakeTypeSchema),
+  emoji_id: type('null').or(SnowflakeTypeSchema),
   emoji_name: 'string | null',
   moderated: 'boolean | null',
 }).configure({ ref: 'GuildTemplateChannelTags' })
@@ -7905,17 +7931,17 @@ export const GuildTemplateChannelResponseSchema = type({
   user_limit: 'number.integer >= -2147483648 & number.integer <= 2147483647',
   nsfw: 'boolean',
   rate_limit_per_user: 'number.integer >= -2147483648 & number.integer <= 2147483647',
-  parent_id: type('null | null').or(SnowflakeTypeSchema),
-  default_auto_archive_duration: type('null | null').or(ThreadAutoArchiveDurationSchema),
+  parent_id: type('null').or(SnowflakeTypeSchema),
+  default_auto_archive_duration: type('null').or(ThreadAutoArchiveDurationSchema),
   permission_overwrites: type(ChannelPermissionOverwriteResponseSchema).array(),
   available_tags: type(type(GuildTemplateChannelTagsSchema).array()).or('null'),
   template: 'string',
-  default_reaction_emoji: type('null | null').or(DefaultReactionEmojiResponseSchema),
+  default_reaction_emoji: type('null').or(DefaultReactionEmojiResponseSchema),
   default_thread_rate_limit_per_user:
     'number.integer >= -2147483648 & number.integer <= 2147483647 | null',
-  default_sort_order: type('null | null').or(ThreadSortOrderSchema),
-  default_forum_layout: type('null | null').or(ForumLayoutSchema),
-  default_tag_setting: type('null | null').or(ThreadSearchTagSettingSchema),
+  default_sort_order: type('null').or(ThreadSortOrderSchema),
+  default_forum_layout: type('null').or(ForumLayoutSchema),
+  default_tag_setting: type('null').or(ThreadSearchTagSettingSchema),
   theme_color: 'number.integer >= -2147483648 & number.integer <= 2147483647 | null',
 }).configure({ ref: 'GuildTemplateChannelResponse' })
 
@@ -7934,7 +7960,7 @@ export const GuildTemplateRoleResponseSchema = type({
   name: 'string',
   permissions: 'string',
   color: 'number.integer >= -2147483648 & number.integer <= 2147483647',
-  colors: type('null | null').or(GuildTemplateRoleColorsResponseSchema),
+  colors: type('null').or(GuildTemplateRoleColorsResponseSchema),
   hoist: 'boolean',
   mentionable: 'boolean',
   icon: 'string | null',
@@ -7951,9 +7977,9 @@ export const GuildTemplateSnapshotResponseSchema = type({
   default_message_notifications: UserNotificationSettingsSchema,
   explicit_content_filter: GuildExplicitContentFilterTypesSchema,
   preferred_locale: AvailableLocalesEnumSchema,
-  afk_channel_id: type('null | null').or(SnowflakeTypeSchema),
+  afk_channel_id: type('null').or(SnowflakeTypeSchema),
   afk_timeout: AfkTimeoutsSchema,
-  system_channel_id: type('null | null').or(SnowflakeTypeSchema),
+  system_channel_id: type('null').or(SnowflakeTypeSchema),
   system_channel_flags: 'number.integer >= -2147483648 & number.integer <= 2147483647',
   roles: type(GuildTemplateRoleResponseSchema).array(),
   channels: type(GuildTemplateChannelResponseSchema).array(),
@@ -7967,7 +7993,7 @@ export const GuildTemplateResponseSchema = type({
   description: 'string | null',
   usage_count: 'number.integer >= -2147483648 & number.integer <= 2147483647',
   creator_id: SnowflakeTypeSchema,
-  creator: type('null | null').or(UserResponseSchema),
+  creator: type('null').or(UserResponseSchema),
   created_at: type(
     /^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z|([+-](?:[01]\d|2[0-3]):[0-5]\d)))$/,
   ),
@@ -7986,7 +8012,7 @@ export const GuildWelcomeChannelSchema = type({
   description: type('string')
     .narrow((data, ctx) => [...data].length >= 1 || ctx.mustBe('at least 1 character'))
     .narrow((data, ctx) => [...data].length <= 50 || ctx.mustBe('at most 50 characters')),
-  'emoji_id?': type('null | null').or(SnowflakeTypeSchema),
+  'emoji_id?': type('null').or(SnowflakeTypeSchema),
   'emoji_name?': type(
     type('string').narrow(
       (data, ctx) => [...data].length <= 152133 || ctx.mustBe('at most 152133 characters'),
@@ -7999,7 +8025,7 @@ export type GuildWelcomeChannel = typeof GuildWelcomeChannelSchema.infer
 export const GuildWelcomeScreenChannelResponseSchema = type({
   channel_id: SnowflakeTypeSchema,
   description: 'string',
-  emoji_id: type('null | null').or(SnowflakeTypeSchema),
+  emoji_id: type('null').or(SnowflakeTypeSchema),
   emoji_name: 'string | null',
 }).configure({ ref: 'GuildWelcomeScreenChannelResponse' })
 
@@ -8025,14 +8051,14 @@ export const GuildWithCountsResponseSchema = type({
     .narrow((data: unknown[], ctx) => new Set(data).size === data.length),
   banner: 'string | null',
   owner_id: SnowflakeTypeSchema,
-  application_id: type('null | null').or(SnowflakeTypeSchema),
+  application_id: type('null').or(SnowflakeTypeSchema),
   region: 'string',
-  afk_channel_id: type('null | null').or(SnowflakeTypeSchema),
+  afk_channel_id: type('null').or(SnowflakeTypeSchema),
   afk_timeout: AfkTimeoutsSchema,
-  system_channel_id: type('null | null').or(SnowflakeTypeSchema),
+  system_channel_id: type('null').or(SnowflakeTypeSchema),
   system_channel_flags: 'number.integer >= -2147483648 & number.integer <= 2147483647',
   widget_enabled: 'boolean',
-  widget_channel_id: type('null | null').or(SnowflakeTypeSchema),
+  widget_channel_id: type('null').or(SnowflakeTypeSchema),
   verification_level: VerificationLevelsSchema,
   roles: type(GuildRoleResponseSchema).array(),
   default_message_notifications: UserNotificationSettingsSchema,
@@ -8046,9 +8072,9 @@ export const GuildWithCountsResponseSchema = type({
   premium_tier: PremiumGuildTiersSchema,
   premium_subscription_count: 'number.integer >= -2147483648 & number.integer <= 2147483647',
   preferred_locale: AvailableLocalesEnumSchema,
-  rules_channel_id: type('null | null').or(SnowflakeTypeSchema),
-  safety_alerts_channel_id: type('null | null').or(SnowflakeTypeSchema),
-  public_updates_channel_id: type('null | null').or(SnowflakeTypeSchema),
+  rules_channel_id: type('null').or(SnowflakeTypeSchema),
+  safety_alerts_channel_id: type('null').or(SnowflakeTypeSchema),
+  public_updates_channel_id: type('null').or(SnowflakeTypeSchema),
   premium_progress_bar_enabled: 'boolean',
   'premium_progress_bar_enabled_user_updated_at?': type(
     type(
@@ -8059,7 +8085,7 @@ export const GuildWithCountsResponseSchema = type({
   nsfw_level: GuildNSFWContentLevelSchema,
   emojis: type(EmojiResponseSchema).array(),
   stickers: type(GuildStickerResponseSchema).array(),
-  incidents_data: type('null | null').or(GuildIncidentsDataResponseSchema),
+  incidents_data: type('null').or(GuildIncidentsDataResponseSchema),
   'approximate_member_count?':
     'number.integer >= -2147483648 & number.integer <= 2147483647 | null',
   'approximate_presence_count?':
@@ -8068,9 +8094,28 @@ export const GuildWithCountsResponseSchema = type({
 
 export type GuildWithCountsResponse = typeof GuildWithCountsResponseSchema.infer
 
-export const HasOptionSchema = type(
-  "'link' | 'embed' | 'file' | 'image' | 'video' | 'sound' | 'sticker' | 'poll' | 'snapshot' | '-link' | '-embed' | '-file' | '-image' | '-video' | '-sound' | '-sticker' | '-poll' | '-snapshot'",
-).configure({ ref: 'HasOption' })
+export const HasOptionSchema = type
+  .enumerated(
+    'link',
+    'embed',
+    'file',
+    'image',
+    'video',
+    'sound',
+    'sticker',
+    'poll',
+    'snapshot',
+    '-link',
+    '-embed',
+    '-file',
+    '-image',
+    '-video',
+    '-sound',
+    '-sticker',
+    '-poll',
+    '-snapshot',
+  )
+  .configure({ ref: 'HasOption' })
 
 export type HasOption = typeof HasOptionSchema.infer
 
@@ -8081,7 +8126,7 @@ export const IncomingWebhookRequestPartialSchema = type({
     ),
   ).or('null'),
   'embeds?': type(type(type(RichEmbedSchema).array()).and(type('unknown[] <= 10'))).or('null'),
-  'allowed_mentions?': type('null | null').or(MessageAllowedMentionsRequestSchema),
+  'allowed_mentions?': type('null').or(MessageAllowedMentionsRequestSchema),
   'components?': type(
     type(
       type(
@@ -8104,7 +8149,7 @@ export const IncomingWebhookRequestPartialSchema = type({
   'attachments?': type(
     type(type(MessageAttachmentRequestSchema).array()).and(type('unknown[] <= 10')),
   ).or('null'),
-  'poll?': type('null | null').or(PollCreateRequestSchema),
+  'poll?': type('null').or(PollCreateRequestSchema),
   'tts?': 'boolean | null',
   'flags?': 'number.integer | null',
   'username?': type(
@@ -8136,7 +8181,7 @@ export const IncomingWebhookUpdateForInteractionCallbackRequestPartialSchema = t
     ),
   ).or('null'),
   'embeds?': type(type(type(RichEmbedSchema).array()).and(type('unknown[] <= 10'))).or('null'),
-  'allowed_mentions?': type('null | null').or(MessageAllowedMentionsRequestSchema),
+  'allowed_mentions?': type('null').or(MessageAllowedMentionsRequestSchema),
   'components?': type(
     type(
       type(
@@ -8172,7 +8217,7 @@ export const IncomingWebhookUpdateRequestPartialSchema = type({
     ),
   ).or('null'),
   'embeds?': type(type(type(RichEmbedSchema).array()).and(type('unknown[] <= 10'))).or('null'),
-  'allowed_mentions?': type('null | null').or(MessageAllowedMentionsRequestSchema),
+  'allowed_mentions?': type('null').or(MessageAllowedMentionsRequestSchema),
   'components?': type(
     type(
       type(
@@ -8195,7 +8240,7 @@ export const IncomingWebhookUpdateRequestPartialSchema = type({
   'attachments?': type(
     type(type(MessageAttachmentRequestSchema).array()).and(type('unknown[] <= 10')),
   ).or('null'),
-  'poll?': type('null | null').or(PollCreateRequestSchema),
+  'poll?': type('null').or(PollCreateRequestSchema),
   'flags?': 'number.integer | null',
 }).configure({ ref: 'IncomingWebhookUpdateRequestPartial' })
 
@@ -8302,7 +8347,7 @@ export const KeywordUpsertRequestSchema = type({
       .narrow((data: unknown[], ctx) => new Set(data).size === data.length),
   ).or('null'),
   trigger_type: AutomodTriggerTypeSchema,
-  'trigger_metadata?': type('null | null').or(KeywordTriggerMetadataSchema),
+  'trigger_metadata?': type('null').or(KeywordTriggerMetadataSchema),
 }).configure({ ref: 'KeywordUpsertRequest' })
 
 export type KeywordUpsertRequest = typeof KeywordUpsertRequestSchema.infer
@@ -8335,7 +8380,7 @@ export const KeywordUpsertRequestPartialSchema = type({
       .narrow((data: unknown[], ctx) => new Set(data).size === data.length),
   ).or('null'),
   'trigger_type?': AutomodTriggerTypeSchema,
-  'trigger_metadata?': type('null | null').or(KeywordTriggerMetadataSchema),
+  'trigger_metadata?': type('null').or(KeywordTriggerMetadataSchema),
 }).configure({ ref: 'KeywordUpsertRequestPartial' })
 
 export type KeywordUpsertRequestPartial = typeof KeywordUpsertRequestPartialSchema.infer
@@ -8519,7 +8564,7 @@ export const SoundboardSoundResponseSchema = type({
   name: 'string',
   sound_id: SnowflakeTypeSchema,
   volume: 'number',
-  emoji_id: type('null | null').or(SnowflakeTypeSchema),
+  emoji_id: type('null').or(SnowflakeTypeSchema),
   emoji_name: 'string | null',
   'guild_id?': SnowflakeTypeSchema,
   available: 'boolean',
@@ -8549,7 +8594,7 @@ export const LobbyMemberRequestSchema = type({
       ),
     }),
   ).or('null'),
-  'flags?': 'null | null | 1',
+  'flags?': 'null | 1',
   'additional_name?': type(
     type('string')
       .narrow((data, ctx) => [...data].length >= 1 || ctx.mustBe('at least 1 character'))
@@ -8628,7 +8673,7 @@ export const MLSpamUpsertRequestSchema = type({
       .narrow((data: unknown[], ctx) => new Set(data).size === data.length),
   ).or('null'),
   trigger_type: AutomodTriggerTypeSchema,
-  'trigger_metadata?': type('null | null').or(MLSpamTriggerMetadataSchema),
+  'trigger_metadata?': type('null').or(MLSpamTriggerMetadataSchema),
 }).configure({ ref: 'MLSpamUpsertRequest' })
 
 export type MLSpamUpsertRequest = typeof MLSpamUpsertRequestSchema.infer
@@ -8661,7 +8706,7 @@ export const MLSpamUpsertRequestPartialSchema = type({
       .narrow((data: unknown[], ctx) => new Set(data).size === data.length),
   ).or('null'),
   'trigger_type?': AutomodTriggerTypeSchema,
-  'trigger_metadata?': type('null | null').or(MLSpamTriggerMetadataSchema),
+  'trigger_metadata?': type('null').or(MLSpamTriggerMetadataSchema),
 }).configure({ ref: 'MLSpamUpsertRequestPartial' })
 
 export type MLSpamUpsertRequestPartial = typeof MLSpamUpsertRequestPartialSchema.infer
@@ -8701,7 +8746,7 @@ export const MentionSpamUpsertRequestSchema = type({
       .narrow((data: unknown[], ctx) => new Set(data).size === data.length),
   ).or('null'),
   trigger_type: AutomodTriggerTypeSchema,
-  'trigger_metadata?': type('null | null').or(MentionSpamTriggerMetadataSchema),
+  'trigger_metadata?': type('null').or(MentionSpamTriggerMetadataSchema),
 }).configure({ ref: 'MentionSpamUpsertRequest' })
 
 export type MentionSpamUpsertRequest = typeof MentionSpamUpsertRequestSchema.infer
@@ -8734,17 +8779,17 @@ export const MentionSpamUpsertRequestPartialSchema = type({
       .narrow((data: unknown[], ctx) => new Set(data).size === data.length),
   ).or('null'),
   'trigger_type?': AutomodTriggerTypeSchema,
-  'trigger_metadata?': type('null | null').or(MentionSpamTriggerMetadataSchema),
+  'trigger_metadata?': type('null').or(MentionSpamTriggerMetadataSchema),
 }).configure({ ref: 'MentionSpamUpsertRequestPartial' })
 
 export type MentionSpamUpsertRequestPartial = typeof MentionSpamUpsertRequestPartialSchema.infer
 
 export const MessageReferenceRequestSchema = type({
-  'guild_id?': type('null | null').or(SnowflakeTypeSchema),
-  'channel_id?': type('null | null').or(SnowflakeTypeSchema),
+  'guild_id?': type('null').or(SnowflakeTypeSchema),
+  'channel_id?': type('null').or(SnowflakeTypeSchema),
   message_id: SnowflakeTypeSchema,
   'fail_if_not_exists?': 'boolean | null',
-  'type?': type('null | null').or(MessageReferenceTypeSchema),
+  'type?': type('null').or(MessageReferenceTypeSchema),
 }).configure({ ref: 'MessageReferenceRequest' })
 
 export type MessageReferenceRequest = typeof MessageReferenceRequestSchema.infer
@@ -8756,7 +8801,7 @@ export const MessageCreateRequestSchema = type({
     ),
   ).or('null'),
   'embeds?': type(type(type(RichEmbedSchema).array()).and(type('unknown[] <= 10'))).or('null'),
-  'allowed_mentions?': type('null | null').or(MessageAllowedMentionsRequestSchema),
+  'allowed_mentions?': type('null').or(MessageAllowedMentionsRequestSchema),
   'sticker_ids?': type(type(type(SnowflakeTypeSchema).array()).and(type('unknown[] <= 3'))).or(
     'null',
   ),
@@ -8783,9 +8828,9 @@ export const MessageCreateRequestSchema = type({
   'attachments?': type(
     type(type(MessageAttachmentRequestSchema).array()).and(type('unknown[] <= 10')),
   ).or('null'),
-  'poll?': type('null | null').or(PollCreateRequestSchema),
-  'shared_client_theme?': type('null | null').or(CustomClientThemeShareRequestSchema),
-  'message_reference?': type('null | null').or(MessageReferenceRequestSchema),
+  'poll?': type('null').or(PollCreateRequestSchema),
+  'shared_client_theme?': type('null').or(CustomClientThemeShareRequestSchema),
+  'message_reference?': type('null').or(MessageReferenceRequestSchema),
   'nonce?': type(
     type(
       type('bigint | number.integer')
@@ -8798,17 +8843,17 @@ export const MessageCreateRequestSchema = type({
         )
         .narrow(
           (data, ctx) =>
-            data >= -9223372036854776000n || ctx.mustBe('at least -9223372036854776000'),
+            data >= -9223372036854775808n || ctx.mustBe('at least -9223372036854775808'),
         )
         .narrow(
-          (data, ctx) => data <= 9223372036854776000n || ctx.mustBe('at most 9223372036854776000'),
+          (data, ctx) => data <= 9223372036854775808n || ctx.mustBe('at most 9223372036854775808'),
         ),
     ).or(
       type('string').narrow(
         (data, ctx) => [...data].length <= 25 || ctx.mustBe('at most 25 characters'),
       ),
     ),
-  ).or('null | null'),
+  ).or('null'),
   'enforce_nonce?': 'boolean | null',
   'tts?': 'boolean | null',
 }).configure({ ref: 'MessageCreateRequest' })
@@ -8823,7 +8868,7 @@ export const MessageEditRequestPartialSchema = type({
   ).or('null'),
   'embeds?': type(type(type(RichEmbedSchema).array()).and(type('unknown[] <= 10'))).or('null'),
   'flags?': 'number.integer | null',
-  'allowed_mentions?': type('null | null').or(MessageAllowedMentionsRequestSchema),
+  'allowed_mentions?': type('null').or(MessageAllowedMentionsRequestSchema),
   'sticker_ids?': type(type(type(SnowflakeTypeSchema).array()).and(type('unknown[] <= 1521'))).or(
     'null',
   ),
@@ -8953,7 +8998,7 @@ export type OAuth2GetOpenIDConnectUserInfoResponse =
   typeof OAuth2GetOpenIDConnectUserInfoResponseSchema.infer
 
 export const OnboardingPromptOptionRequestSchema = type({
-  'id?': type('null | null').or(SnowflakeTypeSchema),
+  'id?': type('null').or(SnowflakeTypeSchema),
   title: type('string')
     .narrow((data, ctx) => [...data].length >= 1 || ctx.mustBe('at least 1 character'))
     .narrow((data, ctx) => [...data].length <= 50 || ctx.mustBe('at most 50 characters')),
@@ -8962,7 +9007,7 @@ export const OnboardingPromptOptionRequestSchema = type({
       (data, ctx) => [...data].length <= 100 || ctx.mustBe('at most 100 characters'),
     ),
   ).or('null'),
-  'emoji_id?': type('null | null').or(SnowflakeTypeSchema),
+  'emoji_id?': type('null').or(SnowflakeTypeSchema),
   'emoji_name?': type(
     type('string').narrow(
       (data, ctx) => [...data].length <= 100 || ctx.mustBe('at most 100 characters'),
@@ -9080,7 +9125,7 @@ export const PrivateApplicationResponseSchema = type({
   name: 'string',
   icon: 'string | null',
   description: 'string',
-  type: type('null | null').or(ApplicationTypesSchema),
+  type: type('null').or(ApplicationTypesSchema),
   'cover_image?': 'string',
   'primary_sku_id?': SnowflakeTypeSchema,
   flags: 'number.integer >= -2147483648 & number.integer <= 2147483647',
@@ -9117,7 +9162,7 @@ export const PrivateApplicationResponseSchema = type({
     .array()
     .narrow((data: unknown[], ctx) => new Set(data).size === data.length),
   explicit_content_filter: ApplicationExplicitContentFilterTypesSchema,
-  team: type('null | null').or(TeamResponseSchema),
+  team: type('null').or(TeamResponseSchema),
   eligible_oauth2_scopes: type(OAuth2ScopesSchema).array(),
 }).configure({ ref: 'PrivateApplicationResponse' })
 
@@ -9125,7 +9170,7 @@ export type PrivateApplicationResponse = typeof PrivateApplicationResponseSchema
 
 export const PrivateGuildMemberResponseSchema = type({
   avatar: type('string | null').describe("the member's guild avatar hash"),
-  'avatar_decoration_data?': type('null | null')
+  'avatar_decoration_data?': type('null')
     .or(UserAvatarDecorationResponseSchema)
     .describe("data for the member's guild avatar decoration"),
   banner: type('string | null').describe("the member's guild banner hash"),
@@ -9159,7 +9204,7 @@ export const PrivateGuildMemberResponseSchema = type({
     .array()
     .narrow((data: unknown[], ctx) => new Set(data).size === data.length)
     .describe('array of role object ids'),
-  'collectibles?': type('null | null')
+  'collectibles?': type('null')
     .or(UserCollectiblesResponseSchema)
     .describe("data for the member's collectibles"),
   user: UserResponseSchema.describe('the user this guild member represents'),
@@ -9192,7 +9237,7 @@ export const PruneGuildRequestSchema = type({
         .and(type('unknown[] <= 100'))
         .narrow((data: unknown[], ctx) => new Set(data).size === data.length),
     ),
-  ).or('null | null'),
+  ).or('null'),
 }).configure({ ref: 'PruneGuildRequest' })
 
 export type PruneGuildRequest = typeof PruneGuildRequestSchema.infer
@@ -9210,7 +9255,7 @@ export const SDKMessageRequestSchema = type({
     ),
   ).or('null'),
   'embeds?': type(type(type(RichEmbedSchema).array()).and(type('unknown[] <= 10'))).or('null'),
-  'allowed_mentions?': type('null | null').or(MessageAllowedMentionsRequestSchema),
+  'allowed_mentions?': type('null').or(MessageAllowedMentionsRequestSchema),
   'sticker_ids?': type(type(type(SnowflakeTypeSchema).array()).and(type('unknown[] <= 3'))).or(
     'null',
   ),
@@ -9237,9 +9282,9 @@ export const SDKMessageRequestSchema = type({
   'attachments?': type(
     type(type(MessageAttachmentRequestSchema).array()).and(type('unknown[] <= 10')),
   ).or('null'),
-  'poll?': type('null | null').or(PollCreateRequestSchema),
-  'shared_client_theme?': type('null | null').or(CustomClientThemeShareRequestSchema),
-  'message_reference?': type('null | null').or(MessageReferenceRequestSchema),
+  'poll?': type('null').or(PollCreateRequestSchema),
+  'shared_client_theme?': type('null').or(CustomClientThemeShareRequestSchema),
+  'message_reference?': type('null').or(MessageReferenceRequestSchema),
   'nonce?': type(
     type(
       type('bigint | number.integer')
@@ -9252,17 +9297,17 @@ export const SDKMessageRequestSchema = type({
         )
         .narrow(
           (data, ctx) =>
-            data >= -9223372036854776000n || ctx.mustBe('at least -9223372036854776000'),
+            data >= -9223372036854775808n || ctx.mustBe('at least -9223372036854775808'),
         )
         .narrow(
-          (data, ctx) => data <= 9223372036854776000n || ctx.mustBe('at most 9223372036854776000'),
+          (data, ctx) => data <= 9223372036854775808n || ctx.mustBe('at most 9223372036854775808'),
         ),
     ).or(
       type('string').narrow(
         (data, ctx) => [...data].length <= 25 || ctx.mustBe('at most 25 characters'),
       ),
     ),
-  ).or('null | null'),
+  ).or('null'),
   'enforce_nonce?': 'boolean | null',
   'tts?': 'boolean | null',
 }).configure({ ref: 'SDKMessageRequest' })
@@ -9415,7 +9460,7 @@ export type SlackWebhook = typeof SlackWebhookSchema.infer
 
 export const SocialLayerSKUPurchaseEligibilityCallbackDataSchema = type({
   eligible: 'boolean',
-  'ineligible_reason?': type('null | null').or(SKUIneligibilityReasonSchema),
+  'ineligible_reason?': type('null').or(SKUIneligibilityReasonSchema),
   'ineligible_reason_description?': type(
     type('string').narrow(
       (data, ctx) => [...data].length <= 255 || ctx.mustBe('at most 255 characters'),
@@ -9447,7 +9492,7 @@ export const SoundboardCreateRequestSchema = type({
     .narrow((data, ctx) => [...data].length >= 2 || ctx.mustBe('at least 2 characters'))
     .narrow((data, ctx) => [...data].length <= 32 || ctx.mustBe('at most 32 characters')),
   'volume?': 'number >= 0 & number <= 1 | null',
-  'emoji_id?': type('null | null').or(SnowflakeTypeSchema),
+  'emoji_id?': type('null').or(SnowflakeTypeSchema),
   'emoji_name?': type(
     type('string')
       .narrow((data, ctx) => [...data].length >= 1 || ctx.mustBe('at least 1 character'))
@@ -9463,7 +9508,7 @@ export const SoundboardPatchRequestPartialSchema = type({
     .narrow((data, ctx) => [...data].length >= 2 || ctx.mustBe('at least 2 characters'))
     .narrow((data, ctx) => [...data].length <= 32 || ctx.mustBe('at most 32 characters')),
   'volume?': 'number >= 0 & number <= 1 | null',
-  'emoji_id?': type('null | null').or(SnowflakeTypeSchema),
+  'emoji_id?': type('null').or(SnowflakeTypeSchema),
   'emoji_name?': type(
     type('string')
       .narrow((data, ctx) => [...data].length >= 1 || ctx.mustBe('at least 1 character'))
@@ -9475,7 +9520,7 @@ export type SoundboardPatchRequestPartial = typeof SoundboardPatchRequestPartial
 
 export const SoundboardSoundSendRequestSchema = type({
   sound_id: SnowflakeTypeSchema,
-  'source_guild_id?': type('null | null').or(SnowflakeTypeSchema),
+  'source_guild_id?': type('null').or(SnowflakeTypeSchema),
 }).configure({ ref: 'SoundboardSoundSendRequest' })
 
 export type SoundboardSoundSendRequest = typeof SoundboardSoundSendRequestSchema.infer
@@ -9495,7 +9540,7 @@ export const StageInstanceResponseSchema = type({
   privacy_level: StageInstancesPrivacyLevelsSchema,
   id: SnowflakeTypeSchema,
   discoverable_disabled: 'boolean',
-  guild_scheduled_event_id: type('null | null').or(SnowflakeTypeSchema),
+  guild_scheduled_event_id: type('null').or(SnowflakeTypeSchema),
 }).configure({ ref: 'StageInstanceResponse' })
 
 export type StageInstanceResponse = typeof StageInstanceResponseSchema.infer
@@ -9520,17 +9565,17 @@ export const StageScheduledEventCreateRequestSchema = type({
   ).or('null'),
   privacy_level: GuildScheduledEventPrivacyLevelsSchema,
   entity_type: GuildScheduledEventEntityTypesSchema,
-  'channel_id?': type('null | null').or(SnowflakeTypeSchema),
-  'recurrence_rule?': type('null | null')
+  'channel_id?': type('null').or(SnowflakeTypeSchema),
+  'recurrence_rule?': type('null')
     .or(RecurrenceRuleSchema)
     .describe('Recurrence rule for the scheduled event'),
-  'entity_metadata?': type('null | null').or(EntityMetadataStageInstanceSchema),
+  'entity_metadata?': type('null').or(EntityMetadataStageInstanceSchema),
 }).configure({ ref: 'StageScheduledEventCreateRequest' })
 
 export type StageScheduledEventCreateRequest = typeof StageScheduledEventCreateRequestSchema.infer
 
 export const StageScheduledEventPatchRequestPartialSchema = type({
-  'status?': type('null | null').or(GuildScheduledEventStatusesSchema),
+  'status?': type('null').or(GuildScheduledEventStatusesSchema),
   'name?': type('string').narrow(
     (data, ctx) => [...data].length <= 100 || ctx.mustBe('at most 100 characters'),
   ),
@@ -9548,13 +9593,13 @@ export const StageScheduledEventPatchRequestPartialSchema = type({
       /^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z|([+-](?:[01]\d|2[0-3]):[0-5]\d)))$/,
     ),
   ).or('null'),
-  'entity_type?': type('null | null').or(GuildScheduledEventEntityTypesSchema),
+  'entity_type?': type('null').or(GuildScheduledEventEntityTypesSchema),
   'privacy_level?': GuildScheduledEventPrivacyLevelsSchema,
-  'channel_id?': type('null | null').or(SnowflakeTypeSchema),
-  'recurrence_rule?': type('null | null')
+  'channel_id?': type('null').or(SnowflakeTypeSchema),
+  'recurrence_rule?': type('null')
     .or(RecurrenceRuleSchema)
     .describe('Recurrence rule for the scheduled event'),
-  'entity_metadata?': type('null | null').or(EntityMetadataStageInstanceSchema),
+  'entity_metadata?': type('null').or(EntityMetadataStageInstanceSchema),
 }).configure({ ref: 'StageScheduledEventPatchRequestPartial' })
 
 export type StageScheduledEventPatchRequestPartial =
@@ -9747,20 +9792,20 @@ export const UpdateThreadTagRequestSchema = type({
   name: type('string')
     .narrow((data, ctx) => [...data].length >= 0 || ctx.mustBe('at least 0 characters'))
     .narrow((data, ctx) => [...data].length <= 50 || ctx.mustBe('at most 50 characters')),
-  'emoji_id?': type('null | null').or(SnowflakeTypeSchema),
+  'emoji_id?': type('null').or(SnowflakeTypeSchema),
   'emoji_name?': type(
     type('string').narrow(
       (data, ctx) => [...data].length <= 100 || ctx.mustBe('at most 100 characters'),
     ),
   ).or('null'),
   'moderated?': 'boolean | null',
-  'id?': type('null | null').or(SnowflakeTypeSchema),
+  'id?': type('null').or(SnowflakeTypeSchema),
 }).configure({ ref: 'UpdateThreadTagRequest' })
 
 export type UpdateThreadTagRequest = typeof UpdateThreadTagRequestSchema.infer
 
 export const UpdateGuildChannelRequestPartialSchema = type({
-  'type?': type('null | null').or(ChannelTypesSchema),
+  'type?': type('null').or(ChannelTypesSchema),
   'name?': type('string')
     .narrow((data, ctx) => [...data].length >= 1 || ctx.mustBe('at least 1 character'))
     .narrow((data, ctx) => [...data].length <= 100 || ctx.mustBe('at most 100 characters')),
@@ -9777,18 +9822,18 @@ export const UpdateGuildChannelRequestPartialSchema = type({
     'number.integer >= -2147483648 & number.integer <= 2147483647 & number.integer >= 0 | null',
   'nsfw?': 'boolean | null',
   'rate_limit_per_user?': 'number.integer >= 0 & number.integer <= 21600 | null',
-  'parent_id?': type('null | null').or(SnowflakeTypeSchema),
+  'parent_id?': type('null').or(SnowflakeTypeSchema),
   'permission_overwrites?': type(
     type(type(ChannelPermissionOverwriteRequestSchema).array()).and(type('unknown[] <= 100')),
   ).or('null'),
   'rtc_region?': 'string | null',
-  'video_quality_mode?': type('null | null').or(VideoQualityModesSchema),
-  'default_auto_archive_duration?': type('null | null').or(ThreadAutoArchiveDurationSchema),
-  'default_reaction_emoji?': type('null | null').or(UpdateDefaultReactionEmojiRequestSchema),
+  'video_quality_mode?': type('null').or(VideoQualityModesSchema),
+  'default_auto_archive_duration?': type('null').or(ThreadAutoArchiveDurationSchema),
+  'default_reaction_emoji?': type('null').or(UpdateDefaultReactionEmojiRequestSchema),
   'default_thread_rate_limit_per_user?': 'number.integer >= 0 & number.integer <= 21600 | null',
-  'default_sort_order?': type('null | null').or(ThreadSortOrderSchema),
-  'default_forum_layout?': type('null | null').or(ForumLayoutSchema),
-  'default_tag_setting?': type('null | null').or(ThreadSearchTagSettingSchema),
+  'default_sort_order?': type('null').or(ThreadSortOrderSchema),
+  'default_forum_layout?': type('null').or(ForumLayoutSchema),
+  'default_tag_setting?': type('null').or(ThreadSearchTagSettingSchema),
   'flags?': 'number.integer | null',
   'available_tags?': type(
     type(type(UpdateThreadTagRequestSchema).array()).and(type('unknown[] <= 20')),
@@ -9807,7 +9852,7 @@ export const UpdateOnboardingPromptRequestSchema = type({
   'single_select?': 'boolean | null',
   'required?': 'boolean | null',
   'in_onboarding?': 'boolean | null',
-  'type?': type('null | null').or(OnboardingPromptTypeSchema),
+  'type?': type('null').or(OnboardingPromptTypeSchema),
   id: SnowflakeTypeSchema,
 }).configure({ ref: 'UpdateOnboardingPromptRequest' })
 
@@ -9823,21 +9868,21 @@ export const UpdateGuildOnboardingRequestSchema = type({
       .and(type('unknown[] <= 500'))
       .narrow((data: unknown[], ctx) => new Set(data).size === data.length),
   ).or('null'),
-  'mode?': type('null | null').or(GuildOnboardingModeSchema),
+  'mode?': type('null').or(GuildOnboardingModeSchema),
 }).configure({ ref: 'UpdateGuildOnboardingRequest' })
 
 export type UpdateGuildOnboardingRequest = typeof UpdateGuildOnboardingRequestSchema.infer
 
 export const UpdateMessageInteractionCallbackRequestSchema = type({
   type: InteractionCallbackTypesSchema,
-  'data?': type('null | null').or(IncomingWebhookUpdateForInteractionCallbackRequestPartialSchema),
+  'data?': type('null').or(IncomingWebhookUpdateForInteractionCallbackRequestPartialSchema),
 }).configure({ ref: 'UpdateMessageInteractionCallbackRequest' })
 
 export type UpdateMessageInteractionCallbackRequest =
   typeof UpdateMessageInteractionCallbackRequestSchema.infer
 
 export const UpdateRolePositionsRequestSchema = type({
-  'id?': type('null | null').or(SnowflakeTypeSchema),
+  'id?': type('null').or(SnowflakeTypeSchema),
   'position?': 'number.integer >= -2147483648 & number.integer <= 2147483647 | null',
 }).configure({ ref: 'UpdateRolePositionsRequest' })
 
@@ -9851,7 +9896,7 @@ export const UpdateRoleRequestPartialSchema = type({
   ).or('null'),
   'permissions?': 'number.integer | null',
   'color?': 'number.integer >= 0 & number.integer <= 16777215 | null',
-  'colors?': type('null | null').or(RoleColorsSchema),
+  'colors?': type('null').or(RoleColorsSchema),
   'hoist?': 'boolean | null',
   'mentionable?': 'boolean | null',
   'icon?': 'string | null',
@@ -9871,7 +9916,7 @@ export const UpdateSelfVoiceStateRequestPartialSchema = type({
     ),
   ).or('null'),
   'suppress?': 'boolean | null',
-  'channel_id?': type('null | null').or(SnowflakeTypeSchema),
+  'channel_id?': type('null').or(SnowflakeTypeSchema),
 }).configure({ ref: 'UpdateSelfVoiceStateRequestPartial' })
 
 export type UpdateSelfVoiceStateRequestPartial =
@@ -9886,7 +9931,7 @@ export const UpdateThreadRequestPartialSchema = type({
   'archived?': 'boolean | null',
   'locked?': 'boolean | null',
   'invitable?': 'boolean | null',
-  'auto_archive_duration?': type('null | null').or(ThreadAutoArchiveDurationSchema),
+  'auto_archive_duration?': type('null').or(ThreadAutoArchiveDurationSchema),
   'rate_limit_per_user?':
     'number.integer >= -2147483648 & number.integer <= 2147483647 & number.integer >= 0 & number.integer <= 21600 | null',
   'flags?': 'number.integer | null',
@@ -9897,14 +9942,14 @@ export const UpdateThreadRequestPartialSchema = type({
     'number.integer >= -2147483648 & number.integer <= 2147483647 & number.integer >= 8000 | null',
   'user_limit?': 'number.integer >= 0 & number.integer <= 99 | null',
   'rtc_region?': 'string | null',
-  'video_quality_mode?': type('null | null').or(VideoQualityModesSchema),
+  'video_quality_mode?': type('null').or(VideoQualityModesSchema),
 }).configure({ ref: 'UpdateThreadRequestPartial' })
 
 export type UpdateThreadRequestPartial = typeof UpdateThreadRequestPartialSchema.infer
 
 export const UpdateVoiceStateRequestPartialSchema = type({
   'suppress?': 'boolean | null',
-  'channel_id?': type('null | null').or(SnowflakeTypeSchema),
+  'channel_id?': type('null').or(SnowflakeTypeSchema),
 }).configure({ ref: 'UpdateVoiceStateRequestPartial' })
 
 export type UpdateVoiceStateRequestPartial = typeof UpdateVoiceStateRequestPartialSchema.infer
@@ -9941,13 +9986,13 @@ export const UserPIIResponseSchema = type({
     "the user's banner color encoded as an integer representation of hexadecimal color code",
   ),
   global_name: type('string | null').describe("the user's display name, if it is set"),
-  'avatar_decoration_data?': type('null | null')
+  'avatar_decoration_data?': type('null')
     .or(UserAvatarDecorationResponseSchema)
     .describe("data for the user's avatar decoration"),
-  'collectibles?': type('null | null')
+  'collectibles?': type('null')
     .or(UserCollectiblesResponseSchema)
     .describe("data for the user's collectibles"),
-  'primary_guild?': type('null | null').or(UserPrimaryGuildResponseSchema),
+  'primary_guild?': type('null').or(UserPrimaryGuildResponseSchema),
   mfa_enabled: 'boolean',
   locale: AvailableLocalesEnumSchema,
   'premium_type?': PremiumTypesSchema,
@@ -10065,7 +10110,7 @@ export type VanityURLErrorResponse = typeof VanityURLErrorResponseSchema.infer
 export const VanityURLResponseSchema = type({
   code: 'string | null',
   uses: 'number.integer >= -2147483648 & number.integer <= 2147483647',
-  'error?': type('null | null').or(VanityURLErrorResponseSchema),
+  'error?': type('null').or(VanityURLErrorResponseSchema),
 }).configure({ ref: 'VanityURLResponse' })
 
 export type VanityURLResponse = typeof VanityURLResponseSchema.infer
@@ -10100,17 +10145,17 @@ export const VoiceScheduledEventCreateRequestSchema = type({
   ).or('null'),
   privacy_level: GuildScheduledEventPrivacyLevelsSchema,
   entity_type: GuildScheduledEventEntityTypesSchema,
-  'channel_id?': type('null | null').or(SnowflakeTypeSchema),
-  'recurrence_rule?': type('null | null')
+  'channel_id?': type('null').or(SnowflakeTypeSchema),
+  'recurrence_rule?': type('null')
     .or(RecurrenceRuleSchema)
     .describe('Recurrence rule for the scheduled event'),
-  'entity_metadata?': type('null | null').or(EntityMetadataVoiceSchema),
+  'entity_metadata?': type('null').or(EntityMetadataVoiceSchema),
 }).configure({ ref: 'VoiceScheduledEventCreateRequest' })
 
 export type VoiceScheduledEventCreateRequest = typeof VoiceScheduledEventCreateRequestSchema.infer
 
 export const VoiceScheduledEventPatchRequestPartialSchema = type({
-  'status?': type('null | null').or(GuildScheduledEventStatusesSchema),
+  'status?': type('null').or(GuildScheduledEventStatusesSchema),
   'name?': type('string').narrow(
     (data, ctx) => [...data].length <= 100 || ctx.mustBe('at most 100 characters'),
   ),
@@ -10128,22 +10173,22 @@ export const VoiceScheduledEventPatchRequestPartialSchema = type({
       /^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z|([+-](?:[01]\d|2[0-3]):[0-5]\d)))$/,
     ),
   ).or('null'),
-  'entity_type?': type('null | null').or(GuildScheduledEventEntityTypesSchema),
+  'entity_type?': type('null').or(GuildScheduledEventEntityTypesSchema),
   'privacy_level?': GuildScheduledEventPrivacyLevelsSchema,
-  'channel_id?': type('null | null').or(SnowflakeTypeSchema),
-  'recurrence_rule?': type('null | null')
+  'channel_id?': type('null').or(SnowflakeTypeSchema),
+  'recurrence_rule?': type('null')
     .or(RecurrenceRuleSchema)
     .describe('Recurrence rule for the scheduled event'),
-  'entity_metadata?': type('null | null').or(EntityMetadataVoiceSchema),
+  'entity_metadata?': type('null').or(EntityMetadataVoiceSchema),
 }).configure({ ref: 'VoiceScheduledEventPatchRequestPartial' })
 
 export type VoiceScheduledEventPatchRequestPartial =
   typeof VoiceScheduledEventPatchRequestPartialSchema.infer
 
 export const VoiceStateResponseSchema = type({
-  channel_id: type('null | null').or(SnowflakeTypeSchema),
+  channel_id: type('null').or(SnowflakeTypeSchema),
   deaf: 'boolean',
-  guild_id: type('null | null').or(SnowflakeTypeSchema),
+  guild_id: type('null').or(SnowflakeTypeSchema),
   'member?': GuildMemberResponseSchema,
   mute: 'boolean',
   request_to_speak_timestamp: type(
@@ -10230,7 +10275,7 @@ export const WidgetMemberSchema = type({
   id: 'string',
   username: 'string',
   discriminator: WidgetUserDiscriminatorSchema,
-  avatar: 'null | null',
+  avatar: 'null',
   status: 'string',
   avatar_url: 'string.url',
   'activity?': WidgetActivitySchema,
@@ -10257,7 +10302,7 @@ export type WidgetResponse = typeof WidgetResponseSchema.infer
 
 export const WidgetSettingsResponseSchema = type({
   enabled: 'boolean',
-  channel_id: type('null | null').or(SnowflakeTypeSchema),
+  channel_id: type('null').or(SnowflakeTypeSchema),
 }).configure({ ref: 'WidgetSettingsResponse' })
 
 export type WidgetSettingsResponse = typeof WidgetSettingsResponseSchema.infer

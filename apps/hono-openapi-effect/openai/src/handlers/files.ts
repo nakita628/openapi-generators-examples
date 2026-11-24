@@ -1,6 +1,6 @@
 import { Hono } from 'hono'
 import { describeRoute, resolver, validator } from 'hono-openapi'
-import { Effect, Schema } from 'effect'
+import { Effect, Schema, SchemaTransformation } from 'effect'
 import {
   DeleteFileResponseSchema,
   ErrorResponseSchema,
@@ -55,14 +55,23 @@ export const filesHandler = new Hono()
       'query',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          purpose: Schema.optional(Schema.String),
-          limit: Schema.FiniteFromString.check(Schema.isInt()).pipe(
-            Schema.withDecodingDefaultType(Effect.succeed(10000)),
-          ),
+          purpose: Schema.optionalKey(Schema.String),
+          limit: Schema.String.check(Schema.isPattern(/^-?(?:0|[1-9]\d*)$/))
+            .pipe(
+              Schema.decodeTo(
+                Schema.Finite,
+                SchemaTransformation.transform({
+                  decode: (input) => Number(input),
+                  encode: (output) => String(output),
+                }),
+              ),
+            )
+            .check(Schema.isInt())
+            .pipe(Schema.withDecodingDefaultType(Effect.succeed(10000))),
           order: Schema.Literals(['asc', 'desc']).pipe(
             Schema.withDecodingDefaultType(Effect.succeed('desc')),
           ),
-          after: Schema.optional(Schema.String),
+          after: Schema.optionalKey(Schema.String),
         }),
       ),
     ),
@@ -113,44 +122,51 @@ export const filesHandler = new Hono()
     validator(
       'form',
       Schema.toStandardSchemaV1(
-        Schema.Struct({
-          file: Schema.instanceOf(File).annotate({
-            description: 'The File object (not file name) to be uploaded.\n',
-          }),
-          purpose: Schema.Literals([
-            'assistants',
-            'batch',
-            'fine-tune',
-            'vision',
-            'user_data',
-            'evals',
-          ]).annotate({
-            description:
-              'The intended purpose of the uploaded file. One of:\n- `assistants`: Used in the Assistants API\n- `batch`: Used in the Batch API\n- `fine-tune`: Used for fine-tuning\n- `vision`: Images used for vision fine-tuning\n- `user_data`: Flexible file type for any purpose\n- `evals`: Used for eval data sets\n',
-          }),
-          expires_after: Schema.optional(
-            Schema.Struct({
-              anchor: Schema.Literal('created_at').annotate({
-                description:
-                  'Anchor timestamp after which the expiration policy applies. Supported anchors: `created_at`.',
-              }),
-              seconds: Schema.BigIntFromString.check(
-                Schema.isBetweenBigInt({
-                  minimum: -9223372036854775808n,
-                  maximum: 9223372036854775807n,
-                }),
-                Schema.isGreaterThanOrEqualToBigInt(3600n),
-                Schema.isLessThanOrEqualToBigInt(2592000n),
-              ).annotate({
-                description:
-                  'The number of seconds after the anchor time that the file will expire. Must be between 3600 (1 hour) and 2592000 (30 days).',
-              }),
-            }).annotate({
-              description:
-                'The expiration policy for a file. By default, files with `purpose=batch` expire after 30 days and all other files are persisted until they are manually deleted.',
+        Schema.StructWithRest(
+          Schema.Struct({
+            file: Schema.instanceOf(File).annotate({
+              description: 'The File object (not file name) to be uploaded.\n',
             }),
+            purpose: Schema.Literals([
+              'assistants',
+              'batch',
+              'fine-tune',
+              'vision',
+              'user_data',
+              'evals',
+            ]).annotate({
+              description:
+                'The intended purpose of the uploaded file. One of:\n- `assistants`: Used in the Assistants API\n- `batch`: Used in the Batch API\n- `fine-tune`: Used for fine-tuning\n- `vision`: Images used for vision fine-tuning\n- `user_data`: Flexible file type for any purpose\n- `evals`: Used for eval data sets\n',
+            }),
+            expires_after: Schema.optionalKey(
+              Schema.Struct({
+                anchor: Schema.Literal('created_at').annotate({
+                  description:
+                    'Anchor timestamp after which the expiration policy applies. Supported anchors: `created_at`.',
+                }),
+                seconds: Schema.BigIntFromString.check(
+                  Schema.isBetweenBigInt({
+                    minimum: -9223372036854775808n,
+                    maximum: 9223372036854775807n,
+                  }),
+                  Schema.isGreaterThanOrEqualToBigInt(3600n),
+                  Schema.isLessThanOrEqualToBigInt(2592000n),
+                ).annotate({
+                  description:
+                    'The number of seconds after the anchor time that the file will expire. Must be between 3600 (1 hour) and 2592000 (30 days).',
+                }),
+              }).annotate({
+                description:
+                  'The expiration policy for a file. By default, files with `purpose=batch` expire after 30 days and all other files are persisted until they are manually deleted.',
+              }),
+            ),
+          }),
+          [Schema.Record(Schema.String, Schema.Unknown)],
+        ).check(
+          Schema.makeFilter((input) =>
+            Object.keys(input).every((key) => ['file', 'purpose', 'expires_after'].includes(key)),
           ),
-        }).annotate({ parseOptions: { onExcessProperty: 'error' } }),
+        ),
       ),
     ),
     (c) => { throw new Error('Not implemented') },

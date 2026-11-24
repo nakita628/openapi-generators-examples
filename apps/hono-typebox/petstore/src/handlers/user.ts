@@ -11,8 +11,8 @@ export const userHandler = new Hono()
       'form',
       Type.Object({
         id: Type.Optional(
-          Codec(Type.String())
-            .Decode((value) => Number.parseInt(value, 10))
+          Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+            .Decode((value) => Number(value))
             .Encode((value) => String(value)),
         ),
         username: Type.Optional(Type.String({ examples: ['theUser'] })),
@@ -22,8 +22,8 @@ export const userHandler = new Hono()
         password: Type.Optional(Type.String({ examples: ['12345'] })),
         phone: Type.Optional(Type.String({ examples: ['12345'] })),
         userStatus: Type.Optional(
-          Codec(Type.String())
-            .Decode((value) => Number.parseInt(value, 10))
+          Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+            .Decode((value) => Number(value))
             .Encode((value) => String(value)),
         ),
       }),
@@ -52,8 +52,8 @@ export const userHandler = new Hono()
       'form',
       Type.Object({
         id: Type.Optional(
-          Codec(Type.String())
-            .Decode((value) => Number.parseInt(value, 10))
+          Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+            .Decode((value) => Number(value))
             .Encode((value) => String(value)),
         ),
         username: Type.Optional(Type.String({ examples: ['theUser'] })),
@@ -63,8 +63,8 @@ export const userHandler = new Hono()
         password: Type.Optional(Type.String({ examples: ['12345'] })),
         phone: Type.Optional(Type.String({ examples: ['12345'] })),
         userStatus: Type.Optional(
-          Codec(Type.String())
-            .Decode((value) => Number.parseInt(value, 10))
+          Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+            .Decode((value) => Number(value))
             .Encode((value) => String(value)),
         ),
       }),

@@ -61,8 +61,10 @@ export const guildsHandler = new Hono()
       'query',
       Type.Object({
         with_counts: Type.Optional(
-          Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-            .Decode((value) => value === 'true')
+          Codec(
+            Type.String({ pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i }),
+          )
+            .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
             .Encode((value) => (value ? 'true' : 'false')),
         ),
       }),
@@ -87,8 +89,18 @@ export const guildsHandler = new Hono()
         before: Type.Optional(SnowflakeTypeSchema),
         after: Type.Optional(SnowflakeTypeSchema),
         limit: Type.Optional(
-          Codec(Type.String())
-            .Decode((value) => Number.parseInt(value, 10))
+          Codec(
+            Type.Refine(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                (value) => Number(value) >= 1,
+                () => 'must be >= 1',
+              ),
+              (value) => Number(value) <= 100,
+              () => 'must be <= 100',
+            ),
+          )
+            .Decode((value) => Number(value))
             .Encode((value) => String(value)),
         ),
       }),
@@ -156,8 +168,18 @@ export const guildsHandler = new Hono()
       'query',
       Type.Object({
         limit: Type.Optional(
-          Codec(Type.String())
-            .Decode((value) => Number.parseInt(value, 10))
+          Codec(
+            Type.Refine(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                (value) => Number(value) >= 1,
+                () => 'must be >= 1',
+              ),
+              (value) => Number(value) <= 1000,
+              () => 'must be <= 1000',
+            ),
+          )
+            .Decode((value) => Number(value))
             .Encode((value) => String(value)),
         ),
         before: Type.Optional(SnowflakeTypeSchema),
@@ -216,13 +238,9 @@ export const guildsHandler = new Hono()
       'json',
       Type.Array(
         Type.Object({
-          id: Type.Optional(
-            Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
-          ),
+          id: Type.Optional(Type.Union([Type.Null(), SnowflakeTypeSchema])),
           position: Type.Optional(Type.Union([Type.Integer({ minimum: 0 }), Type.Null()])),
-          parent_id: Type.Optional(
-            Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
-          ),
+          parent_id: Type.Optional(Type.Union([Type.Null(), SnowflakeTypeSchema])),
           lock_permissions: Type.Optional(Type.Union([Type.Boolean(), Type.Null()])),
         }),
       ),
@@ -244,7 +262,7 @@ export const guildsHandler = new Hono()
         image: Type.String(),
         roles: Type.Optional(
           Type.Union([
-            Type.Array(Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]), {
+            Type.Array(Type.Union([Type.Null(), SnowflakeTypeSchema]), {
               maxItems: 1521,
               uniqueItems: true,
             }),
@@ -283,7 +301,7 @@ export const guildsHandler = new Hono()
         name: Type.Optional(Type.String({ minLength: 2, maxLength: 32 })),
         roles: Type.Optional(
           Type.Union([
-            Type.Array(Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]), {
+            Type.Array(Type.Union([Type.Null(), SnowflakeTypeSchema]), {
               maxItems: 1521,
               uniqueItems: true,
             }),
@@ -325,8 +343,18 @@ export const guildsHandler = new Hono()
       'query',
       Type.Object({
         limit: Type.Optional(
-          Codec(Type.String())
-            .Decode((value) => Number.parseInt(value, 10))
+          Codec(
+            Type.Refine(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                (value) => Number(value) >= 1,
+                () => 'must be >= 1',
+              ),
+              (value) => Number(value) <= 1000,
+              () => 'must be <= 1000',
+            ),
+          )
+            .Decode((value) => Number(value))
             .Encode((value) => String(value)),
         ),
         after: Type.Optional(SnowflakeTypeSchema),
@@ -355,8 +383,18 @@ export const guildsHandler = new Hono()
       'query',
       Type.Object({
         limit: Type.Optional(
-          Codec(Type.String())
-            .Decode((value) => Number.parseInt(value, 10))
+          Codec(
+            Type.Refine(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                (value) => Number(value) >= 1,
+                () => 'must be >= 1',
+              ),
+              (value) => Number(value) <= 1000,
+              () => 'must be <= 1000',
+            ),
+          )
+            .Decode((value) => Number(value))
             .Encode((value) => String(value)),
         ),
         query: Type.String({ minLength: 1, maxLength: 100 }),
@@ -401,7 +439,7 @@ export const guildsHandler = new Hono()
         nick: Type.Optional(Type.Union([Type.String({ maxLength: 32 }), Type.Null()])),
         roles: Type.Optional(
           Type.Union([
-            Type.Array(Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]), {
+            Type.Array(Type.Union([Type.Null(), SnowflakeTypeSchema]), {
               maxItems: 350,
               uniqueItems: true,
             }),
@@ -410,9 +448,7 @@ export const guildsHandler = new Hono()
         ),
         mute: Type.Optional(Type.Union([Type.Boolean(), Type.Null()])),
         deaf: Type.Optional(Type.Union([Type.Boolean(), Type.Null()])),
-        channel_id: Type.Optional(
-          Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
-        ),
+        channel_id: Type.Optional(Type.Union([Type.Null(), SnowflakeTypeSchema])),
         communication_disabled_until: Type.Optional(
           Type.Union([Type.String({ format: 'date-time' }), Type.Null()]),
         ),
@@ -455,8 +491,18 @@ export const guildsHandler = new Hono()
         sort_order: Type.Optional(SortingOrderSchema),
         content: Type.Optional(Type.String({ maxLength: 1024 })),
         slop: Type.Optional(
-          Codec(Type.String())
-            .Decode((value) => Number.parseInt(value, 10))
+          Codec(
+            Type.Refine(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                (value) => Number(value) >= 0,
+                () => 'must be >= 0',
+              ),
+              (value) => Number(value) <= 100,
+              () => 'must be <= 100',
+            ),
+          )
+            .Decode((value) => Number(value))
             .Encode((value) => String(value)),
         ),
         author_id: Type.Optional(
@@ -478,20 +524,42 @@ export const guildsHandler = new Hono()
           Type.Array(SnowflakeTypeSchema, { maxItems: 100, uniqueItems: true }),
         ),
         mention_everyone: Type.Optional(
-          Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-            .Decode((value) => value === 'true')
+          Codec(
+            Type.String({ pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i }),
+          )
+            .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
             .Encode((value) => (value ? 'true' : 'false')),
         ),
         min_id: Type.Optional(SnowflakeTypeSchema),
         max_id: Type.Optional(SnowflakeTypeSchema),
         limit: Type.Optional(
-          Codec(Type.String())
-            .Decode((value) => Number.parseInt(value, 10))
+          Codec(
+            Type.Refine(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                (value) => Number(value) >= 1,
+                () => 'must be >= 1',
+              ),
+              (value) => Number(value) <= 25,
+              () => 'must be <= 25',
+            ),
+          )
+            .Decode((value) => Number(value))
             .Encode((value) => String(value)),
         ),
         offset: Type.Optional(
-          Codec(Type.String())
-            .Decode((value) => Number.parseInt(value, 10))
+          Codec(
+            Type.Refine(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                (value) => Number(value) >= 0,
+                () => 'must be >= 0',
+              ),
+              (value) => Number(value) <= 9975,
+              () => 'must be <= 9975',
+            ),
+          )
+            .Decode((value) => Number(value))
             .Encode((value) => String(value)),
         ),
         has: Type.Optional(Type.Array(HasOptionSchema, { maxItems: 18, uniqueItems: true })),
@@ -511,13 +579,17 @@ export const guildsHandler = new Hono()
           Type.Array(Type.String({ maxLength: 1024 }), { maxItems: 100, uniqueItems: true }),
         ),
         pinned: Type.Optional(
-          Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-            .Decode((value) => value === 'true')
+          Codec(
+            Type.String({ pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i }),
+          )
+            .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
             .Encode((value) => (value ? 'true' : 'false')),
         ),
         include_nsfw: Type.Optional(
-          Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-            .Decode((value) => value === 'true')
+          Codec(
+            Type.String({ pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i }),
+          )
+            .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
             .Encode((value) => (value ? 'true' : 'false')),
         ),
         channel_id: Type.Optional(
@@ -571,14 +643,24 @@ export const guildsHandler = new Hono()
       'query',
       Type.Object({
         days: Type.Optional(
-          Codec(Type.String())
-            .Decode((value) => Number.parseInt(value, 10))
+          Codec(
+            Type.Refine(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                (value) => Number(value) >= 1,
+                () => 'must be >= 1',
+              ),
+              (value) => Number(value) <= 30,
+              () => 'must be <= 30',
+            ),
+          )
+            .Decode((value) => Number(value))
             .Encode((value) => String(value)),
         ),
         include_roles: Type.Optional(
           Type.Union([
             Type.String(),
-            Type.Array(Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]), {
+            Type.Array(Type.Union([Type.Null(), SnowflakeTypeSchema]), {
               maxItems: 100,
               uniqueItems: true,
             }),
@@ -607,8 +689,18 @@ export const guildsHandler = new Hono()
       Type.Object({
         status: Type.Optional(GuildJoinRequestApplicationStatusSchema),
         limit: Type.Optional(
-          Codec(Type.String())
-            .Decode((value) => Number.parseInt(value, 10))
+          Codec(
+            Type.Refine(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                (value) => Number(value) >= 1,
+                () => 'must be >= 1',
+              ),
+              (value) => Number(value) <= 100,
+              () => 'must be <= 100',
+            ),
+          )
+            .Decode((value) => Number(value))
             .Encode((value) => String(value)),
         ),
         before: Type.Optional(SnowflakeTypeSchema),
@@ -694,8 +786,10 @@ export const guildsHandler = new Hono()
       'query',
       Type.Object({
         with_user_count: Type.Optional(
-          Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-            .Decode((value) => value === 'true')
+          Codec(
+            Type.String({ pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i }),
+          )
+            .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
             .Encode((value) => (value ? 'true' : 'false')),
         ),
       }),
@@ -725,8 +819,10 @@ export const guildsHandler = new Hono()
       'query',
       Type.Object({
         with_user_count: Type.Optional(
-          Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-            .Decode((value) => value === 'true')
+          Codec(
+            Type.String({ pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i }),
+          )
+            .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
             .Encode((value) => (value ? 'true' : 'false')),
         ),
       }),
@@ -801,13 +897,25 @@ export const guildsHandler = new Hono()
       'query',
       Type.Object({
         with_member: Type.Optional(
-          Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-            .Decode((value) => value === 'true')
+          Codec(
+            Type.String({ pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i }),
+          )
+            .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
             .Encode((value) => (value ? 'true' : 'false')),
         ),
         limit: Type.Optional(
-          Codec(Type.String())
-            .Decode((value) => Number.parseInt(value, 10))
+          Codec(
+            Type.Refine(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                (value) => Number(value) >= 1,
+                () => 'must be >= 1',
+              ),
+              (value) => Number(value) <= 100,
+              () => 'must be <= 100',
+            ),
+          )
+            .Decode((value) => Number(value))
             .Encode((value) => String(value)),
         ),
         before: Type.Optional(SnowflakeTypeSchema),
@@ -846,13 +954,25 @@ export const guildsHandler = new Hono()
       'query',
       Type.Object({
         with_member: Type.Optional(
-          Codec(Type.Union([Type.Literal('true'), Type.Literal('false')]))
-            .Decode((value) => value === 'true')
+          Codec(
+            Type.String({ pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i }),
+          )
+            .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
             .Encode((value) => (value ? 'true' : 'false')),
         ),
         limit: Type.Optional(
-          Codec(Type.String())
-            .Decode((value) => Number.parseInt(value, 10))
+          Codec(
+            Type.Refine(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                (value) => Number(value) >= 1,
+                () => 'must be >= 1',
+              ),
+              (value) => Number(value) <= 100,
+              () => 'must be <= 100',
+            ),
+          )
+            .Decode((value) => Number(value))
             .Encode((value) => String(value)),
         ),
         before: Type.Optional(SnowflakeTypeSchema),
@@ -1061,9 +1181,7 @@ export const guildsHandler = new Hono()
     tbValidator(
       'json',
       Type.Object({
-        channel_id: Type.Optional(
-          Type.Union([Type.Union([Type.Null(), Type.Null()]), SnowflakeTypeSchema]),
-        ),
+        channel_id: Type.Optional(Type.Union([Type.Null(), SnowflakeTypeSchema])),
         enabled: Type.Optional(Type.Union([Type.Boolean(), Type.Null()])),
       }),
     ),

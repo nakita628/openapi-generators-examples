@@ -137,7 +137,7 @@ export const applicationsHandler = new Hono()
                     (val) => (val === 'null' ? null : val),
                     z
                       .union([
-                        z.preprocess((val) => (val === 'null' ? null : val), z.null().nullable()),
+                        z.preprocess((val) => (val === 'null' ? null : val), z.null()),
                         SnowflakeTypeSchema,
                       ])
                       .nullable(),
@@ -151,7 +151,13 @@ export const applicationsHandler = new Hono()
         guild_id: SnowflakeTypeSchema.exactOptional(),
         before: SnowflakeTypeSchema.exactOptional(),
         after: SnowflakeTypeSchema.exactOptional(),
-        limit: z.coerce.number().int().min(1).max(100).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(1).max(100),
+          )
+          .exactOptional(),
         exclude_ended: z.stringbool().exactOptional(),
         exclude_deleted: z.stringbool().exactOptional(),
         only_active: z.stringbool().exactOptional(),

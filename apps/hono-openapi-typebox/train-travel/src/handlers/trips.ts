@@ -1,6 +1,6 @@
 import { Hono } from 'hono'
 import { describeRoute, resolver, validator } from 'hono-openapi'
-import { Type, Codec } from 'typebox'
+import { Type, Codec, type StaticDecode, type StaticEncode, type TSchema } from 'typebox'
 import { Compile } from 'typebox/compile'
 import {
   LinksSelfSchema,
@@ -13,6 +13,31 @@ import {
   TooManyRequestsResponse,
   UnauthorizedResponse,
 } from '../components'
+
+const toStandardSchemaV1 = <T extends TSchema>(schema: T) => {
+  const validator = Compile(schema)
+  return Object.assign(validator, {
+    '~standard': {
+      version: 1 as const,
+      vendor: 'typebox',
+      validate: (value: unknown) =>
+        validator.Check(value)
+          ? { value: validator.Decode(value) }
+          : {
+              issues: validator.Errors(value).map((error) => ({
+                message: error.message,
+                path: error.instancePath
+                  .split('/')
+                  .slice(1)
+                  .map((key) => key.replaceAll('~1', '/').replaceAll('~0', '~')),
+              })),
+            },
+      types: undefined as
+        | { readonly input: StaticEncode<T>; readonly output: StaticDecode<T> }
+        | undefined,
+    },
+  })
+}
 
 export const tripsHandler = new Hono().get(
   '/trips',
@@ -29,7 +54,7 @@ export const tripsHandler = new Hono().get(
         content: {
           'application/json': {
             schema: resolver(
-              Compile(
+              toStandardSchemaV1(
                 Type.Intersect([
                   WrapperCollectionSchema,
                   Type.Object({ data: Type.Optional(Type.Array(TripSchema)) }),
@@ -72,7 +97,7 @@ export const tripsHandler = new Hono().get(
           },
           'application/xml': {
             schema: resolver(
-              Compile(
+              toStandardSchemaV1(
                 Type.Intersect([
                   WrapperCollectionSchema,
                   Type.Object({ data: Type.Optional(Type.Array(TripSchema)) }),
@@ -94,19 +119,29 @@ export const tripsHandler = new Hono().get(
   }),
   validator(
     'query',
-    Compile(
+    toStandardSchemaV1(
       Type.Object({
         origin: Type.String({ format: 'uuid' }),
         destination: Type.String({ format: 'uuid' }),
         date: Type.String({ format: 'date-time' }),
         bicycles: Type.Optional(
-          Codec(Type.Union([Type.Literal('true'), Type.Literal('false')], { default: 'false' }))
-            .Decode((value) => value === 'true')
+          Codec(
+            Type.String({
+              pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+              default: 'false',
+            }),
+          )
+            .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
             .Encode((value) => (value ? 'true' : 'false')),
         ),
         dogs: Type.Optional(
-          Codec(Type.Union([Type.Literal('true'), Type.Literal('false')], { default: 'false' }))
-            .Decode((value) => value === 'true')
+          Codec(
+            Type.String({
+              pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+              default: 'false',
+            }),
+          )
+            .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
             .Encode((value) => (value ? 'true' : 'false')),
         ),
       }),

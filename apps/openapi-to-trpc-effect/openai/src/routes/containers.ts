@@ -1,5 +1,5 @@
 import { initTRPC, TRPCError } from '@trpc/server'
-import { Schema } from 'effect'
+import { Effect, Schema } from 'effect'
 import {
   ContainerFileListResourceSchema,
   ContainerFileResourceSchema,
@@ -21,8 +21,8 @@ export const containersRouter = t.router({
           order: Schema.Literals(['asc', 'desc']).pipe(
             Schema.withDecodingDefault(Effect.succeed('desc')),
           ),
-          after: Schema.optional(Schema.String),
-          name: Schema.optional(Schema.String),
+          after: Schema.optionalKey(Schema.String),
+          name: Schema.optionalKey(Schema.String),
         }),
       ),
     )
@@ -67,7 +67,7 @@ export const containersRouter = t.router({
           order: Schema.Literals(['asc', 'desc']).pipe(
             Schema.withDecodingDefault(Effect.succeed('desc')),
           ),
-          after: Schema.optional(Schema.String),
+          after: Schema.optionalKey(Schema.String),
         }),
       ),
     )
@@ -80,10 +80,10 @@ export const containersRouter = t.router({
       Schema.toStandardSchemaV1(
         Schema.Struct({
           container_id: Schema.String,
-          file_id: Schema.optional(
+          file_id: Schema.optionalKey(
             Schema.String.annotate({ description: 'Name of the file to create.' }),
           ),
-          file: Schema.optional(
+          file: Schema.optionalKey(
             Schema.instanceOf(File).annotate({
               description: 'The File object (not file name) to be uploaded.\n',
             }),

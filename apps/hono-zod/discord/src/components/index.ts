@@ -45,7 +45,7 @@ export const SnowflakeTypeSchema = z.string().regex(/^(0|[1-9][0-9]*)$/)
 export type SnowflakeType = z.infer<typeof SnowflakeTypeSchema>
 
 export const ComponentEmojiForRequestSchema = z.object({
-  id: z.xor([z.null().nullable(), SnowflakeTypeSchema]).exactOptional(),
+  id: z.xor([z.null(), SnowflakeTypeSchema]).exactOptional(),
   name: z.string().max(32),
 })
 
@@ -59,8 +59,8 @@ export const ButtonComponentForMessageRequestSchema = z.object({
   label: z.string().max(80).nullable().exactOptional(),
   disabled: z.boolean().nullable().exactOptional(),
   url: z.url().max(512).nullable().exactOptional(),
-  sku_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]).exactOptional(),
-  emoji: z.xor([z.null().nullable(), ComponentEmojiForRequestSchema]).exactOptional(),
+  sku_id: z.xor([z.null(), SnowflakeTypeSchema]).exactOptional(),
+  emoji: z.xor([z.null(), ComponentEmojiForRequestSchema]).exactOptional(),
 })
 
 export type ButtonComponentForMessageRequest = z.infer<
@@ -194,7 +194,7 @@ export const StringSelectOptionForRequestSchema = z.object({
   value: z.string().min(1).max(100),
   description: z.string().max(100).nullable().exactOptional(),
   default: z.boolean().nullable().exactOptional(),
-  emoji: z.xor([z.null().nullable(), ComponentEmojiForRequestSchema]).exactOptional(),
+  emoji: z.xor([z.null(), ComponentEmojiForRequestSchema]).exactOptional(),
 })
 
 export type StringSelectOptionForRequest = z.infer<typeof StringSelectOptionForRequestSchema>
@@ -631,7 +631,7 @@ export type Int53Type = z.infer<typeof Int53TypeSchema>
 export const UserAvatarDecorationResponseSchema = z.object({
   asset: z.string().meta({ description: 'the avatar decoration hash' }),
   sku_id: z
-    .xor([z.null().nullable(), SnowflakeTypeSchema])
+    .xor([z.null(), SnowflakeTypeSchema])
     .meta({ description: "id of the avatar decoration's SKU" }),
 })
 
@@ -655,9 +655,7 @@ export const NameplatePaletteSchema = z.xor([
 export type NameplatePalette = z.infer<typeof NameplatePaletteSchema>
 
 export const UserNameplateResponseSchema = z.object({
-  sku_id: z
-    .xor([z.null().nullable(), SnowflakeTypeSchema])
-    .meta({ description: 'ID of the nameplate SKU' }),
+  sku_id: z.xor([z.null(), SnowflakeTypeSchema]).meta({ description: 'ID of the nameplate SKU' }),
   asset: z.string().meta({ description: 'Path to the nameplate asset' }),
   label: z.string().meta({ description: 'The label of this nameplate. Currently unused' }),
   palette: NameplatePaletteSchema.meta({ description: 'Background color of the nameplate' }),
@@ -667,7 +665,7 @@ export type UserNameplateResponse = z.infer<typeof UserNameplateResponseSchema>
 
 export const UserCollectiblesResponseSchema = z.object({
   nameplate: z
-    .xor([z.null().nullable(), UserNameplateResponseSchema])
+    .xor([z.null(), UserNameplateResponseSchema])
     .meta({ description: 'Object mapping of nameplate data' }),
 })
 
@@ -675,7 +673,7 @@ export type UserCollectiblesResponse = z.infer<typeof UserCollectiblesResponseSc
 
 export const UserPrimaryGuildResponseSchema = z.object({
   identity_guild_id: z
-    .xor([z.null().nullable(), SnowflakeTypeSchema])
+    .xor([z.null(), SnowflakeTypeSchema])
     .meta({ description: "the id of the user's primary guild" }),
   identity_enabled: z
     .boolean()
@@ -719,15 +717,15 @@ export const UserResponseSchema = z.object({
     .exactOptional(),
   global_name: z.string().nullable().meta({ description: "the user's display name, if it is set" }),
   avatar_decoration_data: z
-    .xor([z.null().nullable(), UserAvatarDecorationResponseSchema])
+    .xor([z.null(), UserAvatarDecorationResponseSchema])
     .meta({ description: "data for the user's avatar decoration" })
     .exactOptional(),
   collectibles: z
-    .xor([z.null().nullable(), UserCollectiblesResponseSchema])
+    .xor([z.null(), UserCollectiblesResponseSchema])
     .meta({ description: "data for the user's collectibles" })
     .exactOptional(),
   primary_guild: z
-    .xor([z.null().nullable(), UserPrimaryGuildResponseSchema])
+    .xor([z.null(), UserPrimaryGuildResponseSchema])
     .meta({ description: "the user's primary guild" }),
 })
 
@@ -935,7 +933,7 @@ export const ApplicationResponseSchema = z.object({
   name: z.string(),
   icon: z.string().nullable(),
   description: z.string(),
-  type: z.xor([z.null().nullable(), ApplicationTypesSchema]),
+  type: z.xor([z.null(), ApplicationTypesSchema]),
   cover_image: z.string().exactOptional(),
   primary_sku_id: SnowflakeTypeSchema.exactOptional(),
   flags: z.int32(),
@@ -1121,7 +1119,7 @@ export type ApplicationCommandOptionIntegerChoice = z.infer<
 
 export const InteractionApplicationCommandAutocompleteCallbackIntegerDataSchema = z.object({
   choices: z
-    .array(z.xor([z.null().nullable(), ApplicationCommandOptionIntegerChoiceSchema]))
+    .array(z.xor([z.null(), ApplicationCommandOptionIntegerChoiceSchema]))
     .max(25)
     .nullable()
     .exactOptional(),
@@ -1143,7 +1141,7 @@ export type ApplicationCommandOptionNumberChoice = z.infer<
 
 export const InteractionApplicationCommandAutocompleteCallbackNumberDataSchema = z.object({
   choices: z
-    .array(z.xor([z.null().nullable(), ApplicationCommandOptionNumberChoiceSchema]))
+    .array(z.xor([z.null(), ApplicationCommandOptionNumberChoiceSchema]))
     .max(25)
     .nullable()
     .exactOptional(),
@@ -1165,7 +1163,7 @@ export type ApplicationCommandOptionStringChoice = z.infer<
 
 export const InteractionApplicationCommandAutocompleteCallbackStringDataSchema = z.object({
   choices: z
-    .array(z.xor([z.null().nullable(), ApplicationCommandOptionStringChoiceSchema]))
+    .array(z.xor([z.null(), ApplicationCommandOptionStringChoiceSchema]))
     .max(25)
     .nullable()
     .exactOptional(),
@@ -1267,8 +1265,8 @@ export const ApplicationCommandIntegerOptionSchema = z.object({
   required: z.boolean().nullable().exactOptional(),
   autocomplete: z.boolean().nullable().exactOptional(),
   choices: z.array(ApplicationCommandOptionIntegerChoiceSchema).max(25).nullable().exactOptional(),
-  min_value: z.xor([z.null().nullable(), Int53TypeSchema]).exactOptional(),
-  max_value: z.xor([z.null().nullable(), Int53TypeSchema]).exactOptional(),
+  min_value: z.xor([z.null(), Int53TypeSchema]).exactOptional(),
+  max_value: z.xor([z.null(), Int53TypeSchema]).exactOptional(),
 })
 
 export type ApplicationCommandIntegerOption = z.infer<typeof ApplicationCommandIntegerOptionSchema>
@@ -1502,13 +1500,13 @@ export const ApplicationCommandCreateRequestSchema = z.object({
     .nullable()
     .exactOptional(),
   handler: z
-    .xor([z.null().nullable(), ApplicationCommandHandlerSchema])
+    .xor([z.null(), ApplicationCommandHandlerSchema])
     .meta({
       description:
         "Determines whether the interaction is handled by the app's interactions handler or by Discord",
     })
     .exactOptional(),
-  type: z.xor([z.null().nullable(), ApplicationCommandTypeSchema]).exactOptional(),
+  type: z.xor([z.null(), ApplicationCommandTypeSchema]).exactOptional(),
 })
 
 export type ApplicationCommandCreateRequest = z.infer<typeof ApplicationCommandCreateRequestSchema>
@@ -1683,7 +1681,7 @@ export const ApplicationCommandPatchRequestPartialSchema = z.object({
     .nullable()
     .exactOptional(),
   handler: z
-    .xor([z.null().nullable(), ApplicationCommandHandlerSchema])
+    .xor([z.null(), ApplicationCommandHandlerSchema])
     .meta({
       description:
         "Determines whether the interaction is handled by the app's interactions handler or by Discord",
@@ -1899,14 +1897,14 @@ export const ApplicationCommandUpdateRequestSchema = z.object({
     .nullable()
     .exactOptional(),
   handler: z
-    .xor([z.null().nullable(), ApplicationCommandHandlerSchema])
+    .xor([z.null(), ApplicationCommandHandlerSchema])
     .meta({
       description:
         "Determines whether the interaction is handled by the app's interactions handler or by Discord",
     })
     .exactOptional(),
-  type: z.xor([z.null().nullable(), ApplicationCommandTypeSchema]).exactOptional(),
-  id: z.xor([z.null().nullable(), SnowflakeTypeSchema]).exactOptional(),
+  type: z.xor([z.null(), ApplicationCommandTypeSchema]).exactOptional(),
+  id: z.xor([z.null(), SnowflakeTypeSchema]).exactOptional(),
 })
 
 export type ApplicationCommandUpdateRequest = z.infer<typeof ApplicationCommandUpdateRequestSchema>
@@ -1943,9 +1941,7 @@ export const ApplicationOAuth2InstallParamsSchema = z.object({
 export type ApplicationOAuth2InstallParams = z.infer<typeof ApplicationOAuth2InstallParamsSchema>
 
 export const ApplicationIntegrationTypeConfigurationSchema = z.object({
-  oauth2_install_params: z
-    .xor([z.null().nullable(), ApplicationOAuth2InstallParamsSchema])
-    .exactOptional(),
+  oauth2_install_params: z.xor([z.null(), ApplicationOAuth2InstallParamsSchema]).exactOptional(),
 })
 
 export type ApplicationIntegrationTypeConfiguration = z.infer<
@@ -1962,14 +1958,14 @@ export const ApplicationFormPartialSchema = z.object({
     .exactOptional(),
   icon: z.string().nullable().exactOptional(),
   cover_image: z.string().nullable().exactOptional(),
-  team_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]).exactOptional(),
+  team_id: z.xor([z.null(), SnowflakeTypeSchema]).exactOptional(),
   flags: z.int().nullable().exactOptional(),
   interactions_endpoint_url: z.url().max(2048).nullable().exactOptional(),
   explicit_content_filter: z
-    .xor([z.null().nullable(), ApplicationExplicitContentFilterTypesSchema])
+    .xor([z.null(), ApplicationExplicitContentFilterTypesSchema])
     .exactOptional(),
   max_participants: z.int32().min(-1).nullable().exactOptional(),
-  type: z.xor([z.null().nullable(), ApplicationTypesSchema]).exactOptional(),
+  type: z.xor([z.null(), ApplicationTypesSchema]).exactOptional(),
   tags: z
     .array(z.string().max(20))
     .max(5)
@@ -1977,17 +1973,13 @@ export const ApplicationFormPartialSchema = z.object({
     .nullable()
     .exactOptional(),
   custom_install_url: z.url().max(2048).nullable().exactOptional(),
-  install_params: z
-    .xor([z.null().nullable(), ApplicationOAuth2InstallParamsSchema])
-    .exactOptional(),
+  install_params: z.xor([z.null(), ApplicationOAuth2InstallParamsSchema]).exactOptional(),
   role_connections_verification_url: z.url().max(2048).nullable().exactOptional(),
   integration_types_config: z
-    .record(z.string(), z.xor([z.null().nullable(), ApplicationIntegrationTypeConfigurationSchema]))
+    .record(z.string(), z.xor([z.null(), ApplicationIntegrationTypeConfigurationSchema]))
     .nullable()
     .exactOptional(),
-  event_webhooks_status: z
-    .xor([z.null().nullable(), ApplicationEventWebhooksStatusSchema])
-    .exactOptional(),
+  event_webhooks_status: z.xor([z.null(), ApplicationEventWebhooksStatusSchema]).exactOptional(),
   event_webhooks_url: z
     .url()
     .max(2048)
@@ -2036,10 +2028,10 @@ export const WebhookTypesSchema = z.xor([
 export type WebhookTypes = z.infer<typeof WebhookTypesSchema>
 
 export const ApplicationIncomingWebhookResponseSchema = z.object({
-  application_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]),
+  application_id: z.xor([z.null(), SnowflakeTypeSchema]),
   avatar: z.string().nullable(),
-  channel_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]),
-  guild_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]).exactOptional(),
+  channel_id: z.xor([z.null(), SnowflakeTypeSchema]),
+  guild_id: z.xor([z.null(), SnowflakeTypeSchema]).exactOptional(),
   id: SnowflakeTypeSchema,
   name: z.string(),
   type: WebhookTypesSchema,
@@ -2239,8 +2231,8 @@ export type AuditLogObjectChangeResponse = z.infer<typeof AuditLogObjectChangeRe
 export const AuditLogEntryResponseSchema = z.object({
   id: SnowflakeTypeSchema,
   action_type: AuditLogActionTypesSchema,
-  user_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]),
-  target_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]),
+  user_id: z.xor([z.null(), SnowflakeTypeSchema]),
+  target_id: z.xor([z.null(), SnowflakeTypeSchema]),
   changes: z.array(AuditLogObjectChangeResponseSchema).exactOptional(),
   options: z.record(z.string(), z.string()).exactOptional(),
   reason: z.string().exactOptional(),
@@ -2450,33 +2442,33 @@ export const RichEmbedSchema = z.object({
   color: z.int().min(0).max(16777215).nullable().exactOptional(),
   timestamp: z.iso.datetime({ offset: true }).nullable().exactOptional(),
   description: z.string().max(4096).nullable().exactOptional(),
-  author: z.xor([z.null().nullable(), RichEmbedAuthorSchema]).exactOptional(),
-  image: z.xor([z.null().nullable(), RichEmbedImageSchema]).exactOptional(),
-  thumbnail: z.xor([z.null().nullable(), RichEmbedThumbnailSchema]).exactOptional(),
-  footer: z.xor([z.null().nullable(), RichEmbedFooterSchema]).exactOptional(),
+  author: z.xor([z.null(), RichEmbedAuthorSchema]).exactOptional(),
+  image: z.xor([z.null(), RichEmbedImageSchema]).exactOptional(),
+  thumbnail: z.xor([z.null(), RichEmbedThumbnailSchema]).exactOptional(),
+  footer: z.xor([z.null(), RichEmbedFooterSchema]).exactOptional(),
   fields: z.array(RichEmbedFieldSchema).max(25).nullable().exactOptional(),
-  provider: z.xor([z.null().nullable(), RichEmbedProviderSchema]).exactOptional(),
-  video: z.xor([z.null().nullable(), RichEmbedVideoSchema]).exactOptional(),
-  audio: z.xor([z.null().nullable(), RichEmbedAudioSchema]).exactOptional(),
+  provider: z.xor([z.null(), RichEmbedProviderSchema]).exactOptional(),
+  video: z.xor([z.null(), RichEmbedVideoSchema]).exactOptional(),
+  audio: z.xor([z.null(), RichEmbedAudioSchema]).exactOptional(),
 })
 
 export type RichEmbed = z.infer<typeof RichEmbedSchema>
 
 export const MessageAllowedMentionsRequestSchema = z.object({
   parse: z
-    .array(z.xor([z.null().nullable(), AllowedMentionTypesSchema]))
+    .array(z.xor([z.null(), AllowedMentionTypesSchema]))
     .max(1521)
     .refine((val) => new Set(val).size === val.length)
     .nullable()
     .exactOptional(),
   users: z
-    .array(z.xor([z.null().nullable(), SnowflakeTypeSchema]))
+    .array(z.xor([z.null(), SnowflakeTypeSchema]))
     .max(100)
     .refine((val) => new Set(val).size === val.length)
     .nullable()
     .exactOptional(),
   roles: z
-    .array(z.xor([z.null().nullable(), SnowflakeTypeSchema]))
+    .array(z.xor([z.null(), SnowflakeTypeSchema]))
     .max(100)
     .refine((val) => new Set(val).size === val.length)
     .nullable()
@@ -2575,7 +2567,7 @@ export type MessageComponentSeparatorSpacingSize = z.infer<
 export const SeparatorComponentForMessageRequestSchema = z.object({
   type: MessageComponentTypesSchema,
   id: z.int32().min(0).nullable().exactOptional(),
-  spacing: z.xor([z.null().nullable(), MessageComponentSeparatorSpacingSizeSchema]).exactOptional(),
+  spacing: z.xor([z.null(), MessageComponentSeparatorSpacingSizeSchema]).exactOptional(),
   divider: z.boolean().nullable().exactOptional(),
 })
 
@@ -2621,7 +2613,7 @@ export type MessageAttachmentRequest = z.infer<typeof MessageAttachmentRequestSc
 
 export const PollEmojiSchema = z.object({
   id: z
-    .xor([z.null().nullable(), SnowflakeTypeSchema])
+    .xor([z.null(), SnowflakeTypeSchema])
     .meta({ description: 'The ID of the custom emoji' })
     .exactOptional(),
   name: z
@@ -2648,7 +2640,7 @@ export const PollMediaSchema = z.object({
     .meta({ description: 'The text of the field' })
     .exactOptional(),
   emoji: z
-    .xor([z.null().nullable(), PollEmojiSchema])
+    .xor([z.null(), PollEmojiSchema])
     .meta({ description: 'The emoji of the field' })
     .exactOptional(),
 })
@@ -2657,7 +2649,7 @@ export type PollMedia = z.infer<typeof PollMediaSchema>
 
 export const PollEmojiCreateRequestSchema = z.object({
   id: z
-    .xor([z.null().nullable(), SnowflakeTypeSchema])
+    .xor([z.null(), SnowflakeTypeSchema])
     .meta({ description: 'The ID of the custom emoji' })
     .exactOptional(),
   name: z
@@ -2684,7 +2676,7 @@ export const PollMediaCreateRequestSchema = z.object({
     .meta({ description: 'The text of the field' })
     .exactOptional(),
   emoji: z
-    .xor([z.null().nullable(), PollEmojiCreateRequestSchema])
+    .xor([z.null(), PollEmojiCreateRequestSchema])
     .meta({ description: 'The emoji of the field' })
     .exactOptional(),
 })
@@ -2718,7 +2710,7 @@ export const PollCreateRequestSchema = z.object({
     .meta({ description: 'Whether a user can select multiple answers' })
     .exactOptional(),
   layout_type: z
-    .xor([z.null().nullable(), PollLayoutTypesSchema])
+    .xor([z.null(), PollLayoutTypesSchema])
     .meta({ description: 'The layout type of the poll. Defaults to... DEFAULT!' })
     .exactOptional(),
   duration: z
@@ -2750,9 +2742,7 @@ export const CustomClientThemeShareRequestSchema = z.object({
   colors: z.array(z.string().length(6)).min(1).max(5),
   gradient_angle: z.int32().min(0).max(360),
   base_mix: z.int32().min(0).max(100),
-  base_theme: z
-    .xor([z.null().nullable(), MessageShareCustomUserThemeBaseThemeSchema])
-    .exactOptional(),
+  base_theme: z.xor([z.null(), MessageShareCustomUserThemeBaseThemeSchema]).exactOptional(),
 })
 
 export type CustomClientThemeShareRequest = z.infer<typeof CustomClientThemeShareRequestSchema>
@@ -2760,9 +2750,7 @@ export type CustomClientThemeShareRequest = z.infer<typeof CustomClientThemeShar
 export const BaseCreateMessageCreateRequestSchema = z.object({
   content: z.string().max(4000).nullable().exactOptional(),
   embeds: z.array(RichEmbedSchema).max(10).nullable().exactOptional(),
-  allowed_mentions: z
-    .xor([z.null().nullable(), MessageAllowedMentionsRequestSchema])
-    .exactOptional(),
+  allowed_mentions: z.xor([z.null(), MessageAllowedMentionsRequestSchema]).exactOptional(),
   sticker_ids: z.array(SnowflakeTypeSchema).max(3).nullable().exactOptional(),
   components: z
     .array(
@@ -2781,10 +2769,8 @@ export const BaseCreateMessageCreateRequestSchema = z.object({
     .exactOptional(),
   flags: z.int().nullable().exactOptional(),
   attachments: z.array(MessageAttachmentRequestSchema).max(10).nullable().exactOptional(),
-  poll: z.xor([z.null().nullable(), PollCreateRequestSchema]).exactOptional(),
-  shared_client_theme: z
-    .xor([z.null().nullable(), CustomClientThemeShareRequestSchema])
-    .exactOptional(),
+  poll: z.xor([z.null(), PollCreateRequestSchema]).exactOptional(),
+  shared_client_theme: z.xor([z.null(), CustomClientThemeShareRequestSchema]).exactOptional(),
 })
 
 export type BaseCreateMessageCreateRequest = z.infer<typeof BaseCreateMessageCreateRequestSchema>
@@ -2794,7 +2780,7 @@ export const BasicApplicationResponseWithBotSchema = z.object({
   name: z.string(),
   icon: z.string().nullable(),
   description: z.string(),
-  type: z.xor([z.null().nullable(), ApplicationTypesSchema]),
+  type: z.xor([z.null(), ApplicationTypesSchema]),
   cover_image: z.string().exactOptional(),
   primary_sku_id: SnowflakeTypeSchema.exactOptional(),
   flags: z.int32(),
@@ -2807,7 +2793,7 @@ export type BasicApplicationResponseWithBot = z.infer<typeof BasicApplicationRes
 export const BasicGuildMemberResponseSchema = z.object({
   avatar: z.string().nullable().meta({ description: "the member's guild avatar hash" }),
   avatar_decoration_data: z
-    .xor([z.null().nullable(), UserAvatarDecorationResponseSchema])
+    .xor([z.null(), UserAvatarDecorationResponseSchema])
     .meta({ description: "data for the member's guild avatar decoration" })
     .exactOptional(),
   banner: z.string().nullable().meta({ description: "the member's guild banner hash" }),
@@ -2840,7 +2826,7 @@ export const BasicGuildMemberResponseSchema = z.object({
     .refine((val) => new Set(val).size === val.length)
     .meta({ description: 'array of role object ids' }),
   collectibles: z
-    .xor([z.null().nullable(), UserCollectiblesResponseSchema])
+    .xor([z.null(), UserCollectiblesResponseSchema])
     .meta({ description: "data for the member's collectibles" })
     .exactOptional(),
 })
@@ -3137,7 +3123,7 @@ export const GuildStickerResponseSchema = z.object({
   name: z.string(),
   tags: z.string(),
   type: StickerTypesSchema,
-  format_type: z.xor([z.null().nullable(), StickerFormatTypesSchema]),
+  format_type: z.xor([z.null(), StickerFormatTypesSchema]),
   description: z.string().nullable(),
   available: z.boolean(),
   guild_id: SnowflakeTypeSchema,
@@ -3151,7 +3137,7 @@ export const StandardStickerResponseSchema = z.object({
   name: z.string(),
   tags: z.string(),
   type: StickerTypesSchema,
-  format_type: z.xor([z.null().nullable(), StickerFormatTypesSchema]),
+  format_type: z.xor([z.null(), StickerFormatTypesSchema]),
   description: z.string().nullable(),
   pack_id: SnowflakeTypeSchema,
   sort_value: z.int32(),
@@ -3236,7 +3222,7 @@ export type ThreadMetadataResponse = z.infer<typeof ThreadMetadataResponseSchema
 export const GuildMemberResponseSchema = z.object({
   avatar: z.string().nullable().meta({ description: "the member's guild avatar hash" }),
   avatar_decoration_data: z
-    .xor([z.null().nullable(), UserAvatarDecorationResponseSchema])
+    .xor([z.null(), UserAvatarDecorationResponseSchema])
     .meta({ description: "data for the member's guild avatar decoration" })
     .exactOptional(),
   banner: z.string().nullable().meta({ description: "the member's guild banner hash" }),
@@ -3269,7 +3255,7 @@ export const GuildMemberResponseSchema = z.object({
     .refine((val) => new Set(val).size === val.length)
     .meta({ description: 'array of role object ids' }),
   collectibles: z
-    .xor([z.null().nullable(), UserCollectiblesResponseSchema])
+    .xor([z.null(), UserCollectiblesResponseSchema])
     .meta({ description: "data for the member's collectibles" })
     .exactOptional(),
   user: UserResponseSchema.meta({ description: 'the user this guild member represents' }),
@@ -3292,12 +3278,12 @@ export type ThreadMemberResponse = z.infer<typeof ThreadMemberResponseSchema>
 export const ThreadResponseSchema = z.object({
   id: SnowflakeTypeSchema,
   type: ChannelTypesSchema,
-  last_message_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]).exactOptional(),
+  last_message_id: z.xor([z.null(), SnowflakeTypeSchema]).exactOptional(),
   flags: z.int32(),
   last_pin_timestamp: z.iso.datetime({ offset: true }).nullable().exactOptional(),
   guild_id: SnowflakeTypeSchema,
   name: z.string(),
-  parent_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]).exactOptional(),
+  parent_id: z.xor([z.null(), SnowflakeTypeSchema]).exactOptional(),
   rate_limit_per_user: z.int32().exactOptional(),
   bitrate: z.int32().exactOptional(),
   user_limit: z.int32().exactOptional(),
@@ -3372,14 +3358,14 @@ export const ForumTagResponseSchema = z.object({
   id: SnowflakeTypeSchema,
   name: z.string(),
   moderated: z.boolean(),
-  emoji_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]),
+  emoji_id: z.xor([z.null(), SnowflakeTypeSchema]),
   emoji_name: z.string().nullable(),
 })
 
 export type ForumTagResponse = z.infer<typeof ForumTagResponseSchema>
 
 export const DefaultReactionEmojiResponseSchema = z.object({
-  emoji_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]),
+  emoji_id: z.xor([z.null(), SnowflakeTypeSchema]),
   emoji_name: z.string().nullable(),
 })
 
@@ -3416,12 +3402,12 @@ export type ThreadSearchTagSetting = z.infer<typeof ThreadSearchTagSettingSchema
 export const GuildChannelResponseSchema = z.object({
   id: SnowflakeTypeSchema,
   type: ChannelTypesSchema,
-  last_message_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]).exactOptional(),
+  last_message_id: z.xor([z.null(), SnowflakeTypeSchema]).exactOptional(),
   flags: z.int32(),
   last_pin_timestamp: z.iso.datetime({ offset: true }).nullable().exactOptional(),
   guild_id: SnowflakeTypeSchema,
   name: z.string(),
-  parent_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]).exactOptional(),
+  parent_id: z.xor([z.null(), SnowflakeTypeSchema]).exactOptional(),
   rate_limit_per_user: z.int32().exactOptional(),
   bitrate: z.int32().exactOptional(),
   user_limit: z.int32().exactOptional(),
@@ -3435,12 +3421,10 @@ export const GuildChannelResponseSchema = z.object({
   permission_overwrites: z.array(ChannelPermissionOverwriteResponseSchema).exactOptional(),
   nsfw: z.boolean().exactOptional(),
   available_tags: z.array(ForumTagResponseSchema).exactOptional(),
-  default_reaction_emoji: z
-    .xor([z.null().nullable(), DefaultReactionEmojiResponseSchema])
-    .exactOptional(),
-  default_sort_order: z.xor([z.null().nullable(), ThreadSortOrderSchema]).exactOptional(),
+  default_reaction_emoji: z.xor([z.null(), DefaultReactionEmojiResponseSchema]).exactOptional(),
+  default_sort_order: z.xor([z.null(), ThreadSortOrderSchema]).exactOptional(),
   default_forum_layout: ForumLayoutSchema.exactOptional(),
-  default_tag_setting: z.xor([z.null().nullable(), ThreadSearchTagSettingSchema]).exactOptional(),
+  default_tag_setting: z.xor([z.null(), ThreadSearchTagSettingSchema]).exactOptional(),
 })
 
 export type GuildChannelResponse = z.infer<typeof GuildChannelResponseSchema>
@@ -3448,7 +3432,7 @@ export type GuildChannelResponse = z.infer<typeof GuildChannelResponseSchema>
 export const PrivateChannelResponseSchema = z.object({
   id: SnowflakeTypeSchema,
   type: ChannelTypesSchema,
-  last_message_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]).exactOptional(),
+  last_message_id: z.xor([z.null(), SnowflakeTypeSchema]).exactOptional(),
   flags: z.int32(),
   last_pin_timestamp: z.iso.datetime({ offset: true }).nullable().exactOptional(),
   recipients: z.array(UserResponseSchema),
@@ -3459,7 +3443,7 @@ export type PrivateChannelResponse = z.infer<typeof PrivateChannelResponseSchema
 export const PrivateGroupChannelResponseSchema = z.object({
   id: SnowflakeTypeSchema,
   type: ChannelTypesSchema,
-  last_message_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]).exactOptional(),
+  last_message_id: z.xor([z.null(), SnowflakeTypeSchema]).exactOptional(),
   flags: z.int32(),
   last_pin_timestamp: z.iso.datetime({ offset: true }).nullable().exactOptional(),
   recipients: z.array(UserResponseSchema),
@@ -3481,12 +3465,12 @@ export const GuildRoleColorsResponseSchema = z.object({
 export type GuildRoleColorsResponse = z.infer<typeof GuildRoleColorsResponseSchema>
 
 export const GuildRoleTagsResponseSchema = z.object({
-  premium_subscriber: z.null().nullable().exactOptional(),
+  premium_subscriber: z.null().exactOptional(),
   bot_id: SnowflakeTypeSchema.exactOptional(),
   integration_id: SnowflakeTypeSchema.exactOptional(),
   subscription_listing_id: SnowflakeTypeSchema.exactOptional(),
-  available_for_purchase: z.null().nullable().exactOptional(),
-  guild_connections: z.null().nullable().exactOptional(),
+  available_for_purchase: z.null().exactOptional(),
+  guild_connections: z.null().exactOptional(),
 })
 
 export type GuildRoleTagsResponse = z.infer<typeof GuildRoleTagsResponseSchema>
@@ -3530,7 +3514,7 @@ export const ResolvedObjectsResponseSchema = z.object({
 export type ResolvedObjectsResponse = z.infer<typeof ResolvedObjectsResponseSchema>
 
 export const MessageReactionEmojiResponseSchema = z.object({
-  id: z.xor([z.null().nullable(), SnowflakeTypeSchema]),
+  id: z.xor([z.null(), SnowflakeTypeSchema]),
   name: z.string().nullable(),
   animated: z.boolean().exactOptional(),
 })
@@ -3705,7 +3689,7 @@ export const BasicMessageResponseSchema = z.object({
       z
         .union([z.bigint(), z.number().int(), z.string().regex(/^-?\d+$/)])
         .transform((val) => BigInt(val))
-        .pipe(z.int64().min(-9223372036854776000n).max(9223372036854776000n)),
+        .pipe(z.int64().min(-9223372036854775808n).max(9223372036854775808n)),
       z.string().max(25),
     ])
     .exactOptional(),
@@ -3741,7 +3725,7 @@ export type BlockMessageActionMetadata = z.infer<typeof BlockMessageActionMetada
 
 export const BlockMessageActionSchema = z.object({
   type: AutomodActionTypeSchema,
-  metadata: z.xor([z.null().nullable(), BlockMessageActionMetadataSchema]).exactOptional(),
+  metadata: z.xor([z.null(), BlockMessageActionMetadataSchema]).exactOptional(),
 })
 
 export type BlockMessageAction = z.infer<typeof BlockMessageActionSchema>
@@ -3805,7 +3789,7 @@ export type BulkBanUsersResponse = z.infer<typeof BulkBanUsersResponseSchema>
 export const BulkLobbyMemberRequestSchema = z.object({
   id: SnowflakeTypeSchema,
   metadata: z.record(z.string(), z.string().max(1024)).nullable().exactOptional(),
-  flags: z.xor([z.null().nullable(), z.literal(1)]).exactOptional(),
+  flags: z.xor([z.null(), z.literal(1)]).exactOptional(),
   additional_name: z.string().min(1).max(80).nullable().exactOptional(),
   remove_member: z.boolean().nullable().exactOptional(),
 })
@@ -3867,10 +3851,10 @@ export const WebhookSourceChannelResponseSchema = z.object({
 export type WebhookSourceChannelResponse = z.infer<typeof WebhookSourceChannelResponseSchema>
 
 export const ChannelFollowerWebhookResponseSchema = z.object({
-  application_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]),
+  application_id: z.xor([z.null(), SnowflakeTypeSchema]),
   avatar: z.string().nullable(),
-  channel_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]),
-  guild_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]).exactOptional(),
+  channel_id: z.xor([z.null(), SnowflakeTypeSchema]),
+  guild_id: z.xor([z.null(), SnowflakeTypeSchema]).exactOptional(),
   id: SnowflakeTypeSchema,
   name: z.string(),
   type: WebhookTypesSchema,
@@ -3883,7 +3867,7 @@ export type ChannelFollowerWebhookResponse = z.infer<typeof ChannelFollowerWebho
 
 export const ChannelPermissionOverwriteRequestSchema = z.object({
   id: SnowflakeTypeSchema,
-  type: z.xor([z.null().nullable(), ChannelPermissionOverwritesSchema]).exactOptional(),
+  type: z.xor([z.null(), ChannelPermissionOverwritesSchema]).exactOptional(),
   allow: z.int().nullable().exactOptional(),
   deny: z.int().nullable().exactOptional(),
 })
@@ -4062,9 +4046,7 @@ export type CreateEntitlementRequestData = z.infer<typeof CreateEntitlementReque
 
 export const CreateForumThreadRequestSchema = z.object({
   name: z.string().min(1).max(100),
-  auto_archive_duration: z
-    .xor([z.null().nullable(), ThreadAutoArchiveDurationSchema])
-    .exactOptional(),
+  auto_archive_duration: z.xor([z.null(), ThreadAutoArchiveDurationSchema]).exactOptional(),
   rate_limit_per_user: z.int32().min(0).max(21600).nullable().exactOptional(),
   applied_tags: z.array(SnowflakeTypeSchema).max(5).nullable().exactOptional(),
   message: BaseCreateMessageCreateRequestSchema,
@@ -4079,7 +4061,7 @@ export const CreateGroupDMInviteRequestSchema = z.object({
 export type CreateGroupDMInviteRequest = z.infer<typeof CreateGroupDMInviteRequestSchema>
 
 export const UpdateDefaultReactionEmojiRequestSchema = z.object({
-  emoji_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]).exactOptional(),
+  emoji_id: z.xor([z.null(), SnowflakeTypeSchema]).exactOptional(),
   emoji_name: z.string().max(100).nullable().exactOptional(),
 })
 
@@ -4089,7 +4071,7 @@ export type UpdateDefaultReactionEmojiRequest = z.infer<
 
 export const CreateOrUpdateThreadTagRequestSchema = z.object({
   name: z.string().min(0).max(50),
-  emoji_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]).exactOptional(),
+  emoji_id: z.xor([z.null(), SnowflakeTypeSchema]).exactOptional(),
   emoji_name: z.string().max(100).nullable().exactOptional(),
   moderated: z.boolean().nullable().exactOptional(),
 })
@@ -4097,7 +4079,7 @@ export const CreateOrUpdateThreadTagRequestSchema = z.object({
 export type CreateOrUpdateThreadTagRequest = z.infer<typeof CreateOrUpdateThreadTagRequestSchema>
 
 export const CreateGuildChannelRequestSchema = z.object({
-  type: z.xor([z.null().nullable(), ChannelTypesSchema]).exactOptional(),
+  type: z.xor([z.null(), ChannelTypesSchema]).exactOptional(),
   name: z.string().min(1).max(100),
   position: z.int32().min(0).nullable().exactOptional(),
   topic: z.string().min(0).max(4096).nullable().exactOptional(),
@@ -4105,26 +4087,24 @@ export const CreateGuildChannelRequestSchema = z.object({
   user_limit: z.int32().min(0).nullable().exactOptional(),
   nsfw: z.boolean().nullable().exactOptional(),
   rate_limit_per_user: z.int().min(0).max(21600).nullable().exactOptional(),
-  parent_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]).exactOptional(),
+  parent_id: z.xor([z.null(), SnowflakeTypeSchema]).exactOptional(),
   permission_overwrites: z
     .array(ChannelPermissionOverwriteRequestSchema)
     .max(100)
     .nullable()
     .exactOptional(),
   rtc_region: z.string().nullable().exactOptional(),
-  video_quality_mode: z.xor([z.null().nullable(), VideoQualityModesSchema]).exactOptional(),
-  default_auto_archive_duration: z
-    .xor([z.null().nullable(), ThreadAutoArchiveDurationSchema])
-    .exactOptional(),
+  video_quality_mode: z.xor([z.null(), VideoQualityModesSchema]).exactOptional(),
+  default_auto_archive_duration: z.xor([z.null(), ThreadAutoArchiveDurationSchema]).exactOptional(),
   default_reaction_emoji: z
-    .xor([z.null().nullable(), UpdateDefaultReactionEmojiRequestSchema])
+    .xor([z.null(), UpdateDefaultReactionEmojiRequestSchema])
     .exactOptional(),
   default_thread_rate_limit_per_user: z.int().min(0).max(21600).nullable().exactOptional(),
-  default_sort_order: z.xor([z.null().nullable(), ThreadSortOrderSchema]).exactOptional(),
-  default_forum_layout: z.xor([z.null().nullable(), ForumLayoutSchema]).exactOptional(),
-  default_tag_setting: z.xor([z.null().nullable(), ThreadSearchTagSettingSchema]).exactOptional(),
+  default_sort_order: z.xor([z.null(), ThreadSortOrderSchema]).exactOptional(),
+  default_forum_layout: z.xor([z.null(), ForumLayoutSchema]).exactOptional(),
+  default_tag_setting: z.xor([z.null(), ThreadSearchTagSettingSchema]).exactOptional(),
   available_tags: z
-    .array(z.xor([z.null().nullable(), CreateOrUpdateThreadTagRequestSchema]))
+    .array(z.xor([z.null(), CreateOrUpdateThreadTagRequestSchema]))
     .max(20)
     .nullable()
     .exactOptional(),
@@ -4141,9 +4121,9 @@ export const CreateGuildInviteRequestSchema = z.object({
   temporary: z.boolean().nullable().exactOptional(),
   max_uses: z.int().min(0).max(100).nullable().exactOptional(),
   unique: z.boolean().nullable().exactOptional(),
-  target_user_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]).exactOptional(),
-  target_application_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]).exactOptional(),
-  target_type: z.xor([z.null().nullable(), InviteTargetTypesSchema]).exactOptional(),
+  target_user_id: z.xor([z.null(), SnowflakeTypeSchema]).exactOptional(),
+  target_application_id: z.xor([z.null(), SnowflakeTypeSchema]).exactOptional(),
+  target_type: z.xor([z.null(), InviteTargetTypesSchema]).exactOptional(),
   role_ids: z
     .xor([
       z.string(),
@@ -4151,7 +4131,7 @@ export const CreateGuildInviteRequestSchema = z.object({
         .array(SnowflakeTypeSchema)
         .max(250)
         .refine((val) => new Set(val).size === val.length),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   target_user_ids: z
@@ -4161,7 +4141,7 @@ export const CreateGuildInviteRequestSchema = z.object({
         .array(SnowflakeTypeSchema)
         .max(1000)
         .refine((val) => new Set(val).size === val.length),
-      z.null().nullable(),
+      z.null(),
     ])
     .meta({ description: 'The IDs of the users to target with this invite.' })
     .exactOptional(),
@@ -4172,9 +4152,7 @@ export type CreateGuildInviteRequest = z.infer<typeof CreateGuildInviteRequestSc
 export const IncomingWebhookInteractionRequestSchema = z.object({
   content: z.string().max(2000).nullable().exactOptional(),
   embeds: z.array(RichEmbedSchema).max(10).nullable().exactOptional(),
-  allowed_mentions: z
-    .xor([z.null().nullable(), MessageAllowedMentionsRequestSchema])
-    .exactOptional(),
+  allowed_mentions: z.xor([z.null(), MessageAllowedMentionsRequestSchema]).exactOptional(),
   components: z
     .array(
       z.xor([
@@ -4191,7 +4169,7 @@ export const IncomingWebhookInteractionRequestSchema = z.object({
     .nullable()
     .exactOptional(),
   attachments: z.array(MessageAttachmentRequestSchema).max(10).nullable().exactOptional(),
-  poll: z.xor([z.null().nullable(), PollCreateRequestSchema]).exactOptional(),
+  poll: z.xor([z.null(), PollCreateRequestSchema]).exactOptional(),
   tts: z.boolean().nullable().exactOptional(),
   flags: z.int().nullable().exactOptional(),
 })
@@ -4202,7 +4180,7 @@ export type IncomingWebhookInteractionRequest = z.infer<
 
 export const CreateMessageInteractionCallbackRequestSchema = z.object({
   type: InteractionCallbackTypesSchema,
-  data: z.xor([z.null().nullable(), IncomingWebhookInteractionRequestSchema]).exactOptional(),
+  data: z.xor([z.null(), IncomingWebhookInteractionRequestSchema]).exactOptional(),
 })
 
 export type CreateMessageInteractionCallbackRequest = z.infer<
@@ -4270,7 +4248,7 @@ export const MessageResponseSchema = z.object({
       z
         .union([z.bigint(), z.number().int(), z.string().regex(/^-?\d+$/)])
         .transform((val) => BigInt(val))
-        .pipe(z.int64().min(-9223372036854776000n).max(9223372036854776000n)),
+        .pipe(z.int64().min(-9223372036854775808n).max(9223372036854775808n)),
       z.string().max(25),
     ])
     .exactOptional(),
@@ -4295,7 +4273,7 @@ export const MessageResponseSchema = z.object({
   lobby_member: MessageLobbyMemberResponseSchema.exactOptional(),
   actor: UserResponseSchema.exactOptional(),
   reactions: z.array(MessageReactionResponseSchema).exactOptional(),
-  referenced_message: z.xor([z.null().nullable(), BasicMessageResponseSchema]).exactOptional(),
+  referenced_message: z.xor([z.null(), BasicMessageResponseSchema]).exactOptional(),
 })
 
 export type MessageResponse = z.infer<typeof MessageResponseSchema>
@@ -4310,7 +4288,7 @@ export type CreateMessageInteractionCallbackResponse = z.infer<
 >
 
 export const CreatePrivateChannelRequestSchema = z.object({
-  recipient_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]).exactOptional(),
+  recipient_id: z.xor([z.null(), SnowflakeTypeSchema]).exactOptional(),
   access_tokens: z
     .array(z.string().max(152133))
     .max(1521)
@@ -4334,7 +4312,7 @@ export const CreateRoleRequestSchema = z.object({
   name: z.string().min(1).max(100).nullable().exactOptional(),
   permissions: z.int().nullable().exactOptional(),
   color: z.int().min(0).max(16777215).nullable().exactOptional(),
-  colors: z.xor([z.null().nullable(), RoleColorsSchema]).exactOptional(),
+  colors: z.xor([z.null(), RoleColorsSchema]).exactOptional(),
   hoist: z.boolean().nullable().exactOptional(),
   mentionable: z.boolean().nullable().exactOptional(),
   icon: z.string().nullable().exactOptional(),
@@ -4345,9 +4323,7 @@ export type CreateRoleRequest = z.infer<typeof CreateRoleRequestSchema>
 
 export const CreateTextThreadWithMessageRequestSchema = z.object({
   name: z.string().min(1).max(100),
-  auto_archive_duration: z
-    .xor([z.null().nullable(), ThreadAutoArchiveDurationSchema])
-    .exactOptional(),
+  auto_archive_duration: z.xor([z.null(), ThreadAutoArchiveDurationSchema]).exactOptional(),
   rate_limit_per_user: z.int32().min(0).max(21600).nullable().exactOptional(),
 })
 
@@ -4357,11 +4333,9 @@ export type CreateTextThreadWithMessageRequest = z.infer<
 
 export const CreateTextThreadWithoutMessageRequestSchema = z.object({
   name: z.string().min(1).max(100),
-  auto_archive_duration: z
-    .xor([z.null().nullable(), ThreadAutoArchiveDurationSchema])
-    .exactOptional(),
+  auto_archive_duration: z.xor([z.null(), ThreadAutoArchiveDurationSchema]).exactOptional(),
   rate_limit_per_user: z.int32().min(0).max(21600).nullable().exactOptional(),
-  type: z.xor([z.null().nullable(), ChannelTypesSchema]).exactOptional(),
+  type: z.xor([z.null(), ChannelTypesSchema]).exactOptional(),
   invitable: z.boolean().nullable().exactOptional(),
 })
 
@@ -4372,12 +4346,12 @@ export type CreateTextThreadWithoutMessageRequest = z.infer<
 export const CreatedThreadResponseSchema = z.object({
   id: SnowflakeTypeSchema,
   type: ChannelTypesSchema,
-  last_message_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]).exactOptional(),
+  last_message_id: z.xor([z.null(), SnowflakeTypeSchema]).exactOptional(),
   flags: z.int32(),
   last_pin_timestamp: z.iso.datetime({ offset: true }).nullable().exactOptional(),
   guild_id: SnowflakeTypeSchema,
   name: z.string(),
-  parent_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]).exactOptional(),
+  parent_id: z.xor([z.null(), SnowflakeTypeSchema]).exactOptional(),
   rate_limit_per_user: z.int32().exactOptional(),
   bitrate: z.int32().exactOptional(),
   user_limit: z.int32().exactOptional(),
@@ -4436,7 +4410,7 @@ export type QuarantineUserActionMetadata = z.infer<typeof QuarantineUserActionMe
 
 export const QuarantineUserActionSchema = z.object({
   type: AutomodActionTypeSchema,
-  metadata: z.xor([z.null().nullable(), QuarantineUserActionMetadataSchema]).exactOptional(),
+  metadata: z.xor([z.null(), QuarantineUserActionMetadataSchema]).exactOptional(),
 })
 
 export type QuarantineUserAction = z.infer<typeof QuarantineUserActionSchema>
@@ -4601,7 +4575,7 @@ export const IntegrationApplicationResponseSchema = z.object({
   name: z.string(),
   icon: z.string().nullable(),
   description: z.string(),
-  type: z.xor([z.null().nullable(), ApplicationTypesSchema]),
+  type: z.xor([z.null(), ApplicationTypesSchema]),
   cover_image: z.string().exactOptional(),
   primary_sku_id: SnowflakeTypeSchema.exactOptional(),
   flags: z.int32(),
@@ -4696,18 +4670,18 @@ export const EntitlementResponseSchema = z.object({
   sku_id: SnowflakeTypeSchema,
   application_id: SnowflakeTypeSchema,
   user_id: SnowflakeTypeSchema,
-  guild_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]).exactOptional(),
+  guild_id: z.xor([z.null(), SnowflakeTypeSchema]).exactOptional(),
   deleted: z.boolean(),
   starts_at: z.iso.datetime({ offset: true }).nullable(),
   ends_at: z.iso.datetime({ offset: true }).nullable(),
   type: EntitlementTypesSchema,
   fulfilled_at: z.iso.datetime({ offset: true }).nullable().exactOptional(),
   fulfillment_status: z
-    .xor([z.null().nullable(), EntitlementTenantFulfillmentStatusResponseSchema])
+    .xor([z.null(), EntitlementTenantFulfillmentStatusResponseSchema])
     .exactOptional(),
   consumed: z.boolean().exactOptional(),
-  gifter_user_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]).exactOptional(),
-  parent_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]).exactOptional(),
+  gifter_user_id: z.xor([z.null(), SnowflakeTypeSchema]).exactOptional(),
+  parent_id: z.xor([z.null(), SnowflakeTypeSchema]).exactOptional(),
 })
 
 export type EntitlementResponse = z.infer<typeof EntitlementResponseSchema>
@@ -4771,7 +4745,7 @@ export const ExternalConnectionIntegrationResponseSchema = z.object({
   expire_grace_period: IntegrationExpireGracePeriodTypesSchema.exactOptional(),
   subscriber_count: z.int32().exactOptional(),
   synced_at: z.iso.datetime({ offset: true }).exactOptional(),
-  role_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]).exactOptional(),
+  role_id: z.xor([z.null(), SnowflakeTypeSchema]).exactOptional(),
   syncing: z.boolean().exactOptional(),
   enable_emoticons: z.boolean().exactOptional(),
 })
@@ -4889,9 +4863,9 @@ export const ExternalScheduledEventCreateRequestSchema = z.object({
   scheduled_end_time: z.iso.datetime({ offset: true }).nullable().exactOptional(),
   privacy_level: GuildScheduledEventPrivacyLevelsSchema,
   entity_type: GuildScheduledEventEntityTypesSchema,
-  channel_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]).exactOptional(),
+  channel_id: z.xor([z.null(), SnowflakeTypeSchema]).exactOptional(),
   recurrence_rule: z
-    .xor([z.null().nullable(), RecurrenceRuleSchema])
+    .xor([z.null(), RecurrenceRuleSchema])
     .meta({ description: 'Recurrence rule for the scheduled event' })
     .exactOptional(),
   entity_metadata: EntityMetadataExternalSchema,
@@ -4911,17 +4885,17 @@ export const GuildScheduledEventStatusesSchema = z.xor([
 export type GuildScheduledEventStatuses = z.infer<typeof GuildScheduledEventStatusesSchema>
 
 export const ExternalScheduledEventPatchRequestPartialSchema = z.object({
-  status: z.xor([z.null().nullable(), GuildScheduledEventStatusesSchema]).exactOptional(),
+  status: z.xor([z.null(), GuildScheduledEventStatusesSchema]).exactOptional(),
   name: z.string().max(100).exactOptional(),
   description: z.string().max(1000).nullable().exactOptional(),
   image: z.string().nullable().exactOptional(),
   scheduled_start_time: z.iso.datetime({ offset: true }).exactOptional(),
   scheduled_end_time: z.iso.datetime({ offset: true }).nullable().exactOptional(),
-  entity_type: z.xor([z.null().nullable(), GuildScheduledEventEntityTypesSchema]).exactOptional(),
+  entity_type: z.xor([z.null(), GuildScheduledEventEntityTypesSchema]).exactOptional(),
   privacy_level: GuildScheduledEventPrivacyLevelsSchema.exactOptional(),
-  channel_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]).exactOptional(),
+  channel_id: z.xor([z.null(), SnowflakeTypeSchema]).exactOptional(),
   recurrence_rule: z
-    .xor([z.null().nullable(), RecurrenceRuleSchema])
+    .xor([z.null(), RecurrenceRuleSchema])
     .meta({ description: 'Recurrence rule for the scheduled event' })
     .exactOptional(),
   entity_metadata: EntityMetadataExternalSchema.exactOptional(),
@@ -4988,7 +4962,7 @@ export type GuildScheduledEventUserResponses = z.infer<
 export const ScheduledEventUserResponseSchema = z.object({
   guild_scheduled_event_id: SnowflakeTypeSchema.meta({ description: 'ID of the scheduled event' }),
   guild_scheduled_event_exception_id: z
-    .xor([z.null().nullable(), SnowflakeTypeSchema])
+    .xor([z.null(), SnowflakeTypeSchema])
     .meta({ description: 'ID of the scheduled event exception' })
     .exactOptional(),
   user_id: SnowflakeTypeSchema.meta({ description: 'ID of the user' }),
@@ -5031,13 +5005,13 @@ export const ExternalScheduledEventResponseSchema = z.object({
   name: z.string().meta({ description: 'Name of the scheduled event' }),
   description: z.string().nullable().meta({ description: 'Description of the scheduled event' }),
   channel_id: z
-    .xor([z.null().nullable(), SnowflakeTypeSchema])
+    .xor([z.null(), SnowflakeTypeSchema])
     .meta({
       description:
         'Channel ID in which the scheduled event will be hosted, or null if entity type is EXTERNAL',
     }),
   creator_id: z
-    .xor([z.null().nullable(), SnowflakeTypeSchema])
+    .xor([z.null(), SnowflakeTypeSchema])
     .meta({ description: 'ID of the user that created the scheduled event' }),
   creator: UserResponseSchema.meta({
     description: 'User that created the scheduled event',
@@ -5055,10 +5029,10 @@ export const ExternalScheduledEventResponseSchema = z.object({
     description: 'Type of hosting entity associated with the scheduled event',
   }),
   entity_id: z
-    .xor([z.null().nullable(), SnowflakeTypeSchema])
+    .xor([z.null(), SnowflakeTypeSchema])
     .meta({ description: 'ID of the hosting entity associated with the scheduled event' }),
   recurrence_rule: z
-    .xor([z.null().nullable(), RecurrenceRuleResponseSchema])
+    .xor([z.null(), RecurrenceRuleResponseSchema])
     .meta({ description: 'Recurrence rule for the scheduled event, or null if not recurring' }),
   user_count: z
     .int32()
@@ -5067,7 +5041,7 @@ export const ExternalScheduledEventResponseSchema = z.object({
   privacy_level: GuildScheduledEventPrivacyLevelsSchema.meta({
     description: 'Privacy level of the scheduled event',
   }),
-  user_rsvp: z.xor([z.null().nullable(), ScheduledEventUserResponseSchema]).exactOptional(),
+  user_rsvp: z.xor([z.null(), ScheduledEventUserResponseSchema]).exactOptional(),
   guild_scheduled_event_exceptions: z.array(GuildScheduledEventExceptionResponseSchema),
   entity_metadata: EntityMetadataExternalResponseSchema,
 })
@@ -5124,7 +5098,7 @@ export const FriendInviteResponseSchema = z.object({
   created_at: z.iso.datetime({ offset: true }).exactOptional(),
   expires_at: z.iso.datetime({ offset: true }).nullable(),
   friends_count: z.int32().exactOptional(),
-  channel: z.xor([z.null().nullable(), InviteChannelResponseSchema]),
+  channel: z.xor([z.null(), InviteChannelResponseSchema]),
   is_contact: z.boolean().exactOptional(),
   uses: z.int32().exactOptional(),
   max_uses: z.int32().exactOptional(),
@@ -5194,7 +5168,7 @@ export const GithubCheckRunSchema = z.object({
   html_url: z.url().max(2048),
   check_suite: GithubCheckSuiteSchema,
   details_url: z.url().max(2048).nullable().exactOptional(),
-  output: z.xor([z.null().nullable(), GithubCheckRunOutputSchema]).exactOptional(),
+  output: z.xor([z.null(), GithubCheckRunOutputSchema]).exactOptional(),
   pull_requests: z.array(GithubCheckPullRequestSchema).max(1521).nullable().exactOptional(),
 })
 
@@ -5282,23 +5256,23 @@ export const GithubWebhookSchema = z.object({
   action: z.string().max(152133).nullable().exactOptional(),
   ref: z.string().max(152133).nullable().exactOptional(),
   ref_type: z.string().max(152133).nullable().exactOptional(),
-  comment: z.xor([z.null().nullable(), GithubCommentSchema]).exactOptional(),
-  issue: z.xor([z.null().nullable(), GithubIssueSchema]).exactOptional(),
-  pull_request: z.xor([z.null().nullable(), GithubIssueSchema]).exactOptional(),
-  repository: z.xor([z.null().nullable(), GithubRepositorySchema]).exactOptional(),
-  forkee: z.xor([z.null().nullable(), GithubRepositorySchema]).exactOptional(),
+  comment: z.xor([z.null(), GithubCommentSchema]).exactOptional(),
+  issue: z.xor([z.null(), GithubIssueSchema]).exactOptional(),
+  pull_request: z.xor([z.null(), GithubIssueSchema]).exactOptional(),
+  repository: z.xor([z.null(), GithubRepositorySchema]).exactOptional(),
+  forkee: z.xor([z.null(), GithubRepositorySchema]).exactOptional(),
   sender: GithubUserSchema,
-  member: z.xor([z.null().nullable(), GithubUserSchema]).exactOptional(),
-  release: z.xor([z.null().nullable(), GithubReleaseSchema]).exactOptional(),
-  head_commit: z.xor([z.null().nullable(), GithubCommitSchema]).exactOptional(),
+  member: z.xor([z.null(), GithubUserSchema]).exactOptional(),
+  release: z.xor([z.null(), GithubReleaseSchema]).exactOptional(),
+  head_commit: z.xor([z.null(), GithubCommitSchema]).exactOptional(),
   commits: z.array(GithubCommitSchema).max(1521).nullable().exactOptional(),
   forced: z.boolean().nullable().exactOptional(),
   compare: z.url().max(2048).nullable().exactOptional(),
-  review: z.xor([z.null().nullable(), GithubReviewSchema]).exactOptional(),
-  check_run: z.xor([z.null().nullable(), GithubCheckRunSchema]).exactOptional(),
-  check_suite: z.xor([z.null().nullable(), GithubCheckSuiteSchema]).exactOptional(),
-  discussion: z.xor([z.null().nullable(), GithubDiscussionSchema]).exactOptional(),
-  answer: z.xor([z.null().nullable(), GithubCommentSchema]).exactOptional(),
+  review: z.xor([z.null(), GithubReviewSchema]).exactOptional(),
+  check_run: z.xor([z.null(), GithubCheckRunSchema]).exactOptional(),
+  check_suite: z.xor([z.null(), GithubCheckSuiteSchema]).exactOptional(),
+  discussion: z.xor([z.null(), GithubDiscussionSchema]).exactOptional(),
+  answer: z.xor([z.null(), GithubCommentSchema]).exactOptional(),
 })
 
 export type GithubWebhook = z.infer<typeof GithubWebhookSchema>
@@ -5351,10 +5325,10 @@ export type PartialGuildSubscriptionIntegrationResponse = z.infer<
 >
 
 export const GuildIncomingWebhookResponseSchema = z.object({
-  application_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]),
+  application_id: z.xor([z.null(), SnowflakeTypeSchema]),
   avatar: z.string().nullable(),
-  channel_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]),
-  guild_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]).exactOptional(),
+  channel_id: z.xor([z.null(), SnowflakeTypeSchema]),
+  guild_id: z.xor([z.null(), SnowflakeTypeSchema]).exactOptional(),
   id: SnowflakeTypeSchema,
   name: z.string(),
   type: WebhookTypesSchema,
@@ -5373,13 +5347,13 @@ export const StageScheduledEventResponseSchema = z.object({
   name: z.string().meta({ description: 'Name of the scheduled event' }),
   description: z.string().nullable().meta({ description: 'Description of the scheduled event' }),
   channel_id: z
-    .xor([z.null().nullable(), SnowflakeTypeSchema])
+    .xor([z.null(), SnowflakeTypeSchema])
     .meta({
       description:
         'Channel ID in which the scheduled event will be hosted, or null if entity type is EXTERNAL',
     }),
   creator_id: z
-    .xor([z.null().nullable(), SnowflakeTypeSchema])
+    .xor([z.null(), SnowflakeTypeSchema])
     .meta({ description: 'ID of the user that created the scheduled event' }),
   creator: UserResponseSchema.meta({
     description: 'User that created the scheduled event',
@@ -5397,10 +5371,10 @@ export const StageScheduledEventResponseSchema = z.object({
     description: 'Type of hosting entity associated with the scheduled event',
   }),
   entity_id: z
-    .xor([z.null().nullable(), SnowflakeTypeSchema])
+    .xor([z.null(), SnowflakeTypeSchema])
     .meta({ description: 'ID of the hosting entity associated with the scheduled event' }),
   recurrence_rule: z
-    .xor([z.null().nullable(), RecurrenceRuleResponseSchema])
+    .xor([z.null(), RecurrenceRuleResponseSchema])
     .meta({ description: 'Recurrence rule for the scheduled event, or null if not recurring' }),
   user_count: z
     .int32()
@@ -5409,9 +5383,9 @@ export const StageScheduledEventResponseSchema = z.object({
   privacy_level: GuildScheduledEventPrivacyLevelsSchema.meta({
     description: 'Privacy level of the scheduled event',
   }),
-  user_rsvp: z.xor([z.null().nullable(), ScheduledEventUserResponseSchema]).exactOptional(),
+  user_rsvp: z.xor([z.null(), ScheduledEventUserResponseSchema]).exactOptional(),
   guild_scheduled_event_exceptions: z.array(GuildScheduledEventExceptionResponseSchema),
-  entity_metadata: z.xor([z.null().nullable(), EntityMetadataStageInstanceResponseSchema]),
+  entity_metadata: z.xor([z.null(), EntityMetadataStageInstanceResponseSchema]),
 })
 
 export type StageScheduledEventResponse = z.infer<typeof StageScheduledEventResponseSchema>
@@ -5424,13 +5398,13 @@ export const VoiceScheduledEventResponseSchema = z.object({
   name: z.string().meta({ description: 'Name of the scheduled event' }),
   description: z.string().nullable().meta({ description: 'Description of the scheduled event' }),
   channel_id: z
-    .xor([z.null().nullable(), SnowflakeTypeSchema])
+    .xor([z.null(), SnowflakeTypeSchema])
     .meta({
       description:
         'Channel ID in which the scheduled event will be hosted, or null if entity type is EXTERNAL',
     }),
   creator_id: z
-    .xor([z.null().nullable(), SnowflakeTypeSchema])
+    .xor([z.null(), SnowflakeTypeSchema])
     .meta({ description: 'ID of the user that created the scheduled event' }),
   creator: UserResponseSchema.meta({
     description: 'User that created the scheduled event',
@@ -5448,10 +5422,10 @@ export const VoiceScheduledEventResponseSchema = z.object({
     description: 'Type of hosting entity associated with the scheduled event',
   }),
   entity_id: z
-    .xor([z.null().nullable(), SnowflakeTypeSchema])
+    .xor([z.null(), SnowflakeTypeSchema])
     .meta({ description: 'ID of the hosting entity associated with the scheduled event' }),
   recurrence_rule: z
-    .xor([z.null().nullable(), RecurrenceRuleResponseSchema])
+    .xor([z.null(), RecurrenceRuleResponseSchema])
     .meta({ description: 'Recurrence rule for the scheduled event, or null if not recurring' }),
   user_count: z
     .int32()
@@ -5460,9 +5434,9 @@ export const VoiceScheduledEventResponseSchema = z.object({
   privacy_level: GuildScheduledEventPrivacyLevelsSchema.meta({
     description: 'Privacy level of the scheduled event',
   }),
-  user_rsvp: z.xor([z.null().nullable(), ScheduledEventUserResponseSchema]).exactOptional(),
+  user_rsvp: z.xor([z.null(), ScheduledEventUserResponseSchema]).exactOptional(),
   guild_scheduled_event_exceptions: z.array(GuildScheduledEventExceptionResponseSchema),
-  entity_metadata: z.xor([z.null().nullable(), EntityMetadataVoiceResponseSchema]),
+  entity_metadata: z.xor([z.null(), EntityMetadataVoiceResponseSchema]),
 })
 
 export type VoiceScheduledEventResponse = z.infer<typeof VoiceScheduledEventResponseSchema>
@@ -5621,7 +5595,7 @@ export const GuildAuditLogResponseSchema = z.object({
       MLSpamRuleResponseSchema,
       MentionSpamRuleResponseSchema,
       UserProfileRuleResponseSchema,
-      z.null().nullable(),
+      z.null(),
     ]),
   ),
 })
@@ -5738,7 +5712,7 @@ export const NewMemberActionTypeSchema = z.xor([z.literal(0), z.literal(1)])
 export type NewMemberActionType = z.infer<typeof NewMemberActionTypeSchema>
 
 export const SettingsEmojiResponseSchema = z.object({
-  id: z.xor([z.null().nullable(), SnowflakeTypeSchema]),
+  id: z.xor([z.null(), SnowflakeTypeSchema]),
   name: z.string().nullable(),
   animated: z.boolean(),
 })
@@ -5831,9 +5805,9 @@ export const InviteGuildResponseSchema = z.object({
   description: z.string().nullable(),
   icon: z.string().nullable(),
   features: z.array(GuildFeaturesSchema).refine((val) => new Set(val).size === val.length),
-  verification_level: z.xor([z.null().nullable(), VerificationLevelsSchema]),
+  verification_level: z.xor([z.null(), VerificationLevelsSchema]),
   vanity_url_code: z.string().nullable(),
-  nsfw_level: z.xor([z.null().nullable(), GuildNSFWContentLevelSchema]),
+  nsfw_level: z.xor([z.null(), GuildNSFWContentLevelSchema]),
   nsfw: z.boolean().nullable(),
   premium_subscription_count: z.int32(),
 })
@@ -5845,7 +5819,7 @@ export const InviteApplicationResponseSchema = z.object({
   name: z.string(),
   icon: z.string().nullable(),
   description: z.string(),
-  type: z.xor([z.null().nullable(), ApplicationTypesSchema]),
+  type: z.xor([z.null(), ApplicationTypesSchema]),
   cover_image: z.string().exactOptional(),
   primary_sku_id: SnowflakeTypeSchema.exactOptional(),
   flags: z.int32(),
@@ -5883,13 +5857,13 @@ export const ScheduledEventResponseSchema = z.object({
   name: z.string().meta({ description: 'Name of the scheduled event' }),
   description: z.string().nullable().meta({ description: 'Description of the scheduled event' }),
   channel_id: z
-    .xor([z.null().nullable(), SnowflakeTypeSchema])
+    .xor([z.null(), SnowflakeTypeSchema])
     .meta({
       description:
         'Channel ID in which the scheduled event will be hosted, or null if entity type is EXTERNAL',
     }),
   creator_id: z
-    .xor([z.null().nullable(), SnowflakeTypeSchema])
+    .xor([z.null(), SnowflakeTypeSchema])
     .meta({ description: 'ID of the user that created the scheduled event' }),
   creator: UserResponseSchema.meta({
     description: 'User that created the scheduled event',
@@ -5907,10 +5881,10 @@ export const ScheduledEventResponseSchema = z.object({
     description: 'Type of hosting entity associated with the scheduled event',
   }),
   entity_id: z
-    .xor([z.null().nullable(), SnowflakeTypeSchema])
+    .xor([z.null(), SnowflakeTypeSchema])
     .meta({ description: 'ID of the hosting entity associated with the scheduled event' }),
   recurrence_rule: z
-    .xor([z.null().nullable(), RecurrenceRuleResponseSchema])
+    .xor([z.null(), RecurrenceRuleResponseSchema])
     .meta({ description: 'Recurrence rule for the scheduled event, or null if not recurring' }),
   user_count: z
     .int32()
@@ -5919,7 +5893,7 @@ export const ScheduledEventResponseSchema = z.object({
   privacy_level: GuildScheduledEventPrivacyLevelsSchema.meta({
     description: 'Privacy level of the scheduled event',
   }),
-  user_rsvp: z.xor([z.null().nullable(), ScheduledEventUserResponseSchema]).exactOptional(),
+  user_rsvp: z.xor([z.null(), ScheduledEventUserResponseSchema]).exactOptional(),
   guild_scheduled_event_exceptions: z.array(GuildScheduledEventExceptionResponseSchema),
 })
 
@@ -6086,7 +6060,7 @@ export const GuildJoinRequestResponseSchema = z.object({
   id: SnowflakeTypeSchema,
   created_at: z.iso.datetime({ offset: true }),
   reviewed_at: z.iso.datetime({ offset: true }).nullable(),
-  application_status: z.xor([z.null().nullable(), GuildJoinRequestApplicationStatusSchema]),
+  application_status: z.xor([z.null(), GuildJoinRequestApplicationStatusSchema]),
   rejection_reason: z
     .string()
     .nullable()
@@ -6095,7 +6069,7 @@ export const GuildJoinRequestResponseSchema = z.object({
     }),
   guild_id: SnowflakeTypeSchema,
   user_id: SnowflakeTypeSchema,
-  user: z.xor([z.null().nullable(), UserResponseSchema]).exactOptional(),
+  user: z.xor([z.null(), UserResponseSchema]).exactOptional(),
   form_responses: z
     .array(
       z.xor([
@@ -6108,7 +6082,7 @@ export const GuildJoinRequestResponseSchema = z.object({
     .nullable()
     .meta({ description: "Applicant's responses on join request form" })
     .exactOptional(),
-  actioned_by_user: z.xor([z.null().nullable(), UserResponseSchema]).exactOptional(),
+  actioned_by_user: z.xor([z.null(), UserResponseSchema]).exactOptional(),
 })
 
 export type GuildJoinRequestResponse = z.infer<typeof GuildJoinRequestResponseSchema>
@@ -6197,17 +6171,13 @@ export const GuildPatchRequestPartialSchema = z.object({
   description: z.string().min(0).max(300).nullable().exactOptional(),
   region: z.string().nullable().exactOptional(),
   icon: z.string().nullable().exactOptional(),
-  verification_level: z.xor([z.null().nullable(), VerificationLevelsSchema]).exactOptional(),
-  default_message_notifications: z
-    .xor([z.null().nullable(), UserNotificationSettingsSchema])
-    .exactOptional(),
-  explicit_content_filter: z
-    .xor([z.null().nullable(), GuildExplicitContentFilterTypesSchema])
-    .exactOptional(),
-  preferred_locale: z.xor([z.null().nullable(), AvailableLocalesEnumSchema]).exactOptional(),
-  afk_timeout: z.xor([z.null().nullable(), AfkTimeoutsSchema]).exactOptional(),
-  afk_channel_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]).exactOptional(),
-  system_channel_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]).exactOptional(),
+  verification_level: z.xor([z.null(), VerificationLevelsSchema]).exactOptional(),
+  default_message_notifications: z.xor([z.null(), UserNotificationSettingsSchema]).exactOptional(),
+  explicit_content_filter: z.xor([z.null(), GuildExplicitContentFilterTypesSchema]).exactOptional(),
+  preferred_locale: z.xor([z.null(), AvailableLocalesEnumSchema]).exactOptional(),
+  afk_timeout: z.xor([z.null(), AfkTimeoutsSchema]).exactOptional(),
+  afk_channel_id: z.xor([z.null(), SnowflakeTypeSchema]).exactOptional(),
+  system_channel_id: z.xor([z.null(), SnowflakeTypeSchema]).exactOptional(),
   splash: z.string().nullable().exactOptional(),
   banner: z.string().nullable().exactOptional(),
   system_channel_flags: z.int().nullable().exactOptional(),
@@ -6219,9 +6189,9 @@ export const GuildPatchRequestPartialSchema = z.object({
     .exactOptional(),
   discovery_splash: z.string().nullable().exactOptional(),
   home_header: z.string().nullable().exactOptional(),
-  rules_channel_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]).exactOptional(),
-  safety_alerts_channel_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]).exactOptional(),
-  public_updates_channel_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]).exactOptional(),
+  rules_channel_id: z.xor([z.null(), SnowflakeTypeSchema]).exactOptional(),
+  safety_alerts_channel_id: z.xor([z.null(), SnowflakeTypeSchema]).exactOptional(),
+  public_updates_channel_id: z.xor([z.null(), SnowflakeTypeSchema]).exactOptional(),
   premium_progress_bar_enabled: z.boolean().nullable().exactOptional(),
 })
 
@@ -6268,14 +6238,14 @@ export const GuildResponseSchema = z.object({
   features: z.array(GuildFeaturesSchema).refine((val) => new Set(val).size === val.length),
   banner: z.string().nullable(),
   owner_id: SnowflakeTypeSchema,
-  application_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]),
+  application_id: z.xor([z.null(), SnowflakeTypeSchema]),
   region: z.string(),
-  afk_channel_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]),
+  afk_channel_id: z.xor([z.null(), SnowflakeTypeSchema]),
   afk_timeout: AfkTimeoutsSchema,
-  system_channel_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]),
+  system_channel_id: z.xor([z.null(), SnowflakeTypeSchema]),
   system_channel_flags: z.int32(),
   widget_enabled: z.boolean(),
-  widget_channel_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]),
+  widget_channel_id: z.xor([z.null(), SnowflakeTypeSchema]),
   verification_level: VerificationLevelsSchema,
   roles: z.array(GuildRoleResponseSchema),
   default_message_notifications: UserNotificationSettingsSchema,
@@ -6289,9 +6259,9 @@ export const GuildResponseSchema = z.object({
   premium_tier: PremiumGuildTiersSchema,
   premium_subscription_count: z.int32(),
   preferred_locale: AvailableLocalesEnumSchema,
-  rules_channel_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]),
-  safety_alerts_channel_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]),
-  public_updates_channel_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]),
+  rules_channel_id: z.xor([z.null(), SnowflakeTypeSchema]),
+  safety_alerts_channel_id: z.xor([z.null(), SnowflakeTypeSchema]),
+  public_updates_channel_id: z.xor([z.null(), SnowflakeTypeSchema]),
   premium_progress_bar_enabled: z.boolean(),
   premium_progress_bar_enabled_user_updated_at: z.iso
     .datetime({ offset: true })
@@ -6301,7 +6271,7 @@ export const GuildResponseSchema = z.object({
   nsfw_level: GuildNSFWContentLevelSchema,
   emojis: z.array(EmojiResponseSchema),
   stickers: z.array(GuildStickerResponseSchema),
-  incidents_data: z.xor([z.null().nullable(), GuildIncidentsDataResponseSchema]),
+  incidents_data: z.xor([z.null(), GuildIncidentsDataResponseSchema]),
 })
 
 export type GuildResponse = z.infer<typeof GuildResponseSchema>
@@ -6394,7 +6364,7 @@ export const SearchMessageResponseSchema = z.object({
       z
         .union([z.bigint(), z.number().int(), z.string().regex(/^-?\d+$/)])
         .transform((val) => BigInt(val))
-        .pipe(z.int64().min(-9223372036854776000n).max(9223372036854776000n)),
+        .pipe(z.int64().min(-9223372036854775808n).max(9223372036854775808n)),
       z.string().max(25),
     ])
     .exactOptional(),
@@ -6419,7 +6389,7 @@ export const SearchMessageResponseSchema = z.object({
   lobby_member: MessageLobbyMemberResponseSchema.exactOptional(),
   actor: UserResponseSchema.exactOptional(),
   reactions: z.array(MessageReactionResponseSchema).exactOptional(),
-  referenced_message: z.xor([z.null().nullable(), BasicMessageResponseSchema]).exactOptional(),
+  referenced_message: z.xor([z.null(), BasicMessageResponseSchema]).exactOptional(),
   hit: z.boolean(),
   restriction_count: z.int32().exactOptional(),
   author_restriction_count: z.int32().exactOptional(),
@@ -6455,7 +6425,7 @@ export type GuildSubscriptionIntegrationResponse = z.infer<
 export const GuildTemplateChannelTagsSchema = z.object({
   id: z.int32().nullable(),
   name: z.string(),
-  emoji_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]),
+  emoji_id: z.xor([z.null(), SnowflakeTypeSchema]),
   emoji_name: z.string().nullable(),
   moderated: z.boolean().nullable(),
 })
@@ -6472,16 +6442,16 @@ export const GuildTemplateChannelResponseSchema = z.object({
   user_limit: z.int32(),
   nsfw: z.boolean(),
   rate_limit_per_user: z.int32(),
-  parent_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]),
-  default_auto_archive_duration: z.xor([z.null().nullable(), ThreadAutoArchiveDurationSchema]),
+  parent_id: z.xor([z.null(), SnowflakeTypeSchema]),
+  default_auto_archive_duration: z.xor([z.null(), ThreadAutoArchiveDurationSchema]),
   permission_overwrites: z.array(ChannelPermissionOverwriteResponseSchema),
   available_tags: z.array(GuildTemplateChannelTagsSchema).nullable(),
   template: z.string(),
-  default_reaction_emoji: z.xor([z.null().nullable(), DefaultReactionEmojiResponseSchema]),
+  default_reaction_emoji: z.xor([z.null(), DefaultReactionEmojiResponseSchema]),
   default_thread_rate_limit_per_user: z.int32().nullable(),
-  default_sort_order: z.xor([z.null().nullable(), ThreadSortOrderSchema]),
-  default_forum_layout: z.xor([z.null().nullable(), ForumLayoutSchema]),
-  default_tag_setting: z.xor([z.null().nullable(), ThreadSearchTagSettingSchema]),
+  default_sort_order: z.xor([z.null(), ThreadSortOrderSchema]),
+  default_forum_layout: z.xor([z.null(), ForumLayoutSchema]),
+  default_tag_setting: z.xor([z.null(), ThreadSearchTagSettingSchema]),
   theme_color: z.int32().nullable(),
 })
 
@@ -6500,7 +6470,7 @@ export const GuildTemplateRoleResponseSchema = z.object({
   name: z.string(),
   permissions: z.string(),
   color: z.int32(),
-  colors: z.xor([z.null().nullable(), GuildTemplateRoleColorsResponseSchema]),
+  colors: z.xor([z.null(), GuildTemplateRoleColorsResponseSchema]),
   hoist: z.boolean(),
   mentionable: z.boolean(),
   icon: z.string().nullable(),
@@ -6517,9 +6487,9 @@ export const GuildTemplateSnapshotResponseSchema = z.object({
   default_message_notifications: UserNotificationSettingsSchema,
   explicit_content_filter: GuildExplicitContentFilterTypesSchema,
   preferred_locale: AvailableLocalesEnumSchema,
-  afk_channel_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]),
+  afk_channel_id: z.xor([z.null(), SnowflakeTypeSchema]),
   afk_timeout: AfkTimeoutsSchema,
-  system_channel_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]),
+  system_channel_id: z.xor([z.null(), SnowflakeTypeSchema]),
   system_channel_flags: z.int32(),
   roles: z.array(GuildTemplateRoleResponseSchema),
   channels: z.array(GuildTemplateChannelResponseSchema),
@@ -6533,7 +6503,7 @@ export const GuildTemplateResponseSchema = z.object({
   description: z.string().nullable(),
   usage_count: z.int32(),
   creator_id: SnowflakeTypeSchema,
-  creator: z.xor([z.null().nullable(), UserResponseSchema]),
+  creator: z.xor([z.null(), UserResponseSchema]),
   created_at: z.iso.datetime({ offset: true }),
   updated_at: z.iso.datetime({ offset: true }),
   source_guild_id: SnowflakeTypeSchema,
@@ -6546,7 +6516,7 @@ export type GuildTemplateResponse = z.infer<typeof GuildTemplateResponseSchema>
 export const GuildWelcomeChannelSchema = z.object({
   channel_id: SnowflakeTypeSchema,
   description: z.string().min(1).max(50),
-  emoji_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]).exactOptional(),
+  emoji_id: z.xor([z.null(), SnowflakeTypeSchema]).exactOptional(),
   emoji_name: z.string().max(152133).nullable().exactOptional(),
 })
 
@@ -6555,7 +6525,7 @@ export type GuildWelcomeChannel = z.infer<typeof GuildWelcomeChannelSchema>
 export const GuildWelcomeScreenChannelResponseSchema = z.object({
   channel_id: SnowflakeTypeSchema,
   description: z.string(),
-  emoji_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]),
+  emoji_id: z.xor([z.null(), SnowflakeTypeSchema]),
   emoji_name: z.string().nullable(),
 })
 
@@ -6581,14 +6551,14 @@ export const GuildWithCountsResponseSchema = z.object({
   features: z.array(GuildFeaturesSchema).refine((val) => new Set(val).size === val.length),
   banner: z.string().nullable(),
   owner_id: SnowflakeTypeSchema,
-  application_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]),
+  application_id: z.xor([z.null(), SnowflakeTypeSchema]),
   region: z.string(),
-  afk_channel_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]),
+  afk_channel_id: z.xor([z.null(), SnowflakeTypeSchema]),
   afk_timeout: AfkTimeoutsSchema,
-  system_channel_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]),
+  system_channel_id: z.xor([z.null(), SnowflakeTypeSchema]),
   system_channel_flags: z.int32(),
   widget_enabled: z.boolean(),
-  widget_channel_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]),
+  widget_channel_id: z.xor([z.null(), SnowflakeTypeSchema]),
   verification_level: VerificationLevelsSchema,
   roles: z.array(GuildRoleResponseSchema),
   default_message_notifications: UserNotificationSettingsSchema,
@@ -6602,9 +6572,9 @@ export const GuildWithCountsResponseSchema = z.object({
   premium_tier: PremiumGuildTiersSchema,
   premium_subscription_count: z.int32(),
   preferred_locale: AvailableLocalesEnumSchema,
-  rules_channel_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]),
-  safety_alerts_channel_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]),
-  public_updates_channel_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]),
+  rules_channel_id: z.xor([z.null(), SnowflakeTypeSchema]),
+  safety_alerts_channel_id: z.xor([z.null(), SnowflakeTypeSchema]),
+  public_updates_channel_id: z.xor([z.null(), SnowflakeTypeSchema]),
   premium_progress_bar_enabled: z.boolean(),
   premium_progress_bar_enabled_user_updated_at: z.iso
     .datetime({ offset: true })
@@ -6614,7 +6584,7 @@ export const GuildWithCountsResponseSchema = z.object({
   nsfw_level: GuildNSFWContentLevelSchema,
   emojis: z.array(EmojiResponseSchema),
   stickers: z.array(GuildStickerResponseSchema),
-  incidents_data: z.xor([z.null().nullable(), GuildIncidentsDataResponseSchema]),
+  incidents_data: z.xor([z.null(), GuildIncidentsDataResponseSchema]),
   approximate_member_count: z.int32().nullable().exactOptional(),
   approximate_presence_count: z.int32().nullable().exactOptional(),
 })
@@ -6647,9 +6617,7 @@ export type HasOption = z.infer<typeof HasOptionSchema>
 export const IncomingWebhookRequestPartialSchema = z.object({
   content: z.string().max(2000).nullable().exactOptional(),
   embeds: z.array(RichEmbedSchema).max(10).nullable().exactOptional(),
-  allowed_mentions: z
-    .xor([z.null().nullable(), MessageAllowedMentionsRequestSchema])
-    .exactOptional(),
+  allowed_mentions: z.xor([z.null(), MessageAllowedMentionsRequestSchema]).exactOptional(),
   components: z
     .array(
       z.xor([
@@ -6666,7 +6634,7 @@ export const IncomingWebhookRequestPartialSchema = z.object({
     .nullable()
     .exactOptional(),
   attachments: z.array(MessageAttachmentRequestSchema).max(10).nullable().exactOptional(),
-  poll: z.xor([z.null().nullable(), PollCreateRequestSchema]).exactOptional(),
+  poll: z.xor([z.null(), PollCreateRequestSchema]).exactOptional(),
   tts: z.boolean().nullable().exactOptional(),
   flags: z.int().nullable().exactOptional(),
   username: z.string().min(1).max(80).nullable().exactOptional(),
@@ -6680,9 +6648,7 @@ export type IncomingWebhookRequestPartial = z.infer<typeof IncomingWebhookReques
 export const IncomingWebhookUpdateForInteractionCallbackRequestPartialSchema = z.object({
   content: z.string().max(2000).nullable().exactOptional(),
   embeds: z.array(RichEmbedSchema).max(10).nullable().exactOptional(),
-  allowed_mentions: z
-    .xor([z.null().nullable(), MessageAllowedMentionsRequestSchema])
-    .exactOptional(),
+  allowed_mentions: z.xor([z.null(), MessageAllowedMentionsRequestSchema]).exactOptional(),
   components: z
     .array(
       z.xor([
@@ -6709,9 +6675,7 @@ export type IncomingWebhookUpdateForInteractionCallbackRequestPartial = z.infer<
 export const IncomingWebhookUpdateRequestPartialSchema = z.object({
   content: z.string().max(2000).nullable().exactOptional(),
   embeds: z.array(RichEmbedSchema).max(10).nullable().exactOptional(),
-  allowed_mentions: z
-    .xor([z.null().nullable(), MessageAllowedMentionsRequestSchema])
-    .exactOptional(),
+  allowed_mentions: z.xor([z.null(), MessageAllowedMentionsRequestSchema]).exactOptional(),
   components: z
     .array(
       z.xor([
@@ -6728,7 +6692,7 @@ export const IncomingWebhookUpdateRequestPartialSchema = z.object({
     .nullable()
     .exactOptional(),
   attachments: z.array(MessageAttachmentRequestSchema).max(10).nullable().exactOptional(),
-  poll: z.xor([z.null().nullable(), PollCreateRequestSchema]).exactOptional(),
+  poll: z.xor([z.null(), PollCreateRequestSchema]).exactOptional(),
   flags: z.int().nullable().exactOptional(),
 })
 
@@ -6818,7 +6782,7 @@ export const KeywordUpsertRequestSchema = z.object({
     .nullable()
     .exactOptional(),
   trigger_type: AutomodTriggerTypeSchema,
-  trigger_metadata: z.xor([z.null().nullable(), KeywordTriggerMetadataSchema]).exactOptional(),
+  trigger_metadata: z.xor([z.null(), KeywordTriggerMetadataSchema]).exactOptional(),
 })
 
 export type KeywordUpsertRequest = z.infer<typeof KeywordUpsertRequestSchema>
@@ -6853,7 +6817,7 @@ export const KeywordUpsertRequestPartialSchema = z.object({
     .nullable()
     .exactOptional(),
   trigger_type: AutomodTriggerTypeSchema.exactOptional(),
-  trigger_metadata: z.xor([z.null().nullable(), KeywordTriggerMetadataSchema]).exactOptional(),
+  trigger_metadata: z.xor([z.null(), KeywordTriggerMetadataSchema]).exactOptional(),
 })
 
 export type KeywordUpsertRequestPartial = z.infer<typeof KeywordUpsertRequestPartialSchema>
@@ -6984,7 +6948,7 @@ export const SoundboardSoundResponseSchema = z.object({
   name: z.string(),
   sound_id: SnowflakeTypeSchema,
   volume: z.number(),
-  emoji_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]),
+  emoji_id: z.xor([z.null(), SnowflakeTypeSchema]),
   emoji_name: z.string().nullable(),
   guild_id: SnowflakeTypeSchema.exactOptional(),
   available: z.boolean(),
@@ -7008,7 +6972,7 @@ export type LobbyGuildInviteResponse = z.infer<typeof LobbyGuildInviteResponseSc
 export const LobbyMemberRequestSchema = z.object({
   id: SnowflakeTypeSchema,
   metadata: z.record(z.string(), z.string().max(1024)).nullable().exactOptional(),
-  flags: z.xor([z.null().nullable(), z.literal(1)]).exactOptional(),
+  flags: z.xor([z.null(), z.literal(1)]).exactOptional(),
   additional_name: z.string().min(1).max(80).nullable().exactOptional(),
 })
 
@@ -7085,7 +7049,7 @@ export const MLSpamUpsertRequestSchema = z.object({
     .nullable()
     .exactOptional(),
   trigger_type: AutomodTriggerTypeSchema,
-  trigger_metadata: z.xor([z.null().nullable(), MLSpamTriggerMetadataSchema]).exactOptional(),
+  trigger_metadata: z.xor([z.null(), MLSpamTriggerMetadataSchema]).exactOptional(),
 })
 
 export type MLSpamUpsertRequest = z.infer<typeof MLSpamUpsertRequestSchema>
@@ -7120,7 +7084,7 @@ export const MLSpamUpsertRequestPartialSchema = z.object({
     .nullable()
     .exactOptional(),
   trigger_type: AutomodTriggerTypeSchema.exactOptional(),
-  trigger_metadata: z.xor([z.null().nullable(), MLSpamTriggerMetadataSchema]).exactOptional(),
+  trigger_metadata: z.xor([z.null(), MLSpamTriggerMetadataSchema]).exactOptional(),
 })
 
 export type MLSpamUpsertRequestPartial = z.infer<typeof MLSpamUpsertRequestPartialSchema>
@@ -7162,7 +7126,7 @@ export const MentionSpamUpsertRequestSchema = z.object({
     .nullable()
     .exactOptional(),
   trigger_type: AutomodTriggerTypeSchema,
-  trigger_metadata: z.xor([z.null().nullable(), MentionSpamTriggerMetadataSchema]).exactOptional(),
+  trigger_metadata: z.xor([z.null(), MentionSpamTriggerMetadataSchema]).exactOptional(),
 })
 
 export type MentionSpamUpsertRequest = z.infer<typeof MentionSpamUpsertRequestSchema>
@@ -7197,17 +7161,17 @@ export const MentionSpamUpsertRequestPartialSchema = z.object({
     .nullable()
     .exactOptional(),
   trigger_type: AutomodTriggerTypeSchema.exactOptional(),
-  trigger_metadata: z.xor([z.null().nullable(), MentionSpamTriggerMetadataSchema]).exactOptional(),
+  trigger_metadata: z.xor([z.null(), MentionSpamTriggerMetadataSchema]).exactOptional(),
 })
 
 export type MentionSpamUpsertRequestPartial = z.infer<typeof MentionSpamUpsertRequestPartialSchema>
 
 export const MessageReferenceRequestSchema = z.object({
-  guild_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]).exactOptional(),
-  channel_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]).exactOptional(),
+  guild_id: z.xor([z.null(), SnowflakeTypeSchema]).exactOptional(),
+  channel_id: z.xor([z.null(), SnowflakeTypeSchema]).exactOptional(),
   message_id: SnowflakeTypeSchema,
   fail_if_not_exists: z.boolean().nullable().exactOptional(),
-  type: z.xor([z.null().nullable(), MessageReferenceTypeSchema]).exactOptional(),
+  type: z.xor([z.null(), MessageReferenceTypeSchema]).exactOptional(),
 })
 
 export type MessageReferenceRequest = z.infer<typeof MessageReferenceRequestSchema>
@@ -7215,9 +7179,7 @@ export type MessageReferenceRequest = z.infer<typeof MessageReferenceRequestSche
 export const MessageCreateRequestSchema = z.object({
   content: z.string().max(4000).nullable().exactOptional(),
   embeds: z.array(RichEmbedSchema).max(10).nullable().exactOptional(),
-  allowed_mentions: z
-    .xor([z.null().nullable(), MessageAllowedMentionsRequestSchema])
-    .exactOptional(),
+  allowed_mentions: z.xor([z.null(), MessageAllowedMentionsRequestSchema]).exactOptional(),
   sticker_ids: z.array(SnowflakeTypeSchema).max(3).nullable().exactOptional(),
   components: z
     .array(
@@ -7236,19 +7198,17 @@ export const MessageCreateRequestSchema = z.object({
     .exactOptional(),
   flags: z.int().nullable().exactOptional(),
   attachments: z.array(MessageAttachmentRequestSchema).max(10).nullable().exactOptional(),
-  poll: z.xor([z.null().nullable(), PollCreateRequestSchema]).exactOptional(),
-  shared_client_theme: z
-    .xor([z.null().nullable(), CustomClientThemeShareRequestSchema])
-    .exactOptional(),
-  message_reference: z.xor([z.null().nullable(), MessageReferenceRequestSchema]).exactOptional(),
+  poll: z.xor([z.null(), PollCreateRequestSchema]).exactOptional(),
+  shared_client_theme: z.xor([z.null(), CustomClientThemeShareRequestSchema]).exactOptional(),
+  message_reference: z.xor([z.null(), MessageReferenceRequestSchema]).exactOptional(),
   nonce: z
     .xor([
       z
         .union([z.bigint(), z.number().int(), z.string().regex(/^-?\d+$/)])
         .transform((val) => BigInt(val))
-        .pipe(z.int64().min(-9223372036854776000n).max(9223372036854776000n)),
+        .pipe(z.int64().min(-9223372036854775808n).max(9223372036854775808n)),
       z.string().max(25),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   enforce_nonce: z.boolean().nullable().exactOptional(),
@@ -7261,9 +7221,7 @@ export const MessageEditRequestPartialSchema = z.object({
   content: z.string().max(4000).nullable().exactOptional(),
   embeds: z.array(RichEmbedSchema).max(10).nullable().exactOptional(),
   flags: z.int().nullable().exactOptional(),
-  allowed_mentions: z
-    .xor([z.null().nullable(), MessageAllowedMentionsRequestSchema])
-    .exactOptional(),
+  allowed_mentions: z.xor([z.null(), MessageAllowedMentionsRequestSchema]).exactOptional(),
   sticker_ids: z.array(SnowflakeTypeSchema).max(1521).nullable().exactOptional(),
   components: z
     .array(
@@ -7374,10 +7332,10 @@ export type OAuth2GetOpenIDConnectUserInfoResponse = z.infer<
 >
 
 export const OnboardingPromptOptionRequestSchema = z.object({
-  id: z.xor([z.null().nullable(), SnowflakeTypeSchema]).exactOptional(),
+  id: z.xor([z.null(), SnowflakeTypeSchema]).exactOptional(),
   title: z.string().min(1).max(50),
   description: z.string().max(100).nullable().exactOptional(),
-  emoji_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]).exactOptional(),
+  emoji_id: z.xor([z.null(), SnowflakeTypeSchema]).exactOptional(),
   emoji_name: z.string().max(100).nullable().exactOptional(),
   emoji_animated: z.boolean().nullable().exactOptional(),
   role_ids: z
@@ -7492,7 +7450,7 @@ export const PrivateApplicationResponseSchema = z.object({
   name: z.string(),
   icon: z.string().nullable(),
   description: z.string(),
-  type: z.xor([z.null().nullable(), ApplicationTypesSchema]),
+  type: z.xor([z.null(), ApplicationTypesSchema]),
   cover_image: z.string().exactOptional(),
   primary_sku_id: SnowflakeTypeSchema.exactOptional(),
   flags: z.int32(),
@@ -7532,7 +7490,7 @@ export const PrivateApplicationResponseSchema = z.object({
     .refine((val) => new Set(val).size === val.length)
     .exactOptional(),
   explicit_content_filter: ApplicationExplicitContentFilterTypesSchema,
-  team: z.xor([z.null().nullable(), TeamResponseSchema]),
+  team: z.xor([z.null(), TeamResponseSchema]),
   eligible_oauth2_scopes: z.array(OAuth2ScopesSchema),
 })
 
@@ -7541,7 +7499,7 @@ export type PrivateApplicationResponse = z.infer<typeof PrivateApplicationRespon
 export const PrivateGuildMemberResponseSchema = z.object({
   avatar: z.string().nullable().meta({ description: "the member's guild avatar hash" }),
   avatar_decoration_data: z
-    .xor([z.null().nullable(), UserAvatarDecorationResponseSchema])
+    .xor([z.null(), UserAvatarDecorationResponseSchema])
     .meta({ description: "data for the member's guild avatar decoration" })
     .exactOptional(),
   banner: z.string().nullable().meta({ description: "the member's guild banner hash" }),
@@ -7574,7 +7532,7 @@ export const PrivateGuildMemberResponseSchema = z.object({
     .refine((val) => new Set(val).size === val.length)
     .meta({ description: 'array of role object ids' }),
   collectibles: z
-    .xor([z.null().nullable(), UserCollectiblesResponseSchema])
+    .xor([z.null(), UserCollectiblesResponseSchema])
     .meta({ description: "data for the member's collectibles" })
     .exactOptional(),
   user: UserResponseSchema.meta({ description: 'the user this guild member represents' }),
@@ -7608,7 +7566,7 @@ export const PruneGuildRequestSchema = z.object({
         .array(SnowflakeTypeSchema)
         .max(100)
         .refine((val) => new Set(val).size === val.length),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
 })
@@ -7625,9 +7583,7 @@ export type ReactionTypes = z.infer<typeof ReactionTypesSchema>
 export const SDKMessageRequestSchema = z.object({
   content: z.string().max(4000).nullable().exactOptional(),
   embeds: z.array(RichEmbedSchema).max(10).nullable().exactOptional(),
-  allowed_mentions: z
-    .xor([z.null().nullable(), MessageAllowedMentionsRequestSchema])
-    .exactOptional(),
+  allowed_mentions: z.xor([z.null(), MessageAllowedMentionsRequestSchema]).exactOptional(),
   sticker_ids: z.array(SnowflakeTypeSchema).max(3).nullable().exactOptional(),
   components: z
     .array(
@@ -7646,19 +7602,17 @@ export const SDKMessageRequestSchema = z.object({
     .exactOptional(),
   flags: z.int().nullable().exactOptional(),
   attachments: z.array(MessageAttachmentRequestSchema).max(10).nullable().exactOptional(),
-  poll: z.xor([z.null().nullable(), PollCreateRequestSchema]).exactOptional(),
-  shared_client_theme: z
-    .xor([z.null().nullable(), CustomClientThemeShareRequestSchema])
-    .exactOptional(),
-  message_reference: z.xor([z.null().nullable(), MessageReferenceRequestSchema]).exactOptional(),
+  poll: z.xor([z.null(), PollCreateRequestSchema]).exactOptional(),
+  shared_client_theme: z.xor([z.null(), CustomClientThemeShareRequestSchema]).exactOptional(),
+  message_reference: z.xor([z.null(), MessageReferenceRequestSchema]).exactOptional(),
   nonce: z
     .xor([
       z
         .union([z.bigint(), z.number().int(), z.string().regex(/^-?\d+$/)])
         .transform((val) => BigInt(val))
-        .pipe(z.int64().min(-9223372036854776000n).max(9223372036854776000n)),
+        .pipe(z.int64().min(-9223372036854775808n).max(9223372036854775808n)),
       z.string().max(25),
-      z.null().nullable(),
+      z.null(),
     ])
     .exactOptional(),
   enforce_nonce: z.boolean().nullable().exactOptional(),
@@ -7748,7 +7702,7 @@ export type SlackWebhook = z.infer<typeof SlackWebhookSchema>
 
 export const SocialLayerSKUPurchaseEligibilityCallbackDataSchema = z.object({
   eligible: z.boolean(),
-  ineligible_reason: z.xor([z.null().nullable(), SKUIneligibilityReasonSchema]).exactOptional(),
+  ineligible_reason: z.xor([z.null(), SKUIneligibilityReasonSchema]).exactOptional(),
   ineligible_reason_description: z.string().max(255).nullable().exactOptional(),
 })
 
@@ -7776,7 +7730,7 @@ export type SortingOrder = z.infer<typeof SortingOrderSchema>
 export const SoundboardCreateRequestSchema = z.object({
   name: z.string().min(2).max(32),
   volume: z.number().min(0).max(1).nullable().exactOptional(),
-  emoji_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]).exactOptional(),
+  emoji_id: z.xor([z.null(), SnowflakeTypeSchema]).exactOptional(),
   emoji_name: z.string().min(1).max(32).nullable().exactOptional(),
   sound: z.string(),
 })
@@ -7786,7 +7740,7 @@ export type SoundboardCreateRequest = z.infer<typeof SoundboardCreateRequestSche
 export const SoundboardPatchRequestPartialSchema = z.object({
   name: z.string().min(2).max(32).exactOptional(),
   volume: z.number().min(0).max(1).nullable().exactOptional(),
-  emoji_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]).exactOptional(),
+  emoji_id: z.xor([z.null(), SnowflakeTypeSchema]).exactOptional(),
   emoji_name: z.string().min(1).max(32).nullable().exactOptional(),
 })
 
@@ -7794,7 +7748,7 @@ export type SoundboardPatchRequestPartial = z.infer<typeof SoundboardPatchReques
 
 export const SoundboardSoundSendRequestSchema = z.object({
   sound_id: SnowflakeTypeSchema,
-  source_guild_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]).exactOptional(),
+  source_guild_id: z.xor([z.null(), SnowflakeTypeSchema]).exactOptional(),
 })
 
 export type SoundboardSoundSendRequest = z.infer<typeof SoundboardSoundSendRequestSchema>
@@ -7813,7 +7767,7 @@ export const StageInstanceResponseSchema = z.object({
   privacy_level: StageInstancesPrivacyLevelsSchema,
   id: SnowflakeTypeSchema,
   discoverable_disabled: z.boolean(),
-  guild_scheduled_event_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]),
+  guild_scheduled_event_id: z.xor([z.null(), SnowflakeTypeSchema]),
 })
 
 export type StageInstanceResponse = z.infer<typeof StageInstanceResponseSchema>
@@ -7826,12 +7780,12 @@ export const StageScheduledEventCreateRequestSchema = z.object({
   scheduled_end_time: z.iso.datetime({ offset: true }).nullable().exactOptional(),
   privacy_level: GuildScheduledEventPrivacyLevelsSchema,
   entity_type: GuildScheduledEventEntityTypesSchema,
-  channel_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]).exactOptional(),
+  channel_id: z.xor([z.null(), SnowflakeTypeSchema]).exactOptional(),
   recurrence_rule: z
-    .xor([z.null().nullable(), RecurrenceRuleSchema])
+    .xor([z.null(), RecurrenceRuleSchema])
     .meta({ description: 'Recurrence rule for the scheduled event' })
     .exactOptional(),
-  entity_metadata: z.xor([z.null().nullable(), EntityMetadataStageInstanceSchema]).exactOptional(),
+  entity_metadata: z.xor([z.null(), EntityMetadataStageInstanceSchema]).exactOptional(),
 })
 
 export type StageScheduledEventCreateRequest = z.infer<
@@ -7839,20 +7793,20 @@ export type StageScheduledEventCreateRequest = z.infer<
 >
 
 export const StageScheduledEventPatchRequestPartialSchema = z.object({
-  status: z.xor([z.null().nullable(), GuildScheduledEventStatusesSchema]).exactOptional(),
+  status: z.xor([z.null(), GuildScheduledEventStatusesSchema]).exactOptional(),
   name: z.string().max(100).exactOptional(),
   description: z.string().max(1000).nullable().exactOptional(),
   image: z.string().nullable().exactOptional(),
   scheduled_start_time: z.iso.datetime({ offset: true }).exactOptional(),
   scheduled_end_time: z.iso.datetime({ offset: true }).nullable().exactOptional(),
-  entity_type: z.xor([z.null().nullable(), GuildScheduledEventEntityTypesSchema]).exactOptional(),
+  entity_type: z.xor([z.null(), GuildScheduledEventEntityTypesSchema]).exactOptional(),
   privacy_level: GuildScheduledEventPrivacyLevelsSchema.exactOptional(),
-  channel_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]).exactOptional(),
+  channel_id: z.xor([z.null(), SnowflakeTypeSchema]).exactOptional(),
   recurrence_rule: z
-    .xor([z.null().nullable(), RecurrenceRuleSchema])
+    .xor([z.null(), RecurrenceRuleSchema])
     .meta({ description: 'Recurrence rule for the scheduled event' })
     .exactOptional(),
-  entity_metadata: z.xor([z.null().nullable(), EntityMetadataStageInstanceSchema]).exactOptional(),
+  entity_metadata: z.xor([z.null(), EntityMetadataStageInstanceSchema]).exactOptional(),
 })
 
 export type StageScheduledEventPatchRequestPartial = z.infer<
@@ -8022,16 +7976,16 @@ export type UpdateGroupDMRequestPartial = z.infer<typeof UpdateGroupDMRequestPar
 
 export const UpdateThreadTagRequestSchema = z.object({
   name: z.string().min(0).max(50),
-  emoji_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]).exactOptional(),
+  emoji_id: z.xor([z.null(), SnowflakeTypeSchema]).exactOptional(),
   emoji_name: z.string().max(100).nullable().exactOptional(),
   moderated: z.boolean().nullable().exactOptional(),
-  id: z.xor([z.null().nullable(), SnowflakeTypeSchema]).exactOptional(),
+  id: z.xor([z.null(), SnowflakeTypeSchema]).exactOptional(),
 })
 
 export type UpdateThreadTagRequest = z.infer<typeof UpdateThreadTagRequestSchema>
 
 export const UpdateGuildChannelRequestPartialSchema = z.object({
-  type: z.xor([z.null().nullable(), ChannelTypesSchema]).exactOptional(),
+  type: z.xor([z.null(), ChannelTypesSchema]).exactOptional(),
   name: z.string().min(1).max(100).exactOptional(),
   position: z.int32().min(0).nullable().exactOptional(),
   topic: z.string().min(0).max(4096).nullable().exactOptional(),
@@ -8039,24 +7993,22 @@ export const UpdateGuildChannelRequestPartialSchema = z.object({
   user_limit: z.int32().min(0).nullable().exactOptional(),
   nsfw: z.boolean().nullable().exactOptional(),
   rate_limit_per_user: z.int().min(0).max(21600).nullable().exactOptional(),
-  parent_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]).exactOptional(),
+  parent_id: z.xor([z.null(), SnowflakeTypeSchema]).exactOptional(),
   permission_overwrites: z
     .array(ChannelPermissionOverwriteRequestSchema)
     .max(100)
     .nullable()
     .exactOptional(),
   rtc_region: z.string().nullable().exactOptional(),
-  video_quality_mode: z.xor([z.null().nullable(), VideoQualityModesSchema]).exactOptional(),
-  default_auto_archive_duration: z
-    .xor([z.null().nullable(), ThreadAutoArchiveDurationSchema])
-    .exactOptional(),
+  video_quality_mode: z.xor([z.null(), VideoQualityModesSchema]).exactOptional(),
+  default_auto_archive_duration: z.xor([z.null(), ThreadAutoArchiveDurationSchema]).exactOptional(),
   default_reaction_emoji: z
-    .xor([z.null().nullable(), UpdateDefaultReactionEmojiRequestSchema])
+    .xor([z.null(), UpdateDefaultReactionEmojiRequestSchema])
     .exactOptional(),
   default_thread_rate_limit_per_user: z.int().min(0).max(21600).nullable().exactOptional(),
-  default_sort_order: z.xor([z.null().nullable(), ThreadSortOrderSchema]).exactOptional(),
-  default_forum_layout: z.xor([z.null().nullable(), ForumLayoutSchema]).exactOptional(),
-  default_tag_setting: z.xor([z.null().nullable(), ThreadSearchTagSettingSchema]).exactOptional(),
+  default_sort_order: z.xor([z.null(), ThreadSortOrderSchema]).exactOptional(),
+  default_forum_layout: z.xor([z.null(), ForumLayoutSchema]).exactOptional(),
+  default_tag_setting: z.xor([z.null(), ThreadSearchTagSettingSchema]).exactOptional(),
   flags: z.int().nullable().exactOptional(),
   available_tags: z.array(UpdateThreadTagRequestSchema).max(20).nullable().exactOptional(),
 })
@@ -8071,7 +8023,7 @@ export const UpdateOnboardingPromptRequestSchema = z.object({
   single_select: z.boolean().nullable().exactOptional(),
   required: z.boolean().nullable().exactOptional(),
   in_onboarding: z.boolean().nullable().exactOptional(),
-  type: z.xor([z.null().nullable(), OnboardingPromptTypeSchema]).exactOptional(),
+  type: z.xor([z.null(), OnboardingPromptTypeSchema]).exactOptional(),
   id: SnowflakeTypeSchema,
 })
 
@@ -8086,7 +8038,7 @@ export const UpdateGuildOnboardingRequestSchema = z.object({
     .refine((val) => new Set(val).size === val.length)
     .nullable()
     .exactOptional(),
-  mode: z.xor([z.null().nullable(), GuildOnboardingModeSchema]).exactOptional(),
+  mode: z.xor([z.null(), GuildOnboardingModeSchema]).exactOptional(),
 })
 
 export type UpdateGuildOnboardingRequest = z.infer<typeof UpdateGuildOnboardingRequestSchema>
@@ -8094,7 +8046,7 @@ export type UpdateGuildOnboardingRequest = z.infer<typeof UpdateGuildOnboardingR
 export const UpdateMessageInteractionCallbackRequestSchema = z.object({
   type: InteractionCallbackTypesSchema,
   data: z
-    .xor([z.null().nullable(), IncomingWebhookUpdateForInteractionCallbackRequestPartialSchema])
+    .xor([z.null(), IncomingWebhookUpdateForInteractionCallbackRequestPartialSchema])
     .exactOptional(),
 })
 
@@ -8103,7 +8055,7 @@ export type UpdateMessageInteractionCallbackRequest = z.infer<
 >
 
 export const UpdateRolePositionsRequestSchema = z.object({
-  id: z.xor([z.null().nullable(), SnowflakeTypeSchema]).exactOptional(),
+  id: z.xor([z.null(), SnowflakeTypeSchema]).exactOptional(),
   position: z.int32().nullable().exactOptional(),
 })
 
@@ -8113,7 +8065,7 @@ export const UpdateRoleRequestPartialSchema = z.object({
   name: z.string().min(1).max(100).nullable().exactOptional(),
   permissions: z.int().nullable().exactOptional(),
   color: z.int().min(0).max(16777215).nullable().exactOptional(),
-  colors: z.xor([z.null().nullable(), RoleColorsSchema]).exactOptional(),
+  colors: z.xor([z.null(), RoleColorsSchema]).exactOptional(),
   hoist: z.boolean().nullable().exactOptional(),
   mentionable: z.boolean().nullable().exactOptional(),
   icon: z.string().nullable().exactOptional(),
@@ -8125,7 +8077,7 @@ export type UpdateRoleRequestPartial = z.infer<typeof UpdateRoleRequestPartialSc
 export const UpdateSelfVoiceStateRequestPartialSchema = z.object({
   request_to_speak_timestamp: z.iso.datetime({ offset: true }).nullable().exactOptional(),
   suppress: z.boolean().nullable().exactOptional(),
-  channel_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]).exactOptional(),
+  channel_id: z.xor([z.null(), SnowflakeTypeSchema]).exactOptional(),
 })
 
 export type UpdateSelfVoiceStateRequestPartial = z.infer<
@@ -8137,23 +8089,21 @@ export const UpdateThreadRequestPartialSchema = z.object({
   archived: z.boolean().nullable().exactOptional(),
   locked: z.boolean().nullable().exactOptional(),
   invitable: z.boolean().nullable().exactOptional(),
-  auto_archive_duration: z
-    .xor([z.null().nullable(), ThreadAutoArchiveDurationSchema])
-    .exactOptional(),
+  auto_archive_duration: z.xor([z.null(), ThreadAutoArchiveDurationSchema]).exactOptional(),
   rate_limit_per_user: z.int32().min(0).max(21600).nullable().exactOptional(),
   flags: z.int().nullable().exactOptional(),
   applied_tags: z.array(SnowflakeTypeSchema).max(5).nullable().exactOptional(),
   bitrate: z.int32().min(8000).nullable().exactOptional(),
   user_limit: z.int().min(0).max(99).nullable().exactOptional(),
   rtc_region: z.string().nullable().exactOptional(),
-  video_quality_mode: z.xor([z.null().nullable(), VideoQualityModesSchema]).exactOptional(),
+  video_quality_mode: z.xor([z.null(), VideoQualityModesSchema]).exactOptional(),
 })
 
 export type UpdateThreadRequestPartial = z.infer<typeof UpdateThreadRequestPartialSchema>
 
 export const UpdateVoiceStateRequestPartialSchema = z.object({
   suppress: z.boolean().nullable().exactOptional(),
-  channel_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]).exactOptional(),
+  channel_id: z.xor([z.null(), SnowflakeTypeSchema]).exactOptional(),
 })
 
 export type UpdateVoiceStateRequestPartial = z.infer<typeof UpdateVoiceStateRequestPartialSchema>
@@ -8199,14 +8149,14 @@ export const UserPIIResponseSchema = z.object({
     .exactOptional(),
   global_name: z.string().nullable().meta({ description: "the user's display name, if it is set" }),
   avatar_decoration_data: z
-    .xor([z.null().nullable(), UserAvatarDecorationResponseSchema])
+    .xor([z.null(), UserAvatarDecorationResponseSchema])
     .meta({ description: "data for the user's avatar decoration" })
     .exactOptional(),
   collectibles: z
-    .xor([z.null().nullable(), UserCollectiblesResponseSchema])
+    .xor([z.null(), UserCollectiblesResponseSchema])
     .meta({ description: "data for the user's collectibles" })
     .exactOptional(),
-  primary_guild: z.xor([z.null().nullable(), UserPrimaryGuildResponseSchema]).exactOptional(),
+  primary_guild: z.xor([z.null(), UserPrimaryGuildResponseSchema]).exactOptional(),
   mfa_enabled: z.boolean(),
   locale: AvailableLocalesEnumSchema,
   premium_type: PremiumTypesSchema.exactOptional(),
@@ -8301,7 +8251,7 @@ export type VanityURLErrorResponse = z.infer<typeof VanityURLErrorResponseSchema
 export const VanityURLResponseSchema = z.object({
   code: z.string().nullable(),
   uses: z.int32(),
-  error: z.xor([z.null().nullable(), VanityURLErrorResponseSchema]).exactOptional(),
+  error: z.xor([z.null(), VanityURLErrorResponseSchema]).exactOptional(),
 })
 
 export type VanityURLResponse = z.infer<typeof VanityURLResponseSchema>
@@ -8324,12 +8274,12 @@ export const VoiceScheduledEventCreateRequestSchema = z.object({
   scheduled_end_time: z.iso.datetime({ offset: true }).nullable().exactOptional(),
   privacy_level: GuildScheduledEventPrivacyLevelsSchema,
   entity_type: GuildScheduledEventEntityTypesSchema,
-  channel_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]).exactOptional(),
+  channel_id: z.xor([z.null(), SnowflakeTypeSchema]).exactOptional(),
   recurrence_rule: z
-    .xor([z.null().nullable(), RecurrenceRuleSchema])
+    .xor([z.null(), RecurrenceRuleSchema])
     .meta({ description: 'Recurrence rule for the scheduled event' })
     .exactOptional(),
-  entity_metadata: z.xor([z.null().nullable(), EntityMetadataVoiceSchema]).exactOptional(),
+  entity_metadata: z.xor([z.null(), EntityMetadataVoiceSchema]).exactOptional(),
 })
 
 export type VoiceScheduledEventCreateRequest = z.infer<
@@ -8337,20 +8287,20 @@ export type VoiceScheduledEventCreateRequest = z.infer<
 >
 
 export const VoiceScheduledEventPatchRequestPartialSchema = z.object({
-  status: z.xor([z.null().nullable(), GuildScheduledEventStatusesSchema]).exactOptional(),
+  status: z.xor([z.null(), GuildScheduledEventStatusesSchema]).exactOptional(),
   name: z.string().max(100).exactOptional(),
   description: z.string().max(1000).nullable().exactOptional(),
   image: z.string().nullable().exactOptional(),
   scheduled_start_time: z.iso.datetime({ offset: true }).exactOptional(),
   scheduled_end_time: z.iso.datetime({ offset: true }).nullable().exactOptional(),
-  entity_type: z.xor([z.null().nullable(), GuildScheduledEventEntityTypesSchema]).exactOptional(),
+  entity_type: z.xor([z.null(), GuildScheduledEventEntityTypesSchema]).exactOptional(),
   privacy_level: GuildScheduledEventPrivacyLevelsSchema.exactOptional(),
-  channel_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]).exactOptional(),
+  channel_id: z.xor([z.null(), SnowflakeTypeSchema]).exactOptional(),
   recurrence_rule: z
-    .xor([z.null().nullable(), RecurrenceRuleSchema])
+    .xor([z.null(), RecurrenceRuleSchema])
     .meta({ description: 'Recurrence rule for the scheduled event' })
     .exactOptional(),
-  entity_metadata: z.xor([z.null().nullable(), EntityMetadataVoiceSchema]).exactOptional(),
+  entity_metadata: z.xor([z.null(), EntityMetadataVoiceSchema]).exactOptional(),
 })
 
 export type VoiceScheduledEventPatchRequestPartial = z.infer<
@@ -8358,9 +8308,9 @@ export type VoiceScheduledEventPatchRequestPartial = z.infer<
 >
 
 export const VoiceStateResponseSchema = z.object({
-  channel_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]),
+  channel_id: z.xor([z.null(), SnowflakeTypeSchema]),
   deaf: z.boolean(),
-  guild_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]),
+  guild_id: z.xor([z.null(), SnowflakeTypeSchema]),
   member: GuildMemberResponseSchema.exactOptional(),
   mute: z.boolean(),
   request_to_speak_timestamp: z.iso.datetime({ offset: true }).nullable(),
@@ -8437,7 +8387,7 @@ export const WidgetMemberSchema = z.object({
   id: z.string(),
   username: z.string(),
   discriminator: WidgetUserDiscriminatorSchema,
-  avatar: z.null().nullable(),
+  avatar: z.null(),
   status: z.string(),
   avatar_url: z.url(),
   activity: WidgetActivitySchema.exactOptional(),
@@ -8464,7 +8414,7 @@ export type WidgetResponse = z.infer<typeof WidgetResponseSchema>
 
 export const WidgetSettingsResponseSchema = z.object({
   enabled: z.boolean(),
-  channel_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]),
+  channel_id: z.xor([z.null(), SnowflakeTypeSchema]),
 })
 
 export type WidgetSettingsResponse = z.infer<typeof WidgetSettingsResponseSchema>

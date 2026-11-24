@@ -76,7 +76,8 @@ export const storeHandler = new Hono()
           quantity: v.pipe(
             v.pipe(
               v.string(),
-              v.transform(Number),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.transform((input) => Number(input)),
               v.number(),
               v.safeInteger(),
               v.minValue(-2147483648),

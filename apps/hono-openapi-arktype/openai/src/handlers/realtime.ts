@@ -70,9 +70,31 @@ export const realtimeHandler = new Hono()
             .describe(
               'The set of modalities the model can respond with. It defaults to `["audio"]`, indicating\nthat the model will respond with audio plus a transcript. `["text"]` can be used to make\nthe model respond with text only. It is not possible to request both `text` and `audio` at the same time.\n',
             ),
-          'model?': type(
-            "string | 'gpt-realtime' | 'gpt-realtime-1.5' | 'gpt-realtime-2' | 'gpt-realtime-2.1' | 'gpt-realtime-2.1-mini' | 'gpt-realtime-2025-08-28' | 'gpt-4o-realtime-preview' | 'gpt-4o-realtime-preview-2024-10-01' | 'gpt-4o-realtime-preview-2024-12-17' | 'gpt-4o-realtime-preview-2025-06-03' | 'gpt-4o-mini-realtime-preview' | 'gpt-4o-mini-realtime-preview-2024-12-17' | 'gpt-realtime-mini' | 'gpt-realtime-mini-2025-10-06' | 'gpt-realtime-mini-2025-12-15' | 'gpt-audio-1.5' | 'gpt-audio-mini' | 'gpt-audio-mini-2025-10-06' | 'gpt-audio-mini-2025-12-15'",
-          ).describe('The Realtime model used for this session.\n'),
+          'model?': type('string')
+            .or(
+              type.enumerated(
+                'gpt-realtime',
+                'gpt-realtime-1.5',
+                'gpt-realtime-2',
+                'gpt-realtime-2.1',
+                'gpt-realtime-2.1-mini',
+                'gpt-realtime-2025-08-28',
+                'gpt-4o-realtime-preview',
+                'gpt-4o-realtime-preview-2024-10-01',
+                'gpt-4o-realtime-preview-2024-12-17',
+                'gpt-4o-realtime-preview-2025-06-03',
+                'gpt-4o-mini-realtime-preview',
+                'gpt-4o-mini-realtime-preview-2024-12-17',
+                'gpt-realtime-mini',
+                'gpt-realtime-mini-2025-10-06',
+                'gpt-realtime-mini-2025-12-15',
+                'gpt-audio-1.5',
+                'gpt-audio-mini',
+                'gpt-audio-mini-2025-10-06',
+                'gpt-audio-mini-2025-12-15',
+              ),
+            )
+            .describe('The Realtime model used for this session.\n'),
           'instructions?': type('string').describe(
             'The default system instructions (i.e. system message) prepended to model calls. This field allows the client to guide the model on desired responses. The model can be instructed on response content and format, (e.g. "be extremely succinct", "act friendly", "here are examples of good responses") and on audio behavior (e.g. "talk quickly", "inject emotion into your voice", "laugh frequently"). The instructions are not guaranteed to be followed by the model, but they provide guidance to the model on the desired behavior.\n\nNote that the server sets default instructions which will be used if this field is not set and are visible in the `session.created` event at the start of the session.\n',
           ),
@@ -87,8 +109,8 @@ export const realtimeHandler = new Hono()
                       ),
                       'rate?': type('string')
                         .pipe((data, ctx) => {
-                          const value = Number(data)
-                          return Number.isFinite(value) ? value : ctx.error('a number')
+                          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
+                          return Number.isSafeInteger(value) ? value : ctx.error('an integer')
                         })
                         .to('24000')
                         .describe('The sample rate of the audio. Always `24000`.'),
@@ -167,7 +189,10 @@ export const realtimeHandler = new Hono()
                               ),
                               'threshold?': type('string')
                                 .pipe((data, ctx) => {
-                                  const value = Number(data)
+                                  const value =
+                                    /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(data)
+                                      ? Number(data)
+                                      : Number.NaN
                                   return Number.isFinite(value) ? value : ctx.error('a number')
                                 })
                                 .describe(
@@ -175,7 +200,9 @@ export const realtimeHandler = new Hono()
                                 ),
                               'prefix_padding_ms?': type('string')
                                 .pipe((data, ctx) => {
-                                  const value = Number(data)
+                                  const value = /^-?(?:0|[1-9]\d*)$/.test(data)
+                                    ? Number(data)
+                                    : Number.NaN
                                   return Number.isSafeInteger(value)
                                     ? value
                                     : ctx.error('an integer')
@@ -185,7 +212,9 @@ export const realtimeHandler = new Hono()
                                 ),
                               'silence_duration_ms?': type('string')
                                 .pipe((data, ctx) => {
-                                  const value = Number(data)
+                                  const value = /^-?(?:0|[1-9]\d*)$/.test(data)
+                                    ? Number(data)
+                                    : Number.NaN
                                   return Number.isSafeInteger(value)
                                     ? value
                                     : ctx.error('an integer')
@@ -214,7 +243,9 @@ export const realtimeHandler = new Hono()
                                     for (const branch of [
                                       type('string')
                                         .pipe((data, ctx) => {
-                                          const value = Number(data)
+                                          const value = /^-?(?:0|[1-9]\d*)$/.test(data)
+                                            ? Number(data)
+                                            : Number.NaN
                                           return Number.isSafeInteger(value)
                                             ? value
                                             : ctx.error('an integer')
@@ -225,7 +256,7 @@ export const realtimeHandler = new Hono()
                                         ),
                                       type('unknown')
                                         .pipe((data) => (data === 'null' ? null : data))
-                                        .to('null | null'),
+                                        .to('null'),
                                     ]) {
                                       const out = branch(data)
                                       if (!(out instanceof type.errors)) return out
@@ -272,7 +303,7 @@ export const realtimeHandler = new Hono()
                         ),
                       type('unknown')
                         .pipe((data) => (data === 'null' ? null : data))
-                        .to('null | null'),
+                        .to('null'),
                     ]) {
                       const out = branch(data)
                       if (!(out instanceof type.errors)) return out
@@ -292,8 +323,8 @@ export const realtimeHandler = new Hono()
                       ),
                       'rate?': type('string')
                         .pipe((data, ctx) => {
-                          const value = Number(data)
-                          return Number.isFinite(value) ? value : ctx.error('a number')
+                          const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
+                          return Number.isSafeInteger(value) ? value : ctx.error('an integer')
                         })
                         .to('24000')
                         .describe('The sample rate of the audio. Always `24000`.'),
@@ -320,7 +351,9 @@ export const realtimeHandler = new Hono()
               ),
               'speed?': type('string')
                 .pipe((data, ctx) => {
-                  const value = Number(data)
+                  const value = /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(data)
+                    ? Number(data)
+                    : Number.NaN
                   return Number.isFinite(value) ? value : ctx.error('a number')
                 })
                 .to('number >= 0.25 & number <= 1.5')
@@ -354,7 +387,7 @@ export const realtimeHandler = new Hono()
                 }).describe('Granular configuration for tracing.\n'),
                 type('unknown')
                   .pipe((data) => (data === 'null' ? null : data))
-                  .to('null | null'),
+                  .to('null'),
               ]) {
                 const out = branch(data)
                 if (!(out instanceof type.errors)) return out
@@ -405,7 +438,7 @@ export const realtimeHandler = new Hono()
                               ),
                               type('unknown')
                                 .pipe((data) => (data === 'null' ? null : data))
-                                .to('null | null'),
+                                .to('null'),
                             ]) {
                               const out = branch(data)
                               if (!(out instanceof type.errors)) return out
@@ -455,7 +488,7 @@ export const realtimeHandler = new Hono()
                                 .describe('List of allowed tool names or a filter object.\n'),
                               type('unknown')
                                 .pipe((data) => (data === 'null' ? null : data))
-                                .to('null | null'),
+                                .to('null'),
                             ]) {
                               const out = branch(data)
                               if (!(out instanceof type.errors)) return out
@@ -480,7 +513,7 @@ export const realtimeHandler = new Hono()
                                 .describe('The tool invocation context(s).'),
                               type('unknown')
                                 .pipe((data) => (data === 'null' ? null : data))
-                                .to('null | null'),
+                                .to('null'),
                             ]) {
                               const out = branch(data)
                               if (!(out instanceof type.errors)) return out
@@ -547,7 +580,7 @@ export const realtimeHandler = new Hono()
                             .describe("Specify which of the MCP server's tools require approval."),
                           type('unknown')
                             .pipe((data) => (data === 'null' ? null : data))
-                            .to('null | null'),
+                            .to('null'),
                         ]) {
                           const out = branch(data)
                           if (!(out instanceof type.errors)) return out
@@ -586,7 +619,7 @@ export const realtimeHandler = new Hono()
                       type('string').describe('The name of the tool to call on the server.\n'),
                       type('unknown')
                         .pipe((data) => (data === 'null' ? null : data))
-                        .to('null | null'),
+                        .to('null'),
                     ]) {
                       const out = branch(data)
                       if (!(out instanceof type.errors)) return out
@@ -615,7 +648,7 @@ export const realtimeHandler = new Hono()
             .pipe((data, ctx) => {
               for (const branch of [
                 type('string').pipe((data, ctx) => {
-                  const value = Number(data)
+                  const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
                   return Number.isSafeInteger(value) ? value : ctx.error('an integer')
                 }),
                 type("'inf'"),
@@ -638,7 +671,9 @@ export const realtimeHandler = new Hono()
                   type: type("'retention_ratio'").describe('Use retention ratio truncation.'),
                   retention_ratio: type('string')
                     .pipe((data, ctx) => {
-                      const value = Number(data)
+                      const value = /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(data)
+                        ? Number(data)
+                        : Number.NaN
                       return Number.isFinite(value) ? value : ctx.error('a number')
                     })
                     .to('number >= 0 & number <= 1')
@@ -648,7 +683,7 @@ export const realtimeHandler = new Hono()
                   'token_limits?': type({
                     'post_instructions?': type('string')
                       .pipe((data, ctx) => {
-                        const value = Number(data)
+                        const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
                         return Number.isSafeInteger(value) ? value : ctx.error('an integer')
                       })
                       .to('number.integer >= 0')
@@ -684,7 +719,7 @@ export const realtimeHandler = new Hono()
                         type('string').describe('Optional version of the prompt template.'),
                         type('unknown')
                           .pipe((data) => (data === 'null' ? null : data))
-                          .to('null | null'),
+                          .to('null'),
                       ]) {
                         const out = branch(data)
                         if (!(out instanceof type.errors)) return out
@@ -712,7 +747,7 @@ export const realtimeHandler = new Hono()
                                         ),
                                         type('unknown')
                                           .pipe((data) => (data === 'null' ? null : data))
-                                          .to('null | null'),
+                                          .to('null'),
                                       ]) {
                                         const out = branch(data)
                                         if (!(out instanceof type.errors)) return out
@@ -726,7 +761,7 @@ export const realtimeHandler = new Hono()
                                         ),
                                         type('unknown')
                                           .pipe((data) => (data === 'null' ? null : data))
-                                          .to('null | null'),
+                                          .to('null'),
                                       ]) {
                                         const out = branch(data)
                                         if (!(out instanceof type.errors)) return out
@@ -751,7 +786,7 @@ export const realtimeHandler = new Hono()
                                         ),
                                         type('unknown')
                                           .pipe((data) => (data === 'null' ? null : data))
-                                          .to('null | null'),
+                                          .to('null'),
                                       ]) {
                                         const out = branch(data)
                                         if (!(out instanceof type.errors)) return out
@@ -783,7 +818,7 @@ export const realtimeHandler = new Hono()
                             ),
                             type('unknown')
                               .pipe((data) => (data === 'null' ? null : data))
-                              .to('null | null'),
+                              .to('null'),
                           ]) {
                             const out = branch(data)
                             if (!(out instanceof type.errors)) return out
@@ -797,7 +832,7 @@ export const realtimeHandler = new Hono()
                   ),
                   type('unknown')
                     .pipe((data) => (data === 'null' ? null : data))
-                    .to('null | null'),
+                    .to('null'),
                 ]) {
                   const out = branch(data)
                   if (!(out instanceof type.errors)) return out

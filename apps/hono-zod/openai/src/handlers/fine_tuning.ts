@@ -28,7 +28,14 @@ export const fineTuningHandler = new Hono()
       z.object({
         project_id: z.string().exactOptional(),
         after: z.string().exactOptional(),
-        limit: z.coerce.number().int().default(10).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
+          .default(10)
+          .exactOptional(),
         order: z.enum(['ascending', 'descending']).default('descending').exactOptional(),
       }),
     ),
@@ -66,7 +73,14 @@ export const fineTuningHandler = new Hono()
       'query',
       z.object({
         after: z.string().exactOptional(),
-        limit: z.coerce.number().int().default(20).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
+          .default(20)
+          .exactOptional(),
         metadata: z
           .preprocess(
             (val) => (val === 'null' ? null : val),
@@ -110,7 +124,14 @@ export const fineTuningHandler = new Hono()
       'query',
       z.object({
         after: z.string().exactOptional(),
-        limit: z.coerce.number().int().default(10).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
+          .default(10)
+          .exactOptional(),
       }),
     ),
     (c) => { throw new Error('Not implemented') },
@@ -127,7 +148,14 @@ export const fineTuningHandler = new Hono()
       'query',
       z.object({
         after: z.string().exactOptional(),
-        limit: z.coerce.number().int().default(20).exactOptional(),
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
+          .default(20)
+          .exactOptional(),
       }),
     ),
     (c) => { throw new Error('Not implemented') },

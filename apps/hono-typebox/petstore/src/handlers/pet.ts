@@ -11,16 +11,16 @@ export const petHandler = new Hono()
       'form',
       Type.Object({
         id: Type.Optional(
-          Codec(Type.String())
-            .Decode((value) => Number.parseInt(value, 10))
+          Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+            .Decode((value) => Number(value))
             .Encode((value) => String(value)),
         ),
         name: Type.String({ examples: ['doggie'] }),
         category: Type.Optional(
           Type.Object({
             id: Type.Optional(
-              Codec(Type.String())
-                .Decode((value) => Number.parseInt(value, 10))
+              Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+                .Decode((value) => Number(value))
                 .Encode((value) => String(value)),
             ),
             name: Type.Optional(Type.String({ examples: ['Dogs'] })),
@@ -31,8 +31,8 @@ export const petHandler = new Hono()
           Type.Array(
             Type.Object({
               id: Type.Optional(
-                Codec(Type.String())
-                  .Decode((value) => Number.parseInt(value, 10))
+                Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+                  .Decode((value) => Number(value))
                   .Encode((value) => String(value)),
               ),
               name: Type.Optional(Type.String()),
@@ -55,16 +55,16 @@ export const petHandler = new Hono()
       'form',
       Type.Object({
         id: Type.Optional(
-          Codec(Type.String())
-            .Decode((value) => Number.parseInt(value, 10))
+          Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+            .Decode((value) => Number(value))
             .Encode((value) => String(value)),
         ),
         name: Type.String({ examples: ['doggie'] }),
         category: Type.Optional(
           Type.Object({
             id: Type.Optional(
-              Codec(Type.String())
-                .Decode((value) => Number.parseInt(value, 10))
+              Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+                .Decode((value) => Number(value))
                 .Encode((value) => String(value)),
             ),
             name: Type.Optional(Type.String({ examples: ['Dogs'] })),
@@ -75,8 +75,8 @@ export const petHandler = new Hono()
           Type.Array(
             Type.Object({
               id: Type.Optional(
-                Codec(Type.String())
-                  .Decode((value) => Number.parseInt(value, 10))
+                Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+                  .Decode((value) => Number(value))
                   .Encode((value) => String(value)),
               ),
               name: Type.Optional(Type.String()),
@@ -116,8 +116,8 @@ export const petHandler = new Hono()
     tbValidator(
       'param',
       Type.Object({
-        petId: Codec(Type.String())
-          .Decode((value) => Number.parseInt(value, 10))
+        petId: Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+          .Decode((value) => Number(value))
           .Encode((value) => String(value)),
       }),
     ),
@@ -128,8 +128,8 @@ export const petHandler = new Hono()
     tbValidator(
       'param',
       Type.Object({
-        petId: Codec(Type.String())
-          .Decode((value) => Number.parseInt(value, 10))
+        petId: Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+          .Decode((value) => Number(value))
           .Encode((value) => String(value)),
       }),
     ),
@@ -144,8 +144,8 @@ export const petHandler = new Hono()
     tbValidator(
       'param',
       Type.Object({
-        petId: Codec(Type.String())
-          .Decode((value) => Number.parseInt(value, 10))
+        petId: Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+          .Decode((value) => Number(value))
           .Encode((value) => String(value)),
       }),
     ),
@@ -157,8 +157,8 @@ export const petHandler = new Hono()
     tbValidator(
       'param',
       Type.Object({
-        petId: Codec(Type.String())
-          .Decode((value) => Number.parseInt(value, 10))
+        petId: Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+          .Decode((value) => Number(value))
           .Encode((value) => String(value)),
       }),
     ),

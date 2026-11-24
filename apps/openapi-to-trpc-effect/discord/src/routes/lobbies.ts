@@ -1,5 +1,5 @@
 import { initTRPC, TRPCError } from '@trpc/server'
-import { Schema } from 'effect'
+import { Schema, SchemaTransformation } from 'effect'
 import {
   ActionRowComponentForMessageRequestSchema,
   BulkLobbyMemberRequestSchema,
@@ -30,7 +30,7 @@ export const lobbiesRouter = t.router({
     .input(
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          idle_timeout_seconds: Schema.optional(
+          idle_timeout_seconds: Schema.optionalKey(
             Schema.NullOr(
               Schema.Number.check(
                 Schema.isInt32(),
@@ -39,7 +39,7 @@ export const lobbiesRouter = t.router({
               ),
             ),
           ),
-          lobby_metadata: Schema.optional(
+          lobby_metadata: Schema.optionalKey(
             Schema.NullOr(
               Schema.Record(
                 Schema.String,
@@ -51,7 +51,7 @@ export const lobbiesRouter = t.router({
               ),
             ),
           ),
-          member_metadata: Schema.optional(
+          member_metadata: Schema.optionalKey(
             Schema.NullOr(
               Schema.Record(
                 Schema.String,
@@ -68,8 +68,8 @@ export const lobbiesRouter = t.router({
               expected: 'a string of at most 250 characters',
             }),
           ),
-          flags: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), Schema.Literal(1)])),
-          name: Schema.optional(
+          flags: Schema.optionalKey(Schema.Union([Schema.Null, Schema.Literal(1)])),
+          name: Schema.optionalKey(
             Schema.NullOr(
               Schema.String.check(
                 Schema.makeFilter((input) => [...input].length >= 1, {
@@ -92,7 +92,7 @@ export const lobbiesRouter = t.router({
     .input(
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          idle_timeout_seconds: Schema.optional(
+          idle_timeout_seconds: Schema.optionalKey(
             Schema.NullOr(
               Schema.Number.check(
                 Schema.isInt32(),
@@ -101,10 +101,10 @@ export const lobbiesRouter = t.router({
               ),
             ),
           ),
-          members: Schema.optional(
+          members: Schema.optionalKey(
             Schema.NullOr(Schema.Array(LobbyMemberRequestSchema).check(Schema.isMaxLength(25))),
           ),
-          metadata: Schema.optional(
+          metadata: Schema.optionalKey(
             Schema.NullOr(
               Schema.Record(
                 Schema.String,
@@ -116,8 +116,8 @@ export const lobbiesRouter = t.router({
               ),
             ),
           ),
-          flags: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), Schema.Literal(1)])),
-          override_event_webhooks_url: Schema.optional(
+          flags: Schema.optionalKey(Schema.Union([Schema.Null, Schema.Literal(1)])),
+          override_event_webhooks_url: Schema.optionalKey(
             Schema.NullOr(
               Schema.String.check(
                 Schema.makeFilter((input) => URL.canParse(input)),
@@ -127,7 +127,7 @@ export const lobbiesRouter = t.router({
               ),
             ),
           ),
-          name: Schema.optional(
+          name: Schema.optionalKey(
             Schema.NullOr(
               Schema.String.check(
                 Schema.makeFilter((input) => [...input].length >= 1, {
@@ -162,7 +162,7 @@ export const lobbiesRouter = t.router({
       Schema.toStandardSchemaV1(
         Schema.Struct({
           lobby_id: SnowflakeTypeSchema,
-          idle_timeout_seconds: Schema.optional(
+          idle_timeout_seconds: Schema.optionalKey(
             Schema.NullOr(
               Schema.Number.check(
                 Schema.isInt32(),
@@ -171,7 +171,7 @@ export const lobbiesRouter = t.router({
               ),
             ),
           ),
-          metadata: Schema.optional(
+          metadata: Schema.optionalKey(
             Schema.NullOr(
               Schema.Record(
                 Schema.String,
@@ -183,11 +183,11 @@ export const lobbiesRouter = t.router({
               ),
             ),
           ),
-          members: Schema.optional(
+          members: Schema.optionalKey(
             Schema.NullOr(Schema.Array(LobbyMemberRequestSchema).check(Schema.isMaxLength(25))),
           ),
-          flags: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), Schema.Literal(1)])),
-          override_event_webhooks_url: Schema.optional(
+          flags: Schema.optionalKey(Schema.Union([Schema.Null, Schema.Literal(1)])),
+          override_event_webhooks_url: Schema.optionalKey(
             Schema.NullOr(
               Schema.String.check(
                 Schema.makeFilter((input) => URL.canParse(input)),
@@ -197,7 +197,7 @@ export const lobbiesRouter = t.router({
               ),
             ),
           ),
-          name: Schema.optional(
+          name: Schema.optionalKey(
             Schema.NullOr(
               Schema.String.check(
                 Schema.makeFilter((input) => [...input].length >= 1, {
@@ -221,9 +221,7 @@ export const lobbiesRouter = t.router({
       Schema.toStandardSchemaV1(
         Schema.Struct({
           lobby_id: SnowflakeTypeSchema,
-          channel_id: Schema.optional(
-            Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema]),
-          ),
+          channel_id: Schema.optionalKey(Schema.Union([Schema.Null, SnowflakeTypeSchema])),
         }),
       ),
     )
@@ -266,7 +264,7 @@ export const lobbiesRouter = t.router({
         Schema.Struct({
           lobby_id: SnowflakeTypeSchema,
           user_id: SnowflakeTypeSchema,
-          metadata: Schema.optional(
+          metadata: Schema.optionalKey(
             Schema.NullOr(
               Schema.Record(
                 Schema.String,
@@ -278,8 +276,8 @@ export const lobbiesRouter = t.router({
               ),
             ),
           ),
-          flags: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), Schema.Literal(1)])),
-          additional_name: Schema.optional(
+          flags: Schema.optionalKey(Schema.Union([Schema.Null, Schema.Literal(1)])),
+          additional_name: Schema.optionalKey(
             Schema.NullOr(
               Schema.String.check(
                 Schema.makeFilter((input) => [...input].length >= 1, {
@@ -322,7 +320,7 @@ export const lobbiesRouter = t.router({
       Schema.toStandardSchemaV1(
         Schema.Struct({
           lobby_id: SnowflakeTypeSchema,
-          limit: Schema.optional(
+          limit: Schema.optionalKey(
             Schema.Number.check(
               Schema.isInt(),
               Schema.isGreaterThanOrEqualTo(1),
@@ -341,7 +339,7 @@ export const lobbiesRouter = t.router({
       Schema.toStandardSchemaV1(
         Schema.Struct({
           lobby_id: SnowflakeTypeSchema,
-          content: Schema.optional(
+          content: Schema.optionalKey(
             Schema.NullOr(
               Schema.String.check(
                 Schema.makeFilter((input) => [...input].length <= 4000, {
@@ -350,16 +348,16 @@ export const lobbiesRouter = t.router({
               ),
             ),
           ),
-          embeds: Schema.optional(
+          embeds: Schema.optionalKey(
             Schema.NullOr(Schema.Array(RichEmbedSchema).check(Schema.isMaxLength(10))),
           ),
-          allowed_mentions: Schema.optional(
-            Schema.Union([Schema.NullOr(Schema.Null), MessageAllowedMentionsRequestSchema]),
+          allowed_mentions: Schema.optionalKey(
+            Schema.Union([Schema.Null, MessageAllowedMentionsRequestSchema]),
           ),
-          sticker_ids: Schema.optional(
+          sticker_ids: Schema.optionalKey(
             Schema.NullOr(Schema.Array(SnowflakeTypeSchema).check(Schema.isMaxLength(3))),
           ),
-          components: Schema.optional(
+          components: Schema.optionalKey(
             Schema.NullOr(
               Schema.Array(
                 Schema.Union([
@@ -374,22 +372,20 @@ export const lobbiesRouter = t.router({
               ).check(Schema.isMaxLength(40)),
             ),
           ),
-          flags: Schema.optional(Schema.NullOr(Schema.Number.check(Schema.isInt()))),
-          attachments: Schema.optional(
+          flags: Schema.optionalKey(Schema.NullOr(Schema.Number.check(Schema.isInt()))),
+          attachments: Schema.optionalKey(
             Schema.NullOr(
               Schema.Array(MessageAttachmentRequestSchema).check(Schema.isMaxLength(10)),
             ),
           ),
-          poll: Schema.optional(
-            Schema.Union([Schema.NullOr(Schema.Null), PollCreateRequestSchema]),
+          poll: Schema.optionalKey(Schema.Union([Schema.Null, PollCreateRequestSchema])),
+          shared_client_theme: Schema.optionalKey(
+            Schema.Union([Schema.Null, CustomClientThemeShareRequestSchema]),
           ),
-          shared_client_theme: Schema.optional(
-            Schema.Union([Schema.NullOr(Schema.Null), CustomClientThemeShareRequestSchema]),
+          message_reference: Schema.optionalKey(
+            Schema.Union([Schema.Null, MessageReferenceRequestSchema]),
           ),
-          message_reference: Schema.optional(
-            Schema.Union([Schema.NullOr(Schema.Null), MessageReferenceRequestSchema]),
-          ),
-          nonce: Schema.optional(
+          nonce: Schema.optionalKey(
             Schema.Union([
               Schema.Union([
                 Schema.BigInt,
@@ -410,19 +406,19 @@ export const lobbiesRouter = t.router({
                     minimum: -9223372036854775808n,
                     maximum: 9223372036854775807n,
                   }),
-                  Schema.isGreaterThanOrEqualToBigInt(-9223372036854776000n),
-                  Schema.isLessThanOrEqualToBigInt(9223372036854776000n),
+                  Schema.isGreaterThanOrEqualToBigInt(-9223372036854775808n),
+                  Schema.isLessThanOrEqualToBigInt(9223372036854775808n),
                 ),
               Schema.String.check(
                 Schema.makeFilter((input) => [...input].length <= 25, {
                   expected: 'a string of at most 25 characters',
                 }),
               ),
-              Schema.NullOr(Schema.Null),
+              Schema.Null,
             ]),
           ),
-          enforce_nonce: Schema.optional(Schema.NullOr(Schema.Boolean)),
-          tts: Schema.optional(Schema.NullOr(Schema.Boolean)),
+          enforce_nonce: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
+          tts: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
         }),
       ),
     )

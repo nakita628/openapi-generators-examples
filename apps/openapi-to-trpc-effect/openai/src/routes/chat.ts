@@ -1,5 +1,5 @@
 import { initTRPC, TRPCError } from '@trpc/server'
-import { Schema } from 'effect'
+import { Effect, Schema } from 'effect'
 import {
   ChatCompletionDeletedSchema,
   ChatCompletionListSchema,
@@ -16,9 +16,9 @@ export const chatRouter = t.router({
     .input(
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          model: Schema.optional(Schema.String),
-          metadata: Schema.optional(MetadataSchema),
-          after: Schema.optional(Schema.String),
+          model: Schema.optionalKey(Schema.String),
+          metadata: Schema.optionalKey(MetadataSchema),
+          after: Schema.optionalKey(Schema.String),
           limit: Schema.Number.check(Schema.isInt()).pipe(
             Schema.withDecodingDefault(Effect.succeed(20)),
           ),
@@ -65,7 +65,7 @@ export const chatRouter = t.router({
       Schema.toStandardSchemaV1(
         Schema.Struct({
           completion_id: Schema.String,
-          after: Schema.optional(Schema.String),
+          after: Schema.optionalKey(Schema.String),
           limit: Schema.Number.check(Schema.isInt()).pipe(
             Schema.withDecodingDefault(Effect.succeed(20)),
           ),

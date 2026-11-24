@@ -1,5 +1,5 @@
 import { initTRPC, TRPCError } from '@trpc/server'
-import { Schema } from 'effect'
+import { Effect, Schema } from 'effect'
 import { AlbumObjectSchema, PagingSimplifiedTrackObjectSchema } from '../components'
 
 const t = initTRPC.create()
@@ -14,7 +14,7 @@ export const albumsRouter = t.router({
               'The [Spotify ID](/documentation/web-api/concepts/spotify-uris-ids) of the album.\n',
             jsonSchemaExamples: ['4aawyAB9vmqN3uQ7FjRGTy'],
           }),
-          market: Schema.optional(
+          market: Schema.optionalKey(
             Schema.String.annotate({
               description:
                 'An [ISO 3166-1 alpha-2 country code](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2).\n  If a country code is specified, only content that is available in that market will be returned.<br/>\n  If a valid user access token is specified in the request header, the country associated with\n  the user account will take priority over this parameter.<br/>\n  _**Note**: If neither market or user country are provided, the content is considered unavailable for the client._<br/>\n  Users can view the country that is associated with their account in the [account settings](https://www.spotify.com/account/overview/).\n',
@@ -39,7 +39,7 @@ export const albumsRouter = t.router({
               '382ObEPsp2rxGrnsizN5TX,1A2GTWGtFfWp7KSQTwWOyo,2noRn2Aes5aoNVsU6iWThc',
             ],
           }),
-          market: Schema.optional(
+          market: Schema.optionalKey(
             Schema.String.annotate({
               description:
                 'An [ISO 3166-1 alpha-2 country code](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2).\n  If a country code is specified, only content that is available in that market will be returned.<br/>\n  If a valid user access token is specified in the request header, the country associated with\n  the user account will take priority over this parameter.<br/>\n  _**Note**: If neither market or user country are provided, the content is considered unavailable for the client._<br/>\n  Users can view the country that is associated with their account in the [account settings](https://www.spotify.com/account/overview/).\n',
@@ -62,7 +62,7 @@ export const albumsRouter = t.router({
               'The [Spotify ID](/documentation/web-api/concepts/spotify-uris-ids) of the album.\n',
             jsonSchemaExamples: ['4aawyAB9vmqN3uQ7FjRGTy'],
           }),
-          market: Schema.optional(
+          market: Schema.optionalKey(
             Schema.String.annotate({
               description:
                 'An [ISO 3166-1 alpha-2 country code](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2).\n  If a country code is specified, only content that is available in that market will be returned.<br/>\n  If a valid user access token is specified in the request header, the country associated with\n  the user account will take priority over this parameter.<br/>\n  _**Note**: If neither market or user country are provided, the content is considered unavailable for the client._<br/>\n  Users can view the country that is associated with their account in the [account settings](https://www.spotify.com/account/overview/).\n',

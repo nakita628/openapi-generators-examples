@@ -414,21 +414,25 @@ export const PlaylistTrackObjectSchema = type({
   'is_local?': type('boolean').describe(
     'Whether this track or episode is a [local file](/documentation/web-api/concepts/playlists/#local-files) or not.\n',
   ),
-  'item?': type(TrackObjectSchema)
-    .or(EpisodeObjectSchema)
+  'item?': type(type(TrackObjectSchema).and({ type: "'TrackObject'" }))
+    .or(type(EpisodeObjectSchema).and({ type: "'EpisodeObject'" }))
     .describe('Information about the track or episode.'),
-  'track?': type(TrackObjectSchema)
-    .or(EpisodeObjectSchema)
+  'track?': type(type(TrackObjectSchema).and({ type: "'TrackObject'" }))
+    .or(type(EpisodeObjectSchema).and({ type: "'EpisodeObject'" }))
     .describe('**Deprecated:** Use `item` instead. Information about the track or episode.\n'),
 })
 
 export type PlaylistTrackObject = typeof PlaylistTrackObjectSchema.infer
 
 export const QueueObjectSchema = type({
-  'currently_playing?': type(TrackObjectSchema)
-    .or(EpisodeObjectSchema)
+  'currently_playing?': type(type(TrackObjectSchema).and({ type: "'TrackObject'" }))
+    .or(type(EpisodeObjectSchema).and({ type: "'EpisodeObject'" }))
     .describe('The currently playing track or episode. Can be `null`.'),
-  'queue?': type(type(TrackObjectSchema).or(EpisodeObjectSchema))
+  'queue?': type(
+    type(type(TrackObjectSchema).and({ type: "'TrackObject'" })).or(
+      type(EpisodeObjectSchema).and({ type: "'EpisodeObject'" }),
+    ),
+  )
     .array()
     .describe('The tracks or episodes in the queue. Can be empty.'),
 })
@@ -496,8 +500,8 @@ export const CurrentlyPlayingContextObjectSchema = type({
     'Progress into the currently playing track or episode. Can be `null`.',
   ),
   'is_playing?': type('boolean').describe('If something is currently playing, return `true`.'),
-  'item?': type(TrackObjectSchema)
-    .or(EpisodeObjectSchema)
+  'item?': type(type(TrackObjectSchema).and({ type: "'TrackObject'" }))
+    .or(type(EpisodeObjectSchema).and({ type: "'EpisodeObject'" }))
     .describe('The currently playing track or episode. Can be `null`.'),
   'currently_playing_type?': type('string').describe(
     'The object type of the currently playing item. Can be one of `track`, `episode`, `ad` or `unknown`.\n',
@@ -582,19 +586,21 @@ export const PublicUserObjectSchema = type({
 
 export type PublicUserObject = typeof PublicUserObjectSchema.infer
 
-export const LoudnessSchema = type(
-  'number >= -3.4028234663852886e38 & number <= 3.4028234663852886e38',
-).describe(
-  'The overall loudness of a track in decibels (dB). Loudness values are averaged across the entire track and are useful for comparing relative loudness of tracks. Loudness is the quality of a sound that is the primary psychological correlate of physical strength (amplitude). Values typically range between -60 and 0 db.\n',
-)
+export const LoudnessSchema = type('number')
+  .atLeast(-3.4028234663852886e38)
+  .atMost(3.4028234663852886e38)
+  .describe(
+    'The overall loudness of a track in decibels (dB). Loudness values are averaged across the entire track and are useful for comparing relative loudness of tracks. Loudness is the quality of a sound that is the primary psychological correlate of physical strength (amplitude). Values typically range between -60 and 0 db.\n',
+  )
 
 export type Loudness = typeof LoudnessSchema.infer
 
-export const TempoSchema = type(
-  'number >= -3.4028234663852886e38 & number <= 3.4028234663852886e38',
-).describe(
-  'The overall estimated tempo of a track in beats per minute (BPM). In musical terminology, tempo is the speed or pace of a given piece and derives directly from the average beat duration.\n',
-)
+export const TempoSchema = type('number')
+  .atLeast(-3.4028234663852886e38)
+  .atMost(3.4028234663852886e38)
+  .describe(
+    'The overall estimated tempo of a track in beats per minute (BPM). In musical terminology, tempo is the speed or pace of a given piece and derives directly from the average beat duration.\n',
+  )
 
 export type Tempo = typeof TempoSchema.infer
 
@@ -806,40 +812,52 @@ export const AudioAnalysisObjectSchema = type({
 export type AudioAnalysisObject = typeof AudioAnalysisObjectSchema.infer
 
 export const AudioFeaturesObjectSchema = type({
-  'acousticness?': type(
-    'number >= -3.4028234663852886e38 & number <= 3.4028234663852886e38 & number >= 0 & number <= 1',
-  ).describe(
-    'A confidence measure from 0.0 to 1.0 of whether the track is acoustic. 1.0 represents high confidence the track is acoustic.\n',
-  ),
+  'acousticness?': type('number')
+    .atLeast(-3.4028234663852886e38)
+    .atMost(3.4028234663852886e38)
+    .atLeast(0)
+    .atMost(1)
+    .describe(
+      'A confidence measure from 0.0 to 1.0 of whether the track is acoustic. 1.0 represents high confidence the track is acoustic.\n',
+    ),
   'analysis_url?': type('string').describe(
     'A URL to access the full audio analysis of this track. An access token is required to access this data.\n',
   ),
-  'danceability?': type(
-    'number >= -3.4028234663852886e38 & number <= 3.4028234663852886e38',
-  ).describe(
-    'Danceability describes how suitable a track is for dancing based on a combination of musical elements including tempo, rhythm stability, beat strength, and overall regularity. A value of 0.0 is least danceable and 1.0 is most danceable.\n',
-  ),
+  'danceability?': type('number')
+    .atLeast(-3.4028234663852886e38)
+    .atMost(3.4028234663852886e38)
+    .describe(
+      'Danceability describes how suitable a track is for dancing based on a combination of musical elements including tempo, rhythm stability, beat strength, and overall regularity. A value of 0.0 is least danceable and 1.0 is most danceable.\n',
+    ),
   'duration_ms?': type('number.integer').describe('The duration of the track in milliseconds.\n'),
-  'energy?': type('number >= -3.4028234663852886e38 & number <= 3.4028234663852886e38').describe(
-    'Energy is a measure from 0.0 to 1.0 and represents a perceptual measure of intensity and activity. Typically, energetic tracks feel fast, loud, and noisy. For example, death metal has high energy, while a Bach prelude scores low on the scale. Perceptual features contributing to this attribute include dynamic range, perceived loudness, timbre, onset rate, and general entropy.\n',
-  ),
+  'energy?': type('number')
+    .atLeast(-3.4028234663852886e38)
+    .atMost(3.4028234663852886e38)
+    .describe(
+      'Energy is a measure from 0.0 to 1.0 and represents a perceptual measure of intensity and activity. Typically, energetic tracks feel fast, loud, and noisy. For example, death metal has high energy, while a Bach prelude scores low on the scale. Perceptual features contributing to this attribute include dynamic range, perceived loudness, timbre, onset rate, and general entropy.\n',
+    ),
   'id?': type('string').describe('The Spotify ID for the track.\n'),
-  'instrumentalness?': type(
-    'number >= -3.4028234663852886e38 & number <= 3.4028234663852886e38',
-  ).describe(
-    'Predicts whether a track contains no vocals. "Ooh" and "aah" sounds are treated as instrumental in this context. Rap or spoken word tracks are clearly "vocal". The closer the instrumentalness value is to 1.0, the greater likelihood the track contains no vocal content. Values above 0.5 are intended to represent instrumental tracks, but confidence is higher as the value approaches 1.0.\n',
-  ),
+  'instrumentalness?': type('number')
+    .atLeast(-3.4028234663852886e38)
+    .atMost(3.4028234663852886e38)
+    .describe(
+      'Predicts whether a track contains no vocals. "Ooh" and "aah" sounds are treated as instrumental in this context. Rap or spoken word tracks are clearly "vocal". The closer the instrumentalness value is to 1.0, the greater likelihood the track contains no vocal content. Values above 0.5 are intended to represent instrumental tracks, but confidence is higher as the value approaches 1.0.\n',
+    ),
   'key?': KeySchema,
-  'liveness?': type('number >= -3.4028234663852886e38 & number <= 3.4028234663852886e38').describe(
-    'Detects the presence of an audience in the recording. Higher liveness values represent an increased probability that the track was performed live. A value above 0.8 provides strong likelihood that the track is live.\n',
-  ),
+  'liveness?': type('number')
+    .atLeast(-3.4028234663852886e38)
+    .atMost(3.4028234663852886e38)
+    .describe(
+      'Detects the presence of an audience in the recording. Higher liveness values represent an increased probability that the track was performed live. A value above 0.8 provides strong likelihood that the track is live.\n',
+    ),
   'loudness?': LoudnessSchema,
   'mode?': ModeSchema,
-  'speechiness?': type(
-    'number >= -3.4028234663852886e38 & number <= 3.4028234663852886e38',
-  ).describe(
-    'Speechiness detects the presence of spoken words in a track. The more exclusively speech-like the recording (e.g. talk show, audio book, poetry), the closer to 1.0 the attribute value. Values above 0.66 describe tracks that are probably made entirely of spoken words. Values between 0.33 and 0.66 describe tracks that may contain both music and speech, either in sections or layered, including such cases as rap music. Values below 0.33 most likely represent music and other non-speech-like tracks.\n',
-  ),
+  'speechiness?': type('number')
+    .atLeast(-3.4028234663852886e38)
+    .atMost(3.4028234663852886e38)
+    .describe(
+      'Speechiness detects the presence of spoken words in a track. The more exclusively speech-like the recording (e.g. talk show, audio book, poetry), the closer to 1.0 the attribute value. Values above 0.66 describe tracks that are probably made entirely of spoken words. Values between 0.33 and 0.66 describe tracks that may contain both music and speech, either in sections or layered, including such cases as rap music. Values below 0.33 most likely represent music and other non-speech-like tracks.\n',
+    ),
   'tempo?': TempoSchema,
   'time_signature?': TimeSignatureSchema,
   'track_href?': type('string').describe(
@@ -847,11 +865,14 @@ export const AudioFeaturesObjectSchema = type({
   ),
   'type?': type("'audio_features'").describe('The object type.\n'),
   'uri?': type('string').describe('The Spotify URI for the track.\n'),
-  'valence?': type(
-    'number >= -3.4028234663852886e38 & number <= 3.4028234663852886e38 & number >= 0 & number <= 1',
-  ).describe(
-    'A measure from 0.0 to 1.0 describing the musical positiveness conveyed by a track. Tracks with high valence sound more positive (e.g. happy, cheerful, euphoric), while tracks with low valence sound more negative (e.g. sad, depressed, angry).\n',
-  ),
+  'valence?': type('number')
+    .atLeast(-3.4028234663852886e38)
+    .atMost(3.4028234663852886e38)
+    .atLeast(0)
+    .atMost(1)
+    .describe(
+      'A measure from 0.0 to 1.0 describing the musical positiveness conveyed by a track. Tracks with high valence sound more positive (e.g. happy, cheerful, euphoric), while tracks with low valence sound more negative (e.g. sad, depressed, angry).\n',
+    ),
 })
 
 export type AudioFeaturesObject = typeof AudioFeaturesObjectSchema.infer
@@ -955,6 +976,7 @@ export const PagingObjectSchema = type({
     'URL to the previous page of items. ( `null` if none)\n',
   ),
   total: type('number.integer').describe('The total number of items available to return.\n'),
+  items: 'unknown',
 })
 
 export type PagingObject = typeof PagingObjectSchema.infer
@@ -1443,8 +1465,8 @@ export const CurrentlyPlayingObjectSchema = type({
     'Progress into the currently playing track or episode. Can be `null`.',
   ),
   'is_playing?': type('boolean').describe('If something is currently playing, return `true`.'),
-  'item?': type(TrackObjectSchema)
-    .or(EpisodeObjectSchema)
+  'item?': type(type(TrackObjectSchema).and({ type: "'TrackObject'" }))
+    .or(type(EpisodeObjectSchema).and({ type: "'EpisodeObject'" }))
     .describe('The currently playing track or episode. Can be `null`.'),
   'currently_playing_type?': type('string').describe(
     'The object type of the currently playing item. Can be one of `track`, `episode`, `ad` or `unknown`.\n',
@@ -1484,14 +1506,14 @@ export const QueryMarketParamsSchema = type('string').describe(
 )
 export const QueryLimitParamsSchema = type('string')
   .pipe((data, ctx) => {
-    const value = Number(data)
+    const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
     return Number.isSafeInteger(value) ? value : ctx.error('an integer')
   })
   .to('number.integer >= 1 & number.integer <= 50')
   .describe('The maximum number of items to return. Default: 20. Minimum: 1. Maximum: 50.\n')
 export const QueryOffsetParamsSchema = type('string')
   .pipe((data, ctx) => {
-    const value = Number(data)
+    const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
     return Number.isSafeInteger(value) ? value : ctx.error('an integer')
   })
   .describe(

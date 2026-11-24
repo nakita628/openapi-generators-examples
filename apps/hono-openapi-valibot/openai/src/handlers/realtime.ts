@@ -146,7 +146,12 @@ export const realtimeHandler = new Hono()
                                           v.description('The audio format. Always `audio/pcm`.'),
                                         ),
                                         rate: v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(24000)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(24000),
+                                          ),
                                           v.description(
                                             'The sample rate of the audio. Always `24000`.',
                                           ),
@@ -287,7 +292,10 @@ export const realtimeHandler = new Hono()
                                               v.pipe(
                                                 v.pipe(
                                                   v.string(),
-                                                  v.transform(Number),
+                                                  v.regex(
+                                                    /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/,
+                                                  ),
+                                                  v.transform((input) => Number(input)),
                                                   v.number(),
                                                   v.finite(),
                                                 ),
@@ -300,7 +308,8 @@ export const realtimeHandler = new Hono()
                                               v.pipe(
                                                 v.pipe(
                                                   v.string(),
-                                                  v.transform(Number),
+                                                  v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                                  v.transform((input) => Number(input)),
                                                   v.number(),
                                                   v.safeInteger(),
                                                 ),
@@ -313,7 +322,8 @@ export const realtimeHandler = new Hono()
                                               v.pipe(
                                                 v.pipe(
                                                   v.string(),
-                                                  v.transform(Number),
+                                                  v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                                  v.transform((input) => Number(input)),
                                                   v.number(),
                                                   v.safeInteger(),
                                                 ),
@@ -367,7 +377,8 @@ export const realtimeHandler = new Hono()
                                                     v.pipe(
                                                       v.pipe(
                                                         v.string(),
-                                                        v.transform(Number),
+                                                        v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                                        v.transform((input) => Number(input)),
                                                         v.number(),
                                                         v.safeInteger(),
                                                         v.minValue(5000),
@@ -382,7 +393,7 @@ export const realtimeHandler = new Hono()
                                                       v.transform((input) =>
                                                         input === 'null' ? null : input,
                                                       ),
-                                                      v.nullable(v.null()),
+                                                      v.null(),
                                                     ),
                                                   ]),
                                                 ),
@@ -457,7 +468,7 @@ export const realtimeHandler = new Hono()
                                     v.pipe(
                                       v.unknown(),
                                       v.transform((input) => (input === 'null' ? null : input)),
-                                      v.nullable(v.null()),
+                                      v.null(),
                                     ),
                                   ]),
                                 ),
@@ -476,7 +487,12 @@ export const realtimeHandler = new Hono()
                                           v.description('The audio format. Always `audio/pcm`.'),
                                         ),
                                         rate: v.pipe(
-                                          v.pipe(v.string(), v.transform(Number), v.literal(24000)),
+                                          v.pipe(
+                                            v.string(),
+                                            v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.transform((input) => Number(input)),
+                                            v.literal(24000),
+                                          ),
                                           v.description(
                                             'The sample rate of the audio. Always `24000`.',
                                           ),
@@ -523,7 +539,8 @@ export const realtimeHandler = new Hono()
                               v.optional(
                                 v.pipe(
                                   v.string(),
-                                  v.transform(Number),
+                                  v.regex(/^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/),
+                                  v.transform((input) => Number(input)),
                                   v.number(),
                                   v.finite(),
                                   v.minValue(0.25),
@@ -555,8 +572,8 @@ export const realtimeHandler = new Hono()
                       ),
                     ),
                   ),
-                  tracing: v.optional(
-                    v.pipe(
+                  tracing: v.pipe(
+                    v.optional(
                       v.union([
                         v.pipe(
                           v.optional(v.literal('auto'), 'auto'),
@@ -592,12 +609,13 @@ export const realtimeHandler = new Hono()
                         v.pipe(
                           v.unknown(),
                           v.transform((input) => (input === 'null' ? null : input)),
-                          v.nullable(v.null()),
+                          v.null(),
                         ),
                       ]),
-                      v.description(
-                        'Realtime API can write session traces to the [Traces Dashboard](https://platform.openai.com/logs?api=traces). Set to null to disable tracing. Once\ntracing is enabled for a session, the configuration cannot be modified.\n\n`auto` will create a trace for the session with default values for the\nworkflow name, group id, and metadata.\n',
-                      ),
+                      null,
+                    ),
+                    v.description(
+                      'Realtime API can write session traces to the [Traces Dashboard](https://platform.openai.com/logs?api=traces). Set to null to disable tracing. Once\ntracing is enabled for a session, the configuration cannot be modified.\n\n`auto` will create a trace for the session with default values for the\nworkflow name, group id, and metadata.\n',
                     ),
                   ),
                   tools: v.optional(
@@ -687,7 +705,7 @@ export const realtimeHandler = new Hono()
                                         v.pipe(
                                           v.unknown(),
                                           v.transform((input) => (input === 'null' ? null : input)),
-                                          v.nullable(v.null()),
+                                          v.null(),
                                         ),
                                       ]),
                                     ),
@@ -758,7 +776,7 @@ export const realtimeHandler = new Hono()
                                         v.pipe(
                                           v.unknown(),
                                           v.transform((input) => (input === 'null' ? null : input)),
-                                          v.nullable(v.null()),
+                                          v.null(),
                                         ),
                                       ]),
                                     ),
@@ -786,7 +804,7 @@ export const realtimeHandler = new Hono()
                                         v.pipe(
                                           v.unknown(),
                                           v.transform((input) => (input === 'null' ? null : input)),
-                                          v.nullable(v.null()),
+                                          v.null(),
                                         ),
                                       ]),
                                     ),
@@ -902,7 +920,7 @@ export const realtimeHandler = new Hono()
                                     v.pipe(
                                       v.unknown(),
                                       v.transform((input) => (input === 'null' ? null : input)),
-                                      v.nullable(v.null()),
+                                      v.null(),
                                     ),
                                   ]),
                                 ),
@@ -957,7 +975,7 @@ export const realtimeHandler = new Hono()
                                 v.pipe(
                                   v.unknown(),
                                   v.transform((input) => (input === 'null' ? null : input)),
-                                  v.nullable(v.null()),
+                                  v.null(),
                                 ),
                               ]),
                             ),
@@ -989,7 +1007,13 @@ export const realtimeHandler = new Hono()
                   max_output_tokens: v.optional(
                     v.pipe(
                       v.union([
-                        v.pipe(v.string(), v.transform(Number), v.number(), v.safeInteger()),
+                        v.pipe(
+                          v.string(),
+                          v.regex(/^-?(?:0|[1-9]\d*)$/),
+                          v.transform((input) => Number(input)),
+                          v.number(),
+                          v.safeInteger(),
+                        ),
                         v.literal('inf'),
                       ]),
                       v.description(
@@ -1015,7 +1039,8 @@ export const realtimeHandler = new Hono()
                             retention_ratio: v.pipe(
                               v.pipe(
                                 v.string(),
-                                v.transform(Number),
+                                v.regex(/^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/),
+                                v.transform((input) => Number(input)),
                                 v.number(),
                                 v.finite(),
                                 v.minValue(0),
@@ -1032,7 +1057,8 @@ export const realtimeHandler = new Hono()
                                     post_instructions: v.pipe(
                                       v.pipe(
                                         v.string(),
-                                        v.transform(Number),
+                                        v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                        v.transform((input) => Number(input)),
                                         v.number(),
                                         v.safeInteger(),
                                         v.minValue(0),
@@ -1082,7 +1108,7 @@ export const realtimeHandler = new Hono()
                                   v.pipe(
                                     v.unknown(),
                                     v.transform((input) => (input === 'null' ? null : input)),
-                                    v.nullable(v.null()),
+                                    v.null(),
                                   ),
                                 ]),
                               ),
@@ -1122,7 +1148,7 @@ export const realtimeHandler = new Hono()
                                                       v.transform((input) =>
                                                         input === 'null' ? null : input,
                                                       ),
-                                                      v.nullable(v.null()),
+                                                      v.null(),
                                                     ),
                                                   ]),
                                                 ),
@@ -1139,7 +1165,7 @@ export const realtimeHandler = new Hono()
                                                       v.transform((input) =>
                                                         input === 'null' ? null : input,
                                                       ),
-                                                      v.nullable(v.null()),
+                                                      v.null(),
                                                     ),
                                                   ]),
                                                 ),
@@ -1178,7 +1204,7 @@ export const realtimeHandler = new Hono()
                                                       v.transform((input) =>
                                                         input === 'null' ? null : input,
                                                       ),
-                                                      v.nullable(v.null()),
+                                                      v.null(),
                                                     ),
                                                   ]),
                                                 ),
@@ -1229,7 +1255,7 @@ export const realtimeHandler = new Hono()
                                       v.pipe(
                                         v.unknown(),
                                         v.transform((input) => (input === 'null' ? null : input)),
-                                        v.nullable(v.null()),
+                                        v.null(),
                                       ),
                                     ]),
                                   ),
@@ -1243,7 +1269,7 @@ export const realtimeHandler = new Hono()
                           v.pipe(
                             v.unknown(),
                             v.transform((input) => (input === 'null' ? null : input)),
-                            v.nullable(v.null()),
+                            v.null(),
                           ),
                         ]),
                       ),

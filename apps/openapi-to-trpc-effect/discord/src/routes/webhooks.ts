@@ -59,7 +59,7 @@ export const webhooksRouter = t.router({
       Schema.toStandardSchemaV1(
         Schema.Struct({
           webhook_id: SnowflakeTypeSchema,
-          name: Schema.optional(
+          name: Schema.optionalKey(
             Schema.String.check(
               Schema.makeFilter((input) => [...input].length >= 1, {
                 expected: 'a string of at least 1 character',
@@ -69,10 +69,8 @@ export const webhooksRouter = t.router({
               }),
             ),
           ),
-          avatar: Schema.optional(Schema.NullOr(Schema.String)),
-          channel_id: Schema.optional(
-            Schema.Union([Schema.NullOr(Schema.Null), SnowflakeTypeSchema]),
-          ),
+          avatar: Schema.optionalKey(Schema.NullOr(Schema.String)),
+          channel_id: Schema.optionalKey(Schema.Union([Schema.Null, SnowflakeTypeSchema])),
         }),
       ),
     )
@@ -123,9 +121,9 @@ export const webhooksRouter = t.router({
               expected: 'a string of at most 152133 characters',
             }),
           ),
-          wait: Schema.optional(Schema.Boolean),
-          thread_id: Schema.optional(SnowflakeTypeSchema),
-          with_components: Schema.optional(Schema.Boolean),
+          wait: Schema.optionalKey(Schema.Boolean),
+          thread_id: Schema.optionalKey(SnowflakeTypeSchema),
+          with_components: Schema.optionalKey(Schema.Boolean),
           body: Schema.Union([
             IncomingWebhookRequestPartialSchema,
             IncomingWebhookUpdateRequestPartialSchema,
@@ -163,7 +161,7 @@ export const webhooksRouter = t.router({
               expected: 'a string of at most 152133 characters',
             }),
           ),
-          name: Schema.optional(
+          name: Schema.optionalKey(
             Schema.String.check(
               Schema.makeFilter((input) => [...input].length >= 1, {
                 expected: 'a string of at least 1 character',
@@ -173,7 +171,7 @@ export const webhooksRouter = t.router({
               }),
             ),
           ),
-          avatar: Schema.optional(Schema.NullOr(Schema.String)),
+          avatar: Schema.optionalKey(Schema.NullOr(Schema.String)),
         }),
       ),
     )
@@ -199,9 +197,9 @@ export const webhooksRouter = t.router({
               expected: 'a string of at most 152133 characters',
             }),
           ),
-          wait: Schema.optional(Schema.Boolean),
-          thread_id: Schema.optional(SnowflakeTypeSchema),
-          action: Schema.optional(
+          wait: Schema.optionalKey(Schema.Boolean),
+          thread_id: Schema.optionalKey(SnowflakeTypeSchema),
+          action: Schema.optionalKey(
             Schema.NullOr(
               Schema.String.check(
                 Schema.makeFilter((input) => [...input].length <= 152133, {
@@ -210,7 +208,7 @@ export const webhooksRouter = t.router({
               ),
             ),
           ),
-          ref: Schema.optional(
+          ref: Schema.optionalKey(
             Schema.NullOr(
               Schema.String.check(
                 Schema.makeFilter((input) => [...input].length <= 152133, {
@@ -219,7 +217,7 @@ export const webhooksRouter = t.router({
               ),
             ),
           ),
-          ref_type: Schema.optional(
+          ref_type: Schema.optionalKey(
             Schema.NullOr(
               Schema.String.check(
                 Schema.makeFilter((input) => [...input].length <= 152133, {
@@ -228,28 +226,20 @@ export const webhooksRouter = t.router({
               ),
             ),
           ),
-          comment: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), GithubCommentSchema])),
-          issue: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), GithubIssueSchema])),
-          pull_request: Schema.optional(
-            Schema.Union([Schema.NullOr(Schema.Null), GithubIssueSchema]),
-          ),
-          repository: Schema.optional(
-            Schema.Union([Schema.NullOr(Schema.Null), GithubRepositorySchema]),
-          ),
-          forkee: Schema.optional(
-            Schema.Union([Schema.NullOr(Schema.Null), GithubRepositorySchema]),
-          ),
+          comment: Schema.optionalKey(Schema.Union([Schema.Null, GithubCommentSchema])),
+          issue: Schema.optionalKey(Schema.Union([Schema.Null, GithubIssueSchema])),
+          pull_request: Schema.optionalKey(Schema.Union([Schema.Null, GithubIssueSchema])),
+          repository: Schema.optionalKey(Schema.Union([Schema.Null, GithubRepositorySchema])),
+          forkee: Schema.optionalKey(Schema.Union([Schema.Null, GithubRepositorySchema])),
           sender: GithubUserSchema,
-          member: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), GithubUserSchema])),
-          release: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), GithubReleaseSchema])),
-          head_commit: Schema.optional(
-            Schema.Union([Schema.NullOr(Schema.Null), GithubCommitSchema]),
-          ),
-          commits: Schema.optional(
+          member: Schema.optionalKey(Schema.Union([Schema.Null, GithubUserSchema])),
+          release: Schema.optionalKey(Schema.Union([Schema.Null, GithubReleaseSchema])),
+          head_commit: Schema.optionalKey(Schema.Union([Schema.Null, GithubCommitSchema])),
+          commits: Schema.optionalKey(
             Schema.NullOr(Schema.Array(GithubCommitSchema).check(Schema.isMaxLength(1521))),
           ),
-          forced: Schema.optional(Schema.NullOr(Schema.Boolean)),
-          compare: Schema.optional(
+          forced: Schema.optionalKey(Schema.NullOr(Schema.Boolean)),
+          compare: Schema.optionalKey(
             Schema.NullOr(
               Schema.String.check(
                 Schema.makeFilter((input) => URL.canParse(input)),
@@ -259,17 +249,11 @@ export const webhooksRouter = t.router({
               ),
             ),
           ),
-          review: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), GithubReviewSchema])),
-          check_run: Schema.optional(
-            Schema.Union([Schema.NullOr(Schema.Null), GithubCheckRunSchema]),
-          ),
-          check_suite: Schema.optional(
-            Schema.Union([Schema.NullOr(Schema.Null), GithubCheckSuiteSchema]),
-          ),
-          discussion: Schema.optional(
-            Schema.Union([Schema.NullOr(Schema.Null), GithubDiscussionSchema]),
-          ),
-          answer: Schema.optional(Schema.Union([Schema.NullOr(Schema.Null), GithubCommentSchema])),
+          review: Schema.optionalKey(Schema.Union([Schema.Null, GithubReviewSchema])),
+          check_run: Schema.optionalKey(Schema.Union([Schema.Null, GithubCheckRunSchema])),
+          check_suite: Schema.optionalKey(Schema.Union([Schema.Null, GithubCheckSuiteSchema])),
+          discussion: Schema.optionalKey(Schema.Union([Schema.Null, GithubDiscussionSchema])),
+          answer: Schema.optionalKey(Schema.Union([Schema.Null, GithubCommentSchema])),
         }),
       ),
     )
@@ -286,7 +270,7 @@ export const webhooksRouter = t.router({
               expected: 'a string of at most 152133 characters',
             }),
           ),
-          thread_id: Schema.optional(SnowflakeTypeSchema),
+          thread_id: Schema.optionalKey(SnowflakeTypeSchema),
         }),
       ),
     )
@@ -304,7 +288,7 @@ export const webhooksRouter = t.router({
               expected: 'a string of at most 152133 characters',
             }),
           ),
-          thread_id: Schema.optional(SnowflakeTypeSchema),
+          thread_id: Schema.optionalKey(SnowflakeTypeSchema),
         }),
       ),
     )
@@ -321,9 +305,9 @@ export const webhooksRouter = t.router({
               expected: 'a string of at most 152133 characters',
             }),
           ),
-          thread_id: Schema.optional(SnowflakeTypeSchema),
-          with_components: Schema.optional(Schema.Boolean),
-          content: Schema.optional(
+          thread_id: Schema.optionalKey(SnowflakeTypeSchema),
+          with_components: Schema.optionalKey(Schema.Boolean),
+          content: Schema.optionalKey(
             Schema.NullOr(
               Schema.String.check(
                 Schema.makeFilter((input) => [...input].length <= 2000, {
@@ -332,13 +316,13 @@ export const webhooksRouter = t.router({
               ),
             ),
           ),
-          embeds: Schema.optional(
+          embeds: Schema.optionalKey(
             Schema.NullOr(Schema.Array(RichEmbedSchema).check(Schema.isMaxLength(10))),
           ),
-          allowed_mentions: Schema.optional(
-            Schema.Union([Schema.NullOr(Schema.Null), MessageAllowedMentionsRequestSchema]),
+          allowed_mentions: Schema.optionalKey(
+            Schema.Union([Schema.Null, MessageAllowedMentionsRequestSchema]),
           ),
-          components: Schema.optional(
+          components: Schema.optionalKey(
             Schema.NullOr(
               Schema.Array(
                 Schema.Union([
@@ -353,15 +337,13 @@ export const webhooksRouter = t.router({
               ).check(Schema.isMaxLength(40)),
             ),
           ),
-          attachments: Schema.optional(
+          attachments: Schema.optionalKey(
             Schema.NullOr(
               Schema.Array(MessageAttachmentRequestSchema).check(Schema.isMaxLength(10)),
             ),
           ),
-          poll: Schema.optional(
-            Schema.Union([Schema.NullOr(Schema.Null), PollCreateRequestSchema]),
-          ),
-          flags: Schema.optional(Schema.NullOr(Schema.Number.check(Schema.isInt()))),
+          poll: Schema.optionalKey(Schema.Union([Schema.Null, PollCreateRequestSchema])),
+          flags: Schema.optionalKey(Schema.NullOr(Schema.Number.check(Schema.isInt()))),
         }),
       ),
     )
@@ -380,7 +362,7 @@ export const webhooksRouter = t.router({
             }),
           ),
           message_id: SnowflakeTypeSchema,
-          thread_id: Schema.optional(SnowflakeTypeSchema),
+          thread_id: Schema.optionalKey(SnowflakeTypeSchema),
         }),
       ),
     )
@@ -399,7 +381,7 @@ export const webhooksRouter = t.router({
             }),
           ),
           message_id: SnowflakeTypeSchema,
-          thread_id: Schema.optional(SnowflakeTypeSchema),
+          thread_id: Schema.optionalKey(SnowflakeTypeSchema),
         }),
       ),
     )
@@ -417,9 +399,9 @@ export const webhooksRouter = t.router({
             }),
           ),
           message_id: SnowflakeTypeSchema,
-          thread_id: Schema.optional(SnowflakeTypeSchema),
-          with_components: Schema.optional(Schema.Boolean),
-          content: Schema.optional(
+          thread_id: Schema.optionalKey(SnowflakeTypeSchema),
+          with_components: Schema.optionalKey(Schema.Boolean),
+          content: Schema.optionalKey(
             Schema.NullOr(
               Schema.String.check(
                 Schema.makeFilter((input) => [...input].length <= 2000, {
@@ -428,13 +410,13 @@ export const webhooksRouter = t.router({
               ),
             ),
           ),
-          embeds: Schema.optional(
+          embeds: Schema.optionalKey(
             Schema.NullOr(Schema.Array(RichEmbedSchema).check(Schema.isMaxLength(10))),
           ),
-          allowed_mentions: Schema.optional(
-            Schema.Union([Schema.NullOr(Schema.Null), MessageAllowedMentionsRequestSchema]),
+          allowed_mentions: Schema.optionalKey(
+            Schema.Union([Schema.Null, MessageAllowedMentionsRequestSchema]),
           ),
-          components: Schema.optional(
+          components: Schema.optionalKey(
             Schema.NullOr(
               Schema.Array(
                 Schema.Union([
@@ -449,15 +431,13 @@ export const webhooksRouter = t.router({
               ).check(Schema.isMaxLength(40)),
             ),
           ),
-          attachments: Schema.optional(
+          attachments: Schema.optionalKey(
             Schema.NullOr(
               Schema.Array(MessageAttachmentRequestSchema).check(Schema.isMaxLength(10)),
             ),
           ),
-          poll: Schema.optional(
-            Schema.Union([Schema.NullOr(Schema.Null), PollCreateRequestSchema]),
-          ),
-          flags: Schema.optional(Schema.NullOr(Schema.Number.check(Schema.isInt()))),
+          poll: Schema.optionalKey(Schema.Union([Schema.Null, PollCreateRequestSchema])),
+          flags: Schema.optionalKey(Schema.NullOr(Schema.Number.check(Schema.isInt()))),
         }),
       ),
     )
@@ -475,9 +455,9 @@ export const webhooksRouter = t.router({
               expected: 'a string of at most 152133 characters',
             }),
           ),
-          wait: Schema.optional(Schema.Boolean),
-          thread_id: Schema.optional(SnowflakeTypeSchema),
-          text: Schema.optional(
+          wait: Schema.optionalKey(Schema.Boolean),
+          thread_id: Schema.optionalKey(SnowflakeTypeSchema),
+          text: Schema.optionalKey(
             Schema.NullOr(
               Schema.String.check(
                 Schema.makeFilter((input) => [...input].length <= 2000, {
@@ -486,7 +466,7 @@ export const webhooksRouter = t.router({
               ),
             ),
           ),
-          username: Schema.optional(
+          username: Schema.optionalKey(
             Schema.NullOr(
               Schema.String.check(
                 Schema.makeFilter((input) => [...input].length <= 152133, {
@@ -495,7 +475,7 @@ export const webhooksRouter = t.router({
               ),
             ),
           ),
-          icon_url: Schema.optional(
+          icon_url: Schema.optionalKey(
             Schema.NullOr(
               Schema.String.check(
                 Schema.makeFilter((input) => URL.canParse(input)),
@@ -505,7 +485,7 @@ export const webhooksRouter = t.router({
               ),
             ),
           ),
-          attachments: Schema.optional(
+          attachments: Schema.optionalKey(
             Schema.NullOr(Schema.Array(WebhookSlackEmbedSchema).check(Schema.isMaxLength(1521))),
           ),
         }),

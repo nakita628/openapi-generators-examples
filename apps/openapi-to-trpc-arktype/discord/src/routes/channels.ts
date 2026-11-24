@@ -115,7 +115,7 @@ export const channelsRouter = t.router({
             type(type(FriendInviteResponseSchema).or(GroupDMInviteResponseSchema)).or(
               GuildInviteResponseSchema,
             ),
-          ).or('null | null'),
+          ).or('null'),
         ).array(),
       ).or('null'),
     )
@@ -163,7 +163,7 @@ export const channelsRouter = t.router({
         'embeds?': type(type(type(RichEmbedSchema).array()).and(type('unknown[] <= 10'))).or(
           'null',
         ),
-        'allowed_mentions?': type('null | null').or(MessageAllowedMentionsRequestSchema),
+        'allowed_mentions?': type('null').or(MessageAllowedMentionsRequestSchema),
         'sticker_ids?': type(
           type(type(SnowflakeTypeSchema).array()).and(type('unknown[] <= 3')),
         ).or('null'),
@@ -190,9 +190,9 @@ export const channelsRouter = t.router({
         'attachments?': type(
           type(type(MessageAttachmentRequestSchema).array()).and(type('unknown[] <= 10')),
         ).or('null'),
-        'poll?': type('null | null').or(PollCreateRequestSchema),
-        'shared_client_theme?': type('null | null').or(CustomClientThemeShareRequestSchema),
-        'message_reference?': type('null | null').or(MessageReferenceRequestSchema),
+        'poll?': type('null').or(PollCreateRequestSchema),
+        'shared_client_theme?': type('null').or(CustomClientThemeShareRequestSchema),
+        'message_reference?': type('null').or(MessageReferenceRequestSchema),
         'nonce?': type(
           type(
             type('bigint | number.integer')
@@ -205,18 +205,18 @@ export const channelsRouter = t.router({
               )
               .narrow(
                 (data, ctx) =>
-                  data >= -9223372036854776000n || ctx.mustBe('at least -9223372036854776000'),
+                  data >= -9223372036854775808n || ctx.mustBe('at least -9223372036854775808'),
               )
               .narrow(
                 (data, ctx) =>
-                  data <= 9223372036854776000n || ctx.mustBe('at most 9223372036854776000'),
+                  data <= 9223372036854775808n || ctx.mustBe('at most 9223372036854775808'),
               ),
           ).or(
             type('string').narrow(
               (data, ctx) => [...data].length <= 25 || ctx.mustBe('at most 25 characters'),
             ),
           ),
-        ).or('null | null'),
+        ).or('null'),
         'enforce_nonce?': 'boolean | null',
         'tts?': 'boolean | null',
       }),
@@ -286,7 +286,7 @@ export const channelsRouter = t.router({
           'null',
         ),
         'flags?': 'number.integer | null',
-        'allowed_mentions?': type('null | null').or(MessageAllowedMentionsRequestSchema),
+        'allowed_mentions?': type('null').or(MessageAllowedMentionsRequestSchema),
         'sticker_ids?': type(
           type(type(SnowflakeTypeSchema).array()).and(type('unknown[] <= 1521')),
         ).or('null'),
@@ -407,7 +407,7 @@ export const channelsRouter = t.router({
         name: type('string')
           .narrow((data, ctx) => [...data].length >= 1 || ctx.mustBe('at least 1 character'))
           .narrow((data, ctx) => [...data].length <= 100 || ctx.mustBe('at most 100 characters')),
-        'auto_archive_duration?': type('null | null').or(ThreadAutoArchiveDurationSchema),
+        'auto_archive_duration?': type('null').or(ThreadAutoArchiveDurationSchema),
         'rate_limit_per_user?':
           'number.integer >= -2147483648 & number.integer <= 2147483647 & number.integer >= 0 & number.integer <= 21600 | null',
       }),
@@ -445,7 +445,7 @@ export const channelsRouter = t.router({
       type({
         channel_id: SnowflakeTypeSchema,
         overwrite_id: SnowflakeTypeSchema,
-        'type?': type('null | null').or(ChannelPermissionOverwritesSchema),
+        'type?': type('null').or(ChannelPermissionOverwritesSchema),
         'allow?': 'number.integer | null',
         'deny?': 'number.integer | null',
       }),
@@ -526,7 +526,7 @@ export const channelsRouter = t.router({
       type({
         channel_id: SnowflakeTypeSchema,
         sound_id: SnowflakeTypeSchema,
-        'source_guild_id?': type('null | null').or(SnowflakeTypeSchema),
+        'source_guild_id?': type('null').or(SnowflakeTypeSchema),
       }),
     )
     .mutation(() => {

@@ -48,7 +48,7 @@ export const lobbiesRouter = t.router({
         secret: type('string').narrow(
           (data, ctx) => [...data].length <= 250 || ctx.mustBe('at most 250 characters'),
         ),
-        'flags?': 'null | null | 1',
+        'flags?': 'null | 1',
         'name?': type(
           type('string')
             .narrow((data, ctx) => [...data].length >= 1 || ctx.mustBe('at least 1 character'))
@@ -75,7 +75,7 @@ export const lobbiesRouter = t.router({
             ),
           }),
         ).or('null'),
-        'flags?': 'null | null | 1',
+        'flags?': 'null | 1',
         'override_event_webhooks_url?': type(
           type('string.url').narrow(
             (data, ctx) => [...data].length <= 512 || ctx.mustBe('at most 512 characters'),
@@ -117,7 +117,7 @@ export const lobbiesRouter = t.router({
         'members?': type(
           type(type(LobbyMemberRequestSchema).array()).and(type('unknown[] <= 25')),
         ).or('null'),
-        'flags?': 'null | null | 1',
+        'flags?': 'null | 1',
         'override_event_webhooks_url?': type(
           type('string.url').narrow(
             (data, ctx) => [...data].length <= 512 || ctx.mustBe('at most 512 characters'),
@@ -136,10 +136,7 @@ export const lobbiesRouter = t.router({
     }),
   patchLobbiesLobbyIdChannelLinking: t.procedure
     .input(
-      type({
-        lobby_id: SnowflakeTypeSchema,
-        'channel_id?': type('null | null').or(SnowflakeTypeSchema),
-      }),
+      type({ lobby_id: SnowflakeTypeSchema, 'channel_id?': type('null').or(SnowflakeTypeSchema) }),
     )
     .output(LobbyResponseSchema)
     .mutation(() => {
@@ -181,7 +178,7 @@ export const lobbiesRouter = t.router({
             ),
           }),
         ).or('null'),
-        'flags?': 'null | null | 1',
+        'flags?': 'null | 1',
         'additional_name?': type(
           type('string')
             .narrow((data, ctx) => [...data].length >= 1 || ctx.mustBe('at least 1 character'))
@@ -227,7 +224,7 @@ export const lobbiesRouter = t.router({
         'embeds?': type(type(type(RichEmbedSchema).array()).and(type('unknown[] <= 10'))).or(
           'null',
         ),
-        'allowed_mentions?': type('null | null').or(MessageAllowedMentionsRequestSchema),
+        'allowed_mentions?': type('null').or(MessageAllowedMentionsRequestSchema),
         'sticker_ids?': type(
           type(type(SnowflakeTypeSchema).array()).and(type('unknown[] <= 3')),
         ).or('null'),
@@ -254,9 +251,9 @@ export const lobbiesRouter = t.router({
         'attachments?': type(
           type(type(MessageAttachmentRequestSchema).array()).and(type('unknown[] <= 10')),
         ).or('null'),
-        'poll?': type('null | null').or(PollCreateRequestSchema),
-        'shared_client_theme?': type('null | null').or(CustomClientThemeShareRequestSchema),
-        'message_reference?': type('null | null').or(MessageReferenceRequestSchema),
+        'poll?': type('null').or(PollCreateRequestSchema),
+        'shared_client_theme?': type('null').or(CustomClientThemeShareRequestSchema),
+        'message_reference?': type('null').or(MessageReferenceRequestSchema),
         'nonce?': type(
           type(
             type('bigint | number.integer')
@@ -269,18 +266,18 @@ export const lobbiesRouter = t.router({
               )
               .narrow(
                 (data, ctx) =>
-                  data >= -9223372036854776000n || ctx.mustBe('at least -9223372036854776000'),
+                  data >= -9223372036854775808n || ctx.mustBe('at least -9223372036854775808'),
               )
               .narrow(
                 (data, ctx) =>
-                  data <= 9223372036854776000n || ctx.mustBe('at most 9223372036854776000'),
+                  data <= 9223372036854775808n || ctx.mustBe('at most 9223372036854775808'),
               ),
           ).or(
             type('string').narrow(
               (data, ctx) => [...data].length <= 25 || ctx.mustBe('at most 25 characters'),
             ),
           ),
-        ).or('null | null'),
+        ).or('null'),
         'enforce_nonce?': 'boolean | null',
         'tts?': 'boolean | null',
       }),

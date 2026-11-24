@@ -9,8 +9,18 @@ export const recommendationsHandler = new Hono()
       'query',
       Type.Object({
         limit: Type.Optional(
-          Codec(Type.String({ default: '20' }))
-            .Decode((value) => Number.parseInt(value, 10))
+          Codec(
+            Type.Refine(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '20' }),
+                (value) => Number(value) >= 1,
+                () => 'must be >= 1',
+              ),
+              (value) => Number(value) <= 100,
+              () => 'must be <= 100',
+            ),
+          )
+            .Decode((value) => Number(value))
             .Encode((value) => String(value)),
         ),
         market: Type.Optional(
@@ -42,212 +52,518 @@ export const recommendationsHandler = new Hono()
           }),
         ),
         min_acousticness: Type.Optional(
-          Codec(Type.String())
+          Codec(
+            Type.Refine(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$' }),
+                (value) => Number(value) >= 0,
+                () => 'must be >= 0',
+              ),
+              (value) => Number(value) <= 1,
+              () => 'must be <= 1',
+            ),
+          )
             .Decode((value) => Number(value))
             .Encode((value) => String(value)),
         ),
         max_acousticness: Type.Optional(
-          Codec(Type.String())
+          Codec(
+            Type.Refine(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$' }),
+                (value) => Number(value) >= 0,
+                () => 'must be >= 0',
+              ),
+              (value) => Number(value) <= 1,
+              () => 'must be <= 1',
+            ),
+          )
             .Decode((value) => Number(value))
             .Encode((value) => String(value)),
         ),
         target_acousticness: Type.Optional(
-          Codec(Type.String())
+          Codec(
+            Type.Refine(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$' }),
+                (value) => Number(value) >= 0,
+                () => 'must be >= 0',
+              ),
+              (value) => Number(value) <= 1,
+              () => 'must be <= 1',
+            ),
+          )
             .Decode((value) => Number(value))
             .Encode((value) => String(value)),
         ),
         min_danceability: Type.Optional(
-          Codec(Type.String())
+          Codec(
+            Type.Refine(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$' }),
+                (value) => Number(value) >= 0,
+                () => 'must be >= 0',
+              ),
+              (value) => Number(value) <= 1,
+              () => 'must be <= 1',
+            ),
+          )
             .Decode((value) => Number(value))
             .Encode((value) => String(value)),
         ),
         max_danceability: Type.Optional(
-          Codec(Type.String())
+          Codec(
+            Type.Refine(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$' }),
+                (value) => Number(value) >= 0,
+                () => 'must be >= 0',
+              ),
+              (value) => Number(value) <= 1,
+              () => 'must be <= 1',
+            ),
+          )
             .Decode((value) => Number(value))
             .Encode((value) => String(value)),
         ),
         target_danceability: Type.Optional(
-          Codec(Type.String())
+          Codec(
+            Type.Refine(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$' }),
+                (value) => Number(value) >= 0,
+                () => 'must be >= 0',
+              ),
+              (value) => Number(value) <= 1,
+              () => 'must be <= 1',
+            ),
+          )
             .Decode((value) => Number(value))
             .Encode((value) => String(value)),
         ),
         min_duration_ms: Type.Optional(
-          Codec(Type.String())
-            .Decode((value) => Number.parseInt(value, 10))
+          Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+            .Decode((value) => Number(value))
             .Encode((value) => String(value)),
         ),
         max_duration_ms: Type.Optional(
-          Codec(Type.String())
-            .Decode((value) => Number.parseInt(value, 10))
+          Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+            .Decode((value) => Number(value))
             .Encode((value) => String(value)),
         ),
         target_duration_ms: Type.Optional(
-          Codec(Type.String())
-            .Decode((value) => Number.parseInt(value, 10))
+          Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+            .Decode((value) => Number(value))
             .Encode((value) => String(value)),
         ),
         min_energy: Type.Optional(
-          Codec(Type.String())
+          Codec(
+            Type.Refine(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$' }),
+                (value) => Number(value) >= 0,
+                () => 'must be >= 0',
+              ),
+              (value) => Number(value) <= 1,
+              () => 'must be <= 1',
+            ),
+          )
             .Decode((value) => Number(value))
             .Encode((value) => String(value)),
         ),
         max_energy: Type.Optional(
-          Codec(Type.String())
+          Codec(
+            Type.Refine(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$' }),
+                (value) => Number(value) >= 0,
+                () => 'must be >= 0',
+              ),
+              (value) => Number(value) <= 1,
+              () => 'must be <= 1',
+            ),
+          )
             .Decode((value) => Number(value))
             .Encode((value) => String(value)),
         ),
         target_energy: Type.Optional(
-          Codec(Type.String())
+          Codec(
+            Type.Refine(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$' }),
+                (value) => Number(value) >= 0,
+                () => 'must be >= 0',
+              ),
+              (value) => Number(value) <= 1,
+              () => 'must be <= 1',
+            ),
+          )
             .Decode((value) => Number(value))
             .Encode((value) => String(value)),
         ),
         min_instrumentalness: Type.Optional(
-          Codec(Type.String())
+          Codec(
+            Type.Refine(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$' }),
+                (value) => Number(value) >= 0,
+                () => 'must be >= 0',
+              ),
+              (value) => Number(value) <= 1,
+              () => 'must be <= 1',
+            ),
+          )
             .Decode((value) => Number(value))
             .Encode((value) => String(value)),
         ),
         max_instrumentalness: Type.Optional(
-          Codec(Type.String())
+          Codec(
+            Type.Refine(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$' }),
+                (value) => Number(value) >= 0,
+                () => 'must be >= 0',
+              ),
+              (value) => Number(value) <= 1,
+              () => 'must be <= 1',
+            ),
+          )
             .Decode((value) => Number(value))
             .Encode((value) => String(value)),
         ),
         target_instrumentalness: Type.Optional(
-          Codec(Type.String())
+          Codec(
+            Type.Refine(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$' }),
+                (value) => Number(value) >= 0,
+                () => 'must be >= 0',
+              ),
+              (value) => Number(value) <= 1,
+              () => 'must be <= 1',
+            ),
+          )
             .Decode((value) => Number(value))
             .Encode((value) => String(value)),
         ),
         min_key: Type.Optional(
-          Codec(Type.String())
-            .Decode((value) => Number.parseInt(value, 10))
+          Codec(
+            Type.Refine(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                (value) => Number(value) >= 0,
+                () => 'must be >= 0',
+              ),
+              (value) => Number(value) <= 11,
+              () => 'must be <= 11',
+            ),
+          )
+            .Decode((value) => Number(value))
             .Encode((value) => String(value)),
         ),
         max_key: Type.Optional(
-          Codec(Type.String())
-            .Decode((value) => Number.parseInt(value, 10))
+          Codec(
+            Type.Refine(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                (value) => Number(value) >= 0,
+                () => 'must be >= 0',
+              ),
+              (value) => Number(value) <= 11,
+              () => 'must be <= 11',
+            ),
+          )
+            .Decode((value) => Number(value))
             .Encode((value) => String(value)),
         ),
         target_key: Type.Optional(
-          Codec(Type.String())
-            .Decode((value) => Number.parseInt(value, 10))
+          Codec(
+            Type.Refine(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                (value) => Number(value) >= 0,
+                () => 'must be >= 0',
+              ),
+              (value) => Number(value) <= 11,
+              () => 'must be <= 11',
+            ),
+          )
+            .Decode((value) => Number(value))
             .Encode((value) => String(value)),
         ),
         min_liveness: Type.Optional(
-          Codec(Type.String())
+          Codec(
+            Type.Refine(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$' }),
+                (value) => Number(value) >= 0,
+                () => 'must be >= 0',
+              ),
+              (value) => Number(value) <= 1,
+              () => 'must be <= 1',
+            ),
+          )
             .Decode((value) => Number(value))
             .Encode((value) => String(value)),
         ),
         max_liveness: Type.Optional(
-          Codec(Type.String())
+          Codec(
+            Type.Refine(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$' }),
+                (value) => Number(value) >= 0,
+                () => 'must be >= 0',
+              ),
+              (value) => Number(value) <= 1,
+              () => 'must be <= 1',
+            ),
+          )
             .Decode((value) => Number(value))
             .Encode((value) => String(value)),
         ),
         target_liveness: Type.Optional(
-          Codec(Type.String())
+          Codec(
+            Type.Refine(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$' }),
+                (value) => Number(value) >= 0,
+                () => 'must be >= 0',
+              ),
+              (value) => Number(value) <= 1,
+              () => 'must be <= 1',
+            ),
+          )
             .Decode((value) => Number(value))
             .Encode((value) => String(value)),
         ),
         min_loudness: Type.Optional(
-          Codec(Type.String())
+          Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$' }))
             .Decode((value) => Number(value))
             .Encode((value) => String(value)),
         ),
         max_loudness: Type.Optional(
-          Codec(Type.String())
+          Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$' }))
             .Decode((value) => Number(value))
             .Encode((value) => String(value)),
         ),
         target_loudness: Type.Optional(
-          Codec(Type.String())
+          Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$' }))
             .Decode((value) => Number(value))
             .Encode((value) => String(value)),
         ),
         min_mode: Type.Optional(
-          Codec(Type.String())
-            .Decode((value) => Number.parseInt(value, 10))
+          Codec(
+            Type.Refine(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                (value) => Number(value) >= 0,
+                () => 'must be >= 0',
+              ),
+              (value) => Number(value) <= 1,
+              () => 'must be <= 1',
+            ),
+          )
+            .Decode((value) => Number(value))
             .Encode((value) => String(value)),
         ),
         max_mode: Type.Optional(
-          Codec(Type.String())
-            .Decode((value) => Number.parseInt(value, 10))
+          Codec(
+            Type.Refine(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                (value) => Number(value) >= 0,
+                () => 'must be >= 0',
+              ),
+              (value) => Number(value) <= 1,
+              () => 'must be <= 1',
+            ),
+          )
+            .Decode((value) => Number(value))
             .Encode((value) => String(value)),
         ),
         target_mode: Type.Optional(
-          Codec(Type.String())
-            .Decode((value) => Number.parseInt(value, 10))
+          Codec(
+            Type.Refine(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                (value) => Number(value) >= 0,
+                () => 'must be >= 0',
+              ),
+              (value) => Number(value) <= 1,
+              () => 'must be <= 1',
+            ),
+          )
+            .Decode((value) => Number(value))
             .Encode((value) => String(value)),
         ),
         min_popularity: Type.Optional(
-          Codec(Type.String())
-            .Decode((value) => Number.parseInt(value, 10))
+          Codec(
+            Type.Refine(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                (value) => Number(value) >= 0,
+                () => 'must be >= 0',
+              ),
+              (value) => Number(value) <= 100,
+              () => 'must be <= 100',
+            ),
+          )
+            .Decode((value) => Number(value))
             .Encode((value) => String(value)),
         ),
         max_popularity: Type.Optional(
-          Codec(Type.String())
-            .Decode((value) => Number.parseInt(value, 10))
+          Codec(
+            Type.Refine(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                (value) => Number(value) >= 0,
+                () => 'must be >= 0',
+              ),
+              (value) => Number(value) <= 100,
+              () => 'must be <= 100',
+            ),
+          )
+            .Decode((value) => Number(value))
             .Encode((value) => String(value)),
         ),
         target_popularity: Type.Optional(
-          Codec(Type.String())
-            .Decode((value) => Number.parseInt(value, 10))
+          Codec(
+            Type.Refine(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                (value) => Number(value) >= 0,
+                () => 'must be >= 0',
+              ),
+              (value) => Number(value) <= 100,
+              () => 'must be <= 100',
+            ),
+          )
+            .Decode((value) => Number(value))
             .Encode((value) => String(value)),
         ),
         min_speechiness: Type.Optional(
-          Codec(Type.String())
+          Codec(
+            Type.Refine(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$' }),
+                (value) => Number(value) >= 0,
+                () => 'must be >= 0',
+              ),
+              (value) => Number(value) <= 1,
+              () => 'must be <= 1',
+            ),
+          )
             .Decode((value) => Number(value))
             .Encode((value) => String(value)),
         ),
         max_speechiness: Type.Optional(
-          Codec(Type.String())
+          Codec(
+            Type.Refine(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$' }),
+                (value) => Number(value) >= 0,
+                () => 'must be >= 0',
+              ),
+              (value) => Number(value) <= 1,
+              () => 'must be <= 1',
+            ),
+          )
             .Decode((value) => Number(value))
             .Encode((value) => String(value)),
         ),
         target_speechiness: Type.Optional(
-          Codec(Type.String())
+          Codec(
+            Type.Refine(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$' }),
+                (value) => Number(value) >= 0,
+                () => 'must be >= 0',
+              ),
+              (value) => Number(value) <= 1,
+              () => 'must be <= 1',
+            ),
+          )
             .Decode((value) => Number(value))
             .Encode((value) => String(value)),
         ),
         min_tempo: Type.Optional(
-          Codec(Type.String())
+          Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$' }))
             .Decode((value) => Number(value))
             .Encode((value) => String(value)),
         ),
         max_tempo: Type.Optional(
-          Codec(Type.String())
+          Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$' }))
             .Decode((value) => Number(value))
             .Encode((value) => String(value)),
         ),
         target_tempo: Type.Optional(
-          Codec(Type.String())
+          Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$' }))
             .Decode((value) => Number(value))
             .Encode((value) => String(value)),
         ),
         min_time_signature: Type.Optional(
-          Codec(Type.String())
-            .Decode((value) => Number.parseInt(value, 10))
+          Codec(
+            Type.Refine(
+              Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+              (value) => Number(value) <= 11,
+              () => 'must be <= 11',
+            ),
+          )
+            .Decode((value) => Number(value))
             .Encode((value) => String(value)),
         ),
         max_time_signature: Type.Optional(
-          Codec(Type.String())
-            .Decode((value) => Number.parseInt(value, 10))
+          Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+            .Decode((value) => Number(value))
             .Encode((value) => String(value)),
         ),
         target_time_signature: Type.Optional(
-          Codec(Type.String())
-            .Decode((value) => Number.parseInt(value, 10))
+          Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+            .Decode((value) => Number(value))
             .Encode((value) => String(value)),
         ),
         min_valence: Type.Optional(
-          Codec(Type.String())
+          Codec(
+            Type.Refine(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$' }),
+                (value) => Number(value) >= 0,
+                () => 'must be >= 0',
+              ),
+              (value) => Number(value) <= 1,
+              () => 'must be <= 1',
+            ),
+          )
             .Decode((value) => Number(value))
             .Encode((value) => String(value)),
         ),
         max_valence: Type.Optional(
-          Codec(Type.String())
+          Codec(
+            Type.Refine(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$' }),
+                (value) => Number(value) >= 0,
+                () => 'must be >= 0',
+              ),
+              (value) => Number(value) <= 1,
+              () => 'must be <= 1',
+            ),
+          )
             .Decode((value) => Number(value))
             .Encode((value) => String(value)),
         ),
         target_valence: Type.Optional(
-          Codec(Type.String())
+          Codec(
+            Type.Refine(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$' }),
+                (value) => Number(value) >= 0,
+                () => 'must be >= 0',
+              ),
+              (value) => Number(value) <= 1,
+              () => 'must be <= 1',
+            ),
+          )
             .Decode((value) => Number(value))
             .Encode((value) => String(value)),
         ),

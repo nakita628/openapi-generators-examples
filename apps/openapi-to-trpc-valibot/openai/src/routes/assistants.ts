@@ -61,7 +61,7 @@ export const assistantsRouter = t.router({
               v.pipe(v.string(), v.maxCodePoints(256)),
               v.description('The name of the assistant. The maximum length is 256 characters.\n'),
             ),
-            v.nullable(v.null()),
+            v.null(),
           ]),
         ),
         description: v.optional(
@@ -72,7 +72,7 @@ export const assistantsRouter = t.router({
                 'The description of the assistant. The maximum length is 512 characters.\n',
               ),
             ),
-            v.nullable(v.null()),
+            v.null(),
           ]),
         ),
         instructions: v.optional(
@@ -83,7 +83,7 @@ export const assistantsRouter = t.router({
                 'The system instructions that the assistant uses. The maximum length is 256,000 characters.\n',
               ),
             ),
-            v.nullable(v.null()),
+            v.null(),
           ]),
         ),
         tools: v.pipe(
@@ -133,7 +133,7 @@ export const assistantsRouter = t.router({
                 "A set of resources that are used by the assistant's tools. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs.\n",
               ),
             ),
-            v.nullable(v.null()),
+            v.null(),
           ]),
         ),
         metadata: v.optional(MetadataSchema),
@@ -146,7 +146,7 @@ export const assistantsRouter = t.router({
               ),
               v.metadata({ examples: [1] }),
             ),
-            v.nullable(v.null()),
+            v.null(),
           ]),
         ),
         top_p: v.optional(
@@ -158,12 +158,10 @@ export const assistantsRouter = t.router({
               ),
               v.metadata({ examples: [1] }),
             ),
-            v.nullable(v.null()),
+            v.null(),
           ]),
         ),
-        response_format: v.optional(
-          v.union([AssistantsApiResponseFormatOptionSchema, v.nullable(v.null())]),
-        ),
+        response_format: v.optional(v.union([AssistantsApiResponseFormatOptionSchema, v.null()])),
       }),
     )
     .output(AssistantObjectSchema)

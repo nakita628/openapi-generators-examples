@@ -64,7 +64,7 @@ export const imagesHandler = new Hono()
           type(
             type('string')
               .pipe((data, ctx) => {
-                const value = Number(data)
+                const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
                 return Number.isSafeInteger(value) ? value : ctx.error('an integer')
               })
               .to('number.integer >= 2 & number.integer <= 16'),
@@ -79,7 +79,7 @@ export const imagesHandler = new Hono()
           type(
             type('string')
               .pipe((data, ctx) => {
-                const value = Number(data)
+                const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
                 return Number.isSafeInteger(value) ? value : ctx.error('an integer')
               })
               .to('number.integer >= 20'),
@@ -122,7 +122,7 @@ export const imagesHandler = new Hono()
               type("'transparent' | 'opaque' | 'auto'"),
               type('unknown')
                 .pipe((data) => (data === 'null' ? null : data))
-                .to('null | null'),
+                .to('null'),
             ]) {
               const out = branch(data)
               if (!(out instanceof type.errors)) return out
@@ -133,16 +133,18 @@ export const imagesHandler = new Hono()
             'Set the background of the generated image(s). This parameter is only supported for\nthe GPT image models. Must be one of `transparent`, `opaque`, or `auto` (default\nvalue). When `auto` is used, the model will automatically determine the best\nbackground for the image.\n\n`gpt-image-2.5-sunburst` and `gpt-image-2.5-flare`, including their `2026-09-08`\nsnapshots, support `opaque` and `transparent` backgrounds. Transparent backgrounds\nare available for supported GPT Image models. For `gpt-image-2` and\n`gpt-image-2-2026-04-21`, this support is in preview. When using `transparent`,\nset the output format to `png` or `webp`.\n',
           ),
         model: type(
-          "string | 'gpt-image-1.5' | 'gpt-image-2' | 'gpt-image-2-2026-04-21' | 'gpt-image-2.5-sunburst' | 'gpt-image-2.5-sunburst-2026-09-08' | 'gpt-image-2.5-flare' | 'gpt-image-2.5-flare-2026-09-08' | 'gpt-image-2.6-sunburst' | 'gpt-image-2.6-flare' | 'gpt-image-1' | 'gpt-image-1-mini' | 'chatgpt-image-latest' | 'dall-e-2'",
-        ).describe(
-          'The GPT image model to use for image editing\n(`gpt-image-1-mini`, `gpt-image-1.5`, `gpt-image-2`,\n`gpt-image-2-2026-04-21`, `gpt-image-2.5-sunburst`,\n`gpt-image-2.5-sunburst-2026-09-08`, `gpt-image-2.5-flare`,\n`gpt-image-2.5-flare-2026-09-08`, `gpt-image-2.6-sunburst`, `gpt-image-2.6-flare`,\nor `chatgpt-image-latest`).\n\n`gpt-image-1` was shut down on October 23, 2026. Use\n`gpt-image-2.5-sunburst` or `gpt-image-2.5-flare` instead.\n',
-        ),
+          "string | 'gpt-image-1.5' | 'gpt-image-2' | 'gpt-image-2-2026-04-21' | 'gpt-image-2.5-sunburst' | 'gpt-image-2.5-sunburst-2026-09-08' | 'gpt-image-2.5-flare' | 'gpt-image-2.5-flare-2026-09-08' | 'gpt-image-2.6-sunburst' | 'gpt-image-2.6-flare' | 'gpt-image-1' | 'gpt-image-1-mini'",
+        )
+          .or("'chatgpt-image-latest' | 'dall-e-2'")
+          .describe(
+            'The GPT image model to use for image editing\n(`gpt-image-1-mini`, `gpt-image-1.5`, `gpt-image-2`,\n`gpt-image-2-2026-04-21`, `gpt-image-2.5-sunburst`,\n`gpt-image-2.5-sunburst-2026-09-08`, `gpt-image-2.5-flare`,\n`gpt-image-2.5-flare-2026-09-08`, `gpt-image-2.6-sunburst`, `gpt-image-2.6-flare`,\nor `chatgpt-image-latest`).\n\n`gpt-image-1` was shut down on October 23, 2026. Use\n`gpt-image-2.5-sunburst` or `gpt-image-2.5-flare` instead.\n',
+          ),
         'n?': type('unknown').pipe(
           (data) => (data === 'null' ? null : data),
           type(
             type('string')
               .pipe((data, ctx) => {
-                const value = Number(data)
+                const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
                 return Number.isSafeInteger(value) ? value : ctx.error('an integer')
               })
               .to('number.integer >= 1 & number.integer <= 10'),
@@ -157,7 +159,7 @@ export const imagesHandler = new Hono()
               type("'1024x1024' | '1536x1024' | '1024x1536' | 'auto' | '256x256' | '512x512'"),
               type('unknown')
                 .pipe((data) => (data === 'null' ? null : data))
-                .to('null | null'),
+                .to('null'),
             ]) {
               const out = branch(data)
               if (!(out instanceof type.errors)) return out
@@ -167,7 +169,7 @@ export const imagesHandler = new Hono()
           .describe(
             "The size of the generated images. Defaults to `auto`. For `gpt-image-2`, `gpt-image-2-2026-04-21`, `gpt-image-2.5-sunburst`, `gpt-image-2.5-sunburst-2026-09-08`, `gpt-image-2.5-flare`, and `gpt-image-2.5-flare-2026-09-08`, arbitrary resolutions are supported as `WIDTHxHEIGHT` strings, for example `1536x864`. Width and height must both be divisible by 16 and the requested aspect ratio must be between 1:3 and 3:1. Resolutions above `2560x1440` are experimental, and the maximum supported resolution is `3840x2160`. The requested size must also satisfy the model's current pixel and edge limits. The standard sizes `1024x1024`, `1536x1024`, and `1024x1536` are supported by the GPT image models; `auto` is supported for models that allow automatic sizing.",
           ),
-        'response_format?': type("'url' | 'b64_json' | null | null").describe(
+        'response_format?': type("'url' | 'b64_json' | null").describe(
           'Legacy response format parameter for retired image models. Unsupported for GPT image models, which always return base64-encoded images.',
         ),
         'output_format?': type('unknown').pipe(
@@ -179,7 +181,7 @@ export const imagesHandler = new Hono()
                   ImagesApiOutputFormatSchema,
                   type('unknown')
                     .pipe((data) => (data === 'null' ? null : data))
-                    .to('null | null'),
+                    .to('null'),
                 ]) {
                   const out = branch(data)
                   if (!(out instanceof type.errors)) return out
@@ -211,7 +213,7 @@ export const imagesHandler = new Hono()
                             ),
                             type('unknown')
                               .pipe((data) => (data === 'null' ? null : data))
-                              .to('null | null'),
+                              .to('null'),
                           ]) {
                             const out = branch(data)
                             if (!(out instanceof type.errors)) return out
@@ -223,7 +225,7 @@ export const imagesHandler = new Hono()
                   }),
                   type('unknown')
                     .pipe((data) => (data === 'null' ? null : data))
-                    .to('null | null'),
+                    .to('null'),
                 ]) {
                   const out = branch(data)
                   if (!(out instanceof type.errors)) return out
@@ -239,7 +241,7 @@ export const imagesHandler = new Hono()
           (data) => (data === 'null' ? null : data),
           type(
             type('string').pipe((data, ctx) => {
-              const value = Number(data)
+              const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
               return Number.isSafeInteger(value) ? value : ctx.error('an integer')
             }),
           )
@@ -268,7 +270,7 @@ export const imagesHandler = new Hono()
                 InputFidelitySchema,
                 type('unknown')
                   .pipe((data) => (data === 'null' ? null : data))
-                  .to('null | null'),
+                  .to('null'),
               ]) {
                 const out = branch(data)
                 if (!(out instanceof type.errors)) return out
@@ -296,7 +298,7 @@ export const imagesHandler = new Hono()
               for (const branch of [
                 type('string')
                   .pipe((data, ctx) => {
-                    const value = Number(data)
+                    const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
                     return Number.isSafeInteger(value) ? value : ctx.error('an integer')
                   })
                   .to('number.integer >= 0 & number.integer <= 3')
@@ -305,7 +307,7 @@ export const imagesHandler = new Hono()
                   ),
                 type('unknown')
                   .pipe((data) => (data === 'null' ? null : data))
-                  .to('null | null'),
+                  .to('null'),
               ]) {
                 const out = branch(data)
                 if (!(out instanceof type.errors)) return out
@@ -320,7 +322,7 @@ export const imagesHandler = new Hono()
               type("'low' | 'medium' | 'high' | 'xhigh' | 'max' | 'auto' | 'standard'"),
               type('unknown')
                 .pipe((data) => (data === 'null' ? null : data))
-                .to('null | null'),
+                .to('null'),
             ]) {
               const out = branch(data)
               if (!(out instanceof type.errors)) return out
@@ -438,7 +440,7 @@ export const imagesHandler = new Hono()
               type("'dall-e-2'"),
               type('unknown')
                 .pipe((data) => (data === 'null' ? null : data))
-                .to('null | null'),
+                .to('null'),
             ]) {
               const out = branch(data)
               if (!(out instanceof type.errors)) return out
@@ -453,7 +455,7 @@ export const imagesHandler = new Hono()
           type(
             type('string')
               .pipe((data, ctx) => {
-                const value = Number(data)
+                const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
                 return Number.isSafeInteger(value) ? value : ctx.error('an integer')
               })
               .to('number.integer >= 1 & number.integer <= 10'),
@@ -461,10 +463,10 @@ export const imagesHandler = new Hono()
             .or('null')
             .describe('The number of images to generate. Must be between 1 and 10.'),
         ),
-        'response_format?': type("'url' | 'b64_json' | null | null").describe(
+        'response_format?': type("'url' | 'b64_json' | null").describe(
           'The format in which the generated images are returned. Must be one of `url` or `b64_json`. URLs are only valid for 60 minutes after the image has been generated.',
         ),
-        'size?': type("'256x256' | '512x512' | '1024x1024' | null | null").describe(
+        'size?': type("'256x256' | '512x512' | '1024x1024' | null").describe(
           'The size of the generated images. Must be one of `256x256`, `512x512`, or `1024x1024`.',
         ),
         'user?': type('string').describe(

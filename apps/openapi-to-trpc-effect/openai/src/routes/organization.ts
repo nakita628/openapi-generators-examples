@@ -1,5 +1,5 @@
 import { initTRPC, TRPCError } from '@trpc/server'
-import { Schema } from 'effect'
+import { Effect, Schema } from 'effect'
 import {
   AdminApiKeyCreateResponseSchema,
   AdminApiKeySchema,
@@ -120,7 +120,7 @@ export const organizationRouter = t.router({
     .input(
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          after: Schema.optional(
+          after: Schema.optionalKey(
             Schema.NullOr(Schema.String).annotate({
               description: 'Return keys with IDs that come after this ID in the pagination order.',
             }),
@@ -143,7 +143,7 @@ export const organizationRouter = t.router({
       Schema.toStandardSchemaV1(
         Schema.Struct({
           name: Schema.String.annotate({ jsonSchemaExamples: ['New Admin Key'] }),
-          expires_in_seconds: Schema.optional(
+          expires_in_seconds: Schema.optionalKey(
             Schema.Number.check(
               Schema.isInt(),
               Schema.isGreaterThanOrEqualTo(1),
@@ -199,27 +199,27 @@ export const organizationRouter = t.router({
     .input(
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          effective_at: Schema.optional(
+          effective_at: Schema.optionalKey(
             Schema.Struct({
-              gt: Schema.optional(
+              gt: Schema.optionalKey(
                 Schema.Number.check(Schema.isInt()).annotate({
                   description:
                     'Return only events whose `effective_at` (Unix seconds) is greater than this value.',
                 }),
               ),
-              gte: Schema.optional(
+              gte: Schema.optionalKey(
                 Schema.Number.check(Schema.isInt()).annotate({
                   description:
                     'Return only events whose `effective_at` (Unix seconds) is greater than or equal to this value.',
                 }),
               ),
-              lt: Schema.optional(
+              lt: Schema.optionalKey(
                 Schema.Number.check(Schema.isInt()).annotate({
                   description:
                     'Return only events whose `effective_at` (Unix seconds) is less than this value.',
                 }),
               ),
-              lte: Schema.optional(
+              lte: Schema.optionalKey(
                 Schema.Number.check(Schema.isInt()).annotate({
                   description:
                     'Return only events whose `effective_at` (Unix seconds) is less than or equal to this value.',
@@ -227,17 +227,17 @@ export const organizationRouter = t.router({
               ),
             }),
           ),
-          'project_ids[]': Schema.optional(Schema.Array(Schema.String)),
-          'event_types[]': Schema.optional(Schema.Array(AuditLogEventTypeSchema)),
-          'actor_ids[]': Schema.optional(Schema.Array(Schema.String)),
-          'actor_emails[]': Schema.optional(Schema.Array(Schema.String)),
-          'resource_ids[]': Schema.optional(Schema.Array(Schema.String)),
+          'project_ids[]': Schema.optionalKey(Schema.Array(Schema.String)),
+          'event_types[]': Schema.optionalKey(Schema.Array(AuditLogEventTypeSchema)),
+          'actor_ids[]': Schema.optionalKey(Schema.Array(Schema.String)),
+          'actor_emails[]': Schema.optionalKey(Schema.Array(Schema.String)),
+          'resource_ids[]': Schema.optionalKey(Schema.Array(Schema.String)),
           tenant_only: Schema.Boolean.pipe(Schema.withDecodingDefault(Effect.succeed(false))),
           limit: Schema.Number.check(Schema.isInt()).pipe(
             Schema.withDecodingDefault(Effect.succeed(20)),
           ),
-          after: Schema.optional(Schema.String),
-          before: Schema.optional(Schema.String),
+          after: Schema.optionalKey(Schema.String),
+          before: Schema.optionalKey(Schema.String),
         }),
       ),
     )
@@ -252,7 +252,7 @@ export const organizationRouter = t.router({
           limit: Schema.Number.check(Schema.isInt()).pipe(
             Schema.withDecodingDefault(Effect.succeed(20)),
           ),
-          after: Schema.optional(Schema.String),
+          after: Schema.optionalKey(Schema.String),
           order: Schema.Literals(['asc', 'desc']).pipe(
             Schema.withDecodingDefault(Effect.succeed('desc')),
           ),
@@ -286,7 +286,7 @@ export const organizationRouter = t.router({
       Schema.toStandardSchemaV1(
         Schema.Struct({
           certificate_id: Schema.String,
-          include: Schema.optional(Schema.Array(Schema.Literal('content'))),
+          include: Schema.optionalKey(Schema.Array(Schema.Literal('content'))),
         }),
       ),
     )
@@ -299,7 +299,7 @@ export const organizationRouter = t.router({
       Schema.toStandardSchemaV1(
         Schema.Struct({
           certificate_id: Schema.String,
-          name: Schema.optional(
+          name: Schema.optionalKey(
             Schema.String.annotate({ description: 'The updated name for the certificate' }),
           ),
         }),
@@ -320,12 +320,12 @@ export const organizationRouter = t.router({
       Schema.toStandardSchemaV1(
         Schema.Struct({
           start_time: Schema.Number.check(Schema.isInt()),
-          end_time: Schema.optional(Schema.Number.check(Schema.isInt())),
+          end_time: Schema.optionalKey(Schema.Number.check(Schema.isInt())),
           bucket_width: Schema.Literal('1d').pipe(Schema.withDecodingDefault(Effect.succeed('1d'))),
-          project_ids: Schema.optional(Schema.Array(Schema.String)),
-          api_key_ids: Schema.optional(Schema.Array(Schema.String)),
-          line_items: Schema.optional(Schema.Array(Schema.String)),
-          group_by: Schema.optional(
+          project_ids: Schema.optionalKey(Schema.Array(Schema.String)),
+          api_key_ids: Schema.optionalKey(Schema.Array(Schema.String)),
+          line_items: Schema.optionalKey(Schema.Array(Schema.String)),
+          group_by: Schema.optionalKey(
             Schema.Array(
               Schema.Literals(['project_id', 'user_id', 'line_item', 'api_key_id', 'api_source']),
             ),
@@ -333,7 +333,7 @@ export const organizationRouter = t.router({
           limit: Schema.Number.check(Schema.isInt()).pipe(
             Schema.withDecodingDefault(Effect.succeed(7)),
           ),
-          page: Schema.optional(Schema.String),
+          page: Schema.optionalKey(Schema.String),
         }),
       ),
     )
@@ -361,7 +361,7 @@ export const organizationRouter = t.router({
             Schema.isGreaterThanOrEqualTo(0),
             Schema.isLessThanOrEqualTo(1000),
           ).pipe(Schema.withDecodingDefault(Effect.succeed(100))),
-          after: Schema.optional(Schema.String),
+          after: Schema.optionalKey(Schema.String),
           order: Schema.Literals(['asc', 'desc']).pipe(
             Schema.withDecodingDefault(Effect.succeed('asc')),
           ),
@@ -415,15 +415,15 @@ export const organizationRouter = t.router({
       Schema.toStandardSchemaV1(
         Schema.Struct({
           group_id: Schema.String,
-          limit: Schema.optional(
+          limit: Schema.optionalKey(
             Schema.Number.check(
               Schema.isInt(),
               Schema.isGreaterThanOrEqualTo(0),
               Schema.isLessThanOrEqualTo(1000),
             ),
           ),
-          after: Schema.optional(Schema.String),
-          order: Schema.optional(Schema.Literals(['asc', 'desc'])),
+          after: Schema.optionalKey(Schema.String),
+          order: Schema.optionalKey(Schema.Literals(['asc', 'desc'])),
         }),
       ),
     )
@@ -470,7 +470,7 @@ export const organizationRouter = t.router({
             Schema.isGreaterThanOrEqualTo(0),
             Schema.isLessThanOrEqualTo(1000),
           ).pipe(Schema.withDecodingDefault(Effect.succeed(100))),
-          after: Schema.optional(Schema.String),
+          after: Schema.optionalKey(Schema.String),
           order: Schema.Literals(['asc', 'desc']).pipe(
             Schema.withDecodingDefault(Effect.succeed('desc')),
           ),
@@ -519,7 +519,7 @@ export const organizationRouter = t.router({
           limit: Schema.Number.check(Schema.isInt()).pipe(
             Schema.withDecodingDefault(Effect.succeed(20)),
           ),
-          after: Schema.optional(Schema.String),
+          after: Schema.optionalKey(Schema.String),
         }),
       ),
     )
@@ -552,7 +552,7 @@ export const organizationRouter = t.router({
           limit: Schema.Number.check(Schema.isInt()).pipe(
             Schema.withDecodingDefault(Effect.succeed(20)),
           ),
-          after: Schema.optional(Schema.String),
+          after: Schema.optionalKey(Schema.String),
           include_archived: Schema.Boolean.pipe(Schema.withDecodingDefault(Effect.succeed(false))),
         }),
       ),
@@ -578,18 +578,18 @@ export const organizationRouter = t.router({
       Schema.toStandardSchemaV1(
         Schema.Struct({
           project_id: Schema.String,
-          name: Schema.optional(
-            Schema.Union([Schema.String, Schema.NullOr(Schema.Null)]).annotate({
+          name: Schema.optionalKey(
+            Schema.Union([Schema.String, Schema.Null]).annotate({
               description: 'The updated name of the project, this name appears in reports.',
             }),
           ),
-          external_key_id: Schema.optional(
-            Schema.Union([Schema.String, Schema.NullOr(Schema.Null)]).annotate({
+          external_key_id: Schema.optionalKey(
+            Schema.Union([Schema.String, Schema.Null]).annotate({
               description: 'External key ID to associate with the project.',
             }),
           ),
-          geography: Schema.optional(
-            Schema.Union([Schema.String, Schema.NullOr(Schema.Null)]).annotate({
+          geography: Schema.optionalKey(
+            Schema.Union([Schema.String, Schema.Null]).annotate({
               description:
                 'Geography for the project.\nDeprecated: use `residency` when creating a project to configure data residency. This field is retained for backward compatibility.',
               jsonSchemaDeprecated: true,
@@ -610,8 +610,8 @@ export const organizationRouter = t.router({
           limit: Schema.Number.check(Schema.isInt()).pipe(
             Schema.withDecodingDefault(Effect.succeed(20)),
           ),
-          after: Schema.optional(Schema.String),
-          owner_project_access: Schema.optional(Schema.Literals(['active', 'inactive', 'any'])),
+          after: Schema.optionalKey(Schema.String),
+          owner_project_access: Schema.optionalKey(Schema.Literals(['active', 'inactive', 'any'])),
         }),
       ),
     )
@@ -635,7 +635,7 @@ export const organizationRouter = t.router({
         Schema.Struct({
           project_id: Schema.String,
           api_key_id: Schema.String,
-          expires_in_seconds: Schema.optional(
+          expires_in_seconds: Schema.optionalKey(
             Schema.Number.check(
               Schema.isInt(),
               Schema.isGreaterThanOrEqualTo(1),
@@ -645,7 +645,7 @@ export const organizationRouter = t.router({
                 'Number of seconds from this request until the API key expires. Must comply with the organization and project expiry policies. Expired keys cannot be updated. Retrying resets the expiry relative to the new request. Omit to keep the current expiration.',
             }),
           ),
-          scopes: Schema.optional(
+          scopes: Schema.optionalKey(
             Schema.Array(Schema.String).annotate({
               description:
                 'Replace the API key scope restrictions. Omit to leave scopes unchanged. An empty array removes key restrictions (All permissions), subject to the owner\'s effective permissions. Use ["api.all.read"] for read-only access. Scopes do not change the owner\'s roles or grant administrative permissions.',
@@ -682,7 +682,7 @@ export const organizationRouter = t.router({
           limit: Schema.Number.check(Schema.isInt()).pipe(
             Schema.withDecodingDefault(Effect.succeed(20)),
           ),
-          after: Schema.optional(Schema.String),
+          after: Schema.optionalKey(Schema.String),
           order: Schema.Literals(['asc', 'desc']).pipe(
             Schema.withDecodingDefault(Effect.succeed('desc')),
           ),
@@ -759,7 +759,7 @@ export const organizationRouter = t.router({
             Schema.isGreaterThanOrEqualTo(0),
             Schema.isLessThanOrEqualTo(100),
           ).pipe(Schema.withDecodingDefault(Effect.succeed(20))),
-          after: Schema.optional(Schema.String),
+          after: Schema.optionalKey(Schema.String),
           order: Schema.Literals(['asc', 'desc']).pipe(
             Schema.withDecodingDefault(Effect.succeed('asc')),
           ),
@@ -825,28 +825,28 @@ export const organizationRouter = t.router({
       Schema.toStandardSchemaV1(
         Schema.Struct({
           project_id: Schema.String,
-          file_search: Schema.optional(
-            Schema.Union([HostedToolPermissionUpdateSchema, Schema.NullOr(Schema.Null)]).annotate({
+          file_search: Schema.optionalKey(
+            Schema.Union([HostedToolPermissionUpdateSchema, Schema.Null]).annotate({
               description: 'The file search permission update.',
             }),
           ),
-          web_search: Schema.optional(
-            Schema.Union([HostedToolPermissionUpdateSchema, Schema.NullOr(Schema.Null)]).annotate({
+          web_search: Schema.optionalKey(
+            Schema.Union([HostedToolPermissionUpdateSchema, Schema.Null]).annotate({
               description: 'The web search permission update.',
             }),
           ),
-          image_generation: Schema.optional(
-            Schema.Union([HostedToolPermissionUpdateSchema, Schema.NullOr(Schema.Null)]).annotate({
+          image_generation: Schema.optionalKey(
+            Schema.Union([HostedToolPermissionUpdateSchema, Schema.Null]).annotate({
               description: 'The image generation permission update.',
             }),
           ),
-          mcp: Schema.optional(
-            Schema.Union([HostedToolPermissionUpdateSchema, Schema.NullOr(Schema.Null)]).annotate({
+          mcp: Schema.optionalKey(
+            Schema.Union([HostedToolPermissionUpdateSchema, Schema.Null]).annotate({
               description: 'The MCP permission update.',
             }),
           ),
-          code_interpreter: Schema.optional(
-            Schema.Union([HostedToolPermissionUpdateSchema, Schema.NullOr(Schema.Null)]).annotate({
+          code_interpreter: Schema.optionalKey(
+            Schema.Union([HostedToolPermissionUpdateSchema, Schema.Null]).annotate({
               description: 'The code interpreter permission update.',
             }),
           ),
@@ -895,8 +895,8 @@ export const organizationRouter = t.router({
           limit: Schema.Number.check(Schema.isInt()).pipe(
             Schema.withDecodingDefault(Effect.succeed(100)),
           ),
-          after: Schema.optional(Schema.String),
-          before: Schema.optional(Schema.String),
+          after: Schema.optionalKey(Schema.String),
+          before: Schema.optionalKey(Schema.String),
         }),
       ),
     )
@@ -910,33 +910,33 @@ export const organizationRouter = t.router({
         Schema.Struct({
           project_id: Schema.String,
           rate_limit_id: Schema.String,
-          max_requests_per_1_minute: Schema.optional(
+          max_requests_per_1_minute: Schema.optionalKey(
             Schema.Number.check(Schema.isInt()).annotate({
               description: 'The maximum requests per minute.',
             }),
           ),
-          max_tokens_per_1_minute: Schema.optional(
+          max_tokens_per_1_minute: Schema.optionalKey(
             Schema.Number.check(Schema.isInt()).annotate({
               description: 'The maximum tokens per minute.',
             }),
           ),
-          max_images_per_1_minute: Schema.optional(
+          max_images_per_1_minute: Schema.optionalKey(
             Schema.Number.check(Schema.isInt()).annotate({
               description: 'The maximum images per minute. Only relevant for certain models.',
             }),
           ),
-          max_audio_megabytes_per_1_minute: Schema.optional(
+          max_audio_megabytes_per_1_minute: Schema.optionalKey(
             Schema.Number.check(Schema.isInt()).annotate({
               description:
                 'The maximum audio megabytes per minute. Only relevant for certain models.',
             }),
           ),
-          max_requests_per_1_day: Schema.optional(
+          max_requests_per_1_day: Schema.optionalKey(
             Schema.Number.check(Schema.isInt()).annotate({
               description: 'The maximum requests per day. Only relevant for certain models.',
             }),
           ),
-          batch_1_day_max_input_tokens: Schema.optional(
+          batch_1_day_max_input_tokens: Schema.optionalKey(
             Schema.Number.check(Schema.isInt()).annotate({
               description:
                 'The maximum batch input tokens per day. Only relevant for certain models.',
@@ -957,7 +957,7 @@ export const organizationRouter = t.router({
           limit: Schema.Number.check(Schema.isInt()).pipe(
             Schema.withDecodingDefault(Effect.succeed(20)),
           ),
-          after: Schema.optional(Schema.String),
+          after: Schema.optionalKey(Schema.String),
         }),
       ),
     )
@@ -973,22 +973,22 @@ export const organizationRouter = t.router({
           name: Schema.String.annotate({
             description: 'The name of the service account being created.',
           }),
-          create_service_account_only: Schema.optional(
+          create_service_account_only: Schema.optionalKey(
             Schema.Union([
               Schema.Boolean.annotate({
                 description: 'Create the service account without default roles or an API key.',
               }),
-              Schema.NullOr(Schema.Null),
+              Schema.Null,
             ]),
           ),
-          expires_in_seconds: Schema.optional(
+          expires_in_seconds: Schema.optionalKey(
             Schema.Union([
               Schema.Number.check(
                 Schema.isInt(),
                 Schema.isGreaterThanOrEqualTo(1),
                 Schema.isLessThanOrEqualTo(31536000),
               ),
-              Schema.NullOr(Schema.Null),
+              Schema.Null,
             ]).annotate({
               description:
                 'Number of seconds until the initial API key expires. If omitted or null, the key does not expire unless the effective organization or project policy requires an expiration. When a policy sets a maximum lifetime, this value must be provided and must not exceed that limit. A non-null value cannot be used when `create_service_account_only` is true.',
@@ -1017,10 +1017,10 @@ export const organizationRouter = t.router({
         Schema.Struct({
           project_id: Schema.String,
           service_account_id: Schema.String,
-          name: Schema.optional(
+          name: Schema.optionalKey(
             Schema.String.annotate({ description: 'The updated service account name.' }),
           ),
-          role: Schema.optional(
+          role: Schema.optionalKey(
             Schema.Literals(['member', 'owner']).annotate({
               description: 'The updated service account role.',
             }),
@@ -1047,7 +1047,7 @@ export const organizationRouter = t.router({
       Schema.toStandardSchemaV1(
         Schema.Struct({
           project_id: Schema.String,
-          limit: Schema.optional(
+          limit: Schema.optionalKey(
             Schema.Number.check(
               Schema.isInt(),
               Schema.isGreaterThanOrEqualTo(0),
@@ -1057,8 +1057,8 @@ export const organizationRouter = t.router({
           order: Schema.Literals(['asc', 'desc']).pipe(
             Schema.withDecodingDefault(Effect.succeed('asc')),
           ),
-          after: Schema.optional(Schema.String),
-          before: Schema.optional(Schema.String),
+          after: Schema.optionalKey(Schema.String),
+          before: Schema.optionalKey(Schema.String),
         }),
       ),
     )
@@ -1141,7 +1141,7 @@ export const organizationRouter = t.router({
           limit: Schema.Number.check(Schema.isInt()).pipe(
             Schema.withDecodingDefault(Effect.succeed(20)),
           ),
-          after: Schema.optional(Schema.String),
+          after: Schema.optionalKey(Schema.String),
         }),
       ),
     )
@@ -1154,13 +1154,13 @@ export const organizationRouter = t.router({
       Schema.toStandardSchemaV1(
         Schema.Struct({
           project_id: Schema.String,
-          user_id: Schema.optional(
-            Schema.Union([Schema.String, Schema.NullOr(Schema.Null)]).annotate({
+          user_id: Schema.optionalKey(
+            Schema.Union([Schema.String, Schema.Null]).annotate({
               description: 'The ID of the user.',
             }),
           ),
-          email: Schema.optional(
-            Schema.Union([Schema.String, Schema.NullOr(Schema.Null)]).annotate({
+          email: Schema.optionalKey(
+            Schema.Union([Schema.String, Schema.Null]).annotate({
               description: 'Email of the user to add.',
             }),
           ),
@@ -1188,8 +1188,8 @@ export const organizationRouter = t.router({
         Schema.Struct({
           project_id: Schema.String,
           user_id: Schema.String,
-          role: Schema.optional(
-            Schema.Union([Schema.String, Schema.NullOr(Schema.Null)]).annotate({
+          role: Schema.optionalKey(
+            Schema.Union([Schema.String, Schema.Null]).annotate({
               description: '`owner` or `member`',
             }),
           ),
@@ -1219,7 +1219,7 @@ export const organizationRouter = t.router({
             Schema.isGreaterThanOrEqualTo(0),
             Schema.isLessThanOrEqualTo(1000),
           ).pipe(Schema.withDecodingDefault(Effect.succeed(1000))),
-          after: Schema.optional(Schema.String),
+          after: Schema.optionalKey(Schema.String),
           order: Schema.Literals(['asc', 'desc']).pipe(
             Schema.withDecodingDefault(Effect.succeed('asc')),
           ),
@@ -1247,18 +1247,18 @@ export const organizationRouter = t.router({
       Schema.toStandardSchemaV1(
         Schema.Struct({
           role_id: Schema.String,
-          permissions: Schema.optional(
-            Schema.Union([Schema.Array(Schema.String), Schema.NullOr(Schema.Null)]).annotate({
+          permissions: Schema.optionalKey(
+            Schema.Union([Schema.Array(Schema.String), Schema.Null]).annotate({
               description: 'Updated set of permissions for the role.',
             }),
           ),
-          description: Schema.optional(
-            Schema.Union([Schema.String, Schema.NullOr(Schema.Null)]).annotate({
+          description: Schema.optionalKey(
+            Schema.Union([Schema.String, Schema.Null]).annotate({
               description: 'New description for the role.',
             }),
           ),
-          role_name: Schema.optional(
-            Schema.Union([Schema.String, Schema.NullOr(Schema.Null)]).annotate({
+          role_name: Schema.optionalKey(
+            Schema.Union([Schema.String, Schema.Null]).annotate({
               description: 'New name for the role.',
             }),
           ),
@@ -1279,7 +1279,7 @@ export const organizationRouter = t.router({
     .input(
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          limit: Schema.optional(
+          limit: Schema.optionalKey(
             Schema.Number.check(
               Schema.isInt(),
               Schema.isGreaterThanOrEqualTo(0),
@@ -1289,8 +1289,8 @@ export const organizationRouter = t.router({
           order: Schema.Literals(['asc', 'desc']).pipe(
             Schema.withDecodingDefault(Effect.succeed('asc')),
           ),
-          after: Schema.optional(Schema.String),
-          before: Schema.optional(Schema.String),
+          after: Schema.optionalKey(Schema.String),
+          before: Schema.optionalKey(Schema.String),
         }),
       ),
     )
@@ -1344,19 +1344,19 @@ export const organizationRouter = t.router({
       Schema.toStandardSchemaV1(
         Schema.Struct({
           start_time: Schema.Number.check(Schema.isInt()),
-          end_time: Schema.optional(Schema.Number.check(Schema.isInt())),
+          end_time: Schema.optionalKey(Schema.Number.check(Schema.isInt())),
           bucket_width: Schema.Literals(['1m', '1h', '1d']).pipe(
             Schema.withDecodingDefault(Effect.succeed('1d')),
           ),
-          project_ids: Schema.optional(Schema.Array(Schema.String)),
-          user_ids: Schema.optional(Schema.Array(Schema.String)),
-          api_key_ids: Schema.optional(Schema.Array(Schema.String)),
-          models: Schema.optional(Schema.Array(Schema.String)),
-          group_by: Schema.optional(
+          project_ids: Schema.optionalKey(Schema.Array(Schema.String)),
+          user_ids: Schema.optionalKey(Schema.Array(Schema.String)),
+          api_key_ids: Schema.optionalKey(Schema.Array(Schema.String)),
+          models: Schema.optionalKey(Schema.Array(Schema.String)),
+          group_by: Schema.optionalKey(
             Schema.Array(Schema.Literals(['project_id', 'user_id', 'api_key_id', 'model'])),
           ),
-          limit: Schema.optional(Schema.Number.check(Schema.isInt())),
-          page: Schema.optional(Schema.String),
+          limit: Schema.optionalKey(Schema.Number.check(Schema.isInt())),
+          page: Schema.optionalKey(Schema.String),
         }),
       ),
     )
@@ -1369,19 +1369,19 @@ export const organizationRouter = t.router({
       Schema.toStandardSchemaV1(
         Schema.Struct({
           start_time: Schema.Number.check(Schema.isInt()),
-          end_time: Schema.optional(Schema.Number.check(Schema.isInt())),
+          end_time: Schema.optionalKey(Schema.Number.check(Schema.isInt())),
           bucket_width: Schema.Literals(['1m', '1h', '1d']).pipe(
             Schema.withDecodingDefault(Effect.succeed('1d')),
           ),
-          project_ids: Schema.optional(Schema.Array(Schema.String)),
-          user_ids: Schema.optional(Schema.Array(Schema.String)),
-          api_key_ids: Schema.optional(Schema.Array(Schema.String)),
-          models: Schema.optional(Schema.Array(Schema.String)),
-          group_by: Schema.optional(
+          project_ids: Schema.optionalKey(Schema.Array(Schema.String)),
+          user_ids: Schema.optionalKey(Schema.Array(Schema.String)),
+          api_key_ids: Schema.optionalKey(Schema.Array(Schema.String)),
+          models: Schema.optionalKey(Schema.Array(Schema.String)),
+          group_by: Schema.optionalKey(
             Schema.Array(Schema.Literals(['project_id', 'user_id', 'api_key_id', 'model'])),
           ),
-          limit: Schema.optional(Schema.Number.check(Schema.isInt())),
-          page: Schema.optional(Schema.String),
+          limit: Schema.optionalKey(Schema.Number.check(Schema.isInt())),
+          page: Schema.optionalKey(Schema.String),
         }),
       ),
     )
@@ -1394,14 +1394,14 @@ export const organizationRouter = t.router({
       Schema.toStandardSchemaV1(
         Schema.Struct({
           start_time: Schema.Number.check(Schema.isInt()),
-          end_time: Schema.optional(Schema.Number.check(Schema.isInt())),
+          end_time: Schema.optionalKey(Schema.Number.check(Schema.isInt())),
           bucket_width: Schema.Literals(['1m', '1h', '1d']).pipe(
             Schema.withDecodingDefault(Effect.succeed('1d')),
           ),
-          project_ids: Schema.optional(Schema.Array(Schema.String)),
-          group_by: Schema.optional(Schema.Array(Schema.Literal('project_id'))),
-          limit: Schema.optional(Schema.Number.check(Schema.isInt())),
-          page: Schema.optional(Schema.String),
+          project_ids: Schema.optionalKey(Schema.Array(Schema.String)),
+          group_by: Schema.optionalKey(Schema.Array(Schema.Literal('project_id'))),
+          limit: Schema.optionalKey(Schema.Number.check(Schema.isInt())),
+          page: Schema.optionalKey(Schema.String),
         }),
       ),
     )
@@ -1414,16 +1414,16 @@ export const organizationRouter = t.router({
       Schema.toStandardSchemaV1(
         Schema.Struct({
           start_time: Schema.Number.check(Schema.isInt()),
-          end_time: Schema.optional(Schema.Number.check(Schema.isInt())),
+          end_time: Schema.optionalKey(Schema.Number.check(Schema.isInt())),
           bucket_width: Schema.Literals(['1m', '1h', '1d']).pipe(
             Schema.withDecodingDefault(Effect.succeed('1d')),
           ),
-          project_ids: Schema.optional(Schema.Array(Schema.String)),
-          user_ids: Schema.optional(Schema.Array(Schema.String)),
-          api_key_ids: Schema.optional(Schema.Array(Schema.String)),
-          models: Schema.optional(Schema.Array(Schema.String)),
-          batch: Schema.optional(Schema.Boolean),
-          group_by: Schema.optional(
+          project_ids: Schema.optionalKey(Schema.Array(Schema.String)),
+          user_ids: Schema.optionalKey(Schema.Array(Schema.String)),
+          api_key_ids: Schema.optionalKey(Schema.Array(Schema.String)),
+          models: Schema.optionalKey(Schema.Array(Schema.String)),
+          batch: Schema.optionalKey(Schema.Boolean),
+          group_by: Schema.optionalKey(
             Schema.Array(
               Schema.Literals([
                 'project_id',
@@ -1436,8 +1436,8 @@ export const organizationRouter = t.router({
               ]),
             ),
           ),
-          limit: Schema.optional(Schema.Number.check(Schema.isInt())),
-          page: Schema.optional(Schema.String),
+          limit: Schema.optionalKey(Schema.Number.check(Schema.isInt())),
+          page: Schema.optionalKey(Schema.String),
         }),
       ),
     )
@@ -1450,19 +1450,19 @@ export const organizationRouter = t.router({
       Schema.toStandardSchemaV1(
         Schema.Struct({
           start_time: Schema.Number.check(Schema.isInt()),
-          end_time: Schema.optional(Schema.Number.check(Schema.isInt())),
+          end_time: Schema.optionalKey(Schema.Number.check(Schema.isInt())),
           bucket_width: Schema.Literals(['1m', '1h', '1d']).pipe(
             Schema.withDecodingDefault(Effect.succeed('1d')),
           ),
-          project_ids: Schema.optional(Schema.Array(Schema.String)),
-          user_ids: Schema.optional(Schema.Array(Schema.String)),
-          api_key_ids: Schema.optional(Schema.Array(Schema.String)),
-          models: Schema.optional(Schema.Array(Schema.String)),
-          group_by: Schema.optional(
+          project_ids: Schema.optionalKey(Schema.Array(Schema.String)),
+          user_ids: Schema.optionalKey(Schema.Array(Schema.String)),
+          api_key_ids: Schema.optionalKey(Schema.Array(Schema.String)),
+          models: Schema.optionalKey(Schema.Array(Schema.String)),
+          group_by: Schema.optionalKey(
             Schema.Array(Schema.Literals(['project_id', 'user_id', 'api_key_id', 'model'])),
           ),
-          limit: Schema.optional(Schema.Number.check(Schema.isInt())),
-          page: Schema.optional(Schema.String),
+          limit: Schema.optionalKey(Schema.Number.check(Schema.isInt())),
+          page: Schema.optionalKey(Schema.String),
         }),
       ),
     )
@@ -1475,21 +1475,21 @@ export const organizationRouter = t.router({
       Schema.toStandardSchemaV1(
         Schema.Struct({
           start_time: Schema.Number.check(Schema.isInt()),
-          end_time: Schema.optional(Schema.Number.check(Schema.isInt())),
+          end_time: Schema.optionalKey(Schema.Number.check(Schema.isInt())),
           bucket_width: Schema.Literals(['1m', '1h', '1d']).pipe(
             Schema.withDecodingDefault(Effect.succeed('1d')),
           ),
-          project_ids: Schema.optional(Schema.Array(Schema.String)),
-          user_ids: Schema.optional(Schema.Array(Schema.String)),
-          api_key_ids: Schema.optional(Schema.Array(Schema.String)),
-          vector_store_ids: Schema.optional(Schema.Array(Schema.String)),
-          group_by: Schema.optional(
+          project_ids: Schema.optionalKey(Schema.Array(Schema.String)),
+          user_ids: Schema.optionalKey(Schema.Array(Schema.String)),
+          api_key_ids: Schema.optionalKey(Schema.Array(Schema.String)),
+          vector_store_ids: Schema.optionalKey(Schema.Array(Schema.String)),
+          group_by: Schema.optionalKey(
             Schema.Array(
               Schema.Literals(['project_id', 'user_id', 'api_key_id', 'vector_store_id']),
             ),
           ),
-          limit: Schema.optional(Schema.Number.check(Schema.isInt())),
-          page: Schema.optional(Schema.String),
+          limit: Schema.optionalKey(Schema.Number.check(Schema.isInt())),
+          page: Schema.optionalKey(Schema.String),
         }),
       ),
     )
@@ -1502,29 +1502,29 @@ export const organizationRouter = t.router({
       Schema.toStandardSchemaV1(
         Schema.Struct({
           start_time: Schema.Number.check(Schema.isInt()),
-          end_time: Schema.optional(Schema.Number.check(Schema.isInt())),
+          end_time: Schema.optionalKey(Schema.Number.check(Schema.isInt())),
           bucket_width: Schema.Literals(['1m', '1h', '1d']).pipe(
             Schema.withDecodingDefault(Effect.succeed('1d')),
           ),
-          sources: Schema.optional(
+          sources: Schema.optionalKey(
             Schema.Array(Schema.Literals(['image.generation', 'image.edit', 'image.variation'])),
           ),
-          sizes: Schema.optional(
+          sizes: Schema.optionalKey(
             Schema.Array(
               Schema.Literals(['256x256', '512x512', '1024x1024', '1792x1792', '1024x1792']),
             ),
           ),
-          project_ids: Schema.optional(Schema.Array(Schema.String)),
-          user_ids: Schema.optional(Schema.Array(Schema.String)),
-          api_key_ids: Schema.optional(Schema.Array(Schema.String)),
-          models: Schema.optional(Schema.Array(Schema.String)),
-          group_by: Schema.optional(
+          project_ids: Schema.optionalKey(Schema.Array(Schema.String)),
+          user_ids: Schema.optionalKey(Schema.Array(Schema.String)),
+          api_key_ids: Schema.optionalKey(Schema.Array(Schema.String)),
+          models: Schema.optionalKey(Schema.Array(Schema.String)),
+          group_by: Schema.optionalKey(
             Schema.Array(
               Schema.Literals(['project_id', 'user_id', 'api_key_id', 'model', 'size', 'source']),
             ),
           ),
-          limit: Schema.optional(Schema.Number.check(Schema.isInt())),
-          page: Schema.optional(Schema.String),
+          limit: Schema.optionalKey(Schema.Number.check(Schema.isInt())),
+          page: Schema.optionalKey(Schema.String),
         }),
       ),
     )
@@ -1537,19 +1537,19 @@ export const organizationRouter = t.router({
       Schema.toStandardSchemaV1(
         Schema.Struct({
           start_time: Schema.Number.check(Schema.isInt()),
-          end_time: Schema.optional(Schema.Number.check(Schema.isInt())),
+          end_time: Schema.optionalKey(Schema.Number.check(Schema.isInt())),
           bucket_width: Schema.Literals(['1m', '1h', '1d']).pipe(
             Schema.withDecodingDefault(Effect.succeed('1d')),
           ),
-          project_ids: Schema.optional(Schema.Array(Schema.String)),
-          user_ids: Schema.optional(Schema.Array(Schema.String)),
-          api_key_ids: Schema.optional(Schema.Array(Schema.String)),
-          models: Schema.optional(Schema.Array(Schema.String)),
-          group_by: Schema.optional(
+          project_ids: Schema.optionalKey(Schema.Array(Schema.String)),
+          user_ids: Schema.optionalKey(Schema.Array(Schema.String)),
+          api_key_ids: Schema.optionalKey(Schema.Array(Schema.String)),
+          models: Schema.optionalKey(Schema.Array(Schema.String)),
+          group_by: Schema.optionalKey(
             Schema.Array(Schema.Literals(['project_id', 'user_id', 'api_key_id', 'model'])),
           ),
-          limit: Schema.optional(Schema.Number.check(Schema.isInt())),
-          page: Schema.optional(Schema.String),
+          limit: Schema.optionalKey(Schema.Number.check(Schema.isInt())),
+          page: Schema.optionalKey(Schema.String),
         }),
       ),
     )
@@ -1562,14 +1562,14 @@ export const organizationRouter = t.router({
       Schema.toStandardSchemaV1(
         Schema.Struct({
           start_time: Schema.Number.check(Schema.isInt()),
-          end_time: Schema.optional(Schema.Number.check(Schema.isInt())),
+          end_time: Schema.optionalKey(Schema.Number.check(Schema.isInt())),
           bucket_width: Schema.Literals(['1m', '1h', '1d']).pipe(
             Schema.withDecodingDefault(Effect.succeed('1d')),
           ),
-          project_ids: Schema.optional(Schema.Array(Schema.String)),
-          group_by: Schema.optional(Schema.Array(Schema.Literal('project_id'))),
-          limit: Schema.optional(Schema.Number.check(Schema.isInt())),
-          page: Schema.optional(Schema.String),
+          project_ids: Schema.optionalKey(Schema.Array(Schema.String)),
+          group_by: Schema.optionalKey(Schema.Array(Schema.Literal('project_id'))),
+          limit: Schema.optionalKey(Schema.Number.check(Schema.isInt())),
+          page: Schema.optionalKey(Schema.String),
         }),
       ),
     )
@@ -1582,16 +1582,18 @@ export const organizationRouter = t.router({
       Schema.toStandardSchemaV1(
         Schema.Struct({
           start_time: Schema.Number.check(Schema.isInt()),
-          end_time: Schema.optional(Schema.Number.check(Schema.isInt())),
+          end_time: Schema.optionalKey(Schema.Number.check(Schema.isInt())),
           bucket_width: Schema.Literals(['1m', '1h', '1d']).pipe(
             Schema.withDecodingDefault(Effect.succeed('1d')),
           ),
-          project_ids: Schema.optional(Schema.Array(Schema.String)),
-          user_ids: Schema.optional(Schema.Array(Schema.String)),
-          api_key_ids: Schema.optional(Schema.Array(Schema.String)),
-          models: Schema.optional(Schema.Array(Schema.String)),
-          context_levels: Schema.optional(Schema.Array(Schema.Literals(['low', 'medium', 'high']))),
-          group_by: Schema.optional(
+          project_ids: Schema.optionalKey(Schema.Array(Schema.String)),
+          user_ids: Schema.optionalKey(Schema.Array(Schema.String)),
+          api_key_ids: Schema.optionalKey(Schema.Array(Schema.String)),
+          models: Schema.optionalKey(Schema.Array(Schema.String)),
+          context_levels: Schema.optionalKey(
+            Schema.Array(Schema.Literals(['low', 'medium', 'high'])),
+          ),
+          group_by: Schema.optionalKey(
             Schema.Array(
               Schema.Literals([
                 'project_id',
@@ -1603,8 +1605,8 @@ export const organizationRouter = t.router({
               ]),
             ),
           ),
-          limit: Schema.optional(Schema.Number.check(Schema.isInt())),
-          page: Schema.optional(Schema.String),
+          limit: Schema.optionalKey(Schema.Number.check(Schema.isInt())),
+          page: Schema.optionalKey(Schema.String),
         }),
       ),
     )
@@ -1619,8 +1621,8 @@ export const organizationRouter = t.router({
           limit: Schema.Number.check(Schema.isInt()).pipe(
             Schema.withDecodingDefault(Effect.succeed(20)),
           ),
-          after: Schema.optional(Schema.String),
-          emails: Schema.optional(Schema.Array(Schema.String)),
+          after: Schema.optionalKey(Schema.String),
+          emails: Schema.optionalKey(Schema.Array(Schema.String)),
         }),
       ),
     )
@@ -1639,23 +1641,23 @@ export const organizationRouter = t.router({
       Schema.toStandardSchemaV1(
         Schema.Struct({
           user_id: Schema.String,
-          role: Schema.optional(
-            Schema.Union([Schema.String, Schema.NullOr(Schema.Null)]).annotate({
+          role: Schema.optionalKey(
+            Schema.Union([Schema.String, Schema.Null]).annotate({
               description: '`owner` or `reader`',
             }),
           ),
-          role_id: Schema.optional(
-            Schema.Union([Schema.String, Schema.NullOr(Schema.Null)]).annotate({
+          role_id: Schema.optionalKey(
+            Schema.Union([Schema.String, Schema.Null]).annotate({
               description: 'Role ID to assign to the user.',
             }),
           ),
-          technical_level: Schema.optional(
-            Schema.Union([Schema.String, Schema.NullOr(Schema.Null)]).annotate({
+          technical_level: Schema.optionalKey(
+            Schema.Union([Schema.String, Schema.Null]).annotate({
               description: 'Technical level metadata.',
             }),
           ),
-          developer_persona: Schema.optional(
-            Schema.Union([Schema.String, Schema.NullOr(Schema.Null)]).annotate({
+          developer_persona: Schema.optionalKey(
+            Schema.Union([Schema.String, Schema.Null]).annotate({
               description: 'Developer persona metadata.',
             }),
           ),
@@ -1677,15 +1679,15 @@ export const organizationRouter = t.router({
       Schema.toStandardSchemaV1(
         Schema.Struct({
           user_id: Schema.String,
-          limit: Schema.optional(
+          limit: Schema.optionalKey(
             Schema.Number.check(
               Schema.isInt(),
               Schema.isGreaterThanOrEqualTo(0),
               Schema.isLessThanOrEqualTo(1000),
             ),
           ),
-          after: Schema.optional(Schema.String),
-          order: Schema.optional(Schema.Literals(['asc', 'desc'])),
+          after: Schema.optionalKey(Schema.String),
+          order: Schema.optionalKey(Schema.Literals(['asc', 'desc'])),
         }),
       ),
     )
@@ -1726,16 +1728,16 @@ export const organizationRouter = t.router({
     .input(
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          limit: Schema.optional(
+          limit: Schema.optionalKey(
             Schema.Number.check(
               Schema.isInt(),
               Schema.isGreaterThanOrEqualTo(0),
               Schema.isLessThanOrEqualTo(100),
             ),
           ),
-          order: Schema.optional(OrderEnumSchema),
-          after: Schema.optional(Schema.Union([Schema.String, Schema.NullOr(Schema.Null)])),
-          purpose: Schema.optional(ExternalKeyPurposeSchema),
+          order: Schema.optionalKey(OrderEnumSchema),
+          after: Schema.optionalKey(Schema.Union([Schema.String, Schema.Null])),
+          purpose: Schema.optionalKey(ExternalKeyPurposeSchema),
         }),
       ),
     )
@@ -1771,7 +1773,7 @@ export const organizationRouter = t.router({
     .input(
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          limit: Schema.optional(
+          limit: Schema.optionalKey(
             Schema.Number.check(
               Schema.isInt(),
               Schema.isGreaterThanOrEqualTo(1),
@@ -1782,7 +1784,7 @@ export const organizationRouter = t.router({
             Schema.Literal('asc').pipe(Schema.withDecodingDefault(Effect.succeed('asc'))),
             Schema.Literal('desc').pipe(Schema.withDecodingDefault(Effect.succeed('desc'))),
           ]),
-          after: Schema.optional(
+          after: Schema.optionalKey(
             Schema.String.check(
               Schema.makeFilter((input) => [...input].length >= 1, {
                 expected: 'a string of at least 1 character',
@@ -1827,35 +1829,35 @@ export const organizationRouter = t.router({
               expected: 'a string of at least 1 character',
             }),
           ),
-          name: Schema.optional(
+          name: Schema.optionalKey(
             Schema.String.check(
               Schema.makeFilter((input) => [...input].length >= 1, {
                 expected: 'a string of at least 1 character',
               }),
             ),
           ),
-          issuer: Schema.optional(
+          issuer: Schema.optionalKey(
             Schema.String.check(
               Schema.makeFilter((input) => [...input].length >= 1, {
                 expected: 'a string of at least 1 character',
               }),
             ),
           ),
-          audience: Schema.optional(
+          audience: Schema.optionalKey(
             Schema.String.check(
               Schema.makeFilter((input) => [...input].length >= 1, {
                 expected: 'a string of at least 1 character',
               }),
             ),
           ),
-          verification: Schema.optional(
+          verification: Schema.optionalKey(
             Schema.Union([DiscoveryVerificationParamSchema, UploadedJwksVerificationParamSchema]),
           ),
-          description: Schema.optional(Schema.Union([Schema.String, Schema.NullOr(Schema.Null)])),
-          attribute_transformations: Schema.optional(
+          description: Schema.optionalKey(Schema.Union([Schema.String, Schema.Null])),
+          attribute_transformations: Schema.optionalKey(
             Schema.Array(TransformationParamSchema).check(Schema.isMaxLength(20)),
           ),
-          enabled: Schema.optional(Schema.Boolean),
+          enabled: Schema.optionalKey(Schema.Boolean),
         }),
       ),
     )
@@ -1888,7 +1890,7 @@ export const organizationRouter = t.router({
               expected: 'a string of at least 1 character',
             }),
           ),
-          limit: Schema.optional(
+          limit: Schema.optionalKey(
             Schema.Number.check(
               Schema.isInt(),
               Schema.isGreaterThanOrEqualTo(1),
@@ -1899,14 +1901,14 @@ export const organizationRouter = t.router({
             Schema.Literal('asc').pipe(Schema.withDecodingDefault(Effect.succeed('asc'))),
             Schema.Literal('desc').pipe(Schema.withDecodingDefault(Effect.succeed('desc'))),
           ]),
-          after: Schema.optional(
+          after: Schema.optionalKey(
             Schema.String.check(
               Schema.makeFilter((input) => [...input].length >= 1, {
                 expected: 'a string of at least 1 character',
               }),
             ),
           ),
-          service_account_id: Schema.optional(
+          service_account_id: Schema.optionalKey(
             Schema.String.check(
               Schema.makeFilter((input) => [...input].length >= 1, {
                 expected: 'a string of at least 1 character',
@@ -1939,8 +1941,8 @@ export const organizationRouter = t.router({
               expected: 'a string of at least 1 character',
             }),
           ),
-          name: Schema.optional(Schema.String),
-          description: Schema.optional(Schema.String),
+          name: Schema.optionalKey(Schema.String),
+          description: Schema.optionalKey(Schema.String),
           attribute_matchers: Schema.Record(
             Schema.String,
             Schema.Union([
@@ -1949,10 +1951,10 @@ export const organizationRouter = t.router({
               Schema.Union([Schema.Number.check(Schema.isInt()), Schema.Number]),
             ]),
           ),
-          permissions: Schema.optional(
+          permissions: Schema.optionalKey(
             Schema.Union([DefaultPermissionsParamSchema, RestrictedPermissionsParamSchema]),
           ),
-          enabled: Schema.optional(Schema.Boolean),
+          enabled: Schema.optionalKey(Schema.Boolean),
         }),
       ),
     )
@@ -1997,9 +1999,9 @@ export const organizationRouter = t.router({
                 expected: 'a string of at least 1 character',
               }),
             ),
-            name: Schema.optional(Schema.Union([Schema.String, Schema.NullOr(Schema.Null)])),
-            description: Schema.optional(Schema.Union([Schema.String, Schema.NullOr(Schema.Null)])),
-            attribute_matchers: Schema.optional(
+            name: Schema.optionalKey(Schema.Union([Schema.String, Schema.Null])),
+            description: Schema.optionalKey(Schema.Union([Schema.String, Schema.Null])),
+            attribute_matchers: Schema.optionalKey(
               Schema.Record(
                 Schema.String,
                 Schema.Union([
@@ -2009,10 +2011,10 @@ export const organizationRouter = t.router({
                 ]),
               ),
             ),
-            permissions: Schema.optional(
+            permissions: Schema.optionalKey(
               Schema.Union([DefaultPermissionsParamSchema, RestrictedPermissionsParamSchema]),
             ),
-            enabled: Schema.optional(Schema.Boolean),
+            enabled: Schema.optionalKey(Schema.Boolean),
           }),
         ),
       )
@@ -2047,72 +2049,72 @@ export const organizationRouter = t.router({
       Schema.toStandardSchemaV1(
         Schema.Struct({
           start_time: Schema.Number.check(Schema.isInt()),
-          end_time: Schema.optional(
-            Schema.Union([Schema.Number.check(Schema.isInt()), Schema.NullOr(Schema.Null)]),
+          end_time: Schema.optionalKey(
+            Schema.Union([Schema.Number.check(Schema.isInt()), Schema.Null]),
           ),
-          bucket_width: Schema.optional(
+          bucket_width: Schema.optionalKey(
             Schema.Union([
               Schema.Union([DecisionsUsageBucketWidthSchema]).annotate({
                 description:
                   'Width of each time bucket in response. Currently `1m`, `1h` and `1d` are supported, default to `1d`.',
               }),
-              Schema.NullOr(Schema.Null),
+              Schema.Null,
             ]),
           ),
-          limit: Schema.optional(
-            Schema.Union([Schema.Number.check(Schema.isInt()), Schema.NullOr(Schema.Null)]),
+          limit: Schema.optionalKey(
+            Schema.Union([Schema.Number.check(Schema.isInt()), Schema.Null]),
           ),
-          page: Schema.optional(
+          page: Schema.optionalKey(
             Schema.Union([
               Schema.String.annotate({
                 description:
                   'A cursor for use in pagination. Corresponding to the `next_page` field from the previous response.',
               }),
-              Schema.NullOr(Schema.Null),
+              Schema.Null,
             ]),
           ),
-          project_ids: Schema.optional(
+          project_ids: Schema.optionalKey(
             Schema.Union([
               Schema.Union([Schema.Array(Schema.String)]).annotate({
                 description: 'Return only usage for these projects.',
               }),
-              Schema.NullOr(Schema.Null),
+              Schema.Null,
             ]),
           ),
-          group_by: Schema.optional(
+          group_by: Schema.optionalKey(
             Schema.Union([
               Schema.Union([Schema.Array(DecisionsUsageGroupBySchema)]).annotate({
                 description:
                   'Group the usage data by the specified fields. Support fields include `project_id`, `user_id`, `api_key_id`, `model`, `batch`, `service_tier`, `api_source` or any combination of them. When grouped by `api_source`, results use `agents_api` for attributed Agents API activity and `unlabeled` for all other activity. Without source grouping, `api_source` is null.',
               }),
-              Schema.NullOr(Schema.Null),
+              Schema.Null,
             ]),
           ),
-          user_ids: Schema.optional(
+          user_ids: Schema.optionalKey(
             Schema.Union([
               Schema.Union([Schema.Array(Schema.String)]).annotate({
                 description: 'Return only usage for these users.',
               }),
-              Schema.NullOr(Schema.Null),
+              Schema.Null,
             ]),
           ),
-          api_key_ids: Schema.optional(
+          api_key_ids: Schema.optionalKey(
             Schema.Union([
               Schema.Union([Schema.Array(Schema.String)]).annotate({
                 description: 'Return only usage for these API keys.',
               }),
-              Schema.NullOr(Schema.Null),
+              Schema.Null,
             ]),
           ),
-          models: Schema.optional(
+          models: Schema.optionalKey(
             Schema.Union([
               Schema.Union([Schema.Array(Schema.String)]).annotate({
                 description: 'Return only usage for these models.',
               }),
-              Schema.NullOr(Schema.Null),
+              Schema.Null,
             ]),
           ),
-          batch: Schema.optional(Schema.Union([Schema.Boolean, Schema.NullOr(Schema.Null)])),
+          batch: Schema.optionalKey(Schema.Union([Schema.Boolean, Schema.Null])),
         }),
       ),
     )
@@ -2124,22 +2126,22 @@ export const organizationRouter = t.router({
     .input(
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          project_id: Schema.optional(
+          project_id: Schema.optionalKey(
             Schema.Union([
               Schema.String.annotate({ jsonSchemaExamples: ['proj_123'] }),
-              Schema.NullOr(Schema.Null),
+              Schema.Null,
             ]),
           ),
-          after: Schema.optional(
+          after: Schema.optionalKey(
             Schema.Union([
               Schema.String.annotate({
                 description: 'Return external storage configurations after this ID.',
               }),
-              Schema.NullOr(Schema.Null),
+              Schema.Null,
             ]),
           ),
-          order: Schema.optional(ExternalStorageOrderSchema),
-          limit: Schema.optional(
+          order: Schema.optionalKey(ExternalStorageOrderSchema),
+          limit: Schema.optionalKey(
             Schema.Number.check(
               Schema.isInt(),
               Schema.isGreaterThanOrEqualTo(1),
@@ -2238,13 +2240,13 @@ export const organizationRouter = t.router({
             description:
               'The time interval for evaluating spend against the threshold. Currently, only `month` is supported.',
           }),
-          notification_channel: Schema.optional(
+          notification_channel: Schema.optionalKey(
             Schema.Union([
               SpendLimitEmailNotificationChannelParamsSchema.annotate({
                 description:
                   'Configure email notifications when the spend limit is reached. Leave this out to keep the current settings, or send null to reset to owner-only notifications.',
               }),
-              Schema.NullOr(Schema.Null),
+              Schema.Null,
             ]),
           ),
         }),
@@ -2281,7 +2283,7 @@ export const organizationRouter = t.router({
       Schema.toStandardSchemaV1(
         Schema.Struct({
           project_id: Schema.String.annotate({ description: 'The ID of the project' }),
-          default: Schema.optional(
+          default: Schema.optionalKey(
             ProjectDefaultServiceTierSchema.annotate({
               description: 'Default tier for requests that omit service_tier or use auto.',
             }),
@@ -2308,20 +2310,20 @@ export const organizationRouter = t.router({
           service_account_id: Schema.String.annotate({
             description: 'The ID of the service account.',
           }),
-          name: Schema.optional(Schema.String.annotate({ description: 'API key name.' })),
-          scopes: Schema.optional(
+          name: Schema.optionalKey(Schema.String.annotate({ description: 'API key name.' })),
+          scopes: Schema.optionalKey(
             Schema.Array(Schema.String.annotate({ description: 'API key scope.' })).annotate({
               description: 'API key scopes.',
             }),
           ),
-          expires_in_seconds: Schema.optional(
+          expires_in_seconds: Schema.optionalKey(
             Schema.Union([
               Schema.Number.check(
                 Schema.isInt(),
                 Schema.isGreaterThanOrEqualTo(1),
                 Schema.isLessThanOrEqualTo(31536000),
               ).annotate({ description: 'Number of seconds until the API key expires.' }),
-              Schema.NullOr(Schema.Null),
+              Schema.Null,
             ]),
           ),
         }),

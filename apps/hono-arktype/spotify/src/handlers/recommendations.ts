@@ -10,7 +10,7 @@ export const recommendationsHandler = new Hono()
       type({
         'limit?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .to('number.integer >= 1 & number.integer <= 100')
@@ -31,7 +31,9 @@ export const recommendationsHandler = new Hono()
         ),
         'min_acousticness?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(data)
+              ? Number(data)
+              : Number.NaN
             return Number.isFinite(value) ? value : ctx.error('a number')
           })
           .to('number >= 0 & number <= 1')
@@ -40,7 +42,9 @@ export const recommendationsHandler = new Hono()
           ),
         'max_acousticness?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(data)
+              ? Number(data)
+              : Number.NaN
             return Number.isFinite(value) ? value : ctx.error('a number')
           })
           .to('number >= 0 & number <= 1')
@@ -49,7 +53,9 @@ export const recommendationsHandler = new Hono()
           ),
         'target_acousticness?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(data)
+              ? Number(data)
+              : Number.NaN
             return Number.isFinite(value) ? value : ctx.error('a number')
           })
           .to('number >= 0 & number <= 1')
@@ -58,7 +64,9 @@ export const recommendationsHandler = new Hono()
           ),
         'min_danceability?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(data)
+              ? Number(data)
+              : Number.NaN
             return Number.isFinite(value) ? value : ctx.error('a number')
           })
           .to('number >= 0 & number <= 1')
@@ -67,7 +75,9 @@ export const recommendationsHandler = new Hono()
           ),
         'max_danceability?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(data)
+              ? Number(data)
+              : Number.NaN
             return Number.isFinite(value) ? value : ctx.error('a number')
           })
           .to('number >= 0 & number <= 1')
@@ -76,7 +86,9 @@ export const recommendationsHandler = new Hono()
           ),
         'target_danceability?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(data)
+              ? Number(data)
+              : Number.NaN
             return Number.isFinite(value) ? value : ctx.error('a number')
           })
           .to('number >= 0 & number <= 1')
@@ -85,7 +97,7 @@ export const recommendationsHandler = new Hono()
           ),
         'min_duration_ms?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .describe(
@@ -93,7 +105,7 @@ export const recommendationsHandler = new Hono()
           ),
         'max_duration_ms?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .describe(
@@ -101,13 +113,15 @@ export const recommendationsHandler = new Hono()
           ),
         'target_duration_ms?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .describe('Target duration of the track (ms)'),
         'min_energy?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(data)
+              ? Number(data)
+              : Number.NaN
             return Number.isFinite(value) ? value : ctx.error('a number')
           })
           .to('number >= 0 & number <= 1')
@@ -116,7 +130,9 @@ export const recommendationsHandler = new Hono()
           ),
         'max_energy?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(data)
+              ? Number(data)
+              : Number.NaN
             return Number.isFinite(value) ? value : ctx.error('a number')
           })
           .to('number >= 0 & number <= 1')
@@ -125,7 +141,9 @@ export const recommendationsHandler = new Hono()
           ),
         'target_energy?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(data)
+              ? Number(data)
+              : Number.NaN
             return Number.isFinite(value) ? value : ctx.error('a number')
           })
           .to('number >= 0 & number <= 1')
@@ -134,7 +152,9 @@ export const recommendationsHandler = new Hono()
           ),
         'min_instrumentalness?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(data)
+              ? Number(data)
+              : Number.NaN
             return Number.isFinite(value) ? value : ctx.error('a number')
           })
           .to('number >= 0 & number <= 1')
@@ -143,7 +163,9 @@ export const recommendationsHandler = new Hono()
           ),
         'max_instrumentalness?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(data)
+              ? Number(data)
+              : Number.NaN
             return Number.isFinite(value) ? value : ctx.error('a number')
           })
           .to('number >= 0 & number <= 1')
@@ -152,7 +174,9 @@ export const recommendationsHandler = new Hono()
           ),
         'target_instrumentalness?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(data)
+              ? Number(data)
+              : Number.NaN
             return Number.isFinite(value) ? value : ctx.error('a number')
           })
           .to('number >= 0 & number <= 1')
@@ -161,7 +185,7 @@ export const recommendationsHandler = new Hono()
           ),
         'min_key?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .to('number.integer >= 0 & number.integer <= 11')
@@ -170,7 +194,7 @@ export const recommendationsHandler = new Hono()
           ),
         'max_key?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .to('number.integer >= 0 & number.integer <= 11')
@@ -179,7 +203,7 @@ export const recommendationsHandler = new Hono()
           ),
         'target_key?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .to('number.integer >= 0 & number.integer <= 11')
@@ -188,7 +212,9 @@ export const recommendationsHandler = new Hono()
           ),
         'min_liveness?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(data)
+              ? Number(data)
+              : Number.NaN
             return Number.isFinite(value) ? value : ctx.error('a number')
           })
           .to('number >= 0 & number <= 1')
@@ -197,7 +223,9 @@ export const recommendationsHandler = new Hono()
           ),
         'max_liveness?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(data)
+              ? Number(data)
+              : Number.NaN
             return Number.isFinite(value) ? value : ctx.error('a number')
           })
           .to('number >= 0 & number <= 1')
@@ -206,7 +234,9 @@ export const recommendationsHandler = new Hono()
           ),
         'target_liveness?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(data)
+              ? Number(data)
+              : Number.NaN
             return Number.isFinite(value) ? value : ctx.error('a number')
           })
           .to('number >= 0 & number <= 1')
@@ -215,7 +245,9 @@ export const recommendationsHandler = new Hono()
           ),
         'min_loudness?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(data)
+              ? Number(data)
+              : Number.NaN
             return Number.isFinite(value) ? value : ctx.error('a number')
           })
           .describe(
@@ -223,7 +255,9 @@ export const recommendationsHandler = new Hono()
           ),
         'max_loudness?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(data)
+              ? Number(data)
+              : Number.NaN
             return Number.isFinite(value) ? value : ctx.error('a number')
           })
           .describe(
@@ -231,7 +265,9 @@ export const recommendationsHandler = new Hono()
           ),
         'target_loudness?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(data)
+              ? Number(data)
+              : Number.NaN
             return Number.isFinite(value) ? value : ctx.error('a number')
           })
           .describe(
@@ -239,7 +275,7 @@ export const recommendationsHandler = new Hono()
           ),
         'min_mode?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .to('number.integer >= 0 & number.integer <= 1')
@@ -248,7 +284,7 @@ export const recommendationsHandler = new Hono()
           ),
         'max_mode?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .to('number.integer >= 0 & number.integer <= 1')
@@ -257,7 +293,7 @@ export const recommendationsHandler = new Hono()
           ),
         'target_mode?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .to('number.integer >= 0 & number.integer <= 1')
@@ -266,7 +302,7 @@ export const recommendationsHandler = new Hono()
           ),
         'min_popularity?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .to('number.integer >= 0 & number.integer <= 100')
@@ -275,7 +311,7 @@ export const recommendationsHandler = new Hono()
           ),
         'max_popularity?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .to('number.integer >= 0 & number.integer <= 100')
@@ -284,7 +320,7 @@ export const recommendationsHandler = new Hono()
           ),
         'target_popularity?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .to('number.integer >= 0 & number.integer <= 100')
@@ -293,7 +329,9 @@ export const recommendationsHandler = new Hono()
           ),
         'min_speechiness?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(data)
+              ? Number(data)
+              : Number.NaN
             return Number.isFinite(value) ? value : ctx.error('a number')
           })
           .to('number >= 0 & number <= 1')
@@ -302,7 +340,9 @@ export const recommendationsHandler = new Hono()
           ),
         'max_speechiness?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(data)
+              ? Number(data)
+              : Number.NaN
             return Number.isFinite(value) ? value : ctx.error('a number')
           })
           .to('number >= 0 & number <= 1')
@@ -311,7 +351,9 @@ export const recommendationsHandler = new Hono()
           ),
         'target_speechiness?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(data)
+              ? Number(data)
+              : Number.NaN
             return Number.isFinite(value) ? value : ctx.error('a number')
           })
           .to('number >= 0 & number <= 1')
@@ -320,7 +362,9 @@ export const recommendationsHandler = new Hono()
           ),
         'min_tempo?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(data)
+              ? Number(data)
+              : Number.NaN
             return Number.isFinite(value) ? value : ctx.error('a number')
           })
           .describe(
@@ -328,7 +372,9 @@ export const recommendationsHandler = new Hono()
           ),
         'max_tempo?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(data)
+              ? Number(data)
+              : Number.NaN
             return Number.isFinite(value) ? value : ctx.error('a number')
           })
           .describe(
@@ -336,13 +382,15 @@ export const recommendationsHandler = new Hono()
           ),
         'target_tempo?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(data)
+              ? Number(data)
+              : Number.NaN
             return Number.isFinite(value) ? value : ctx.error('a number')
           })
           .describe('Target tempo (BPM)'),
         'min_time_signature?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .to('number.integer <= 11')
@@ -351,7 +399,7 @@ export const recommendationsHandler = new Hono()
           ),
         'max_time_signature?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .describe(
@@ -359,7 +407,7 @@ export const recommendationsHandler = new Hono()
           ),
         'target_time_signature?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
             return Number.isSafeInteger(value) ? value : ctx.error('an integer')
           })
           .describe(
@@ -367,7 +415,9 @@ export const recommendationsHandler = new Hono()
           ),
         'min_valence?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(data)
+              ? Number(data)
+              : Number.NaN
             return Number.isFinite(value) ? value : ctx.error('a number')
           })
           .to('number >= 0 & number <= 1')
@@ -376,7 +426,9 @@ export const recommendationsHandler = new Hono()
           ),
         'max_valence?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(data)
+              ? Number(data)
+              : Number.NaN
             return Number.isFinite(value) ? value : ctx.error('a number')
           })
           .to('number >= 0 & number <= 1')
@@ -385,7 +437,9 @@ export const recommendationsHandler = new Hono()
           ),
         'target_valence?': type('string')
           .pipe((data, ctx) => {
-            const value = Number(data)
+            const value = /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(data)
+              ? Number(data)
+              : Number.NaN
             return Number.isFinite(value) ? value : ctx.error('a number')
           })
           .to('number >= 0 & number <= 1')

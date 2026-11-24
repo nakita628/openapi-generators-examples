@@ -1,5 +1,5 @@
 import { initTRPC, TRPCError } from '@trpc/server'
-import { Schema } from 'effect'
+import { Effect, Schema } from 'effect'
 import { DeleteFileResponseSchema, ListFilesResponseSchema, OpenAIFileSchema } from '../components'
 
 const t = initTRPC.create()
@@ -9,14 +9,14 @@ export const filesRouter = t.router({
     .input(
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          purpose: Schema.optional(Schema.String),
+          purpose: Schema.optionalKey(Schema.String),
           limit: Schema.Number.check(Schema.isInt()).pipe(
             Schema.withDecodingDefault(Effect.succeed(10000)),
           ),
           order: Schema.Literals(['asc', 'desc']).pipe(
             Schema.withDecodingDefault(Effect.succeed('desc')),
           ),
-          after: Schema.optional(Schema.String),
+          after: Schema.optionalKey(Schema.String),
         }),
       ),
     )

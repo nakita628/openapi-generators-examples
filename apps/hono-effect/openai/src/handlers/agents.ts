@@ -33,7 +33,7 @@ export const agentsHandler = new Hono()
             Schema.isLessThanOrEqualToBigInt(100n),
           ).pipe(Schema.withDecodingDefaultType(Effect.succeed(20n))),
           order: ListOrderParamSchema.pipe(Schema.withDecodingDefaultType(Effect.succeed('desc'))),
-          after: Schema.optional(
+          after: Schema.optionalKey(
             Schema.String.check(
               Schema.makeFilter((input) => [...input].length >= 0, {
                 expected: 'a string of at least 0 characters',
@@ -43,7 +43,7 @@ export const agentsHandler = new Hono()
               }),
             ),
           ),
-          session_id: Schema.optional(
+          session_id: Schema.optionalKey(
             Schema.String.check(
               Schema.makeFilter((input) => [...input].length >= 0, {
                 expected: 'a string of at least 0 characters',
@@ -189,7 +189,7 @@ export const agentsHandler = new Hono()
             Schema.isLessThanOrEqualToBigInt(100n),
           ).pipe(Schema.withDecodingDefaultType(Effect.succeed(20n))),
           order: ListOrderParamSchema.pipe(Schema.withDecodingDefaultType(Effect.succeed('desc'))),
-          after: Schema.optional(
+          after: Schema.optionalKey(
             Schema.String.check(
               Schema.makeFilter((input) => [...input].length >= 0, {
                 expected: 'a string of at least 0 characters',
@@ -265,7 +265,7 @@ export const agentsHandler = new Hono()
             Schema.isLessThanOrEqualToBigInt(100n),
           ).pipe(Schema.withDecodingDefaultType(Effect.succeed(20n))),
           order: ListOrderParamSchema.pipe(Schema.withDecodingDefaultType(Effect.succeed('desc'))),
-          after: Schema.optional(
+          after: Schema.optionalKey(
             Schema.String.check(
               Schema.makeFilter((input) => [...input].length >= 0, {
                 expected: 'a string of at least 0 characters',
@@ -275,7 +275,7 @@ export const agentsHandler = new Hono()
               }),
             ),
           ),
-          type: Schema.optional(EnvironmentTypeParamSchema),
+          type: Schema.optionalKey(EnvironmentTypeParamSchema),
         }),
       ),
     ),
@@ -287,7 +287,7 @@ export const agentsHandler = new Hono()
       'header',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          'idempotency-key': Schema.optional(
+          'idempotency-key': Schema.optionalKey(
             Schema.String.check(
               Schema.makeFilter((input) => [...input].length >= 1, {
                 expected: 'a string of at least 1 character',
@@ -343,7 +343,7 @@ export const agentsHandler = new Hono()
       'query',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          path: Schema.optional(
+          path: Schema.optionalKey(
             Schema.NullOr(
               Schema.String.check(
                 Schema.makeFilter((input) => [...input].length >= 0, {
@@ -355,7 +355,7 @@ export const agentsHandler = new Hono()
               ),
             ),
           ),
-          limit: Schema.optional(
+          limit: Schema.optionalKey(
             Schema.Unknown.pipe(
               Schema.decodeTo(
                 Schema.Unknown,
@@ -378,8 +378,8 @@ export const agentsHandler = new Hono()
               ),
             ),
           ),
-          order: Schema.optional(ListOrderParamSchema),
-          page: Schema.optional(
+          order: Schema.optionalKey(ListOrderParamSchema),
+          page: Schema.optionalKey(
             Schema.String.check(
               Schema.makeFilter((input) => [...input].length >= 0, {
                 expected: 'a string of at least 0 characters',
@@ -444,7 +444,7 @@ export const agentsHandler = new Hono()
             Schema.isLessThanOrEqualToBigInt(100n),
           ).pipe(Schema.withDecodingDefaultType(Effect.succeed(20n))),
           order: ListOrderParamSchema.pipe(Schema.withDecodingDefaultType(Effect.succeed('desc'))),
-          after: Schema.optional(
+          after: Schema.optionalKey(
             Schema.String.check(
               Schema.makeFilter((input) => [...input].length >= 0, {
                 expected: 'a string of at least 0 characters',
@@ -524,7 +524,7 @@ export const agentsHandler = new Hono()
             Schema.isLessThanOrEqualToBigInt(100n),
           ).pipe(Schema.withDecodingDefaultType(Effect.succeed(20n))),
           order: ListOrderParamSchema.pipe(Schema.withDecodingDefaultType(Effect.succeed('desc'))),
-          after: Schema.optional(
+          after: Schema.optionalKey(
             Schema.String.check(
               Schema.makeFilter((input) => [...input].length >= 0, {
                 expected: 'a string of at least 0 characters',
@@ -577,7 +577,7 @@ export const agentsHandler = new Hono()
             Schema.isLessThanOrEqualToBigInt(100n),
           ).pipe(Schema.withDecodingDefaultType(Effect.succeed(20n))),
           order: ListOrderParamSchema.pipe(Schema.withDecodingDefaultType(Effect.succeed('desc'))),
-          after: Schema.optional(
+          after: Schema.optionalKey(
             Schema.String.check(
               Schema.makeFilter((input) => [...input].length >= 0, {
                 expected: 'a string of at least 0 characters',
@@ -673,7 +673,7 @@ export const agentsHandler = new Hono()
             Schema.isLessThanOrEqualToBigInt(100n),
           ).pipe(Schema.withDecodingDefaultType(Effect.succeed(20n))),
           order: ListOrderParamSchema.pipe(Schema.withDecodingDefaultType(Effect.succeed('desc'))),
-          after: Schema.optional(
+          after: Schema.optionalKey(
             Schema.String.check(
               Schema.makeFilter((input) => [...input].length >= 0, {
                 expected: 'a string of at least 0 characters',
@@ -703,7 +703,7 @@ export const agentsHandler = new Hono()
             Schema.isLessThanOrEqualToBigInt(100n),
           ).pipe(Schema.withDecodingDefaultType(Effect.succeed(20n))),
           order: ListOrderParamSchema.pipe(Schema.withDecodingDefaultType(Effect.succeed('desc'))),
-          after: Schema.optional(
+          after: Schema.optionalKey(
             Schema.String.check(
               Schema.makeFilter((input) => [...input].length >= 0, {
                 expected: 'a string of at least 0 characters',
@@ -796,7 +796,7 @@ export const agentsHandler = new Hono()
             Schema.isLessThanOrEqualToBigInt(100n),
           ).pipe(Schema.withDecodingDefaultType(Effect.succeed(20n))),
           order: ListOrderParamSchema.pipe(Schema.withDecodingDefaultType(Effect.succeed('desc'))),
-          after: Schema.optional(
+          after: Schema.optionalKey(
             Schema.String.check(
               Schema.makeFilter((input) => [...input].length >= 0, {
                 expected: 'a string of at least 0 characters',
@@ -889,7 +889,7 @@ export const agentsHandler = new Hono()
             Schema.isLessThanOrEqualToBigInt(100n),
           ).pipe(Schema.withDecodingDefaultType(Effect.succeed(20n))),
           order: ListOrderParamSchema.pipe(Schema.withDecodingDefaultType(Effect.succeed('desc'))),
-          after: Schema.optional(
+          after: Schema.optionalKey(
             Schema.String.check(
               Schema.makeFilter((input) => [...input].length >= 0, {
                 expected: 'a string of at least 0 characters',
@@ -899,7 +899,7 @@ export const agentsHandler = new Hono()
               }),
             ),
           ),
-          agent_id: Schema.optional(
+          agent_id: Schema.optionalKey(
             Schema.String.check(
               Schema.makeFilter((input) => [...input].length >= 0, {
                 expected: 'a string of at least 0 characters',
@@ -909,7 +909,7 @@ export const agentsHandler = new Hono()
               }),
             ),
           ),
-          metadata: Schema.optional(
+          metadata: Schema.optionalKey(
             Schema.Record(
               Schema.String,
               Schema.String.check(
@@ -1020,7 +1020,7 @@ export const agentsHandler = new Hono()
             Schema.isLessThanOrEqualToBigInt(100n),
           ).pipe(Schema.withDecodingDefaultType(Effect.succeed(20n))),
           order: ListOrderParamSchema.pipe(Schema.withDecodingDefaultType(Effect.succeed('desc'))),
-          after: Schema.optional(
+          after: Schema.optionalKey(
             Schema.String.check(
               Schema.makeFilter((input) => [...input].length >= 0, {
                 expected: 'a string of at least 0 characters',
@@ -1030,7 +1030,7 @@ export const agentsHandler = new Hono()
               }),
             ),
           ),
-          environment_id: Schema.optional(
+          environment_id: Schema.optionalKey(
             Schema.NullOr(
               Schema.String.check(
                 Schema.makeFilter((input) => [...input].length >= 0, {
@@ -1188,7 +1188,7 @@ export const agentsHandler = new Hono()
       'header',
       Schema.toStandardSchemaV1(
         Schema.Struct({
-          'idempotency-key': Schema.optional(
+          'idempotency-key': Schema.optionalKey(
             Schema.String.check(
               Schema.makeFilter((input) => [...input].length >= 1, {
                 expected: 'a string of at least 1 character',
@@ -1234,7 +1234,7 @@ export const agentsHandler = new Hono()
             Schema.isLessThanOrEqualToBigInt(100n),
           ).pipe(Schema.withDecodingDefaultType(Effect.succeed(20n))),
           order: ListOrderParamSchema.pipe(Schema.withDecodingDefaultType(Effect.succeed('desc'))),
-          after: Schema.optional(
+          after: Schema.optionalKey(
             Schema.String.check(
               Schema.makeFilter((input) => [...input].length >= 0, {
                 expected: 'a string of at least 0 characters',
@@ -1279,7 +1279,7 @@ export const agentsHandler = new Hono()
             Schema.isLessThanOrEqualToBigInt(100n),
           ).pipe(Schema.withDecodingDefaultType(Effect.succeed(20n))),
           order: ListOrderParamSchema.pipe(Schema.withDecodingDefaultType(Effect.succeed('desc'))),
-          after: Schema.optional(
+          after: Schema.optionalKey(
             Schema.String.check(
               Schema.makeFilter((input) => [...input].length >= 0, {
                 expected: 'a string of at least 0 characters',
@@ -1324,7 +1324,7 @@ export const agentsHandler = new Hono()
             Schema.isLessThanOrEqualToBigInt(100n),
           ).pipe(Schema.withDecodingDefaultType(Effect.succeed(20n))),
           order: ListOrderParamSchema.pipe(Schema.withDecodingDefaultType(Effect.succeed('desc'))),
-          after: Schema.optional(
+          after: Schema.optionalKey(
             Schema.String.check(
               Schema.makeFilter((input) => [...input].length >= 0, {
                 expected: 'a string of at least 0 characters',
@@ -1404,7 +1404,7 @@ export const agentsHandler = new Hono()
             Schema.isLessThanOrEqualToBigInt(100n),
           ).pipe(Schema.withDecodingDefaultType(Effect.succeed(20n))),
           order: ListOrderParamSchema.pipe(Schema.withDecodingDefaultType(Effect.succeed('desc'))),
-          after: Schema.optional(
+          after: Schema.optionalKey(
             Schema.String.check(
               Schema.makeFilter((input) => [...input].length >= 0, {
                 expected: 'a string of at least 0 characters',

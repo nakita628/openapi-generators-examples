@@ -25,7 +25,7 @@ export const interactionsRouter = t.router({
               expected: 'a string of at most 152133 characters',
             }),
           ),
-          with_response: Schema.optional(Schema.Boolean),
+          with_response: Schema.optionalKey(Schema.Boolean),
           body: Schema.Union([
             ApplicationCommandAutocompleteCallbackRequestSchema,
             CreateMessageInteractionCallbackRequestSchema,

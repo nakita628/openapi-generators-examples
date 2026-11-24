@@ -30,11 +30,12 @@ export const recommendationsHandler = new Hono()
     validator(
       'query',
       z.object({
-        limit: z.coerce
-          .number()
-          .int()
-          .min(1)
-          .max(100)
+        limit: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(1).max(100),
+          )
           .default(20)
           .meta({
             description:
@@ -74,362 +75,511 @@ export const recommendationsHandler = new Hono()
             examples: ['0c6xIDDpzE81m2q797ordA'],
           })
           .exactOptional(),
-        min_acousticness: z.coerce
-          .number()
-          .min(0)
-          .max(1)
+        min_acousticness: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(val)
+                ? Number(val)
+                : val,
+            z.number().min(0).max(1),
+          )
           .meta({
             description:
               'For each tunable track attribute, a hard floor on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `min_tempo=140` would restrict results to only those tracks with a tempo of greater than 140 beats per minute.\n',
           })
           .exactOptional(),
-        max_acousticness: z.coerce
-          .number()
-          .min(0)
-          .max(1)
+        max_acousticness: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(val)
+                ? Number(val)
+                : val,
+            z.number().min(0).max(1),
+          )
           .meta({
             description:
               'For each tunable track attribute, a hard ceiling on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `max_instrumentalness=0.35` would filter out most tracks that are likely to be instrumental.\n',
           })
           .exactOptional(),
-        target_acousticness: z.coerce
-          .number()
-          .min(0)
-          .max(1)
+        target_acousticness: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(val)
+                ? Number(val)
+                : val,
+            z.number().min(0).max(1),
+          )
           .meta({
             description:
               'For each of the tunable track attributes (below) a target value may be provided. Tracks with the attribute values nearest to the target values will be preferred. For example, you might request `target_energy=0.6` and `target_danceability=0.8`. All target values will be weighed equally in ranking results.\n',
           })
           .exactOptional(),
-        min_danceability: z.coerce
-          .number()
-          .min(0)
-          .max(1)
+        min_danceability: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(val)
+                ? Number(val)
+                : val,
+            z.number().min(0).max(1),
+          )
           .meta({
             description:
               'For each tunable track attribute, a hard floor on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `min_tempo=140` would restrict results to only those tracks with a tempo of greater than 140 beats per minute.\n',
           })
           .exactOptional(),
-        max_danceability: z.coerce
-          .number()
-          .min(0)
-          .max(1)
+        max_danceability: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(val)
+                ? Number(val)
+                : val,
+            z.number().min(0).max(1),
+          )
           .meta({
             description:
               'For each tunable track attribute, a hard ceiling on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `max_instrumentalness=0.35` would filter out most tracks that are likely to be instrumental.\n',
           })
           .exactOptional(),
-        target_danceability: z.coerce
-          .number()
-          .min(0)
-          .max(1)
+        target_danceability: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(val)
+                ? Number(val)
+                : val,
+            z.number().min(0).max(1),
+          )
           .meta({
             description:
               'For each of the tunable track attributes (below) a target value may be provided. Tracks with the attribute values nearest to the target values will be preferred. For example, you might request `target_energy=0.6` and `target_danceability=0.8`. All target values will be weighed equally in ranking results.\n',
           })
           .exactOptional(),
-        min_duration_ms: z.coerce
-          .number()
-          .int()
+        min_duration_ms: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
           .meta({
             description:
               'For each tunable track attribute, a hard floor on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `min_tempo=140` would restrict results to only those tracks with a tempo of greater than 140 beats per minute.\n',
           })
           .exactOptional(),
-        max_duration_ms: z.coerce
-          .number()
-          .int()
+        max_duration_ms: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
           .meta({
             description:
               'For each tunable track attribute, a hard ceiling on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `max_instrumentalness=0.35` would filter out most tracks that are likely to be instrumental.\n',
           })
           .exactOptional(),
-        target_duration_ms: z.coerce
-          .number()
-          .int()
+        target_duration_ms: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
           .meta({ description: 'Target duration of the track (ms)' })
           .exactOptional(),
-        min_energy: z.coerce
-          .number()
-          .min(0)
-          .max(1)
+        min_energy: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(val)
+                ? Number(val)
+                : val,
+            z.number().min(0).max(1),
+          )
           .meta({
             description:
               'For each tunable track attribute, a hard floor on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `min_tempo=140` would restrict results to only those tracks with a tempo of greater than 140 beats per minute.\n',
           })
           .exactOptional(),
-        max_energy: z.coerce
-          .number()
-          .min(0)
-          .max(1)
+        max_energy: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(val)
+                ? Number(val)
+                : val,
+            z.number().min(0).max(1),
+          )
           .meta({
             description:
               'For each tunable track attribute, a hard ceiling on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `max_instrumentalness=0.35` would filter out most tracks that are likely to be instrumental.\n',
           })
           .exactOptional(),
-        target_energy: z.coerce
-          .number()
-          .min(0)
-          .max(1)
+        target_energy: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(val)
+                ? Number(val)
+                : val,
+            z.number().min(0).max(1),
+          )
           .meta({
             description:
               'For each of the tunable track attributes (below) a target value may be provided. Tracks with the attribute values nearest to the target values will be preferred. For example, you might request `target_energy=0.6` and `target_danceability=0.8`. All target values will be weighed equally in ranking results.\n',
           })
           .exactOptional(),
-        min_instrumentalness: z.coerce
-          .number()
-          .min(0)
-          .max(1)
+        min_instrumentalness: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(val)
+                ? Number(val)
+                : val,
+            z.number().min(0).max(1),
+          )
           .meta({
             description:
               'For each tunable track attribute, a hard floor on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `min_tempo=140` would restrict results to only those tracks with a tempo of greater than 140 beats per minute.\n',
           })
           .exactOptional(),
-        max_instrumentalness: z.coerce
-          .number()
-          .min(0)
-          .max(1)
+        max_instrumentalness: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(val)
+                ? Number(val)
+                : val,
+            z.number().min(0).max(1),
+          )
           .meta({
             description:
               'For each tunable track attribute, a hard ceiling on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `max_instrumentalness=0.35` would filter out most tracks that are likely to be instrumental.\n',
           })
           .exactOptional(),
-        target_instrumentalness: z.coerce
-          .number()
-          .min(0)
-          .max(1)
+        target_instrumentalness: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(val)
+                ? Number(val)
+                : val,
+            z.number().min(0).max(1),
+          )
           .meta({
             description:
               'For each of the tunable track attributes (below) a target value may be provided. Tracks with the attribute values nearest to the target values will be preferred. For example, you might request `target_energy=0.6` and `target_danceability=0.8`. All target values will be weighed equally in ranking results.\n',
           })
           .exactOptional(),
-        min_key: z.coerce
-          .number()
-          .int()
-          .min(0)
-          .max(11)
+        min_key: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(0).max(11),
+          )
           .meta({
             description:
               'For each tunable track attribute, a hard floor on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `min_tempo=140` would restrict results to only those tracks with a tempo of greater than 140 beats per minute.\n',
           })
           .exactOptional(),
-        max_key: z.coerce
-          .number()
-          .int()
-          .min(0)
-          .max(11)
+        max_key: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(0).max(11),
+          )
           .meta({
             description:
               'For each tunable track attribute, a hard ceiling on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `max_instrumentalness=0.35` would filter out most tracks that are likely to be instrumental.\n',
           })
           .exactOptional(),
-        target_key: z.coerce
-          .number()
-          .int()
-          .min(0)
-          .max(11)
+        target_key: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(0).max(11),
+          )
           .meta({
             description:
               'For each of the tunable track attributes (below) a target value may be provided. Tracks with the attribute values nearest to the target values will be preferred. For example, you might request `target_energy=0.6` and `target_danceability=0.8`. All target values will be weighed equally in ranking results.\n',
           })
           .exactOptional(),
-        min_liveness: z.coerce
-          .number()
-          .min(0)
-          .max(1)
+        min_liveness: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(val)
+                ? Number(val)
+                : val,
+            z.number().min(0).max(1),
+          )
           .meta({
             description:
               'For each tunable track attribute, a hard floor on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `min_tempo=140` would restrict results to only those tracks with a tempo of greater than 140 beats per minute.\n',
           })
           .exactOptional(),
-        max_liveness: z.coerce
-          .number()
-          .min(0)
-          .max(1)
+        max_liveness: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(val)
+                ? Number(val)
+                : val,
+            z.number().min(0).max(1),
+          )
           .meta({
             description:
               'For each tunable track attribute, a hard ceiling on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `max_instrumentalness=0.35` would filter out most tracks that are likely to be instrumental.\n',
           })
           .exactOptional(),
-        target_liveness: z.coerce
-          .number()
-          .min(0)
-          .max(1)
+        target_liveness: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(val)
+                ? Number(val)
+                : val,
+            z.number().min(0).max(1),
+          )
           .meta({
             description:
               'For each of the tunable track attributes (below) a target value may be provided. Tracks with the attribute values nearest to the target values will be preferred. For example, you might request `target_energy=0.6` and `target_danceability=0.8`. All target values will be weighed equally in ranking results.\n',
           })
           .exactOptional(),
-        min_loudness: z.coerce
-          .number()
+        min_loudness: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(val)
+                ? Number(val)
+                : val,
+            z.number(),
+          )
           .meta({
             description:
               'For each tunable track attribute, a hard floor on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `min_tempo=140` would restrict results to only those tracks with a tempo of greater than 140 beats per minute.\n',
           })
           .exactOptional(),
-        max_loudness: z.coerce
-          .number()
+        max_loudness: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(val)
+                ? Number(val)
+                : val,
+            z.number(),
+          )
           .meta({
             description:
               'For each tunable track attribute, a hard ceiling on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `max_instrumentalness=0.35` would filter out most tracks that are likely to be instrumental.\n',
           })
           .exactOptional(),
-        target_loudness: z.coerce
-          .number()
+        target_loudness: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(val)
+                ? Number(val)
+                : val,
+            z.number(),
+          )
           .meta({
             description:
               'For each of the tunable track attributes (below) a target value may be provided. Tracks with the attribute values nearest to the target values will be preferred. For example, you might request `target_energy=0.6` and `target_danceability=0.8`. All target values will be weighed equally in ranking results.\n',
           })
           .exactOptional(),
-        min_mode: z.coerce
-          .number()
-          .int()
-          .min(0)
-          .max(1)
+        min_mode: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(0).max(1),
+          )
           .meta({
             description:
               'For each tunable track attribute, a hard floor on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `min_tempo=140` would restrict results to only those tracks with a tempo of greater than 140 beats per minute.\n',
           })
           .exactOptional(),
-        max_mode: z.coerce
-          .number()
-          .int()
-          .min(0)
-          .max(1)
+        max_mode: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(0).max(1),
+          )
           .meta({
             description:
               'For each tunable track attribute, a hard ceiling on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `max_instrumentalness=0.35` would filter out most tracks that are likely to be instrumental.\n',
           })
           .exactOptional(),
-        target_mode: z.coerce
-          .number()
-          .int()
-          .min(0)
-          .max(1)
+        target_mode: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(0).max(1),
+          )
           .meta({
             description:
               'For each of the tunable track attributes (below) a target value may be provided. Tracks with the attribute values nearest to the target values will be preferred. For example, you might request `target_energy=0.6` and `target_danceability=0.8`. All target values will be weighed equally in ranking results.\n',
           })
           .exactOptional(),
-        min_popularity: z.coerce
-          .number()
-          .int()
-          .min(0)
-          .max(100)
+        min_popularity: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(0).max(100),
+          )
           .meta({
             description:
               'For each tunable track attribute, a hard floor on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `min_tempo=140` would restrict results to only those tracks with a tempo of greater than 140 beats per minute.\n',
           })
           .exactOptional(),
-        max_popularity: z.coerce
-          .number()
-          .int()
-          .min(0)
-          .max(100)
+        max_popularity: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(0).max(100),
+          )
           .meta({
             description:
               'For each tunable track attribute, a hard ceiling on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `max_instrumentalness=0.35` would filter out most tracks that are likely to be instrumental.\n',
           })
           .exactOptional(),
-        target_popularity: z.coerce
-          .number()
-          .int()
-          .min(0)
-          .max(100)
+        target_popularity: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().min(0).max(100),
+          )
           .meta({
             description:
               'For each of the tunable track attributes (below) a target value may be provided. Tracks with the attribute values nearest to the target values will be preferred. For example, you might request `target_energy=0.6` and `target_danceability=0.8`. All target values will be weighed equally in ranking results.\n',
           })
           .exactOptional(),
-        min_speechiness: z.coerce
-          .number()
-          .min(0)
-          .max(1)
+        min_speechiness: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(val)
+                ? Number(val)
+                : val,
+            z.number().min(0).max(1),
+          )
           .meta({
             description:
               'For each tunable track attribute, a hard floor on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `min_tempo=140` would restrict results to only those tracks with a tempo of greater than 140 beats per minute.\n',
           })
           .exactOptional(),
-        max_speechiness: z.coerce
-          .number()
-          .min(0)
-          .max(1)
+        max_speechiness: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(val)
+                ? Number(val)
+                : val,
+            z.number().min(0).max(1),
+          )
           .meta({
             description:
               'For each tunable track attribute, a hard ceiling on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `max_instrumentalness=0.35` would filter out most tracks that are likely to be instrumental.\n',
           })
           .exactOptional(),
-        target_speechiness: z.coerce
-          .number()
-          .min(0)
-          .max(1)
+        target_speechiness: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(val)
+                ? Number(val)
+                : val,
+            z.number().min(0).max(1),
+          )
           .meta({
             description:
               'For each of the tunable track attributes (below) a target value may be provided. Tracks with the attribute values nearest to the target values will be preferred. For example, you might request `target_energy=0.6` and `target_danceability=0.8`. All target values will be weighed equally in ranking results.\n',
           })
           .exactOptional(),
-        min_tempo: z.coerce
-          .number()
+        min_tempo: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(val)
+                ? Number(val)
+                : val,
+            z.number(),
+          )
           .meta({
             description:
               'For each tunable track attribute, a hard floor on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `min_tempo=140` would restrict results to only those tracks with a tempo of greater than 140 beats per minute.\n',
           })
           .exactOptional(),
-        max_tempo: z.coerce
-          .number()
+        max_tempo: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(val)
+                ? Number(val)
+                : val,
+            z.number(),
+          )
           .meta({
             description:
               'For each tunable track attribute, a hard ceiling on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `max_instrumentalness=0.35` would filter out most tracks that are likely to be instrumental.\n',
           })
           .exactOptional(),
-        target_tempo: z.coerce.number().meta({ description: 'Target tempo (BPM)' }).exactOptional(),
-        min_time_signature: z.coerce
-          .number()
-          .int()
-          .max(11)
+        target_tempo: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(val)
+                ? Number(val)
+                : val,
+            z.number(),
+          )
+          .meta({ description: 'Target tempo (BPM)' })
+          .exactOptional(),
+        min_time_signature: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int().max(11),
+          )
           .meta({
             description:
               'For each tunable track attribute, a hard floor on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `min_tempo=140` would restrict results to only those tracks with a tempo of greater than 140 beats per minute.\n',
           })
           .exactOptional(),
-        max_time_signature: z.coerce
-          .number()
-          .int()
+        max_time_signature: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
           .meta({
             description:
               'For each tunable track attribute, a hard ceiling on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `max_instrumentalness=0.35` would filter out most tracks that are likely to be instrumental.\n',
           })
           .exactOptional(),
-        target_time_signature: z.coerce
-          .number()
-          .int()
+        target_time_signature: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)$/.test(val) ? Number(val) : val,
+            z.number().int(),
+          )
           .meta({
             description:
               'For each of the tunable track attributes (below) a target value may be provided. Tracks with the attribute values nearest to the target values will be preferred. For example, you might request `target_energy=0.6` and `target_danceability=0.8`. All target values will be weighed equally in ranking results.\n',
           })
           .exactOptional(),
-        min_valence: z.coerce
-          .number()
-          .min(0)
-          .max(1)
+        min_valence: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(val)
+                ? Number(val)
+                : val,
+            z.number().min(0).max(1),
+          )
           .meta({
             description:
               'For each tunable track attribute, a hard floor on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `min_tempo=140` would restrict results to only those tracks with a tempo of greater than 140 beats per minute.\n',
           })
           .exactOptional(),
-        max_valence: z.coerce
-          .number()
-          .min(0)
-          .max(1)
+        max_valence: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(val)
+                ? Number(val)
+                : val,
+            z.number().min(0).max(1),
+          )
           .meta({
             description:
               'For each tunable track attribute, a hard ceiling on the selected track attribute’s value can be provided. See tunable track attributes below for the list of available options. For example, `max_instrumentalness=0.35` would filter out most tracks that are likely to be instrumental.\n',
           })
           .exactOptional(),
-        target_valence: z.coerce
-          .number()
-          .min(0)
-          .max(1)
+        target_valence: z
+          .preprocess(
+            (val) =>
+              typeof val === 'string' && /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(val)
+                ? Number(val)
+                : val,
+            z.number().min(0).max(1),
+          )
           .meta({
             description:
               'For each of the tunable track attributes (below) a target value may be provided. Tracks with the attribute values nearest to the target values will be preferred. For example, you might request `target_energy=0.6` and `target_danceability=0.8`. All target values will be weighed equally in ranking results.\n',

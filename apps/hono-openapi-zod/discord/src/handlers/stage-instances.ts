@@ -36,10 +36,8 @@ export const stageInstancesHandler = new Hono()
       z.object({
         topic: z.string().min(1).max(120),
         channel_id: SnowflakeTypeSchema,
-        privacy_level: z
-          .xor([z.null().nullable(), StageInstancesPrivacyLevelsSchema])
-          .exactOptional(),
-        guild_scheduled_event_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]).exactOptional(),
+        privacy_level: z.xor([z.null(), StageInstancesPrivacyLevelsSchema]).exactOptional(),
+        guild_scheduled_event_id: z.xor([z.null(), SnowflakeTypeSchema]).exactOptional(),
         send_start_notification: z.boolean().nullable().exactOptional(),
       }),
     ),
