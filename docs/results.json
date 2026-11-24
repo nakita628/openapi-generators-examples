@@ -541,14 +541,11 @@
   },
   "openai": {
     "elysia-typebox": {
-      "generator": "asphodelos@0.5.1",
+      "generator": "asphodelos@0.5.4",
       "date": "2026-11-24",
       "typecheck": {
-        "errors": 284,
-        "codes": "TS2339 ×268, TS7053 ×16",
-        "where": "`src/hooks/*`"
-      },
-      "issue": "nakita628/asphodelos#39"
+        "errors": 0
+      }
     },
     "hono-arktype": {
       "generator": "takibi-hono@0.10.2",

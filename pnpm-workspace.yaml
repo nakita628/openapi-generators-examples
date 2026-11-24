@@ -41,10 +41,10 @@ catalog:
   zod: 4.6.7
 minimumReleaseAgeExclude:
   - effect@4.1.5
-  - asphodelos@0.5.1
+  - asphodelos@0.5.4
   - "@tanstack/angular-query@5.108.4"
   - openapi-to-trpc@0.3.1
-  - takibi-hono@0.10.2
+  - takibi-hono@0.11.0
   - oas-truth@0.8.1
   - schema-truth@0.8.11 || 0.8.15
   - wakusei@0.1.0

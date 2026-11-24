@@ -52,9 +52,9 @@
   },
   "devDependencies": {
     "@bazel/bazelisk": "1.28.1",
-    "asphodelos": "0.5.1",
+    "asphodelos": "0.5.4",
     "openapi-to-trpc": "0.3.1",
-    "takibi-hono": "0.10.2",
+    "takibi-hono": "0.11.0",
     "typescript": "catalog:",
     "wakusei": "0.1.0"
   },

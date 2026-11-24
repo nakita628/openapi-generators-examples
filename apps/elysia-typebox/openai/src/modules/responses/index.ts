@@ -1356,33 +1356,6 @@ export const responses = new Elysia()
       operationId: 'Compactconversation',
     },
   })
-  .get('/responses/:response_id?beta=true', ({ params, query, headers }) => { throw new Error('Not implemented') }, {
-    params: ResponsesModel.beta_getResponseParams,
-    query: ResponsesModel.beta_getResponseQuery,
-    headers: ResponsesModel.beta_getResponseHeaders,
-    response: { 200: 'BetaResponse', 404: 'BetaErrorResponse', 429: 'ErrorResponse' },
-    detail: {
-      tags: ['Responses'],
-      summary: 'Get a model response',
-      description: 'Retrieves a model response with the given ID.\n',
-      operationId: 'beta_getResponse',
-    },
-  })
-  .delete('/responses/:response_id?beta=true', ({ params, headers }) => { throw new Error('Not implemented') }, {
-    params: ResponsesModel.beta_deleteResponseParams,
-    headers: ResponsesModel.beta_deleteResponseHeaders,
-    response: {
-      200: ResponsesModel.beta_deleteResponseResponse200,
-      404: 'BetaErrorResponse',
-      429: 'ErrorResponse',
-    },
-    detail: {
-      tags: ['Responses'],
-      summary: 'Delete a model response',
-      description: 'Deletes a model response with the given ID.\n',
-      operationId: 'beta_deleteResponse',
-    },
-  })
   .post('/responses/:response_id/cancel?beta=true', ({ params, headers }) => { throw new Error('Not implemented') }, {
     params: ResponsesModel.beta_cancelResponseParams,
     headers: ResponsesModel.beta_cancelResponseHeaders,

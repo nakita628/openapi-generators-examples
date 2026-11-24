@@ -80,4 +80,3 @@ Problems found while generating are reported where the code lives: schema genera
 | Issue | Effect here |
 | --- | --- |
 | [takibi-hono#96](https://github.com/nakita628/takibi-hono/issues/96) effect `allOf` code uses `SchemaGetter` and `SchemaIssue` without importing them | the takibi-hono Effect apps fail on Discord, OpenAI, Spotify and Train Travel |
-| [asphodelos#39](https://github.com/nakita628/asphodelos/issues/39) a path key with a query string after a parameter becomes an optional Elysia parameter | `elysia-typebox` fails on OpenAI |

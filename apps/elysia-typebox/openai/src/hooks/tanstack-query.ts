@@ -15,6 +15,56 @@ import type { Static } from 'elysia'
 import type { BetaResponseSchema } from '../components/schemas'
 import { client, clientOrigin } from '../lib'
 
+const ISO8601 =
+  /(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+([+-][0-2]\d:[0-5]\d|Z))|(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d([+-][0-2]\d:[0-5]\d|Z))|(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d([+-][0-2]\d:[0-5]\d|Z))/u
+
+const FORMAL_DATE =
+  /(?:Sun|Mon|Tue|Wed|Thu|Fri|Sat)\s(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s\d{2}\s\d{4}\s\d{2}:\d{2}:\d{2}\sGMT(?:\+|-)\d{4}\s\([^)]+\)/u
+
+const SHORTENED_DATE =
+  /^(?:(?:(?:(?:0?[1-9]|[12][0-9]|3[01])[/\s-](?:0?[1-9]|1[0-2])[/\s-](?:19|20)\d{2})|(?:(?:19|20)\d{2}[/\s-](?:0?[1-9]|1[0-2])[/\s-](?:0?[1-9]|[12][0-9]|3[01]))))(?:\s(?:1[012]|0?[1-9]):[0-5][0-9](?::[0-5][0-9])?(?:\s[AP]M)?)?$/u
+
+function reviveDate(_key: string, value: unknown) {
+  if (typeof value !== 'string') return value
+  const text = value.replace(/"/gu, '')
+  if (!ISO8601.test(text) && !FORMAL_DATE.test(text) && !SHORTENED_DATE.test(text)) return value
+  const date = new Date(text)
+  return Number.isNaN(date.getTime()) ? value : date
+}
+
+async function readResponse(res: Response) {
+  const text = await res.text()
+  if (res.ok) return text === '' ? undefined : JSON.parse(text, reviveDate)
+  let error: unknown
+  try {
+    error = JSON.parse(text, reviveDate)
+  } catch {
+    error = Object.assign(new Error(`${res.status} ${res.statusText}`.trim()), {
+      status: res.status,
+      value: text,
+    })
+  }
+  throw error
+}
+
+function toSearch(query: Record<string, unknown> | undefined) {
+  const search = new URLSearchParams()
+  for (const [key, value] of Object.entries(query ?? {})) {
+    for (const item of Array.isArray(value) ? value : [value]) {
+      if (item === undefined || item === null) continue
+      search.append(
+        key,
+        item instanceof Date
+          ? item.toISOString()
+          : typeof item === 'object'
+            ? JSON.stringify(item)
+            : String(item),
+      )
+    }
+  }
+  return search
+}
+
 export function getAgentsKey() {
   return ['agents'] as const
 }
@@ -36753,23 +36803,12 @@ export function getResponsesResponseIdBetaTrueQueryOptions<
   >({
     queryKey: getResponsesResponseIdBetaTrueQueryKey(params, options),
     queryFn: async ({ signal }) => {
-      const search = new URLSearchParams()
-      for (const [k, v] of Object.entries(options?.query ?? {})) {
-        if (v === undefined) continue
-        if (Array.isArray(v)) {
-          for (const x of v) {
-            search.append(k, String(x))
-          }
-        } else {
-          search.set(k, String(v))
-        }
-      }
+      const search = toSearch(options?.query)
       const res = await fetch(
-        `${clientOrigin}/responses/${encodeURIComponent(params)}?beta=true${search.size ? `?${search}` : ''}`,
+        `${clientOrigin}/responses/${encodeURIComponent(params)}?beta=true${search.size ? `&${search}` : ''}`,
         { headers: options?.headers, signal },
       )
-      if (!res.ok) throw await res.json()
-      return JSON.parse(await res.text())
+      return readResponse(res)
     },
   })
 }
@@ -36853,8 +36892,7 @@ export function getDeleteResponsesResponseIdBetaTrueMutationOptions<
         headers: { 'content-type': 'application/json', ...options?.headers },
         body: body === undefined ? undefined : JSON.stringify(body),
       })
-      if (!res.ok) throw await res.json()
-      return JSON.parse(await res.text())
+      return readResponse(res)
     },
   })
 }
