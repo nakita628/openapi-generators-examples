@@ -119,7 +119,7 @@ export const channelsRouter = t.router({
             FriendInviteResponseSchema,
             GroupDMInviteResponseSchema,
             GuildInviteResponseSchema,
-            z.null().nullable(),
+            z.null(),
           ]),
         )
         .nullable(),
@@ -160,9 +160,7 @@ export const channelsRouter = t.router({
         channel_id: SnowflakeTypeSchema,
         content: z.string().max(4000).nullable().exactOptional(),
         embeds: z.array(RichEmbedSchema).max(10).nullable().exactOptional(),
-        allowed_mentions: z
-          .xor([z.null().nullable(), MessageAllowedMentionsRequestSchema])
-          .exactOptional(),
+        allowed_mentions: z.xor([z.null(), MessageAllowedMentionsRequestSchema]).exactOptional(),
         sticker_ids: z.array(SnowflakeTypeSchema).max(3).nullable().exactOptional(),
         components: z
           .array(
@@ -181,21 +179,17 @@ export const channelsRouter = t.router({
           .exactOptional(),
         flags: z.int().nullable().exactOptional(),
         attachments: z.array(MessageAttachmentRequestSchema).max(10).nullable().exactOptional(),
-        poll: z.xor([z.null().nullable(), PollCreateRequestSchema]).exactOptional(),
-        shared_client_theme: z
-          .xor([z.null().nullable(), CustomClientThemeShareRequestSchema])
-          .exactOptional(),
-        message_reference: z
-          .xor([z.null().nullable(), MessageReferenceRequestSchema])
-          .exactOptional(),
+        poll: z.xor([z.null(), PollCreateRequestSchema]).exactOptional(),
+        shared_client_theme: z.xor([z.null(), CustomClientThemeShareRequestSchema]).exactOptional(),
+        message_reference: z.xor([z.null(), MessageReferenceRequestSchema]).exactOptional(),
         nonce: z
           .xor([
             z
               .union([z.bigint(), z.number().int(), z.string().regex(/^-?\d+$/)])
               .transform((val) => BigInt(val))
-              .pipe(z.int64().min(-9223372036854776000n).max(9223372036854776000n)),
+              .pipe(z.int64().min(-9223372036854775808n).max(9223372036854775808n)),
             z.string().max(25),
-            z.null().nullable(),
+            z.null(),
           ])
           .exactOptional(),
         enforce_nonce: z.boolean().nullable().exactOptional(),
@@ -261,9 +255,7 @@ export const channelsRouter = t.router({
         content: z.string().max(4000).nullable().exactOptional(),
         embeds: z.array(RichEmbedSchema).max(10).nullable().exactOptional(),
         flags: z.int().nullable().exactOptional(),
-        allowed_mentions: z
-          .xor([z.null().nullable(), MessageAllowedMentionsRequestSchema])
-          .exactOptional(),
+        allowed_mentions: z.xor([z.null(), MessageAllowedMentionsRequestSchema]).exactOptional(),
         sticker_ids: z.array(SnowflakeTypeSchema).max(1521).nullable().exactOptional(),
         components: z
           .array(
@@ -364,9 +356,7 @@ export const channelsRouter = t.router({
         channel_id: SnowflakeTypeSchema,
         message_id: SnowflakeTypeSchema,
         name: z.string().min(1).max(100),
-        auto_archive_duration: z
-          .xor([z.null().nullable(), ThreadAutoArchiveDurationSchema])
-          .exactOptional(),
+        auto_archive_duration: z.xor([z.null(), ThreadAutoArchiveDurationSchema]).exactOptional(),
         rate_limit_per_user: z.int32().min(0).max(21600).nullable().exactOptional(),
       }),
     )
@@ -403,7 +393,7 @@ export const channelsRouter = t.router({
       z.object({
         channel_id: SnowflakeTypeSchema,
         overwrite_id: SnowflakeTypeSchema,
-        type: z.xor([z.null().nullable(), ChannelPermissionOverwritesSchema]).exactOptional(),
+        type: z.xor([z.null(), ChannelPermissionOverwritesSchema]).exactOptional(),
         allow: z.int().nullable().exactOptional(),
         deny: z.int().nullable().exactOptional(),
       }),
@@ -475,7 +465,7 @@ export const channelsRouter = t.router({
       z.object({
         channel_id: SnowflakeTypeSchema,
         sound_id: SnowflakeTypeSchema,
-        source_guild_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]).exactOptional(),
+        source_guild_id: z.xor([z.null(), SnowflakeTypeSchema]).exactOptional(),
       }),
     )
     .mutation(() => {

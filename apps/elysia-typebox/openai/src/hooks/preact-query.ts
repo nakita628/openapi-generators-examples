@@ -32,9 +32,13 @@ function reviveDate(_key: string, value: unknown) {
   return Number.isNaN(date.getTime()) ? value : date
 }
 
-async function readResponse(res: Response) {
+async function readResponse(res: Response, as: 'json' | 'text' | 'bytes' = 'json') {
+  if (res.ok && as === 'bytes') return res.arrayBuffer()
   const text = await res.text()
-  if (res.ok) return text === '' ? undefined : JSON.parse(text, reviveDate)
+  if (res.ok) {
+    if (as === 'text') return text
+    return text === '' ? undefined : JSON.parse(text, reviveDate)
+  }
   let error: unknown
   try {
     error = JSON.parse(text, reviveDate)

@@ -1897,78 +1897,6 @@ export const ApplicationExplicitContentFilterTypesSchema = t.Union([
   t.Literal(1, { title: 'ALWAYS', description: 'interactions will always be scanned' }),
 ])
 
-export const ApplicationOAuth2InstallParamsSchema = t.Object({
-  scopes: t.Optional(
-    t.Union([t.Array(OAuth2ScopesSchema, { minItems: 1, uniqueItems: true }), t.Null()]),
-  ),
-  permissions: t.Optional(
-    t.Union([t.Integer({ minimum: 0, maximum: 18014398509481984 }), t.Null()]),
-  ),
-})
-
-export const ApplicationIntegrationTypeConfigurationSchema = t.Object({
-  oauth2_install_params: t.Optional(t.Union([t.Null(), ApplicationOAuth2InstallParamsSchema])),
-})
-
-export const ApplicationFormPartialSchema = t.Object({
-  description: t.Optional(
-    t.Union([
-      t.Object({
-        default: t.String({ maxLength: 400 }),
-        localizations: t.Optional(
-          t.Union([t.Record(t.String(), t.String({ maxLength: 400 })), t.Null()]),
-        ),
-      }),
-      t.Null(),
-    ]),
-  ),
-  icon: t.Optional(t.Union([t.String(), t.Null()])),
-  cover_image: t.Optional(t.Union([t.String(), t.Null()])),
-  team_id: t.Optional(t.Union([t.Null(), SnowflakeTypeSchema])),
-  flags: t.Optional(t.Union([t.Integer({ maximum: 9007199254740991 }), t.Null()])),
-  interactions_endpoint_url: t.Optional(
-    t.Union([t.String({ format: 'uri', maxLength: 2048 }), t.Null()]),
-  ),
-  explicit_content_filter: t.Optional(
-    t.Union([t.Null(), ApplicationExplicitContentFilterTypesSchema]),
-  ),
-  max_participants: t.Optional(
-    t.Union([t.Integer({ format: 'int32', minimum: -1, maximum: 2147483647 }), t.Null()]),
-  ),
-  type: t.Optional(t.Union([t.Null(), ApplicationTypesSchema])),
-  tags: t.Optional(
-    t.Union([t.Array(t.String({ maxLength: 20 }), { maxItems: 5, uniqueItems: true }), t.Null()]),
-  ),
-  custom_install_url: t.Optional(t.Union([t.String({ format: 'uri', maxLength: 2048 }), t.Null()])),
-  install_params: t.Optional(t.Union([t.Null(), ApplicationOAuth2InstallParamsSchema])),
-  role_connections_verification_url: t.Optional(
-    t.Union([t.String({ format: 'uri', maxLength: 2048 }), t.Null()]),
-  ),
-  integration_types_config: t.Optional(
-    t.Union([
-      t.Record(t.String(), t.Union([t.Null(), ApplicationIntegrationTypeConfigurationSchema]), {
-        minProperties: 1,
-        maxProperties: 2,
-      }),
-      t.Null(),
-    ]),
-  ),
-  event_webhooks_status: t.Optional(t.Union([t.Null(), ApplicationEventWebhooksStatusSchema])),
-  event_webhooks_url: t.Optional(
-    t.Union([
-      t.String({
-        format: 'uri',
-        maxLength: 2048,
-        description: 'Event webhooks URL for the app to receive webhook events',
-      }),
-      t.Null(),
-    ]),
-  ),
-  event_webhooks_types: t.Optional(
-    t.Union([t.Array(ActionTypesSchema, { uniqueItems: true }), t.Null()]),
-  ),
-})
-
 export const ApplicationIdentityProviderAuthTypeSchema = t.Union([
   t.Literal('OIDC', { title: 'OIDC' }),
   t.Literal('EPIC_ONLINE_SERVICES_ACCESS_TOKEN', { title: 'EPIC_ONLINE_SERVICES_ACCESS_TOKEN' }),
@@ -2005,6 +1933,19 @@ export const ApplicationIncomingWebhookResponseSchema = t.Object({
   name: t.String(),
   type: WebhookTypesSchema,
   user: t.Optional(UserResponseSchema),
+})
+
+export const ApplicationOAuth2InstallParamsSchema = t.Object({
+  scopes: t.Optional(
+    t.Union([t.Array(OAuth2ScopesSchema, { minItems: 1, uniqueItems: true }), t.Null()]),
+  ),
+  permissions: t.Optional(
+    t.Union([t.Integer({ minimum: 0, maximum: 18014398509481984 }), t.Null()]),
+  ),
+})
+
+export const ApplicationIntegrationTypeConfigurationSchema = t.Object({
+  oauth2_install_params: t.Optional(t.Union([t.Null(), ApplicationOAuth2InstallParamsSchema])),
 })
 
 export const MetadataItemTypesSchema = t.Union([
@@ -2079,6 +2020,65 @@ export const ApplicationRoleConnectionsMetadataItemResponseSchema = t.Object({
   name_localizations: t.Optional(t.Union([t.Record(t.String(), t.String()), t.Null()])),
   description: t.String(),
   description_localizations: t.Optional(t.Union([t.Record(t.String(), t.String()), t.Null()])),
+})
+
+export const ApplicationUpdateFormPartialSchema = t.Object({
+  description: t.Optional(
+    t.Union([
+      t.Object({
+        default: t.String({ maxLength: 400 }),
+        localizations: t.Optional(
+          t.Union([t.Record(t.String(), t.String({ maxLength: 400 })), t.Null()]),
+        ),
+      }),
+      t.Null(),
+    ]),
+  ),
+  icon: t.Optional(t.Union([t.String(), t.Null()])),
+  cover_image: t.Optional(t.Union([t.String(), t.Null()])),
+  team_id: t.Optional(t.Union([t.Null(), SnowflakeTypeSchema])),
+  flags: t.Optional(t.Union([t.Integer({ maximum: 9007199254740991 }), t.Null()])),
+  interactions_endpoint_url: t.Optional(
+    t.Union([t.String({ format: 'uri', maxLength: 2048 }), t.Null()]),
+  ),
+  explicit_content_filter: t.Optional(
+    t.Union([t.Null(), ApplicationExplicitContentFilterTypesSchema]),
+  ),
+  max_participants: t.Optional(
+    t.Union([t.Integer({ format: 'int32', minimum: -1, maximum: 2147483647 }), t.Null()]),
+  ),
+  type: t.Optional(t.Union([t.Null(), ApplicationTypesSchema])),
+  tags: t.Optional(
+    t.Union([t.Array(t.String({ maxLength: 20 }), { maxItems: 5, uniqueItems: true }), t.Null()]),
+  ),
+  custom_install_url: t.Optional(t.Union([t.String({ format: 'uri', maxLength: 2048 }), t.Null()])),
+  install_params: t.Optional(t.Union([t.Null(), ApplicationOAuth2InstallParamsSchema])),
+  role_connections_verification_url: t.Optional(
+    t.Union([t.String({ format: 'uri', maxLength: 2048 }), t.Null()]),
+  ),
+  integration_types_config: t.Optional(
+    t.Union([
+      t.Record(t.String(), t.Union([t.Null(), ApplicationIntegrationTypeConfigurationSchema]), {
+        minProperties: 1,
+        maxProperties: 2,
+      }),
+      t.Null(),
+    ]),
+  ),
+  event_webhooks_status: t.Optional(t.Union([t.Null(), ApplicationEventWebhooksStatusSchema])),
+  event_webhooks_url: t.Optional(
+    t.Union([
+      t.String({
+        format: 'uri',
+        maxLength: 2048,
+        description: 'Event webhooks URL for the app to receive webhook events',
+      }),
+      t.Null(),
+    ]),
+  ),
+  event_webhooks_types: t.Optional(
+    t.Union([t.Array(ActionTypesSchema, { uniqueItems: true }), t.Null()]),
+  ),
 })
 
 export const ApplicationUserRoleConnectionResponseSchema = t.Object({

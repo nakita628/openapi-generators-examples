@@ -21,13 +21,13 @@ import {
   ApplicationCommandUserOptionSchema,
   ApplicationEventWebhooksStatusSchema,
   ApplicationExplicitContentFilterTypesSchema,
-  ApplicationFormPartialSchema,
   ApplicationIntegrationTypeConfigurationSchema,
   ApplicationIntegrationTypeSchema,
   ApplicationOAuth2InstallParamsSchema,
   ApplicationRoleConnectionsMetadataItemRequestSchema,
   ApplicationRoleConnectionsMetadataItemResponseSchema,
   ApplicationTypesSchema,
+  ApplicationUpdateFormPartialSchema,
   CommandPermissionsResponseSchema,
   EmbeddedActivityInstanceSchema,
   EmojiResponseSchema,
@@ -46,7 +46,7 @@ export const applicationsRouter = t.router({
     throw new TRPCError({ code: 'NOT_IMPLEMENTED' })
   }),
   patchApplicationsMe: t.procedure
-    .input(ApplicationFormPartialSchema)
+    .input(ApplicationUpdateFormPartialSchema)
     .output(PrivateApplicationResponseSchema)
     .mutation(() => {
       throw new TRPCError({ code: 'NOT_IMPLEMENTED' })
@@ -70,14 +70,14 @@ export const applicationsRouter = t.router({
           .exactOptional(),
         icon: z.string().nullable().exactOptional(),
         cover_image: z.string().nullable().exactOptional(),
-        team_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]).exactOptional(),
+        team_id: z.xor([z.null(), SnowflakeTypeSchema]).exactOptional(),
         flags: z.int().nullable().exactOptional(),
         interactions_endpoint_url: z.url().max(2048).nullable().exactOptional(),
         explicit_content_filter: z
-          .xor([z.null().nullable(), ApplicationExplicitContentFilterTypesSchema])
+          .xor([z.null(), ApplicationExplicitContentFilterTypesSchema])
           .exactOptional(),
         max_participants: z.int32().min(-1).nullable().exactOptional(),
-        type: z.xor([z.null().nullable(), ApplicationTypesSchema]).exactOptional(),
+        type: z.xor([z.null(), ApplicationTypesSchema]).exactOptional(),
         tags: z
           .array(z.string().max(20))
           .max(5)
@@ -85,19 +85,14 @@ export const applicationsRouter = t.router({
           .nullable()
           .exactOptional(),
         custom_install_url: z.url().max(2048).nullable().exactOptional(),
-        install_params: z
-          .xor([z.null().nullable(), ApplicationOAuth2InstallParamsSchema])
-          .exactOptional(),
+        install_params: z.xor([z.null(), ApplicationOAuth2InstallParamsSchema]).exactOptional(),
         role_connections_verification_url: z.url().max(2048).nullable().exactOptional(),
         integration_types_config: z
-          .record(
-            z.string(),
-            z.xor([z.null().nullable(), ApplicationIntegrationTypeConfigurationSchema]),
-          )
+          .record(z.string(), z.xor([z.null(), ApplicationIntegrationTypeConfigurationSchema]))
           .nullable()
           .exactOptional(),
         event_webhooks_status: z
-          .xor([z.null().nullable(), ApplicationEventWebhooksStatusSchema])
+          .xor([z.null(), ApplicationEventWebhooksStatusSchema])
           .exactOptional(),
         event_webhooks_url: z
           .url()
@@ -203,13 +198,13 @@ export const applicationsRouter = t.router({
           .nullable()
           .exactOptional(),
         handler: z
-          .xor([z.null().nullable(), ApplicationCommandHandlerSchema])
+          .xor([z.null(), ApplicationCommandHandlerSchema])
           .meta({
             description:
               "Determines whether the interaction is handled by the app's interactions handler or by Discord",
           })
           .exactOptional(),
-        type: z.xor([z.null().nullable(), ApplicationCommandTypeSchema]).exactOptional(),
+        type: z.xor([z.null(), ApplicationCommandTypeSchema]).exactOptional(),
       }),
     )
     .output(ApplicationCommandResponseSchema)
@@ -281,7 +276,7 @@ export const applicationsRouter = t.router({
           .nullable()
           .exactOptional(),
         handler: z
-          .xor([z.null().nullable(), ApplicationCommandHandlerSchema])
+          .xor([z.null(), ApplicationCommandHandlerSchema])
           .meta({
             description:
               "Determines whether the interaction is handled by the app's interactions handler or by Discord",
@@ -343,7 +338,7 @@ export const applicationsRouter = t.router({
           .xor([
             z.string(),
             z
-              .array(z.xor([z.null().nullable(), SnowflakeTypeSchema]))
+              .array(z.xor([z.null(), SnowflakeTypeSchema]))
               .max(100)
               .refine((val) => new Set(val).size === val.length),
           ])
@@ -474,13 +469,13 @@ export const applicationsRouter = t.router({
           .nullable()
           .exactOptional(),
         handler: z
-          .xor([z.null().nullable(), ApplicationCommandHandlerSchema])
+          .xor([z.null(), ApplicationCommandHandlerSchema])
           .meta({
             description:
               "Determines whether the interaction is handled by the app's interactions handler or by Discord",
           })
           .exactOptional(),
-        type: z.xor([z.null().nullable(), ApplicationCommandTypeSchema]).exactOptional(),
+        type: z.xor([z.null(), ApplicationCommandTypeSchema]).exactOptional(),
       }),
     )
     .output(ApplicationCommandResponseSchema)
@@ -571,7 +566,7 @@ export const applicationsRouter = t.router({
           .nullable()
           .exactOptional(),
         handler: z
-          .xor([z.null().nullable(), ApplicationCommandHandlerSchema])
+          .xor([z.null(), ApplicationCommandHandlerSchema])
           .meta({
             description:
               "Determines whether the interaction is handled by the app's interactions handler or by Discord",

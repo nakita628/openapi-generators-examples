@@ -16,7 +16,7 @@ export const chatHandler = new Hono()
             type('unknown').pipe((data, ctx) => {
               for (const branch of [
                 type({ '[string]': 'string' }).describe(
-                  'Set of 16 key-value pairs that can be attached to an object. This can be\nuseful for storing additional information about the object in a structured\nformat, and querying for objects via API or the dashboard.\n\nKeys are strings with a maximum length of 64 characters. Values are strings\nwith a maximum length of 512 characters.\n',
+                  'Set of 16 key-value pairs that can be attached to an object. This can be\nuseful for storing additional information about the object in a structured\nformat.\n\nKeys are strings with a maximum length of 64 characters. Values are strings\nwith a maximum length of 512 characters.\n',
                 ),
                 type('unknown')
                   .pipe((data) => (data === 'null' ? null : data))

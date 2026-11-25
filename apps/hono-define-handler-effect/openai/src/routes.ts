@@ -275,7 +275,7 @@ export type AssistantToolsFunction = Schema.Schema.Type<typeof AssistantToolsFun
 export const MetadataSchema = Schema.Union([
   Schema.Record(Schema.String, Schema.String).annotate({
     description:
-      'Set of 16 key-value pairs that can be attached to an object. This can be\nuseful for storing additional information about the object in a structured\nformat, and querying for objects via API or the dashboard.\n\nKeys are strings with a maximum length of 64 characters. Values are strings\nwith a maximum length of 512 characters.\n',
+      'Set of 16 key-value pairs that can be attached to an object. This can be\nuseful for storing additional information about the object in a structured\nformat.\n\nKeys are strings with a maximum length of 64 characters. Values are strings\nwith a maximum length of 512 characters.\n',
   }),
   Schema.Null,
 ])
@@ -15869,6 +15869,10 @@ export const ModelIdsResponsesSchema = Schema.Union([
     'gpt-rosalind-research',
     'gpt-6-rosalind',
     'gpt-6.2-astra-law',
+    'gpt-6-astra-healthcare',
+    'gpt-6.1-sol-healthcare',
+    'gpt-6.2-astra-healthcare',
+    'gpt-6.2-sol-healthcare',
   ]),
 ]).annotate({ jsonSchemaExamples: ['gpt-6.2-astra'] })
 
@@ -51644,6 +51648,18 @@ export const CreateConversationBodySchema = Schema.Struct({
       Schema.Null,
     ]),
   ),
+  safety_identifier: Schema.optionalKey(
+    Schema.Union([
+      Schema.String.check(
+        Schema.makeFilter((input) => [...input].length <= 128, {
+          expected: 'a string of at most 128 characters',
+        }),
+      ).annotate({
+        description: 'A stable identifier used for safety monitoring and abuse detection.',
+      }),
+      Schema.Null,
+    ]),
+  ),
   items: Schema.optionalKey(
     Schema.Union([
       Schema.Array(InputItemSchema)
@@ -85575,6 +85591,10 @@ export const BetaModelIdsResponsesSchema = Schema.Union([
     'gpt-rosalind-research',
     'gpt-6-rosalind',
     'gpt-6.2-astra-law',
+    'gpt-6-astra-healthcare',
+    'gpt-6.1-sol-healthcare',
+    'gpt-6.2-astra-healthcare',
+    'gpt-6.2-sol-healthcare',
   ]),
 ]).annotate({ jsonSchemaExamples: ['gpt-6.2-astra'] })
 
@@ -89824,7 +89844,7 @@ export type BetaResponseCustomToolCallInputDeltaEvent = Schema.Schema.Type<
 export const BetaMetadataSchema = Schema.Union([
   Schema.Record(Schema.String, Schema.String).annotate({
     description:
-      'Set of 16 key-value pairs that can be attached to an object. This can be\nuseful for storing additional information about the object in a structured\nformat, and querying for objects via API or the dashboard.\n\nKeys are strings with a maximum length of 64 characters. Values are strings\nwith a maximum length of 512 characters.\n',
+      'Set of 16 key-value pairs that can be attached to an object. This can be\nuseful for storing additional information about the object in a structured\nformat.\n\nKeys are strings with a maximum length of 64 characters. Values are strings\nwith a maximum length of 512 characters.\n',
   }),
   Schema.Null,
 ])
@@ -97352,7 +97372,7 @@ export const getChatCompletionsHandler = defineHandler({
               Schema.Union([
                 Schema.Record(Schema.String, Schema.String).annotate({
                   description:
-                    'Set of 16 key-value pairs that can be attached to an object. This can be\nuseful for storing additional information about the object in a structured\nformat, and querying for objects via API or the dashboard.\n\nKeys are strings with a maximum length of 64 characters. Values are strings\nwith a maximum length of 512 characters.\n',
+                    'Set of 16 key-value pairs that can be attached to an object. This can be\nuseful for storing additional information about the object in a structured\nformat.\n\nKeys are strings with a maximum length of 64 characters. Values are strings\nwith a maximum length of 512 characters.\n',
                 }),
                 Schema.Unknown.pipe(
                   Schema.decodeTo(

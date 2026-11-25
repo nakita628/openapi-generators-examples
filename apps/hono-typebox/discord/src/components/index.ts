@@ -2083,94 +2083,6 @@ export type ApplicationExplicitContentFilterTypes = Static<
   typeof ApplicationExplicitContentFilterTypesSchema
 >
 
-export const ApplicationOAuth2InstallParamsSchema = Type.Object({
-  scopes: Type.Optional(
-    Type.Union([Type.Array(OAuth2ScopesSchema, { minItems: 1, uniqueItems: true }), Type.Null()]),
-  ),
-  permissions: Type.Optional(
-    Type.Union([Type.Integer({ minimum: 0, maximum: 18014398509481984 }), Type.Null()]),
-  ),
-})
-
-export type ApplicationOAuth2InstallParams = Static<typeof ApplicationOAuth2InstallParamsSchema>
-
-export const ApplicationIntegrationTypeConfigurationSchema = Type.Object({
-  oauth2_install_params: Type.Optional(
-    Type.Union([Type.Null(), ApplicationOAuth2InstallParamsSchema]),
-  ),
-})
-
-export type ApplicationIntegrationTypeConfiguration = Static<
-  typeof ApplicationIntegrationTypeConfigurationSchema
->
-
-export const ApplicationFormPartialSchema = Type.Object({
-  description: Type.Optional(
-    Type.Union([
-      Type.Object({
-        default: Type.String({ maxLength: 400 }),
-        localizations: Type.Optional(
-          Type.Union([Type.Record(Type.String(), Type.String({ maxLength: 400 })), Type.Null()]),
-        ),
-      }),
-      Type.Null(),
-    ]),
-  ),
-  icon: Type.Optional(Type.Union([Type.String(), Type.Null()])),
-  cover_image: Type.Optional(Type.Union([Type.String(), Type.Null()])),
-  team_id: Type.Optional(Type.Union([Type.Null(), SnowflakeTypeSchema])),
-  flags: Type.Optional(Type.Union([Type.Integer(), Type.Null()])),
-  interactions_endpoint_url: Type.Optional(
-    Type.Union([Type.String({ format: 'uri', maxLength: 2048 }), Type.Null()]),
-  ),
-  explicit_content_filter: Type.Optional(
-    Type.Union([Type.Null(), ApplicationExplicitContentFilterTypesSchema]),
-  ),
-  max_participants: Type.Optional(Type.Union([Type.Integer({ minimum: -1 }), Type.Null()])),
-  type: Type.Optional(Type.Union([Type.Null(), ApplicationTypesSchema])),
-  tags: Type.Optional(
-    Type.Union([
-      Type.Array(Type.String({ maxLength: 20 }), { maxItems: 5, uniqueItems: true }),
-      Type.Null(),
-    ]),
-  ),
-  custom_install_url: Type.Optional(
-    Type.Union([Type.String({ format: 'uri', maxLength: 2048 }), Type.Null()]),
-  ),
-  install_params: Type.Optional(Type.Union([Type.Null(), ApplicationOAuth2InstallParamsSchema])),
-  role_connections_verification_url: Type.Optional(
-    Type.Union([Type.String({ format: 'uri', maxLength: 2048 }), Type.Null()]),
-  ),
-  integration_types_config: Type.Optional(
-    Type.Union([
-      Type.Record(
-        Type.String(),
-        Type.Union([Type.Null(), ApplicationIntegrationTypeConfigurationSchema]),
-        { minProperties: 1, maxProperties: 2 },
-      ),
-      Type.Null(),
-    ]),
-  ),
-  event_webhooks_status: Type.Optional(
-    Type.Union([Type.Null(), ApplicationEventWebhooksStatusSchema]),
-  ),
-  event_webhooks_url: Type.Optional(
-    Type.Union([
-      Type.String({
-        format: 'uri',
-        maxLength: 2048,
-        description: 'Event webhooks URL for the app to receive webhook events',
-      }),
-      Type.Null(),
-    ]),
-  ),
-  event_webhooks_types: Type.Optional(
-    Type.Union([Type.Array(ActionTypesSchema, { uniqueItems: true }), Type.Null()]),
-  ),
-})
-
-export type ApplicationFormPartial = Static<typeof ApplicationFormPartialSchema>
-
 export const ApplicationIdentityProviderAuthTypeSchema = Type.Union([
   Type.Literal('OIDC'),
   Type.Literal('EPIC_ONLINE_SERVICES_ACCESS_TOKEN'),
@@ -2212,6 +2124,27 @@ export const ApplicationIncomingWebhookResponseSchema = Type.Object({
 
 export type ApplicationIncomingWebhookResponse = Static<
   typeof ApplicationIncomingWebhookResponseSchema
+>
+
+export const ApplicationOAuth2InstallParamsSchema = Type.Object({
+  scopes: Type.Optional(
+    Type.Union([Type.Array(OAuth2ScopesSchema, { minItems: 1, uniqueItems: true }), Type.Null()]),
+  ),
+  permissions: Type.Optional(
+    Type.Union([Type.Integer({ minimum: 0, maximum: 18014398509481984 }), Type.Null()]),
+  ),
+})
+
+export type ApplicationOAuth2InstallParams = Static<typeof ApplicationOAuth2InstallParamsSchema>
+
+export const ApplicationIntegrationTypeConfigurationSchema = Type.Object({
+  oauth2_install_params: Type.Optional(
+    Type.Union([Type.Null(), ApplicationOAuth2InstallParamsSchema]),
+  ),
+})
+
+export type ApplicationIntegrationTypeConfiguration = Static<
+  typeof ApplicationIntegrationTypeConfigurationSchema
 >
 
 export const MetadataItemTypesSchema = Type.Union([
@@ -2297,6 +2230,73 @@ export const ApplicationRoleConnectionsMetadataItemResponseSchema = Type.Object(
 export type ApplicationRoleConnectionsMetadataItemResponse = Static<
   typeof ApplicationRoleConnectionsMetadataItemResponseSchema
 >
+
+export const ApplicationUpdateFormPartialSchema = Type.Object({
+  description: Type.Optional(
+    Type.Union([
+      Type.Object({
+        default: Type.String({ maxLength: 400 }),
+        localizations: Type.Optional(
+          Type.Union([Type.Record(Type.String(), Type.String({ maxLength: 400 })), Type.Null()]),
+        ),
+      }),
+      Type.Null(),
+    ]),
+  ),
+  icon: Type.Optional(Type.Union([Type.String(), Type.Null()])),
+  cover_image: Type.Optional(Type.Union([Type.String(), Type.Null()])),
+  team_id: Type.Optional(Type.Union([Type.Null(), SnowflakeTypeSchema])),
+  flags: Type.Optional(Type.Union([Type.Integer(), Type.Null()])),
+  interactions_endpoint_url: Type.Optional(
+    Type.Union([Type.String({ format: 'uri', maxLength: 2048 }), Type.Null()]),
+  ),
+  explicit_content_filter: Type.Optional(
+    Type.Union([Type.Null(), ApplicationExplicitContentFilterTypesSchema]),
+  ),
+  max_participants: Type.Optional(Type.Union([Type.Integer({ minimum: -1 }), Type.Null()])),
+  type: Type.Optional(Type.Union([Type.Null(), ApplicationTypesSchema])),
+  tags: Type.Optional(
+    Type.Union([
+      Type.Array(Type.String({ maxLength: 20 }), { maxItems: 5, uniqueItems: true }),
+      Type.Null(),
+    ]),
+  ),
+  custom_install_url: Type.Optional(
+    Type.Union([Type.String({ format: 'uri', maxLength: 2048 }), Type.Null()]),
+  ),
+  install_params: Type.Optional(Type.Union([Type.Null(), ApplicationOAuth2InstallParamsSchema])),
+  role_connections_verification_url: Type.Optional(
+    Type.Union([Type.String({ format: 'uri', maxLength: 2048 }), Type.Null()]),
+  ),
+  integration_types_config: Type.Optional(
+    Type.Union([
+      Type.Record(
+        Type.String(),
+        Type.Union([Type.Null(), ApplicationIntegrationTypeConfigurationSchema]),
+        { minProperties: 1, maxProperties: 2 },
+      ),
+      Type.Null(),
+    ]),
+  ),
+  event_webhooks_status: Type.Optional(
+    Type.Union([Type.Null(), ApplicationEventWebhooksStatusSchema]),
+  ),
+  event_webhooks_url: Type.Optional(
+    Type.Union([
+      Type.String({
+        format: 'uri',
+        maxLength: 2048,
+        description: 'Event webhooks URL for the app to receive webhook events',
+      }),
+      Type.Null(),
+    ]),
+  ),
+  event_webhooks_types: Type.Optional(
+    Type.Union([Type.Array(ActionTypesSchema, { uniqueItems: true }), Type.Null()]),
+  ),
+})
+
+export type ApplicationUpdateFormPartial = Static<typeof ApplicationUpdateFormPartialSchema>
 
 export const ApplicationUserRoleConnectionResponseSchema = Type.Object({
   platform_name: Type.Optional(Type.String()),

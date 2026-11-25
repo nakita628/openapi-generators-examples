@@ -310,20 +310,20 @@ importers:
         specifier: 1.28.1
         version: 1.28.1
       asphodelos:
-        specifier: 0.5.4
-        version: 0.5.4(@types/node@26.6.6)(@typespec/http@1.18.0(@typespec/compiler@1.18.0(@types/node@26.6.6)))(@typespec/openapi@1.18.0(@typespec/compiler@1.18.0(@types/node@26.6.6))(@typespec/http@1.18.0(@typespec/compiler@1.18.0(@types/node@26.6.6))))(openapi-types@12.1.3)(redis@6.3.1)(svelte@5.59.1)
+        specifier: 0.5.6
+        version: 0.5.6(@types/node@26.6.6)(@typespec/http@1.18.0(@typespec/compiler@1.18.0(@types/node@26.6.6)))(@typespec/openapi@1.18.0(@typespec/compiler@1.18.0(@types/node@26.6.6))(@typespec/http@1.18.0(@typespec/compiler@1.18.0(@types/node@26.6.6))))(openapi-types@12.1.3)(redis@6.3.1)(svelte@5.59.1)
       openapi-to-trpc:
-        specifier: 0.3.1
-        version: 0.3.1(@apidevtools/swagger-parser@13.1.0(openapi-types@12.1.3))(@types/json-schema@7.0.15)(@typespec/compiler@1.18.0(@types/node@26.6.6))(@typespec/openapi3@1.18.0(@typespec/compiler@1.18.0(@types/node@26.6.6))(@typespec/http@1.18.0(@typespec/compiler@1.18.0(@types/node@26.6.6)))(@typespec/openapi@1.18.0(@typespec/compiler@1.18.0(@types/node@26.6.6))(@typespec/http@1.18.0(@typespec/compiler@1.18.0(@types/node@26.6.6)))))(redis@6.3.1)(svelte@5.59.1)
+        specifier: 0.4.0
+        version: 0.4.0(@apidevtools/swagger-parser@13.1.0(openapi-types@12.1.3))(@types/json-schema@7.0.15)(@typespec/compiler@1.18.0(@types/node@26.6.6))(@typespec/openapi3@1.18.0(@typespec/compiler@1.18.0(@types/node@26.6.6))(@typespec/http@1.18.0(@typespec/compiler@1.18.0(@types/node@26.6.6)))(@typespec/openapi@1.18.0(@typespec/compiler@1.18.0(@types/node@26.6.6))(@typespec/http@1.18.0(@typespec/compiler@1.18.0(@types/node@26.6.6)))))(redis@6.3.1)(svelte@5.59.1)
       takibi-hono:
-        specifier: 0.11.0
-        version: 0.11.0(@types/json-schema@7.0.15)(@types/node@26.6.6)(@typespec/http@1.18.0(@typespec/compiler@1.18.0(@types/node@26.6.6)))(@typespec/openapi@1.18.0(@typespec/compiler@1.18.0(@types/node@26.6.6))(@typespec/http@1.18.0(@typespec/compiler@1.18.0(@types/node@26.6.6))))(openapi-types@12.1.3)(redis@6.3.1)(svelte@5.59.1)
+        specifier: 0.11.1
+        version: 0.11.1(@types/json-schema@7.0.15)(@types/node@26.6.6)(@typespec/http@1.18.0(@typespec/compiler@1.18.0(@types/node@26.6.6)))(@typespec/openapi@1.18.0(@typespec/compiler@1.18.0(@types/node@26.6.6))(@typespec/http@1.18.0(@typespec/compiler@1.18.0(@types/node@26.6.6))))(openapi-types@12.1.3)(redis@6.3.1)(svelte@5.59.1)
       typescript:
         specifier: 'catalog:'
         version: 7.0.2
       wakusei:
-        specifier: 0.1.0
-        version: 0.1.0(@apidevtools/swagger-parser@13.1.0(openapi-types@12.1.3))(@types/json-schema@7.0.15)(@typespec/compiler@1.18.0(@types/node@26.6.6))(@typespec/openapi3@1.18.0(@typespec/compiler@1.18.0(@types/node@26.6.6))(@typespec/http@1.18.0(@typespec/compiler@1.18.0(@types/node@26.6.6)))(@typespec/openapi@1.18.0(@typespec/compiler@1.18.0(@types/node@26.6.6))(@typespec/http@1.18.0(@typespec/compiler@1.18.0(@types/node@26.6.6)))))(redis@6.3.1)(svelte@5.59.1)
+        specifier: 0.1.1
+        version: 0.1.1(@apidevtools/swagger-parser@13.1.0(openapi-types@12.1.3))(@types/json-schema@7.0.15)(@typespec/compiler@1.18.0(@types/node@26.6.6))(@typespec/openapi3@1.18.0(@typespec/compiler@1.18.0(@types/node@26.6.6))(@typespec/http@1.18.0(@typespec/compiler@1.18.0(@types/node@26.6.6)))(@typespec/openapi@1.18.0(@typespec/compiler@1.18.0(@types/node@26.6.6))(@typespec/http@1.18.0(@typespec/compiler@1.18.0(@types/node@26.6.6)))))(redis@6.3.1)(svelte@5.59.1)
 
   apps/elysia-typebox:
     dependencies:
@@ -2602,8 +2602,8 @@ packages:
   arktype@2.2.10:
     resolution: {integrity: sha512-xfum3++1RGjULFBeeXph3XrejEhAfswZlpH/V5m324j8aZ/53tHUd8OPCXE1v5iU/2UEkn/ZDFUT0Exkjv96xA==}
 
-  asphodelos@0.5.4:
-    resolution: {integrity: sha512-stfPeCzvxs7xTiMMlN2pkw6MletnMA6IW+AGnojksUpq4h1nQmmh6CFn8MES+LWXfoFtUuMeMqOugjDFfqfZmQ==}
+  asphodelos@0.5.6:
+    resolution: {integrity: sha512-XmqbqpLlDDfTNpGNVQYoDsNwx62w67/zAeZ59DHGj1gZPSNl1CDGGl3AeWDkMtvk2hACX2EWVhTKp4YmZU+yiw==}
     hasBin: true
 
   axobject-query@4.1.0:
@@ -2864,20 +2864,6 @@ packages:
     engines: {node: ^18 || >=20}
     hasBin: true
 
-  oas-truth@0.6.1:
-    resolution: {integrity: sha512-F+UPE5xuRYcG37AvbYAiN77m0msox3Bq51dAJ5GbkmlkkiYS1uyDTPuOqJVBoW0kMz4oY0RVRibx7G3W4OsBsA==}
-    peerDependencies:
-      '@apidevtools/swagger-parser': '>=12.0.0 <14.0.0'
-      '@typespec/compiler': '>=1.11.0 <2.0.0'
-      '@typespec/openapi3': '>=1.11.0 <2.0.0'
-
-  oas-truth@0.7.1:
-    resolution: {integrity: sha512-5CHUn8eMbwQj4VcTnlS8oA+pcf90rYECe4C3kGVgqZMtVDQVNYQky6vnNC7QoqYe2sT4z8Z63UAXqO80Vub1DQ==}
-    peerDependencies:
-      '@apidevtools/swagger-parser': '>=12.0.0 <14.0.0'
-      '@typespec/compiler': '>=1.11.0 <2.0.0'
-      '@typespec/openapi3': '>=1.11.0 <2.0.0'
-
   oas-truth@0.8.1:
     resolution: {integrity: sha512-aHUhdTcyHIYIIUW1jISd6+0CtMnLZQBD5Pc9cMmXD+EGW4kEzDGTHiE7FVwZL2BqwcMKkuVnQpJvadl3v8iVnQ==}
     peerDependencies:
@@ -2885,8 +2871,8 @@ packages:
       '@typespec/compiler': '>=1.11.0 <2.0.0'
       '@typespec/openapi3': '>=1.11.0 <2.0.0'
 
-  openapi-to-trpc@0.3.1:
-    resolution: {integrity: sha512-tUKFglweXjzODrvRRUp0LzCBZ0Qeput/CkT/5y2w0bikc3ndxh2BWPMll8iJMuExFVgR/cCi6/pqNAOWnGl+HA==}
+  openapi-to-trpc@0.4.0:
+    resolution: {integrity: sha512-dSGFULvU3c+96OPsicN/rn7TS63IBna0XHdFYo1i2s2kaVhI2qNPHEBQtCAe1KbATiQzU9aHcfcSlJys7L96OA==}
     hasBin: true
 
   openapi-types@12.1.3:
@@ -3102,8 +3088,8 @@ packages:
     resolution: {integrity: sha512-yEFYrVhod+hdNyx7g5Bnkkb0G6si8HJurOoOEgC8B/O0uXLHlaey/65KRv6cuWBNhBgHKAROVpc7QyYqE5gFng==}
     engines: {node: '>=20'}
 
-  takibi-hono@0.11.0:
-    resolution: {integrity: sha512-KMSrEEUt9PEfZLC6D7lm2YU7qbiYla5pB2J2+39Sqfyi8lKpPGeHMljD8PZWr/bENDMO6BpuUsjZrb2UbsmJEg==}
+  takibi-hono@0.11.1:
+    resolution: {integrity: sha512-BQZnGoWEgwFIOmg5yJEKp8Q/nD1T8MptMaL7G2JxKXeY0VGVk+q/BUUTG9byW7/KgF3InTMQxXV8NqRH1NSItg==}
     hasBin: true
 
   tar@7.5.23:
@@ -3213,8 +3199,8 @@ packages:
       typescript:
         optional: true
 
-  wakusei@0.1.0:
-    resolution: {integrity: sha512-eaKJe4kuvcoV7XuvmarU6c7Fxb6wtTNe89G8VrJALeH9HGE+jWYX4jxwd65lqI85SUFrCzGcHAH3RGIr65jxcw==}
+  wakusei@0.1.1:
+    resolution: {integrity: sha512-qgIiQzdAKRU+KVfQzPFDLPBuRDThsam8khZg1Y6xQcmiYbYt+f+pKX1C2Q6lMRSl7+SoIwai1IF/SKE+jZDIww==}
     hasBin: true
 
   wrap-ansi@9.0.2:
@@ -4587,7 +4573,7 @@ snapshots:
       '@ark/util': 0.56.9
       arkregex: 0.0.15
 
-  asphodelos@0.5.4(@types/node@26.6.6)(@typespec/http@1.18.0(@typespec/compiler@1.18.0(@types/node@26.6.6)))(@typespec/openapi@1.18.0(@typespec/compiler@1.18.0(@types/node@26.6.6))(@typespec/http@1.18.0(@typespec/compiler@1.18.0(@types/node@26.6.6))))(openapi-types@12.1.3)(redis@6.3.1)(svelte@5.59.1):
+  asphodelos@0.5.6(@types/node@26.6.6)(@typespec/http@1.18.0(@typespec/compiler@1.18.0(@types/node@26.6.6)))(@typespec/openapi@1.18.0(@typespec/compiler@1.18.0(@types/node@26.6.6))(@typespec/http@1.18.0(@typespec/compiler@1.18.0(@types/node@26.6.6))))(openapi-types@12.1.3)(redis@6.3.1)(svelte@5.59.1):
     dependencies:
       '@apidevtools/swagger-parser': 13.1.0(openapi-types@12.1.3)
       '@effect/platform-node': 4.0.6(effect@4.0.6)(redis@6.3.1)
@@ -4860,36 +4846,6 @@ snapshots:
 
   nanoid@5.1.16: {}
 
-  oas-truth@0.6.1(@apidevtools/swagger-parser@13.1.0(openapi-types@12.1.3))(@types/json-schema@7.0.15)(@typespec/compiler@1.18.0(@types/node@26.6.6))(@typespec/openapi3@1.18.0(@typespec/compiler@1.18.0(@types/node@26.6.6))(@typespec/http@1.18.0(@typespec/compiler@1.18.0(@types/node@26.6.6)))(@typespec/openapi@1.18.0(@typespec/compiler@1.18.0(@types/node@26.6.6))(@typespec/http@1.18.0(@typespec/compiler@1.18.0(@types/node@26.6.6)))))(redis@6.3.1)(svelte@5.59.1):
-    dependencies:
-      '@apidevtools/swagger-parser': 13.1.0(openapi-types@12.1.3)
-      '@typespec/compiler': 1.18.0(@types/node@26.6.6)
-      '@typespec/openapi3': 1.18.0(@typespec/compiler@1.18.0(@types/node@26.6.6))(@typespec/http@1.18.0(@typespec/compiler@1.18.0(@types/node@26.6.6)))(@typespec/openapi@1.18.0(@typespec/compiler@1.18.0(@types/node@26.6.6))(@typespec/http@1.18.0(@typespec/compiler@1.18.0(@types/node@26.6.6))))
-      schema-truth: 0.8.15(@types/json-schema@7.0.15)(redis@6.3.1)(svelte@5.59.1)
-    transitivePeerDependencies:
-      - '@astrojs/compiler-rs'
-      - '@types/json-schema'
-      - bufferutil
-      - redis
-      - svelte
-      - utf-8-validate
-      - vite-plus
-
-  oas-truth@0.7.1(@apidevtools/swagger-parser@13.1.0(openapi-types@12.1.3))(@types/json-schema@7.0.15)(@typespec/compiler@1.18.0(@types/node@26.6.6))(@typespec/openapi3@1.18.0(@typespec/compiler@1.18.0(@types/node@26.6.6))(@typespec/http@1.18.0(@typespec/compiler@1.18.0(@types/node@26.6.6)))(@typespec/openapi@1.18.0(@typespec/compiler@1.18.0(@types/node@26.6.6))(@typespec/http@1.18.0(@typespec/compiler@1.18.0(@types/node@26.6.6)))))(redis@6.3.1)(svelte@5.59.1):
-    dependencies:
-      '@apidevtools/swagger-parser': 13.1.0(openapi-types@12.1.3)
-      '@typespec/compiler': 1.18.0(@types/node@26.6.6)
-      '@typespec/openapi3': 1.18.0(@typespec/compiler@1.18.0(@types/node@26.6.6))(@typespec/http@1.18.0(@typespec/compiler@1.18.0(@types/node@26.6.6)))(@typespec/openapi@1.18.0(@typespec/compiler@1.18.0(@types/node@26.6.6))(@typespec/http@1.18.0(@typespec/compiler@1.18.0(@types/node@26.6.6))))
-      schema-truth: 0.8.15(@types/json-schema@7.0.15)(redis@6.3.1)(svelte@5.59.1)
-    transitivePeerDependencies:
-      - '@astrojs/compiler-rs'
-      - '@types/json-schema'
-      - bufferutil
-      - redis
-      - svelte
-      - utf-8-validate
-      - vite-plus
-
   oas-truth@0.8.1(@apidevtools/swagger-parser@13.1.0(openapi-types@12.1.3))(@types/json-schema@7.0.15)(@typespec/compiler@1.18.0(@types/node@26.6.6))(@typespec/openapi3@1.18.0(@typespec/compiler@1.18.0(@types/node@26.6.6))(@typespec/http@1.18.0(@typespec/compiler@1.18.0(@types/node@26.6.6)))(@typespec/openapi@1.18.0(@typespec/compiler@1.18.0(@types/node@26.6.6))(@typespec/http@1.18.0(@typespec/compiler@1.18.0(@types/node@26.6.6)))))(redis@6.3.1)(svelte@5.59.1):
     dependencies:
       '@apidevtools/swagger-parser': 13.1.0(openapi-types@12.1.3)
@@ -4905,7 +4861,7 @@ snapshots:
       - utf-8-validate
       - vite-plus
 
-  openapi-to-trpc@0.3.1(@apidevtools/swagger-parser@13.1.0(openapi-types@12.1.3))(@types/json-schema@7.0.15)(@typespec/compiler@1.18.0(@types/node@26.6.6))(@typespec/openapi3@1.18.0(@typespec/compiler@1.18.0(@types/node@26.6.6))(@typespec/http@1.18.0(@typespec/compiler@1.18.0(@types/node@26.6.6)))(@typespec/openapi@1.18.0(@typespec/compiler@1.18.0(@types/node@26.6.6))(@typespec/http@1.18.0(@typespec/compiler@1.18.0(@types/node@26.6.6)))))(redis@6.3.1)(svelte@5.59.1):
+  openapi-to-trpc@0.4.0(@apidevtools/swagger-parser@13.1.0(openapi-types@12.1.3))(@types/json-schema@7.0.15)(@typespec/compiler@1.18.0(@types/node@26.6.6))(@typespec/openapi3@1.18.0(@typespec/compiler@1.18.0(@types/node@26.6.6))(@typespec/http@1.18.0(@typespec/compiler@1.18.0(@types/node@26.6.6)))(@typespec/openapi@1.18.0(@typespec/compiler@1.18.0(@types/node@26.6.6))(@typespec/http@1.18.0(@typespec/compiler@1.18.0(@types/node@26.6.6)))))(redis@6.3.1)(svelte@5.59.1):
     dependencies:
       '@effect/platform-node': 4.1.5(effect@4.1.5)(redis@6.3.1)
       effect: 4.1.5
@@ -5245,7 +5201,7 @@ snapshots:
 
   tagged-tag@1.0.0: {}
 
-  takibi-hono@0.11.0(@types/json-schema@7.0.15)(@types/node@26.6.6)(@typespec/http@1.18.0(@typespec/compiler@1.18.0(@types/node@26.6.6)))(@typespec/openapi@1.18.0(@typespec/compiler@1.18.0(@types/node@26.6.6))(@typespec/http@1.18.0(@typespec/compiler@1.18.0(@types/node@26.6.6))))(openapi-types@12.1.3)(redis@6.3.1)(svelte@5.59.1):
+  takibi-hono@0.11.1(@types/json-schema@7.0.15)(@types/node@26.6.6)(@typespec/http@1.18.0(@typespec/compiler@1.18.0(@types/node@26.6.6)))(@typespec/openapi@1.18.0(@typespec/compiler@1.18.0(@types/node@26.6.6))(@typespec/http@1.18.0(@typespec/compiler@1.18.0(@types/node@26.6.6))))(openapi-types@12.1.3)(redis@6.3.1)(svelte@5.59.1):
     dependencies:
       '@apidevtools/swagger-parser': 13.1.0(openapi-types@12.1.3)
       '@effect/platform-node': 4.1.4(effect@4.1.4)(redis@6.3.1)
@@ -5253,7 +5209,7 @@ snapshots:
       '@typespec/openapi3': 1.18.0(@typespec/compiler@1.18.0(@types/node@26.6.6))(@typespec/http@1.18.0(@typespec/compiler@1.18.0(@types/node@26.6.6)))(@typespec/openapi@1.18.0(@typespec/compiler@1.18.0(@types/node@26.6.6))(@typespec/http@1.18.0(@typespec/compiler@1.18.0(@types/node@26.6.6))))
       effect: 4.1.4
       hono-takibi: 0.32.5(@types/node@26.6.6)(@typespec/http@1.18.0(@typespec/compiler@1.18.0(@types/node@26.6.6)))(@typespec/openapi@1.18.0(@typespec/compiler@1.18.0(@types/node@26.6.6))(@typespec/http@1.18.0(@typespec/compiler@1.18.0(@types/node@26.6.6))))(openapi-types@12.1.3)(redis@6.3.1)(svelte@5.59.1)
-      oas-truth: 0.7.1(@apidevtools/swagger-parser@13.1.0(openapi-types@12.1.3))(@types/json-schema@7.0.15)(@typespec/compiler@1.18.0(@types/node@26.6.6))(@typespec/openapi3@1.18.0(@typespec/compiler@1.18.0(@types/node@26.6.6))(@typespec/http@1.18.0(@typespec/compiler@1.18.0(@types/node@26.6.6)))(@typespec/openapi@1.18.0(@typespec/compiler@1.18.0(@types/node@26.6.6))(@typespec/http@1.18.0(@typespec/compiler@1.18.0(@types/node@26.6.6)))))(redis@6.3.1)(svelte@5.59.1)
+      oas-truth: 0.8.1(@apidevtools/swagger-parser@13.1.0(openapi-types@12.1.3))(@types/json-schema@7.0.15)(@typespec/compiler@1.18.0(@types/node@26.6.6))(@typespec/openapi3@1.18.0(@typespec/compiler@1.18.0(@types/node@26.6.6))(@typespec/http@1.18.0(@typespec/compiler@1.18.0(@types/node@26.6.6)))(@typespec/openapi@1.18.0(@typespec/compiler@1.18.0(@types/node@26.6.6))(@typespec/http@1.18.0(@typespec/compiler@1.18.0(@types/node@26.6.6)))))(redis@6.3.1)(svelte@5.59.1)
       oxc-parser: 0.159.0
       oxfmt: 0.79.0(svelte@5.59.1)
     transitivePeerDependencies:
@@ -5386,11 +5342,11 @@ snapshots:
     optionalDependencies:
       typescript: 7.0.2
 
-  wakusei@0.1.0(@apidevtools/swagger-parser@13.1.0(openapi-types@12.1.3))(@types/json-schema@7.0.15)(@typespec/compiler@1.18.0(@types/node@26.6.6))(@typespec/openapi3@1.18.0(@typespec/compiler@1.18.0(@types/node@26.6.6))(@typespec/http@1.18.0(@typespec/compiler@1.18.0(@types/node@26.6.6)))(@typespec/openapi@1.18.0(@typespec/compiler@1.18.0(@types/node@26.6.6))(@typespec/http@1.18.0(@typespec/compiler@1.18.0(@types/node@26.6.6)))))(redis@6.3.1)(svelte@5.59.1):
+  wakusei@0.1.1(@apidevtools/swagger-parser@13.1.0(openapi-types@12.1.3))(@types/json-schema@7.0.15)(@typespec/compiler@1.18.0(@types/node@26.6.6))(@typespec/openapi3@1.18.0(@typespec/compiler@1.18.0(@types/node@26.6.6))(@typespec/http@1.18.0(@typespec/compiler@1.18.0(@types/node@26.6.6)))(@typespec/openapi@1.18.0(@typespec/compiler@1.18.0(@types/node@26.6.6))(@typespec/http@1.18.0(@typespec/compiler@1.18.0(@types/node@26.6.6)))))(redis@6.3.1)(svelte@5.59.1):
     dependencies:
       '@effect/platform-node': 4.1.2(effect@4.1.2)(redis@6.3.1)
       effect: 4.1.2
-      oas-truth: 0.6.1(@apidevtools/swagger-parser@13.1.0(openapi-types@12.1.3))(@types/json-schema@7.0.15)(@typespec/compiler@1.18.0(@types/node@26.6.6))(@typespec/openapi3@1.18.0(@typespec/compiler@1.18.0(@types/node@26.6.6))(@typespec/http@1.18.0(@typespec/compiler@1.18.0(@types/node@26.6.6)))(@typespec/openapi@1.18.0(@typespec/compiler@1.18.0(@types/node@26.6.6))(@typespec/http@1.18.0(@typespec/compiler@1.18.0(@types/node@26.6.6)))))(redis@6.3.1)(svelte@5.59.1)
+      oas-truth: 0.8.1(@apidevtools/swagger-parser@13.1.0(openapi-types@12.1.3))(@types/json-schema@7.0.15)(@typespec/compiler@1.18.0(@types/node@26.6.6))(@typespec/openapi3@1.18.0(@typespec/compiler@1.18.0(@types/node@26.6.6))(@typespec/http@1.18.0(@typespec/compiler@1.18.0(@types/node@26.6.6)))(@typespec/openapi@1.18.0(@typespec/compiler@1.18.0(@types/node@26.6.6))(@typespec/http@1.18.0(@typespec/compiler@1.18.0(@types/node@26.6.6)))))(redis@6.3.1)(svelte@5.59.1)
       oxc-parser: 0.159.0
       oxfmt: 0.79.0(svelte@5.59.1)
     transitivePeerDependencies:

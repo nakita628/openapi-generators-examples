@@ -119,7 +119,7 @@ export const channelsRouter = t.router({
             FriendInviteResponseSchema,
             GroupDMInviteResponseSchema,
             GuildInviteResponseSchema,
-            v.nullable(v.null()),
+            v.null(),
           ]),
         ),
       ),
@@ -160,9 +160,7 @@ export const channelsRouter = t.router({
         channel_id: SnowflakeTypeSchema,
         content: v.optional(v.nullable(v.pipe(v.string(), v.maxCodePoints(4000)))),
         embeds: v.optional(v.nullable(v.pipe(v.array(RichEmbedSchema), v.maxLength(10)))),
-        allowed_mentions: v.optional(
-          v.union([v.nullable(v.null()), MessageAllowedMentionsRequestSchema]),
-        ),
+        allowed_mentions: v.optional(v.union([v.null(), MessageAllowedMentionsRequestSchema])),
         sticker_ids: v.optional(v.nullable(v.pipe(v.array(SnowflakeTypeSchema), v.maxLength(3)))),
         components: v.optional(
           v.nullable(
@@ -186,13 +184,9 @@ export const channelsRouter = t.router({
         attachments: v.optional(
           v.nullable(v.pipe(v.array(MessageAttachmentRequestSchema), v.maxLength(10))),
         ),
-        poll: v.optional(v.union([v.nullable(v.null()), PollCreateRequestSchema])),
-        shared_client_theme: v.optional(
-          v.union([v.nullable(v.null()), CustomClientThemeShareRequestSchema]),
-        ),
-        message_reference: v.optional(
-          v.union([v.nullable(v.null()), MessageReferenceRequestSchema]),
-        ),
+        poll: v.optional(v.union([v.null(), PollCreateRequestSchema])),
+        shared_client_theme: v.optional(v.union([v.null(), CustomClientThemeShareRequestSchema])),
+        message_reference: v.optional(v.union([v.null(), MessageReferenceRequestSchema])),
         nonce: v.optional(
           v.union([
             v.pipe(
@@ -204,11 +198,11 @@ export const channelsRouter = t.router({
               v.transform((input) => BigInt(input)),
               v.minValue(-9223372036854775808n),
               v.maxValue(9223372036854775807n),
-              v.minValue(-9223372036854776000n),
-              v.maxValue(9223372036854776000n),
+              v.minValue(-9223372036854775808n),
+              v.maxValue(9223372036854775808n),
             ),
             v.pipe(v.string(), v.maxCodePoints(25)),
-            v.nullable(v.null()),
+            v.null(),
           ]),
         ),
         enforce_nonce: v.optional(v.nullable(v.boolean())),
@@ -282,9 +276,7 @@ export const channelsRouter = t.router({
         content: v.optional(v.nullable(v.pipe(v.string(), v.maxCodePoints(4000)))),
         embeds: v.optional(v.nullable(v.pipe(v.array(RichEmbedSchema), v.maxLength(10)))),
         flags: v.optional(v.nullable(v.pipe(v.number(), v.integer()))),
-        allowed_mentions: v.optional(
-          v.union([v.nullable(v.null()), MessageAllowedMentionsRequestSchema]),
-        ),
+        allowed_mentions: v.optional(v.union([v.null(), MessageAllowedMentionsRequestSchema])),
         sticker_ids: v.optional(
           v.nullable(v.pipe(v.array(SnowflakeTypeSchema), v.maxLength(1521))),
         ),
@@ -392,9 +384,7 @@ export const channelsRouter = t.router({
         channel_id: SnowflakeTypeSchema,
         message_id: SnowflakeTypeSchema,
         name: v.pipe(v.string(), v.minCodePoints(1), v.maxCodePoints(100)),
-        auto_archive_duration: v.optional(
-          v.union([v.nullable(v.null()), ThreadAutoArchiveDurationSchema]),
-        ),
+        auto_archive_duration: v.optional(v.union([v.null(), ThreadAutoArchiveDurationSchema])),
         rate_limit_per_user: v.optional(
           v.nullable(
             v.pipe(
@@ -442,7 +432,7 @@ export const channelsRouter = t.router({
       v.object({
         channel_id: SnowflakeTypeSchema,
         overwrite_id: SnowflakeTypeSchema,
-        type: v.optional(v.union([v.nullable(v.null()), ChannelPermissionOverwritesSchema])),
+        type: v.optional(v.union([v.null(), ChannelPermissionOverwritesSchema])),
         allow: v.optional(v.nullable(v.pipe(v.number(), v.integer()))),
         deny: v.optional(v.nullable(v.pipe(v.number(), v.integer()))),
       }),
@@ -521,7 +511,7 @@ export const channelsRouter = t.router({
       v.object({
         channel_id: SnowflakeTypeSchema,
         sound_id: SnowflakeTypeSchema,
-        source_guild_id: v.optional(v.union([v.nullable(v.null()), SnowflakeTypeSchema])),
+        source_guild_id: v.optional(v.union([v.null(), SnowflakeTypeSchema])),
       }),
     )
     .mutation(() => {

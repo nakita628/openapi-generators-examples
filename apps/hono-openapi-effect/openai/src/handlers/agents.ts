@@ -152,6 +152,14 @@ export const agentsHandler = new Hono()
             },
           },
         },
+        '429': {
+          description: "The request exceeded this endpoint's rate limit.",
+          content: {
+            'application/json': {
+              schema: resolver(Schema.toStandardSchemaV1(ErrorResponse2Schema)),
+            },
+          },
+        },
         '500': {
           description: 'An internal error occurred.',
           content: {
@@ -272,6 +280,14 @@ export const agentsHandler = new Hono()
             },
           },
         },
+        '429': {
+          description: "The request exceeded this endpoint's rate limit.",
+          content: {
+            'application/json': {
+              schema: resolver(Schema.toStandardSchemaV1(ErrorResponse2Schema)),
+            },
+          },
+        },
         '500': {
           description: 'An internal error occurred.',
           content: {
@@ -343,6 +359,14 @@ export const agentsHandler = new Hono()
         },
         '409': {
           description: 'The request conflicted with the current session state.',
+          content: {
+            'application/json': {
+              schema: resolver(Schema.toStandardSchemaV1(ErrorResponse2Schema)),
+            },
+          },
+        },
+        '429': {
+          description: "The request exceeded this endpoint's rate limit.",
           content: {
             'application/json': {
               schema: resolver(Schema.toStandardSchemaV1(ErrorResponse2Schema)),
@@ -434,6 +458,14 @@ export const agentsHandler = new Hono()
         },
         '409': {
           description: 'The request conflicted with the current session state.',
+          content: {
+            'application/json': {
+              schema: resolver(Schema.toStandardSchemaV1(ErrorResponse2Schema)),
+            },
+          },
+        },
+        '429': {
+          description: "The request exceeded this endpoint's rate limit.",
           content: {
             'application/json': {
               schema: resolver(Schema.toStandardSchemaV1(ErrorResponse2Schema)),
@@ -533,6 +565,14 @@ export const agentsHandler = new Hono()
             },
           },
         },
+        '429': {
+          description: "The request exceeded this endpoint's rate limit.",
+          content: {
+            'application/json': {
+              schema: resolver(Schema.toStandardSchemaV1(ErrorResponse2Schema)),
+            },
+          },
+        },
         '500': {
           description: 'An internal error occurred.',
           content: {
@@ -618,6 +658,14 @@ export const agentsHandler = new Hono()
         },
         '409': {
           description: 'The request conflicted with the current session state.',
+          content: {
+            'application/json': {
+              schema: resolver(Schema.toStandardSchemaV1(ErrorResponse2Schema)),
+            },
+          },
+        },
+        '429': {
+          description: "The request exceeded this endpoint's rate limit.",
           content: {
             'application/json': {
               schema: resolver(Schema.toStandardSchemaV1(ErrorResponse2Schema)),
@@ -710,6 +758,14 @@ export const agentsHandler = new Hono()
         },
         '409': {
           description: 'The request conflicted with the current session state.',
+          content: {
+            'application/json': {
+              schema: resolver(Schema.toStandardSchemaV1(ErrorResponse2Schema)),
+            },
+          },
+        },
+        '429': {
+          description: "The request exceeded this endpoint's rate limit.",
           content: {
             'application/json': {
               schema: resolver(Schema.toStandardSchemaV1(ErrorResponse2Schema)),
@@ -859,6 +915,14 @@ export const agentsHandler = new Hono()
             },
           },
         },
+        '429': {
+          description: "The request exceeded this endpoint's rate limit.",
+          content: {
+            'application/json': {
+              schema: resolver(Schema.toStandardSchemaV1(ErrorResponse2Schema)),
+            },
+          },
+        },
         '500': {
           description: 'An internal error occurred.',
           content: {
@@ -984,6 +1048,14 @@ export const agentsHandler = new Hono()
             },
           },
         },
+        '429': {
+          description: "The request exceeded this endpoint's rate limit.",
+          content: {
+            'application/json': {
+              schema: resolver(Schema.toStandardSchemaV1(ErrorResponse2Schema)),
+            },
+          },
+        },
         '500': {
           description: 'An internal error occurred.',
           content: {
@@ -1069,6 +1141,14 @@ export const agentsHandler = new Hono()
         },
         '409': {
           description: 'The request conflicted with the current session state.',
+          content: {
+            'application/json': {
+              schema: resolver(Schema.toStandardSchemaV1(ErrorResponse2Schema)),
+            },
+          },
+        },
+        '429': {
+          description: "The request exceeded this endpoint's rate limit.",
           content: {
             'application/json': {
               schema: resolver(Schema.toStandardSchemaV1(ErrorResponse2Schema)),
@@ -1169,6 +1249,14 @@ export const agentsHandler = new Hono()
         },
         '409': {
           description: 'The request conflicted with the current environment state.',
+          content: {
+            'application/json': {
+              schema: resolver(Schema.toStandardSchemaV1(ErrorResponse2Schema)),
+            },
+          },
+        },
+        '429': {
+          description: 'The request exceeded a rate or capacity limit.',
           content: {
             'application/json': {
               schema: resolver(Schema.toStandardSchemaV1(ErrorResponse2Schema)),
@@ -1382,6 +1470,14 @@ export const agentsHandler = new Hono()
             },
           },
         },
+        '429': {
+          description: "The request exceeded this endpoint's rate limit.",
+          content: {
+            'application/json': {
+              schema: resolver(Schema.toStandardSchemaV1(ErrorResponse2Schema)),
+            },
+          },
+        },
         '500': {
           description: 'An internal error occurred.',
           content: {
@@ -1468,6 +1564,14 @@ export const agentsHandler = new Hono()
         },
         '409': {
           description: 'The request conflicted with the current session state.',
+          content: {
+            'application/json': {
+              schema: resolver(Schema.toStandardSchemaV1(ErrorResponse2Schema)),
+            },
+          },
+        },
+        '429': {
+          description: "The request exceeded this endpoint's rate limit.",
           content: {
             'application/json': {
               schema: resolver(Schema.toStandardSchemaV1(ErrorResponse2Schema)),
@@ -1620,7 +1724,8 @@ export const agentsHandler = new Hono()
           },
         },
         '429': {
-          description: 'The Files API rate limit for your user has been exceeded.',
+          description:
+            'The Files API rate limit for your user has been exceeded. This status also applies to the endpoint rate limit.',
           content: {
             'application/json': {
               schema: resolver(Schema.toStandardSchemaV1(ErrorResponse2Schema)),
@@ -1772,6 +1877,14 @@ export const agentsHandler = new Hono()
             },
           },
         },
+        '429': {
+          description: "The request exceeded this endpoint's rate limit.",
+          content: {
+            'application/json': {
+              schema: resolver(Schema.toStandardSchemaV1(ErrorResponse2Schema)),
+            },
+          },
+        },
         '500': {
           description: 'An internal error occurred.',
           content: {
@@ -1890,6 +2003,14 @@ export const agentsHandler = new Hono()
             },
           },
         },
+        '429': {
+          description: "The request exceeded this endpoint's rate limit.",
+          content: {
+            'application/json': {
+              schema: resolver(Schema.toStandardSchemaV1(ErrorResponse2Schema)),
+            },
+          },
+        },
         '500': {
           description: 'An internal error occurred.',
           content: {
@@ -1984,6 +2105,14 @@ export const agentsHandler = new Hono()
         },
         '409': {
           description: 'The request conflicted with the current session state.',
+          content: {
+            'application/json': {
+              schema: resolver(Schema.toStandardSchemaV1(ErrorResponse2Schema)),
+            },
+          },
+        },
+        '429': {
+          description: "The request exceeded this endpoint's rate limit.",
           content: {
             'application/json': {
               schema: resolver(Schema.toStandardSchemaV1(ErrorResponse2Schema)),
@@ -2116,6 +2245,14 @@ export const agentsHandler = new Hono()
             },
           },
         },
+        '429': {
+          description: "The request exceeded this endpoint's rate limit.",
+          content: {
+            'application/json': {
+              schema: resolver(Schema.toStandardSchemaV1(ErrorResponse2Schema)),
+            },
+          },
+        },
         '500': {
           description: 'An internal error occurred.',
           content: {
@@ -2240,6 +2377,14 @@ export const agentsHandler = new Hono()
             },
           },
         },
+        '429': {
+          description: "The request exceeded this endpoint's rate limit.",
+          content: {
+            'application/json': {
+              schema: resolver(Schema.toStandardSchemaV1(ErrorResponse2Schema)),
+            },
+          },
+        },
         '500': {
           description: 'An internal error occurred.',
           content: {
@@ -2342,6 +2487,14 @@ export const agentsHandler = new Hono()
         },
         '409': {
           description: 'The request conflicted with the current session state.',
+          content: {
+            'application/json': {
+              schema: resolver(Schema.toStandardSchemaV1(ErrorResponse2Schema)),
+            },
+          },
+        },
+        '429': {
+          description: "The request exceeded this endpoint's rate limit.",
           content: {
             'application/json': {
               schema: resolver(Schema.toStandardSchemaV1(ErrorResponse2Schema)),
@@ -2482,6 +2635,14 @@ export const agentsHandler = new Hono()
             },
           },
         },
+        '429': {
+          description: "The request exceeded this endpoint's rate limit.",
+          content: {
+            'application/json': {
+              schema: resolver(Schema.toStandardSchemaV1(ErrorResponse2Schema)),
+            },
+          },
+        },
         '500': {
           description: 'An internal error occurred.',
           content: {
@@ -2585,6 +2746,14 @@ export const agentsHandler = new Hono()
             },
           },
         },
+        '429': {
+          description: "The request exceeded this endpoint's rate limit.",
+          content: {
+            'application/json': {
+              schema: resolver(Schema.toStandardSchemaV1(ErrorResponse2Schema)),
+            },
+          },
+        },
         '500': {
           description: 'An internal error occurred.',
           content: {
@@ -2657,6 +2826,14 @@ export const agentsHandler = new Hono()
         },
         '409': {
           description: 'The request conflicted with the current session state.',
+          content: {
+            'application/json': {
+              schema: resolver(Schema.toStandardSchemaV1(ErrorResponse2Schema)),
+            },
+          },
+        },
+        '429': {
+          description: "The request exceeded this endpoint's rate limit.",
           content: {
             'application/json': {
               schema: resolver(Schema.toStandardSchemaV1(ErrorResponse2Schema)),
@@ -2749,6 +2926,14 @@ export const agentsHandler = new Hono()
         },
         '409': {
           description: 'The request conflicted with the current session state.',
+          content: {
+            'application/json': {
+              schema: resolver(Schema.toStandardSchemaV1(ErrorResponse2Schema)),
+            },
+          },
+        },
+        '429': {
+          description: "The request exceeded this endpoint's rate limit.",
           content: {
             'application/json': {
               schema: resolver(Schema.toStandardSchemaV1(ErrorResponse2Schema)),
@@ -2848,6 +3033,14 @@ export const agentsHandler = new Hono()
             },
           },
         },
+        '429': {
+          description: "The request exceeded this endpoint's rate limit.",
+          content: {
+            'application/json': {
+              schema: resolver(Schema.toStandardSchemaV1(ErrorResponse2Schema)),
+            },
+          },
+        },
         '500': {
           description: 'An internal error occurred.',
           content: {
@@ -2926,6 +3119,14 @@ export const agentsHandler = new Hono()
         },
         '404': {
           description: 'The requested environment definition was not found.',
+          content: {
+            'application/json': {
+              schema: resolver(Schema.toStandardSchemaV1(ErrorResponse2Schema)),
+            },
+          },
+        },
+        '429': {
+          description: "The request exceeded this endpoint's rate limit.",
           content: {
             'application/json': {
               schema: resolver(Schema.toStandardSchemaV1(ErrorResponse2Schema)),
@@ -3027,6 +3228,14 @@ export const agentsHandler = new Hono()
             },
           },
         },
+        '429': {
+          description: "The request exceeded this endpoint's rate limit.",
+          content: {
+            'application/json': {
+              schema: resolver(Schema.toStandardSchemaV1(ErrorResponse2Schema)),
+            },
+          },
+        },
         '500': {
           description: 'An internal error occurred.',
           content: {
@@ -3091,6 +3300,14 @@ export const agentsHandler = new Hono()
         },
         '404': {
           description: 'The requested environment definition was not found.',
+          content: {
+            'application/json': {
+              schema: resolver(Schema.toStandardSchemaV1(ErrorResponse2Schema)),
+            },
+          },
+        },
+        '429': {
+          description: "The request exceeded this endpoint's rate limit.",
           content: {
             'application/json': {
               schema: resolver(Schema.toStandardSchemaV1(ErrorResponse2Schema)),
@@ -3183,6 +3400,14 @@ export const agentsHandler = new Hono()
         },
         '409': {
           description: 'The request conflicted with the current environment state.',
+          content: {
+            'application/json': {
+              schema: resolver(Schema.toStandardSchemaV1(ErrorResponse2Schema)),
+            },
+          },
+        },
+        '429': {
+          description: "The request exceeded this endpoint's rate limit.",
           content: {
             'application/json': {
               schema: resolver(Schema.toStandardSchemaV1(ErrorResponse2Schema)),
@@ -3282,6 +3507,14 @@ export const agentsHandler = new Hono()
             },
           },
         },
+        '429': {
+          description: "The request exceeded this endpoint's rate limit.",
+          content: {
+            'application/json': {
+              schema: resolver(Schema.toStandardSchemaV1(ErrorResponse2Schema)),
+            },
+          },
+        },
         '500': {
           description: 'An internal error occurred.',
           content: {
@@ -3368,6 +3601,14 @@ export const agentsHandler = new Hono()
         },
         '409': {
           description: 'The request conflicted with the current session state.',
+          content: {
+            'application/json': {
+              schema: resolver(Schema.toStandardSchemaV1(ErrorResponse2Schema)),
+            },
+          },
+        },
+        '429': {
+          description: "The request exceeded this endpoint's rate limit.",
           content: {
             'application/json': {
               schema: resolver(Schema.toStandardSchemaV1(ErrorResponse2Schema)),
@@ -3504,7 +3745,8 @@ export const agentsHandler = new Hono()
           },
         },
         '429': {
-          description: 'The Files API rate limit for your user has been exceeded.',
+          description:
+            'The Files API rate limit for your user has been exceeded. This status also applies to the endpoint rate limit.',
           content: {
             'application/json': {
               schema: resolver(Schema.toStandardSchemaV1(ErrorResponse2Schema)),
@@ -3583,6 +3825,14 @@ export const agentsHandler = new Hono()
         },
         '409': {
           description: 'The request conflicted with the current session state.',
+          content: {
+            'application/json': {
+              schema: resolver(Schema.toStandardSchemaV1(ErrorResponse2Schema)),
+            },
+          },
+        },
+        '429': {
+          description: "The request exceeded this endpoint's rate limit.",
           content: {
             'application/json': {
               schema: resolver(Schema.toStandardSchemaV1(ErrorResponse2Schema)),
@@ -3675,6 +3925,14 @@ export const agentsHandler = new Hono()
         },
         '409': {
           description: 'The request conflicted with the current session state.',
+          content: {
+            'application/json': {
+              schema: resolver(Schema.toStandardSchemaV1(ErrorResponse2Schema)),
+            },
+          },
+        },
+        '429': {
+          description: "The request exceeded this endpoint's rate limit.",
           content: {
             'application/json': {
               schema: resolver(Schema.toStandardSchemaV1(ErrorResponse2Schema)),
@@ -3774,6 +4032,14 @@ export const agentsHandler = new Hono()
             },
           },
         },
+        '429': {
+          description: "The request exceeded this endpoint's rate limit.",
+          content: {
+            'application/json': {
+              schema: resolver(Schema.toStandardSchemaV1(ErrorResponse2Schema)),
+            },
+          },
+        },
         '500': {
           description: 'An internal error occurred.',
           content: {
@@ -3860,6 +4126,14 @@ export const agentsHandler = new Hono()
         },
         '409': {
           description: 'The request conflicted with the current session state.',
+          content: {
+            'application/json': {
+              schema: resolver(Schema.toStandardSchemaV1(ErrorResponse2Schema)),
+            },
+          },
+        },
+        '429': {
+          description: "The request exceeded this endpoint's rate limit.",
           content: {
             'application/json': {
               schema: resolver(Schema.toStandardSchemaV1(ErrorResponse2Schema)),
@@ -3996,6 +4270,14 @@ export const agentsHandler = new Hono()
             },
           },
         },
+        '429': {
+          description: "The request exceeded this endpoint's rate limit.",
+          content: {
+            'application/json': {
+              schema: resolver(Schema.toStandardSchemaV1(ErrorResponse2Schema)),
+            },
+          },
+        },
         '500': {
           description: 'An internal error occurred.',
           content: {
@@ -4090,6 +4372,14 @@ export const agentsHandler = new Hono()
         },
         '409': {
           description: 'The request conflicted with the current session state.',
+          content: {
+            'application/json': {
+              schema: resolver(Schema.toStandardSchemaV1(ErrorResponse2Schema)),
+            },
+          },
+        },
+        '429': {
+          description: "The request exceeded this endpoint's rate limit.",
           content: {
             'application/json': {
               schema: resolver(Schema.toStandardSchemaV1(ErrorResponse2Schema)),
@@ -4196,6 +4486,14 @@ export const agentsHandler = new Hono()
             },
           },
         },
+        '429': {
+          description: "The request exceeded this endpoint's rate limit.",
+          content: {
+            'application/json': {
+              schema: resolver(Schema.toStandardSchemaV1(ErrorResponse2Schema)),
+            },
+          },
+        },
         '500': {
           description: 'An internal error occurred.',
           content: {
@@ -4290,6 +4588,14 @@ export const agentsHandler = new Hono()
         },
         '409': {
           description: 'The request conflicted with the current session state.',
+          content: {
+            'application/json': {
+              schema: resolver(Schema.toStandardSchemaV1(ErrorResponse2Schema)),
+            },
+          },
+        },
+        '429': {
+          description: "The request exceeded this endpoint's rate limit.",
           content: {
             'application/json': {
               schema: resolver(Schema.toStandardSchemaV1(ErrorResponse2Schema)),
@@ -4401,6 +4707,14 @@ export const agentsHandler = new Hono()
             },
           },
         },
+        '429': {
+          description: "The request exceeded this endpoint's rate limit.",
+          content: {
+            'application/json': {
+              schema: resolver(Schema.toStandardSchemaV1(ErrorResponse2Schema)),
+            },
+          },
+        },
         '500': {
           description: 'An internal error occurred.',
           content: {
@@ -4505,6 +4819,14 @@ export const agentsHandler = new Hono()
         },
         '409': {
           description: 'The request conflicted with the current session state.',
+          content: {
+            'application/json': {
+              schema: resolver(Schema.toStandardSchemaV1(ErrorResponse2Schema)),
+            },
+          },
+        },
+        '429': {
+          description: "The request exceeded this endpoint's rate limit.",
           content: {
             'application/json': {
               schema: resolver(Schema.toStandardSchemaV1(ErrorResponse2Schema)),
@@ -4629,6 +4951,14 @@ export const agentsHandler = new Hono()
             },
           },
         },
+        '429': {
+          description: "The request exceeded this endpoint's rate limit.",
+          content: {
+            'application/json': {
+              schema: resolver(Schema.toStandardSchemaV1(ErrorResponse2Schema)),
+            },
+          },
+        },
         '500': {
           description: 'An internal error occurred.',
           content: {
@@ -4741,6 +5071,14 @@ export const agentsHandler = new Hono()
         },
         '409': {
           description: 'The request conflicted with the current session state.',
+          content: {
+            'application/json': {
+              schema: resolver(Schema.toStandardSchemaV1(ErrorResponse2Schema)),
+            },
+          },
+        },
+        '429': {
+          description: "The request exceeded this endpoint's rate limit.",
           content: {
             'application/json': {
               schema: resolver(Schema.toStandardSchemaV1(ErrorResponse2Schema)),
@@ -4863,6 +5201,14 @@ export const agentsHandler = new Hono()
             },
           },
         },
+        '429': {
+          description: "The request exceeded this endpoint's rate limit.",
+          content: {
+            'application/json': {
+              schema: resolver(Schema.toStandardSchemaV1(ErrorResponse2Schema)),
+            },
+          },
+        },
         '500': {
           description: 'An internal error occurred.',
           content: {
@@ -4957,6 +5303,14 @@ export const agentsHandler = new Hono()
         },
         '409': {
           description: 'The request conflicted with the current session state.',
+          content: {
+            'application/json': {
+              schema: resolver(Schema.toStandardSchemaV1(ErrorResponse2Schema)),
+            },
+          },
+        },
+        '429': {
+          description: "The request exceeded this endpoint's rate limit.",
           content: {
             'application/json': {
               schema: resolver(Schema.toStandardSchemaV1(ErrorResponse2Schema)),

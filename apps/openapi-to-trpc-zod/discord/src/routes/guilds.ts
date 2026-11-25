@@ -124,17 +124,17 @@ export const guildsRouter = t.router({
         description: z.string().min(0).max(300).nullable().exactOptional(),
         region: z.string().nullable().exactOptional(),
         icon: z.string().nullable().exactOptional(),
-        verification_level: z.xor([z.null().nullable(), VerificationLevelsSchema]).exactOptional(),
+        verification_level: z.xor([z.null(), VerificationLevelsSchema]).exactOptional(),
         default_message_notifications: z
-          .xor([z.null().nullable(), UserNotificationSettingsSchema])
+          .xor([z.null(), UserNotificationSettingsSchema])
           .exactOptional(),
         explicit_content_filter: z
-          .xor([z.null().nullable(), GuildExplicitContentFilterTypesSchema])
+          .xor([z.null(), GuildExplicitContentFilterTypesSchema])
           .exactOptional(),
-        preferred_locale: z.xor([z.null().nullable(), AvailableLocalesEnumSchema]).exactOptional(),
-        afk_timeout: z.xor([z.null().nullable(), AfkTimeoutsSchema]).exactOptional(),
-        afk_channel_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]).exactOptional(),
-        system_channel_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]).exactOptional(),
+        preferred_locale: z.xor([z.null(), AvailableLocalesEnumSchema]).exactOptional(),
+        afk_timeout: z.xor([z.null(), AfkTimeoutsSchema]).exactOptional(),
+        afk_channel_id: z.xor([z.null(), SnowflakeTypeSchema]).exactOptional(),
+        system_channel_id: z.xor([z.null(), SnowflakeTypeSchema]).exactOptional(),
         splash: z.string().nullable().exactOptional(),
         banner: z.string().nullable().exactOptional(),
         system_channel_flags: z.int().nullable().exactOptional(),
@@ -146,11 +146,9 @@ export const guildsRouter = t.router({
           .exactOptional(),
         discovery_splash: z.string().nullable().exactOptional(),
         home_header: z.string().nullable().exactOptional(),
-        rules_channel_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]).exactOptional(),
-        safety_alerts_channel_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]).exactOptional(),
-        public_updates_channel_id: z
-          .xor([z.null().nullable(), SnowflakeTypeSchema])
-          .exactOptional(),
+        rules_channel_id: z.xor([z.null(), SnowflakeTypeSchema]).exactOptional(),
+        safety_alerts_channel_id: z.xor([z.null(), SnowflakeTypeSchema]).exactOptional(),
+        public_updates_channel_id: z.xor([z.null(), SnowflakeTypeSchema]).exactOptional(),
         premium_progress_bar_enabled: z.boolean().nullable().exactOptional(),
       }),
     )
@@ -185,7 +183,7 @@ export const guildsRouter = t.router({
             MLSpamRuleResponseSchema,
             MentionSpamRuleResponseSchema,
             UserProfileRuleResponseSchema,
-            z.null().nullable(),
+            z.null(),
           ]),
         )
         .nullable(),
@@ -335,7 +333,7 @@ export const guildsRouter = t.router({
     .input(
       z.object({
         guild_id: SnowflakeTypeSchema,
-        type: z.xor([z.null().nullable(), ChannelTypesSchema]).exactOptional(),
+        type: z.xor([z.null(), ChannelTypesSchema]).exactOptional(),
         name: z.string().min(1).max(100),
         position: z.int32().min(0).nullable().exactOptional(),
         topic: z.string().min(0).max(4096).nullable().exactOptional(),
@@ -343,28 +341,26 @@ export const guildsRouter = t.router({
         user_limit: z.int32().min(0).nullable().exactOptional(),
         nsfw: z.boolean().nullable().exactOptional(),
         rate_limit_per_user: z.int().min(0).max(21600).nullable().exactOptional(),
-        parent_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]).exactOptional(),
+        parent_id: z.xor([z.null(), SnowflakeTypeSchema]).exactOptional(),
         permission_overwrites: z
           .array(ChannelPermissionOverwriteRequestSchema)
           .max(100)
           .nullable()
           .exactOptional(),
         rtc_region: z.string().nullable().exactOptional(),
-        video_quality_mode: z.xor([z.null().nullable(), VideoQualityModesSchema]).exactOptional(),
+        video_quality_mode: z.xor([z.null(), VideoQualityModesSchema]).exactOptional(),
         default_auto_archive_duration: z
-          .xor([z.null().nullable(), ThreadAutoArchiveDurationSchema])
+          .xor([z.null(), ThreadAutoArchiveDurationSchema])
           .exactOptional(),
         default_reaction_emoji: z
-          .xor([z.null().nullable(), UpdateDefaultReactionEmojiRequestSchema])
+          .xor([z.null(), UpdateDefaultReactionEmojiRequestSchema])
           .exactOptional(),
         default_thread_rate_limit_per_user: z.int().min(0).max(21600).nullable().exactOptional(),
-        default_sort_order: z.xor([z.null().nullable(), ThreadSortOrderSchema]).exactOptional(),
-        default_forum_layout: z.xor([z.null().nullable(), ForumLayoutSchema]).exactOptional(),
-        default_tag_setting: z
-          .xor([z.null().nullable(), ThreadSearchTagSettingSchema])
-          .exactOptional(),
+        default_sort_order: z.xor([z.null(), ThreadSortOrderSchema]).exactOptional(),
+        default_forum_layout: z.xor([z.null(), ForumLayoutSchema]).exactOptional(),
+        default_tag_setting: z.xor([z.null(), ThreadSearchTagSettingSchema]).exactOptional(),
         available_tags: z
-          .array(z.xor([z.null().nullable(), CreateOrUpdateThreadTagRequestSchema]))
+          .array(z.xor([z.null(), CreateOrUpdateThreadTagRequestSchema]))
           .max(20)
           .nullable()
           .exactOptional(),
@@ -380,9 +376,9 @@ export const guildsRouter = t.router({
         guild_id: SnowflakeTypeSchema,
         body: z.array(
           z.object({
-            id: z.xor([z.null().nullable(), SnowflakeTypeSchema]).exactOptional(),
+            id: z.xor([z.null(), SnowflakeTypeSchema]).exactOptional(),
             position: z.int32().min(0).nullable().exactOptional(),
-            parent_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]).exactOptional(),
+            parent_id: z.xor([z.null(), SnowflakeTypeSchema]).exactOptional(),
             lock_permissions: z.boolean().nullable().exactOptional(),
           }),
         ),
@@ -404,7 +400,7 @@ export const guildsRouter = t.router({
         name: z.string().min(2).max(32),
         image: z.string(),
         roles: z
-          .array(z.xor([z.null().nullable(), SnowflakeTypeSchema]))
+          .array(z.xor([z.null(), SnowflakeTypeSchema]))
           .max(1521)
           .refine((val) => new Set(val).size === val.length)
           .nullable()
@@ -433,7 +429,7 @@ export const guildsRouter = t.router({
         emoji_id: SnowflakeTypeSchema,
         name: z.string().min(2).max(32).exactOptional(),
         roles: z
-          .array(z.xor([z.null().nullable(), SnowflakeTypeSchema]))
+          .array(z.xor([z.null(), SnowflakeTypeSchema]))
           .max(1521)
           .refine((val) => new Set(val).size === val.length)
           .nullable()
@@ -494,7 +490,7 @@ export const guildsRouter = t.router({
             FriendInviteResponseSchema,
             GroupDMInviteResponseSchema,
             GuildInviteResponseSchema,
-            z.null().nullable(),
+            z.null(),
           ]),
         )
         .nullable(),
@@ -580,14 +576,14 @@ export const guildsRouter = t.router({
         user_id: SnowflakeTypeSchema,
         nick: z.string().max(32).nullable().exactOptional(),
         roles: z
-          .array(z.xor([z.null().nullable(), SnowflakeTypeSchema]))
+          .array(z.xor([z.null(), SnowflakeTypeSchema]))
           .max(350)
           .refine((val) => new Set(val).size === val.length)
           .nullable()
           .exactOptional(),
         mute: z.boolean().nullable().exactOptional(),
         deaf: z.boolean().nullable().exactOptional(),
-        channel_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]).exactOptional(),
+        channel_id: z.xor([z.null(), SnowflakeTypeSchema]).exactOptional(),
         communication_disabled_until: z.iso.datetime({ offset: true }).nullable().exactOptional(),
         flags: z.int().nullable().exactOptional(),
       }),
@@ -728,7 +724,7 @@ export const guildsRouter = t.router({
           .refine((val) => new Set(val).size === val.length)
           .nullable()
           .exactOptional(),
-        mode: z.xor([z.null().nullable(), GuildOnboardingModeSchema]).exactOptional(),
+        mode: z.xor([z.null(), GuildOnboardingModeSchema]).exactOptional(),
       }),
     )
     .output(GuildOnboardingResponseSchema)
@@ -762,7 +758,7 @@ export const guildsRouter = t.router({
           .xor([
             z.string(),
             z
-              .array(z.xor([z.null().nullable(), SnowflakeTypeSchema]))
+              .array(z.xor([z.null(), SnowflakeTypeSchema]))
               .max(100)
               .refine((val) => new Set(val).size === val.length),
           ])
@@ -786,7 +782,7 @@ export const guildsRouter = t.router({
               .array(SnowflakeTypeSchema)
               .max(100)
               .refine((val) => new Set(val).size === val.length),
-            z.null().nullable(),
+            z.null(),
           ])
           .exactOptional(),
       }),
@@ -848,7 +844,7 @@ export const guildsRouter = t.router({
         name: z.string().min(1).max(100).nullable().exactOptional(),
         permissions: z.int().nullable().exactOptional(),
         color: z.int().min(0).max(16777215).nullable().exactOptional(),
-        colors: z.xor([z.null().nullable(), RoleColorsSchema]).exactOptional(),
+        colors: z.xor([z.null(), RoleColorsSchema]).exactOptional(),
         hoist: z.boolean().nullable().exactOptional(),
         mentionable: z.boolean().nullable().exactOptional(),
         icon: z.string().nullable().exactOptional(),
@@ -892,7 +888,7 @@ export const guildsRouter = t.router({
         name: z.string().min(1).max(100).nullable().exactOptional(),
         permissions: z.int().nullable().exactOptional(),
         color: z.int().min(0).max(16777215).nullable().exactOptional(),
-        colors: z.xor([z.null().nullable(), RoleColorsSchema]).exactOptional(),
+        colors: z.xor([z.null(), RoleColorsSchema]).exactOptional(),
         hoist: z.boolean().nullable().exactOptional(),
         mentionable: z.boolean().nullable().exactOptional(),
         icon: z.string().nullable().exactOptional(),
@@ -1114,7 +1110,7 @@ export const guildsRouter = t.router({
         guild_id: SnowflakeTypeSchema,
         name: z.string().min(2).max(32),
         volume: z.number().min(0).max(1).nullable().exactOptional(),
-        emoji_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]).exactOptional(),
+        emoji_id: z.xor([z.null(), SnowflakeTypeSchema]).exactOptional(),
         emoji_name: z.string().min(1).max(32).nullable().exactOptional(),
         sound: z.string(),
       }),
@@ -1141,7 +1137,7 @@ export const guildsRouter = t.router({
         sound_id: SnowflakeTypeSchema,
         name: z.string().min(2).max(32).exactOptional(),
         volume: z.number().min(0).max(1).nullable().exactOptional(),
-        emoji_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]).exactOptional(),
+        emoji_id: z.xor([z.null(), SnowflakeTypeSchema]).exactOptional(),
         emoji_name: z.string().min(1).max(32).nullable().exactOptional(),
       }),
     )
@@ -1253,7 +1249,7 @@ export const guildsRouter = t.router({
         guild_id: SnowflakeTypeSchema,
         request_to_speak_timestamp: z.iso.datetime({ offset: true }).nullable().exactOptional(),
         suppress: z.boolean().nullable().exactOptional(),
-        channel_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]).exactOptional(),
+        channel_id: z.xor([z.null(), SnowflakeTypeSchema]).exactOptional(),
       }),
     )
     .mutation(() => {
@@ -1271,7 +1267,7 @@ export const guildsRouter = t.router({
         guild_id: SnowflakeTypeSchema,
         user_id: SnowflakeTypeSchema,
         suppress: z.boolean().nullable().exactOptional(),
-        channel_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]).exactOptional(),
+        channel_id: z.xor([z.null(), SnowflakeTypeSchema]).exactOptional(),
       }),
     )
     .mutation(() => {
@@ -1322,7 +1318,7 @@ export const guildsRouter = t.router({
     .input(
       z.object({
         guild_id: SnowflakeTypeSchema,
-        channel_id: z.xor([z.null().nullable(), SnowflakeTypeSchema]).exactOptional(),
+        channel_id: z.xor([z.null(), SnowflakeTypeSchema]).exactOptional(),
         enabled: z.boolean().nullable().exactOptional(),
       }),
     )

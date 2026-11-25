@@ -2974,142 +2974,6 @@ export type ApplicationExplicitContentFilterTypes = Schema.Schema.Type<
   typeof ApplicationExplicitContentFilterTypesSchema
 >
 
-export const ApplicationOAuth2InstallParamsSchema = Schema.Struct({
-  scopes: Schema.optionalKey(
-    Schema.NullOr(Schema.Array(OAuth2ScopesSchema).check(Schema.isMinLength(1), Schema.isUnique())),
-  ),
-  permissions: Schema.optionalKey(
-    Schema.NullOr(
-      Schema.Number.check(
-        Schema.isInt(),
-        Schema.isGreaterThanOrEqualTo(0),
-        Schema.isLessThanOrEqualTo(18014398509481984),
-      ),
-    ),
-  ),
-}).annotate({ identifier: 'ApplicationOAuth2InstallParams' })
-
-export type ApplicationOAuth2InstallParams = Schema.Schema.Type<
-  typeof ApplicationOAuth2InstallParamsSchema
->
-
-export const ApplicationIntegrationTypeConfigurationSchema = Schema.Struct({
-  oauth2_install_params: Schema.optionalKey(
-    Schema.Union([Schema.Null, ApplicationOAuth2InstallParamsSchema]),
-  ),
-}).annotate({ identifier: 'ApplicationIntegrationTypeConfiguration' })
-
-export type ApplicationIntegrationTypeConfiguration = Schema.Schema.Type<
-  typeof ApplicationIntegrationTypeConfigurationSchema
->
-
-export const ApplicationFormPartialSchema = Schema.Struct({
-  description: Schema.optionalKey(
-    Schema.NullOr(
-      Schema.Struct({
-        default: Schema.String.check(
-          Schema.makeFilter((input) => [...input].length <= 400, {
-            expected: 'a string of at most 400 characters',
-          }),
-        ),
-        localizations: Schema.optionalKey(
-          Schema.NullOr(
-            Schema.Record(
-              Schema.String,
-              Schema.String.check(
-                Schema.makeFilter((input) => [...input].length <= 400, {
-                  expected: 'a string of at most 400 characters',
-                }),
-              ),
-            ),
-          ),
-        ),
-      }),
-    ),
-  ),
-  icon: Schema.optionalKey(Schema.NullOr(Schema.String)),
-  cover_image: Schema.optionalKey(Schema.NullOr(Schema.String)),
-  team_id: Schema.optionalKey(Schema.Union([Schema.Null, SnowflakeTypeSchema])),
-  flags: Schema.optionalKey(Schema.NullOr(Schema.Number.check(Schema.isInt()))),
-  interactions_endpoint_url: Schema.optionalKey(
-    Schema.NullOr(
-      Schema.String.check(
-        Schema.makeFilter((input) => URL.canParse(input)),
-        Schema.makeFilter((input) => [...input].length <= 2048, {
-          expected: 'a string of at most 2048 characters',
-        }),
-      ),
-    ),
-  ),
-  explicit_content_filter: Schema.optionalKey(
-    Schema.Union([Schema.Null, ApplicationExplicitContentFilterTypesSchema]),
-  ),
-  max_participants: Schema.optionalKey(
-    Schema.NullOr(Schema.Number.check(Schema.isInt32(), Schema.isGreaterThanOrEqualTo(-1))),
-  ),
-  type: Schema.optionalKey(Schema.Union([Schema.Null, ApplicationTypesSchema])),
-  tags: Schema.optionalKey(
-    Schema.NullOr(
-      Schema.Array(
-        Schema.String.check(
-          Schema.makeFilter((input) => [...input].length <= 20, {
-            expected: 'a string of at most 20 characters',
-          }),
-        ),
-      ).check(Schema.isMaxLength(5), Schema.isUnique()),
-    ),
-  ),
-  custom_install_url: Schema.optionalKey(
-    Schema.NullOr(
-      Schema.String.check(
-        Schema.makeFilter((input) => URL.canParse(input)),
-        Schema.makeFilter((input) => [...input].length <= 2048, {
-          expected: 'a string of at most 2048 characters',
-        }),
-      ),
-    ),
-  ),
-  install_params: Schema.optionalKey(
-    Schema.Union([Schema.Null, ApplicationOAuth2InstallParamsSchema]),
-  ),
-  role_connections_verification_url: Schema.optionalKey(
-    Schema.NullOr(
-      Schema.String.check(
-        Schema.makeFilter((input) => URL.canParse(input)),
-        Schema.makeFilter((input) => [...input].length <= 2048, {
-          expected: 'a string of at most 2048 characters',
-        }),
-      ),
-    ),
-  ),
-  integration_types_config: Schema.optionalKey(
-    Schema.NullOr(
-      Schema.Record(
-        Schema.String,
-        Schema.Union([Schema.Null, ApplicationIntegrationTypeConfigurationSchema]),
-      ),
-    ),
-  ),
-  event_webhooks_status: Schema.optionalKey(
-    Schema.Union([Schema.Null, ApplicationEventWebhooksStatusSchema]),
-  ),
-  event_webhooks_url: Schema.optionalKey(
-    Schema.NullOr(
-      Schema.String.check(
-        Schema.makeFilter((input) => URL.canParse(input)),
-        Schema.makeFilter((input) => [...input].length <= 2048, {
-          expected: 'a string of at most 2048 characters',
-        }),
-      ),
-    ).annotate({ description: 'Event webhooks URL for the app to receive webhook events' }),
-  ),
-  event_webhooks_types: Schema.optionalKey(
-    Schema.NullOr(Schema.Array(ActionTypesSchema).check(Schema.isUnique())),
-  ),
-}).annotate({ identifier: 'ApplicationFormPartial' })
-
-export type ApplicationFormPartial = Schema.Schema.Type<typeof ApplicationFormPartialSchema>
-
 export const ApplicationIdentityProviderAuthTypeSchema = Schema.Union([
   Schema.Literal('OIDC'),
   Schema.Literal('EPIC_ONLINE_SERVICES_ACCESS_TOKEN'),
@@ -3153,6 +3017,35 @@ export const ApplicationIncomingWebhookResponseSchema = Schema.Struct({
 
 export type ApplicationIncomingWebhookResponse = Schema.Schema.Type<
   typeof ApplicationIncomingWebhookResponseSchema
+>
+
+export const ApplicationOAuth2InstallParamsSchema = Schema.Struct({
+  scopes: Schema.optionalKey(
+    Schema.NullOr(Schema.Array(OAuth2ScopesSchema).check(Schema.isMinLength(1), Schema.isUnique())),
+  ),
+  permissions: Schema.optionalKey(
+    Schema.NullOr(
+      Schema.Number.check(
+        Schema.isInt(),
+        Schema.isGreaterThanOrEqualTo(0),
+        Schema.isLessThanOrEqualTo(18014398509481984),
+      ),
+    ),
+  ),
+}).annotate({ identifier: 'ApplicationOAuth2InstallParams' })
+
+export type ApplicationOAuth2InstallParams = Schema.Schema.Type<
+  typeof ApplicationOAuth2InstallParamsSchema
+>
+
+export const ApplicationIntegrationTypeConfigurationSchema = Schema.Struct({
+  oauth2_install_params: Schema.optionalKey(
+    Schema.Union([Schema.Null, ApplicationOAuth2InstallParamsSchema]),
+  ),
+}).annotate({ identifier: 'ApplicationIntegrationTypeConfiguration' })
+
+export type ApplicationIntegrationTypeConfiguration = Schema.Schema.Type<
+  typeof ApplicationIntegrationTypeConfigurationSchema
 >
 
 export const MetadataItemTypesSchema = Schema.Union([
@@ -3272,6 +3165,115 @@ export const ApplicationRoleConnectionsMetadataItemResponseSchema = Schema.Struc
 
 export type ApplicationRoleConnectionsMetadataItemResponse = Schema.Schema.Type<
   typeof ApplicationRoleConnectionsMetadataItemResponseSchema
+>
+
+export const ApplicationUpdateFormPartialSchema = Schema.Struct({
+  description: Schema.optionalKey(
+    Schema.NullOr(
+      Schema.Struct({
+        default: Schema.String.check(
+          Schema.makeFilter((input) => [...input].length <= 400, {
+            expected: 'a string of at most 400 characters',
+          }),
+        ),
+        localizations: Schema.optionalKey(
+          Schema.NullOr(
+            Schema.Record(
+              Schema.String,
+              Schema.String.check(
+                Schema.makeFilter((input) => [...input].length <= 400, {
+                  expected: 'a string of at most 400 characters',
+                }),
+              ),
+            ),
+          ),
+        ),
+      }),
+    ),
+  ),
+  icon: Schema.optionalKey(Schema.NullOr(Schema.String)),
+  cover_image: Schema.optionalKey(Schema.NullOr(Schema.String)),
+  team_id: Schema.optionalKey(Schema.Union([Schema.Null, SnowflakeTypeSchema])),
+  flags: Schema.optionalKey(Schema.NullOr(Schema.Number.check(Schema.isInt()))),
+  interactions_endpoint_url: Schema.optionalKey(
+    Schema.NullOr(
+      Schema.String.check(
+        Schema.makeFilter((input) => URL.canParse(input)),
+        Schema.makeFilter((input) => [...input].length <= 2048, {
+          expected: 'a string of at most 2048 characters',
+        }),
+      ),
+    ),
+  ),
+  explicit_content_filter: Schema.optionalKey(
+    Schema.Union([Schema.Null, ApplicationExplicitContentFilterTypesSchema]),
+  ),
+  max_participants: Schema.optionalKey(
+    Schema.NullOr(Schema.Number.check(Schema.isInt32(), Schema.isGreaterThanOrEqualTo(-1))),
+  ),
+  type: Schema.optionalKey(Schema.Union([Schema.Null, ApplicationTypesSchema])),
+  tags: Schema.optionalKey(
+    Schema.NullOr(
+      Schema.Array(
+        Schema.String.check(
+          Schema.makeFilter((input) => [...input].length <= 20, {
+            expected: 'a string of at most 20 characters',
+          }),
+        ),
+      ).check(Schema.isMaxLength(5), Schema.isUnique()),
+    ),
+  ),
+  custom_install_url: Schema.optionalKey(
+    Schema.NullOr(
+      Schema.String.check(
+        Schema.makeFilter((input) => URL.canParse(input)),
+        Schema.makeFilter((input) => [...input].length <= 2048, {
+          expected: 'a string of at most 2048 characters',
+        }),
+      ),
+    ),
+  ),
+  install_params: Schema.optionalKey(
+    Schema.Union([Schema.Null, ApplicationOAuth2InstallParamsSchema]),
+  ),
+  role_connections_verification_url: Schema.optionalKey(
+    Schema.NullOr(
+      Schema.String.check(
+        Schema.makeFilter((input) => URL.canParse(input)),
+        Schema.makeFilter((input) => [...input].length <= 2048, {
+          expected: 'a string of at most 2048 characters',
+        }),
+      ),
+    ),
+  ),
+  integration_types_config: Schema.optionalKey(
+    Schema.NullOr(
+      Schema.Record(
+        Schema.String,
+        Schema.Union([Schema.Null, ApplicationIntegrationTypeConfigurationSchema]),
+      ),
+    ),
+  ),
+  event_webhooks_status: Schema.optionalKey(
+    Schema.Union([Schema.Null, ApplicationEventWebhooksStatusSchema]),
+  ),
+  event_webhooks_url: Schema.optionalKey(
+    Schema.NullOr(
+      Schema.String.check(
+        Schema.makeFilter((input) => URL.canParse(input)),
+        Schema.makeFilter((input) => [...input].length <= 2048, {
+          expected: 'a string of at most 2048 characters',
+        }),
+      ),
+    ).annotate({ description: 'Event webhooks URL for the app to receive webhook events' }),
+  ),
+  event_webhooks_types: Schema.optionalKey(
+    Schema.NullOr(Schema.Array(ActionTypesSchema).check(Schema.isUnique())),
+  ),
+}).annotate({ identifier: 'ApplicationUpdateFormPartial' })
+
+export type ApplicationUpdateFormPartial = Schema.Schema.Type<
+  typeof ApplicationUpdateFormPartialSchema
 >
 
 export const ApplicationUserRoleConnectionResponseSchema = Schema.Struct({

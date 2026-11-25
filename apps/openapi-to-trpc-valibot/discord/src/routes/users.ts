@@ -35,7 +35,7 @@ export const usersRouter = t.router({
           v.union([
             v.string(),
             v.pipe(
-              v.array(v.union([v.nullable(v.null()), SnowflakeTypeSchema])),
+              v.array(v.union([v.null(), SnowflakeTypeSchema])),
               v.maxLength(100),
               v.check((input) => new Set(input).size === input.length),
             ),

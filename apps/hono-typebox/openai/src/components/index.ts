@@ -253,7 +253,7 @@ export type AssistantToolsFunction = Static<typeof AssistantToolsFunctionSchema>
 export const MetadataSchema = Type.Union([
   Type.Record(Type.String(), Type.String(), {
     description:
-      'Set of 16 key-value pairs that can be attached to an object. This can be\nuseful for storing additional information about the object in a structured\nformat, and querying for objects via API or the dashboard.\n\nKeys are strings with a maximum length of 64 characters. Values are strings\nwith a maximum length of 512 characters.\n',
+      'Set of 16 key-value pairs that can be attached to an object. This can be\nuseful for storing additional information about the object in a structured\nformat.\n\nKeys are strings with a maximum length of 64 characters. Values are strings\nwith a maximum length of 512 characters.\n',
   }),
   Type.Null(),
 ])
@@ -5414,7 +5414,7 @@ export const CompoundFilterSchema = Type.Cyclic(
             ]),
             Type.Intersect([
               Type.Ref('CompoundFilterSchema'),
-              Type.Object({ type: Type.Literal('CompoundFilterSchema') }),
+              Type.Object({ type: Type.Literal('CompoundFilter') }),
             ]),
           ]),
           {
@@ -12883,6 +12883,10 @@ export const ModelIdsResponsesSchema = Type.Union(
       Type.Literal('gpt-rosalind-research'),
       Type.Literal('gpt-6-rosalind'),
       Type.Literal('gpt-6.2-astra-law'),
+      Type.Literal('gpt-6-astra-healthcare'),
+      Type.Literal('gpt-6.1-sol-healthcare'),
+      Type.Literal('gpt-6.2-astra-healthcare'),
+      Type.Literal('gpt-6.2-sol-healthcare'),
     ]),
   ],
   { examples: ['gpt-6.2-astra'] },
@@ -36654,6 +36658,15 @@ export type UpdateProjectApiKeyBody = Static<typeof UpdateProjectApiKeyBodySchem
 
 export const CreateConversationBodySchema = Type.Object({
   metadata: Type.Optional(Type.Union([MetadataSchema, Type.Null()])),
+  safety_identifier: Type.Optional(
+    Type.Union([
+      Type.String({
+        maxLength: 128,
+        description: 'A stable identifier used for safety monitoring and abuse detection.',
+      }),
+      Type.Null(),
+    ]),
+  ),
   items: Type.Optional(
     Type.Union([
       Type.Array(InputItemSchema, {
@@ -52193,7 +52206,7 @@ export const BetaCompoundFilterSchema = Type.Cyclic(
             ]),
             Type.Intersect([
               Type.Ref('BetaCompoundFilterSchema'),
-              Type.Object({ type: Type.Literal('BetaCompoundFilterSchema') }),
+              Type.Object({ type: Type.Literal('BetaCompoundFilter') }),
             ]),
           ]),
           {
@@ -55675,6 +55688,10 @@ export const BetaModelIdsResponsesSchema = Type.Union(
       Type.Literal('gpt-rosalind-research'),
       Type.Literal('gpt-6-rosalind'),
       Type.Literal('gpt-6.2-astra-law'),
+      Type.Literal('gpt-6-astra-healthcare'),
+      Type.Literal('gpt-6.1-sol-healthcare'),
+      Type.Literal('gpt-6.2-astra-healthcare'),
+      Type.Literal('gpt-6.2-sol-healthcare'),
     ]),
   ],
   { examples: ['gpt-6.2-astra'] },
@@ -57352,7 +57369,7 @@ export type BetaResponseCustomToolCallInputDeltaEvent = Static<
 export const BetaMetadataSchema = Type.Union([
   Type.Record(Type.String(), Type.String(), {
     description:
-      'Set of 16 key-value pairs that can be attached to an object. This can be\nuseful for storing additional information about the object in a structured\nformat, and querying for objects via API or the dashboard.\n\nKeys are strings with a maximum length of 64 characters. Values are strings\nwith a maximum length of 512 characters.\n',
+      'Set of 16 key-value pairs that can be attached to an object. This can be\nuseful for storing additional information about the object in a structured\nformat.\n\nKeys are strings with a maximum length of 64 characters. Values are strings\nwith a maximum length of 512 characters.\n',
   }),
   Type.Null(),
 ])

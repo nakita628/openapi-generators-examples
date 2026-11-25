@@ -41,7 +41,6 @@ import {
   ApplicationCommandUserOptionResponseSchema,
   ApplicationEventWebhooksStatusSchema,
   ApplicationExplicitContentFilterTypesSchema,
-  ApplicationFormPartialSchema,
   ApplicationIntegrationTypeSchema,
   ApplicationIntegrationTypeConfigurationSchema,
   ApplicationIntegrationTypeConfigurationResponseSchema,
@@ -51,6 +50,7 @@ import {
   ApplicationRoleConnectionsMetadataItemRequestSchema,
   ApplicationRoleConnectionsMetadataItemResponseSchema,
   ApplicationTypesSchema,
+  ApplicationUpdateFormPartialSchema,
   AttachmentResponseSchema,
   ChannelTypesSchema,
   CommandPermissionResponseSchema,
@@ -137,7 +137,6 @@ export const applications = new Elysia()
     ApplicationCommandUserOptionResponse: ApplicationCommandUserOptionResponseSchema,
     ApplicationEventWebhooksStatus: ApplicationEventWebhooksStatusSchema,
     ApplicationExplicitContentFilterTypes: ApplicationExplicitContentFilterTypesSchema,
-    ApplicationFormPartial: ApplicationFormPartialSchema,
     ApplicationIntegrationType: ApplicationIntegrationTypeSchema,
     ApplicationIntegrationTypeConfiguration: ApplicationIntegrationTypeConfigurationSchema,
     ApplicationIntegrationTypeConfigurationResponse:
@@ -150,6 +149,7 @@ export const applications = new Elysia()
     ApplicationRoleConnectionsMetadataItemResponse:
       ApplicationRoleConnectionsMetadataItemResponseSchema,
     ApplicationTypes: ApplicationTypesSchema,
+    ApplicationUpdateFormPartial: ApplicationUpdateFormPartialSchema,
     AttachmentResponse: AttachmentResponseSchema,
     ChannelTypes: ChannelTypesSchema,
     CommandPermissionResponse: CommandPermissionResponseSchema,
@@ -196,7 +196,7 @@ export const applications = new Elysia()
     detail: { tags: [], operationId: 'get_my_application', security: [{ BotToken: [] }] },
   })
   .patch('/applications/@me', ({ body }) => { throw new Error('Not implemented') }, {
-    body: 'ApplicationFormPartial',
+    body: 'ApplicationUpdateFormPartial',
     response: {
       200: 'PrivateApplicationResponse',
       429: 'RatelimitedResponse',
@@ -215,7 +215,7 @@ export const applications = new Elysia()
   })
   .patch('/applications/:application_id', ({ params, body }) => { throw new Error('Not implemented') }, {
     params: ApplicationsModel.update_applicationParams,
-    body: 'ApplicationFormPartial',
+    body: 'ApplicationUpdateFormPartial',
     response: {
       200: 'PrivateApplicationResponse',
       429: 'RatelimitedResponse',

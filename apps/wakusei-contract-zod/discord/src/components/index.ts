@@ -1952,75 +1952,6 @@ export type ApplicationExplicitContentFilterTypesSchema = z.infer<
   typeof ApplicationExplicitContentFilterTypesSchema
 >
 
-export const ApplicationOAuth2InstallParamsSchema = z.object({
-  scopes: z
-    .array(OAuth2ScopesSchema)
-    .min(1)
-    .refine((val) => new Set(val).size === val.length)
-    .nullable()
-    .exactOptional(),
-  permissions: z.int().min(0).max(18014398509481984).nullable().exactOptional(),
-})
-
-export type ApplicationOAuth2InstallParamsSchema = z.infer<
-  typeof ApplicationOAuth2InstallParamsSchema
->
-
-export const ApplicationIntegrationTypeConfigurationSchema = z.object({
-  oauth2_install_params: z.xor([z.null(), ApplicationOAuth2InstallParamsSchema]).exactOptional(),
-})
-
-export type ApplicationIntegrationTypeConfigurationSchema = z.infer<
-  typeof ApplicationIntegrationTypeConfigurationSchema
->
-
-export const ApplicationFormPartialSchema = z.object({
-  description: z
-    .object({
-      default: z.string().max(400),
-      localizations: z.record(z.string(), z.string().max(400)).nullable().exactOptional(),
-    })
-    .nullable()
-    .exactOptional(),
-  icon: z.string().nullable().exactOptional(),
-  cover_image: z.string().nullable().exactOptional(),
-  team_id: z.xor([z.null(), SnowflakeTypeSchema]).exactOptional(),
-  flags: z.int().nullable().exactOptional(),
-  interactions_endpoint_url: z.url().max(2048).nullable().exactOptional(),
-  explicit_content_filter: z
-    .xor([z.null(), ApplicationExplicitContentFilterTypesSchema])
-    .exactOptional(),
-  max_participants: z.int32().min(-1).nullable().exactOptional(),
-  type: z.xor([z.null(), ApplicationTypesSchema]).exactOptional(),
-  tags: z
-    .array(z.string().max(20))
-    .max(5)
-    .refine((val) => new Set(val).size === val.length)
-    .nullable()
-    .exactOptional(),
-  custom_install_url: z.url().max(2048).nullable().exactOptional(),
-  install_params: z.xor([z.null(), ApplicationOAuth2InstallParamsSchema]).exactOptional(),
-  role_connections_verification_url: z.url().max(2048).nullable().exactOptional(),
-  integration_types_config: z
-    .record(z.string(), z.xor([z.null(), ApplicationIntegrationTypeConfigurationSchema]))
-    .nullable()
-    .exactOptional(),
-  event_webhooks_status: z.xor([z.null(), ApplicationEventWebhooksStatusSchema]).exactOptional(),
-  event_webhooks_url: z
-    .url()
-    .max(2048)
-    .nullable()
-    .meta({ description: 'Event webhooks URL for the app to receive webhook events' })
-    .exactOptional(),
-  event_webhooks_types: z
-    .array(ActionTypesSchema)
-    .refine((val) => new Set(val).size === val.length)
-    .nullable()
-    .exactOptional(),
-})
-
-export type ApplicationFormPartialSchema = z.infer<typeof ApplicationFormPartialSchema>
-
 export const ApplicationIdentityProviderAuthTypeSchema = z.xor([
   z.literal('OIDC'),
   z.literal('EPIC_ONLINE_SERVICES_ACCESS_TOKEN'),
@@ -2066,6 +1997,28 @@ export const ApplicationIncomingWebhookResponseSchema = z.object({
 
 export type ApplicationIncomingWebhookResponseSchema = z.infer<
   typeof ApplicationIncomingWebhookResponseSchema
+>
+
+export const ApplicationOAuth2InstallParamsSchema = z.object({
+  scopes: z
+    .array(OAuth2ScopesSchema)
+    .min(1)
+    .refine((val) => new Set(val).size === val.length)
+    .nullable()
+    .exactOptional(),
+  permissions: z.int().min(0).max(18014398509481984).nullable().exactOptional(),
+})
+
+export type ApplicationOAuth2InstallParamsSchema = z.infer<
+  typeof ApplicationOAuth2InstallParamsSchema
+>
+
+export const ApplicationIntegrationTypeConfigurationSchema = z.object({
+  oauth2_install_params: z.xor([z.null(), ApplicationOAuth2InstallParamsSchema]).exactOptional(),
+})
+
+export type ApplicationIntegrationTypeConfigurationSchema = z.infer<
+  typeof ApplicationIntegrationTypeConfigurationSchema
 >
 
 export const MetadataItemTypesSchema = z.xor([
@@ -2152,6 +2105,53 @@ export const ApplicationRoleConnectionsMetadataItemResponseSchema = z.object({
 export type ApplicationRoleConnectionsMetadataItemResponseSchema = z.infer<
   typeof ApplicationRoleConnectionsMetadataItemResponseSchema
 >
+
+export const ApplicationUpdateFormPartialSchema = z.object({
+  description: z
+    .object({
+      default: z.string().max(400),
+      localizations: z.record(z.string(), z.string().max(400)).nullable().exactOptional(),
+    })
+    .nullable()
+    .exactOptional(),
+  icon: z.string().nullable().exactOptional(),
+  cover_image: z.string().nullable().exactOptional(),
+  team_id: z.xor([z.null(), SnowflakeTypeSchema]).exactOptional(),
+  flags: z.int().nullable().exactOptional(),
+  interactions_endpoint_url: z.url().max(2048).nullable().exactOptional(),
+  explicit_content_filter: z
+    .xor([z.null(), ApplicationExplicitContentFilterTypesSchema])
+    .exactOptional(),
+  max_participants: z.int32().min(-1).nullable().exactOptional(),
+  type: z.xor([z.null(), ApplicationTypesSchema]).exactOptional(),
+  tags: z
+    .array(z.string().max(20))
+    .max(5)
+    .refine((val) => new Set(val).size === val.length)
+    .nullable()
+    .exactOptional(),
+  custom_install_url: z.url().max(2048).nullable().exactOptional(),
+  install_params: z.xor([z.null(), ApplicationOAuth2InstallParamsSchema]).exactOptional(),
+  role_connections_verification_url: z.url().max(2048).nullable().exactOptional(),
+  integration_types_config: z
+    .record(z.string(), z.xor([z.null(), ApplicationIntegrationTypeConfigurationSchema]))
+    .nullable()
+    .exactOptional(),
+  event_webhooks_status: z.xor([z.null(), ApplicationEventWebhooksStatusSchema]).exactOptional(),
+  event_webhooks_url: z
+    .url()
+    .max(2048)
+    .nullable()
+    .meta({ description: 'Event webhooks URL for the app to receive webhook events' })
+    .exactOptional(),
+  event_webhooks_types: z
+    .array(ActionTypesSchema)
+    .refine((val) => new Set(val).size === val.length)
+    .nullable()
+    .exactOptional(),
+})
+
+export type ApplicationUpdateFormPartialSchema = z.infer<typeof ApplicationUpdateFormPartialSchema>
 
 export const ApplicationUserRoleConnectionResponseSchema = z.object({
   platform_name: z.string().exactOptional(),

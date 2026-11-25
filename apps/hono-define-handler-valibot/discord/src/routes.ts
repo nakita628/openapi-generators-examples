@@ -2259,90 +2259,6 @@ export type ApplicationExplicitContentFilterTypes = v.InferOutput<
   typeof ApplicationExplicitContentFilterTypesSchema
 >
 
-export const ApplicationOAuth2InstallParamsSchema = v.partial(
-  v.object({
-    scopes: v.nullable(
-      v.pipe(
-        v.array(OAuth2ScopesSchema),
-        v.minLength(1),
-        v.check((input) => new Set(input).size === input.length),
-      ),
-    ),
-    permissions: v.nullable(
-      v.pipe(v.number(), v.integer(), v.minValue(0), v.maxValue(18014398509481984)),
-    ),
-  }),
-)
-
-export type ApplicationOAuth2InstallParams = v.InferOutput<
-  typeof ApplicationOAuth2InstallParamsSchema
->
-
-export const ApplicationIntegrationTypeConfigurationSchema = v.partial(
-  v.object({ oauth2_install_params: v.union([v.null(), ApplicationOAuth2InstallParamsSchema]) }),
-)
-
-export type ApplicationIntegrationTypeConfiguration = v.InferOutput<
-  typeof ApplicationIntegrationTypeConfigurationSchema
->
-
-export const ApplicationFormPartialSchema = v.partial(
-  v.object({
-    description: v.nullable(
-      v.object({
-        default: v.pipe(v.string(), v.maxCodePoints(400)),
-        localizations: v.optional(
-          v.nullable(v.record(v.string(), v.pipe(v.string(), v.maxCodePoints(400)))),
-        ),
-      }),
-    ),
-    icon: v.nullable(v.string()),
-    cover_image: v.nullable(v.string()),
-    team_id: v.union([v.null(), SnowflakeTypeSchema]),
-    flags: v.nullable(v.pipe(v.number(), v.integer())),
-    interactions_endpoint_url: v.nullable(v.pipe(v.string(), v.url(), v.maxCodePoints(2048))),
-    explicit_content_filter: v.union([v.null(), ApplicationExplicitContentFilterTypesSchema]),
-    max_participants: v.nullable(
-      v.pipe(
-        v.number(),
-        v.integer(),
-        v.minValue(-2147483648),
-        v.maxValue(2147483647),
-        v.minValue(-1),
-      ),
-    ),
-    type: v.union([v.null(), ApplicationTypesSchema]),
-    tags: v.nullable(
-      v.pipe(
-        v.array(v.pipe(v.string(), v.maxCodePoints(20))),
-        v.maxLength(5),
-        v.check((input) => new Set(input).size === input.length),
-      ),
-    ),
-    custom_install_url: v.nullable(v.pipe(v.string(), v.url(), v.maxCodePoints(2048))),
-    install_params: v.union([v.null(), ApplicationOAuth2InstallParamsSchema]),
-    role_connections_verification_url: v.nullable(
-      v.pipe(v.string(), v.url(), v.maxCodePoints(2048)),
-    ),
-    integration_types_config: v.nullable(
-      v.record(v.string(), v.union([v.null(), ApplicationIntegrationTypeConfigurationSchema])),
-    ),
-    event_webhooks_status: v.union([v.null(), ApplicationEventWebhooksStatusSchema]),
-    event_webhooks_url: v.pipe(
-      v.nullable(v.pipe(v.string(), v.url(), v.maxCodePoints(2048))),
-      v.description('Event webhooks URL for the app to receive webhook events'),
-    ),
-    event_webhooks_types: v.nullable(
-      v.pipe(
-        v.array(ActionTypesSchema),
-        v.check((input) => new Set(input).size === input.length),
-      ),
-    ),
-  }),
-)
-
-export type ApplicationFormPartial = v.InferOutput<typeof ApplicationFormPartialSchema>
-
 export const ApplicationIdentityProviderAuthTypeSchema = v.union([
   v.literal('OIDC'),
   v.literal('EPIC_ONLINE_SERVICES_ACCESS_TOKEN'),
@@ -2387,6 +2303,33 @@ export const ApplicationIncomingWebhookResponseSchema = v.object({
 
 export type ApplicationIncomingWebhookResponse = v.InferOutput<
   typeof ApplicationIncomingWebhookResponseSchema
+>
+
+export const ApplicationOAuth2InstallParamsSchema = v.partial(
+  v.object({
+    scopes: v.nullable(
+      v.pipe(
+        v.array(OAuth2ScopesSchema),
+        v.minLength(1),
+        v.check((input) => new Set(input).size === input.length),
+      ),
+    ),
+    permissions: v.nullable(
+      v.pipe(v.number(), v.integer(), v.minValue(0), v.maxValue(18014398509481984)),
+    ),
+  }),
+)
+
+export type ApplicationOAuth2InstallParams = v.InferOutput<
+  typeof ApplicationOAuth2InstallParamsSchema
+>
+
+export const ApplicationIntegrationTypeConfigurationSchema = v.partial(
+  v.object({ oauth2_install_params: v.union([v.null(), ApplicationOAuth2InstallParamsSchema]) }),
+)
+
+export type ApplicationIntegrationTypeConfiguration = v.InferOutput<
+  typeof ApplicationIntegrationTypeConfigurationSchema
 >
 
 export const MetadataItemTypesSchema = v.union([
@@ -2481,6 +2424,63 @@ export const ApplicationRoleConnectionsMetadataItemResponseSchema = v.object({
 export type ApplicationRoleConnectionsMetadataItemResponse = v.InferOutput<
   typeof ApplicationRoleConnectionsMetadataItemResponseSchema
 >
+
+export const ApplicationUpdateFormPartialSchema = v.partial(
+  v.object({
+    description: v.nullable(
+      v.object({
+        default: v.pipe(v.string(), v.maxCodePoints(400)),
+        localizations: v.optional(
+          v.nullable(v.record(v.string(), v.pipe(v.string(), v.maxCodePoints(400)))),
+        ),
+      }),
+    ),
+    icon: v.nullable(v.string()),
+    cover_image: v.nullable(v.string()),
+    team_id: v.union([v.null(), SnowflakeTypeSchema]),
+    flags: v.nullable(v.pipe(v.number(), v.integer())),
+    interactions_endpoint_url: v.nullable(v.pipe(v.string(), v.url(), v.maxCodePoints(2048))),
+    explicit_content_filter: v.union([v.null(), ApplicationExplicitContentFilterTypesSchema]),
+    max_participants: v.nullable(
+      v.pipe(
+        v.number(),
+        v.integer(),
+        v.minValue(-2147483648),
+        v.maxValue(2147483647),
+        v.minValue(-1),
+      ),
+    ),
+    type: v.union([v.null(), ApplicationTypesSchema]),
+    tags: v.nullable(
+      v.pipe(
+        v.array(v.pipe(v.string(), v.maxCodePoints(20))),
+        v.maxLength(5),
+        v.check((input) => new Set(input).size === input.length),
+      ),
+    ),
+    custom_install_url: v.nullable(v.pipe(v.string(), v.url(), v.maxCodePoints(2048))),
+    install_params: v.union([v.null(), ApplicationOAuth2InstallParamsSchema]),
+    role_connections_verification_url: v.nullable(
+      v.pipe(v.string(), v.url(), v.maxCodePoints(2048)),
+    ),
+    integration_types_config: v.nullable(
+      v.record(v.string(), v.union([v.null(), ApplicationIntegrationTypeConfigurationSchema])),
+    ),
+    event_webhooks_status: v.union([v.null(), ApplicationEventWebhooksStatusSchema]),
+    event_webhooks_url: v.pipe(
+      v.nullable(v.pipe(v.string(), v.url(), v.maxCodePoints(2048))),
+      v.description('Event webhooks URL for the app to receive webhook events'),
+    ),
+    event_webhooks_types: v.nullable(
+      v.pipe(
+        v.array(ActionTypesSchema),
+        v.check((input) => new Set(input).size === input.length),
+      ),
+    ),
+  }),
+)
+
+export type ApplicationUpdateFormPartial = v.InferOutput<typeof ApplicationUpdateFormPartialSchema>
 
 export const ApplicationUserRoleConnectionResponseSchema = v.partial(
   v.object({
@@ -10932,7 +10932,7 @@ export const getApplicationsMeHandler = defineHandler({
 })
 
 export const patchApplicationsMeHandler = defineHandler({
-  json: ApplicationFormPartialSchema,
+  json: ApplicationUpdateFormPartialSchema,
   response: PrivateApplicationResponseSchema,
 })
 
@@ -10943,7 +10943,7 @@ export const getApplicationsApplicationIdHandler = defineHandler({
 
 export const patchApplicationsApplicationIdHandler = defineHandler({
   param: v.object({ application_id: SnowflakeTypeSchema }),
-  json: ApplicationFormPartialSchema,
+  json: ApplicationUpdateFormPartialSchema,
   response: PrivateApplicationResponseSchema,
 })
 

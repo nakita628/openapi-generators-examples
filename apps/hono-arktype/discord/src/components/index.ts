@@ -2600,94 +2600,6 @@ export const ApplicationExplicitContentFilterTypesSchema = type(
 export type ApplicationExplicitContentFilterTypes =
   typeof ApplicationExplicitContentFilterTypesSchema.infer
 
-export const ApplicationOAuth2InstallParamsSchema = type({
-  'scopes?': type(
-    type(type(OAuth2ScopesSchema).array())
-      .and(type('unknown[] >= 1'))
-      .narrow((data: unknown[], ctx) => new Set(data).size === data.length),
-  ).or('null'),
-  'permissions?': 'number.integer >= 0 & number.integer <= 18014398509481984 | null',
-})
-
-export type ApplicationOAuth2InstallParams = typeof ApplicationOAuth2InstallParamsSchema.infer
-
-export const ApplicationIntegrationTypeConfigurationSchema = type({
-  'oauth2_install_params?': type('null').or(ApplicationOAuth2InstallParamsSchema),
-})
-
-export type ApplicationIntegrationTypeConfiguration =
-  typeof ApplicationIntegrationTypeConfigurationSchema.infer
-
-export const ApplicationFormPartialSchema = type({
-  'description?': type(
-    type({
-      default: type('string').narrow(
-        (data, ctx) => [...data].length <= 400 || ctx.mustBe('at most 400 characters'),
-      ),
-      'localizations?': type(
-        type({
-          '[string]': type('string').narrow(
-            (data, ctx) => [...data].length <= 400 || ctx.mustBe('at most 400 characters'),
-          ),
-        }),
-      ).or('null'),
-    }),
-  ).or('null'),
-  'icon?': 'string | null',
-  'cover_image?': 'string | null',
-  'team_id?': type('null').or(SnowflakeTypeSchema),
-  'flags?': 'number.integer | null',
-  'interactions_endpoint_url?': type(
-    type('string.url').narrow(
-      (data, ctx) => [...data].length <= 2048 || ctx.mustBe('at most 2048 characters'),
-    ),
-  ).or('null'),
-  'explicit_content_filter?': type('null').or(ApplicationExplicitContentFilterTypesSchema),
-  'max_participants?':
-    'number.integer >= -2147483648 & number.integer <= 2147483647 & number.integer >= -1 | null',
-  'type?': type('null').or(ApplicationTypesSchema),
-  'tags?': type(
-    type(
-      type(
-        type('string').narrow(
-          (data, ctx) => [...data].length <= 20 || ctx.mustBe('at most 20 characters'),
-        ),
-      ).array(),
-    )
-      .and(type('unknown[] <= 5'))
-      .narrow((data: unknown[], ctx) => new Set(data).size === data.length),
-  ).or('null'),
-  'custom_install_url?': type(
-    type('string.url').narrow(
-      (data, ctx) => [...data].length <= 2048 || ctx.mustBe('at most 2048 characters'),
-    ),
-  ).or('null'),
-  'install_params?': type('null').or(ApplicationOAuth2InstallParamsSchema),
-  'role_connections_verification_url?': type(
-    type('string.url').narrow(
-      (data, ctx) => [...data].length <= 2048 || ctx.mustBe('at most 2048 characters'),
-    ),
-  ).or('null'),
-  'integration_types_config?': type(
-    type({ '[string]': type('null').or(ApplicationIntegrationTypeConfigurationSchema) }),
-  ).or('null'),
-  'event_webhooks_status?': type('null').or(ApplicationEventWebhooksStatusSchema),
-  'event_webhooks_url?': type(
-    type('string.url').narrow(
-      (data, ctx) => [...data].length <= 2048 || ctx.mustBe('at most 2048 characters'),
-    ),
-  )
-    .or('null')
-    .describe('Event webhooks URL for the app to receive webhook events'),
-  'event_webhooks_types?': type(
-    type(ActionTypesSchema)
-      .array()
-      .narrow((data: unknown[], ctx) => new Set(data).size === data.length),
-  ).or('null'),
-})
-
-export type ApplicationFormPartial = typeof ApplicationFormPartialSchema.infer
-
 export const ApplicationIdentityProviderAuthTypeSchema = type(
   "'OIDC' | 'EPIC_ONLINE_SERVICES_ACCESS_TOKEN' | 'EPIC_ONLINE_SERVICES_ID_TOKEN' | 'STEAM_SESSION_TICKET' | 'UNITY_SERVICES_ID_TOKEN' | 'DISCORD_BOT_ISSUED_ACCESS_TOKEN' | 'APPLE_ID_TOKEN' | 'PLAYSTATION_NETWORK_ID_TOKEN'",
 )
@@ -2720,6 +2632,24 @@ export const ApplicationIncomingWebhookResponseSchema = type({
 
 export type ApplicationIncomingWebhookResponse =
   typeof ApplicationIncomingWebhookResponseSchema.infer
+
+export const ApplicationOAuth2InstallParamsSchema = type({
+  'scopes?': type(
+    type(type(OAuth2ScopesSchema).array())
+      .and(type('unknown[] >= 1'))
+      .narrow((data: unknown[], ctx) => new Set(data).size === data.length),
+  ).or('null'),
+  'permissions?': 'number.integer >= 0 & number.integer <= 18014398509481984 | null',
+})
+
+export type ApplicationOAuth2InstallParams = typeof ApplicationOAuth2InstallParamsSchema.infer
+
+export const ApplicationIntegrationTypeConfigurationSchema = type({
+  'oauth2_install_params?': type('null').or(ApplicationOAuth2InstallParamsSchema),
+})
+
+export type ApplicationIntegrationTypeConfiguration =
+  typeof ApplicationIntegrationTypeConfigurationSchema.infer
 
 export const MetadataItemTypesSchema = type(
   type(
@@ -2814,6 +2744,76 @@ export const ApplicationRoleConnectionsMetadataItemResponseSchema = type({
 
 export type ApplicationRoleConnectionsMetadataItemResponse =
   typeof ApplicationRoleConnectionsMetadataItemResponseSchema.infer
+
+export const ApplicationUpdateFormPartialSchema = type({
+  'description?': type(
+    type({
+      default: type('string').narrow(
+        (data, ctx) => [...data].length <= 400 || ctx.mustBe('at most 400 characters'),
+      ),
+      'localizations?': type(
+        type({
+          '[string]': type('string').narrow(
+            (data, ctx) => [...data].length <= 400 || ctx.mustBe('at most 400 characters'),
+          ),
+        }),
+      ).or('null'),
+    }),
+  ).or('null'),
+  'icon?': 'string | null',
+  'cover_image?': 'string | null',
+  'team_id?': type('null').or(SnowflakeTypeSchema),
+  'flags?': 'number.integer | null',
+  'interactions_endpoint_url?': type(
+    type('string.url').narrow(
+      (data, ctx) => [...data].length <= 2048 || ctx.mustBe('at most 2048 characters'),
+    ),
+  ).or('null'),
+  'explicit_content_filter?': type('null').or(ApplicationExplicitContentFilterTypesSchema),
+  'max_participants?':
+    'number.integer >= -2147483648 & number.integer <= 2147483647 & number.integer >= -1 | null',
+  'type?': type('null').or(ApplicationTypesSchema),
+  'tags?': type(
+    type(
+      type(
+        type('string').narrow(
+          (data, ctx) => [...data].length <= 20 || ctx.mustBe('at most 20 characters'),
+        ),
+      ).array(),
+    )
+      .and(type('unknown[] <= 5'))
+      .narrow((data: unknown[], ctx) => new Set(data).size === data.length),
+  ).or('null'),
+  'custom_install_url?': type(
+    type('string.url').narrow(
+      (data, ctx) => [...data].length <= 2048 || ctx.mustBe('at most 2048 characters'),
+    ),
+  ).or('null'),
+  'install_params?': type('null').or(ApplicationOAuth2InstallParamsSchema),
+  'role_connections_verification_url?': type(
+    type('string.url').narrow(
+      (data, ctx) => [...data].length <= 2048 || ctx.mustBe('at most 2048 characters'),
+    ),
+  ).or('null'),
+  'integration_types_config?': type(
+    type({ '[string]': type('null').or(ApplicationIntegrationTypeConfigurationSchema) }),
+  ).or('null'),
+  'event_webhooks_status?': type('null').or(ApplicationEventWebhooksStatusSchema),
+  'event_webhooks_url?': type(
+    type('string.url').narrow(
+      (data, ctx) => [...data].length <= 2048 || ctx.mustBe('at most 2048 characters'),
+    ),
+  )
+    .or('null')
+    .describe('Event webhooks URL for the app to receive webhook events'),
+  'event_webhooks_types?': type(
+    type(ActionTypesSchema)
+      .array()
+      .narrow((data: unknown[], ctx) => new Set(data).size === data.length),
+  ).or('null'),
+})
+
+export type ApplicationUpdateFormPartial = typeof ApplicationUpdateFormPartialSchema.infer
 
 export const ApplicationUserRoleConnectionResponseSchema = type({
   'platform_name?': 'string',

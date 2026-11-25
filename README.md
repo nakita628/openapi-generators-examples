@@ -45,12 +45,15 @@ The first five came from hono-takibi-examples, and the daily routine takes the n
 <!-- specs:start -->
 | Spec | Document | Source | Added |
 | --- | --- | --- | --- |
-| [discord](./openapi/discord.json) | Discord HTTP API (Preview) 10 | <https://raw.githubusercontent.com/discord/discord-api-spec/main/specs/openapi.json> ([pinned](https://github.com/discord/discord-api-spec/blob/3a21a01249a763cd47f1dfec3da91c5ba71bb974/specs/openapi.json)) | 2026-11-21 |
+| [discord](./openapi/discord.json) | Discord HTTP API (Preview) 10 | <https://raw.githubusercontent.com/discord/discord-api-spec/main/specs/openapi.json> ([pinned](https://github.com/discord/discord-api-spec/blob/654230017d4f5ee3e6a59a769ffc40cf61001e3f/specs/openapi.json)) | 2026-11-21 |
 | [line-channel-access-token](./openapi/line-channel-access-token.yaml) | Channel Access Token API 0.0.1 | <https://raw.githubusercontent.com/line/line-openapi/main/channel-access-token.yml> ([pinned](https://github.com/line/line-openapi/blob/967498a4e192914679ad0571d5845b29aa9755de/channel-access-token.yml)) | 2026-11-24 |
 | [line-insight](./openapi/line-insight.yaml) | LINE Messaging API(Insight) 0.0.1 | <https://raw.githubusercontent.com/line/line-openapi/main/insight.yml> ([pinned](https://github.com/line/line-openapi/blob/967498a4e192914679ad0571d5845b29aa9755de/insight.yml)) | 2026-11-24 |
-| [openai](./openapi/openai.yaml) | OpenAI API 2.3.0 | <https://raw.githubusercontent.com/openai/openai-openapi/main/openapi.yaml> ([pinned](https://github.com/openai/openai-openapi/blob/373f26a9aec3608e3158f2a0d4b8ae49d13162a4/openapi.yaml)) | 2026-11-21 |
+| [line-liff](./openapi/line-liff.yaml) | LIFF server API 1.0.0 | <https://raw.githubusercontent.com/line/line-openapi/main/liff.yml> ([pinned](https://github.com/line/line-openapi/blob/967498a4e192914679ad0571d5845b29aa9755de/liff.yml)) | 2026-11-25 |
+| [line-manage-audience](./openapi/line-manage-audience.yaml) | LINE Messaging API 0.0.1 | <https://raw.githubusercontent.com/line/line-openapi/main/manage-audience.yml> ([pinned](https://github.com/line/line-openapi/blob/967498a4e192914679ad0571d5845b29aa9755de/manage-audience.yml)) | 2026-11-25 |
+| [openai](./openapi/openai.yaml) | OpenAI API 2.3.0 | <https://raw.githubusercontent.com/openai/openai-openapi/main/openapi.yaml> ([pinned](https://github.com/openai/openai-openapi/blob/f8e83eac0bc446ff4dd1dd4cd5128e31bde3ce79/openapi.yaml)) | 2026-11-21 |
 | [petstore](./openapi/petstore.json) | Swagger Petstore - OpenAPI 3.0 1.0.27 | <https://petstore3.swagger.io/api/v3/openapi.json> | 2026-11-21 |
 | [spotify](./openapi/spotify.yaml) | Spotify Web API with fixes and improvements from sonallux 2026.5.31 | <https://raw.githubusercontent.com/sonallux/spotify-web-api/main/fixed-spotify-open-api.yml> ([pinned](https://github.com/sonallux/spotify-web-api/blob/f02c40936c591459617491c62fef0b555b8fd63e/fixed-spotify-open-api.yml)) | 2026-11-21 |
+| [stripe](./openapi/stripe.json) | Stripe API 2026-09-30.endive | <https://raw.githubusercontent.com/stripe/openapi/master/openapi/spec3.json> ([pinned](https://github.com/stripe/openapi/blob/5237fa08d785bc435df80fe40c2416e2848e49b7/openapi/spec3.json)) | 2026-11-25 |
 | [train-travel](./openapi/train-travel.json) | Train Travel API 1.0.0 | <https://raw.githubusercontent.com/readmeio/oas-examples/main/3.1/json/train-travel.json> ([pinned](https://github.com/readmeio/oas-examples/blob/060d4ffbbe63003f923c8cd7268ee39a495cf21f/3.1/json/train-travel.json)) | 2026-11-21 |
 | [twilio](./openapi/twilio.json) | Twilio - Api 1.0.0 | <https://raw.githubusercontent.com/twilio/twilio-oai/main/spec/json/twilio_api_v2010.json> ([pinned](https://github.com/twilio/twilio-oai/blob/090e1654f5ca1f6a01b6a117fbec5f75c44f44d7/spec/json/twilio_api_v2010.json)) | 2026-11-24 |
 <!-- specs:end -->
@@ -80,3 +83,4 @@ Problems found while generating are reported where the code lives: schema genera
 | Issue | Effect here |
 | --- | --- |
 | [takibi-hono#96](https://github.com/nakita628/takibi-hono/issues/96) effect `allOf` code uses `SchemaGetter` and `SchemaIssue` without importing them | the takibi-hono Effect apps fail on Discord, OpenAI, Spotify and Train Travel |
+| [asphodelos#65](https://github.com/nakita628/asphodelos/issues/65) a cycle of mutually recursive schemas is rewritten by text, so odd keys and string literals break it | `elysia-typebox` cannot be generated for Stripe (77 schema keys contain a dot) |

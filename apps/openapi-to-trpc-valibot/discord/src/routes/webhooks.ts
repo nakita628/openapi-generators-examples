@@ -58,7 +58,7 @@ export const webhooksRouter = t.router({
         webhook_id: SnowflakeTypeSchema,
         name: v.optional(v.pipe(v.string(), v.minCodePoints(1), v.maxCodePoints(80))),
         avatar: v.optional(v.nullable(v.string())),
-        channel_id: v.optional(v.union([v.nullable(v.null()), SnowflakeTypeSchema])),
+        channel_id: v.optional(v.union([v.null(), SnowflakeTypeSchema])),
       }),
     )
     .output(
@@ -145,23 +145,23 @@ export const webhooksRouter = t.router({
         action: v.optional(v.nullable(v.pipe(v.string(), v.maxCodePoints(152133)))),
         ref: v.optional(v.nullable(v.pipe(v.string(), v.maxCodePoints(152133)))),
         ref_type: v.optional(v.nullable(v.pipe(v.string(), v.maxCodePoints(152133)))),
-        comment: v.optional(v.union([v.nullable(v.null()), GithubCommentSchema])),
-        issue: v.optional(v.union([v.nullable(v.null()), GithubIssueSchema])),
-        pull_request: v.optional(v.union([v.nullable(v.null()), GithubIssueSchema])),
-        repository: v.optional(v.union([v.nullable(v.null()), GithubRepositorySchema])),
-        forkee: v.optional(v.union([v.nullable(v.null()), GithubRepositorySchema])),
+        comment: v.optional(v.union([v.null(), GithubCommentSchema])),
+        issue: v.optional(v.union([v.null(), GithubIssueSchema])),
+        pull_request: v.optional(v.union([v.null(), GithubIssueSchema])),
+        repository: v.optional(v.union([v.null(), GithubRepositorySchema])),
+        forkee: v.optional(v.union([v.null(), GithubRepositorySchema])),
         sender: GithubUserSchema,
-        member: v.optional(v.union([v.nullable(v.null()), GithubUserSchema])),
-        release: v.optional(v.union([v.nullable(v.null()), GithubReleaseSchema])),
-        head_commit: v.optional(v.union([v.nullable(v.null()), GithubCommitSchema])),
+        member: v.optional(v.union([v.null(), GithubUserSchema])),
+        release: v.optional(v.union([v.null(), GithubReleaseSchema])),
+        head_commit: v.optional(v.union([v.null(), GithubCommitSchema])),
         commits: v.optional(v.nullable(v.pipe(v.array(GithubCommitSchema), v.maxLength(1521)))),
         forced: v.optional(v.nullable(v.boolean())),
         compare: v.optional(v.nullable(v.pipe(v.string(), v.url(), v.maxCodePoints(2048)))),
-        review: v.optional(v.union([v.nullable(v.null()), GithubReviewSchema])),
-        check_run: v.optional(v.union([v.nullable(v.null()), GithubCheckRunSchema])),
-        check_suite: v.optional(v.union([v.nullable(v.null()), GithubCheckSuiteSchema])),
-        discussion: v.optional(v.union([v.nullable(v.null()), GithubDiscussionSchema])),
-        answer: v.optional(v.union([v.nullable(v.null()), GithubCommentSchema])),
+        review: v.optional(v.union([v.null(), GithubReviewSchema])),
+        check_run: v.optional(v.union([v.null(), GithubCheckRunSchema])),
+        check_suite: v.optional(v.union([v.null(), GithubCheckSuiteSchema])),
+        discussion: v.optional(v.union([v.null(), GithubDiscussionSchema])),
+        answer: v.optional(v.union([v.null(), GithubCommentSchema])),
       }),
     )
     .mutation(() => {
@@ -199,9 +199,7 @@ export const webhooksRouter = t.router({
         with_components: v.optional(v.boolean()),
         content: v.optional(v.nullable(v.pipe(v.string(), v.maxCodePoints(2000)))),
         embeds: v.optional(v.nullable(v.pipe(v.array(RichEmbedSchema), v.maxLength(10)))),
-        allowed_mentions: v.optional(
-          v.union([v.nullable(v.null()), MessageAllowedMentionsRequestSchema]),
-        ),
+        allowed_mentions: v.optional(v.union([v.null(), MessageAllowedMentionsRequestSchema])),
         components: v.optional(
           v.nullable(
             v.pipe(
@@ -223,7 +221,7 @@ export const webhooksRouter = t.router({
         attachments: v.optional(
           v.nullable(v.pipe(v.array(MessageAttachmentRequestSchema), v.maxLength(10))),
         ),
-        poll: v.optional(v.union([v.nullable(v.null()), PollCreateRequestSchema])),
+        poll: v.optional(v.union([v.null(), PollCreateRequestSchema])),
         flags: v.optional(v.nullable(v.pipe(v.number(), v.integer()))),
       }),
     )
@@ -266,9 +264,7 @@ export const webhooksRouter = t.router({
         with_components: v.optional(v.boolean()),
         content: v.optional(v.nullable(v.pipe(v.string(), v.maxCodePoints(2000)))),
         embeds: v.optional(v.nullable(v.pipe(v.array(RichEmbedSchema), v.maxLength(10)))),
-        allowed_mentions: v.optional(
-          v.union([v.nullable(v.null()), MessageAllowedMentionsRequestSchema]),
-        ),
+        allowed_mentions: v.optional(v.union([v.null(), MessageAllowedMentionsRequestSchema])),
         components: v.optional(
           v.nullable(
             v.pipe(
@@ -290,7 +286,7 @@ export const webhooksRouter = t.router({
         attachments: v.optional(
           v.nullable(v.pipe(v.array(MessageAttachmentRequestSchema), v.maxLength(10))),
         ),
-        poll: v.optional(v.union([v.nullable(v.null()), PollCreateRequestSchema])),
+        poll: v.optional(v.union([v.null(), PollCreateRequestSchema])),
         flags: v.optional(v.nullable(v.pipe(v.number(), v.integer()))),
       }),
     )

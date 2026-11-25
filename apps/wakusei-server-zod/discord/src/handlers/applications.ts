@@ -20,12 +20,12 @@ import {
   ApplicationCommandUserOptionSchema,
   ApplicationEventWebhooksStatusSchema,
   ApplicationExplicitContentFilterTypesSchema,
-  ApplicationFormPartialSchema,
   ApplicationIntegrationTypeConfigurationSchema,
   ApplicationIntegrationTypeSchema,
   ApplicationOAuth2InstallParamsSchema,
   ApplicationRoleConnectionsMetadataItemResponseSchema,
   ApplicationTypesSchema,
+  ApplicationUpdateFormPartialSchema,
   CommandPermissionsResponseSchema,
   EmbeddedActivityInstanceSchema,
   EmojiResponseSchema,
@@ -52,7 +52,7 @@ export const patchApplicationsMe = os
     path: '/applications/@me',
     successDescription: '200 response for update_my_application',
   })
-  .input(ApplicationFormPartialSchema)
+  .input(ApplicationUpdateFormPartialSchema)
   .output(PrivateApplicationResponseSchema)
   .handler(async ({ input }) => { throw new Error('Not implemented') })
 

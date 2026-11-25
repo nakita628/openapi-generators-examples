@@ -6,15 +6,15 @@ import {
   ApplicationCommandPatchRequestPartialSchema,
   ApplicationCommandPermissionSchema,
   ApplicationCommandUpdateRequestSchema,
-  ApplicationFormPartialSchema,
   ApplicationRoleConnectionsMetadataItemRequestSchema,
+  ApplicationUpdateFormPartialSchema,
   CreateEntitlementRequestDataSchema,
   SnowflakeTypeSchema,
 } from '../components'
 
 export const applicationsHandler = new Hono()
   .get('/applications/@me', (c) => { throw new Error('Not implemented') })
-  .patch('/applications/@me', tbValidator('json', ApplicationFormPartialSchema), (c) => { throw new Error('Not implemented') })
+  .patch('/applications/@me', tbValidator('json', ApplicationUpdateFormPartialSchema), (c) => { throw new Error('Not implemented') })
   .get(
     '/applications/:application_id',
     tbValidator('param', Type.Object({ application_id: SnowflakeTypeSchema })),
@@ -23,7 +23,7 @@ export const applicationsHandler = new Hono()
   .patch(
     '/applications/:application_id',
     tbValidator('param', Type.Object({ application_id: SnowflakeTypeSchema })),
-    tbValidator('json', ApplicationFormPartialSchema),
+    tbValidator('json', ApplicationUpdateFormPartialSchema),
     (c) => { throw new Error('Not implemented') },
   )
   .get(

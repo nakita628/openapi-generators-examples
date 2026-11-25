@@ -1,16 +1,17 @@
 {
   "discord": {
     "url": "https://raw.githubusercontent.com/discord/discord-api-spec/main/specs/openapi.json",
-    "pinned": "https://github.com/discord/discord-api-spec/blob/3a21a01249a763cd47f1dfec3da91c5ba71bb974/specs/openapi.json",
     "file": "discord.json",
     "title": "Discord HTTP API (Preview)",
     "version": "10",
     "openapi": "3.1.0",
     "operations": 250,
     "added": "2026-11-21",
-    "etag": "W/\"19542bb6e57f68c5e4ef16055b22565d3a5c6a49836be5b62da33a6d65999330\"",
-    "sha256": "ef338088f4c6a73fdb9840acd1ce2bf8f16c1870f4437bfc563418c7e0de7278",
-    "canonical": "22c72cba9ed7461521d386f3a32f4fa400af39edc85e0b8dc9aacf0587384adf"
+    "sha256": "33be28e715283003426be4666c0b558a53ce2e9a54f13217666304a2865048ba",
+    "pinned": "https://github.com/discord/discord-api-spec/blob/654230017d4f5ee3e6a59a769ffc40cf61001e3f/specs/openapi.json",
+    "updated": "2026-11-25",
+    "etag": "W/\"3dd217b4a22029740ca7519f51d5d69383f227765b9ed2debed3695a0b4229ee\"",
+    "canonical": "945d12e0506a05897465ff1710742a188d7e446bdc53eda6631a7c1b4b744f11"
   },
   "line-channel-access-token": {
     "url": "https://raw.githubusercontent.com/line/line-openapi/main/channel-access-token.yml",
@@ -36,6 +37,30 @@
     "etag": "W/\"3bdfab125c17ac8409669aa38282936a09aeaf1f81c9da4ebb06bb0ed0408dd4\"",
     "sha256": "e4e3a1bbf6c5bf670f11f07c3c92659b236536355286748f3b27252d335723cd"
   },
+  "line-liff": {
+    "url": "https://raw.githubusercontent.com/line/line-openapi/main/liff.yml",
+    "pinned": "https://github.com/line/line-openapi/blob/967498a4e192914679ad0571d5845b29aa9755de/liff.yml",
+    "file": "line-liff.yaml",
+    "title": "LIFF server API",
+    "version": "1.0.0",
+    "openapi": "3.0.2",
+    "operations": 4,
+    "added": "2026-11-25",
+    "etag": "W/\"e3bbf25a3884d0e5c1b39f9afcfd0c6f656d0cfae47f9c5ff1ae3df3e5450297\"",
+    "sha256": "2ba074ae9da7916510707c4b456428e20c93433e391a3558d2ce160a3effd460"
+  },
+  "line-manage-audience": {
+    "url": "https://raw.githubusercontent.com/line/line-openapi/main/manage-audience.yml",
+    "pinned": "https://github.com/line/line-openapi/blob/967498a4e192914679ad0571d5845b29aa9755de/manage-audience.yml",
+    "file": "line-manage-audience.yaml",
+    "title": "LINE Messaging API",
+    "version": "0.0.1",
+    "openapi": "3.0.0",
+    "operations": 12,
+    "added": "2026-11-25",
+    "etag": "W/\"605449f6eb3270a8395f97f408175d80587dedb44456cc842390ab72da2f985d\"",
+    "sha256": "e3f4c214604305ca9d0db45435bd15161d40fb959a4b6cf38356d38fc0577e29"
+  },
   "openai": {
     "url": "https://raw.githubusercontent.com/openai/openai-openapi/main/openapi.yaml",
     "file": "openai.yaml",
@@ -44,10 +69,10 @@
     "openapi": "3.1.0",
     "operations": 388,
     "added": "2026-11-21",
-    "sha256": "7c8d7421248daafc14d6dc749f34da30e97f0c91c7d1f19f6fd011a302c84bcc",
-    "pinned": "https://github.com/openai/openai-openapi/blob/373f26a9aec3608e3158f2a0d4b8ae49d13162a4/openapi.yaml",
-    "updated": "2026-11-24",
-    "etag": "W/\"4b91830a582a4ae3a3acafb1132665b472a831cb8a1036d4db4ef2b7c80e3d92\""
+    "sha256": "09df2b5326964a45db2b48931695e5a5eca695f586963960eea389c265c93492",
+    "updated": "2026-11-25",
+    "pinned": "https://github.com/openai/openai-openapi/blob/f8e83eac0bc446ff4dd1dd4cd5128e31bde3ce79/openapi.yaml",
+    "etag": "W/\"951f75ec1c2d41f27ad827382b6fb47e5dfb102a95faf6d7677bd64ff9e5885f\""
   },
   "petstore": {
     "url": "https://petstore3.swagger.io/api/v3/openapi.json",
@@ -71,6 +96,19 @@
     "added": "2026-11-21",
     "etag": "W/\"eee08d56ef2468961eec08d01ae6b078eb081c4459f85643fae5059e1bff1e2e\"",
     "sha256": "ddeb078a50208d94c4538bd891bec0c9e67c9f3406617a2d887f0a482a4501f4"
+  },
+  "stripe": {
+    "url": "https://raw.githubusercontent.com/stripe/openapi/master/openapi/spec3.json",
+    "pinned": "https://github.com/stripe/openapi/blob/5237fa08d785bc435df80fe40c2416e2848e49b7/openapi/spec3.json",
+    "file": "stripe.json",
+    "title": "Stripe API",
+    "version": "2026-09-30.endive",
+    "openapi": "3.0.0",
+    "operations": 612,
+    "added": "2026-11-25",
+    "etag": "W/\"66ba08254f450bce0bd8d29a246d321c5884608896a23c223994bc75bc4a0a92\"",
+    "sha256": "7cff4cc46d0654101a36a3302f7544640f5f73e4f3cad6f264f0e23c19fa1776",
+    "canonical": "c67c76cd05b4de9e7d1469a49eaf5d97aeceba8f8d797488d478e1dbe97a05be"
   },
   "train-travel": {
     "url": "https://raw.githubusercontent.com/readmeio/oas-examples/main/3.1/json/train-travel.json",

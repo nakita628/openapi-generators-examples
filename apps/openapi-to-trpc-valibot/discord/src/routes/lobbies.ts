@@ -48,7 +48,7 @@ export const lobbiesRouter = t.router({
           v.nullable(v.record(v.string(), v.pipe(v.string(), v.maxCodePoints(1024)))),
         ),
         secret: v.pipe(v.string(), v.maxCodePoints(250)),
-        flags: v.optional(v.union([v.nullable(v.null()), v.literal(1)])),
+        flags: v.optional(v.union([v.null(), v.literal(1)])),
         name: v.optional(v.nullable(v.pipe(v.string(), v.minCodePoints(1), v.maxCodePoints(100)))),
       }),
     )
@@ -72,7 +72,7 @@ export const lobbiesRouter = t.router({
           ),
           members: v.nullable(v.pipe(v.array(LobbyMemberRequestSchema), v.maxLength(25))),
           metadata: v.nullable(v.record(v.string(), v.pipe(v.string(), v.maxCodePoints(1024)))),
-          flags: v.union([v.nullable(v.null()), v.literal(1)]),
+          flags: v.union([v.null(), v.literal(1)]),
           override_event_webhooks_url: v.nullable(
             v.pipe(v.string(), v.url(), v.maxCodePoints(512)),
           ),
@@ -115,7 +115,7 @@ export const lobbiesRouter = t.router({
           v.nullable(v.record(v.string(), v.pipe(v.string(), v.maxCodePoints(1024)))),
         ),
         members: v.optional(v.nullable(v.pipe(v.array(LobbyMemberRequestSchema), v.maxLength(25)))),
-        flags: v.optional(v.union([v.nullable(v.null()), v.literal(1)])),
+        flags: v.optional(v.union([v.null(), v.literal(1)])),
         override_event_webhooks_url: v.optional(
           v.nullable(v.pipe(v.string(), v.url(), v.maxCodePoints(512))),
         ),
@@ -130,7 +130,7 @@ export const lobbiesRouter = t.router({
     .input(
       v.object({
         lobby_id: SnowflakeTypeSchema,
-        channel_id: v.optional(v.union([v.nullable(v.null()), SnowflakeTypeSchema])),
+        channel_id: v.optional(v.union([v.null(), SnowflakeTypeSchema])),
       }),
     )
     .output(LobbyResponseSchema)
@@ -169,7 +169,7 @@ export const lobbiesRouter = t.router({
         metadata: v.optional(
           v.nullable(v.record(v.string(), v.pipe(v.string(), v.maxCodePoints(1024)))),
         ),
-        flags: v.optional(v.union([v.nullable(v.null()), v.literal(1)])),
+        flags: v.optional(v.union([v.null(), v.literal(1)])),
         additional_name: v.optional(
           v.nullable(v.pipe(v.string(), v.minCodePoints(1), v.maxCodePoints(80))),
         ),
@@ -207,9 +207,7 @@ export const lobbiesRouter = t.router({
         lobby_id: SnowflakeTypeSchema,
         content: v.optional(v.nullable(v.pipe(v.string(), v.maxCodePoints(4000)))),
         embeds: v.optional(v.nullable(v.pipe(v.array(RichEmbedSchema), v.maxLength(10)))),
-        allowed_mentions: v.optional(
-          v.union([v.nullable(v.null()), MessageAllowedMentionsRequestSchema]),
-        ),
+        allowed_mentions: v.optional(v.union([v.null(), MessageAllowedMentionsRequestSchema])),
         sticker_ids: v.optional(v.nullable(v.pipe(v.array(SnowflakeTypeSchema), v.maxLength(3)))),
         components: v.optional(
           v.nullable(
@@ -233,13 +231,9 @@ export const lobbiesRouter = t.router({
         attachments: v.optional(
           v.nullable(v.pipe(v.array(MessageAttachmentRequestSchema), v.maxLength(10))),
         ),
-        poll: v.optional(v.union([v.nullable(v.null()), PollCreateRequestSchema])),
-        shared_client_theme: v.optional(
-          v.union([v.nullable(v.null()), CustomClientThemeShareRequestSchema]),
-        ),
-        message_reference: v.optional(
-          v.union([v.nullable(v.null()), MessageReferenceRequestSchema]),
-        ),
+        poll: v.optional(v.union([v.null(), PollCreateRequestSchema])),
+        shared_client_theme: v.optional(v.union([v.null(), CustomClientThemeShareRequestSchema])),
+        message_reference: v.optional(v.union([v.null(), MessageReferenceRequestSchema])),
         nonce: v.optional(
           v.union([
             v.pipe(
@@ -251,11 +245,11 @@ export const lobbiesRouter = t.router({
               v.transform((input) => BigInt(input)),
               v.minValue(-9223372036854775808n),
               v.maxValue(9223372036854775807n),
-              v.minValue(-9223372036854776000n),
-              v.maxValue(9223372036854776000n),
+              v.minValue(-9223372036854775808n),
+              v.maxValue(9223372036854775808n),
             ),
             v.pipe(v.string(), v.maxCodePoints(25)),
-            v.nullable(v.null()),
+            v.null(),
           ]),
         ),
         enforce_nonce: v.optional(v.nullable(v.boolean())),

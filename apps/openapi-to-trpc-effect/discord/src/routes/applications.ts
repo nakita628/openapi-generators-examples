@@ -21,13 +21,13 @@ import {
   ApplicationCommandUserOptionSchema,
   ApplicationEventWebhooksStatusSchema,
   ApplicationExplicitContentFilterTypesSchema,
-  ApplicationFormPartialSchema,
   ApplicationIntegrationTypeConfigurationSchema,
   ApplicationIntegrationTypeSchema,
   ApplicationOAuth2InstallParamsSchema,
   ApplicationRoleConnectionsMetadataItemRequestSchema,
   ApplicationRoleConnectionsMetadataItemResponseSchema,
   ApplicationTypesSchema,
+  ApplicationUpdateFormPartialSchema,
   CommandPermissionsResponseSchema,
   EmbeddedActivityInstanceSchema,
   EmojiResponseSchema,
@@ -48,7 +48,7 @@ export const applicationsRouter = t.router({
       throw new TRPCError({ code: 'NOT_IMPLEMENTED' })
     }),
   patchApplicationsMe: t.procedure
-    .input(Schema.toStandardSchemaV1(ApplicationFormPartialSchema))
+    .input(Schema.toStandardSchemaV1(ApplicationUpdateFormPartialSchema))
     .output(Schema.toStandardSchemaV1(PrivateApplicationResponseSchema))
     .mutation(() => {
       throw new TRPCError({ code: 'NOT_IMPLEMENTED' })

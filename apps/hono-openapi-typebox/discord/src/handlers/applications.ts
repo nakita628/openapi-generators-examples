@@ -9,9 +9,9 @@ import {
   ApplicationCommandPermissionSchema,
   ApplicationCommandResponseSchema,
   ApplicationCommandUpdateRequestSchema,
-  ApplicationFormPartialSchema,
   ApplicationRoleConnectionsMetadataItemRequestSchema,
   ApplicationRoleConnectionsMetadataItemResponseSchema,
+  ApplicationUpdateFormPartialSchema,
   CommandPermissionsResponseSchema,
   CreateEntitlementRequestDataSchema,
   EmbeddedActivityInstanceSchema,
@@ -102,7 +102,7 @@ export const applicationsHandler = new Hono()
       },
       security: [{ BotToken: [] }],
     }),
-    validator('json', toStandardSchemaV1(ApplicationFormPartialSchema)),
+    validator('json', toStandardSchemaV1(ApplicationUpdateFormPartialSchema)),
     (c) => { throw new Error('Not implemented') },
   )
   .get(
@@ -159,7 +159,7 @@ export const applicationsHandler = new Hono()
       security: [{ BotToken: [] }],
     }),
     validator('param', toStandardSchemaV1(Type.Object({ application_id: SnowflakeTypeSchema }))),
-    validator('json', toStandardSchemaV1(ApplicationFormPartialSchema)),
+    validator('json', toStandardSchemaV1(ApplicationUpdateFormPartialSchema)),
     (c) => { throw new Error('Not implemented') },
   )
   .get(

@@ -147,7 +147,7 @@ export type AssistantToolsFunction = typeof AssistantToolsFunctionSchema.infer
 
 export const MetadataSchema = type(
   type({ '[string]': 'string' }).describe(
-    'Set of 16 key-value pairs that can be attached to an object. This can be\nuseful for storing additional information about the object in a structured\nformat, and querying for objects via API or the dashboard.\n\nKeys are strings with a maximum length of 64 characters. Values are strings\nwith a maximum length of 512 characters.\n',
+    'Set of 16 key-value pairs that can be attached to an object. This can be\nuseful for storing additional information about the object in a structured\nformat.\n\nKeys are strings with a maximum length of 64 characters. Values are strings\nwith a maximum length of 512 characters.\n',
   ),
 ).or('null')
 
@@ -3278,7 +3278,7 @@ export const CompoundFilterSchema = scope({
           [
             ['ComparisonFilterSchema', '&', { type: "'ComparisonFilter'" }],
             '|',
-            ['CompoundFilterSchema', '&', { type: "'CompoundFilterSchema'" }],
+            ['CompoundFilterSchema', '&', { type: "'CompoundFilter'" }],
           ],
           '[]',
         ],
@@ -7729,6 +7729,10 @@ export const ModelIdsResponsesSchema = type(ModelIdsSharedSchema).or(
     'gpt-rosalind-research',
     'gpt-6-rosalind',
     'gpt-6.2-astra-law',
+    'gpt-6-astra-healthcare',
+    'gpt-6.1-sol-healthcare',
+    'gpt-6.2-astra-healthcare',
+    'gpt-6.2-sol-healthcare',
   ),
 )
 
@@ -24708,6 +24712,11 @@ export const CreateConversationBodySchema = type({
       'Set of 16 key-value pairs that can be attached to an object. This can be         useful for storing additional information about the object in a structured         format, and querying for objects via API or the dashboard.\n        Keys are strings with a maximum length of 64 characters. Values are strings         with a maximum length of 512 characters.',
     ),
   ).or('null'),
+  'safety_identifier?': type(
+    type('string')
+      .narrow((data, ctx) => [...data].length <= 128 || ctx.mustBe('at most 128 characters'))
+      .describe('A stable identifier used for safety monitoring and abuse detection.'),
+  ).or('null'),
   'items?': type(
     type(type(InputItemSchema).array())
       .and(type('unknown[] <= 20'))
@@ -36366,7 +36375,7 @@ export const BetaCompoundFilterSchema = scope({
           [
             ['BetaComparisonFilterSchema', '&', { type: "'BetaComparisonFilter'" }],
             '|',
-            ['BetaCompoundFilterSchema', '&', { type: "'BetaCompoundFilterSchema'" }],
+            ['BetaCompoundFilterSchema', '&', { type: "'BetaCompoundFilter'" }],
           ],
           '[]',
         ],
@@ -38618,6 +38627,10 @@ export const BetaModelIdsResponsesSchema = type(BetaModelIdsSharedSchema).or(
     'gpt-rosalind-research',
     'gpt-6-rosalind',
     'gpt-6.2-astra-law',
+    'gpt-6-astra-healthcare',
+    'gpt-6.1-sol-healthcare',
+    'gpt-6.2-astra-healthcare',
+    'gpt-6.2-sol-healthcare',
   ),
 )
 
@@ -39890,7 +39903,7 @@ export type BetaResponseCustomToolCallInputDeltaEvent =
 
 export const BetaMetadataSchema = type(
   type({ '[string]': 'string' }).describe(
-    'Set of 16 key-value pairs that can be attached to an object. This can be\nuseful for storing additional information about the object in a structured\nformat, and querying for objects via API or the dashboard.\n\nKeys are strings with a maximum length of 64 characters. Values are strings\nwith a maximum length of 512 characters.\n',
+    'Set of 16 key-value pairs that can be attached to an object. This can be\nuseful for storing additional information about the object in a structured\nformat.\n\nKeys are strings with a maximum length of 64 characters. Values are strings\nwith a maximum length of 512 characters.\n',
   ),
 ).or('null')
 

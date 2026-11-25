@@ -1,29 +1,29 @@
 {
   "discord": {
     "elysia-typebox": {
-      "generator": "asphodelos@0.5.1",
-      "date": "2026-11-24",
+      "generator": "asphodelos@0.5.6",
+      "date": "2026-11-25",
       "typecheck": {
         "errors": 0
       }
     },
     "hono-arktype": {
-      "generator": "takibi-hono@0.10.2",
-      "date": "2026-11-24",
+      "generator": "takibi-hono@0.11.1",
+      "date": "2026-11-25",
       "typecheck": {
         "errors": 0
       }
     },
     "hono-define-handler-arktype": {
-      "generator": "takibi-hono@0.10.2",
-      "date": "2026-11-24",
+      "generator": "takibi-hono@0.11.1",
+      "date": "2026-11-25",
       "typecheck": {
         "errors": 0
       }
     },
     "hono-define-handler-effect": {
-      "generator": "takibi-hono@0.10.2",
-      "date": "2026-11-24",
+      "generator": "takibi-hono@0.11.1",
+      "date": "2026-11-25",
       "typecheck": {
         "errors": 8,
         "codes": "TS2304 ×6, TS7006 ×2",
@@ -32,22 +32,22 @@
       "issue": "nakita628/takibi-hono#96"
     },
     "hono-define-handler-valibot": {
-      "generator": "takibi-hono@0.10.2",
-      "date": "2026-11-24",
+      "generator": "takibi-hono@0.11.1",
+      "date": "2026-11-25",
       "typecheck": {
         "errors": 0
       }
     },
     "hono-define-handler-zod": {
-      "generator": "takibi-hono@0.10.2",
-      "date": "2026-11-24",
+      "generator": "takibi-hono@0.11.1",
+      "date": "2026-11-25",
       "typecheck": {
         "errors": 0
       }
     },
     "hono-effect": {
-      "generator": "takibi-hono@0.10.2",
-      "date": "2026-11-24",
+      "generator": "takibi-hono@0.11.1",
+      "date": "2026-11-25",
       "typecheck": {
         "errors": 8,
         "codes": "TS2304 ×6, TS7006 ×2",
@@ -56,15 +56,15 @@
       "issue": "nakita628/takibi-hono#96"
     },
     "hono-openapi-arktype": {
-      "generator": "takibi-hono@0.10.2",
-      "date": "2026-11-24",
+      "generator": "takibi-hono@0.11.1",
+      "date": "2026-11-25",
       "typecheck": {
         "errors": 0
       }
     },
     "hono-openapi-effect": {
-      "generator": "takibi-hono@0.10.2",
-      "date": "2026-11-24",
+      "generator": "takibi-hono@0.11.1",
+      "date": "2026-11-25",
       "typecheck": {
         "errors": 8,
         "codes": "TS2304 ×6, TS7006 ×2",
@@ -73,113 +73,113 @@
       "issue": "nakita628/takibi-hono#96"
     },
     "hono-openapi-typebox": {
-      "generator": "takibi-hono@0.10.2",
-      "date": "2026-11-24",
+      "generator": "takibi-hono@0.11.1",
+      "date": "2026-11-25",
       "typecheck": {
         "errors": 0
       }
     },
     "hono-openapi-valibot": {
-      "generator": "takibi-hono@0.10.2",
-      "date": "2026-11-24",
+      "generator": "takibi-hono@0.11.1",
+      "date": "2026-11-25",
       "typecheck": {
         "errors": 0
       }
     },
     "hono-openapi-zod": {
-      "generator": "takibi-hono@0.10.2",
-      "date": "2026-11-24",
+      "generator": "takibi-hono@0.11.1",
+      "date": "2026-11-25",
       "typecheck": {
         "errors": 0
       }
     },
     "hono-typebox": {
-      "generator": "takibi-hono@0.10.2",
-      "date": "2026-11-24",
+      "generator": "takibi-hono@0.11.1",
+      "date": "2026-11-25",
       "typecheck": {
         "errors": 0
       }
     },
     "hono-valibot": {
-      "generator": "takibi-hono@0.10.2",
-      "date": "2026-11-24",
+      "generator": "takibi-hono@0.11.1",
+      "date": "2026-11-25",
       "typecheck": {
         "errors": 0
       }
     },
     "hono-zod": {
-      "generator": "takibi-hono@0.10.2",
-      "date": "2026-11-24",
+      "generator": "takibi-hono@0.11.1",
+      "date": "2026-11-25",
       "typecheck": {
         "errors": 0
       }
     },
     "openapi-to-trpc-arktype": {
-      "generator": "openapi-to-trpc@0.3.1",
-      "date": "2026-11-24",
+      "generator": "openapi-to-trpc@0.4.0",
+      "date": "2026-11-25",
       "typecheck": {
         "errors": 0
       }
     },
     "openapi-to-trpc-effect": {
-      "generator": "openapi-to-trpc@0.3.1",
-      "date": "2026-11-24",
+      "generator": "openapi-to-trpc@0.4.0",
+      "date": "2026-11-25",
       "typecheck": {
         "errors": 0
       }
     },
     "openapi-to-trpc-valibot": {
-      "generator": "openapi-to-trpc@0.3.0",
-      "date": "2026-11-23",
+      "generator": "openapi-to-trpc@0.4.0",
+      "date": "2026-11-25",
       "typecheck": {
         "errors": 0
       }
     },
     "openapi-to-trpc-zod": {
-      "generator": "openapi-to-trpc@0.3.0",
-      "date": "2026-11-23",
+      "generator": "openapi-to-trpc@0.4.0",
+      "date": "2026-11-25",
       "typecheck": {
         "errors": 0
       }
     },
     "wakusei-contract-arktype": {
-      "generator": "wakusei@0.1.0",
-      "date": "2026-11-23",
+      "generator": "wakusei@0.1.1",
+      "date": "2026-11-25",
       "typecheck": {
         "errors": 0
       }
     },
     "wakusei-contract-valibot": {
-      "generator": "wakusei@0.1.0",
-      "date": "2026-11-23",
+      "generator": "wakusei@0.1.1",
+      "date": "2026-11-25",
       "typecheck": {
         "errors": 0
       }
     },
     "wakusei-contract-zod": {
-      "generator": "wakusei@0.1.0",
-      "date": "2026-11-23",
+      "generator": "wakusei@0.1.1",
+      "date": "2026-11-25",
       "typecheck": {
         "errors": 0
       }
     },
     "wakusei-server-arktype": {
-      "generator": "wakusei@0.1.0",
-      "date": "2026-11-23",
+      "generator": "wakusei@0.1.1",
+      "date": "2026-11-25",
       "typecheck": {
         "errors": 0
       }
     },
     "wakusei-server-valibot": {
-      "generator": "wakusei@0.1.0",
-      "date": "2026-11-23",
+      "generator": "wakusei@0.1.1",
+      "date": "2026-11-25",
       "typecheck": {
         "errors": 0
       }
     },
     "wakusei-server-zod": {
-      "generator": "wakusei@0.1.0",
-      "date": "2026-11-23",
+      "generator": "wakusei@0.1.1",
+      "date": "2026-11-25",
       "typecheck": {
         "errors": 0
       }
@@ -539,31 +539,385 @@
       }
     }
   },
-  "openai": {
+  "line-liff": {
     "elysia-typebox": {
-      "generator": "asphodelos@0.5.4",
-      "date": "2026-11-24",
+      "generator": "asphodelos@0.5.6",
+      "date": "2026-11-25",
       "typecheck": {
         "errors": 0
       }
     },
     "hono-arktype": {
-      "generator": "takibi-hono@0.10.2",
-      "date": "2026-11-24",
+      "generator": "takibi-hono@0.11.1",
+      "date": "2026-11-25",
       "typecheck": {
         "errors": 0
       }
     },
     "hono-define-handler-arktype": {
-      "generator": "takibi-hono@0.10.2",
-      "date": "2026-11-24",
+      "generator": "takibi-hono@0.11.1",
+      "date": "2026-11-25",
       "typecheck": {
         "errors": 0
       }
     },
     "hono-define-handler-effect": {
-      "generator": "takibi-hono@0.10.2",
-      "date": "2026-11-24",
+      "generator": "takibi-hono@0.11.1",
+      "date": "2026-11-25",
+      "typecheck": {
+        "errors": 0
+      }
+    },
+    "hono-define-handler-valibot": {
+      "generator": "takibi-hono@0.11.1",
+      "date": "2026-11-25",
+      "typecheck": {
+        "errors": 0
+      }
+    },
+    "hono-define-handler-zod": {
+      "generator": "takibi-hono@0.11.1",
+      "date": "2026-11-25",
+      "typecheck": {
+        "errors": 0
+      }
+    },
+    "hono-effect": {
+      "generator": "takibi-hono@0.11.1",
+      "date": "2026-11-25",
+      "typecheck": {
+        "errors": 0
+      }
+    },
+    "hono-openapi-arktype": {
+      "generator": "takibi-hono@0.11.1",
+      "date": "2026-11-25",
+      "typecheck": {
+        "errors": 0
+      }
+    },
+    "hono-openapi-effect": {
+      "generator": "takibi-hono@0.11.1",
+      "date": "2026-11-25",
+      "typecheck": {
+        "errors": 0
+      }
+    },
+    "hono-openapi-typebox": {
+      "generator": "takibi-hono@0.11.1",
+      "date": "2026-11-25",
+      "typecheck": {
+        "errors": 0
+      }
+    },
+    "hono-openapi-valibot": {
+      "generator": "takibi-hono@0.11.1",
+      "date": "2026-11-25",
+      "typecheck": {
+        "errors": 0
+      }
+    },
+    "hono-openapi-zod": {
+      "generator": "takibi-hono@0.11.1",
+      "date": "2026-11-25",
+      "typecheck": {
+        "errors": 0
+      }
+    },
+    "hono-typebox": {
+      "generator": "takibi-hono@0.11.1",
+      "date": "2026-11-25",
+      "typecheck": {
+        "errors": 0
+      }
+    },
+    "hono-valibot": {
+      "generator": "takibi-hono@0.11.1",
+      "date": "2026-11-25",
+      "typecheck": {
+        "errors": 0
+      }
+    },
+    "hono-zod": {
+      "generator": "takibi-hono@0.11.1",
+      "date": "2026-11-25",
+      "typecheck": {
+        "errors": 0
+      }
+    },
+    "openapi-to-trpc-arktype": {
+      "generator": "openapi-to-trpc@0.4.0",
+      "date": "2026-11-25",
+      "typecheck": {
+        "errors": 0
+      }
+    },
+    "openapi-to-trpc-effect": {
+      "generator": "openapi-to-trpc@0.4.0",
+      "date": "2026-11-25",
+      "typecheck": {
+        "errors": 0
+      }
+    },
+    "openapi-to-trpc-valibot": {
+      "generator": "openapi-to-trpc@0.4.0",
+      "date": "2026-11-25",
+      "typecheck": {
+        "errors": 0
+      }
+    },
+    "openapi-to-trpc-zod": {
+      "generator": "openapi-to-trpc@0.4.0",
+      "date": "2026-11-25",
+      "typecheck": {
+        "errors": 0
+      }
+    },
+    "wakusei-contract-arktype": {
+      "generator": "wakusei@0.1.1",
+      "date": "2026-11-25",
+      "typecheck": {
+        "errors": 0
+      }
+    },
+    "wakusei-contract-valibot": {
+      "generator": "wakusei@0.1.1",
+      "date": "2026-11-25",
+      "typecheck": {
+        "errors": 0
+      }
+    },
+    "wakusei-contract-zod": {
+      "generator": "wakusei@0.1.1",
+      "date": "2026-11-25",
+      "typecheck": {
+        "errors": 0
+      }
+    },
+    "wakusei-server-arktype": {
+      "generator": "wakusei@0.1.1",
+      "date": "2026-11-25",
+      "typecheck": {
+        "errors": 0
+      }
+    },
+    "wakusei-server-valibot": {
+      "generator": "wakusei@0.1.1",
+      "date": "2026-11-25",
+      "typecheck": {
+        "errors": 0
+      }
+    },
+    "wakusei-server-zod": {
+      "generator": "wakusei@0.1.1",
+      "date": "2026-11-25",
+      "typecheck": {
+        "errors": 0
+      }
+    }
+  },
+  "line-manage-audience": {
+    "elysia-typebox": {
+      "generator": "asphodelos@0.5.6",
+      "date": "2026-11-25",
+      "typecheck": {
+        "errors": 0
+      }
+    },
+    "hono-arktype": {
+      "generator": "takibi-hono@0.11.1",
+      "date": "2026-11-25",
+      "typecheck": {
+        "errors": 0
+      }
+    },
+    "hono-define-handler-arktype": {
+      "generator": "takibi-hono@0.11.1",
+      "date": "2026-11-25",
+      "typecheck": {
+        "errors": 0
+      }
+    },
+    "hono-define-handler-effect": {
+      "generator": "takibi-hono@0.11.1",
+      "date": "2026-11-25",
+      "typecheck": {
+        "errors": 0
+      }
+    },
+    "hono-define-handler-valibot": {
+      "generator": "takibi-hono@0.11.1",
+      "date": "2026-11-25",
+      "typecheck": {
+        "errors": 0
+      }
+    },
+    "hono-define-handler-zod": {
+      "generator": "takibi-hono@0.11.1",
+      "date": "2026-11-25",
+      "typecheck": {
+        "errors": 0
+      }
+    },
+    "hono-effect": {
+      "generator": "takibi-hono@0.11.1",
+      "date": "2026-11-25",
+      "typecheck": {
+        "errors": 0
+      }
+    },
+    "hono-openapi-arktype": {
+      "generator": "takibi-hono@0.11.1",
+      "date": "2026-11-25",
+      "typecheck": {
+        "errors": 0
+      }
+    },
+    "hono-openapi-effect": {
+      "generator": "takibi-hono@0.11.1",
+      "date": "2026-11-25",
+      "typecheck": {
+        "errors": 0
+      }
+    },
+    "hono-openapi-typebox": {
+      "generator": "takibi-hono@0.11.1",
+      "date": "2026-11-25",
+      "typecheck": {
+        "errors": 0
+      }
+    },
+    "hono-openapi-valibot": {
+      "generator": "takibi-hono@0.11.1",
+      "date": "2026-11-25",
+      "typecheck": {
+        "errors": 0
+      }
+    },
+    "hono-openapi-zod": {
+      "generator": "takibi-hono@0.11.1",
+      "date": "2026-11-25",
+      "typecheck": {
+        "errors": 0
+      }
+    },
+    "hono-typebox": {
+      "generator": "takibi-hono@0.11.1",
+      "date": "2026-11-25",
+      "typecheck": {
+        "errors": 0
+      }
+    },
+    "hono-valibot": {
+      "generator": "takibi-hono@0.11.1",
+      "date": "2026-11-25",
+      "typecheck": {
+        "errors": 0
+      }
+    },
+    "hono-zod": {
+      "generator": "takibi-hono@0.11.1",
+      "date": "2026-11-25",
+      "typecheck": {
+        "errors": 0
+      }
+    },
+    "openapi-to-trpc-arktype": {
+      "generator": "openapi-to-trpc@0.4.0",
+      "date": "2026-11-25",
+      "typecheck": {
+        "errors": 0
+      }
+    },
+    "openapi-to-trpc-effect": {
+      "generator": "openapi-to-trpc@0.4.0",
+      "date": "2026-11-25",
+      "typecheck": {
+        "errors": 0
+      }
+    },
+    "openapi-to-trpc-valibot": {
+      "generator": "openapi-to-trpc@0.4.0",
+      "date": "2026-11-25",
+      "typecheck": {
+        "errors": 0
+      }
+    },
+    "openapi-to-trpc-zod": {
+      "generator": "openapi-to-trpc@0.4.0",
+      "date": "2026-11-25",
+      "typecheck": {
+        "errors": 0
+      }
+    },
+    "wakusei-contract-arktype": {
+      "generator": "wakusei@0.1.1",
+      "date": "2026-11-25",
+      "typecheck": {
+        "errors": 0
+      }
+    },
+    "wakusei-contract-valibot": {
+      "generator": "wakusei@0.1.1",
+      "date": "2026-11-25",
+      "typecheck": {
+        "errors": 0
+      }
+    },
+    "wakusei-contract-zod": {
+      "generator": "wakusei@0.1.1",
+      "date": "2026-11-25",
+      "typecheck": {
+        "errors": 0
+      }
+    },
+    "wakusei-server-arktype": {
+      "generator": "wakusei@0.1.1",
+      "date": "2026-11-25",
+      "typecheck": {
+        "errors": 0
+      }
+    },
+    "wakusei-server-valibot": {
+      "generator": "wakusei@0.1.1",
+      "date": "2026-11-25",
+      "typecheck": {
+        "errors": 0
+      }
+    },
+    "wakusei-server-zod": {
+      "generator": "wakusei@0.1.1",
+      "date": "2026-11-25",
+      "typecheck": {
+        "errors": 0
+      }
+    }
+  },
+  "openai": {
+    "elysia-typebox": {
+      "generator": "asphodelos@0.5.6",
+      "date": "2026-11-25",
+      "typecheck": {
+        "errors": 0
+      }
+    },
+    "hono-arktype": {
+      "generator": "takibi-hono@0.11.1",
+      "date": "2026-11-25",
+      "typecheck": {
+        "errors": 0
+      }
+    },
+    "hono-define-handler-arktype": {
+      "generator": "takibi-hono@0.11.1",
+      "date": "2026-11-25",
+      "typecheck": {
+        "errors": 0
+      }
+    },
+    "hono-define-handler-effect": {
+      "generator": "takibi-hono@0.11.1",
+      "date": "2026-11-25",
       "typecheck": {
         "errors": 5097,
         "codes": "TS2304 ×3738, TS7006 ×1246, TS2345 ×111, TS2322 ×2",
@@ -572,22 +926,22 @@
       "issue": "nakita628/takibi-hono#96"
     },
     "hono-define-handler-valibot": {
-      "generator": "takibi-hono@0.10.2",
-      "date": "2026-11-24",
+      "generator": "takibi-hono@0.11.1",
+      "date": "2026-11-25",
       "typecheck": {
         "errors": 0
       }
     },
     "hono-define-handler-zod": {
-      "generator": "takibi-hono@0.10.2",
-      "date": "2026-11-24",
+      "generator": "takibi-hono@0.11.1",
+      "date": "2026-11-25",
       "typecheck": {
         "errors": 0
       }
     },
     "hono-effect": {
-      "generator": "takibi-hono@0.10.2",
-      "date": "2026-11-24",
+      "generator": "takibi-hono@0.11.1",
+      "date": "2026-11-25",
       "typecheck": {
         "errors": 5017,
         "codes": "TS2304 ×3738, TS7006 ×1246, TS2345 ×31, TS2322 ×2",
@@ -596,15 +950,15 @@
       "issue": "nakita628/takibi-hono#96"
     },
     "hono-openapi-arktype": {
-      "generator": "takibi-hono@0.10.2",
-      "date": "2026-11-24",
+      "generator": "takibi-hono@0.11.1",
+      "date": "2026-11-25",
       "typecheck": {
         "errors": 0
       }
     },
     "hono-openapi-effect": {
-      "generator": "takibi-hono@0.10.2",
-      "date": "2026-11-24",
+      "generator": "takibi-hono@0.11.1",
+      "date": "2026-11-25",
       "typecheck": {
         "errors": 5104,
         "codes": "TS2304 ×3738, TS7006 ×1246, TS2345 ×118, TS2322 ×2",
@@ -613,113 +967,113 @@
       "issue": "nakita628/takibi-hono#96"
     },
     "hono-openapi-typebox": {
-      "generator": "takibi-hono@0.10.2",
-      "date": "2026-11-24",
+      "generator": "takibi-hono@0.11.1",
+      "date": "2026-11-25",
       "typecheck": {
         "errors": 0
       }
     },
     "hono-openapi-valibot": {
-      "generator": "takibi-hono@0.10.2",
-      "date": "2026-11-24",
+      "generator": "takibi-hono@0.11.1",
+      "date": "2026-11-25",
       "typecheck": {
         "errors": 0
       }
     },
     "hono-openapi-zod": {
-      "generator": "takibi-hono@0.10.2",
-      "date": "2026-11-24",
+      "generator": "takibi-hono@0.11.1",
+      "date": "2026-11-25",
       "typecheck": {
         "errors": 0
       }
     },
     "hono-typebox": {
-      "generator": "takibi-hono@0.10.2",
-      "date": "2026-11-24",
+      "generator": "takibi-hono@0.11.1",
+      "date": "2026-11-25",
       "typecheck": {
         "errors": 0
       }
     },
     "hono-valibot": {
-      "generator": "takibi-hono@0.10.2",
-      "date": "2026-11-24",
+      "generator": "takibi-hono@0.11.1",
+      "date": "2026-11-25",
       "typecheck": {
         "errors": 0
       }
     },
     "hono-zod": {
-      "generator": "takibi-hono@0.10.2",
-      "date": "2026-11-24",
+      "generator": "takibi-hono@0.11.1",
+      "date": "2026-11-25",
       "typecheck": {
         "errors": 0
       }
     },
     "openapi-to-trpc-arktype": {
-      "generator": "openapi-to-trpc@0.3.1",
-      "date": "2026-11-24",
+      "generator": "openapi-to-trpc@0.4.0",
+      "date": "2026-11-25",
       "typecheck": {
         "errors": 0
       }
     },
     "openapi-to-trpc-effect": {
-      "generator": "openapi-to-trpc@0.3.1",
-      "date": "2026-11-24",
+      "generator": "openapi-to-trpc@0.4.0",
+      "date": "2026-11-25",
       "typecheck": {
         "errors": 0
       }
     },
     "openapi-to-trpc-valibot": {
-      "generator": "openapi-to-trpc@0.3.1",
-      "date": "2026-11-24",
+      "generator": "openapi-to-trpc@0.4.0",
+      "date": "2026-11-25",
       "typecheck": {
         "errors": 0
       }
     },
     "openapi-to-trpc-zod": {
-      "generator": "openapi-to-trpc@0.3.1",
-      "date": "2026-11-24",
+      "generator": "openapi-to-trpc@0.4.0",
+      "date": "2026-11-25",
       "typecheck": {
         "errors": 0
       }
     },
     "wakusei-contract-arktype": {
-      "generator": "wakusei@0.1.0",
-      "date": "2026-11-24",
+      "generator": "wakusei@0.1.1",
+      "date": "2026-11-25",
       "typecheck": {
         "errors": 0
       }
     },
     "wakusei-contract-valibot": {
-      "generator": "wakusei@0.1.0",
-      "date": "2026-11-24",
+      "generator": "wakusei@0.1.1",
+      "date": "2026-11-25",
       "typecheck": {
         "errors": 0
       }
     },
     "wakusei-contract-zod": {
-      "generator": "wakusei@0.1.0",
-      "date": "2026-11-24",
+      "generator": "wakusei@0.1.1",
+      "date": "2026-11-25",
       "typecheck": {
         "errors": 0
       }
     },
     "wakusei-server-arktype": {
-      "generator": "wakusei@0.1.0",
-      "date": "2026-11-24",
+      "generator": "wakusei@0.1.1",
+      "date": "2026-11-25",
       "typecheck": {
         "errors": 0
       }
     },
     "wakusei-server-valibot": {
-      "generator": "wakusei@0.1.0",
-      "date": "2026-11-24",
+      "generator": "wakusei@0.1.1",
+      "date": "2026-11-25",
       "typecheck": {
         "errors": 0
       }
     },
     "wakusei-server-zod": {
-      "generator": "wakusei@0.1.0",
-      "date": "2026-11-24",
+      "generator": "wakusei@0.1.1",
+      "date": "2026-11-25",
       "typecheck": {
         "errors": 0
       }
@@ -1086,6 +1440,248 @@
       "typecheck": {
         "errors": 0
       }
+    }
+  },
+  "stripe": {
+    "elysia-typebox": {
+      "failed": {
+        "generator": "asphodelos@0.5.6",
+        "date": "2026-11-25",
+        "error": "Expected `,` or `}` but found `.`"
+      },
+      "issue": "nakita628/asphodelos#65"
+    },
+    "hono-arktype": {
+      "generator": "takibi-hono@0.11.1",
+      "date": "2026-11-25",
+      "typecheck": {
+        "errors": 23572,
+        "codes": "TS2345 ×23572",
+        "where": "`src/components/index.ts`"
+      },
+      "issue": "nakita628/truth (not filed yet): arktype writes `type(...).or(\"Alias\")` for a length-narrowed string and a $ref inside a cycle, and the alias is unresolvable"
+    },
+    "hono-define-handler-arktype": {
+      "generator": "takibi-hono@0.11.1",
+      "date": "2026-11-25",
+      "typecheck": {
+        "errors": null,
+        "reason": "killed, likely out of memory (16 GB)"
+      },
+      "issue": "tsc killed (out of memory at about 13.8 GB on a 16 GB machine, twice); src/routes.ts is 41.6 MB"
+    },
+    "hono-define-handler-effect": {
+      "generator": "takibi-hono@0.11.1",
+      "date": "2026-11-25",
+      "typecheck": {
+        "errors": 86,
+        "codes": "TS2322 ×86",
+        "where": "`src/routes.ts`"
+      },
+      "issue": "nakita628/truth (not filed yet): the helper type of a recursive declaration drops `| null` for a nullable enum, anyOf, oneOf or allOf"
+    },
+    "hono-define-handler-valibot": {
+      "generator": "takibi-hono@0.11.1",
+      "date": "2026-11-25",
+      "typecheck": {
+        "errors": 86,
+        "codes": "TS2322 ×86",
+        "where": "`src/routes.ts`"
+      },
+      "issue": "nakita628/truth (not filed yet): the helper type of a recursive declaration drops `| null` for a nullable enum, anyOf, oneOf or allOf"
+    },
+    "hono-define-handler-zod": {
+      "generator": "takibi-hono@0.11.1",
+      "date": "2026-11-25",
+      "typecheck": {
+        "errors": null,
+        "reason": "killed, likely out of memory (16 GB)"
+      },
+      "issue": "tsc killed (out of memory at about 13.8 GB on a 16 GB machine, twice); src/routes.ts is 4.3 MB"
+    },
+    "hono-effect": {
+      "generator": "takibi-hono@0.11.1",
+      "date": "2026-11-25",
+      "typecheck": {
+        "errors": 86,
+        "codes": "TS2322 ×86",
+        "where": "`src/components/index.ts`"
+      },
+      "issue": "nakita628/truth (not filed yet): the helper type of a recursive declaration drops `| null` for a nullable enum, anyOf, oneOf or allOf"
+    },
+    "hono-openapi-arktype": {
+      "generator": "takibi-hono@0.11.1",
+      "date": "2026-11-25",
+      "typecheck": {
+        "errors": 23572,
+        "codes": "TS2345 ×23572",
+        "where": "`src/components/index.ts`"
+      },
+      "issue": "nakita628/truth (not filed yet): arktype writes `type(...).or(\"Alias\")` for a length-narrowed string and a $ref inside a cycle, and the alias is unresolvable"
+    },
+    "hono-openapi-effect": {
+      "generator": "takibi-hono@0.11.1",
+      "date": "2026-11-25",
+      "typecheck": {
+        "errors": 86,
+        "codes": "TS2322 ×86",
+        "where": "`src/components/index.ts`"
+      },
+      "issue": "nakita628/truth (not filed yet): the helper type of a recursive declaration drops `| null` for a nullable enum, anyOf, oneOf or allOf"
+    },
+    "hono-openapi-typebox": {
+      "generator": "takibi-hono@0.11.1",
+      "date": "2026-11-25",
+      "typecheck": {
+        "errors": 0
+      }
+    },
+    "hono-openapi-valibot": {
+      "generator": "takibi-hono@0.11.1",
+      "date": "2026-11-25",
+      "typecheck": {
+        "errors": 86,
+        "codes": "TS2322 ×86",
+        "where": "`src/components/index.ts`"
+      },
+      "issue": "nakita628/truth (not filed yet): the helper type of a recursive declaration drops `| null` for a nullable enum, anyOf, oneOf or allOf"
+    },
+    "hono-openapi-zod": {
+      "generator": "takibi-hono@0.11.1",
+      "date": "2026-11-25",
+      "typecheck": {
+        "errors": 86,
+        "codes": "TS2322 ×86",
+        "where": "`src/components/index.ts`"
+      },
+      "issue": "nakita628/truth (not filed yet): the helper type of a recursive declaration drops `| null` for a nullable enum, anyOf, oneOf or allOf"
+    },
+    "hono-typebox": {
+      "generator": "takibi-hono@0.11.1",
+      "date": "2026-11-25",
+      "typecheck": {
+        "errors": 0
+      }
+    },
+    "hono-valibot": {
+      "generator": "takibi-hono@0.11.1",
+      "date": "2026-11-25",
+      "typecheck": {
+        "errors": 86,
+        "codes": "TS2322 ×86",
+        "where": "`src/components/index.ts`"
+      },
+      "issue": "nakita628/truth (not filed yet): the helper type of a recursive declaration drops `| null` for a nullable enum, anyOf, oneOf or allOf"
+    },
+    "hono-zod": {
+      "generator": "takibi-hono@0.11.1",
+      "date": "2026-11-25",
+      "typecheck": {
+        "errors": 86,
+        "codes": "TS2322 ×86",
+        "where": "`src/components/index.ts`"
+      },
+      "issue": "nakita628/truth (not filed yet): the helper type of a recursive declaration drops `| null` for a nullable enum, anyOf, oneOf or allOf"
+    },
+    "openapi-to-trpc-arktype": {
+      "generator": "openapi-to-trpc@0.4.0",
+      "date": "2026-11-25",
+      "typecheck": {
+        "errors": 23572,
+        "codes": "TS2345 ×23572",
+        "where": "`src/components/index.ts`"
+      },
+      "issue": "nakita628/truth (not filed yet): arktype writes `type(...).or(\"Alias\")` for a length-narrowed string and a $ref inside a cycle, and the alias is unresolvable"
+    },
+    "openapi-to-trpc-effect": {
+      "generator": "openapi-to-trpc@0.4.0",
+      "date": "2026-11-25",
+      "typecheck": {
+        "errors": 86,
+        "codes": "TS2322 ×86",
+        "where": "`src/components/index.ts`"
+      },
+      "issue": "nakita628/truth (not filed yet): the helper type of a recursive declaration drops `| null` for a nullable enum, anyOf, oneOf or allOf"
+    },
+    "openapi-to-trpc-valibot": {
+      "generator": "openapi-to-trpc@0.4.0",
+      "date": "2026-11-25",
+      "typecheck": {
+        "errors": 86,
+        "codes": "TS2322 ×86",
+        "where": "`src/components/index.ts`"
+      },
+      "issue": "nakita628/truth (not filed yet): the helper type of a recursive declaration drops `| null` for a nullable enum, anyOf, oneOf or allOf"
+    },
+    "openapi-to-trpc-zod": {
+      "generator": "openapi-to-trpc@0.4.0",
+      "date": "2026-11-25",
+      "typecheck": {
+        "errors": 86,
+        "codes": "TS2322 ×86",
+        "where": "`src/components/index.ts`"
+      },
+      "issue": "nakita628/truth (not filed yet): the helper type of a recursive declaration drops `| null` for a nullable enum, anyOf, oneOf or allOf"
+    },
+    "wakusei-contract-arktype": {
+      "generator": "wakusei@0.1.1",
+      "date": "2026-11-25",
+      "typecheck": {
+        "errors": 23572,
+        "codes": "TS2345 ×23572",
+        "where": "`src/components/index.ts`"
+      },
+      "issue": "nakita628/truth (not filed yet): arktype writes `type(...).or(\"Alias\")` for a length-narrowed string and a $ref inside a cycle, and the alias is unresolvable"
+    },
+    "wakusei-contract-valibot": {
+      "generator": "wakusei@0.1.1",
+      "date": "2026-11-25",
+      "typecheck": {
+        "errors": 86,
+        "codes": "TS2322 ×86",
+        "where": "`src/components/index.ts`"
+      },
+      "issue": "nakita628/truth (not filed yet): the helper type of a recursive declaration drops `| null` for a nullable enum, anyOf, oneOf or allOf"
+    },
+    "wakusei-contract-zod": {
+      "generator": "wakusei@0.1.1",
+      "date": "2026-11-25",
+      "typecheck": {
+        "errors": 86,
+        "codes": "TS2322 ×86",
+        "where": "`src/components/index.ts`"
+      },
+      "issue": "nakita628/truth (not filed yet): the helper type of a recursive declaration drops `| null` for a nullable enum, anyOf, oneOf or allOf"
+    },
+    "wakusei-server-arktype": {
+      "generator": "wakusei@0.1.1",
+      "date": "2026-11-25",
+      "typecheck": {
+        "errors": 23572,
+        "codes": "TS2345 ×23572",
+        "where": "`src/components/index.ts`"
+      },
+      "issue": "nakita628/truth (not filed yet): arktype writes `type(...).or(\"Alias\")` for a length-narrowed string and a $ref inside a cycle, and the alias is unresolvable"
+    },
+    "wakusei-server-valibot": {
+      "generator": "wakusei@0.1.1",
+      "date": "2026-11-25",
+      "typecheck": {
+        "errors": 86,
+        "codes": "TS2322 ×86",
+        "where": "`src/components/index.ts`"
+      },
+      "issue": "nakita628/truth (not filed yet): the helper type of a recursive declaration drops `| null` for a nullable enum, anyOf, oneOf or allOf"
+    },
+    "wakusei-server-zod": {
+      "generator": "wakusei@0.1.1",
+      "date": "2026-11-25",
+      "typecheck": {
+        "errors": 86,
+        "codes": "TS2322 ×86",
+        "where": "`src/components/index.ts`"
+      },
+      "issue": "nakita628/truth (not filed yet): the helper type of a recursive declaration drops `| null` for a nullable enum, anyOf, oneOf or allOf"
     }
   },
   "train-travel": {

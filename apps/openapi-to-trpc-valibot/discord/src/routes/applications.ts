@@ -21,13 +21,13 @@ import {
   ApplicationCommandUserOptionSchema,
   ApplicationEventWebhooksStatusSchema,
   ApplicationExplicitContentFilterTypesSchema,
-  ApplicationFormPartialSchema,
   ApplicationIntegrationTypeConfigurationSchema,
   ApplicationIntegrationTypeSchema,
   ApplicationOAuth2InstallParamsSchema,
   ApplicationRoleConnectionsMetadataItemRequestSchema,
   ApplicationRoleConnectionsMetadataItemResponseSchema,
   ApplicationTypesSchema,
+  ApplicationUpdateFormPartialSchema,
   CommandPermissionsResponseSchema,
   EmbeddedActivityInstanceSchema,
   EmojiResponseSchema,
@@ -46,7 +46,7 @@ export const applicationsRouter = t.router({
     throw new TRPCError({ code: 'NOT_IMPLEMENTED' })
   }),
   patchApplicationsMe: t.procedure
-    .input(ApplicationFormPartialSchema)
+    .input(ApplicationUpdateFormPartialSchema)
     .output(PrivateApplicationResponseSchema)
     .mutation(() => {
       throw new TRPCError({ code: 'NOT_IMPLEMENTED' })
@@ -73,13 +73,13 @@ export const applicationsRouter = t.router({
         ),
         icon: v.optional(v.nullable(v.string())),
         cover_image: v.optional(v.nullable(v.string())),
-        team_id: v.optional(v.union([v.nullable(v.null()), SnowflakeTypeSchema])),
+        team_id: v.optional(v.union([v.null(), SnowflakeTypeSchema])),
         flags: v.optional(v.nullable(v.pipe(v.number(), v.integer()))),
         interactions_endpoint_url: v.optional(
           v.nullable(v.pipe(v.string(), v.url(), v.maxCodePoints(2048))),
         ),
         explicit_content_filter: v.optional(
-          v.union([v.nullable(v.null()), ApplicationExplicitContentFilterTypesSchema]),
+          v.union([v.null(), ApplicationExplicitContentFilterTypesSchema]),
         ),
         max_participants: v.optional(
           v.nullable(
@@ -92,7 +92,7 @@ export const applicationsRouter = t.router({
             ),
           ),
         ),
-        type: v.optional(v.union([v.nullable(v.null()), ApplicationTypesSchema])),
+        type: v.optional(v.union([v.null(), ApplicationTypesSchema])),
         tags: v.optional(
           v.nullable(
             v.pipe(
@@ -105,9 +105,7 @@ export const applicationsRouter = t.router({
         custom_install_url: v.optional(
           v.nullable(v.pipe(v.string(), v.url(), v.maxCodePoints(2048))),
         ),
-        install_params: v.optional(
-          v.union([v.nullable(v.null()), ApplicationOAuth2InstallParamsSchema]),
-        ),
+        install_params: v.optional(v.union([v.null(), ApplicationOAuth2InstallParamsSchema])),
         role_connections_verification_url: v.optional(
           v.nullable(v.pipe(v.string(), v.url(), v.maxCodePoints(2048))),
         ),
@@ -115,12 +113,12 @@ export const applicationsRouter = t.router({
           v.nullable(
             v.record(
               v.string(),
-              v.union([v.nullable(v.null()), ApplicationIntegrationTypeConfigurationSchema]),
+              v.union([v.null(), ApplicationIntegrationTypeConfigurationSchema]),
             ),
           ),
         ),
         event_webhooks_status: v.optional(
-          v.union([v.nullable(v.null()), ApplicationEventWebhooksStatusSchema]),
+          v.union([v.null(), ApplicationEventWebhooksStatusSchema]),
         ),
         event_webhooks_url: v.optional(
           v.pipe(
@@ -243,13 +241,13 @@ export const applicationsRouter = t.router({
         ),
         handler: v.optional(
           v.pipe(
-            v.union([v.nullable(v.null()), ApplicationCommandHandlerSchema]),
+            v.union([v.null(), ApplicationCommandHandlerSchema]),
             v.description(
               "Determines whether the interaction is handled by the app's interactions handler or by Discord",
             ),
           ),
         ),
-        type: v.optional(v.union([v.nullable(v.null()), ApplicationCommandTypeSchema])),
+        type: v.optional(v.union([v.null(), ApplicationCommandTypeSchema])),
       }),
     )
     .output(ApplicationCommandResponseSchema)
@@ -330,7 +328,7 @@ export const applicationsRouter = t.router({
         ),
         handler: v.optional(
           v.pipe(
-            v.union([v.nullable(v.null()), ApplicationCommandHandlerSchema]),
+            v.union([v.null(), ApplicationCommandHandlerSchema]),
             v.description(
               "Determines whether the interaction is handled by the app's interactions handler or by Discord",
             ),
@@ -392,7 +390,7 @@ export const applicationsRouter = t.router({
           v.union([
             v.string(),
             v.pipe(
-              v.array(v.union([v.nullable(v.null()), SnowflakeTypeSchema])),
+              v.array(v.union([v.null(), SnowflakeTypeSchema])),
               v.maxLength(100),
               v.check((input) => new Set(input).size === input.length),
             ),
@@ -536,13 +534,13 @@ export const applicationsRouter = t.router({
         ),
         handler: v.optional(
           v.pipe(
-            v.union([v.nullable(v.null()), ApplicationCommandHandlerSchema]),
+            v.union([v.null(), ApplicationCommandHandlerSchema]),
             v.description(
               "Determines whether the interaction is handled by the app's interactions handler or by Discord",
             ),
           ),
         ),
-        type: v.optional(v.union([v.nullable(v.null()), ApplicationCommandTypeSchema])),
+        type: v.optional(v.union([v.null(), ApplicationCommandTypeSchema])),
       }),
     )
     .output(ApplicationCommandResponseSchema)
@@ -642,7 +640,7 @@ export const applicationsRouter = t.router({
         ),
         handler: v.optional(
           v.pipe(
-            v.union([v.nullable(v.null()), ApplicationCommandHandlerSchema]),
+            v.union([v.null(), ApplicationCommandHandlerSchema]),
             v.description(
               "Determines whether the interaction is handled by the app's interactions handler or by Discord",
             ),

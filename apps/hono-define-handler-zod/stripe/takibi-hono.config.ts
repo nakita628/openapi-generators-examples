@@ -1,0 +1,3 @@
+import { defineConfig } from 'takibi-hono/config'
+
+export default defineConfig({ input: '../../../openapi/stripe.json', schema: 'zod', defineHandler: { output: 'src/routes.ts', template: true } })

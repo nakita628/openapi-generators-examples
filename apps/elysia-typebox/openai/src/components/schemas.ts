@@ -239,7 +239,7 @@ export const AssistantToolsFunctionSchema = t.Object(
 export const MetadataSchema = t.Union([
   t.Record(t.String(), t.String(), {
     description:
-      'Set of 16 key-value pairs that can be attached to an object. This can be\nuseful for storing additional information about the object in a structured\nformat, and querying for objects via API or the dashboard.\n\nKeys are strings with a maximum length of 64 characters. Values are strings\nwith a maximum length of 512 characters.\n',
+      'Set of 16 key-value pairs that can be attached to an object. This can be\nuseful for storing additional information about the object in a structured\nformat.\n\nKeys are strings with a maximum length of 64 characters. Values are strings\nwith a maximum length of 512 characters.\n',
   }),
   t.Null(),
 ])
@@ -11475,6 +11475,10 @@ export const ModelIdsResponsesSchema = t.Union(
         'gpt-rosalind-research',
         'gpt-6-rosalind',
         'gpt-6.2-astra-law',
+        'gpt-6-astra-healthcare',
+        'gpt-6.1-sol-healthcare',
+        'gpt-6.2-astra-healthcare',
+        'gpt-6.2-sol-healthcare',
       ],
       { title: 'ResponsesOnlyModel', default: undefined },
     ),
@@ -32487,6 +32491,15 @@ export const UpdateProjectApiKeyBodySchema = t.Union([t.Unknown(), t.Unknown()])
 
 export const CreateConversationBodySchema = t.Object({
   metadata: t.Optional(t.Union([MetadataSchema, t.Null()])),
+  safety_identifier: t.Optional(
+    t.Union([
+      t.String({
+        maxLength: 128,
+        description: 'A stable identifier used for safety monitoring and abuse detection.',
+      }),
+      t.Null(),
+    ]),
+  ),
   items: t.Optional(
     t.Union([
       t.Array(InputItemSchema, {
@@ -47488,6 +47501,10 @@ export const BetaModelIdsResponsesSchema = t.Union(
         'gpt-rosalind-research',
         'gpt-6-rosalind',
         'gpt-6.2-astra-law',
+        'gpt-6-astra-healthcare',
+        'gpt-6.1-sol-healthcare',
+        'gpt-6.2-astra-healthcare',
+        'gpt-6.2-sol-healthcare',
       ],
       { title: 'ResponsesOnlyModel', default: undefined },
     ),
@@ -48706,7 +48723,7 @@ export const BetaResponseCustomToolCallInputDeltaEventSchema = t.Object(
 export const BetaMetadataSchema = t.Union([
   t.Record(t.String(), t.String(), {
     description:
-      'Set of 16 key-value pairs that can be attached to an object. This can be\nuseful for storing additional information about the object in a structured\nformat, and querying for objects via API or the dashboard.\n\nKeys are strings with a maximum length of 64 characters. Values are strings\nwith a maximum length of 512 characters.\n',
+      'Set of 16 key-value pairs that can be attached to an object. This can be\nuseful for storing additional information about the object in a structured\nformat.\n\nKeys are strings with a maximum length of 64 characters. Values are strings\nwith a maximum length of 512 characters.\n',
   }),
   t.Null(),
 ])

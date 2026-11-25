@@ -292,7 +292,7 @@ export const MetadataSchema = z
       .record(z.string(), z.string())
       .meta({
         description:
-          'Set of 16 key-value pairs that can be attached to an object. This can be\nuseful for storing additional information about the object in a structured\nformat, and querying for objects via API or the dashboard.\n\nKeys are strings with a maximum length of 64 characters. Values are strings\nwith a maximum length of 512 characters.\n',
+          'Set of 16 key-value pairs that can be attached to an object. This can be\nuseful for storing additional information about the object in a structured\nformat.\n\nKeys are strings with a maximum length of 64 characters. Values are strings\nwith a maximum length of 512 characters.\n',
       }),
     z.null(),
   ])
@@ -13143,6 +13143,10 @@ export const ModelIdsResponsesSchema = z
       'gpt-rosalind-research',
       'gpt-6-rosalind',
       'gpt-6.2-astra-law',
+      'gpt-6-astra-healthcare',
+      'gpt-6.1-sol-healthcare',
+      'gpt-6.2-astra-healthcare',
+      'gpt-6.2-sol-healthcare',
     ]),
   ])
   .meta({ examples: ['gpt-6.2-astra'] })
@@ -38077,6 +38081,17 @@ export const CreateConversationBodySchema = z
         z.null(),
       ])
       .exactOptional(),
+    safety_identifier: z
+      .union([
+        z
+          .string()
+          .max(128)
+          .meta({
+            description: 'A stable identifier used for safety monitoring and abuse detection.',
+          }),
+        z.null(),
+      ])
+      .exactOptional(),
     items: z
       .union([
         z
@@ -56759,6 +56774,10 @@ export const BetaModelIdsResponsesSchema = z
       'gpt-rosalind-research',
       'gpt-6-rosalind',
       'gpt-6.2-astra-law',
+      'gpt-6-astra-healthcare',
+      'gpt-6.1-sol-healthcare',
+      'gpt-6.2-astra-healthcare',
+      'gpt-6.2-sol-healthcare',
     ]),
   ])
   .meta({ examples: ['gpt-6.2-astra'] })
@@ -58560,7 +58579,7 @@ export const BetaMetadataSchema = z
       .record(z.string(), z.string())
       .meta({
         description:
-          'Set of 16 key-value pairs that can be attached to an object. This can be\nuseful for storing additional information about the object in a structured\nformat, and querying for objects via API or the dashboard.\n\nKeys are strings with a maximum length of 64 characters. Values are strings\nwith a maximum length of 512 characters.\n',
+          'Set of 16 key-value pairs that can be attached to an object. This can be\nuseful for storing additional information about the object in a structured\nformat.\n\nKeys are strings with a maximum length of 64 characters. Values are strings\nwith a maximum length of 512 characters.\n',
       }),
     z.null(),
   ])

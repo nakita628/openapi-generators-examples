@@ -22,7 +22,6 @@ import {
   ApplicationCommandUserOptionSchema,
   ApplicationEventWebhooksStatusSchema,
   ApplicationExplicitContentFilterTypesSchema,
-  ApplicationFormPartialSchema,
   ApplicationIdentityProviderAuthTypeSchema,
   ApplicationIncomingWebhookResponseSchema,
   ApplicationIntegrationTypeConfigurationSchema,
@@ -30,6 +29,7 @@ import {
   ApplicationOAuth2InstallParamsSchema,
   ApplicationRoleConnectionsMetadataItemResponseSchema,
   ApplicationTypesSchema,
+  ApplicationUpdateFormPartialSchema,
   ApplicationUserRoleConnectionResponseSchema,
   AuditLogActionTypesSchema,
   AuthorTypeSchema,
@@ -192,7 +192,7 @@ export const contract = {
       path: '/applications/@me',
       successDescription: '200 response for update_my_application',
     })
-    .input(ApplicationFormPartialSchema)
+    .input(ApplicationUpdateFormPartialSchema)
     .output(PrivateApplicationResponseSchema),
   getApplicationsApplicationId: oc
     .route({

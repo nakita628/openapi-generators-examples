@@ -35,7 +35,7 @@ export const usersRouter = t.router({
           .xor([
             z.string(),
             z
-              .array(z.xor([z.null().nullable(), SnowflakeTypeSchema]))
+              .array(z.xor([z.null(), SnowflakeTypeSchema]))
               .max(100)
               .refine((val) => new Set(val).size === val.length),
           ])

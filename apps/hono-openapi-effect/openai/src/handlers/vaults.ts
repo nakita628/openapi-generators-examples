@@ -75,6 +75,14 @@ export const vaultsHandler = new Hono()
             },
           },
         },
+        '429': {
+          description: "The request exceeded this endpoint's rate limit.",
+          content: {
+            'application/json': {
+              schema: resolver(Schema.toStandardSchemaV1(ErrorResponse2Schema)),
+            },
+          },
+        },
         '500': {
           description: 'An internal error occurred.',
           content: {
@@ -215,6 +223,14 @@ export const vaultsHandler = new Hono()
             },
           },
         },
+        '429': {
+          description: "The request exceeded this endpoint's rate limit.",
+          content: {
+            'application/json': {
+              schema: resolver(Schema.toStandardSchemaV1(ErrorResponse2Schema)),
+            },
+          },
+        },
         '500': {
           description: 'An internal error occurred.',
           content: {
@@ -287,6 +303,14 @@ export const vaultsHandler = new Hono()
         },
         '409': {
           description: 'The request conflicted with the current vault state.',
+          content: {
+            'application/json': {
+              schema: resolver(Schema.toStandardSchemaV1(ErrorResponse2Schema)),
+            },
+          },
+        },
+        '429': {
+          description: "The request exceeded this endpoint's rate limit.",
           content: {
             'application/json': {
               schema: resolver(Schema.toStandardSchemaV1(ErrorResponse2Schema)),
@@ -379,6 +403,14 @@ export const vaultsHandler = new Hono()
         },
         '409': {
           description: 'The request conflicted with the current vault state.',
+          content: {
+            'application/json': {
+              schema: resolver(Schema.toStandardSchemaV1(ErrorResponse2Schema)),
+            },
+          },
+        },
+        '429': {
+          description: "The request exceeded this endpoint's rate limit.",
           content: {
             'application/json': {
               schema: resolver(Schema.toStandardSchemaV1(ErrorResponse2Schema)),
@@ -478,6 +510,14 @@ export const vaultsHandler = new Hono()
             },
           },
         },
+        '429': {
+          description: "The request exceeded this endpoint's rate limit.",
+          content: {
+            'application/json': {
+              schema: resolver(Schema.toStandardSchemaV1(ErrorResponse2Schema)),
+            },
+          },
+        },
         '500': {
           description: 'An internal error occurred.',
           content: {
@@ -564,6 +604,14 @@ export const vaultsHandler = new Hono()
         },
         '409': {
           description: 'The request conflicted with the current vault state.',
+          content: {
+            'application/json': {
+              schema: resolver(Schema.toStandardSchemaV1(ErrorResponse2Schema)),
+            },
+          },
+        },
+        '429': {
+          description: "The request exceeded this endpoint's rate limit.",
           content: {
             'application/json': {
               schema: resolver(Schema.toStandardSchemaV1(ErrorResponse2Schema)),
@@ -725,6 +773,14 @@ export const vaultsHandler = new Hono()
             },
           },
         },
+        '429': {
+          description: "The request exceeded this endpoint's rate limit.",
+          content: {
+            'application/json': {
+              schema: resolver(Schema.toStandardSchemaV1(ErrorResponse2Schema)),
+            },
+          },
+        },
         '500': {
           description: 'An internal error occurred.',
           content: {
@@ -812,6 +868,14 @@ export const vaultsHandler = new Hono()
         },
         '409': {
           description: 'The request conflicted with the current vault state.',
+          content: {
+            'application/json': {
+              schema: resolver(Schema.toStandardSchemaV1(ErrorResponse2Schema)),
+            },
+          },
+        },
+        '429': {
+          description: "The request exceeded this endpoint's rate limit.",
           content: {
             'application/json': {
               schema: resolver(Schema.toStandardSchemaV1(ErrorResponse2Schema)),
@@ -918,6 +982,14 @@ export const vaultsHandler = new Hono()
             },
           },
         },
+        '429': {
+          description: "The request exceeded this endpoint's rate limit.",
+          content: {
+            'application/json': {
+              schema: resolver(Schema.toStandardSchemaV1(ErrorResponse2Schema)),
+            },
+          },
+        },
         '500': {
           description: 'An internal error occurred.',
           content: {
@@ -1013,6 +1085,14 @@ export const vaultsHandler = new Hono()
         },
         '409': {
           description: 'The request conflicted with the current vault state.',
+          content: {
+            'application/json': {
+              schema: resolver(Schema.toStandardSchemaV1(ErrorResponse2Schema)),
+            },
+          },
+        },
+        '429': {
+          description: "The request exceeded this endpoint's rate limit.",
           content: {
             'application/json': {
               schema: resolver(Schema.toStandardSchemaV1(ErrorResponse2Schema)),

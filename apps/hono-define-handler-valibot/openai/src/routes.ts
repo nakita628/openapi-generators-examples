@@ -285,7 +285,7 @@ export const MetadataSchema = v.union([
   v.pipe(
     v.record(v.string(), v.string()),
     v.description(
-      'Set of 16 key-value pairs that can be attached to an object. This can be\nuseful for storing additional information about the object in a structured\nformat, and querying for objects via API or the dashboard.\n\nKeys are strings with a maximum length of 64 characters. Values are strings\nwith a maximum length of 512 characters.\n',
+      'Set of 16 key-value pairs that can be attached to an object. This can be\nuseful for storing additional information about the object in a structured\nformat.\n\nKeys are strings with a maximum length of 64 characters. Values are strings\nwith a maximum length of 512 characters.\n',
     ),
   ),
   v.null(),
@@ -13338,6 +13338,10 @@ export const ModelIdsResponsesSchema = v.pipe(
       'gpt-rosalind-research',
       'gpt-6-rosalind',
       'gpt-6.2-astra-law',
+      'gpt-6-astra-healthcare',
+      'gpt-6.1-sol-healthcare',
+      'gpt-6.2-astra-healthcare',
+      'gpt-6.2-sol-healthcare',
     ]),
   ]),
   v.metadata({ examples: ['gpt-6.2-astra'] }),
@@ -39277,6 +39281,13 @@ export const CreateConversationBodySchema = v.partial(
       ),
       v.null(),
     ]),
+    safety_identifier: v.union([
+      v.pipe(
+        v.pipe(v.string(), v.maxCodePoints(128)),
+        v.description('A stable identifier used for safety monitoring and abuse detection.'),
+      ),
+      v.null(),
+    ]),
     items: v.union([
       v.pipe(
         v.pipe(v.array(InputItemSchema), v.maxLength(20)),
@@ -58936,6 +58947,10 @@ export const BetaModelIdsResponsesSchema = v.pipe(
       'gpt-rosalind-research',
       'gpt-6-rosalind',
       'gpt-6.2-astra-law',
+      'gpt-6-astra-healthcare',
+      'gpt-6.1-sol-healthcare',
+      'gpt-6.2-astra-healthcare',
+      'gpt-6.2-sol-healthcare',
     ]),
   ]),
   v.metadata({ examples: ['gpt-6.2-astra'] }),
@@ -60801,7 +60816,7 @@ export const BetaMetadataSchema = v.union([
   v.pipe(
     v.record(v.string(), v.string()),
     v.description(
-      'Set of 16 key-value pairs that can be attached to an object. This can be\nuseful for storing additional information about the object in a structured\nformat, and querying for objects via API or the dashboard.\n\nKeys are strings with a maximum length of 64 characters. Values are strings\nwith a maximum length of 512 characters.\n',
+      'Set of 16 key-value pairs that can be attached to an object. This can be\nuseful for storing additional information about the object in a structured\nformat.\n\nKeys are strings with a maximum length of 64 characters. Values are strings\nwith a maximum length of 512 characters.\n',
     ),
   ),
   v.null(),
@@ -66253,7 +66268,7 @@ export const getChatCompletionsHandler = defineHandler({
             v.pipe(
               v.record(v.string(), v.string()),
               v.description(
-                'Set of 16 key-value pairs that can be attached to an object. This can be\nuseful for storing additional information about the object in a structured\nformat, and querying for objects via API or the dashboard.\n\nKeys are strings with a maximum length of 64 characters. Values are strings\nwith a maximum length of 512 characters.\n',
+                'Set of 16 key-value pairs that can be attached to an object. This can be\nuseful for storing additional information about the object in a structured\nformat.\n\nKeys are strings with a maximum length of 64 characters. Values are strings\nwith a maximum length of 512 characters.\n',
               ),
             ),
             v.pipe(
