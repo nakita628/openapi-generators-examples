@@ -35,8 +35,10 @@ export const realtimeHandler = new Hono()
             'The type of session to create. Always `realtime` for the Realtime API.\n',
           ),
           'output_modalities?': type('unknown')
-            .pipe((data) => (data === undefined || Array.isArray(data) ? data : [data]))
-            .to("'text' | 'audio'[]")
+            .pipe(
+              (data) => (data === undefined || Array.isArray(data) ? data : [data]),
+              type("'text' | 'audio'").array(),
+            )
             .describe(
               'The set of modalities the model can respond with. It defaults to `["audio"]`, indicating\nthat the model will respond with audio plus a transcript. `["text"]` can be used to make\nthe model respond with text only. It is not possible to request both `text` and `audio` at the same time.\n',
             ),

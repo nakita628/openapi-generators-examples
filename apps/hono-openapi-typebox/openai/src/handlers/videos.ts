@@ -87,7 +87,11 @@ export const videosHandler = new Hono()
             Codec(
               Type.Refine(
                 Type.Refine(
-                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                  Type.Refine(
+                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                    (value) => Number.isSafeInteger(Number(value)),
+                    () => 'must be a safe integer',
+                  ),
                   (value) => Number(value) >= 0,
                   () => 'must be >= 0',
                 ),

@@ -31,15 +31,19 @@ export const getVectorStores = os
   .input(
     v.object({
       limit: v.optional(
-        v.optional(
-          v.pipe(
-            v.string(),
-            v.regex(/^-?(?:0|[1-9]\d*)$/),
-            v.transform((input) => Number(input)),
-            v.number(),
-            v.safeInteger(),
+        v.pipe(
+          v.optional(
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.metadata({ type: 'integer' }),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+            ),
+            '20',
           ),
-          '20',
+          v.metadata({ default: 20 }),
         ),
       ),
       order: v.optional(v.optional(v.picklist(['asc', 'desc']), 'desc')),
@@ -184,15 +188,19 @@ export const getVectorStoresVectorStoreIdFileBatchesBatchIdFiles = os
       vector_store_id: v.string(),
       batch_id: v.string(),
       limit: v.optional(
-        v.optional(
-          v.pipe(
-            v.string(),
-            v.regex(/^-?(?:0|[1-9]\d*)$/),
-            v.transform((input) => Number(input)),
-            v.number(),
-            v.safeInteger(),
+        v.pipe(
+          v.optional(
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.metadata({ type: 'integer' }),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+            ),
+            '20',
           ),
-          '20',
+          v.metadata({ default: 20 }),
         ),
       ),
       order: v.optional(v.optional(v.picklist(['asc', 'desc']), 'desc')),
@@ -216,15 +224,19 @@ export const getVectorStoresVectorStoreIdFiles = os
     v.object({
       vector_store_id: v.string(),
       limit: v.optional(
-        v.optional(
-          v.pipe(
-            v.string(),
-            v.regex(/^-?(?:0|[1-9]\d*)$/),
-            v.transform((input) => Number(input)),
-            v.number(),
-            v.safeInteger(),
+        v.pipe(
+          v.optional(
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.metadata({ type: 'integer' }),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+            ),
+            '20',
           ),
-          '20',
+          v.metadata({ default: 20 }),
         ),
       ),
       order: v.optional(v.optional(v.picklist(['asc', 'desc']), 'desc')),

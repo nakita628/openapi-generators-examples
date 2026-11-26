@@ -92,6 +92,7 @@ export const audioHandler = new Hono()
             v.pipe(
               v.string(),
               v.regex(/^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/),
+              v.metadata({ type: 'number' }),
               v.transform((input) => Number(input)),
               v.number(),
               v.finite(),
@@ -101,6 +102,7 @@ export const audioHandler = new Hono()
           v.description(
             'The sampling temperature, between 0 and 1. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic. If set to 0, the model will use [log probability](https://en.wikipedia.org/wiki/Log_probability) to automatically increase the temperature until certain thresholds are hit.\n',
           ),
+          v.metadata({ default: 0 }),
         ),
         include: v.optional(
           v.pipe(
@@ -181,6 +183,7 @@ export const audioHandler = new Hono()
                       v.pipe(
                         v.string(),
                         v.regex(/^-?(?:0|[1-9]\d*)$/),
+                        v.metadata({ type: 'integer' }),
                         v.transform((input) => Number(input)),
                         v.number(),
                         v.safeInteger(),
@@ -190,12 +193,14 @@ export const audioHandler = new Hono()
                     v.description(
                       'Amount of audio to include before the VAD detected speech (in \nmilliseconds).\n',
                     ),
+                    v.metadata({ default: 300 }),
                   ),
                   silence_duration_ms: v.pipe(
                     v.optional(
                       v.pipe(
                         v.string(),
                         v.regex(/^-?(?:0|[1-9]\d*)$/),
+                        v.metadata({ type: 'integer' }),
                         v.transform((input) => Number(input)),
                         v.number(),
                         v.safeInteger(),
@@ -205,12 +210,14 @@ export const audioHandler = new Hono()
                     v.description(
                       'Duration of silence to detect speech stop (in milliseconds).\nWith shorter values the model will respond more quickly, \nbut may jump in on short pauses from the user.\n',
                     ),
+                    v.metadata({ default: 200 }),
                   ),
                   threshold: v.pipe(
                     v.optional(
                       v.pipe(
                         v.string(),
                         v.regex(/^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/),
+                        v.metadata({ type: 'number' }),
                         v.transform((input) => Number(input)),
                         v.number(),
                         v.finite(),
@@ -220,6 +227,7 @@ export const audioHandler = new Hono()
                     v.description(
                       'Sensitivity threshold (0.0 to 1.0) for voice activity detection. A \nhigher threshold will require louder audio to activate the model, and \nthus might perform better in noisy environments.\n',
                     ),
+                    v.metadata({ default: 0.5 }),
                   ),
                 }),
               ]),
@@ -305,6 +313,7 @@ export const audioHandler = new Hono()
             v.pipe(
               v.string(),
               v.regex(/^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/),
+              v.metadata({ type: 'number' }),
               v.transform((input) => Number(input)),
               v.number(),
               v.finite(),
@@ -314,6 +323,7 @@ export const audioHandler = new Hono()
           v.description(
             'The sampling temperature, between 0 and 1. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic. If set to 0, the model will use [log probability](https://en.wikipedia.org/wiki/Log_probability) to automatically increase the temperature until certain thresholds are hit.\n',
           ),
+          v.metadata({ default: 0 }),
         ),
       }),
     ),
@@ -325,15 +335,19 @@ export const audioHandler = new Hono()
       'query',
       v.object({
         after: v.optional(v.string()),
-        limit: v.optional(
-          v.pipe(
-            v.string(),
-            v.regex(/^-?(?:0|[1-9]\d*)$/),
-            v.transform((input) => Number(input)),
-            v.number(),
-            v.safeInteger(),
+        limit: v.pipe(
+          v.optional(
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.metadata({ type: 'integer' }),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+            ),
+            '20',
           ),
-          '20',
+          v.metadata({ default: 20 }),
         ),
       }),
     ),

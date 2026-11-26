@@ -2674,9 +2674,11 @@ export type ChatCompletionMessageToolCallChunk =
   typeof ChatCompletionMessageToolCallChunkSchema.infer
 
 export const ChatCompletionModalitiesSchema = type(
-  type("'text' | 'audio'[]").describe(
-    'Output types that you would like the model to generate for this request.\nMost models are capable of generating text, which is the default:\n\n`["text"]`\n\nThe `gpt-4o-audio-preview` model can also be used to [generate audio](https://developers.openai.com/api/docs/guides/audio). To\nrequest that this model generate both text and audio responses, you can\nuse:\n\n`["text", "audio"]`\n',
-  ),
+  type("'text' | 'audio'")
+    .array()
+    .describe(
+      'Output types that you would like the model to generate for this request.\nMost models are capable of generating text, which is the default:\n\n`["text"]`\n\nThe `gpt-4o-audio-preview` model can also be used to [generate audio](https://developers.openai.com/api/docs/guides/audio). To\nrequest that this model generate both text and audio responses, you can\nuse:\n\n`["text", "audio"]`\n',
+    ),
 ).or('null')
 
 export type ChatCompletionModalities = typeof ChatCompletionModalitiesSchema.infer
@@ -3248,9 +3250,11 @@ export const ComparisonFilterSchema = type({
     'Specifies the comparison operator: `eq`, `ne`, `gt`, `gte`, `lt`, `lte`, `in`, `nin`.\n- `eq`: equals\n- `ne`: not equal\n- `gt`: greater than\n- `gte`: greater than or equal\n- `lt`: less than\n- `lte`: less than or equal\n- `in`: in\n- `nin`: not in\n',
   ),
   key: type('string').describe('The key to compare against the value.'),
-  value: type('string | number | boolean | string | number[]').describe(
-    'The value to compare against the attribute key; supports string, number, or boolean types.',
-  ),
+  value: type(type(type('string').or('number')).or('boolean'))
+    .or(type('string | number').array())
+    .describe(
+      'The value to compare against the attribute key; supports string, number, or boolean types.',
+    ),
   '+': 'reject',
 }).describe(
   'A filter used to compare a specified attribute key to a given value using a defined comparison operation.\n',
@@ -5878,9 +5882,11 @@ export const ModelIdsSharedSchema = type('string').or(
 export type ModelIdsShared = typeof ModelIdsSharedSchema.infer
 
 export const ResponseModalitiesSchema = type(
-  type("'text' | 'audio'[]").describe(
-    'Output types that you would like the model to generate.\nMost models are capable of generating text, which is the default:\n\n`["text"]`\n\nThe `gpt-4o-audio-preview` model can also be used to\n[generate audio](https://developers.openai.com/api/docs/guides/audio). To request that this model generate\nboth text and audio responses, you can use:\n\n`["text", "audio"]`\n',
-  ),
+  type("'text' | 'audio'")
+    .array()
+    .describe(
+      'Output types that you would like the model to generate.\nMost models are capable of generating text, which is the default:\n\n`["text"]`\n\nThe `gpt-4o-audio-preview` model can also be used to\n[generate audio](https://developers.openai.com/api/docs/guides/audio). To request that this model generate\nboth text and audio responses, you can use:\n\n`["text", "audio"]`\n',
+    ),
 ).or('null')
 
 export type ResponseModalities = typeof ResponseModalitiesSchema.infer
@@ -7672,27 +7678,27 @@ export const CreateModerationResponseSchema = type({
         'illicit/violent': type("'text'[]").describe(
           "The applied input type(s) for the category 'illicit/violent'.",
         ),
-        'self-harm': type("'text' | 'image'[]").describe(
-          "The applied input type(s) for the category 'self-harm'.",
-        ),
-        'self-harm/intent': type("'text' | 'image'[]").describe(
-          "The applied input type(s) for the category 'self-harm/intent'.",
-        ),
-        'self-harm/instructions': type("'text' | 'image'[]").describe(
-          "The applied input type(s) for the category 'self-harm/instructions'.",
-        ),
-        sexual: type("'text' | 'image'[]").describe(
-          "The applied input type(s) for the category 'sexual'.",
-        ),
+        'self-harm': type("'text' | 'image'")
+          .array()
+          .describe("The applied input type(s) for the category 'self-harm'."),
+        'self-harm/intent': type("'text' | 'image'")
+          .array()
+          .describe("The applied input type(s) for the category 'self-harm/intent'."),
+        'self-harm/instructions': type("'text' | 'image'")
+          .array()
+          .describe("The applied input type(s) for the category 'self-harm/instructions'."),
+        sexual: type("'text' | 'image'")
+          .array()
+          .describe("The applied input type(s) for the category 'sexual'."),
         'sexual/minors': type("'text'[]").describe(
           "The applied input type(s) for the category 'sexual/minors'.",
         ),
-        violence: type("'text' | 'image'[]").describe(
-          "The applied input type(s) for the category 'violence'.",
-        ),
-        'violence/graphic': type("'text' | 'image'[]").describe(
-          "The applied input type(s) for the category 'violence/graphic'.",
-        ),
+        violence: type("'text' | 'image'")
+          .array()
+          .describe("The applied input type(s) for the category 'violence'."),
+        'violence/graphic': type("'text' | 'image'")
+          .array()
+          .describe("The applied input type(s) for the category 'violence/graphic'."),
       }).describe(
         'A list of the categories along with the input type(s) that the score applies to.',
       ),
@@ -9355,9 +9361,11 @@ export const CreateTranscriptionRequestSchema = type({
     .describe(
       "Additional information to include in the transcription response.\n`logprobs` will return the log probabilities of the tokens in the\nresponse to understand the model's confidence in the transcription.\n`logprobs` only works with response_format set to `json` and only with\nthe models `gpt-4o-transcribe`, `gpt-4o-mini-transcribe`, and `gpt-4o-mini-transcribe-2025-12-15`. This field is not supported when using `gpt-4o-transcribe-diarize`.\n",
     ),
-  'timestamp_granularities?': type("'word' | 'segment'[]").describe(
-    'The timestamp granularities to populate for this transcription. `response_format` must be set `verbose_json` to use timestamp granularities. Either or both of these options are supported: `word`, or `segment`. Note: There is no additional latency for segment timestamps, but generating word timestamps incurs additional latency.\nThis option is not available for `gpt-4o-transcribe-diarize`.\n',
-  ),
+  'timestamp_granularities?': type("'word' | 'segment'")
+    .array()
+    .describe(
+      'The timestamp granularities to populate for this transcription. `response_format` must be set `verbose_json` to use timestamp granularities. Either or both of these options are supported: `word`, or `segment`. Note: There is no additional latency for segment timestamps, but generating word timestamps incurs additional latency.\nThis option is not available for `gpt-4o-transcribe-diarize`.\n',
+    ),
   'stream?': type(
     type('boolean').describe(
       'If set to true, the model response data will be streamed to the client\nas it is generated using [server-sent events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events#Event_stream_format).\nSee the [Streaming section of the Speech-to-Text guide](https://developers.openai.com/api/docs/guides/speech-to-text?lang=curl#streaming)\nfor more information.\n\nNote: Streaming is not supported for the `whisper-1` model and will be ignored.\n',
@@ -16550,9 +16558,11 @@ export type RealtimeBetaClientEventResponseCancel =
   typeof RealtimeBetaClientEventResponseCancelSchema.infer
 
 export const RealtimeBetaResponseCreateParamsSchema = type({
-  'modalities?': type("'text' | 'audio'[]").describe(
-    'The set of modalities the model can respond with. To disable audio,\nset this to ["text"].\n',
-  ),
+  'modalities?': type("'text' | 'audio'")
+    .array()
+    .describe(
+      'The set of modalities the model can respond with. To disable audio,\nset this to ["text"].\n',
+    ),
   'instructions?': type('string').describe(
     'The default system instructions (i.e. system message) prepended to model \ncalls. This field allows the client to guide the model on desired \nresponses. The model can be instructed on response content and format, \n(e.g. "be extremely succinct", "act friendly", "here are examples of good \nresponses") and on audio behavior (e.g. "talk quickly", "inject emotion \ninto your voice", "laugh frequently"). The instructions are not guaranteed \nto be followed by the model, but they provide guidance to the model on the \ndesired behavior.\n\nNote that the server sets default instructions which will be used if this \nfield is not set and are visible in the `session.created` event at the \nstart of the session.\n',
   ),
@@ -16647,9 +16657,11 @@ export const RealtimeSessionCreateRequestSchema = type({
       'Timestamp for when the token expires. Currently, all tokens expire\nafter one minute.\n',
     ),
   }).describe('Ephemeral key returned by the API.'),
-  'modalities?': type("'text' | 'audio'[]").describe(
-    'The set of modalities the model can respond with. To disable audio,\nset this to ["text"].\n',
-  ),
+  'modalities?': type("'text' | 'audio'")
+    .array()
+    .describe(
+      'The set of modalities the model can respond with. To disable audio,\nset this to ["text"].\n',
+    ),
   'instructions?': type('string').describe(
     'The default system instructions (i.e. system message) prepended to model calls. This field allows the client to guide the model on desired responses. The model can be instructed on response content and format, (e.g. "be extremely succinct", "act friendly", "here are examples of good responses") and on audio behavior (e.g. "talk quickly", "inject emotion into your voice", "laugh frequently"). The instructions are not guaranteed to be followed by the model, but they provide guidance to the model on the desired behavior.\nNote that the server sets default instructions which will be used if this field is not set and are visible in the `session.created` event at the start of the session.\n',
   ),
@@ -16875,9 +16887,11 @@ export const RealtimeBetaResponseSchema = type({
   'voice?': VoiceIdsSharedSchema.describe(
     'The voice the model used to respond.\nCurrent voice options are `alloy`, `ash`, `ballad`, `coral`, `echo`, `sage`,\n`shimmer`, and `verse`.\n',
   ),
-  'modalities?': type("'text' | 'audio'[]").describe(
-    'The set of modalities the model used to respond. If there are multiple modalities,\nthe model will pick one, for example if `modalities` is `["text", "audio"]`, the model\ncould be responding in either text or audio.\n',
-  ),
+  'modalities?': type("'text' | 'audio'")
+    .array()
+    .describe(
+      'The set of modalities the model used to respond. If there are multiple modalities,\nthe model will pick one, for example if `modalities` is `["text", "audio"]`, the model\ncould be responding in either text or audio.\n',
+    ),
   'output_audio_format?': type("'pcm16' | 'g711_ulaw' | 'g711_alaw'").describe(
     'The format of output audio. Options are `pcm16`, `g711_ulaw`, or `g711_alaw`.\n',
   ),
@@ -17560,9 +17574,11 @@ export const RealtimeSessionSchema = type({
     'Unique identifier for the session that looks like `sess_1234567890abcdef`.\n',
   ),
   'object?': type("'realtime.session'").describe('The object type. Always `realtime.session`.'),
-  'modalities?': type("'text' | 'audio'[]").describe(
-    'The set of modalities the model can respond with. To disable audio,\nset this to ["text"].\n',
-  ),
+  'modalities?': type("'text' | 'audio'")
+    .array()
+    .describe(
+      'The set of modalities the model can respond with. To disable audio,\nset this to ["text"].\n',
+    ),
   'model?': type(
     "string | 'gpt-realtime' | 'gpt-realtime-1.5' | 'gpt-realtime-2025-08-28' | 'gpt-4o-realtime-preview' | 'gpt-4o-realtime-preview-2024-10-01' | 'gpt-4o-realtime-preview-2024-12-17' | 'gpt-4o-realtime-preview-2025-06-03' | 'gpt-4o-mini-realtime-preview' | 'gpt-4o-mini-realtime-preview-2024-12-17' | 'gpt-realtime-mini' | 'gpt-realtime-mini-2025-10-06'",
   )
@@ -17759,9 +17775,11 @@ export const RealtimeSessionCreateRequestGASchema = type({
   type: type("'realtime'").describe(
     'The type of session to create. Always `realtime` for the Realtime API.\n',
   ),
-  'output_modalities?': type("'text' | 'audio'[]").describe(
-    'The set of modalities the model can respond with. It defaults to `["audio"]`, indicating\nthat the model will respond with audio plus a transcript. `["text"]` can be used to make\nthe model respond with text only. It is not possible to request both `text` and `audio` at the same time.\n',
-  ),
+  'output_modalities?': type("'text' | 'audio'")
+    .array()
+    .describe(
+      'The set of modalities the model can respond with. It defaults to `["audio"]`, indicating\nthat the model will respond with audio plus a transcript. `["text"]` can be used to make\nthe model respond with text only. It is not possible to request both `text` and `audio` at the same time.\n',
+    ),
   'model?': type('string')
     .or(
       type.enumerated(
@@ -18252,9 +18270,11 @@ export const RealtimeResponseInputItemSchema = type(
 export type RealtimeResponseInputItem = typeof RealtimeResponseInputItemSchema.infer
 
 export const RealtimeResponseCreateParamsSchema = type({
-  'output_modalities?': type("'text' | 'audio'[]").describe(
-    'The set of modalities the model used to respond, currently the only possible values are\n`[\\"audio\\"]`, `[\\"text\\"]`. Audio output always include a text transcript. Setting the\noutput to mode `text` will disable audio output from the model.\n',
-  ),
+  'output_modalities?': type("'text' | 'audio'")
+    .array()
+    .describe(
+      'The set of modalities the model used to respond, currently the only possible values are\n`[\\"audio\\"]`, `[\\"text\\"]`. Audio output always include a text transcript. Setting the\noutput to mode `text` will disable audio output from the model.\n',
+    ),
   'instructions?': type('string').describe(
     'The default system instructions (i.e. system message) prepended to model calls. This field allows the client to guide the model on desired responses. The model can be instructed on response content and format, (e.g. "be extremely succinct", "act friendly", "here are examples of good responses") and on audio behavior (e.g. "talk quickly", "inject emotion into your voice", "laugh frequently"). The instructions are not guaranteed to be followed by the model, but they provide guidance to the model on the desired behavior.\nNote that the server sets default instructions which will be used if this field is not set and are visible in the `session.created` event at the start of the session.\n',
   ),
@@ -18507,9 +18527,11 @@ export const RealtimeSessionCreateResponseGASchema = type({
   'expires_at?': type('number.integer').describe(
     'Expiration timestamp for the session, in seconds since epoch.',
   ),
-  'output_modalities?': type("'text' | 'audio'[]").describe(
-    'The set of modalities the model can respond with. It defaults to `["audio"]`, indicating\nthat the model will respond with audio plus a transcript. `["text"]` can be used to make\nthe model respond with text only. It is not possible to request both `text` and `audio` at the same time.\n',
-  ),
+  'output_modalities?': type("'text' | 'audio'")
+    .array()
+    .describe(
+      'The set of modalities the model can respond with. It defaults to `["audio"]`, indicating\nthat the model will respond with audio plus a transcript. `["text"]` can be used to make\nthe model respond with text only. It is not possible to request both `text` and `audio` at the same time.\n',
+    ),
   'model?': type('string')
     .or(
       type.enumerated(
@@ -18768,9 +18790,11 @@ export const RealtimeResponseSchema = type({
   'conversation_id?': type('string').describe(
     'Which conversation the response is added to, determined by the `conversation`\nfield in the `response.create` event. If `auto`, the response will be added to\nthe default conversation and the value of `conversation_id` will be an id like\n`conv_1234`. If `none`, the response will not be added to any conversation and\nthe value of `conversation_id` will be `null`. If responses are being triggered\nautomatically by VAD the response will be added to the default conversation\n',
   ),
-  'output_modalities?': type("'text' | 'audio'[]").describe(
-    'The set of modalities the model used to respond, currently the only possible values are\n`[\\"audio\\"]`, `[\\"text\\"]`. Audio output always include a text transcript. Setting the\noutput to mode `text` will disable audio output from the model.\n',
-  ),
+  'output_modalities?': type("'text' | 'audio'")
+    .array()
+    .describe(
+      'The set of modalities the model used to respond, currently the only possible values are\n`[\\"audio\\"]`, `[\\"text\\"]`. Audio output always include a text transcript. Setting the\noutput to mode `text` will disable audio output from the model.\n',
+    ),
   'max_output_tokens?': type("number.integer | 'inf'").describe(
     'Maximum number of output tokens for a single assistant response,\ninclusive of tool calls, that was used in this response.\n',
   ),
@@ -28842,7 +28866,7 @@ export const SessionAgentConfigParamSchema = type({
   )
     .or('null')
     .describe(
-      'Tools available to the agent. Omit to inherit, or pass null to clear them. The resolved tool list must fit within 3 MiB (3,145,728 bytes) of compact UTF-8 JSON.',
+      'Tools available to the agent. Omit to inherit, or pass null to clear them. The resolved tool list must fit within 8 MiB (8,388,608 bytes) of compact UTF-8 JSON.',
     ),
   '+': 'reject',
 }).describe(
@@ -36355,9 +36379,11 @@ export const BetaComparisonFilterSchema = type({
     'Specifies the comparison operator: `eq`, `ne`, `gt`, `gte`, `lt`, `lte`, `in`, `nin`.\n- `eq`: equals\n- `ne`: not equal\n- `gt`: greater than\n- `gte`: greater than or equal\n- `lt`: less than\n- `lte`: less than or equal\n- `in`: in\n- `nin`: not in\n',
   ),
   key: type('string').describe('The key to compare against the value.'),
-  value: type('string | number | boolean | string | number[]').describe(
-    'The value to compare against the attribute key; supports string, number, or boolean types.',
-  ),
+  value: type(type(type('string').or('number')).or('boolean'))
+    .or(type('string | number').array())
+    .describe(
+      'The value to compare against the attribute key; supports string, number, or boolean types.',
+    ),
   '+': 'reject',
 }).describe(
   'A filter used to compare a specified attribute key to a given value using a defined comparison operation.\n',

@@ -275,10 +275,14 @@ export const audioHandler = new Hono()
             response_format: Type.Optional(AudioResponseFormatSchema),
             temperature: Type.Optional(
               Codec(
-                Type.String({
-                  pattern: '^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$',
-                  default: '0',
-                }),
+                Type.Refine(
+                  Type.String({
+                    pattern: '^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$',
+                    default: '0',
+                  }),
+                  (value) => Number.isFinite(Number(value)),
+                  () => 'must be a finite number',
+                ),
               )
                 .Decode((value) => Number(value))
                 .Encode((value) => String(value)),
@@ -301,7 +305,8 @@ export const audioHandler = new Hono()
                 Type.Optional(
                   Codec(
                     Type.String({
-                      pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                      pattern:
+                        '^(?:[Tt][Rr][Uu][Ee]|1|[Yy][Ee][Ss]|[Oo][Nn]|[Yy]|[Ee][Nn][Aa][Bb][Ll][Ee][Dd]|[Ff][Aa][Ll][Ss][Ee]|0|[Nn][Oo]|[Oo][Ff][Ff]|[Nn]|[Dd][Ii][Ss][Aa][Bb][Ll][Ee][Dd])$',
                       default: 'false',
                     }),
                   )
@@ -329,21 +334,37 @@ export const audioHandler = new Hono()
                             'Must be set to `server_vad` to enable manual chunking using server side VAD.',
                         }),
                         prefix_padding_ms: Type.Optional(
-                          Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '300' }))
+                          Codec(
+                            Type.Refine(
+                              Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '300' }),
+                              (value) => Number.isSafeInteger(Number(value)),
+                              () => 'must be a safe integer',
+                            ),
+                          )
                             .Decode((value) => Number(value))
                             .Encode((value) => String(value)),
                         ),
                         silence_duration_ms: Type.Optional(
-                          Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '200' }))
+                          Codec(
+                            Type.Refine(
+                              Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '200' }),
+                              (value) => Number.isSafeInteger(Number(value)),
+                              () => 'must be a safe integer',
+                            ),
+                          )
                             .Decode((value) => Number(value))
                             .Encode((value) => String(value)),
                         ),
                         threshold: Type.Optional(
                           Codec(
-                            Type.String({
-                              pattern: '^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$',
-                              default: '0.5',
-                            }),
+                            Type.Refine(
+                              Type.String({
+                                pattern: '^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$',
+                                default: '0.5',
+                              }),
+                              (value) => Number.isFinite(Number(value)),
+                              () => 'must be a finite number',
+                            ),
                           )
                             .Decode((value) => Number(value))
                             .Encode((value) => String(value)),
@@ -506,10 +527,14 @@ export const audioHandler = new Hono()
             ),
             temperature: Type.Optional(
               Codec(
-                Type.String({
-                  pattern: '^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$',
-                  default: '0',
-                }),
+                Type.Refine(
+                  Type.String({
+                    pattern: '^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$',
+                    default: '0',
+                  }),
+                  (value) => Number.isFinite(Number(value)),
+                  () => 'must be a finite number',
+                ),
               )
                 .Decode((value) => Number(value))
                 .Encode((value) => String(value)),
@@ -557,7 +582,13 @@ export const audioHandler = new Hono()
         Type.Object({
           after: Type.Optional(Type.String()),
           limit: Type.Optional(
-            Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '20' }))
+            Codec(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '20' }),
+                (value) => Number.isSafeInteger(Number(value)),
+                () => 'must be a safe integer',
+              ),
+            )
               .Decode((value) => Number(value))
               .Encode((value) => String(value)),
           ),

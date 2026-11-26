@@ -27,7 +27,11 @@ export const agentsHandler = new Hono()
           Codec(
             Type.Refine(
               Type.Refine(
-                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '20' }),
+                Type.Refine(
+                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '20' }),
+                  (value) => Number.isSafeInteger(Number(value)),
+                  () => 'must be a safe integer',
+                ),
                 (value) => Number(value) >= 1,
                 () => 'must be >= 1',
               ),
@@ -100,7 +104,11 @@ export const agentsHandler = new Hono()
           Codec(
             Type.Refine(
               Type.Refine(
-                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '20' }),
+                Type.Refine(
+                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '20' }),
+                  (value) => Number.isSafeInteger(Number(value)),
+                  () => 'must be a safe integer',
+                ),
                 (value) => Number(value) >= 1,
                 () => 'must be >= 1',
               ),
@@ -145,7 +153,11 @@ export const agentsHandler = new Hono()
           Codec(
             Type.Refine(
               Type.Refine(
-                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '20' }),
+                Type.Refine(
+                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '20' }),
+                  (value) => Number.isSafeInteger(Number(value)),
+                  () => 'must be a safe integer',
+                ),
                 (value) => Number(value) >= 1,
                 () => 'must be >= 1',
               ),
@@ -199,7 +211,11 @@ export const agentsHandler = new Hono()
             Codec(
               Type.Refine(
                 Type.Refine(
-                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                  Type.Refine(
+                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                    (value) => Number.isSafeInteger(Number(value)),
+                    () => 'must be a safe integer',
+                  ),
                   (value) => Number(value) >= 1,
                   () => 'must be >= 1',
                 ),
@@ -240,7 +256,11 @@ export const agentsHandler = new Hono()
           Codec(
             Type.Refine(
               Type.Refine(
-                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '20' }),
+                Type.Refine(
+                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '20' }),
+                  (value) => Number.isSafeInteger(Number(value)),
+                  () => 'must be a safe integer',
+                ),
                 (value) => Number(value) >= 1,
                 () => 'must be >= 1',
               ),
@@ -284,7 +304,11 @@ export const agentsHandler = new Hono()
           Codec(
             Type.Refine(
               Type.Refine(
-                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '20' }),
+                Type.Refine(
+                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '20' }),
+                  (value) => Number.isSafeInteger(Number(value)),
+                  () => 'must be a safe integer',
+                ),
                 (value) => Number(value) >= 1,
                 () => 'must be >= 1',
               ),
@@ -317,7 +341,11 @@ export const agentsHandler = new Hono()
           Codec(
             Type.Refine(
               Type.Refine(
-                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '20' }),
+                Type.Refine(
+                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '20' }),
+                  (value) => Number.isSafeInteger(Number(value)),
+                  () => 'must be a safe integer',
+                ),
                 (value) => Number(value) >= 1,
                 () => 'must be >= 1',
               ),
@@ -363,7 +391,11 @@ export const agentsHandler = new Hono()
           Codec(
             Type.Refine(
               Type.Refine(
-                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '20' }),
+                Type.Refine(
+                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '20' }),
+                  (value) => Number.isSafeInteger(Number(value)),
+                  () => 'must be a safe integer',
+                ),
                 (value) => Number(value) >= 1,
                 () => 'must be >= 1',
               ),
@@ -389,7 +421,11 @@ export const agentsHandler = new Hono()
           Codec(
             Type.Refine(
               Type.Refine(
-                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '20' }),
+                Type.Refine(
+                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '20' }),
+                  (value) => Number.isSafeInteger(Number(value)),
+                  () => 'must be a safe integer',
+                ),
                 (value) => Number(value) >= 1,
                 () => 'must be >= 1',
               ),
@@ -441,7 +477,11 @@ export const agentsHandler = new Hono()
           Codec(
             Type.Refine(
               Type.Refine(
-                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '20' }),
+                Type.Refine(
+                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '20' }),
+                  (value) => Number.isSafeInteger(Number(value)),
+                  () => 'must be a safe integer',
+                ),
                 (value) => Number(value) >= 1,
                 () => 'must be >= 1',
               ),
@@ -497,7 +537,11 @@ export const agentsHandler = new Hono()
           Codec(
             Type.Refine(
               Type.Refine(
-                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '20' }),
+                Type.Refine(
+                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '20' }),
+                  (value) => Number.isSafeInteger(Number(value)),
+                  () => 'must be a safe integer',
+                ),
                 (value) => Number(value) >= 1,
                 () => 'must be >= 1',
               ),
@@ -561,7 +605,11 @@ export const agentsHandler = new Hono()
           Codec(
             Type.Refine(
               Type.Refine(
-                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '20' }),
+                Type.Refine(
+                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '20' }),
+                  (value) => Number.isSafeInteger(Number(value)),
+                  () => 'must be a safe integer',
+                ),
                 (value) => Number(value) >= 1,
                 () => 'must be >= 1',
               ),
@@ -626,7 +674,8 @@ export const agentsHandler = new Hono()
         include_obfuscation: Type.Optional(
           Codec(
             Type.String({
-              pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+              pattern:
+                '^(?:[Tt][Rr][Uu][Ee]|1|[Yy][Ee][Ss]|[Oo][Nn]|[Yy]|[Ee][Nn][Aa][Bb][Ll][Ee][Dd]|[Ff][Aa][Ll][Ss][Ee]|0|[Nn][Oo]|[Oo][Ff][Ff]|[Nn]|[Dd][Ii][Ss][Aa][Bb][Ll][Ee][Dd])$',
               default: 'true',
             }),
           )
@@ -665,7 +714,11 @@ export const agentsHandler = new Hono()
           Codec(
             Type.Refine(
               Type.Refine(
-                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '20' }),
+                Type.Refine(
+                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '20' }),
+                  (value) => Number.isSafeInteger(Number(value)),
+                  () => 'must be a safe integer',
+                ),
                 (value) => Number(value) >= 1,
                 () => 'must be >= 1',
               ),
@@ -695,7 +748,11 @@ export const agentsHandler = new Hono()
           Codec(
             Type.Refine(
               Type.Refine(
-                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '20' }),
+                Type.Refine(
+                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '20' }),
+                  (value) => Number.isSafeInteger(Number(value)),
+                  () => 'must be a safe integer',
+                ),
                 (value) => Number(value) >= 1,
                 () => 'must be >= 1',
               ),
@@ -725,7 +782,11 @@ export const agentsHandler = new Hono()
           Codec(
             Type.Refine(
               Type.Refine(
-                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '20' }),
+                Type.Refine(
+                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '20' }),
+                  (value) => Number.isSafeInteger(Number(value)),
+                  () => 'must be a safe integer',
+                ),
                 (value) => Number(value) >= 1,
                 () => 'must be >= 1',
               ),
@@ -769,7 +830,11 @@ export const agentsHandler = new Hono()
           Codec(
             Type.Refine(
               Type.Refine(
-                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '20' }),
+                Type.Refine(
+                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '20' }),
+                  (value) => Number.isSafeInteger(Number(value)),
+                  () => 'must be a safe integer',
+                ),
                 (value) => Number(value) >= 1,
                 () => 'must be >= 1',
               ),

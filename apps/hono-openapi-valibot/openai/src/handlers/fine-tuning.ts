@@ -109,15 +109,19 @@ export const fineTuningHandler = new Hono()
       v.object({
         project_id: v.optional(v.string()),
         after: v.optional(v.string()),
-        limit: v.optional(
-          v.pipe(
-            v.string(),
-            v.regex(/^-?(?:0|[1-9]\d*)$/),
-            v.transform((input) => Number(input)),
-            v.number(),
-            v.safeInteger(),
+        limit: v.pipe(
+          v.optional(
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.metadata({ type: 'integer' }),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+            ),
+            '10',
           ),
-          '10',
+          v.metadata({ default: 10 }),
         ),
         order: v.optional(v.picklist(['ascending', 'descending']), 'descending'),
       }),
@@ -245,15 +249,19 @@ export const fineTuningHandler = new Hono()
       'query',
       v.object({
         after: v.optional(v.string()),
-        limit: v.optional(
-          v.pipe(
-            v.string(),
-            v.regex(/^-?(?:0|[1-9]\d*)$/),
-            v.transform((input) => Number(input)),
-            v.number(),
-            v.safeInteger(),
+        limit: v.pipe(
+          v.optional(
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.metadata({ type: 'integer' }),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+            ),
+            '20',
           ),
-          '20',
+          v.metadata({ default: 20 }),
         ),
         metadata: v.optional(
           v.pipe(
@@ -405,15 +413,19 @@ export const fineTuningHandler = new Hono()
       'query',
       v.object({
         after: v.optional(v.string()),
-        limit: v.optional(
-          v.pipe(
-            v.string(),
-            v.regex(/^-?(?:0|[1-9]\d*)$/),
-            v.transform((input) => Number(input)),
-            v.number(),
-            v.safeInteger(),
+        limit: v.pipe(
+          v.optional(
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.metadata({ type: 'integer' }),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+            ),
+            '10',
           ),
-          '10',
+          v.metadata({ default: 10 }),
         ),
       }),
     ),
@@ -460,15 +472,19 @@ export const fineTuningHandler = new Hono()
       'query',
       v.object({
         after: v.optional(v.string()),
-        limit: v.optional(
-          v.pipe(
-            v.string(),
-            v.regex(/^-?(?:0|[1-9]\d*)$/),
-            v.transform((input) => Number(input)),
-            v.number(),
-            v.safeInteger(),
+        limit: v.pipe(
+          v.optional(
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.metadata({ type: 'integer' }),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+            ),
+            '20',
           ),
-          '20',
+          v.metadata({ default: 20 }),
         ),
       }),
     ),

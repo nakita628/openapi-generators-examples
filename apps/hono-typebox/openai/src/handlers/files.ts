@@ -10,7 +10,13 @@ export const filesHandler = new Hono()
       Type.Object({
         purpose: Type.Optional(Type.String()),
         limit: Type.Optional(
-          Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '10000' }))
+          Codec(
+            Type.Refine(
+              Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '10000' }),
+              (value) => Number.isSafeInteger(Number(value)),
+              () => 'must be a safe integer',
+            ),
+          )
             .Decode((value) => Number(value))
             .Encode((value) => String(value)),
         ),
@@ -53,7 +59,11 @@ export const filesHandler = new Hono()
                 seconds: Codec(
                   Type.Refine(
                     Type.Refine(
-                      Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                      Type.Refine(
+                        Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                        (value) => Number.isSafeInteger(Number(value)),
+                        () => 'must be a safe integer',
+                      ),
                       (value) => Number(value) >= 3600,
                       () => 'must be >= 3600',
                     ),

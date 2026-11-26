@@ -28,6 +28,7 @@ export const getProjectsProjectIdGroupsGroupIdRoles = os
         v.pipe(
           v.string(),
           v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.metadata({ type: 'integer', minimum: 0, maximum: 1000 }),
           v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
@@ -100,17 +101,21 @@ export const getProjectsProjectIdRoles = os
     v.object({
       project_id: v.string(),
       limit: v.optional(
-        v.optional(
-          v.pipe(
-            v.string(),
-            v.regex(/^-?(?:0|[1-9]\d*)$/),
-            v.transform((input) => Number(input)),
-            v.number(),
-            v.safeInteger(),
-            v.minValue(0),
-            v.maxValue(1000),
+        v.pipe(
+          v.optional(
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.metadata({ type: 'integer', minimum: 0, maximum: 1000 }),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+              v.minValue(0),
+              v.maxValue(1000),
+            ),
+            '1000',
           ),
-          '1000',
+          v.metadata({ default: 1000 }),
         ),
       ),
       after: v.optional(v.string()),
@@ -215,6 +220,7 @@ export const getProjectsProjectIdUsersUserIdRoles = os
         v.pipe(
           v.string(),
           v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.metadata({ type: 'integer', minimum: 0, maximum: 1000 }),
           v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),

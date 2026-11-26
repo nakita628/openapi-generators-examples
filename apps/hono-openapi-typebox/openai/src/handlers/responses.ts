@@ -132,19 +132,31 @@ export const responsesHandler = new Hono()
           include: Type.Optional(Type.Array(IncludeEnumSchema)),
           stream: Type.Optional(
             Codec(
-              Type.String({ pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i }),
+              Type.String({
+                pattern:
+                  '^(?:[Tt][Rr][Uu][Ee]|1|[Yy][Ee][Ss]|[Oo][Nn]|[Yy]|[Ee][Nn][Aa][Bb][Ll][Ee][Dd]|[Ff][Aa][Ll][Ss][Ee]|0|[Nn][Oo]|[Oo][Ff][Ff]|[Nn]|[Dd][Ii][Ss][Aa][Bb][Ll][Ee][Dd])$',
+              }),
             )
               .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
               .Encode((value) => (value ? 'true' : 'false')),
           ),
           starting_after: Type.Optional(
-            Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+            Codec(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                (value) => Number.isSafeInteger(Number(value)),
+                () => 'must be a safe integer',
+              ),
+            )
               .Decode((value) => Number(value))
               .Encode((value) => String(value)),
           ),
           include_obfuscation: Type.Optional(
             Codec(
-              Type.String({ pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i }),
+              Type.String({
+                pattern:
+                  '^(?:[Tt][Rr][Uu][Ee]|1|[Yy][Ee][Ss]|[Oo][Nn]|[Yy]|[Ee][Nn][Aa][Bb][Ll][Ee][Dd]|[Ff][Aa][Ll][Ss][Ee]|0|[Nn][Oo]|[Oo][Ff][Ff]|[Nn]|[Dd][Ii][Ss][Aa][Bb][Ll][Ee][Dd])$',
+              }),
             )
               .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
               .Encode((value) => (value ? 'true' : 'false')),
@@ -260,7 +272,13 @@ export const responsesHandler = new Hono()
       toStandardSchemaV1(
         Type.Object({
           limit: Type.Optional(
-            Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '20' }))
+            Codec(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '20' }),
+                (value) => Number.isSafeInteger(Number(value)),
+                () => 'must be a safe integer',
+              ),
+            )
               .Decode((value) => Number(value))
               .Encode((value) => String(value)),
           ),
@@ -369,19 +387,31 @@ export const responsesHandler = new Hono()
           include: Type.Optional(Type.Array(BetaIncludeEnumSchema)),
           stream: Type.Optional(
             Codec(
-              Type.String({ pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i }),
+              Type.String({
+                pattern:
+                  '^(?:[Tt][Rr][Uu][Ee]|1|[Yy][Ee][Ss]|[Oo][Nn]|[Yy]|[Ee][Nn][Aa][Bb][Ll][Ee][Dd]|[Ff][Aa][Ll][Ss][Ee]|0|[Nn][Oo]|[Oo][Ff][Ff]|[Nn]|[Dd][Ii][Ss][Aa][Bb][Ll][Ee][Dd])$',
+              }),
             )
               .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
               .Encode((value) => (value ? 'true' : 'false')),
           ),
           starting_after: Type.Optional(
-            Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+            Codec(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                (value) => Number.isSafeInteger(Number(value)),
+                () => 'must be a safe integer',
+              ),
+            )
               .Decode((value) => Number(value))
               .Encode((value) => String(value)),
           ),
           include_obfuscation: Type.Optional(
             Codec(
-              Type.String({ pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i }),
+              Type.String({
+                pattern:
+                  '^(?:[Tt][Rr][Uu][Ee]|1|[Yy][Ee][Ss]|[Oo][Nn]|[Yy]|[Ee][Nn][Aa][Bb][Ll][Ee][Dd]|[Ff][Aa][Ll][Ss][Ee]|0|[Nn][Oo]|[Oo][Ff][Ff]|[Nn]|[Dd][Ii][Ss][Aa][Bb][Ll][Ee][Dd])$',
+              }),
             )
               .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
               .Encode((value) => (value ? 'true' : 'false')),
@@ -561,7 +591,13 @@ export const responsesHandler = new Hono()
       toStandardSchemaV1(
         Type.Object({
           limit: Type.Optional(
-            Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '20' }))
+            Codec(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '20' }),
+                (value) => Number.isSafeInteger(Number(value)),
+                () => 'must be a safe integer',
+              ),
+            )
               .Decode((value) => Number(value))
               .Encode((value) => String(value)),
           ),

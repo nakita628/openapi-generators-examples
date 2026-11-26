@@ -18,7 +18,11 @@ export const webhookEndpointsHandler = new Hono()
           Codec(
             Type.Refine(
               Type.Refine(
-                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                Type.Refine(
+                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                  (value) => Number.isSafeInteger(Number(value)),
+                  () => 'must be a safe integer',
+                ),
                 (value) => Number(value) >= 1,
                 () => 'must be >= 1',
               ),

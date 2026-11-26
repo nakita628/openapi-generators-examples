@@ -156,7 +156,13 @@ export const fineTuningHandler = new Hono()
           project_id: Type.Optional(Type.String()),
           after: Type.Optional(Type.String()),
           limit: Type.Optional(
-            Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '10' }))
+            Codec(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '10' }),
+                (value) => Number.isSafeInteger(Number(value)),
+                () => 'must be a safe integer',
+              ),
+            )
               .Decode((value) => Number(value))
               .Encode((value) => String(value)),
           ),
@@ -314,7 +320,13 @@ export const fineTuningHandler = new Hono()
         Type.Object({
           after: Type.Optional(Type.String()),
           limit: Type.Optional(
-            Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '20' }))
+            Codec(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '20' }),
+                (value) => Number.isSafeInteger(Number(value)),
+                () => 'must be a safe integer',
+              ),
+            )
               .Decode((value) => Number(value))
               .Encode((value) => String(value)),
           ),
@@ -492,7 +504,13 @@ export const fineTuningHandler = new Hono()
         Type.Object({
           after: Type.Optional(Type.String()),
           limit: Type.Optional(
-            Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '10' }))
+            Codec(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '10' }),
+                (value) => Number.isSafeInteger(Number(value)),
+                () => 'must be a safe integer',
+              ),
+            )
               .Decode((value) => Number(value))
               .Encode((value) => String(value)),
           ),
@@ -551,7 +569,13 @@ export const fineTuningHandler = new Hono()
         Type.Object({
           after: Type.Optional(Type.String()),
           limit: Type.Optional(
-            Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '20' }))
+            Codec(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '20' }),
+                (value) => Number.isSafeInteger(Number(value)),
+                () => 'must be a safe integer',
+              ),
+            )
               .Decode((value) => Number(value))
               .Encode((value) => String(value)),
           ),

@@ -1885,9 +1885,10 @@ export const contract = {
         'line_items?': type('unknown')
           .pipe((data) => (data === undefined || Array.isArray(data) ? data : [data]))
           .to('string[]'),
-        'group_by?': type('unknown')
-          .pipe((data) => (data === undefined || Array.isArray(data) ? data : [data]))
-          .to("'project_id' | 'user_id' | 'line_item' | 'api_key_id' | 'api_source'[]"),
+        'group_by?': type('unknown').pipe(
+          (data) => (data === undefined || Array.isArray(data) ? data : [data]),
+          type("'project_id' | 'user_id' | 'line_item' | 'api_key_id' | 'api_source'").array(),
+        ),
         'limit?': type('string').pipe((data, ctx) => {
           const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
@@ -3048,9 +3049,10 @@ export const contract = {
         'models?': type('unknown')
           .pipe((data) => (data === undefined || Array.isArray(data) ? data : [data]))
           .to('string[]'),
-        'group_by?': type('unknown')
-          .pipe((data) => (data === undefined || Array.isArray(data) ? data : [data]))
-          .to("'project_id' | 'user_id' | 'api_key_id' | 'model'[]"),
+        'group_by?': type('unknown').pipe(
+          (data) => (data === undefined || Array.isArray(data) ? data : [data]),
+          type("'project_id' | 'user_id' | 'api_key_id' | 'model'").array(),
+        ),
         'limit?': type('string').pipe((data, ctx) => {
           const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
@@ -3091,9 +3093,10 @@ export const contract = {
         'models?': type('unknown')
           .pipe((data) => (data === undefined || Array.isArray(data) ? data : [data]))
           .to('string[]'),
-        'group_by?': type('unknown')
-          .pipe((data) => (data === undefined || Array.isArray(data) ? data : [data]))
-          .to("'project_id' | 'user_id' | 'api_key_id' | 'model'[]"),
+        'group_by?': type('unknown').pipe(
+          (data) => (data === undefined || Array.isArray(data) ? data : [data]),
+          type("'project_id' | 'user_id' | 'api_key_id' | 'model'").array(),
+        ),
         'limit?': type('string').pipe((data, ctx) => {
           const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
@@ -3171,11 +3174,12 @@ export const contract = {
         'batch?': type(/^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i).pipe((data) =>
           /^(?:true|1|yes|on|y|enabled)$/i.test(data),
         ),
-        'group_by?': type('unknown')
-          .pipe((data) => (data === undefined || Array.isArray(data) ? data : [data]))
-          .to(
-            "'project_id' | 'user_id' | 'api_key_id' | 'model' | 'batch' | 'service_tier' | 'api_source'[]",
-          ),
+        'group_by?': type('unknown').pipe(
+          (data) => (data === undefined || Array.isArray(data) ? data : [data]),
+          type(
+            "'project_id' | 'user_id' | 'api_key_id' | 'model' | 'batch' | 'service_tier' | 'api_source'",
+          ).array(),
+        ),
         'limit?': type('string').pipe((data, ctx) => {
           const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
@@ -3216,9 +3220,10 @@ export const contract = {
         'models?': type('unknown')
           .pipe((data) => (data === undefined || Array.isArray(data) ? data : [data]))
           .to('string[]'),
-        'group_by?': type('unknown')
-          .pipe((data) => (data === undefined || Array.isArray(data) ? data : [data]))
-          .to("'project_id' | 'user_id' | 'api_key_id' | 'model'[]"),
+        'group_by?': type('unknown').pipe(
+          (data) => (data === undefined || Array.isArray(data) ? data : [data]),
+          type("'project_id' | 'user_id' | 'api_key_id' | 'model'").array(),
+        ),
         'limit?': type('string').pipe((data, ctx) => {
           const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
@@ -3259,9 +3264,10 @@ export const contract = {
         'vector_store_ids?': type('unknown')
           .pipe((data) => (data === undefined || Array.isArray(data) ? data : [data]))
           .to('string[]'),
-        'group_by?': type('unknown')
-          .pipe((data) => (data === undefined || Array.isArray(data) ? data : [data]))
-          .to("'project_id' | 'user_id' | 'api_key_id' | 'vector_store_id'[]"),
+        'group_by?': type('unknown').pipe(
+          (data) => (data === undefined || Array.isArray(data) ? data : [data]),
+          type("'project_id' | 'user_id' | 'api_key_id' | 'vector_store_id'").array(),
+        ),
         'limit?': type('string').pipe((data, ctx) => {
           const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
@@ -3290,12 +3296,14 @@ export const contract = {
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'bucket_width?': type("'1m' | '1h' | '1d'"),
-        'sources?': type('unknown')
-          .pipe((data) => (data === undefined || Array.isArray(data) ? data : [data]))
-          .to("'image.generation' | 'image.edit' | 'image.variation'[]"),
-        'sizes?': type('unknown')
-          .pipe((data) => (data === undefined || Array.isArray(data) ? data : [data]))
-          .to("'256x256' | '512x512' | '1024x1024' | '1792x1792' | '1024x1792'[]"),
+        'sources?': type('unknown').pipe(
+          (data) => (data === undefined || Array.isArray(data) ? data : [data]),
+          type("'image.generation' | 'image.edit' | 'image.variation'").array(),
+        ),
+        'sizes?': type('unknown').pipe(
+          (data) => (data === undefined || Array.isArray(data) ? data : [data]),
+          type("'256x256' | '512x512' | '1024x1024' | '1792x1792' | '1024x1792'").array(),
+        ),
         'project_ids?': type('unknown')
           .pipe((data) => (data === undefined || Array.isArray(data) ? data : [data]))
           .to('string[]'),
@@ -3308,9 +3316,10 @@ export const contract = {
         'models?': type('unknown')
           .pipe((data) => (data === undefined || Array.isArray(data) ? data : [data]))
           .to('string[]'),
-        'group_by?': type('unknown')
-          .pipe((data) => (data === undefined || Array.isArray(data) ? data : [data]))
-          .to("'project_id' | 'user_id' | 'api_key_id' | 'model' | 'size' | 'source'[]"),
+        'group_by?': type('unknown').pipe(
+          (data) => (data === undefined || Array.isArray(data) ? data : [data]),
+          type("'project_id' | 'user_id' | 'api_key_id' | 'model' | 'size' | 'source'").array(),
+        ),
         'limit?': type('string').pipe((data, ctx) => {
           const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
@@ -3351,9 +3360,10 @@ export const contract = {
         'models?': type('unknown')
           .pipe((data) => (data === undefined || Array.isArray(data) ? data : [data]))
           .to('string[]'),
-        'group_by?': type('unknown')
-          .pipe((data) => (data === undefined || Array.isArray(data) ? data : [data]))
-          .to("'project_id' | 'user_id' | 'api_key_id' | 'model'[]"),
+        'group_by?': type('unknown').pipe(
+          (data) => (data === undefined || Array.isArray(data) ? data : [data]),
+          type("'project_id' | 'user_id' | 'api_key_id' | 'model'").array(),
+        ),
         'limit?': type('string').pipe((data, ctx) => {
           const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
@@ -3428,14 +3438,16 @@ export const contract = {
         'models?': type('unknown')
           .pipe((data) => (data === undefined || Array.isArray(data) ? data : [data]))
           .to('string[]'),
-        'context_levels?': type('unknown')
-          .pipe((data) => (data === undefined || Array.isArray(data) ? data : [data]))
-          .to("'low' | 'medium' | 'high'[]"),
-        'group_by?': type('unknown')
-          .pipe((data) => (data === undefined || Array.isArray(data) ? data : [data]))
-          .to(
-            "'project_id' | 'user_id' | 'api_key_id' | 'model' | 'context_level' | 'api_source'[]",
-          ),
+        'context_levels?': type('unknown').pipe(
+          (data) => (data === undefined || Array.isArray(data) ? data : [data]),
+          type("'low' | 'medium' | 'high'").array(),
+        ),
+        'group_by?': type('unknown').pipe(
+          (data) => (data === undefined || Array.isArray(data) ? data : [data]),
+          type(
+            "'project_id' | 'user_id' | 'api_key_id' | 'model' | 'context_level' | 'api_source'",
+          ).array(),
+        ),
         'limit?': type('string').pipe((data, ctx) => {
           const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
@@ -3804,9 +3816,11 @@ export const contract = {
         type: type("'realtime'").describe(
           'The type of session to create. Always `realtime` for the Realtime API.\n',
         ),
-        'output_modalities?': type("'text' | 'audio'[]").describe(
-          'The set of modalities the model can respond with. It defaults to `["audio"]`, indicating\nthat the model will respond with audio plus a transcript. `["text"]` can be used to make\nthe model respond with text only. It is not possible to request both `text` and `audio` at the same time.\n',
-        ),
+        'output_modalities?': type("'text' | 'audio'")
+          .array()
+          .describe(
+            'The set of modalities the model can respond with. It defaults to `["audio"]`, indicating\nthat the model will respond with audio plus a transcript. `["text"]` can be used to make\nthe model respond with text only. It is not possible to request both `text` and `audio` at the same time.\n',
+          ),
         'model?': type('string')
           .or(
             type.enumerated(

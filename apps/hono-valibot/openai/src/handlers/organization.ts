@@ -66,6 +66,7 @@ export const organizationHandler = new Hono()
             v.pipe(
               v.string(),
               v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.metadata({ type: 'integer' }),
               v.transform((input) => Number(input)),
               v.number(),
               v.safeInteger(),
@@ -73,6 +74,7 @@ export const organizationHandler = new Hono()
             '20',
           ),
           v.description('Maximum number of keys to return.'),
+          v.metadata({ default: 20 }),
         ),
       }),
     ),
@@ -127,6 +129,7 @@ export const organizationHandler = new Hono()
                 v.pipe(
                   v.string(),
                   v.regex(/^-?(?:0|[1-9]\d*)$/),
+                  v.metadata({ type: 'integer' }),
                   v.transform((input) => Number(input)),
                   v.number(),
                   v.safeInteger(),
@@ -139,6 +142,7 @@ export const organizationHandler = new Hono()
                 v.pipe(
                   v.string(),
                   v.regex(/^-?(?:0|[1-9]\d*)$/),
+                  v.metadata({ type: 'integer' }),
                   v.transform((input) => Number(input)),
                   v.number(),
                   v.safeInteger(),
@@ -151,6 +155,7 @@ export const organizationHandler = new Hono()
                 v.pipe(
                   v.string(),
                   v.regex(/^-?(?:0|[1-9]\d*)$/),
+                  v.metadata({ type: 'integer' }),
                   v.transform((input) => Number(input)),
                   v.number(),
                   v.safeInteger(),
@@ -163,6 +168,7 @@ export const organizationHandler = new Hono()
                 v.pipe(
                   v.string(),
                   v.regex(/^-?(?:0|[1-9]\d*)$/),
+                  v.metadata({ type: 'integer' }),
                   v.transform((input) => Number(input)),
                   v.number(),
                   v.safeInteger(),
@@ -217,15 +223,19 @@ export const organizationHandler = new Hono()
           ),
           'false',
         ),
-        limit: v.optional(
-          v.pipe(
-            v.string(),
-            v.regex(/^-?(?:0|[1-9]\d*)$/),
-            v.transform((input) => Number(input)),
-            v.number(),
-            v.safeInteger(),
+        limit: v.pipe(
+          v.optional(
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.metadata({ type: 'integer' }),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+            ),
+            '20',
           ),
-          '20',
+          v.metadata({ default: 20 }),
         ),
         after: v.optional(v.string()),
         before: v.optional(v.string()),
@@ -238,15 +248,19 @@ export const organizationHandler = new Hono()
     sValidator(
       'query',
       v.object({
-        limit: v.optional(
-          v.pipe(
-            v.string(),
-            v.regex(/^-?(?:0|[1-9]\d*)$/),
-            v.transform((input) => Number(input)),
-            v.number(),
-            v.safeInteger(),
+        limit: v.pipe(
+          v.optional(
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.metadata({ type: 'integer' }),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+            ),
+            '20',
           ),
-          '20',
+          v.metadata({ default: 20 }),
         ),
         after: v.optional(v.string()),
         order: v.optional(v.picklist(['asc', 'desc']), 'desc'),
@@ -301,6 +315,7 @@ export const organizationHandler = new Hono()
         start_time: v.pipe(
           v.string(),
           v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.metadata({ type: 'integer' }),
           v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
@@ -309,6 +324,7 @@ export const organizationHandler = new Hono()
           v.pipe(
             v.string(),
             v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.metadata({ type: 'integer' }),
             v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
@@ -343,15 +359,19 @@ export const organizationHandler = new Hono()
             v.array(v.picklist(['project_id', 'user_id', 'line_item', 'api_key_id', 'api_source'])),
           ),
         ),
-        limit: v.optional(
-          v.pipe(
-            v.string(),
-            v.regex(/^-?(?:0|[1-9]\d*)$/),
-            v.transform((input) => Number(input)),
-            v.number(),
-            v.safeInteger(),
+        limit: v.pipe(
+          v.optional(
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.metadata({ type: 'integer' }),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+            ),
+            '7',
           ),
-          '7',
+          v.metadata({ default: 7 }),
         ),
         page: v.optional(v.string()),
       }),
@@ -369,17 +389,21 @@ export const organizationHandler = new Hono()
     sValidator(
       'query',
       v.object({
-        limit: v.optional(
-          v.pipe(
-            v.string(),
-            v.regex(/^-?(?:0|[1-9]\d*)$/),
-            v.transform((input) => Number(input)),
-            v.number(),
-            v.safeInteger(),
-            v.minValue(0),
-            v.maxValue(1000),
+        limit: v.pipe(
+          v.optional(
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.metadata({ type: 'integer', minimum: 0, maximum: 1000 }),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+              v.minValue(0),
+              v.maxValue(1000),
+            ),
+            '100',
           ),
-          '100',
+          v.metadata({ default: 100 }),
         ),
         after: v.optional(v.string()),
         order: v.optional(v.picklist(['asc', 'desc']), 'asc'),
@@ -414,6 +438,7 @@ export const organizationHandler = new Hono()
           limit: v.pipe(
             v.string(),
             v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.metadata({ type: 'integer', minimum: 0, maximum: 1000 }),
             v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
@@ -449,17 +474,21 @@ export const organizationHandler = new Hono()
     sValidator(
       'query',
       v.object({
-        limit: v.optional(
-          v.pipe(
-            v.string(),
-            v.regex(/^-?(?:0|[1-9]\d*)$/),
-            v.transform((input) => Number(input)),
-            v.number(),
-            v.safeInteger(),
-            v.minValue(0),
-            v.maxValue(1000),
+        limit: v.pipe(
+          v.optional(
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.metadata({ type: 'integer', minimum: 0, maximum: 1000 }),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+              v.minValue(0),
+              v.maxValue(1000),
+            ),
+            '100',
           ),
-          '100',
+          v.metadata({ default: 100 }),
         ),
         after: v.optional(v.string()),
         order: v.optional(v.picklist(['asc', 'desc']), 'desc'),
@@ -488,15 +517,19 @@ export const organizationHandler = new Hono()
     sValidator(
       'query',
       v.object({
-        limit: v.optional(
-          v.pipe(
-            v.string(),
-            v.regex(/^-?(?:0|[1-9]\d*)$/),
-            v.transform((input) => Number(input)),
-            v.number(),
-            v.safeInteger(),
+        limit: v.pipe(
+          v.optional(
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.metadata({ type: 'integer' }),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+            ),
+            '20',
           ),
-          '20',
+          v.metadata({ default: 20 }),
         ),
         after: v.optional(v.string()),
       }),
@@ -519,15 +552,19 @@ export const organizationHandler = new Hono()
     sValidator(
       'query',
       v.object({
-        limit: v.optional(
-          v.pipe(
-            v.string(),
-            v.regex(/^-?(?:0|[1-9]\d*)$/),
-            v.transform((input) => Number(input)),
-            v.number(),
-            v.safeInteger(),
+        limit: v.pipe(
+          v.optional(
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.metadata({ type: 'integer' }),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+            ),
+            '20',
           ),
-          '20',
+          v.metadata({ default: 20 }),
         ),
         after: v.optional(v.string()),
         include_archived: v.optional(
@@ -560,15 +597,19 @@ export const organizationHandler = new Hono()
     sValidator(
       'query',
       v.object({
-        limit: v.optional(
-          v.pipe(
-            v.string(),
-            v.regex(/^-?(?:0|[1-9]\d*)$/),
-            v.transform((input) => Number(input)),
-            v.number(),
-            v.safeInteger(),
+        limit: v.pipe(
+          v.optional(
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.metadata({ type: 'integer' }),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+            ),
+            '20',
           ),
-          '20',
+          v.metadata({ default: 20 }),
         ),
         after: v.optional(v.string()),
         owner_project_access: v.optional(v.picklist(['active', 'inactive', 'any'])),
@@ -603,15 +644,19 @@ export const organizationHandler = new Hono()
     sValidator(
       'query',
       v.object({
-        limit: v.optional(
-          v.pipe(
-            v.string(),
-            v.regex(/^-?(?:0|[1-9]\d*)$/),
-            v.transform((input) => Number(input)),
-            v.number(),
-            v.safeInteger(),
+        limit: v.pipe(
+          v.optional(
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.metadata({ type: 'integer' }),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+            ),
+            '20',
           ),
-          '20',
+          v.metadata({ default: 20 }),
         ),
         after: v.optional(v.string()),
         order: v.optional(v.picklist(['asc', 'desc']), 'desc'),
@@ -648,17 +693,21 @@ export const organizationHandler = new Hono()
     sValidator(
       'query',
       v.object({
-        limit: v.optional(
-          v.pipe(
-            v.string(),
-            v.regex(/^-?(?:0|[1-9]\d*)$/),
-            v.transform((input) => Number(input)),
-            v.number(),
-            v.safeInteger(),
-            v.minValue(0),
-            v.maxValue(100),
+        limit: v.pipe(
+          v.optional(
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.metadata({ type: 'integer', minimum: 0, maximum: 100 }),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+              v.minValue(0),
+              v.maxValue(100),
+            ),
+            '20',
           ),
-          '20',
+          v.metadata({ default: 20 }),
         ),
         after: v.optional(v.string()),
         order: v.optional(v.picklist(['asc', 'desc']), 'asc'),
@@ -719,15 +768,19 @@ export const organizationHandler = new Hono()
     sValidator(
       'query',
       v.object({
-        limit: v.optional(
-          v.pipe(
-            v.string(),
-            v.regex(/^-?(?:0|[1-9]\d*)$/),
-            v.transform((input) => Number(input)),
-            v.number(),
-            v.safeInteger(),
+        limit: v.pipe(
+          v.optional(
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.metadata({ type: 'integer' }),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+            ),
+            '100',
           ),
-          '100',
+          v.metadata({ default: 100 }),
         ),
         after: v.optional(v.string()),
         before: v.optional(v.string()),
@@ -747,15 +800,19 @@ export const organizationHandler = new Hono()
     sValidator(
       'query',
       v.object({
-        limit: v.optional(
-          v.pipe(
-            v.string(),
-            v.regex(/^-?(?:0|[1-9]\d*)$/),
-            v.transform((input) => Number(input)),
-            v.number(),
-            v.safeInteger(),
+        limit: v.pipe(
+          v.optional(
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.metadata({ type: 'integer' }),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+            ),
+            '20',
           ),
-          '20',
+          v.metadata({ default: 20 }),
         ),
         after: v.optional(v.string()),
       }),
@@ -794,6 +851,7 @@ export const organizationHandler = new Hono()
           v.pipe(
             v.string(),
             v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.metadata({ type: 'integer', minimum: 0, maximum: 100 }),
             v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
@@ -836,15 +894,19 @@ export const organizationHandler = new Hono()
     sValidator(
       'query',
       v.object({
-        limit: v.optional(
-          v.pipe(
-            v.string(),
-            v.regex(/^-?(?:0|[1-9]\d*)$/),
-            v.transform((input) => Number(input)),
-            v.number(),
-            v.safeInteger(),
+        limit: v.pipe(
+          v.optional(
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.metadata({ type: 'integer' }),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+            ),
+            '20',
           ),
-          '20',
+          v.metadata({ default: 20 }),
         ),
         after: v.optional(v.string()),
       }),
@@ -878,17 +940,21 @@ export const organizationHandler = new Hono()
     sValidator(
       'query',
       v.object({
-        limit: v.optional(
-          v.pipe(
-            v.string(),
-            v.regex(/^-?(?:0|[1-9]\d*)$/),
-            v.transform((input) => Number(input)),
-            v.number(),
-            v.safeInteger(),
-            v.minValue(0),
-            v.maxValue(1000),
+        limit: v.pipe(
+          v.optional(
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.metadata({ type: 'integer', minimum: 0, maximum: 1000 }),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+              v.minValue(0),
+              v.maxValue(1000),
+            ),
+            '1000',
           ),
-          '1000',
+          v.metadata({ default: 1000 }),
         ),
         after: v.optional(v.string()),
         order: v.optional(v.picklist(['asc', 'desc']), 'asc'),
@@ -926,6 +992,7 @@ export const organizationHandler = new Hono()
           v.pipe(
             v.string(),
             v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.metadata({ type: 'integer', minimum: 0, maximum: 100 }),
             v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
@@ -965,6 +1032,7 @@ export const organizationHandler = new Hono()
         start_time: v.pipe(
           v.string(),
           v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.metadata({ type: 'integer' }),
           v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
@@ -973,6 +1041,7 @@ export const organizationHandler = new Hono()
           v.pipe(
             v.string(),
             v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.metadata({ type: 'integer' }),
             v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
@@ -1018,6 +1087,7 @@ export const organizationHandler = new Hono()
           v.pipe(
             v.string(),
             v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.metadata({ type: 'integer' }),
             v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
@@ -1036,6 +1106,7 @@ export const organizationHandler = new Hono()
         start_time: v.pipe(
           v.string(),
           v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.metadata({ type: 'integer' }),
           v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
@@ -1044,6 +1115,7 @@ export const organizationHandler = new Hono()
           v.pipe(
             v.string(),
             v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.metadata({ type: 'integer' }),
             v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
@@ -1089,6 +1161,7 @@ export const organizationHandler = new Hono()
           v.pipe(
             v.string(),
             v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.metadata({ type: 'integer' }),
             v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
@@ -1107,6 +1180,7 @@ export const organizationHandler = new Hono()
         start_time: v.pipe(
           v.string(),
           v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.metadata({ type: 'integer' }),
           v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
@@ -1115,6 +1189,7 @@ export const organizationHandler = new Hono()
           v.pipe(
             v.string(),
             v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.metadata({ type: 'integer' }),
             v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
@@ -1139,6 +1214,7 @@ export const organizationHandler = new Hono()
           v.pipe(
             v.string(),
             v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.metadata({ type: 'integer' }),
             v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
@@ -1157,6 +1233,7 @@ export const organizationHandler = new Hono()
         start_time: v.pipe(
           v.string(),
           v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.metadata({ type: 'integer' }),
           v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
@@ -1165,6 +1242,7 @@ export const organizationHandler = new Hono()
           v.pipe(
             v.string(),
             v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.metadata({ type: 'integer' }),
             v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
@@ -1227,6 +1305,7 @@ export const organizationHandler = new Hono()
           v.pipe(
             v.string(),
             v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.metadata({ type: 'integer' }),
             v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
@@ -1245,6 +1324,7 @@ export const organizationHandler = new Hono()
         start_time: v.pipe(
           v.string(),
           v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.metadata({ type: 'integer' }),
           v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
@@ -1253,6 +1333,7 @@ export const organizationHandler = new Hono()
           v.pipe(
             v.string(),
             v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.metadata({ type: 'integer' }),
             v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
@@ -1298,6 +1379,7 @@ export const organizationHandler = new Hono()
           v.pipe(
             v.string(),
             v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.metadata({ type: 'integer' }),
             v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
@@ -1316,6 +1398,7 @@ export const organizationHandler = new Hono()
         start_time: v.pipe(
           v.string(),
           v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.metadata({ type: 'integer' }),
           v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
@@ -1324,6 +1407,7 @@ export const organizationHandler = new Hono()
           v.pipe(
             v.string(),
             v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.metadata({ type: 'integer' }),
             v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
@@ -1369,6 +1453,7 @@ export const organizationHandler = new Hono()
           v.pipe(
             v.string(),
             v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.metadata({ type: 'integer' }),
             v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
@@ -1387,6 +1472,7 @@ export const organizationHandler = new Hono()
         start_time: v.pipe(
           v.string(),
           v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.metadata({ type: 'integer' }),
           v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
@@ -1395,6 +1481,7 @@ export const organizationHandler = new Hono()
           v.pipe(
             v.string(),
             v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.metadata({ type: 'integer' }),
             v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
@@ -1454,6 +1541,7 @@ export const organizationHandler = new Hono()
           v.pipe(
             v.string(),
             v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.metadata({ type: 'integer' }),
             v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
@@ -1472,6 +1560,7 @@ export const organizationHandler = new Hono()
         start_time: v.pipe(
           v.string(),
           v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.metadata({ type: 'integer' }),
           v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
@@ -1480,6 +1569,7 @@ export const organizationHandler = new Hono()
           v.pipe(
             v.string(),
             v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.metadata({ type: 'integer' }),
             v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
@@ -1525,6 +1615,7 @@ export const organizationHandler = new Hono()
           v.pipe(
             v.string(),
             v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.metadata({ type: 'integer' }),
             v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
@@ -1543,6 +1634,7 @@ export const organizationHandler = new Hono()
         start_time: v.pipe(
           v.string(),
           v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.metadata({ type: 'integer' }),
           v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
@@ -1551,6 +1643,7 @@ export const organizationHandler = new Hono()
           v.pipe(
             v.string(),
             v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.metadata({ type: 'integer' }),
             v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
@@ -1575,6 +1668,7 @@ export const organizationHandler = new Hono()
           v.pipe(
             v.string(),
             v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.metadata({ type: 'integer' }),
             v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
@@ -1593,6 +1687,7 @@ export const organizationHandler = new Hono()
         start_time: v.pipe(
           v.string(),
           v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.metadata({ type: 'integer' }),
           v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
@@ -1601,6 +1696,7 @@ export const organizationHandler = new Hono()
           v.pipe(
             v.string(),
             v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.metadata({ type: 'integer' }),
             v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
@@ -1662,6 +1758,7 @@ export const organizationHandler = new Hono()
           v.pipe(
             v.string(),
             v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.metadata({ type: 'integer' }),
             v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
@@ -1677,15 +1774,19 @@ export const organizationHandler = new Hono()
     sValidator(
       'query',
       v.object({
-        limit: v.optional(
-          v.pipe(
-            v.string(),
-            v.regex(/^-?(?:0|[1-9]\d*)$/),
-            v.transform((input) => Number(input)),
-            v.number(),
-            v.safeInteger(),
+        limit: v.pipe(
+          v.optional(
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.metadata({ type: 'integer' }),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+            ),
+            '20',
           ),
-          '20',
+          v.metadata({ default: 20 }),
         ),
         after: v.optional(v.string()),
         emails: v.optional(
@@ -1725,6 +1826,7 @@ export const organizationHandler = new Hono()
           limit: v.pipe(
             v.string(),
             v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.metadata({ type: 'integer', minimum: 0, maximum: 1000 }),
             v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
@@ -1763,6 +1865,7 @@ export const organizationHandler = new Hono()
           limit: v.pipe(
             v.string(),
             v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.metadata({ type: 'integer', minimum: 0, maximum: 100 }),
             v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
@@ -1813,6 +1916,7 @@ export const organizationHandler = new Hono()
           limit: v.pipe(
             v.string(),
             v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.metadata({ type: 'integer', minimum: 1, maximum: 100 }),
             v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
@@ -1872,6 +1976,7 @@ export const organizationHandler = new Hono()
           limit: v.pipe(
             v.string(),
             v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.metadata({ type: 'integer', minimum: 1, maximum: 100 }),
             v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
@@ -1940,6 +2045,7 @@ export const organizationHandler = new Hono()
         start_time: v.pipe(
           v.string(),
           v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.metadata({ type: 'integer' }),
           v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
@@ -1953,6 +2059,7 @@ export const organizationHandler = new Hono()
                 v.pipe(
                   v.string(),
                   v.regex(/^-?(?:0|[1-9]\d*)$/),
+                  v.metadata({ type: 'integer' }),
                   v.transform((input) => Number(input)),
                   v.number(),
                   v.safeInteger(),
@@ -1996,6 +2103,7 @@ export const organizationHandler = new Hono()
                 v.pipe(
                   v.string(),
                   v.regex(/^-?(?:0|[1-9]\d*)$/),
+                  v.metadata({ type: 'integer' }),
                   v.transform((input) => Number(input)),
                   v.number(),
                   v.safeInteger(),
@@ -2214,6 +2322,7 @@ export const organizationHandler = new Hono()
           limit: v.pipe(
             v.string(),
             v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.metadata({ type: 'integer', minimum: 1, maximum: 100 }),
             v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),

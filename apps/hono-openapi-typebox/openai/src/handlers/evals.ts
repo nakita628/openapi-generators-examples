@@ -63,7 +63,13 @@ export const evalsHandler = new Hono()
         Type.Object({
           after: Type.Optional(Type.String()),
           limit: Type.Optional(
-            Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '20' }))
+            Codec(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '20' }),
+                (value) => Number.isSafeInteger(Number(value)),
+                () => 'must be a safe integer',
+              ),
+            )
               .Decode((value) => Number(value))
               .Encode((value) => String(value)),
           ),
@@ -246,7 +252,13 @@ export const evalsHandler = new Hono()
         Type.Object({
           after: Type.Optional(Type.String()),
           limit: Type.Optional(
-            Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '20' }))
+            Codec(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '20' }),
+                (value) => Number.isSafeInteger(Number(value)),
+                () => 'must be a safe integer',
+              ),
+            )
               .Decode((value) => Number(value))
               .Encode((value) => String(value)),
           ),
@@ -447,7 +459,13 @@ export const evalsHandler = new Hono()
         Type.Object({
           after: Type.Optional(Type.String()),
           limit: Type.Optional(
-            Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '20' }))
+            Codec(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '20' }),
+                (value) => Number.isSafeInteger(Number(value)),
+                () => 'must be a safe integer',
+              ),
+            )
               .Decode((value) => Number(value))
               .Encode((value) => String(value)),
           ),

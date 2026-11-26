@@ -68,6 +68,7 @@ export const imagesHandler = new Hono()
                 v.pipe(
                   v.string(),
                   v.regex(/^-?(?:0|[1-9]\d*)$/),
+                  v.metadata({ type: 'integer', minimum: 2, maximum: 16 }),
                   v.transform((input) => Number(input)),
                   v.number(),
                   v.safeInteger(),
@@ -90,6 +91,7 @@ export const imagesHandler = new Hono()
                 v.pipe(
                   v.string(),
                   v.regex(/^-?(?:0|[1-9]\d*)$/),
+                  v.metadata({ type: 'integer', minimum: 20 }),
                   v.transform((input) => Number(input)),
                   v.number(),
                   v.safeInteger(),
@@ -192,6 +194,7 @@ export const imagesHandler = new Hono()
                 v.pipe(
                   v.string(),
                   v.regex(/^-?(?:0|[1-9]\d*)$/),
+                  v.metadata({ type: 'integer', minimum: 1, maximum: 10 }),
                   v.transform((input) => Number(input)),
                   v.number(),
                   v.safeInteger(),
@@ -203,7 +206,7 @@ export const imagesHandler = new Hono()
             '1',
           ),
           v.description('The number of images to generate. Must be between 1 and 10.'),
-          v.metadata({ examples: [1] }),
+          v.metadata({ examples: [1], default: 1 }),
         ),
         size: v.pipe(
           v.optional(
@@ -308,6 +311,7 @@ export const imagesHandler = new Hono()
                 v.pipe(
                   v.string(),
                   v.regex(/^-?(?:0|[1-9]\d*)$/),
+                  v.metadata({ type: 'integer' }),
                   v.transform((input) => Number(input)),
                   v.number(),
                   v.safeInteger(),
@@ -319,7 +323,7 @@ export const imagesHandler = new Hono()
           v.description(
             'The compression level (0-100%) for the generated images. This parameter\nis only supported for the GPT image models with the `webp` or `jpeg` output\nformats, and defaults to 100.\n',
           ),
-          v.metadata({ examples: [100] }),
+          v.metadata({ examples: [100], default: 100 }),
         ),
         safety_identifier: v.optional(
           v.pipe(
@@ -386,6 +390,7 @@ export const imagesHandler = new Hono()
                     v.pipe(
                       v.string(),
                       v.regex(/^-?(?:0|[1-9]\d*)$/),
+                      v.metadata({ type: 'integer', minimum: 0, maximum: 3 }),
                       v.transform((input) => Number(input)),
                       v.number(),
                       v.safeInteger(),
@@ -397,7 +402,7 @@ export const imagesHandler = new Hono()
                   v.description(
                     'The number of partial images to generate. This parameter is used for\nstreaming responses that return partial images. Value must be between 0 and 3.\nWhen set to 0, the response will be a single image sent in one streaming event.\n\nNote that the final image may be sent before the full number of partial images\nare generated if the full image is generated more quickly.\n',
                   ),
-                  v.metadata({ examples: [1] }),
+                  v.metadata({ examples: [1], default: 0 }),
                 ),
                 v.pipe(
                   v.unknown(),
@@ -557,6 +562,7 @@ export const imagesHandler = new Hono()
                   v.pipe(
                     v.string(),
                     v.regex(/^-?(?:0|[1-9]\d*)$/),
+                    v.metadata({ type: 'integer', minimum: 1, maximum: 10 }),
                     v.transform((input) => Number(input)),
                     v.number(),
                     v.safeInteger(),
@@ -568,7 +574,7 @@ export const imagesHandler = new Hono()
               '1',
             ),
             v.description('The number of images to generate. Must be between 1 and 10.'),
-            v.metadata({ examples: [1] }),
+            v.metadata({ examples: [1], default: 1 }),
           ),
           response_format: v.pipe(
             v.optional(v.nullable(v.picklist(['url', 'b64_json'])), 'url'),

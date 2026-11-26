@@ -13,6 +13,18 @@
     "etag": "W/\"3dd217b4a22029740ca7519f51d5d69383f227765b9ed2debed3695a0b4229ee\"",
     "canonical": "945d12e0506a05897465ff1710742a188d7e446bdc53eda6631a7c1b4b744f11"
   },
+  "gitlab": {
+    "url": "https://gitlab.com/gitlab-org/gitlab/-/raw/master/doc/api/openapi/openapi_v3.yaml",
+    "pinned": "https://gitlab.com/gitlab-org/gitlab/-/blob/eb1ffe94adde55d1a7cbe8d0ddb4957c176c5cc5/doc/api/openapi/openapi_v3.yaml",
+    "file": "gitlab.yaml",
+    "title": "GitLab REST API",
+    "version": "19.7",
+    "openapi": "3.0.0",
+    "operations": 1874,
+    "added": "2026-11-26",
+    "etag": "\"c23e7b06afad637127f04e0ef97491a7\"",
+    "sha256": "8c382800da902b2159261a2dab53d54e84b170fee632cea7487792fcc792eb71"
+  },
   "line-channel-access-token": {
     "url": "https://raw.githubusercontent.com/line/line-openapi/main/channel-access-token.yml",
     "pinned": "https://github.com/line/line-openapi/blob/967498a4e192914679ad0571d5845b29aa9755de/channel-access-token.yml",
@@ -61,6 +73,30 @@
     "etag": "W/\"605449f6eb3270a8395f97f408175d80587dedb44456cc842390ab72da2f985d\"",
     "sha256": "e3f4c214604305ca9d0db45435bd15161d40fb959a4b6cf38356d38fc0577e29"
   },
+  "line-messaging-api": {
+    "url": "https://raw.githubusercontent.com/line/line-openapi/main/messaging-api.yml",
+    "pinned": "https://github.com/line/line-openapi/blob/967498a4e192914679ad0571d5845b29aa9755de/messaging-api.yml",
+    "file": "line-messaging-api.yaml",
+    "title": "LINE Messaging API",
+    "version": "0.0.1",
+    "openapi": "3.0.0",
+    "operations": 75,
+    "added": "2026-11-26",
+    "etag": "W/\"b93c1e2fc12321de78ee2351a52c1da724588e60f915c01533d291e96b30dbda\"",
+    "sha256": "0cb0d8f89372a3e85ed960df6d3b2f343da2f00c149edfd2730cdab6e3415b1b"
+  },
+  "line-module": {
+    "url": "https://raw.githubusercontent.com/line/line-openapi/main/module.yml",
+    "pinned": "https://github.com/line/line-openapi/blob/967498a4e192914679ad0571d5845b29aa9755de/module.yml",
+    "file": "line-module.yaml",
+    "title": "LINE Messaging API",
+    "version": "0.0.1",
+    "openapi": "3.0.0",
+    "operations": 4,
+    "added": "2026-11-26",
+    "etag": "W/\"fc5829238f25f2afdb934ecd05dd5720a90bcc3e0101bab021b8adca5339ca35\"",
+    "sha256": "31d9580396bb6e781bb42e5ea513e1884c3998b783cf6d7b30d65c87d32fa498"
+  },
   "openai": {
     "url": "https://raw.githubusercontent.com/openai/openai-openapi/main/openapi.yaml",
     "file": "openai.yaml",
@@ -69,10 +105,10 @@
     "openapi": "3.1.0",
     "operations": 388,
     "added": "2026-11-21",
-    "sha256": "09df2b5326964a45db2b48931695e5a5eca695f586963960eea389c265c93492",
-    "updated": "2026-11-25",
-    "pinned": "https://github.com/openai/openai-openapi/blob/f8e83eac0bc446ff4dd1dd4cd5128e31bde3ce79/openapi.yaml",
-    "etag": "W/\"951f75ec1c2d41f27ad827382b6fb47e5dfb102a95faf6d7677bd64ff9e5885f\""
+    "sha256": "ae4c0ef3af8be217680eea63e6d66da71fba17a51c29b96330e7018f54166396",
+    "updated": "2026-11-26",
+    "pinned": "https://github.com/openai/openai-openapi/blob/abe304d1e5f1264fd3a11499ab57c0d17f5c1df3/openapi.yaml",
+    "etag": "W/\"cd8b2aab9ab2b0f0b16f1050e5010181de1d0ed4b78b098327a355b2d3e13e53\""
   },
   "petstore": {
     "url": "https://petstore3.swagger.io/api/v3/openapi.json",

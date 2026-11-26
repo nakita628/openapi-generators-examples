@@ -18,7 +18,11 @@ export const skillsHandler = new Hono()
           Codec(
             Type.Refine(
               Type.Refine(
-                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                Type.Refine(
+                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                  (value) => Number.isSafeInteger(Number(value)),
+                  () => 'must be a safe integer',
+                ),
                 (value) => Number(value) >= 0,
                 () => 'must be >= 0',
               ),
@@ -76,7 +80,11 @@ export const skillsHandler = new Hono()
           Codec(
             Type.Refine(
               Type.Refine(
-                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                Type.Refine(
+                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                  (value) => Number.isSafeInteger(Number(value)),
+                  () => 'must be a safe integer',
+                ),
                 (value) => Number(value) >= 0,
                 () => 'must be >= 0',
               ),
@@ -110,7 +118,10 @@ export const skillsHandler = new Hono()
           ]),
           default: Type.Optional(
             Codec(
-              Type.String({ pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i }),
+              Type.String({
+                pattern:
+                  '^(?:[Tt][Rr][Uu][Ee]|1|[Yy][Ee][Ss]|[Oo][Nn]|[Yy]|[Ee][Nn][Aa][Bb][Ll][Ee][Dd]|[Ff][Aa][Ll][Ss][Ee]|0|[Nn][Oo]|[Oo][Ff][Ff]|[Nn]|[Dd][Ii][Ss][Aa][Bb][Ll][Ee][Dd])$',
+              }),
             )
               .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
               .Encode((value) => (value ? 'true' : 'false')),

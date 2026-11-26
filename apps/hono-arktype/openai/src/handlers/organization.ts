@@ -234,9 +234,10 @@ export const organizationHandler = new Hono()
         'line_items?': type('unknown')
           .pipe((data) => (data === undefined || Array.isArray(data) ? data : [data]))
           .to('string[]'),
-        'group_by?': type('unknown')
-          .pipe((data) => (data === undefined || Array.isArray(data) ? data : [data]))
-          .to("'project_id' | 'user_id' | 'line_item' | 'api_key_id' | 'api_source'[]"),
+        'group_by?': type('unknown').pipe(
+          (data) => (data === undefined || Array.isArray(data) ? data : [data]),
+          type("'project_id' | 'user_id' | 'line_item' | 'api_key_id' | 'api_source'").array(),
+        ),
         'limit?': type('string').pipe((data, ctx) => {
           const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
@@ -778,9 +779,10 @@ export const organizationHandler = new Hono()
         'models?': type('unknown')
           .pipe((data) => (data === undefined || Array.isArray(data) ? data : [data]))
           .to('string[]'),
-        'group_by?': type('unknown')
-          .pipe((data) => (data === undefined || Array.isArray(data) ? data : [data]))
-          .to("'project_id' | 'user_id' | 'api_key_id' | 'model'[]"),
+        'group_by?': type('unknown').pipe(
+          (data) => (data === undefined || Array.isArray(data) ? data : [data]),
+          type("'project_id' | 'user_id' | 'api_key_id' | 'model'").array(),
+        ),
         'limit?': type('string').pipe((data, ctx) => {
           const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
@@ -816,9 +818,10 @@ export const organizationHandler = new Hono()
         'models?': type('unknown')
           .pipe((data) => (data === undefined || Array.isArray(data) ? data : [data]))
           .to('string[]'),
-        'group_by?': type('unknown')
-          .pipe((data) => (data === undefined || Array.isArray(data) ? data : [data]))
-          .to("'project_id' | 'user_id' | 'api_key_id' | 'model'[]"),
+        'group_by?': type('unknown').pipe(
+          (data) => (data === undefined || Array.isArray(data) ? data : [data]),
+          type("'project_id' | 'user_id' | 'api_key_id' | 'model'").array(),
+        ),
         'limit?': type('string').pipe((data, ctx) => {
           const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
@@ -886,11 +889,12 @@ export const organizationHandler = new Hono()
         'batch?': type(/^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i).pipe((data) =>
           /^(?:true|1|yes|on|y|enabled)$/i.test(data),
         ),
-        'group_by?': type('unknown')
-          .pipe((data) => (data === undefined || Array.isArray(data) ? data : [data]))
-          .to(
-            "'project_id' | 'user_id' | 'api_key_id' | 'model' | 'batch' | 'service_tier' | 'api_source'[]",
-          ),
+        'group_by?': type('unknown').pipe(
+          (data) => (data === undefined || Array.isArray(data) ? data : [data]),
+          type(
+            "'project_id' | 'user_id' | 'api_key_id' | 'model' | 'batch' | 'service_tier' | 'api_source'",
+          ).array(),
+        ),
         'limit?': type('string').pipe((data, ctx) => {
           const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
@@ -926,9 +930,10 @@ export const organizationHandler = new Hono()
         'models?': type('unknown')
           .pipe((data) => (data === undefined || Array.isArray(data) ? data : [data]))
           .to('string[]'),
-        'group_by?': type('unknown')
-          .pipe((data) => (data === undefined || Array.isArray(data) ? data : [data]))
-          .to("'project_id' | 'user_id' | 'api_key_id' | 'model'[]"),
+        'group_by?': type('unknown').pipe(
+          (data) => (data === undefined || Array.isArray(data) ? data : [data]),
+          type("'project_id' | 'user_id' | 'api_key_id' | 'model'").array(),
+        ),
         'limit?': type('string').pipe((data, ctx) => {
           const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
@@ -964,9 +969,10 @@ export const organizationHandler = new Hono()
         'vector_store_ids?': type('unknown')
           .pipe((data) => (data === undefined || Array.isArray(data) ? data : [data]))
           .to('string[]'),
-        'group_by?': type('unknown')
-          .pipe((data) => (data === undefined || Array.isArray(data) ? data : [data]))
-          .to("'project_id' | 'user_id' | 'api_key_id' | 'vector_store_id'[]"),
+        'group_by?': type('unknown').pipe(
+          (data) => (data === undefined || Array.isArray(data) ? data : [data]),
+          type("'project_id' | 'user_id' | 'api_key_id' | 'vector_store_id'").array(),
+        ),
         'limit?': type('string').pipe((data, ctx) => {
           const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
@@ -990,12 +996,14 @@ export const organizationHandler = new Hono()
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
         }),
         'bucket_width?': "'1m' | '1h' | '1d'",
-        'sources?': type('unknown')
-          .pipe((data) => (data === undefined || Array.isArray(data) ? data : [data]))
-          .to("'image.generation' | 'image.edit' | 'image.variation'[]"),
-        'sizes?': type('unknown')
-          .pipe((data) => (data === undefined || Array.isArray(data) ? data : [data]))
-          .to("'256x256' | '512x512' | '1024x1024' | '1792x1792' | '1024x1792'[]"),
+        'sources?': type('unknown').pipe(
+          (data) => (data === undefined || Array.isArray(data) ? data : [data]),
+          type("'image.generation' | 'image.edit' | 'image.variation'").array(),
+        ),
+        'sizes?': type('unknown').pipe(
+          (data) => (data === undefined || Array.isArray(data) ? data : [data]),
+          type("'256x256' | '512x512' | '1024x1024' | '1792x1792' | '1024x1792'").array(),
+        ),
         'project_ids?': type('unknown')
           .pipe((data) => (data === undefined || Array.isArray(data) ? data : [data]))
           .to('string[]'),
@@ -1008,9 +1016,10 @@ export const organizationHandler = new Hono()
         'models?': type('unknown')
           .pipe((data) => (data === undefined || Array.isArray(data) ? data : [data]))
           .to('string[]'),
-        'group_by?': type('unknown')
-          .pipe((data) => (data === undefined || Array.isArray(data) ? data : [data]))
-          .to("'project_id' | 'user_id' | 'api_key_id' | 'model' | 'size' | 'source'[]"),
+        'group_by?': type('unknown').pipe(
+          (data) => (data === undefined || Array.isArray(data) ? data : [data]),
+          type("'project_id' | 'user_id' | 'api_key_id' | 'model' | 'size' | 'source'").array(),
+        ),
         'limit?': type('string').pipe((data, ctx) => {
           const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
@@ -1046,9 +1055,10 @@ export const organizationHandler = new Hono()
         'models?': type('unknown')
           .pipe((data) => (data === undefined || Array.isArray(data) ? data : [data]))
           .to('string[]'),
-        'group_by?': type('unknown')
-          .pipe((data) => (data === undefined || Array.isArray(data) ? data : [data]))
-          .to("'project_id' | 'user_id' | 'api_key_id' | 'model'[]"),
+        'group_by?': type('unknown').pipe(
+          (data) => (data === undefined || Array.isArray(data) ? data : [data]),
+          type("'project_id' | 'user_id' | 'api_key_id' | 'model'").array(),
+        ),
         'limit?': type('string').pipe((data, ctx) => {
           const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')
@@ -1113,14 +1123,16 @@ export const organizationHandler = new Hono()
         'models?': type('unknown')
           .pipe((data) => (data === undefined || Array.isArray(data) ? data : [data]))
           .to('string[]'),
-        'context_levels?': type('unknown')
-          .pipe((data) => (data === undefined || Array.isArray(data) ? data : [data]))
-          .to("'low' | 'medium' | 'high'[]"),
-        'group_by?': type('unknown')
-          .pipe((data) => (data === undefined || Array.isArray(data) ? data : [data]))
-          .to(
-            "'project_id' | 'user_id' | 'api_key_id' | 'model' | 'context_level' | 'api_source'[]",
-          ),
+        'context_levels?': type('unknown').pipe(
+          (data) => (data === undefined || Array.isArray(data) ? data : [data]),
+          type("'low' | 'medium' | 'high'").array(),
+        ),
+        'group_by?': type('unknown').pipe(
+          (data) => (data === undefined || Array.isArray(data) ? data : [data]),
+          type(
+            "'project_id' | 'user_id' | 'api_key_id' | 'model' | 'context_level' | 'api_source'",
+          ).array(),
+        ),
         'limit?': type('string').pipe((data, ctx) => {
           const value = /^-?(?:0|[1-9]\d*)$/.test(data) ? Number(data) : Number.NaN
           return Number.isSafeInteger(value) ? value : ctx.error('an integer')

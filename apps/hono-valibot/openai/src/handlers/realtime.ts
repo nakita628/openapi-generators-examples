@@ -116,6 +116,7 @@ export const realtimeHandler = new Hono()
                                           v.pipe(
                                             v.string(),
                                             v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.metadata({ type: 'integer', enum: [24000] }),
                                             v.transform((input) => Number(input)),
                                             v.literal(24000),
                                           ),
@@ -262,6 +263,7 @@ export const realtimeHandler = new Hono()
                                                   v.regex(
                                                     /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/,
                                                   ),
+                                                  v.metadata({ type: 'number' }),
                                                   v.transform((input) => Number(input)),
                                                   v.number(),
                                                   v.finite(),
@@ -276,6 +278,7 @@ export const realtimeHandler = new Hono()
                                                 v.pipe(
                                                   v.string(),
                                                   v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                                  v.metadata({ type: 'integer' }),
                                                   v.transform((input) => Number(input)),
                                                   v.number(),
                                                   v.safeInteger(),
@@ -290,6 +293,7 @@ export const realtimeHandler = new Hono()
                                                 v.pipe(
                                                   v.string(),
                                                   v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                                  v.metadata({ type: 'integer' }),
                                                   v.transform((input) => Number(input)),
                                                   v.number(),
                                                   v.safeInteger(),
@@ -345,6 +349,11 @@ export const realtimeHandler = new Hono()
                                                       v.pipe(
                                                         v.string(),
                                                         v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                                        v.metadata({
+                                                          type: 'integer',
+                                                          minimum: 5000,
+                                                          maximum: 30000,
+                                                        }),
                                                         v.transform((input) => Number(input)),
                                                         v.number(),
                                                         v.safeInteger(),
@@ -457,6 +466,7 @@ export const realtimeHandler = new Hono()
                                           v.pipe(
                                             v.string(),
                                             v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                            v.metadata({ type: 'integer', enum: [24000] }),
                                             v.transform((input) => Number(input)),
                                             v.literal(24000),
                                           ),
@@ -507,6 +517,7 @@ export const realtimeHandler = new Hono()
                                 v.pipe(
                                   v.string(),
                                   v.regex(/^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/),
+                                  v.metadata({ type: 'number', minimum: 0.25, maximum: 1.5 }),
                                   v.transform((input) => Number(input)),
                                   v.number(),
                                   v.finite(),
@@ -518,6 +529,7 @@ export const realtimeHandler = new Hono()
                               v.description(
                                 "The speed of the model's spoken response as a multiple of the original speed.\n1.0 is the default speed. 0.25 is the minimum speed. 1.5 is the maximum speed. This value can only be changed in between model turns, not while a response is in progress.\n\nThis parameter is a post-processing adjustment to the audio after it is generated, it's\nalso possible to prompt the model to speak faster or slower.\n",
                               ),
+                              v.metadata({ default: 1 }),
                             ),
                           }),
                         }),
@@ -977,6 +989,7 @@ export const realtimeHandler = new Hono()
                         v.pipe(
                           v.string(),
                           v.regex(/^-?(?:0|[1-9]\d*)$/),
+                          v.metadata({ type: 'integer' }),
                           v.transform((input) => Number(input)),
                           v.number(),
                           v.safeInteger(),
@@ -1007,6 +1020,7 @@ export const realtimeHandler = new Hono()
                               v.pipe(
                                 v.string(),
                                 v.regex(/^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/),
+                                v.metadata({ type: 'number', minimum: 0, maximum: 1 }),
                                 v.transform((input) => Number(input)),
                                 v.number(),
                                 v.finite(),
@@ -1025,6 +1039,7 @@ export const realtimeHandler = new Hono()
                                       v.pipe(
                                         v.string(),
                                         v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                        v.metadata({ type: 'integer', minimum: 0 }),
                                         v.transform((input) => Number(input)),
                                         v.number(),
                                         v.safeInteger(),

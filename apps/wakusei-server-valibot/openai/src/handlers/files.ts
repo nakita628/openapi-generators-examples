@@ -14,15 +14,19 @@ export const getFiles = os
     v.object({
       purpose: v.optional(v.string()),
       limit: v.optional(
-        v.optional(
-          v.pipe(
-            v.string(),
-            v.regex(/^-?(?:0|[1-9]\d*)$/),
-            v.transform((input) => Number(input)),
-            v.number(),
-            v.safeInteger(),
+        v.pipe(
+          v.optional(
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.metadata({ type: 'integer' }),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+            ),
+            '10000',
           ),
-          '10000',
+          v.metadata({ default: 10000 }),
         ),
       ),
       order: v.optional(v.optional(v.picklist(['asc', 'desc']), 'desc')),

@@ -1,0 +1,10676 @@
+import { Elysia, t } from 'elysia'
+import {
+  AccountSchema,
+  AccountAnnualRevenueSchema,
+  AccountBacsDebitPaymentsSettingsSchema,
+  AccountBrandingSettingsSchema,
+  AccountBusinessProfileSchema,
+  AccountCapabilitiesSchema,
+  AccountCapabilityFutureRequirementsSchema,
+  AccountCapabilityRequirementsSchema,
+  AccountCardIssuingSettingsSchema,
+  AccountCardPaymentsSettingsSchema,
+  AccountDashboardSettingsSchema,
+  AccountDeclineChargeOnSchema,
+  AccountFutureRequirementsSchema,
+  AccountGroupMembershipSchema,
+  AccountInvoicesSettingsSchema,
+  AccountLinkSchema,
+  AccountMonthlyEstimatedRevenueSchema,
+  AccountPaymentsSettingsSchema,
+  AccountPayoutSettingsSchema,
+  AccountPaypayPaymentsSettingsSchema,
+  AccountPaypaySiteAccessibleSettingsSchema,
+  AccountPaypaySiteInDevelopmentSettingsSchema,
+  AccountPaypaySiteRestrictedSettingsSchema,
+  AccountPaypaySiteSettingsSchema,
+  AccountRequirementsSchema,
+  AccountRequirementsAlternativeSchema,
+  AccountRequirementsErrorSchema,
+  AccountSepaDebitPaymentsSettingsSchema,
+  AccountSessionSchema,
+  AccountSettingsSchema,
+  AccountTermsOfServiceSchema,
+  AccountTosAcceptanceSchema,
+  AccountTreasurySettingsSchema,
+  AccountUnificationAccountControllerSchema,
+  AccountUnificationAccountControllerFeesSchema,
+  AccountUnificationAccountControllerLossesSchema,
+  AccountUnificationAccountControllerStripeDashboardSchema,
+  AddressSchema,
+  AddressApiResourceTerminalSchema,
+  AmazonPayUnderlyingPaymentMethodFundingDetailsSchema,
+  ApiErrorsSchema,
+  AppServiceResourceInstallContentSecurityPolicySchema,
+  ApplePayDomainSchema,
+  ApplicationSchema,
+  ApplicationFeeSchema,
+  AppsInstallSchema,
+  AppsSecretSchema,
+  AutomaticTaxSchema,
+  BalanceSchema,
+  BalanceAmountSchema,
+  BalanceAmountBySourceTypeSchema,
+  BalanceAmountNetSchema,
+  BalanceDetailSchema,
+  BalanceDetailUngatedSchema,
+  BalanceNetAvailableSchema,
+  BalanceSettingsSchema,
+  BalanceSettingsResourceAutomaticTransferRuleSchema,
+  BalanceSettingsResourcePaymentsSchema,
+  BalanceSettingsResourcePayoutScheduleSchema,
+  BalanceSettingsResourcePayoutsSchema,
+  BalanceSettingsResourceSettlementTimingSchema,
+  BalanceSettingsResourceStartOfDaySchema,
+  BalanceTransactionSchema,
+  BankAccountSchema,
+  BankConnectionsResourceAccountNumberDetailsSchema,
+  BankConnectionsResourceAccountStatusDetailsSchema,
+  BankConnectionsResourceAccountStatusDetailsApiResourceActiveStatusDetailsSchema,
+  BankConnectionsResourceAccountholderSchema,
+  BankConnectionsResourceBalanceSchema,
+  BankConnectionsResourceBalanceApiResourceCashBalanceSchema,
+  BankConnectionsResourceBalanceApiResourceCreditBalanceSchema,
+  BankConnectionsResourceBalanceRefreshSchema,
+  BankConnectionsResourceLinkAccountSessionFiltersSchema,
+  BankConnectionsResourceLinkAccountSessionLimitsSchema,
+  BankConnectionsResourceLinkAccountSessionManualEntrySchema,
+  BankConnectionsResourceOwnershipRefreshSchema,
+  BankConnectionsResourceTransactionRefreshSchema,
+  BankConnectionsResourceTransactionResourceStatusTransitionsSchema,
+  BillingAlertSchema,
+  BillingCreditBalanceSummarySchema,
+  BillingCreditBalanceTransactionSchema,
+  BillingCreditGrantSchema,
+  BillingFeedbackOptionSchema,
+  BillingMeterSchema,
+  BillingMeterEventSchema,
+  BillingMeterEventAdjustmentSchema,
+  BillingMeterEventSummarySchema,
+  BillingBillResourceInvoiceItemParentsInvoiceItemParentSchema,
+  BillingBillResourceInvoiceItemParentsInvoiceItemSubscriptionParentSchema,
+  BillingBillResourceInvoicingLinesCommonCreditedItemsSchema,
+  BillingBillResourceInvoicingLinesCommonProrationDetailsSchema,
+  BillingBillResourceInvoicingLinesParentsInvoiceLineItemInvoiceItemParentSchema,
+  BillingBillResourceInvoicingLinesParentsInvoiceLineItemParentSchema,
+  BillingBillResourceInvoicingLinesParentsInvoiceLineItemSubscriptionItemParentSchema,
+  BillingBillResourceInvoicingParentsInvoiceParentSchema,
+  BillingBillResourceInvoicingParentsInvoiceQuoteParentSchema,
+  BillingBillResourceInvoicingParentsInvoiceSubscriptionParentSchema,
+  BillingBillResourceInvoicingPricingPricingSchema,
+  BillingBillResourceInvoicingPricingPricingPriceDetailsSchema,
+  BillingBillResourceInvoicingTaxesTaxSchema,
+  BillingBillResourceInvoicingTaxesTaxRateDetailsSchema,
+  BillingClocksResourceStatusDetailsAdvancingStatusDetailsSchema,
+  BillingClocksResourceStatusDetailsStatusDetailsSchema,
+  BillingCreditGrantsResourceAmountSchema,
+  BillingCreditGrantsResourceApplicabilityConfigSchema,
+  BillingCreditGrantsResourceApplicablePriceSchema,
+  BillingCreditGrantsResourceBalanceCreditSchema,
+  BillingCreditGrantsResourceBalanceCreditsApplicationInvoiceVoidedSchema,
+  BillingCreditGrantsResourceBalanceCreditsAppliedSchema,
+  BillingCreditGrantsResourceBalanceDebitSchema,
+  BillingCreditGrantsResourceMonetaryAmountSchema,
+  BillingCreditGrantsResourceScopeSchema,
+  BillingDetailsSchema,
+  BillingMeterResourceAggregationSettingsSchema,
+  BillingMeterResourceBillingMeterEventAdjustmentCancelSchema,
+  BillingMeterResourceBillingMeterStatusTransitionsSchema,
+  BillingMeterResourceBillingMeterValueSchema,
+  BillingMeterResourceCustomerMappingSettingsSchema,
+  BillingPortalConfigurationSchema,
+  BillingPortalSessionSchema,
+  CancellationDetailsSchema,
+  CapabilitySchema,
+  CardSchema,
+  CardGeneratedFromPaymentMethodDetailsSchema,
+  CardIssuingAccountTermsOfServiceSchema,
+  CardMandatePaymentMethodDetailsSchema,
+  CardMandatePaymentMethodDetailsIndiaSchema,
+  CashBalanceSchema,
+  ChargeSchema,
+  ChargeFraudDetailsSchema,
+  ChargeOutcomeSchema,
+  ChargeTransferDataSchema,
+  CheckoutSessionSchema,
+  CheckoutAcssDebitMandateOptionsSchema,
+  CheckoutAcssDebitPaymentMethodOptionsSchema,
+  CheckoutAffirmPaymentMethodOptionsSchema,
+  CheckoutAfterpayClearpayPaymentMethodOptionsSchema,
+  CheckoutAlipayPaymentMethodOptionsSchema,
+  CheckoutAlmaPaymentMethodOptionsSchema,
+  CheckoutAmazonPayPaymentMethodOptionsSchema,
+  CheckoutAuBecsDebitPaymentMethodOptionsSchema,
+  CheckoutBacsDebitPaymentMethodOptionsSchema,
+  CheckoutBancontactPaymentMethodOptionsSchema,
+  CheckoutBilliePaymentMethodOptionsSchema,
+  CheckoutBoletoPaymentMethodOptionsSchema,
+  CheckoutCardInstallmentsOptionsSchema,
+  CheckoutCardPaymentMethodOptionsSchema,
+  CheckoutCashappPaymentMethodOptionsSchema,
+  CheckoutCustomerBalanceBankTransferPaymentMethodOptionsSchema,
+  CheckoutCustomerBalancePaymentMethodOptionsSchema,
+  CheckoutEpsPaymentMethodOptionsSchema,
+  CheckoutFinancialConnectionsPaymentMethodOptionsSchema,
+  CheckoutFinancialConnectionsPaymentMethodOptionsFiltersSchema,
+  CheckoutFpxPaymentMethodOptionsSchema,
+  CheckoutGiropayPaymentMethodOptionsSchema,
+  CheckoutGrabPayPaymentMethodOptionsSchema,
+  CheckoutIdealPaymentMethodOptionsSchema,
+  CheckoutKakaoPayPaymentMethodOptionsSchema,
+  CheckoutKlarnaPaymentMethodOptionsSchema,
+  CheckoutKonbiniPaymentMethodOptionsSchema,
+  CheckoutKrCardPaymentMethodOptionsSchema,
+  CheckoutLinkPaymentMethodOptionsSchema,
+  CheckoutLinkWalletOptionsSchema,
+  CheckoutMobilepayPaymentMethodOptionsSchema,
+  CheckoutMultibancoPaymentMethodOptionsSchema,
+  CheckoutNaverPayPaymentMethodOptionsSchema,
+  CheckoutOxxoPaymentMethodOptionsSchema,
+  CheckoutP24PaymentMethodOptionsSchema,
+  CheckoutPaycoPaymentMethodOptionsSchema,
+  CheckoutPaymentMethodOptionsMandateOptionsBacsDebitSchema,
+  CheckoutPaymentMethodOptionsMandateOptionsSepaDebitSchema,
+  CheckoutPaynowPaymentMethodOptionsSchema,
+  CheckoutPaypalPaymentMethodOptionsSchema,
+  CheckoutPaytoPaymentMethodOptionsSchema,
+  CheckoutPixPaymentMethodOptionsSchema,
+  CheckoutRevolutPayPaymentMethodOptionsSchema,
+  CheckoutSamsungPayPaymentMethodOptionsSchema,
+  CheckoutSatispayPaymentMethodOptionsSchema,
+  CheckoutScalapayPaymentMethodOptionsSchema,
+  CheckoutSepaDebitPaymentMethodOptionsSchema,
+  CheckoutSequraPaymentMethodOptionsSchema,
+  CheckoutSessionPaymentMethodOptionsSchema,
+  CheckoutSessionWalletOptionsSchema,
+  CheckoutSofortPaymentMethodOptionsSchema,
+  CheckoutSunbitPaymentMethodOptionsSchema,
+  CheckoutSwishPaymentMethodOptionsSchema,
+  CheckoutTwintPaymentMethodOptionsSchema,
+  CheckoutUpiPaymentMethodOptionsSchema,
+  CheckoutUsBankAccountPaymentMethodOptionsSchema,
+  CheckoutWechatPayPaymentMethodOptionsSchema,
+  ClimateOrderSchema,
+  ClimateProductSchema,
+  ClimateSupplierSchema,
+  ClimateRemovalsBeneficiarySchema,
+  ClimateRemovalsLocationSchema,
+  ClimateRemovalsOrderDeliveriesSchema,
+  ClimateRemovalsProductsPriceSchema,
+  ConfirmationTokenSchema,
+  ConfirmationTokensResourceMandateDataSchema,
+  ConfirmationTokensResourceMandateDataResourceCustomerAcceptanceSchema,
+  ConfirmationTokensResourceMandateDataResourceCustomerAcceptanceResourceOnlineSchema,
+  ConfirmationTokensResourcePaymentMethodOptionsSchema,
+  ConfirmationTokensResourcePaymentMethodOptionsResourceCardSchema,
+  ConfirmationTokensResourcePaymentMethodOptionsResourceCardResourceInstallmentSchema,
+  ConfirmationTokensResourcePaymentMethodPreviewSchema,
+  ConfirmationTokensResourceShippingSchema,
+  ConnectAccountReferenceSchema,
+  ConnectCollectionTransferSchema,
+  ConnectEmbeddedAccountConfigClaimSchema,
+  ConnectEmbeddedAccountFeaturesClaimSchema,
+  ConnectEmbeddedAccountSessionCreateComponentsSchema,
+  ConnectEmbeddedBaseConfigClaimSchema,
+  ConnectEmbeddedBaseFeaturesSchema,
+  ConnectEmbeddedDisputesListConfigSchema,
+  ConnectEmbeddedDisputesListFeaturesSchema,
+  ConnectEmbeddedFinancialAccountConfigClaimSchema,
+  ConnectEmbeddedFinancialAccountFeaturesSchema,
+  ConnectEmbeddedFinancialAccountTransactionsConfigClaimSchema,
+  ConnectEmbeddedFinancialAccountTransactionsFeaturesSchema,
+  ConnectEmbeddedInstantPayoutsPromotionConfigSchema,
+  ConnectEmbeddedInstantPayoutsPromotionFeaturesSchema,
+  ConnectEmbeddedIssuingCardConfigClaimSchema,
+  ConnectEmbeddedIssuingCardFeaturesSchema,
+  ConnectEmbeddedIssuingCardsListConfigClaimSchema,
+  ConnectEmbeddedIssuingCardsListFeaturesSchema,
+  ConnectEmbeddedPaymentDisputesConfigSchema,
+  ConnectEmbeddedPaymentDisputesFeaturesSchema,
+  ConnectEmbeddedPaymentMethodSettingsConfigClaimSchema,
+  ConnectEmbeddedPaymentMethodSettingsFeaturesSchema,
+  ConnectEmbeddedPaymentsConfigClaimSchema,
+  ConnectEmbeddedPaymentsFeaturesSchema,
+  ConnectEmbeddedPayoutsConfigSchema,
+  ConnectEmbeddedPayoutsFeaturesSchema,
+  CountrySpecSchema,
+  CountrySpecVerificationFieldDetailsSchema,
+  CountrySpecVerificationFieldsSchema,
+  CouponSchema,
+  CouponAppliesToSchema,
+  CouponCurrencyOptionSchema,
+  CreditBalanceSchema,
+  CreditNoteSchema,
+  CreditNoteLineItemSchema,
+  CreditNoteRefundSchema,
+  CreditNotesPaymentRecordRefundSchema,
+  CreditNotesPretaxCreditAmountSchema,
+  CreditedItemsInvoiceLineItemsSchema,
+  CurrencyOptionSchema,
+  CustomLogoSchema,
+  CustomUnitAmountSchema,
+  CustomerSchema,
+  CustomerAcceptanceSchema,
+  CustomerBalanceCustomerBalanceSettingsSchema,
+  CustomerBalanceResourceCashBalanceTransactionResourceAdjustedForOverdraftSchema,
+  CustomerBalanceResourceCashBalanceTransactionResourceAppliedToPaymentTransactionSchema,
+  CustomerBalanceResourceCashBalanceTransactionResourceFundedTransactionSchema,
+  CustomerBalanceResourceCashBalanceTransactionResourceFundedTransactionResourceBankTransferSchema,
+  CustomerBalanceResourceCashBalanceTransactionResourceFundedTransactionResourceBankTransferResourceEuBankTransferSchema,
+  CustomerBalanceResourceCashBalanceTransactionResourceFundedTransactionResourceBankTransferResourceGbBankTransferSchema,
+  CustomerBalanceResourceCashBalanceTransactionResourceFundedTransactionResourceBankTransferResourceJpBankTransferSchema,
+  CustomerBalanceResourceCashBalanceTransactionResourceFundedTransactionResourceBankTransferResourceUsBankTransferSchema,
+  CustomerBalanceResourceCashBalanceTransactionResourceRefundedFromPaymentTransactionSchema,
+  CustomerBalanceResourceCashBalanceTransactionResourceTransferredToBalanceSchema,
+  CustomerBalanceResourceCashBalanceTransactionResourceUnappliedFromPaymentTransactionSchema,
+  CustomerBalanceTransactionSchema,
+  CustomerCashBalanceTransactionSchema,
+  CustomerSessionSchema,
+  CustomerSessionResourceComponentsSchema,
+  CustomerSessionResourceComponentsResourceActiveEntitlementsSchema,
+  CustomerSessionResourceComponentsResourceBuyButtonSchema,
+  CustomerSessionResourceComponentsResourceCustomerPortalSchema,
+  CustomerSessionResourceComponentsResourceCustomerSheetSchema,
+  CustomerSessionResourceComponentsResourceCustomerSheetResourceFeaturesSchema,
+  CustomerSessionResourceComponentsResourceMobilePaymentElementSchema,
+  CustomerSessionResourceComponentsResourceMobilePaymentElementResourceFeaturesSchema,
+  CustomerSessionResourceComponentsResourcePaymentElementSchema,
+  CustomerSessionResourceComponentsResourcePaymentElementResourceFeaturesSchema,
+  CustomerSessionResourceComponentsResourcePricingTableSchema,
+  CustomerTaxSchema,
+  CustomerTaxLocationSchema,
+  DeletedAccountSchema,
+  DeletedApplePayDomainSchema,
+  DeletedApplicationSchema,
+  DeletedBankAccountSchema,
+  DeletedCardSchema,
+  DeletedCouponSchema,
+  DeletedCustomerSchema,
+  DeletedDiscountSchema,
+  DeletedExternalAccountSchema,
+  DeletedInvoiceSchema,
+  DeletedInvoiceitemSchema,
+  DeletedPaymentSourceSchema,
+  DeletedPersonSchema,
+  DeletedPlanSchema,
+  DeletedPriceSchema,
+  DeletedProductSchema,
+  DeletedProductFeatureSchema,
+  DeletedRadarValueListSchema,
+  DeletedRadarValueListItemSchema,
+  DeletedSubscriptionItemSchema,
+  DeletedTaxIdSchema,
+  DeletedTerminalConfigurationSchema,
+  DeletedTerminalLocationSchema,
+  DeletedTerminalReaderSchema,
+  DeletedTestHelpersTestClockSchema,
+  DeletedWebhookEndpointSchema,
+  DestinationDetailsUnimplementedSchema,
+  DiscountSchema,
+  DiscountSourceSchema,
+  DiscountsResourceDiscountAmountSchema,
+  DiscountsResourceStackableDiscountWithDiscountEndSchema,
+  DisputeSchema,
+  DisputeEnhancedEligibilitySchema,
+  DisputeEnhancedEligibilityMastercardComplianceSchema,
+  DisputeEnhancedEligibilityVisaCompellingEvidence3Schema,
+  DisputeEnhancedEligibilityVisaComplianceSchema,
+  DisputeEnhancedEvidenceSchema,
+  DisputeEnhancedEvidenceMastercardComplianceSchema,
+  DisputeEnhancedEvidenceVisaCompellingEvidence3Schema,
+  DisputeEnhancedEvidenceVisaComplianceSchema,
+  DisputeEvidenceSchema,
+  DisputeEvidenceDetailsSchema,
+  DisputePaymentMethodDetailsSchema,
+  DisputePaymentMethodDetailsAmazonPaySchema,
+  DisputePaymentMethodDetailsCardSchema,
+  DisputePaymentMethodDetailsKlarnaSchema,
+  DisputePaymentMethodDetailsPaypalSchema,
+  DisputeTransactionShippingAddressSchema,
+  DisputeVisaCompellingEvidence3DisputedTransactionSchema,
+  DisputeVisaCompellingEvidence3PriorUndisputedTransactionSchema,
+  EmailSentSchema,
+  EntitlementsActiveEntitlementSchema,
+  EntitlementsFeatureSchema,
+  EphemeralKeySchema,
+  ErrorSchema,
+  EventSchema,
+  ExchangeRateSchema,
+  ExternalAccountSchema,
+  ExternalAccountRequirementsSchema,
+  FeeSchema,
+  FeeRefundSchema,
+  FeedbackOptionsStatusTransitionsSchema,
+  FileSchema,
+  FileLinkSchema,
+  FinancialConnectionsAccountSchema,
+  FinancialConnectionsAccountOwnerSchema,
+  FinancialConnectionsAccountOwnershipSchema,
+  FinancialConnectionsSessionSchema,
+  FinancialConnectionsTransactionSchema,
+  FinancialReportingFinanceReportRunRunParametersSchema,
+  ForwardedRequestContextSchema,
+  ForwardedRequestDetailsSchema,
+  ForwardedRequestHeaderSchema,
+  ForwardedResponseDetailsSchema,
+  ForwardingRequestSchema,
+  FundingInstructionsSchema,
+  FundingInstructionsBankTransferSchema,
+  FundingInstructionsBankTransferAbaRecordSchema,
+  FundingInstructionsBankTransferFinancialAddressSchema,
+  FundingInstructionsBankTransferIbanRecordSchema,
+  FundingInstructionsBankTransferSortCodeRecordSchema,
+  FundingInstructionsBankTransferSpeiRecordSchema,
+  FundingInstructionsBankTransferSwiftRecordSchema,
+  FundingInstructionsBankTransferZenginRecordSchema,
+  GelatoDataDocumentReportDateOfBirthSchema,
+  GelatoDataDocumentReportExpirationDateSchema,
+  GelatoDataDocumentReportIssuedDateSchema,
+  GelatoDataIdNumberReportDateSchema,
+  GelatoDataVerifiedOutputsDateSchema,
+  GelatoDocumentReportSchema,
+  GelatoDocumentReportErrorSchema,
+  GelatoEmailReportSchema,
+  GelatoEmailReportErrorSchema,
+  GelatoIdNumberReportSchema,
+  GelatoIdNumberReportErrorSchema,
+  GelatoPhoneReportSchema,
+  GelatoPhoneReportErrorSchema,
+  GelatoProvidedDetailsSchema,
+  GelatoRelatedPersonSchema,
+  GelatoReportDocumentOptionsSchema,
+  GelatoReportIdNumberOptionsSchema,
+  GelatoSelfieReportSchema,
+  GelatoSelfieReportErrorSchema,
+  GelatoSessionDocumentOptionsSchema,
+  GelatoSessionEmailOptionsSchema,
+  GelatoSessionIdNumberOptionsSchema,
+  GelatoSessionLastErrorSchema,
+  GelatoSessionMatchingOptionsSchema,
+  GelatoSessionPhoneOptionsSchema,
+  GelatoVerificationReportOptionsSchema,
+  GelatoVerificationSessionOptionsSchema,
+  GelatoVerifiedOutputsSchema,
+  IdentityVerificationReportSchema,
+  IdentityVerificationSessionSchema,
+  InboundTransfersSchema,
+  InboundTransfersPaymentMethodDetailsUsBankAccountSchema,
+  InsightsResourcesPaymentEvaluationAddressSchema,
+  InsightsResourcesPaymentEvaluationBillingDetailsSchema,
+  InsightsResourcesPaymentEvaluationClientDeviceMetadataSchema,
+  InsightsResourcesPaymentEvaluationCustomerDetailsSchema,
+  InsightsResourcesPaymentEvaluationDisputeOpenedSchema,
+  InsightsResourcesPaymentEvaluationEarlyFraudWarningReceivedSchema,
+  InsightsResourcesPaymentEvaluationEventSchema,
+  InsightsResourcesPaymentEvaluationMerchantBlockedSchema,
+  InsightsResourcesPaymentEvaluationMoneyMovementCardSchema,
+  InsightsResourcesPaymentEvaluationMoneyMovementDetailsSchema,
+  InsightsResourcesPaymentEvaluationOutcomeSchema,
+  InsightsResourcesPaymentEvaluationPaymentDetailsSchema,
+  InsightsResourcesPaymentEvaluationPaymentMethodDetailsSchema,
+  InsightsResourcesPaymentEvaluationRefundedSchema,
+  InsightsResourcesPaymentEvaluationRejectedSchema,
+  InsightsResourcesPaymentEvaluationRejectedCardSchema,
+  InsightsResourcesPaymentEvaluationShippingSchema,
+  InsightsResourcesPaymentEvaluationSignalV2Schema,
+  InsightsResourcesPaymentEvaluationSignalsSchema,
+  InsightsResourcesPaymentEvaluationSucceededSchema,
+  InsightsResourcesPaymentEvaluationSucceededCardSchema,
+  InsightsResourcesPaymentEvaluationUserInterventionRaisedSchema,
+  InsightsResourcesPaymentEvaluationUserInterventionRaisedCustomSchema,
+  InsightsResourcesPaymentEvaluationUserInterventionResolvedSchema,
+  InternalCardSchema,
+  InvoiceSchema,
+  InvoiceInstallmentsCardSchema,
+  InvoiceItemProrationCreditedItemsSchema,
+  InvoiceItemThresholdReasonSchema,
+  InvoiceLineItemPeriodSchema,
+  InvoiceMandateOptionsCardSchema,
+  InvoiceMandateOptionsPaytoSchema,
+  InvoicePaymentSchema,
+  InvoicePaymentMethodOptionsAcssDebitSchema,
+  InvoicePaymentMethodOptionsAcssDebitMandateOptionsSchema,
+  InvoicePaymentMethodOptionsBancontactSchema,
+  InvoicePaymentMethodOptionsBillieSchema,
+  InvoicePaymentMethodOptionsBillieCompanyDetailsSchema,
+  InvoicePaymentMethodOptionsBillieCompanyDetailsRegisteredAddressSchema,
+  InvoicePaymentMethodOptionsBlikSchema,
+  InvoicePaymentMethodOptionsCardSchema,
+  InvoicePaymentMethodOptionsCustomerBalanceSchema,
+  InvoicePaymentMethodOptionsCustomerBalanceBankTransferSchema,
+  InvoicePaymentMethodOptionsCustomerBalanceBankTransferEuBankTransferSchema,
+  InvoicePaymentMethodOptionsKonbiniSchema,
+  InvoicePaymentMethodOptionsMandateOptionsUpiSchema,
+  InvoicePaymentMethodOptionsPaytoSchema,
+  InvoicePaymentMethodOptionsPixSchema,
+  InvoicePaymentMethodOptionsSepaDebitSchema,
+  InvoicePaymentMethodOptionsUpiSchema,
+  InvoicePaymentMethodOptionsUsBankAccountSchema,
+  InvoicePaymentMethodOptionsUsBankAccountLinkedAccountOptionsSchema,
+  InvoicePaymentMethodOptionsUsBankAccountLinkedAccountOptionsFiltersSchema,
+  InvoiceRenderingPdfSchema,
+  InvoiceRenderingTemplateSchema,
+  InvoiceSettingCheckoutRenderingOptionsSchema,
+  InvoiceSettingCustomFieldSchema,
+  InvoiceSettingCustomerRenderingOptionsSchema,
+  InvoiceSettingCustomerSettingSchema,
+  InvoiceSettingQuoteSettingSchema,
+  InvoiceSettingSubscriptionSchedulePhaseSettingSchema,
+  InvoiceSettingSubscriptionScheduleSettingSchema,
+  InvoiceThresholdReasonSchema,
+  InvoiceitemSchema,
+  InvoicesPaymentMethodOptionsSchema,
+  InvoicesPaymentSettingsSchema,
+  InvoicesPaymentsInvoicePaymentAssociatedPaymentSchema,
+  InvoicesPaymentsInvoicePaymentStatusTransitionsSchema,
+  InvoicesResourceConfirmationSecretSchema,
+  InvoicesResourceFromInvoiceSchema,
+  InvoicesResourceInvoiceRenderingSchema,
+  InvoicesResourceInvoiceTaxIdSchema,
+  InvoicesResourcePretaxCreditAmountSchema,
+  InvoicesResourceShippingCostSchema,
+  InvoicesResourceStatusDetailsSchema,
+  InvoicesResourceStatusTransitionsSchema,
+  InvoicesResourceUncollectibleStatusDetailsSchema,
+  InvoicingRuleSchema,
+  IssuingAuthorizationSchema,
+  IssuingCardSchema,
+  IssuingCardholderSchema,
+  IssuingDisputeSchema,
+  IssuingPersonalizationDesignSchema,
+  IssuingPhysicalBundleSchema,
+  IssuingSettlementSchema,
+  IssuingTokenSchema,
+  IssuingTransactionSchema,
+  IssuingAuthorizationAmountDetailsSchema,
+  IssuingAuthorizationAuthenticationExemptionSchema,
+  IssuingAuthorizationFleetCardholderPromptDataSchema,
+  IssuingAuthorizationFleetDataSchema,
+  IssuingAuthorizationFleetFuelPriceDataSchema,
+  IssuingAuthorizationFleetNonFuelPriceDataSchema,
+  IssuingAuthorizationFleetReportedBreakdownSchema,
+  IssuingAuthorizationFleetTaxDataSchema,
+  IssuingAuthorizationFraudChallengeSchema,
+  IssuingAuthorizationFuelDataSchema,
+  IssuingAuthorizationMerchantDataSchema,
+  IssuingAuthorizationNetworkDataSchema,
+  IssuingAuthorizationPendingRequestSchema,
+  IssuingAuthorizationRequestSchema,
+  IssuingAuthorizationThreeDSecureSchema,
+  IssuingAuthorizationTreasurySchema,
+  IssuingAuthorizationVerificationDataSchema,
+  IssuingCardApplePaySchema,
+  IssuingCardAuthorizationControlsSchema,
+  IssuingCardFraudWarningSchema,
+  IssuingCardGooglePaySchema,
+  IssuingCardLifecycleConditionsSchema,
+  IssuingCardLifecycleControlsSchema,
+  IssuingCardShippingSchema,
+  IssuingCardShippingAddressValidationSchema,
+  IssuingCardShippingCustomsSchema,
+  IssuingCardSpendingLimitSchema,
+  IssuingCardWalletsSchema,
+  IssuingCardholderAddressSchema,
+  IssuingCardholderAuthorizationControlsSchema,
+  IssuingCardholderCardIssuingSchema,
+  IssuingCardholderCompanySchema,
+  IssuingCardholderIdDocumentSchema,
+  IssuingCardholderIndividualSchema,
+  IssuingCardholderIndividualDobSchema,
+  IssuingCardholderRequirementsSchema,
+  IssuingCardholderSpendingLimitSchema,
+  IssuingCardholderUserTermsAcceptanceSchema,
+  IssuingCardholderVerificationSchema,
+  IssuingDisputeCanceledEvidenceSchema,
+  IssuingDisputeDuplicateEvidenceSchema,
+  IssuingDisputeEvidenceSchema,
+  IssuingDisputeFraudulentEvidenceSchema,
+  IssuingDisputeMerchandiseNotAsDescribedEvidenceSchema,
+  IssuingDisputeNoValidAuthorizationEvidenceSchema,
+  IssuingDisputeNotReceivedEvidenceSchema,
+  IssuingDisputeOtherEvidenceSchema,
+  IssuingDisputeServiceNotAsDescribedEvidenceSchema,
+  IssuingDisputeTreasurySchema,
+  IssuingNetworkTokenAddressSchema,
+  IssuingNetworkTokenDeviceSchema,
+  IssuingNetworkTokenMastercardSchema,
+  IssuingNetworkTokenNetworkDataSchema,
+  IssuingNetworkTokenVisaSchema,
+  IssuingNetworkTokenWalletProviderSchema,
+  IssuingPersonalizationDesignCarrierTextSchema,
+  IssuingPersonalizationDesignPreferencesSchema,
+  IssuingPersonalizationDesignRejectionReasonsSchema,
+  IssuingPhysicalBundleFeaturesSchema,
+  IssuingTransactionAmountDetailsSchema,
+  IssuingTransactionFleetCardholderPromptDataSchema,
+  IssuingTransactionFleetDataSchema,
+  IssuingTransactionFleetFuelPriceDataSchema,
+  IssuingTransactionFleetNonFuelPriceDataSchema,
+  IssuingTransactionFleetReportedBreakdownSchema,
+  IssuingTransactionFleetTaxDataSchema,
+  IssuingTransactionFlightDataSchema,
+  IssuingTransactionFlightDataLegSchema,
+  IssuingTransactionFuelDataSchema,
+  IssuingTransactionLodgingDataSchema,
+  IssuingTransactionNetworkDataSchema,
+  IssuingTransactionPurchaseDetailsSchema,
+  IssuingTransactionReceiptDataSchema,
+  IssuingTransactionTreasurySchema,
+  ItemSchema,
+  KlarnaAddressSchema,
+  KlarnaPayerDetailsSchema,
+  LegalEntityCompanySchema,
+  LegalEntityCompanyVerificationSchema,
+  LegalEntityCompanyVerificationDocumentSchema,
+  LegalEntityDirectorshipDeclarationSchema,
+  LegalEntityDobSchema,
+  LegalEntityJapanAddressSchema,
+  LegalEntityPersonVerificationSchema,
+  LegalEntityPersonVerificationDocumentSchema,
+  LegalEntityRegistrationDateSchema,
+  LegalEntityRepresentativeDeclarationSchema,
+  LegalEntityUboDeclarationSchema,
+  LineItemSchema,
+  LineItemsAdjustableQuantitySchema,
+  LineItemsDiscountAmountSchema,
+  LineItemsTaxAmountSchema,
+  LinkedAccountOptionsCommonSchema,
+  LoginLinkSchema,
+  MandateSchema,
+  MandateAcssDebitSchema,
+  MandateAmazonPaySchema,
+  MandateAuBecsDebitSchema,
+  MandateBacsDebitSchema,
+  MandateBlikSchema,
+  MandateCashappSchema,
+  MandateKakaoPaySchema,
+  MandateKlarnaSchema,
+  MandateKrCardSchema,
+  MandateLinkSchema,
+  MandateMultiUseSchema,
+  MandateNaverPaySchema,
+  MandateNzBankAccountSchema,
+  MandateOptionsPaytoSchema,
+  MandateOptionsUpiSchema,
+  MandatePaymentMethodDetailsSchema,
+  MandatePaypalSchema,
+  MandatePaytoSchema,
+  MandatePixSchema,
+  MandateRevolutPaySchema,
+  MandateSepaDebitSchema,
+  MandateSingleUseSchema,
+  MandateTwintSchema,
+  MandateUpiSchema,
+  MandateUsBankAccountSchema,
+  NetworksSchema,
+  NotificationEventDataSchema,
+  NotificationEventRequestSchema,
+  OfflineAcceptanceSchema,
+  OnlineAcceptanceSchema,
+  OutboundPaymentsPaymentMethodDetailsSchema,
+  OutboundPaymentsPaymentMethodDetailsFinancialAccountSchema,
+  OutboundPaymentsPaymentMethodDetailsUsBankAccountSchema,
+  OutboundTransfersPaymentMethodDetailsSchema,
+  OutboundTransfersPaymentMethodDetailsFinancialAccountSchema,
+  OutboundTransfersPaymentMethodDetailsUsBankAccountSchema,
+  PackageDimensionsSchema,
+  PaymentAttemptRecordSchema,
+  PaymentDataSchema,
+  PaymentFlowsAmountDetailsSchema,
+  PaymentFlowsAmountDetailsClientSchema,
+  PaymentFlowsAmountDetailsClientResourceTipSchema,
+  PaymentFlowsAmountDetailsResourceErrorSchema,
+  PaymentFlowsAmountDetailsResourceLineItemsListResourceLineItemResourcePaymentMethodOptionsSchema,
+  PaymentFlowsAmountDetailsResourceLineItemsListResourceLineItemResourceTaxSchema,
+  PaymentFlowsAmountDetailsResourceShippingSchema,
+  PaymentFlowsAmountDetailsResourceTaxSchema,
+  PaymentFlowsAutomaticPaymentMethodsPaymentIntentSchema,
+  PaymentFlowsAutomaticPaymentMethodsSetupIntentSchema,
+  PaymentFlowsInstallmentOptionsSchema,
+  PaymentFlowsPaymentDetailsSchema,
+  PaymentFlowsPaymentIntentAsyncWorkflowsSchema,
+  PaymentFlowsPaymentIntentAsyncWorkflowsResourceInputsSchema,
+  PaymentFlowsPaymentIntentAsyncWorkflowsResourceInputsResourceTaxSchema,
+  PaymentFlowsPaymentIntentPresentmentDetailsSchema,
+  PaymentFlowsPrivatePaymentMethodsAlipaySchema,
+  PaymentFlowsPrivatePaymentMethodsAlmaDetailsResourceInstallmentsSchema,
+  PaymentFlowsPrivatePaymentMethodsBilliePaymentMethodOptionsResourceCompanyDetailsSchema,
+  PaymentFlowsPrivatePaymentMethodsBilliePaymentMethodOptionsResourceCompanyDetailsResourceCompanyDetailsRegisteredAddressSchema,
+  PaymentFlowsPrivatePaymentMethodsCardDetailsApiResourceEnterpriseFeaturesExtendedAuthorizationExtendedAuthorizationSchema,
+  PaymentFlowsPrivatePaymentMethodsCardDetailsApiResourceEnterpriseFeaturesIncrementalAuthorizationIncrementalAuthorizationSchema,
+  PaymentFlowsPrivatePaymentMethodsCardDetailsApiResourceEnterpriseFeaturesOvercaptureOvercaptureSchema,
+  PaymentFlowsPrivatePaymentMethodsCardDetailsApiResourceMulticaptureSchema,
+  PaymentFlowsPrivatePaymentMethodsCardPaymentIntentAmountDetailsLineItemPaymentMethodOptionsSchema,
+  PaymentFlowsPrivatePaymentMethodsCardPresentAmountDetailsLineItemPaymentMethodOptionsSchema,
+  PaymentFlowsPrivatePaymentMethodsCardPresentCommonWalletSchema,
+  PaymentFlowsPrivatePaymentMethodsFinancialConnectionsCommonLinkedAccountOptionsFiltersSchema,
+  PaymentFlowsPrivatePaymentMethodsKakaoPayPaymentMethodOptionsSchema,
+  PaymentFlowsPrivatePaymentMethodsKlarnaDobSchema,
+  PaymentFlowsPrivatePaymentMethodsKlarnaPaymentIntentAmountDetailsLineItemPaymentMethodOptionsSchema,
+  PaymentFlowsPrivatePaymentMethodsKonbiniDetailsResourceStoreSchema,
+  PaymentFlowsPrivatePaymentMethodsNaverPayPaymentMethodOptionsSchema,
+  PaymentFlowsPrivatePaymentMethodsPaycoPaymentMethodOptionsSchema,
+  PaymentFlowsPrivatePaymentMethodsPaypalAmountDetailsLineItemPaymentMethodOptionsSchema,
+  PaymentFlowsPrivatePaymentMethodsSamsungPayPaymentMethodOptionsSchema,
+  PaymentFlowsPrivatePaymentMethodsSatispaySetupAttemptDetailsSchema,
+  PaymentIntentSchema,
+  PaymentIntentAmountDetailsLineItemSchema,
+  PaymentIntentCardProcessingSchema,
+  PaymentIntentNextActionSchema,
+  PaymentIntentNextActionAlipayHandleRedirectSchema,
+  PaymentIntentNextActionBlikAuthorizeSchema,
+  PaymentIntentNextActionBoletoSchema,
+  PaymentIntentNextActionCardAwaitNotificationSchema,
+  PaymentIntentNextActionCashappHandleRedirectOrDisplayQrCodeSchema,
+  PaymentIntentNextActionCashappQrCodeSchema,
+  PaymentIntentNextActionDisplayBankTransferInstructionsSchema,
+  PaymentIntentNextActionDisplayMultibancoDetailsSchema,
+  PaymentIntentNextActionDisplayOxxoDetailsSchema,
+  PaymentIntentNextActionKlarnaDisplayQrCodeSchema,
+  PaymentIntentNextActionKonbiniSchema,
+  PaymentIntentNextActionKonbiniFamilymartSchema,
+  PaymentIntentNextActionKonbiniLawsonSchema,
+  PaymentIntentNextActionKonbiniMinistopSchema,
+  PaymentIntentNextActionKonbiniSeicomartSchema,
+  PaymentIntentNextActionKonbiniStoresSchema,
+  PaymentIntentNextActionPaynowDisplayQrCodeSchema,
+  PaymentIntentNextActionPixDisplayQrCodeSchema,
+  PaymentIntentNextActionPromptpayDisplayQrCodeSchema,
+  PaymentIntentNextActionRedirectToUrlSchema,
+  PaymentIntentNextActionSwishHandleRedirectOrDisplayQrCodeSchema,
+  PaymentIntentNextActionSwishQrCodeSchema,
+  PaymentIntentNextActionUpiHandleRedirectOrDisplayQrCodeSchema,
+  PaymentIntentNextActionUpiqrCodeSchema,
+  PaymentIntentNextActionVerifyWithMicrodepositsSchema,
+  PaymentIntentNextActionWechatPayDisplayQrCodeSchema,
+  PaymentIntentNextActionWechatPayRedirectToAndroidAppSchema,
+  PaymentIntentNextActionWechatPayRedirectToIosAppSchema,
+  PaymentIntentPaymentMethodOptionsSchema,
+  PaymentIntentPaymentMethodOptionsAcssDebitSchema,
+  PaymentIntentPaymentMethodOptionsAuBecsDebitSchema,
+  PaymentIntentPaymentMethodOptionsBacsDebitSchema,
+  PaymentIntentPaymentMethodOptionsBlikSchema,
+  PaymentIntentPaymentMethodOptionsCardSchema,
+  PaymentIntentPaymentMethodOptionsEpsSchema,
+  PaymentIntentPaymentMethodOptionsLinkSchema,
+  PaymentIntentPaymentMethodOptionsMandateOptionsAcssDebitSchema,
+  PaymentIntentPaymentMethodOptionsMandateOptionsBacsDebitSchema,
+  PaymentIntentPaymentMethodOptionsMandateOptionsBlikSchema,
+  PaymentIntentPaymentMethodOptionsMandateOptionsPaytoSchema,
+  PaymentIntentPaymentMethodOptionsMandateOptionsSepaDebitSchema,
+  PaymentIntentPaymentMethodOptionsMobilepaySchema,
+  PaymentIntentPaymentMethodOptionsNzBankAccountSchema,
+  PaymentIntentPaymentMethodOptionsPaytoSchema,
+  PaymentIntentPaymentMethodOptionsSepaDebitSchema,
+  PaymentIntentPaymentMethodOptionsSwishSchema,
+  PaymentIntentPaymentMethodOptionsUsBankAccountSchema,
+  PaymentIntentProcessingSchema,
+  PaymentIntentProcessingCustomerNotificationSchema,
+  PaymentIntentTypeSpecificPaymentMethodOptionsClientSchema,
+  PaymentLinkSchema,
+  PaymentLinksResourceAfterCompletionSchema,
+  PaymentLinksResourceAutomaticTaxSchema,
+  PaymentLinksResourceBusinessNameSchema,
+  PaymentLinksResourceCardPaymentMethodOptionsSchema,
+  PaymentLinksResourceCardRestrictionsSchema,
+  PaymentLinksResourceCompletedSessionsSchema,
+  PaymentLinksResourceCompletionBehaviorConfirmationPageSchema,
+  PaymentLinksResourceCompletionBehaviorRedirectSchema,
+  PaymentLinksResourceConsentCollectionSchema,
+  PaymentLinksResourceCustomFieldsSchema,
+  PaymentLinksResourceCustomFieldsDropdownSchema,
+  PaymentLinksResourceCustomFieldsDropdownOptionSchema,
+  PaymentLinksResourceCustomFieldsLabelSchema,
+  PaymentLinksResourceCustomFieldsNumericSchema,
+  PaymentLinksResourceCustomFieldsTextSchema,
+  PaymentLinksResourceCustomTextSchema,
+  PaymentLinksResourceCustomTextPositionSchema,
+  PaymentLinksResourceIndividualNameSchema,
+  PaymentLinksResourceInvoiceCreationSchema,
+  PaymentLinksResourceInvoiceSettingsSchema,
+  PaymentLinksResourceNameCollectionSchema,
+  PaymentLinksResourceOptionalItemSchema,
+  PaymentLinksResourceOptionalItemAdjustableQuantitySchema,
+  PaymentLinksResourcePaymentIntentDataSchema,
+  PaymentLinksResourcePaymentMethodOptionsSchema,
+  PaymentLinksResourcePaymentMethodReuseAgreementSchema,
+  PaymentLinksResourcePhoneNumberCollectionSchema,
+  PaymentLinksResourceRestrictionsSchema,
+  PaymentLinksResourceShippingAddressCollectionSchema,
+  PaymentLinksResourceShippingOptionSchema,
+  PaymentLinksResourceSubscriptionDataSchema,
+  PaymentLinksResourceSubscriptionDataInvoiceSettingsSchema,
+  PaymentLinksResourceTaxIdCollectionSchema,
+  PaymentLinksResourceTransferDataSchema,
+  PaymentMethodSchema,
+  PaymentMethodAcssDebitSchema,
+  PaymentMethodAffirmSchema,
+  PaymentMethodAfterpayClearpaySchema,
+  PaymentMethodAlmaSchema,
+  PaymentMethodAmazonPaySchema,
+  PaymentMethodAuBecsDebitSchema,
+  PaymentMethodBacsDebitSchema,
+  PaymentMethodBancontactSchema,
+  PaymentMethodBillieSchema,
+  PaymentMethodBizumSchema,
+  PaymentMethodBlikSchema,
+  PaymentMethodBoletoSchema,
+  PaymentMethodCardSchema,
+  PaymentMethodCardChecksSchema,
+  PaymentMethodCardGeneratedCardSchema,
+  PaymentMethodCardPresentSchema,
+  PaymentMethodCardPresentNetworksSchema,
+  PaymentMethodCardWalletSchema,
+  PaymentMethodCardWalletAmexExpressCheckoutSchema,
+  PaymentMethodCardWalletApplePaySchema,
+  PaymentMethodCardWalletGooglePaySchema,
+  PaymentMethodCardWalletLinkSchema,
+  PaymentMethodCardWalletMasterpassSchema,
+  PaymentMethodCardWalletSamsungPaySchema,
+  PaymentMethodCardWalletVisaCheckoutSchema,
+  PaymentMethodCashappSchema,
+  PaymentMethodConfigBizPaymentMethodConfigurationDetailsSchema,
+  PaymentMethodConfigResourceDisplayPreferenceSchema,
+  PaymentMethodConfigResourcePaymentMethodPropertiesSchema,
+  PaymentMethodConfigurationSchema,
+  PaymentMethodCryptoSchema,
+  PaymentMethodCustomSchema,
+  PaymentMethodCustomerBalanceSchema,
+  PaymentMethodDetailsSchema,
+  PaymentMethodDetailsAchCreditTransferSchema,
+  PaymentMethodDetailsAchDebitSchema,
+  PaymentMethodDetailsAcssDebitSchema,
+  PaymentMethodDetailsAffirmSchema,
+  PaymentMethodDetailsAfterpayClearpaySchema,
+  PaymentMethodDetailsAlipaySchema,
+  PaymentMethodDetailsAlmaSchema,
+  PaymentMethodDetailsAmazonPaySchema,
+  PaymentMethodDetailsAuBecsDebitSchema,
+  PaymentMethodDetailsBacsDebitSchema,
+  PaymentMethodDetailsBancontactSchema,
+  PaymentMethodDetailsBillieSchema,
+  PaymentMethodDetailsBizumSchema,
+  PaymentMethodDetailsBlikSchema,
+  PaymentMethodDetailsBoletoSchema,
+  PaymentMethodDetailsCardSchema,
+  PaymentMethodDetailsCardChecksSchema,
+  PaymentMethodDetailsCardInstallmentsSchema,
+  PaymentMethodDetailsCardInstallmentsPlanSchema,
+  PaymentMethodDetailsCardNetworkTokenSchema,
+  PaymentMethodDetailsCardPresentSchema,
+  PaymentMethodDetailsCardPresentOfflineSchema,
+  PaymentMethodDetailsCardPresentReceiptSchema,
+  PaymentMethodDetailsCardWalletSchema,
+  PaymentMethodDetailsCardWalletAmexExpressCheckoutSchema,
+  PaymentMethodDetailsCardWalletApplePaySchema,
+  PaymentMethodDetailsCardWalletGooglePaySchema,
+  PaymentMethodDetailsCardWalletLinkSchema,
+  PaymentMethodDetailsCardWalletMasterpassSchema,
+  PaymentMethodDetailsCardWalletSamsungPaySchema,
+  PaymentMethodDetailsCardWalletVisaCheckoutSchema,
+  PaymentMethodDetailsCashappSchema,
+  PaymentMethodDetailsCryptoSchema,
+  PaymentMethodDetailsCustomerBalanceSchema,
+  PaymentMethodDetailsEpsSchema,
+  PaymentMethodDetailsFpxSchema,
+  PaymentMethodDetailsGiropaySchema,
+  PaymentMethodDetailsGrabpaySchema,
+  PaymentMethodDetailsIdealSchema,
+  PaymentMethodDetailsInteracPresentSchema,
+  PaymentMethodDetailsInteracPresentReceiptSchema,
+  PaymentMethodDetailsKakaoPaySchema,
+  PaymentMethodDetailsKlarnaSchema,
+  PaymentMethodDetailsKonbiniSchema,
+  PaymentMethodDetailsKrCardSchema,
+  PaymentMethodDetailsLinkSchema,
+  PaymentMethodDetailsMbWaySchema,
+  PaymentMethodDetailsMobilepaySchema,
+  PaymentMethodDetailsMultibancoSchema,
+  PaymentMethodDetailsNaverPaySchema,
+  PaymentMethodDetailsNzBankAccountSchema,
+  PaymentMethodDetailsOxxoSchema,
+  PaymentMethodDetailsP24Schema,
+  PaymentMethodDetailsPassthroughCardSchema,
+  PaymentMethodDetailsPayByBankSchema,
+  PaymentMethodDetailsPaycoSchema,
+  PaymentMethodDetailsPaymentRecordAcssDebitSchema,
+  PaymentMethodDetailsPaymentRecordAffirmSchema,
+  PaymentMethodDetailsPaymentRecordAfterpayClearpaySchema,
+  PaymentMethodDetailsPaymentRecordAlipaySchema,
+  PaymentMethodDetailsPaymentRecordAlmaSchema,
+  PaymentMethodDetailsPaymentRecordAmazonPaySchema,
+  PaymentMethodDetailsPaymentRecordAuBecsDebitSchema,
+  PaymentMethodDetailsPaymentRecordBacsDebitSchema,
+  PaymentMethodDetailsPaymentRecordBancontactSchema,
+  PaymentMethodDetailsPaymentRecordBillieSchema,
+  PaymentMethodDetailsPaymentRecordBizumSchema,
+  PaymentMethodDetailsPaymentRecordBlikSchema,
+  PaymentMethodDetailsPaymentRecordBoletoSchema,
+  PaymentMethodDetailsPaymentRecordCashappSchema,
+  PaymentMethodDetailsPaymentRecordEpsSchema,
+  PaymentMethodDetailsPaymentRecordGiropaySchema,
+  PaymentMethodDetailsPaymentRecordIdealSchema,
+  PaymentMethodDetailsPaymentRecordKakaoPaySchema,
+  PaymentMethodDetailsPaymentRecordKlarnaSchema,
+  PaymentMethodDetailsPaymentRecordKonbiniSchema,
+  PaymentMethodDetailsPaymentRecordLinkSchema,
+  PaymentMethodDetailsPaymentRecordMbWaySchema,
+  PaymentMethodDetailsPaymentRecordMobilepaySchema,
+  PaymentMethodDetailsPaymentRecordMomoSchema,
+  PaymentMethodDetailsPaymentRecordMultibancoSchema,
+  PaymentMethodDetailsPaymentRecordNaverPaySchema,
+  PaymentMethodDetailsPaymentRecordNzBankAccountSchema,
+  PaymentMethodDetailsPaymentRecordOxxoSchema,
+  PaymentMethodDetailsPaymentRecordP24Schema,
+  PaymentMethodDetailsPaymentRecordPayByBankSchema,
+  PaymentMethodDetailsPaymentRecordPaycoSchema,
+  PaymentMethodDetailsPaymentRecordPaynowSchema,
+  PaymentMethodDetailsPaymentRecordPaypaySchema,
+  PaymentMethodDetailsPaymentRecordPaytoSchema,
+  PaymentMethodDetailsPaymentRecordPixSchema,
+  PaymentMethodDetailsPaymentRecordPromptpaySchema,
+  PaymentMethodDetailsPaymentRecordRevolutPaySchema,
+  PaymentMethodDetailsPaymentRecordSamsungPaySchema,
+  PaymentMethodDetailsPaymentRecordSatispaySchema,
+  PaymentMethodDetailsPaymentRecordScalapaySchema,
+  PaymentMethodDetailsPaymentRecordSepaDebitSchema,
+  PaymentMethodDetailsPaymentRecordSequraSchema,
+  PaymentMethodDetailsPaymentRecordSofortSchema,
+  PaymentMethodDetailsPaymentRecordSunbitSchema,
+  PaymentMethodDetailsPaymentRecordSwishSchema,
+  PaymentMethodDetailsPaymentRecordTwintSchema,
+  PaymentMethodDetailsPaymentRecordUpiSchema,
+  PaymentMethodDetailsPaymentRecordUsBankAccountSchema,
+  PaymentMethodDetailsPaymentRecordWechatPaySchema,
+  PaymentMethodDetailsPaymentRecordZipSchema,
+  PaymentMethodDetailsPaynowSchema,
+  PaymentMethodDetailsPaypalSchema,
+  PaymentMethodDetailsPaypaySchema,
+  PaymentMethodDetailsPaytoSchema,
+  PaymentMethodDetailsPixSchema,
+  PaymentMethodDetailsPromptpaySchema,
+  PaymentMethodDetailsRevolutPaySchema,
+  PaymentMethodDetailsSamsungPaySchema,
+  PaymentMethodDetailsSatispaySchema,
+  PaymentMethodDetailsScalapaySchema,
+  PaymentMethodDetailsSepaDebitSchema,
+  PaymentMethodDetailsSequraSchema,
+  PaymentMethodDetailsSofortSchema,
+  PaymentMethodDetailsStripeAccountSchema,
+  PaymentMethodDetailsSunbitSchema,
+  PaymentMethodDetailsSwishSchema,
+  PaymentMethodDetailsTwintSchema,
+  PaymentMethodDetailsUpiSchema,
+  PaymentMethodDetailsUsBankAccountSchema,
+  PaymentMethodDetailsWechatSchema,
+  PaymentMethodDetailsWechatPaySchema,
+  PaymentMethodDetailsZipSchema,
+  PaymentMethodDomainSchema,
+  PaymentMethodDomainResourcePaymentMethodStatusSchema,
+  PaymentMethodDomainResourcePaymentMethodStatusDetailsSchema,
+  PaymentMethodEpsSchema,
+  PaymentMethodFpxSchema,
+  PaymentMethodGiropaySchema,
+  PaymentMethodGrabpaySchema,
+  PaymentMethodIdealSchema,
+  PaymentMethodInteracPresentSchema,
+  PaymentMethodKakaoPaySchema,
+  PaymentMethodKlarnaSchema,
+  PaymentMethodKonbiniSchema,
+  PaymentMethodKrCardSchema,
+  PaymentMethodLinkSchema,
+  PaymentMethodMbWaySchema,
+  PaymentMethodMobilepaySchema,
+  PaymentMethodMultibancoSchema,
+  PaymentMethodNaverPaySchema,
+  PaymentMethodNzBankAccountSchema,
+  PaymentMethodOptionsAffirmSchema,
+  PaymentMethodOptionsAfterpayClearpaySchema,
+  PaymentMethodOptionsAlipaySchema,
+  PaymentMethodOptionsAlmaSchema,
+  PaymentMethodOptionsAmazonPaySchema,
+  PaymentMethodOptionsBancontactSchema,
+  PaymentMethodOptionsBillieSchema,
+  PaymentMethodOptionsBizumSchema,
+  PaymentMethodOptionsBoletoSchema,
+  PaymentMethodOptionsCardInstallmentsSchema,
+  PaymentMethodOptionsCardMandateOptionsSchema,
+  PaymentMethodOptionsCardPresentSchema,
+  PaymentMethodOptionsCardPresentRoutingSchema,
+  PaymentMethodOptionsCashappSchema,
+  PaymentMethodOptionsCryptoSchema,
+  PaymentMethodOptionsCustomerBalanceSchema,
+  PaymentMethodOptionsCustomerBalanceBankTransferSchema,
+  PaymentMethodOptionsCustomerBalanceEuBankAccountSchema,
+  PaymentMethodOptionsFpxSchema,
+  PaymentMethodOptionsGiropaySchema,
+  PaymentMethodOptionsGrabpaySchema,
+  PaymentMethodOptionsIdealSchema,
+  PaymentMethodOptionsInteracPresentSchema,
+  PaymentMethodOptionsKlarnaSchema,
+  PaymentMethodOptionsKonbiniSchema,
+  PaymentMethodOptionsKrCardSchema,
+  PaymentMethodOptionsMandateOptionsPixSchema,
+  PaymentMethodOptionsMandateOptionsUpiSchema,
+  PaymentMethodOptionsMbWaySchema,
+  PaymentMethodOptionsMultibancoSchema,
+  PaymentMethodOptionsOxxoSchema,
+  PaymentMethodOptionsP24Schema,
+  PaymentMethodOptionsPayByBankSchema,
+  PaymentMethodOptionsPaynowSchema,
+  PaymentMethodOptionsPaypalSchema,
+  PaymentMethodOptionsPaypaySchema,
+  PaymentMethodOptionsPixSchema,
+  PaymentMethodOptionsPromptpaySchema,
+  PaymentMethodOptionsRevolutPaySchema,
+  PaymentMethodOptionsSatispaySchema,
+  PaymentMethodOptionsScalapaySchema,
+  PaymentMethodOptionsSequraSchema,
+  PaymentMethodOptionsSofortSchema,
+  PaymentMethodOptionsSunbitSchema,
+  PaymentMethodOptionsTwintSchema,
+  PaymentMethodOptionsUpiSchema,
+  PaymentMethodOptionsUsBankAccountMandateOptionsSchema,
+  PaymentMethodOptionsWechatPaySchema,
+  PaymentMethodOptionsZipSchema,
+  PaymentMethodOxxoSchema,
+  PaymentMethodP24Schema,
+  PaymentMethodPayByBankSchema,
+  PaymentMethodPaycoSchema,
+  PaymentMethodPaynowSchema,
+  PaymentMethodPaypalSchema,
+  PaymentMethodPaypaySchema,
+  PaymentMethodPaytoSchema,
+  PaymentMethodPixSchema,
+  PaymentMethodPromptpaySchema,
+  PaymentMethodRevolutPaySchema,
+  PaymentMethodSamsungPaySchema,
+  PaymentMethodSatispaySchema,
+  PaymentMethodScalapaySchema,
+  PaymentMethodSepaDebitSchema,
+  PaymentMethodSequraSchema,
+  PaymentMethodSofortSchema,
+  PaymentMethodSunbitSchema,
+  PaymentMethodSwishSchema,
+  PaymentMethodTwintSchema,
+  PaymentMethodUpiSchema,
+  PaymentMethodUsBankAccountSchema,
+  PaymentMethodUsBankAccountBlockedSchema,
+  PaymentMethodUsBankAccountStatusDetailsSchema,
+  PaymentMethodWechatPaySchema,
+  PaymentMethodZipSchema,
+  PaymentPagesCheckoutSessionAdaptivePricingSchema,
+  PaymentPagesCheckoutSessionAfterExpirationSchema,
+  PaymentPagesCheckoutSessionAfterExpirationRecoverySchema,
+  PaymentPagesCheckoutSessionAutomaticTaxSchema,
+  PaymentPagesCheckoutSessionBrandingSettingsSchema,
+  PaymentPagesCheckoutSessionBrandingSettingsIconSchema,
+  PaymentPagesCheckoutSessionBrandingSettingsLogoSchema,
+  PaymentPagesCheckoutSessionBusinessNameSchema,
+  PaymentPagesCheckoutSessionCheckoutAddressDetailsSchema,
+  PaymentPagesCheckoutSessionCollectedInformationSchema,
+  PaymentPagesCheckoutSessionConsentSchema,
+  PaymentPagesCheckoutSessionConsentCollectionSchema,
+  PaymentPagesCheckoutSessionCurrencyConversionSchema,
+  PaymentPagesCheckoutSessionCustomFieldsSchema,
+  PaymentPagesCheckoutSessionCustomFieldsDropdownSchema,
+  PaymentPagesCheckoutSessionCustomFieldsLabelSchema,
+  PaymentPagesCheckoutSessionCustomFieldsNumericSchema,
+  PaymentPagesCheckoutSessionCustomFieldsOptionSchema,
+  PaymentPagesCheckoutSessionCustomFieldsTextSchema,
+  PaymentPagesCheckoutSessionCustomTextSchema,
+  PaymentPagesCheckoutSessionCustomTextPositionSchema,
+  PaymentPagesCheckoutSessionCustomerDetailsSchema,
+  PaymentPagesCheckoutSessionDiscountSchema,
+  PaymentPagesCheckoutSessionIndividualNameSchema,
+  PaymentPagesCheckoutSessionInvoiceCreationSchema,
+  PaymentPagesCheckoutSessionInvoiceSettingsSchema,
+  PaymentPagesCheckoutSessionManagedPaymentsSchema,
+  PaymentPagesCheckoutSessionNameCollectionSchema,
+  PaymentPagesCheckoutSessionOptionalItemSchema,
+  PaymentPagesCheckoutSessionOptionalItemAdjustableQuantitySchema,
+  PaymentPagesCheckoutSessionPaymentMethodReuseAgreementSchema,
+  PaymentPagesCheckoutSessionPermissionsSchema,
+  PaymentPagesCheckoutSessionPhoneNumberCollectionSchema,
+  PaymentPagesCheckoutSessionSavedPaymentMethodOptionsSchema,
+  PaymentPagesCheckoutSessionShippingAddressCollectionSchema,
+  PaymentPagesCheckoutSessionShippingCostSchema,
+  PaymentPagesCheckoutSessionShippingOptionSchema,
+  PaymentPagesCheckoutSessionTaxIdSchema,
+  PaymentPagesCheckoutSessionTaxIdCollectionSchema,
+  PaymentPagesCheckoutSessionTotalDetailsSchema,
+  PaymentPagesCheckoutSessionTotalDetailsResourceBreakdownSchema,
+  PaymentPagesPrivateCardPaymentMethodOptionsResourceRestrictionsSchema,
+  PaymentRecordSchema,
+  PaymentSourceSchema,
+  PaymentsPrimitivesPaymentRecordsResourceAddressSchema,
+  PaymentsPrimitivesPaymentRecordsResourceAmountSchema,
+  PaymentsPrimitivesPaymentRecordsResourceBillingDetailsSchema,
+  PaymentsPrimitivesPaymentRecordsResourceCustomerDetailsSchema,
+  PaymentsPrimitivesPaymentRecordsResourcePaymentMethodAlmaDetailsResourceInstallmentsSchema,
+  PaymentsPrimitivesPaymentRecordsResourcePaymentMethodAmazonPayDetailsResourceFundingSchema,
+  PaymentsPrimitivesPaymentRecordsResourcePaymentMethodAmazonPayDetailsResourceFundingResourceFundingCardSchema,
+  PaymentsPrimitivesPaymentRecordsResourcePaymentMethodCardDetailsSchema,
+  PaymentsPrimitivesPaymentRecordsResourcePaymentMethodCardDetailsResourceChecksSchema,
+  PaymentsPrimitivesPaymentRecordsResourcePaymentMethodCardDetailsResourceInstallmentPlanSchema,
+  PaymentsPrimitivesPaymentRecordsResourcePaymentMethodCardDetailsResourceInstallmentsSchema,
+  PaymentsPrimitivesPaymentRecordsResourcePaymentMethodCardDetailsResourceNetworkTokenSchema,
+  PaymentsPrimitivesPaymentRecordsResourcePaymentMethodCardDetailsResourceThreeDSecureSchema,
+  PaymentsPrimitivesPaymentRecordsResourcePaymentMethodCardDetailsResourceWalletSchema,
+  PaymentsPrimitivesPaymentRecordsResourcePaymentMethodCardDetailsResourceWalletResourceApplePaySchema,
+  PaymentsPrimitivesPaymentRecordsResourcePaymentMethodCardDetailsResourceWalletResourceGooglePaySchema,
+  PaymentsPrimitivesPaymentRecordsResourcePaymentMethodCardDetailsResourceWalletResourceLinkSchema,
+  PaymentsPrimitivesPaymentRecordsResourcePaymentMethodCustomDetailsSchema,
+  PaymentsPrimitivesPaymentRecordsResourcePaymentMethodDetailsSchema,
+  PaymentsPrimitivesPaymentRecordsResourcePaymentMethodKlarnaDetailsResourcePayerDetailsSchema,
+  PaymentsPrimitivesPaymentRecordsResourcePaymentMethodKlarnaDetailsResourcePayerDetailsResourcePayerDetailsAddressSchema,
+  PaymentsPrimitivesPaymentRecordsResourcePaymentMethodKonbiniDetailsResourceStoreSchema,
+  PaymentsPrimitivesPaymentRecordsResourcePaymentMethodMobilepayDetailsResourceCardSchema,
+  PaymentsPrimitivesPaymentRecordsResourcePaymentMethodRevolutPayDetailsResourceFundingSchema,
+  PaymentsPrimitivesPaymentRecordsResourcePaymentMethodRevolutPayDetailsResourceFundingResourceFundingCardSchema,
+  PaymentsPrimitivesPaymentRecordsResourceProcessorDetailsSchema,
+  PaymentsPrimitivesPaymentRecordsResourceProcessorDetailsResourceCustomDetailsSchema,
+  PaymentsPrimitivesPaymentRecordsResourceShippingDetailsSchema,
+  PayoutSchema,
+  PayoutsTraceIdSchema,
+  PaypalSellerProtectionSchema,
+  PersonSchema,
+  PersonAdditionalTosAcceptanceSchema,
+  PersonAdditionalTosAcceptancesSchema,
+  PersonEthnicityDetailsSchema,
+  PersonFutureRequirementsSchema,
+  PersonRaceDetailsSchema,
+  PersonRelationshipSchema,
+  PersonRequirementsSchema,
+  PersonUsCfpbDataSchema,
+  PlanSchema,
+  PlanTierSchema,
+  PlatformEarningFeeSourceSchema,
+  PortalBusinessProfileSchema,
+  PortalCustomerUpdateSchema,
+  PortalFeaturesSchema,
+  PortalFlowsAfterCompletionHostedConfirmationSchema,
+  PortalFlowsAfterCompletionRedirectSchema,
+  PortalFlowsCouponOfferSchema,
+  PortalFlowsFlowSchema,
+  PortalFlowsFlowAfterCompletionSchema,
+  PortalFlowsFlowCustomerUpdateSchema,
+  PortalFlowsFlowSubscriptionCancelSchema,
+  PortalFlowsFlowSubscriptionUpdateSchema,
+  PortalFlowsFlowSubscriptionUpdateConfirmSchema,
+  PortalFlowsRetentionSchema,
+  PortalFlowsSubscriptionUpdateConfirmDiscountSchema,
+  PortalFlowsSubscriptionUpdateConfirmItemSchema,
+  PortalInvoiceListSchema,
+  PortalLoginPageSchema,
+  PortalPaymentMethodUpdateSchema,
+  PortalResourceScheduleUpdateAtPeriodEndSchema,
+  PortalResourceScheduleUpdateAtPeriodEndConditionSchema,
+  PortalSubscriptionCancelSchema,
+  PortalSubscriptionCancellationReasonSchema,
+  PortalSubscriptionUpdateSchema,
+  PortalSubscriptionUpdateProductSchema,
+  PortalSubscriptionUpdateProductAdjustableQuantitySchema,
+  PriceSchema,
+  PriceTierSchema,
+  ProductSchema,
+  ProductCatalogTrialOfferSchema,
+  ProductCatalogImplEndpointsTrialOfferResourceRelativeDurationSchema,
+  ProductCatalogImplEndpointsTrialOfferResourceTransitionSchema,
+  ProductCatalogImplEndpointsTrialOfferResourceTrialOfferDurationSchema,
+  ProductCatalogImplEndpointsTrialOfferResourceTrialOfferEndBehaviorSchema,
+  ProductFeatureSchema,
+  ProductMarketingFeatureSchema,
+  PromotionCodeSchema,
+  PromotionCodeCurrencyOptionSchema,
+  PromotionCodesResourcePromotionSchema,
+  PromotionCodesResourceRestrictionsSchema,
+  ProrationDetailsSchema,
+  QuoteSchema,
+  QuotesResourceAutomaticTaxSchema,
+  QuotesResourceComputedSchema,
+  QuotesResourceFromQuoteSchema,
+  QuotesResourceRecurringSchema,
+  QuotesResourceStatusTransitionsSchema,
+  QuotesResourceSubscriptionDataBillingModeSchema,
+  QuotesResourceSubscriptionDataSubscriptionDataSchema,
+  QuotesResourceTotalDetailsSchema,
+  QuotesResourceTotalDetailsResourceBreakdownSchema,
+  QuotesResourceTransferDataSchema,
+  QuotesResourceUpfrontSchema,
+  RadarEarlyFraudWarningSchema,
+  RadarPaymentEvaluationSchema,
+  RadarValueListSchema,
+  RadarValueListItemSchema,
+  RadarRadarOptionsSchema,
+  RadarReviewResourceLocationSchema,
+  RadarReviewResourceSessionSchema,
+  ReceivedPaymentMethodDetailsFinancialAccountSchema,
+  RecurringSchema,
+  RefundSchema,
+  RefundDestinationDetailsSchema,
+  RefundDestinationDetailsBlikSchema,
+  RefundDestinationDetailsBrBankTransferSchema,
+  RefundDestinationDetailsCardSchema,
+  RefundDestinationDetailsCryptoSchema,
+  RefundDestinationDetailsEuBankTransferSchema,
+  RefundDestinationDetailsGbBankTransferSchema,
+  RefundDestinationDetailsJpBankTransferSchema,
+  RefundDestinationDetailsMbWaySchema,
+  RefundDestinationDetailsMultibancoSchema,
+  RefundDestinationDetailsMxBankTransferSchema,
+  RefundDestinationDetailsP24Schema,
+  RefundDestinationDetailsPaypalSchema,
+  RefundDestinationDetailsSwishSchema,
+  RefundDestinationDetailsThBankTransferSchema,
+  RefundDestinationDetailsUsBankTransferSchema,
+  RefundNextActionSchema,
+  RefundNextActionDisplayDetailsSchema,
+  ReportingReportRunSchema,
+  ReportingReportTypeSchema,
+  ReserveTransactionSchema,
+  ReviewSchema,
+  RevolutPayUnderlyingPaymentMethodFundingDetailsSchema,
+  RuleSchema,
+  ScheduledQueryRunSchema,
+  SchedulesPhaseAutomaticTaxSchema,
+  SecretServiceResourceScopeSchema,
+  SepaDebitGeneratedFromSchema,
+  SetupAttemptSchema,
+  SetupAttemptPaymentMethodDetailsSchema,
+  SetupAttemptPaymentMethodDetailsAcssDebitSchema,
+  SetupAttemptPaymentMethodDetailsAmazonPaySchema,
+  SetupAttemptPaymentMethodDetailsAuBecsDebitSchema,
+  SetupAttemptPaymentMethodDetailsBacsDebitSchema,
+  SetupAttemptPaymentMethodDetailsBancontactSchema,
+  SetupAttemptPaymentMethodDetailsBlikSchema,
+  SetupAttemptPaymentMethodDetailsBoletoSchema,
+  SetupAttemptPaymentMethodDetailsCardSchema,
+  SetupAttemptPaymentMethodDetailsCardChecksSchema,
+  SetupAttemptPaymentMethodDetailsCardPresentSchema,
+  SetupAttemptPaymentMethodDetailsCardWalletSchema,
+  SetupAttemptPaymentMethodDetailsCashappSchema,
+  SetupAttemptPaymentMethodDetailsIdealSchema,
+  SetupAttemptPaymentMethodDetailsKakaoPaySchema,
+  SetupAttemptPaymentMethodDetailsKlarnaSchema,
+  SetupAttemptPaymentMethodDetailsKrCardSchema,
+  SetupAttemptPaymentMethodDetailsLinkSchema,
+  SetupAttemptPaymentMethodDetailsNaverPaySchema,
+  SetupAttemptPaymentMethodDetailsNzBankAccountSchema,
+  SetupAttemptPaymentMethodDetailsPaypalSchema,
+  SetupAttemptPaymentMethodDetailsPaytoSchema,
+  SetupAttemptPaymentMethodDetailsPixSchema,
+  SetupAttemptPaymentMethodDetailsRevolutPaySchema,
+  SetupAttemptPaymentMethodDetailsSepaDebitSchema,
+  SetupAttemptPaymentMethodDetailsSofortSchema,
+  SetupAttemptPaymentMethodDetailsTwintSchema,
+  SetupAttemptPaymentMethodDetailsUpiSchema,
+  SetupAttemptPaymentMethodDetailsUsBankAccountSchema,
+  SetupIntentSchema,
+  SetupIntentNextActionSchema,
+  SetupIntentNextActionPixDisplayQrCodeSchema,
+  SetupIntentNextActionRedirectToUrlSchema,
+  SetupIntentNextActionVerifyWithMicrodepositsSchema,
+  SetupIntentPaymentMethodOptionsSchema,
+  SetupIntentPaymentMethodOptionsAcssDebitSchema,
+  SetupIntentPaymentMethodOptionsAmazonPaySchema,
+  SetupIntentPaymentMethodOptionsBacsDebitSchema,
+  SetupIntentPaymentMethodOptionsBizumSchema,
+  SetupIntentPaymentMethodOptionsBlikSchema,
+  SetupIntentPaymentMethodOptionsCardSchema,
+  SetupIntentPaymentMethodOptionsCardMandateOptionsSchema,
+  SetupIntentPaymentMethodOptionsCardPresentSchema,
+  SetupIntentPaymentMethodOptionsKlarnaSchema,
+  SetupIntentPaymentMethodOptionsLinkSchema,
+  SetupIntentPaymentMethodOptionsMandateOptionsAcssDebitSchema,
+  SetupIntentPaymentMethodOptionsMandateOptionsBacsDebitSchema,
+  SetupIntentPaymentMethodOptionsMandateOptionsBlikSchema,
+  SetupIntentPaymentMethodOptionsMandateOptionsPaytoSchema,
+  SetupIntentPaymentMethodOptionsMandateOptionsSepaDebitSchema,
+  SetupIntentPaymentMethodOptionsPaypalSchema,
+  SetupIntentPaymentMethodOptionsPaytoSchema,
+  SetupIntentPaymentMethodOptionsPixSchema,
+  SetupIntentPaymentMethodOptionsSepaDebitSchema,
+  SetupIntentPaymentMethodOptionsUpiSchema,
+  SetupIntentPaymentMethodOptionsUsBankAccountSchema,
+  SetupIntentTypeSpecificPaymentMethodOptionsClientSchema,
+  ShippingSchema,
+  ShippingRateSchema,
+  ShippingRateCurrencyOptionSchema,
+  ShippingRateDeliveryEstimateSchema,
+  ShippingRateDeliveryEstimateBoundSchema,
+  ShippingRateFixedAmountSchema,
+  SigmaSigmaApiQuerySchema,
+  SigmaScheduledQueryRunErrorSchema,
+  SmorResourceManagedPaymentsSchema,
+  SourceSchema,
+  SourceCodeVerificationFlowSchema,
+  SourceMandateNotificationSchema,
+  SourceMandateNotificationAcssDebitDataSchema,
+  SourceMandateNotificationBacsDebitDataSchema,
+  SourceMandateNotificationSepaDebitDataSchema,
+  SourceOrderSchema,
+  SourceOrderItemSchema,
+  SourceOwnerSchema,
+  SourceReceiverFlowSchema,
+  SourceRedirectFlowSchema,
+  SourceTransactionSchema,
+  SourceTransactionAchCreditTransferDataSchema,
+  SourceTransactionChfCreditTransferDataSchema,
+  SourceTransactionGbpCreditTransferDataSchema,
+  SourceTransactionPaperCheckDataSchema,
+  SourceTransactionSepaCreditTransferDataSchema,
+  SourceTypeAchCreditTransferSchema,
+  SourceTypeAchDebitSchema,
+  SourceTypeAcssDebitSchema,
+  SourceTypeAlipaySchema,
+  SourceTypeAuBecsDebitSchema,
+  SourceTypeBancontactSchema,
+  SourceTypeCardSchema,
+  SourceTypeCardPresentSchema,
+  SourceTypeEpsSchema,
+  SourceTypeGiropaySchema,
+  SourceTypeIdealSchema,
+  SourceTypeKlarnaSchema,
+  SourceTypeMultibancoSchema,
+  SourceTypeP24Schema,
+  SourceTypeSepaDebitSchema,
+  SourceTypeSofortSchema,
+  SourceTypeThreeDSecureSchema,
+  SourceTypeWechatSchema,
+  StackableDiscountWithDiscountSettingsSchema,
+  StackableDiscountWithDiscountSettingsAndDiscountEndSchema,
+  SubscriptionSchema,
+  SubscriptionAutomaticTaxSchema,
+  SubscriptionBillingThresholdsSchema,
+  SubscriptionItemSchema,
+  SubscriptionItemBillingThresholdsSchema,
+  SubscriptionPaymentMethodOptionsBillieSchema,
+  SubscriptionPaymentMethodOptionsBillieCompanyDetailsSchema,
+  SubscriptionPaymentMethodOptionsBillieCompanyDetailsRegisteredAddressSchema,
+  SubscriptionPaymentMethodOptionsBlikSchema,
+  SubscriptionPaymentMethodOptionsCardSchema,
+  SubscriptionPaymentMethodOptionsMandateOptionsBlikSchema,
+  SubscriptionPaymentMethodOptionsMandateOptionsPixSchema,
+  SubscriptionPaymentMethodOptionsPixSchema,
+  SubscriptionPendingInvoiceItemIntervalSchema,
+  SubscriptionScheduleSchema,
+  SubscriptionScheduleAddInvoiceItemSchema,
+  SubscriptionScheduleAddInvoiceItemPeriodSchema,
+  SubscriptionScheduleConfigurationItemSchema,
+  SubscriptionScheduleCurrentPhaseSchema,
+  SubscriptionSchedulePhaseConfigurationSchema,
+  SubscriptionSchedulesResourceDefaultSettingsSchema,
+  SubscriptionSchedulesResourceDefaultSettingsAutomaticTaxSchema,
+  SubscriptionSchedulesResourceInvoiceItemPeriodResourcePeriodEndSchema,
+  SubscriptionSchedulesResourceInvoiceItemPeriodResourcePeriodStartSchema,
+  SubscriptionSchedulesResourcePauseScheduleSchema,
+  SubscriptionSchedulesResourcePauseScheduleBillForSchema,
+  SubscriptionSchedulesResourcePauseScheduleOutstandingUsageThroughSchema,
+  SubscriptionSchedulesResourcePauseSchedulePauseSchema,
+  SubscriptionSchedulesResourcePauseSchedulePauseSettingsSchema,
+  SubscriptionSchedulesResourcePauseSchedulePauseStatusSchema,
+  SubscriptionSchedulesResourcePauseScheduleResumeSchema,
+  SubscriptionSchedulesResourcePauseScheduleResumeSettingsSchema,
+  SubscriptionSchedulesResourcePauseScheduleResumeStatusSchema,
+  SubscriptionSchedulesResourcePauseScheduleStatusErrorSchema,
+  SubscriptionSchedulesResourcePauseScheduleUnusedTimeFromSchema,
+  SubscriptionTransferDataSchema,
+  SubscriptionsResourceBillingCycleAnchorConfigSchema,
+  SubscriptionsResourceBillingModeSchema,
+  SubscriptionsResourceBillingModeFlexibleSchema,
+  SubscriptionsResourceBillingSchedulesSchema,
+  SubscriptionsResourceBillingSchedulesAppliesToSchema,
+  SubscriptionsResourceBillingSchedulesBillUntilSchema,
+  SubscriptionsResourceBillingSchedulesBillUntilDurationSchema,
+  SubscriptionsResourcePauseCollectionSchema,
+  SubscriptionsResourcePausedStatusDetailsPublicSchema,
+  SubscriptionsResourcePausedStatusDetailsSubscriptionSchema,
+  SubscriptionsResourcePaymentMethodOptionsSchema,
+  SubscriptionsResourcePaymentSettingsSchema,
+  SubscriptionsResourcePendingUpdateSchema,
+  SubscriptionsResourceStatusDetailsPublicSchema,
+  SubscriptionsResourceSubscriptionInvoiceSettingsSchema,
+  SubscriptionsResourceSubscriptionPresentmentDetailsSchema,
+  SubscriptionsResourceTrialSettingsEndBehaviorSchema,
+  SubscriptionsResourceTrialSettingsTrialSettingsSchema,
+  SubscriptionsTrialsResourceCurrentTrialSchema,
+  SubscriptionsTrialsResourceEndBehaviorSchema,
+  SubscriptionsTrialsResourceTrialSettingsSchema,
+  TaxAssociationSchema,
+  TaxCalculationSchema,
+  TaxCalculationLineItemSchema,
+  TaxLocationSchema,
+  TaxRegistrationSchema,
+  TaxSettingsSchema,
+  TaxTransactionSchema,
+  TaxTransactionLineItemSchema,
+  TaxCodeSchema,
+  TaxCodeRequirementsSchema,
+  TaxDeductedAtSourceSchema,
+  TaxIDsOwnerSchema,
+  TaxIdSchema,
+  TaxIdVerificationSchema,
+  TaxProductRegistrationsResourceCountryOptionsSchema,
+  TaxProductRegistrationsResourceCountryOptionsCaProvinceStandardSchema,
+  TaxProductRegistrationsResourceCountryOptionsCanadaSchema,
+  TaxProductRegistrationsResourceCountryOptionsDefaultSchema,
+  TaxProductRegistrationsResourceCountryOptionsDefaultInboundGoodsSchema,
+  TaxProductRegistrationsResourceCountryOptionsDefaultStandardSchema,
+  TaxProductRegistrationsResourceCountryOptionsEuStandardSchema,
+  TaxProductRegistrationsResourceCountryOptionsEuropeSchema,
+  TaxProductRegistrationsResourceCountryOptionsSimplifiedSchema,
+  TaxProductRegistrationsResourceCountryOptionsSpainSchema,
+  TaxProductRegistrationsResourceCountryOptionsThailandSchema,
+  TaxProductRegistrationsResourceCountryOptionsUnitedStatesSchema,
+  TaxProductRegistrationsResourceCountryOptionsUsAdmissionsTaxSchema,
+  TaxProductRegistrationsResourceCountryOptionsUsAttendanceTaxSchema,
+  TaxProductRegistrationsResourceCountryOptionsUsEntertainmentTaxSchema,
+  TaxProductRegistrationsResourceCountryOptionsUsGrossReceiptsTaxSchema,
+  TaxProductRegistrationsResourceCountryOptionsUsHospitalityTaxSchema,
+  TaxProductRegistrationsResourceCountryOptionsUsLocalAmusementTaxSchema,
+  TaxProductRegistrationsResourceCountryOptionsUsLocalLeaseTaxSchema,
+  TaxProductRegistrationsResourceCountryOptionsUsLuxuryTaxSchema,
+  TaxProductRegistrationsResourceCountryOptionsUsMassTransitParkingTaxSchema,
+  TaxProductRegistrationsResourceCountryOptionsUsParkingTaxSchema,
+  TaxProductRegistrationsResourceCountryOptionsUsResortTaxSchema,
+  TaxProductRegistrationsResourceCountryOptionsUsStateSalesTaxSchema,
+  TaxProductRegistrationsResourceCountryOptionsUsStateSalesTaxElectionSchema,
+  TaxProductRegistrationsResourceCountryOptionsUsTourismTaxSchema,
+  TaxProductResourceCustomerDetailsSchema,
+  TaxProductResourceCustomerDetailsResourceTaxIdSchema,
+  TaxProductResourceJurisdictionSchema,
+  TaxProductResourceLineItemTaxBreakdownSchema,
+  TaxProductResourceLineItemTaxRateDetailsSchema,
+  TaxProductResourcePostalAddressSchema,
+  TaxProductResourceShipFromDetailsSchema,
+  TaxProductResourceTaxAssociationTransactionAttemptsSchema,
+  TaxProductResourceTaxAssociationTransactionAttemptsResourceCommittedSchema,
+  TaxProductResourceTaxAssociationTransactionAttemptsResourceErroredSchema,
+  TaxProductResourceTaxBreakdownSchema,
+  TaxProductResourceTaxCalculationShippingCostSchema,
+  TaxProductResourceTaxRateDetailsSchema,
+  TaxProductResourceTaxSettingsDefaultsSchema,
+  TaxProductResourceTaxSettingsHeadOfficeSchema,
+  TaxProductResourceTaxSettingsStatusDetailsSchema,
+  TaxProductResourceTaxSettingsStatusDetailsResourceActiveSchema,
+  TaxProductResourceTaxSettingsStatusDetailsResourcePendingSchema,
+  TaxProductResourceTaxTransactionLineItemResourceReversalSchema,
+  TaxProductResourceTaxTransactionResourceReversalSchema,
+  TaxProductResourceTaxTransactionShippingCostSchema,
+  TaxProductTaxDetailsResourceTaxDetailsSchema,
+  TaxRateSchema,
+  TaxRateFlatAmountSchema,
+  TerminalConfigurationSchema,
+  TerminalConnectionTokenSchema,
+  TerminalLocationSchema,
+  TerminalOnboardingLinkSchema,
+  TerminalReaderSchema,
+  TerminalRefundSchema,
+  TerminalConfigurationConfigurationResourceCellularConfigSchema,
+  TerminalConfigurationConfigurationResourceCurrencySpecificConfigSchema,
+  TerminalConfigurationConfigurationResourceDeviceTypeSpecificConfigSchema,
+  TerminalConfigurationConfigurationResourceEnterprisePeapWifiSchema,
+  TerminalConfigurationConfigurationResourceEnterpriseTlsWifiSchema,
+  TerminalConfigurationConfigurationResourceOfflineConfigSchema,
+  TerminalConfigurationConfigurationResourcePersonalPskWifiSchema,
+  TerminalConfigurationConfigurationResourceRebootWindowSchema,
+  TerminalConfigurationConfigurationResourceTippingSchema,
+  TerminalConfigurationConfigurationResourceWifiConfigSchema,
+  TerminalOnboardingLinkAppleTermsAndConditionsSchema,
+  TerminalOnboardingLinkLinkOptionsSchema,
+  TerminalReaderReaderResourceCartSchema,
+  TerminalReaderReaderResourceChoiceSchema,
+  TerminalReaderReaderResourceCollectConfigSchema,
+  TerminalReaderReaderResourceCollectInputsActionSchema,
+  TerminalReaderReaderResourceCollectPaymentMethodActionSchema,
+  TerminalReaderReaderResourceConfirmConfigSchema,
+  TerminalReaderReaderResourceConfirmPaymentIntentActionSchema,
+  TerminalReaderReaderResourceCustomTextSchema,
+  TerminalReaderReaderResourceEmailSchema,
+  TerminalReaderReaderResourceFileMetadataSchema,
+  TerminalReaderReaderResourceInputSchema,
+  TerminalReaderReaderResourceLineItemSchema,
+  TerminalReaderReaderResourceNumericSchema,
+  TerminalReaderReaderResourcePhoneSchema,
+  TerminalReaderReaderResourcePrintContentSchema,
+  TerminalReaderReaderResourceProcessConfigSchema,
+  TerminalReaderReaderResourceProcessPaymentIntentActionSchema,
+  TerminalReaderReaderResourceProcessSetupConfigSchema,
+  TerminalReaderReaderResourceProcessSetupIntentActionSchema,
+  TerminalReaderReaderResourceReaderActionSchema,
+  TerminalReaderReaderResourceRefundPaymentActionSchema,
+  TerminalReaderReaderResourceRefundPaymentConfigSchema,
+  TerminalReaderReaderResourceSelectionSchema,
+  TerminalReaderReaderResourceSetReaderDisplayActionSchema,
+  TerminalReaderReaderResourceSignatureSchema,
+  TerminalReaderReaderResourceTextSchema,
+  TerminalReaderReaderResourceTippingConfigSchema,
+  TerminalReaderReaderResourceToggleSchema,
+  TestHelpersTestClockSchema,
+  ThreeDSecureAuthenticationSchema,
+  ThreeDSecureDetailsSchema,
+  ThreeDSecureDetailsChargeSchema,
+  ThreeDSecureStandaloneResourceAcquirerDetailsSchema,
+  ThreeDSecureStandaloneResourceBrowserDetailsSchema,
+  ThreeDSecureStandaloneResourceCartesBancairesSchema,
+  ThreeDSecureStandaloneResourceChallengeDetailsSchema,
+  ThreeDSecureStandaloneResourceChannelSchema,
+  ThreeDSecureStandaloneResourceDataShareDetailsSchema,
+  ThreeDSecureStandaloneResourceExpirySchema,
+  ThreeDSecureStandaloneResourceFlowPreferenceSchema,
+  ThreeDSecureStandaloneResourceFrictionlessDetailsSchema,
+  ThreeDSecureStandaloneResourceFutureUsageSchema,
+  ThreeDSecureStandaloneResourceInstallmentSchema,
+  ThreeDSecureStandaloneResourceNetworkDetailsSchema,
+  ThreeDSecureStandaloneResourceOutcomeDetailsSchema,
+  ThreeDSecureStandaloneResourceRecurringSchema,
+  ThreeDSecureStandaloneResourceShippingAddressSchema,
+  ThreeDSecureStandaloneResourceThreeRiDetailsSchema,
+  ThreeDSecureUsageSchema,
+  ThresholdsResourceUsageAlertFilterSchema,
+  ThresholdsResourceUsageThresholdConfigSchema,
+  TokenSchema,
+  TokenCardNetworksSchema,
+  TopupSchema,
+  TopupResourcePaymentMethodOptionsSchema,
+  TopupResourceUsBankAccountSchema,
+  TransferSchema,
+  TransferDataSchema,
+  TransferReversalSchema,
+  TransferScheduleSchema,
+  TransformQuantitySchema,
+  TransformUsageSchema,
+  TreasuryCreditReversalSchema,
+  TreasuryDebitReversalSchema,
+  TreasuryFinancialAccountSchema,
+  TreasuryFinancialAccountFeaturesSchema,
+  TreasuryInboundTransferSchema,
+  TreasuryOutboundPaymentSchema,
+  TreasuryOutboundTransferSchema,
+  TreasuryReceivedCreditSchema,
+  TreasuryReceivedDebitSchema,
+  TreasuryTransactionSchema,
+  TreasuryTransactionEntrySchema,
+  TreasuryFinancialAccountsResourceAbaRecordSchema,
+  TreasuryFinancialAccountsResourceAbaToggleSettingsSchema,
+  TreasuryFinancialAccountsResourceBalanceSchema,
+  TreasuryFinancialAccountsResourceClosedStatusDetailsSchema,
+  TreasuryFinancialAccountsResourceFinancialAddressSchema,
+  TreasuryFinancialAccountsResourceFinancialAddressesFeaturesSchema,
+  TreasuryFinancialAccountsResourceInboundAchToggleSettingsSchema,
+  TreasuryFinancialAccountsResourceInboundTransfersSchema,
+  TreasuryFinancialAccountsResourceOutboundAchToggleSettingsSchema,
+  TreasuryFinancialAccountsResourceOutboundPaymentsSchema,
+  TreasuryFinancialAccountsResourceOutboundTransfersSchema,
+  TreasuryFinancialAccountsResourcePlatformRestrictionsSchema,
+  TreasuryFinancialAccountsResourceStatusDetailsSchema,
+  TreasuryFinancialAccountsResourceToggleSettingsSchema,
+  TreasuryFinancialAccountsResourceTogglesSettingStatusDetailsSchema,
+  TreasuryInboundTransfersResourceFailureDetailsSchema,
+  TreasuryInboundTransfersResourceInboundTransferResourceLinkedFlowsSchema,
+  TreasuryInboundTransfersResourceInboundTransferResourceStatusTransitionsSchema,
+  TreasuryOutboundPaymentsResourceAchTrackingDetailsSchema,
+  TreasuryOutboundPaymentsResourceOutboundPaymentResourceEndUserDetailsSchema,
+  TreasuryOutboundPaymentsResourceOutboundPaymentResourceStatusTransitionsSchema,
+  TreasuryOutboundPaymentsResourceOutboundPaymentResourceTrackingDetailsSchema,
+  TreasuryOutboundPaymentsResourceReturnedStatusSchema,
+  TreasuryOutboundPaymentsResourceUsDomesticWireTrackingDetailsSchema,
+  TreasuryOutboundTransfersResourceAchTrackingDetailsSchema,
+  TreasuryOutboundTransfersResourceOutboundTransferResourceTrackingDetailsSchema,
+  TreasuryOutboundTransfersResourceReturnedDetailsSchema,
+  TreasuryOutboundTransfersResourceStatusTransitionsSchema,
+  TreasuryOutboundTransfersResourceUsDomesticWireTrackingDetailsSchema,
+  TreasuryReceivedCreditsResourceLinkedFlowsSchema,
+  TreasuryReceivedCreditsResourceReversalDetailsSchema,
+  TreasuryReceivedCreditsResourceSourceFlowsDetailsSchema,
+  TreasuryReceivedCreditsResourceStatusTransitionsSchema,
+  TreasuryReceivedDebitsResourceDebitReversalLinkedFlowsSchema,
+  TreasuryReceivedDebitsResourceLinkedFlowsSchema,
+  TreasuryReceivedDebitsResourceReversalDetailsSchema,
+  TreasuryReceivedDebitsResourceStatusTransitionsSchema,
+  TreasurySharedResourceBillingDetailsSchema,
+  TreasurySharedResourceInitiatingPaymentMethodDetailsInitiatingPaymentMethodDetailsSchema,
+  TreasurySharedResourceInitiatingPaymentMethodDetailsUsBankAccountSchema,
+  TreasuryTransactionsResourceAbstractTransactionResourceStatusTransitionsSchema,
+  TreasuryTransactionsResourceBalanceImpactSchema,
+  TreasuryTransactionsResourceFlowDetailsSchema,
+  UsBankAccountNetworksSchema,
+  VerificationSessionRedactionSchema,
+  WebhookEndpointSchema,
+} from '../../components/schemas'
+import { V1Model } from './model'
+
+export const v1 = new Elysia()
+  .model({
+    Account: AccountSchema,
+    AccountAnnualRevenue: AccountAnnualRevenueSchema,
+    AccountBacsDebitPaymentsSettings: AccountBacsDebitPaymentsSettingsSchema,
+    AccountBrandingSettings: AccountBrandingSettingsSchema,
+    AccountBusinessProfile: AccountBusinessProfileSchema,
+    AccountCapabilities: AccountCapabilitiesSchema,
+    AccountCapabilityFutureRequirements: AccountCapabilityFutureRequirementsSchema,
+    AccountCapabilityRequirements: AccountCapabilityRequirementsSchema,
+    AccountCardIssuingSettings: AccountCardIssuingSettingsSchema,
+    AccountCardPaymentsSettings: AccountCardPaymentsSettingsSchema,
+    AccountDashboardSettings: AccountDashboardSettingsSchema,
+    AccountDeclineChargeOn: AccountDeclineChargeOnSchema,
+    AccountFutureRequirements: AccountFutureRequirementsSchema,
+    AccountGroupMembership: AccountGroupMembershipSchema,
+    AccountInvoicesSettings: AccountInvoicesSettingsSchema,
+    AccountLink: AccountLinkSchema,
+    AccountMonthlyEstimatedRevenue: AccountMonthlyEstimatedRevenueSchema,
+    AccountPaymentsSettings: AccountPaymentsSettingsSchema,
+    AccountPayoutSettings: AccountPayoutSettingsSchema,
+    AccountPaypayPaymentsSettings: AccountPaypayPaymentsSettingsSchema,
+    AccountPaypaySiteAccessibleSettings: AccountPaypaySiteAccessibleSettingsSchema,
+    AccountPaypaySiteInDevelopmentSettings: AccountPaypaySiteInDevelopmentSettingsSchema,
+    AccountPaypaySiteRestrictedSettings: AccountPaypaySiteRestrictedSettingsSchema,
+    AccountPaypaySiteSettings: AccountPaypaySiteSettingsSchema,
+    AccountRequirements: AccountRequirementsSchema,
+    AccountRequirementsAlternative: AccountRequirementsAlternativeSchema,
+    AccountRequirementsError: AccountRequirementsErrorSchema,
+    AccountSepaDebitPaymentsSettings: AccountSepaDebitPaymentsSettingsSchema,
+    AccountSession: AccountSessionSchema,
+    AccountSettings: AccountSettingsSchema,
+    AccountTermsOfService: AccountTermsOfServiceSchema,
+    AccountTosAcceptance: AccountTosAcceptanceSchema,
+    AccountTreasurySettings: AccountTreasurySettingsSchema,
+    AccountUnificationAccountController: AccountUnificationAccountControllerSchema,
+    AccountUnificationAccountControllerFees: AccountUnificationAccountControllerFeesSchema,
+    AccountUnificationAccountControllerLosses: AccountUnificationAccountControllerLossesSchema,
+    AccountUnificationAccountControllerStripeDashboard:
+      AccountUnificationAccountControllerStripeDashboardSchema,
+    Address: AddressSchema,
+    AddressApiResourceTerminal: AddressApiResourceTerminalSchema,
+    AmazonPayUnderlyingPaymentMethodFundingDetails:
+      AmazonPayUnderlyingPaymentMethodFundingDetailsSchema,
+    ApiErrors: ApiErrorsSchema,
+    AppServiceResourceInstallContentSecurityPolicy:
+      AppServiceResourceInstallContentSecurityPolicySchema,
+    ApplePayDomain: ApplePayDomainSchema,
+    Application: ApplicationSchema,
+    ApplicationFee: ApplicationFeeSchema,
+    AppsInstall: AppsInstallSchema,
+    AppsSecret: AppsSecretSchema,
+    AutomaticTax: AutomaticTaxSchema,
+    Balance: BalanceSchema,
+    BalanceAmount: BalanceAmountSchema,
+    BalanceAmountBySourceType: BalanceAmountBySourceTypeSchema,
+    BalanceAmountNet: BalanceAmountNetSchema,
+    BalanceDetail: BalanceDetailSchema,
+    BalanceDetailUngated: BalanceDetailUngatedSchema,
+    BalanceNetAvailable: BalanceNetAvailableSchema,
+    BalanceSettings: BalanceSettingsSchema,
+    BalanceSettingsResourceAutomaticTransferRule:
+      BalanceSettingsResourceAutomaticTransferRuleSchema,
+    BalanceSettingsResourcePayments: BalanceSettingsResourcePaymentsSchema,
+    BalanceSettingsResourcePayoutSchedule: BalanceSettingsResourcePayoutScheduleSchema,
+    BalanceSettingsResourcePayouts: BalanceSettingsResourcePayoutsSchema,
+    BalanceSettingsResourceSettlementTiming: BalanceSettingsResourceSettlementTimingSchema,
+    BalanceSettingsResourceStartOfDay: BalanceSettingsResourceStartOfDaySchema,
+    BalanceTransaction: BalanceTransactionSchema,
+    BankAccount: BankAccountSchema,
+    BankConnectionsResourceAccountNumberDetails: BankConnectionsResourceAccountNumberDetailsSchema,
+    BankConnectionsResourceAccountStatusDetails: BankConnectionsResourceAccountStatusDetailsSchema,
+    BankConnectionsResourceAccountStatusDetailsApiResourceActiveStatusDetails:
+      BankConnectionsResourceAccountStatusDetailsApiResourceActiveStatusDetailsSchema,
+    BankConnectionsResourceAccountholder: BankConnectionsResourceAccountholderSchema,
+    BankConnectionsResourceBalance: BankConnectionsResourceBalanceSchema,
+    BankConnectionsResourceBalanceApiResourceCashBalance:
+      BankConnectionsResourceBalanceApiResourceCashBalanceSchema,
+    BankConnectionsResourceBalanceApiResourceCreditBalance:
+      BankConnectionsResourceBalanceApiResourceCreditBalanceSchema,
+    BankConnectionsResourceBalanceRefresh: BankConnectionsResourceBalanceRefreshSchema,
+    BankConnectionsResourceLinkAccountSessionFilters:
+      BankConnectionsResourceLinkAccountSessionFiltersSchema,
+    BankConnectionsResourceLinkAccountSessionLimits:
+      BankConnectionsResourceLinkAccountSessionLimitsSchema,
+    BankConnectionsResourceLinkAccountSessionManualEntry:
+      BankConnectionsResourceLinkAccountSessionManualEntrySchema,
+    BankConnectionsResourceOwnershipRefresh: BankConnectionsResourceOwnershipRefreshSchema,
+    BankConnectionsResourceTransactionRefresh: BankConnectionsResourceTransactionRefreshSchema,
+    BankConnectionsResourceTransactionResourceStatusTransitions:
+      BankConnectionsResourceTransactionResourceStatusTransitionsSchema,
+    BillingAlert: BillingAlertSchema,
+    BillingCreditBalanceSummary: BillingCreditBalanceSummarySchema,
+    BillingCreditBalanceTransaction: BillingCreditBalanceTransactionSchema,
+    BillingCreditGrant: BillingCreditGrantSchema,
+    BillingFeedbackOption: BillingFeedbackOptionSchema,
+    BillingMeter: BillingMeterSchema,
+    BillingMeterEvent: BillingMeterEventSchema,
+    BillingMeterEventAdjustment: BillingMeterEventAdjustmentSchema,
+    BillingMeterEventSummary: BillingMeterEventSummarySchema,
+    BillingBillResourceInvoiceItemParentsInvoiceItemParent:
+      BillingBillResourceInvoiceItemParentsInvoiceItemParentSchema,
+    BillingBillResourceInvoiceItemParentsInvoiceItemSubscriptionParent:
+      BillingBillResourceInvoiceItemParentsInvoiceItemSubscriptionParentSchema,
+    BillingBillResourceInvoicingLinesCommonCreditedItems:
+      BillingBillResourceInvoicingLinesCommonCreditedItemsSchema,
+    BillingBillResourceInvoicingLinesCommonProrationDetails:
+      BillingBillResourceInvoicingLinesCommonProrationDetailsSchema,
+    BillingBillResourceInvoicingLinesParentsInvoiceLineItemInvoiceItemParent:
+      BillingBillResourceInvoicingLinesParentsInvoiceLineItemInvoiceItemParentSchema,
+    BillingBillResourceInvoicingLinesParentsInvoiceLineItemParent:
+      BillingBillResourceInvoicingLinesParentsInvoiceLineItemParentSchema,
+    BillingBillResourceInvoicingLinesParentsInvoiceLineItemSubscriptionItemParent:
+      BillingBillResourceInvoicingLinesParentsInvoiceLineItemSubscriptionItemParentSchema,
+    BillingBillResourceInvoicingParentsInvoiceParent:
+      BillingBillResourceInvoicingParentsInvoiceParentSchema,
+    BillingBillResourceInvoicingParentsInvoiceQuoteParent:
+      BillingBillResourceInvoicingParentsInvoiceQuoteParentSchema,
+    BillingBillResourceInvoicingParentsInvoiceSubscriptionParent:
+      BillingBillResourceInvoicingParentsInvoiceSubscriptionParentSchema,
+    BillingBillResourceInvoicingPricingPricing: BillingBillResourceInvoicingPricingPricingSchema,
+    BillingBillResourceInvoicingPricingPricingPriceDetails:
+      BillingBillResourceInvoicingPricingPricingPriceDetailsSchema,
+    BillingBillResourceInvoicingTaxesTax: BillingBillResourceInvoicingTaxesTaxSchema,
+    BillingBillResourceInvoicingTaxesTaxRateDetails:
+      BillingBillResourceInvoicingTaxesTaxRateDetailsSchema,
+    BillingClocksResourceStatusDetailsAdvancingStatusDetails:
+      BillingClocksResourceStatusDetailsAdvancingStatusDetailsSchema,
+    BillingClocksResourceStatusDetailsStatusDetails:
+      BillingClocksResourceStatusDetailsStatusDetailsSchema,
+    BillingCreditGrantsResourceAmount: BillingCreditGrantsResourceAmountSchema,
+    BillingCreditGrantsResourceApplicabilityConfig:
+      BillingCreditGrantsResourceApplicabilityConfigSchema,
+    BillingCreditGrantsResourceApplicablePrice: BillingCreditGrantsResourceApplicablePriceSchema,
+    BillingCreditGrantsResourceBalanceCredit: BillingCreditGrantsResourceBalanceCreditSchema,
+    BillingCreditGrantsResourceBalanceCreditsApplicationInvoiceVoided:
+      BillingCreditGrantsResourceBalanceCreditsApplicationInvoiceVoidedSchema,
+    BillingCreditGrantsResourceBalanceCreditsApplied:
+      BillingCreditGrantsResourceBalanceCreditsAppliedSchema,
+    BillingCreditGrantsResourceBalanceDebit: BillingCreditGrantsResourceBalanceDebitSchema,
+    BillingCreditGrantsResourceMonetaryAmount: BillingCreditGrantsResourceMonetaryAmountSchema,
+    BillingCreditGrantsResourceScope: BillingCreditGrantsResourceScopeSchema,
+    BillingDetails: BillingDetailsSchema,
+    BillingMeterResourceAggregationSettings: BillingMeterResourceAggregationSettingsSchema,
+    BillingMeterResourceBillingMeterEventAdjustmentCancel:
+      BillingMeterResourceBillingMeterEventAdjustmentCancelSchema,
+    BillingMeterResourceBillingMeterStatusTransitions:
+      BillingMeterResourceBillingMeterStatusTransitionsSchema,
+    BillingMeterResourceBillingMeterValue: BillingMeterResourceBillingMeterValueSchema,
+    BillingMeterResourceCustomerMappingSettings: BillingMeterResourceCustomerMappingSettingsSchema,
+    BillingPortalConfiguration: BillingPortalConfigurationSchema,
+    BillingPortalSession: BillingPortalSessionSchema,
+    CancellationDetails: CancellationDetailsSchema,
+    Capability: CapabilitySchema,
+    Card: CardSchema,
+    CardGeneratedFromPaymentMethodDetails: CardGeneratedFromPaymentMethodDetailsSchema,
+    CardIssuingAccountTermsOfService: CardIssuingAccountTermsOfServiceSchema,
+    CardMandatePaymentMethodDetails: CardMandatePaymentMethodDetailsSchema,
+    CardMandatePaymentMethodDetailsIndia: CardMandatePaymentMethodDetailsIndiaSchema,
+    CashBalance: CashBalanceSchema,
+    Charge: ChargeSchema,
+    ChargeFraudDetails: ChargeFraudDetailsSchema,
+    ChargeOutcome: ChargeOutcomeSchema,
+    ChargeTransferData: ChargeTransferDataSchema,
+    CheckoutSession: CheckoutSessionSchema,
+    CheckoutAcssDebitMandateOptions: CheckoutAcssDebitMandateOptionsSchema,
+    CheckoutAcssDebitPaymentMethodOptions: CheckoutAcssDebitPaymentMethodOptionsSchema,
+    CheckoutAffirmPaymentMethodOptions: CheckoutAffirmPaymentMethodOptionsSchema,
+    CheckoutAfterpayClearpayPaymentMethodOptions:
+      CheckoutAfterpayClearpayPaymentMethodOptionsSchema,
+    CheckoutAlipayPaymentMethodOptions: CheckoutAlipayPaymentMethodOptionsSchema,
+    CheckoutAlmaPaymentMethodOptions: CheckoutAlmaPaymentMethodOptionsSchema,
+    CheckoutAmazonPayPaymentMethodOptions: CheckoutAmazonPayPaymentMethodOptionsSchema,
+    CheckoutAuBecsDebitPaymentMethodOptions: CheckoutAuBecsDebitPaymentMethodOptionsSchema,
+    CheckoutBacsDebitPaymentMethodOptions: CheckoutBacsDebitPaymentMethodOptionsSchema,
+    CheckoutBancontactPaymentMethodOptions: CheckoutBancontactPaymentMethodOptionsSchema,
+    CheckoutBilliePaymentMethodOptions: CheckoutBilliePaymentMethodOptionsSchema,
+    CheckoutBoletoPaymentMethodOptions: CheckoutBoletoPaymentMethodOptionsSchema,
+    CheckoutCardInstallmentsOptions: CheckoutCardInstallmentsOptionsSchema,
+    CheckoutCardPaymentMethodOptions: CheckoutCardPaymentMethodOptionsSchema,
+    CheckoutCashappPaymentMethodOptions: CheckoutCashappPaymentMethodOptionsSchema,
+    CheckoutCustomerBalanceBankTransferPaymentMethodOptions:
+      CheckoutCustomerBalanceBankTransferPaymentMethodOptionsSchema,
+    CheckoutCustomerBalancePaymentMethodOptions: CheckoutCustomerBalancePaymentMethodOptionsSchema,
+    CheckoutEpsPaymentMethodOptions: CheckoutEpsPaymentMethodOptionsSchema,
+    CheckoutFinancialConnectionsPaymentMethodOptions:
+      CheckoutFinancialConnectionsPaymentMethodOptionsSchema,
+    CheckoutFinancialConnectionsPaymentMethodOptionsFilters:
+      CheckoutFinancialConnectionsPaymentMethodOptionsFiltersSchema,
+    CheckoutFpxPaymentMethodOptions: CheckoutFpxPaymentMethodOptionsSchema,
+    CheckoutGiropayPaymentMethodOptions: CheckoutGiropayPaymentMethodOptionsSchema,
+    CheckoutGrabPayPaymentMethodOptions: CheckoutGrabPayPaymentMethodOptionsSchema,
+    CheckoutIdealPaymentMethodOptions: CheckoutIdealPaymentMethodOptionsSchema,
+    CheckoutKakaoPayPaymentMethodOptions: CheckoutKakaoPayPaymentMethodOptionsSchema,
+    CheckoutKlarnaPaymentMethodOptions: CheckoutKlarnaPaymentMethodOptionsSchema,
+    CheckoutKonbiniPaymentMethodOptions: CheckoutKonbiniPaymentMethodOptionsSchema,
+    CheckoutKrCardPaymentMethodOptions: CheckoutKrCardPaymentMethodOptionsSchema,
+    CheckoutLinkPaymentMethodOptions: CheckoutLinkPaymentMethodOptionsSchema,
+    CheckoutLinkWalletOptions: CheckoutLinkWalletOptionsSchema,
+    CheckoutMobilepayPaymentMethodOptions: CheckoutMobilepayPaymentMethodOptionsSchema,
+    CheckoutMultibancoPaymentMethodOptions: CheckoutMultibancoPaymentMethodOptionsSchema,
+    CheckoutNaverPayPaymentMethodOptions: CheckoutNaverPayPaymentMethodOptionsSchema,
+    CheckoutOxxoPaymentMethodOptions: CheckoutOxxoPaymentMethodOptionsSchema,
+    CheckoutP24PaymentMethodOptions: CheckoutP24PaymentMethodOptionsSchema,
+    CheckoutPaycoPaymentMethodOptions: CheckoutPaycoPaymentMethodOptionsSchema,
+    CheckoutPaymentMethodOptionsMandateOptionsBacsDebit:
+      CheckoutPaymentMethodOptionsMandateOptionsBacsDebitSchema,
+    CheckoutPaymentMethodOptionsMandateOptionsSepaDebit:
+      CheckoutPaymentMethodOptionsMandateOptionsSepaDebitSchema,
+    CheckoutPaynowPaymentMethodOptions: CheckoutPaynowPaymentMethodOptionsSchema,
+    CheckoutPaypalPaymentMethodOptions: CheckoutPaypalPaymentMethodOptionsSchema,
+    CheckoutPaytoPaymentMethodOptions: CheckoutPaytoPaymentMethodOptionsSchema,
+    CheckoutPixPaymentMethodOptions: CheckoutPixPaymentMethodOptionsSchema,
+    CheckoutRevolutPayPaymentMethodOptions: CheckoutRevolutPayPaymentMethodOptionsSchema,
+    CheckoutSamsungPayPaymentMethodOptions: CheckoutSamsungPayPaymentMethodOptionsSchema,
+    CheckoutSatispayPaymentMethodOptions: CheckoutSatispayPaymentMethodOptionsSchema,
+    CheckoutScalapayPaymentMethodOptions: CheckoutScalapayPaymentMethodOptionsSchema,
+    CheckoutSepaDebitPaymentMethodOptions: CheckoutSepaDebitPaymentMethodOptionsSchema,
+    CheckoutSequraPaymentMethodOptions: CheckoutSequraPaymentMethodOptionsSchema,
+    CheckoutSessionPaymentMethodOptions: CheckoutSessionPaymentMethodOptionsSchema,
+    CheckoutSessionWalletOptions: CheckoutSessionWalletOptionsSchema,
+    CheckoutSofortPaymentMethodOptions: CheckoutSofortPaymentMethodOptionsSchema,
+    CheckoutSunbitPaymentMethodOptions: CheckoutSunbitPaymentMethodOptionsSchema,
+    CheckoutSwishPaymentMethodOptions: CheckoutSwishPaymentMethodOptionsSchema,
+    CheckoutTwintPaymentMethodOptions: CheckoutTwintPaymentMethodOptionsSchema,
+    CheckoutUpiPaymentMethodOptions: CheckoutUpiPaymentMethodOptionsSchema,
+    CheckoutUsBankAccountPaymentMethodOptions: CheckoutUsBankAccountPaymentMethodOptionsSchema,
+    CheckoutWechatPayPaymentMethodOptions: CheckoutWechatPayPaymentMethodOptionsSchema,
+    ClimateOrder: ClimateOrderSchema,
+    ClimateProduct: ClimateProductSchema,
+    ClimateSupplier: ClimateSupplierSchema,
+    ClimateRemovalsBeneficiary: ClimateRemovalsBeneficiarySchema,
+    ClimateRemovalsLocation: ClimateRemovalsLocationSchema,
+    ClimateRemovalsOrderDeliveries: ClimateRemovalsOrderDeliveriesSchema,
+    ClimateRemovalsProductsPrice: ClimateRemovalsProductsPriceSchema,
+    ConfirmationToken: ConfirmationTokenSchema,
+    ConfirmationTokensResourceMandateData: ConfirmationTokensResourceMandateDataSchema,
+    ConfirmationTokensResourceMandateDataResourceCustomerAcceptance:
+      ConfirmationTokensResourceMandateDataResourceCustomerAcceptanceSchema,
+    ConfirmationTokensResourceMandateDataResourceCustomerAcceptanceResourceOnline:
+      ConfirmationTokensResourceMandateDataResourceCustomerAcceptanceResourceOnlineSchema,
+    ConfirmationTokensResourcePaymentMethodOptions:
+      ConfirmationTokensResourcePaymentMethodOptionsSchema,
+    ConfirmationTokensResourcePaymentMethodOptionsResourceCard:
+      ConfirmationTokensResourcePaymentMethodOptionsResourceCardSchema,
+    ConfirmationTokensResourcePaymentMethodOptionsResourceCardResourceInstallment:
+      ConfirmationTokensResourcePaymentMethodOptionsResourceCardResourceInstallmentSchema,
+    ConfirmationTokensResourcePaymentMethodPreview:
+      ConfirmationTokensResourcePaymentMethodPreviewSchema,
+    ConfirmationTokensResourceShipping: ConfirmationTokensResourceShippingSchema,
+    ConnectAccountReference: ConnectAccountReferenceSchema,
+    ConnectCollectionTransfer: ConnectCollectionTransferSchema,
+    ConnectEmbeddedAccountConfigClaim: ConnectEmbeddedAccountConfigClaimSchema,
+    ConnectEmbeddedAccountFeaturesClaim: ConnectEmbeddedAccountFeaturesClaimSchema,
+    ConnectEmbeddedAccountSessionCreateComponents:
+      ConnectEmbeddedAccountSessionCreateComponentsSchema,
+    ConnectEmbeddedBaseConfigClaim: ConnectEmbeddedBaseConfigClaimSchema,
+    ConnectEmbeddedBaseFeatures: ConnectEmbeddedBaseFeaturesSchema,
+    ConnectEmbeddedDisputesListConfig: ConnectEmbeddedDisputesListConfigSchema,
+    ConnectEmbeddedDisputesListFeatures: ConnectEmbeddedDisputesListFeaturesSchema,
+    ConnectEmbeddedFinancialAccountConfigClaim: ConnectEmbeddedFinancialAccountConfigClaimSchema,
+    ConnectEmbeddedFinancialAccountFeatures: ConnectEmbeddedFinancialAccountFeaturesSchema,
+    ConnectEmbeddedFinancialAccountTransactionsConfigClaim:
+      ConnectEmbeddedFinancialAccountTransactionsConfigClaimSchema,
+    ConnectEmbeddedFinancialAccountTransactionsFeatures:
+      ConnectEmbeddedFinancialAccountTransactionsFeaturesSchema,
+    ConnectEmbeddedInstantPayoutsPromotionConfig:
+      ConnectEmbeddedInstantPayoutsPromotionConfigSchema,
+    ConnectEmbeddedInstantPayoutsPromotionFeatures:
+      ConnectEmbeddedInstantPayoutsPromotionFeaturesSchema,
+    ConnectEmbeddedIssuingCardConfigClaim: ConnectEmbeddedIssuingCardConfigClaimSchema,
+    ConnectEmbeddedIssuingCardFeatures: ConnectEmbeddedIssuingCardFeaturesSchema,
+    ConnectEmbeddedIssuingCardsListConfigClaim: ConnectEmbeddedIssuingCardsListConfigClaimSchema,
+    ConnectEmbeddedIssuingCardsListFeatures: ConnectEmbeddedIssuingCardsListFeaturesSchema,
+    ConnectEmbeddedPaymentDisputesConfig: ConnectEmbeddedPaymentDisputesConfigSchema,
+    ConnectEmbeddedPaymentDisputesFeatures: ConnectEmbeddedPaymentDisputesFeaturesSchema,
+    ConnectEmbeddedPaymentMethodSettingsConfigClaim:
+      ConnectEmbeddedPaymentMethodSettingsConfigClaimSchema,
+    ConnectEmbeddedPaymentMethodSettingsFeatures:
+      ConnectEmbeddedPaymentMethodSettingsFeaturesSchema,
+    ConnectEmbeddedPaymentsConfigClaim: ConnectEmbeddedPaymentsConfigClaimSchema,
+    ConnectEmbeddedPaymentsFeatures: ConnectEmbeddedPaymentsFeaturesSchema,
+    ConnectEmbeddedPayoutsConfig: ConnectEmbeddedPayoutsConfigSchema,
+    ConnectEmbeddedPayoutsFeatures: ConnectEmbeddedPayoutsFeaturesSchema,
+    CountrySpec: CountrySpecSchema,
+    CountrySpecVerificationFieldDetails: CountrySpecVerificationFieldDetailsSchema,
+    CountrySpecVerificationFields: CountrySpecVerificationFieldsSchema,
+    Coupon: CouponSchema,
+    CouponAppliesTo: CouponAppliesToSchema,
+    CouponCurrencyOption: CouponCurrencyOptionSchema,
+    CreditBalance: CreditBalanceSchema,
+    CreditNote: CreditNoteSchema,
+    CreditNoteLineItem: CreditNoteLineItemSchema,
+    CreditNoteRefund: CreditNoteRefundSchema,
+    CreditNotesPaymentRecordRefund: CreditNotesPaymentRecordRefundSchema,
+    CreditNotesPretaxCreditAmount: CreditNotesPretaxCreditAmountSchema,
+    CreditedItemsInvoiceLineItems: CreditedItemsInvoiceLineItemsSchema,
+    CurrencyOption: CurrencyOptionSchema,
+    CustomLogo: CustomLogoSchema,
+    CustomUnitAmount: CustomUnitAmountSchema,
+    Customer: CustomerSchema,
+    CustomerAcceptance: CustomerAcceptanceSchema,
+    CustomerBalanceCustomerBalanceSettings: CustomerBalanceCustomerBalanceSettingsSchema,
+    CustomerBalanceResourceCashBalanceTransactionResourceAdjustedForOverdraft:
+      CustomerBalanceResourceCashBalanceTransactionResourceAdjustedForOverdraftSchema,
+    CustomerBalanceResourceCashBalanceTransactionResourceAppliedToPaymentTransaction:
+      CustomerBalanceResourceCashBalanceTransactionResourceAppliedToPaymentTransactionSchema,
+    CustomerBalanceResourceCashBalanceTransactionResourceFundedTransaction:
+      CustomerBalanceResourceCashBalanceTransactionResourceFundedTransactionSchema,
+    CustomerBalanceResourceCashBalanceTransactionResourceFundedTransactionResourceBankTransfer:
+      CustomerBalanceResourceCashBalanceTransactionResourceFundedTransactionResourceBankTransferSchema,
+    CustomerBalanceResourceCashBalanceTransactionResourceFundedTransactionResourceBankTransferResourceEuBankTransfer:
+      CustomerBalanceResourceCashBalanceTransactionResourceFundedTransactionResourceBankTransferResourceEuBankTransferSchema,
+    CustomerBalanceResourceCashBalanceTransactionResourceFundedTransactionResourceBankTransferResourceGbBankTransfer:
+      CustomerBalanceResourceCashBalanceTransactionResourceFundedTransactionResourceBankTransferResourceGbBankTransferSchema,
+    CustomerBalanceResourceCashBalanceTransactionResourceFundedTransactionResourceBankTransferResourceJpBankTransfer:
+      CustomerBalanceResourceCashBalanceTransactionResourceFundedTransactionResourceBankTransferResourceJpBankTransferSchema,
+    CustomerBalanceResourceCashBalanceTransactionResourceFundedTransactionResourceBankTransferResourceUsBankTransfer:
+      CustomerBalanceResourceCashBalanceTransactionResourceFundedTransactionResourceBankTransferResourceUsBankTransferSchema,
+    CustomerBalanceResourceCashBalanceTransactionResourceRefundedFromPaymentTransaction:
+      CustomerBalanceResourceCashBalanceTransactionResourceRefundedFromPaymentTransactionSchema,
+    CustomerBalanceResourceCashBalanceTransactionResourceTransferredToBalance:
+      CustomerBalanceResourceCashBalanceTransactionResourceTransferredToBalanceSchema,
+    CustomerBalanceResourceCashBalanceTransactionResourceUnappliedFromPaymentTransaction:
+      CustomerBalanceResourceCashBalanceTransactionResourceUnappliedFromPaymentTransactionSchema,
+    CustomerBalanceTransaction: CustomerBalanceTransactionSchema,
+    CustomerCashBalanceTransaction: CustomerCashBalanceTransactionSchema,
+    CustomerSession: CustomerSessionSchema,
+    CustomerSessionResourceComponents: CustomerSessionResourceComponentsSchema,
+    CustomerSessionResourceComponentsResourceActiveEntitlements:
+      CustomerSessionResourceComponentsResourceActiveEntitlementsSchema,
+    CustomerSessionResourceComponentsResourceBuyButton:
+      CustomerSessionResourceComponentsResourceBuyButtonSchema,
+    CustomerSessionResourceComponentsResourceCustomerPortal:
+      CustomerSessionResourceComponentsResourceCustomerPortalSchema,
+    CustomerSessionResourceComponentsResourceCustomerSheet:
+      CustomerSessionResourceComponentsResourceCustomerSheetSchema,
+    CustomerSessionResourceComponentsResourceCustomerSheetResourceFeatures:
+      CustomerSessionResourceComponentsResourceCustomerSheetResourceFeaturesSchema,
+    CustomerSessionResourceComponentsResourceMobilePaymentElement:
+      CustomerSessionResourceComponentsResourceMobilePaymentElementSchema,
+    CustomerSessionResourceComponentsResourceMobilePaymentElementResourceFeatures:
+      CustomerSessionResourceComponentsResourceMobilePaymentElementResourceFeaturesSchema,
+    CustomerSessionResourceComponentsResourcePaymentElement:
+      CustomerSessionResourceComponentsResourcePaymentElementSchema,
+    CustomerSessionResourceComponentsResourcePaymentElementResourceFeatures:
+      CustomerSessionResourceComponentsResourcePaymentElementResourceFeaturesSchema,
+    CustomerSessionResourceComponentsResourcePricingTable:
+      CustomerSessionResourceComponentsResourcePricingTableSchema,
+    CustomerTax: CustomerTaxSchema,
+    CustomerTaxLocation: CustomerTaxLocationSchema,
+    DeletedAccount: DeletedAccountSchema,
+    DeletedApplePayDomain: DeletedApplePayDomainSchema,
+    DeletedApplication: DeletedApplicationSchema,
+    DeletedBankAccount: DeletedBankAccountSchema,
+    DeletedCard: DeletedCardSchema,
+    DeletedCoupon: DeletedCouponSchema,
+    DeletedCustomer: DeletedCustomerSchema,
+    DeletedDiscount: DeletedDiscountSchema,
+    DeletedExternalAccount: DeletedExternalAccountSchema,
+    DeletedInvoice: DeletedInvoiceSchema,
+    DeletedInvoiceitem: DeletedInvoiceitemSchema,
+    DeletedPaymentSource: DeletedPaymentSourceSchema,
+    DeletedPerson: DeletedPersonSchema,
+    DeletedPlan: DeletedPlanSchema,
+    DeletedPrice: DeletedPriceSchema,
+    DeletedProduct: DeletedProductSchema,
+    DeletedProductFeature: DeletedProductFeatureSchema,
+    DeletedRadarValueList: DeletedRadarValueListSchema,
+    DeletedRadarValueListItem: DeletedRadarValueListItemSchema,
+    DeletedSubscriptionItem: DeletedSubscriptionItemSchema,
+    DeletedTaxId: DeletedTaxIdSchema,
+    DeletedTerminalConfiguration: DeletedTerminalConfigurationSchema,
+    DeletedTerminalLocation: DeletedTerminalLocationSchema,
+    DeletedTerminalReader: DeletedTerminalReaderSchema,
+    DeletedTestHelpersTestClock: DeletedTestHelpersTestClockSchema,
+    DeletedWebhookEndpoint: DeletedWebhookEndpointSchema,
+    DestinationDetailsUnimplemented: DestinationDetailsUnimplementedSchema,
+    Discount: DiscountSchema,
+    DiscountSource: DiscountSourceSchema,
+    DiscountsResourceDiscountAmount: DiscountsResourceDiscountAmountSchema,
+    DiscountsResourceStackableDiscountWithDiscountEnd:
+      DiscountsResourceStackableDiscountWithDiscountEndSchema,
+    Dispute: DisputeSchema,
+    DisputeEnhancedEligibility: DisputeEnhancedEligibilitySchema,
+    DisputeEnhancedEligibilityMastercardCompliance:
+      DisputeEnhancedEligibilityMastercardComplianceSchema,
+    DisputeEnhancedEligibilityVisaCompellingEvidence3:
+      DisputeEnhancedEligibilityVisaCompellingEvidence3Schema,
+    DisputeEnhancedEligibilityVisaCompliance: DisputeEnhancedEligibilityVisaComplianceSchema,
+    DisputeEnhancedEvidence: DisputeEnhancedEvidenceSchema,
+    DisputeEnhancedEvidenceMastercardCompliance: DisputeEnhancedEvidenceMastercardComplianceSchema,
+    DisputeEnhancedEvidenceVisaCompellingEvidence3:
+      DisputeEnhancedEvidenceVisaCompellingEvidence3Schema,
+    DisputeEnhancedEvidenceVisaCompliance: DisputeEnhancedEvidenceVisaComplianceSchema,
+    DisputeEvidence: DisputeEvidenceSchema,
+    DisputeEvidenceDetails: DisputeEvidenceDetailsSchema,
+    DisputePaymentMethodDetails: DisputePaymentMethodDetailsSchema,
+    DisputePaymentMethodDetailsAmazonPay: DisputePaymentMethodDetailsAmazonPaySchema,
+    DisputePaymentMethodDetailsCard: DisputePaymentMethodDetailsCardSchema,
+    DisputePaymentMethodDetailsKlarna: DisputePaymentMethodDetailsKlarnaSchema,
+    DisputePaymentMethodDetailsPaypal: DisputePaymentMethodDetailsPaypalSchema,
+    DisputeTransactionShippingAddress: DisputeTransactionShippingAddressSchema,
+    DisputeVisaCompellingEvidence3DisputedTransaction:
+      DisputeVisaCompellingEvidence3DisputedTransactionSchema,
+    DisputeVisaCompellingEvidence3PriorUndisputedTransaction:
+      DisputeVisaCompellingEvidence3PriorUndisputedTransactionSchema,
+    EmailSent: EmailSentSchema,
+    EntitlementsActiveEntitlement: EntitlementsActiveEntitlementSchema,
+    EntitlementsFeature: EntitlementsFeatureSchema,
+    EphemeralKey: EphemeralKeySchema,
+    Error: ErrorSchema,
+    Event: EventSchema,
+    ExchangeRate: ExchangeRateSchema,
+    ExternalAccount: ExternalAccountSchema,
+    ExternalAccountRequirements: ExternalAccountRequirementsSchema,
+    Fee: FeeSchema,
+    FeeRefund: FeeRefundSchema,
+    FeedbackOptionsStatusTransitions: FeedbackOptionsStatusTransitionsSchema,
+    File: FileSchema,
+    FileLink: FileLinkSchema,
+    FinancialConnectionsAccount: FinancialConnectionsAccountSchema,
+    FinancialConnectionsAccountOwner: FinancialConnectionsAccountOwnerSchema,
+    FinancialConnectionsAccountOwnership: FinancialConnectionsAccountOwnershipSchema,
+    FinancialConnectionsSession: FinancialConnectionsSessionSchema,
+    FinancialConnectionsTransaction: FinancialConnectionsTransactionSchema,
+    FinancialReportingFinanceReportRunRunParameters:
+      FinancialReportingFinanceReportRunRunParametersSchema,
+    ForwardedRequestContext: ForwardedRequestContextSchema,
+    ForwardedRequestDetails: ForwardedRequestDetailsSchema,
+    ForwardedRequestHeader: ForwardedRequestHeaderSchema,
+    ForwardedResponseDetails: ForwardedResponseDetailsSchema,
+    ForwardingRequest: ForwardingRequestSchema,
+    FundingInstructions: FundingInstructionsSchema,
+    FundingInstructionsBankTransfer: FundingInstructionsBankTransferSchema,
+    FundingInstructionsBankTransferAbaRecord: FundingInstructionsBankTransferAbaRecordSchema,
+    FundingInstructionsBankTransferFinancialAddress:
+      FundingInstructionsBankTransferFinancialAddressSchema,
+    FundingInstructionsBankTransferIbanRecord: FundingInstructionsBankTransferIbanRecordSchema,
+    FundingInstructionsBankTransferSortCodeRecord:
+      FundingInstructionsBankTransferSortCodeRecordSchema,
+    FundingInstructionsBankTransferSpeiRecord: FundingInstructionsBankTransferSpeiRecordSchema,
+    FundingInstructionsBankTransferSwiftRecord: FundingInstructionsBankTransferSwiftRecordSchema,
+    FundingInstructionsBankTransferZenginRecord: FundingInstructionsBankTransferZenginRecordSchema,
+    GelatoDataDocumentReportDateOfBirth: GelatoDataDocumentReportDateOfBirthSchema,
+    GelatoDataDocumentReportExpirationDate: GelatoDataDocumentReportExpirationDateSchema,
+    GelatoDataDocumentReportIssuedDate: GelatoDataDocumentReportIssuedDateSchema,
+    GelatoDataIdNumberReportDate: GelatoDataIdNumberReportDateSchema,
+    GelatoDataVerifiedOutputsDate: GelatoDataVerifiedOutputsDateSchema,
+    GelatoDocumentReport: GelatoDocumentReportSchema,
+    GelatoDocumentReportError: GelatoDocumentReportErrorSchema,
+    GelatoEmailReport: GelatoEmailReportSchema,
+    GelatoEmailReportError: GelatoEmailReportErrorSchema,
+    GelatoIdNumberReport: GelatoIdNumberReportSchema,
+    GelatoIdNumberReportError: GelatoIdNumberReportErrorSchema,
+    GelatoPhoneReport: GelatoPhoneReportSchema,
+    GelatoPhoneReportError: GelatoPhoneReportErrorSchema,
+    GelatoProvidedDetails: GelatoProvidedDetailsSchema,
+    GelatoRelatedPerson: GelatoRelatedPersonSchema,
+    GelatoReportDocumentOptions: GelatoReportDocumentOptionsSchema,
+    GelatoReportIdNumberOptions: GelatoReportIdNumberOptionsSchema,
+    GelatoSelfieReport: GelatoSelfieReportSchema,
+    GelatoSelfieReportError: GelatoSelfieReportErrorSchema,
+    GelatoSessionDocumentOptions: GelatoSessionDocumentOptionsSchema,
+    GelatoSessionEmailOptions: GelatoSessionEmailOptionsSchema,
+    GelatoSessionIdNumberOptions: GelatoSessionIdNumberOptionsSchema,
+    GelatoSessionLastError: GelatoSessionLastErrorSchema,
+    GelatoSessionMatchingOptions: GelatoSessionMatchingOptionsSchema,
+    GelatoSessionPhoneOptions: GelatoSessionPhoneOptionsSchema,
+    GelatoVerificationReportOptions: GelatoVerificationReportOptionsSchema,
+    GelatoVerificationSessionOptions: GelatoVerificationSessionOptionsSchema,
+    GelatoVerifiedOutputs: GelatoVerifiedOutputsSchema,
+    IdentityVerificationReport: IdentityVerificationReportSchema,
+    IdentityVerificationSession: IdentityVerificationSessionSchema,
+    InboundTransfers: InboundTransfersSchema,
+    InboundTransfersPaymentMethodDetailsUsBankAccount:
+      InboundTransfersPaymentMethodDetailsUsBankAccountSchema,
+    InsightsResourcesPaymentEvaluationAddress: InsightsResourcesPaymentEvaluationAddressSchema,
+    InsightsResourcesPaymentEvaluationBillingDetails:
+      InsightsResourcesPaymentEvaluationBillingDetailsSchema,
+    InsightsResourcesPaymentEvaluationClientDeviceMetadata:
+      InsightsResourcesPaymentEvaluationClientDeviceMetadataSchema,
+    InsightsResourcesPaymentEvaluationCustomerDetails:
+      InsightsResourcesPaymentEvaluationCustomerDetailsSchema,
+    InsightsResourcesPaymentEvaluationDisputeOpened:
+      InsightsResourcesPaymentEvaluationDisputeOpenedSchema,
+    InsightsResourcesPaymentEvaluationEarlyFraudWarningReceived:
+      InsightsResourcesPaymentEvaluationEarlyFraudWarningReceivedSchema,
+    InsightsResourcesPaymentEvaluationEvent: InsightsResourcesPaymentEvaluationEventSchema,
+    InsightsResourcesPaymentEvaluationMerchantBlocked:
+      InsightsResourcesPaymentEvaluationMerchantBlockedSchema,
+    InsightsResourcesPaymentEvaluationMoneyMovementCard:
+      InsightsResourcesPaymentEvaluationMoneyMovementCardSchema,
+    InsightsResourcesPaymentEvaluationMoneyMovementDetails:
+      InsightsResourcesPaymentEvaluationMoneyMovementDetailsSchema,
+    InsightsResourcesPaymentEvaluationOutcome: InsightsResourcesPaymentEvaluationOutcomeSchema,
+    InsightsResourcesPaymentEvaluationPaymentDetails:
+      InsightsResourcesPaymentEvaluationPaymentDetailsSchema,
+    InsightsResourcesPaymentEvaluationPaymentMethodDetails:
+      InsightsResourcesPaymentEvaluationPaymentMethodDetailsSchema,
+    InsightsResourcesPaymentEvaluationRefunded: InsightsResourcesPaymentEvaluationRefundedSchema,
+    InsightsResourcesPaymentEvaluationRejected: InsightsResourcesPaymentEvaluationRejectedSchema,
+    InsightsResourcesPaymentEvaluationRejectedCard:
+      InsightsResourcesPaymentEvaluationRejectedCardSchema,
+    InsightsResourcesPaymentEvaluationShipping: InsightsResourcesPaymentEvaluationShippingSchema,
+    InsightsResourcesPaymentEvaluationSignalV2: InsightsResourcesPaymentEvaluationSignalV2Schema,
+    InsightsResourcesPaymentEvaluationSignals: InsightsResourcesPaymentEvaluationSignalsSchema,
+    InsightsResourcesPaymentEvaluationSucceeded: InsightsResourcesPaymentEvaluationSucceededSchema,
+    InsightsResourcesPaymentEvaluationSucceededCard:
+      InsightsResourcesPaymentEvaluationSucceededCardSchema,
+    InsightsResourcesPaymentEvaluationUserInterventionRaised:
+      InsightsResourcesPaymentEvaluationUserInterventionRaisedSchema,
+    InsightsResourcesPaymentEvaluationUserInterventionRaisedCustom:
+      InsightsResourcesPaymentEvaluationUserInterventionRaisedCustomSchema,
+    InsightsResourcesPaymentEvaluationUserInterventionResolved:
+      InsightsResourcesPaymentEvaluationUserInterventionResolvedSchema,
+    InternalCard: InternalCardSchema,
+    Invoice: InvoiceSchema,
+    InvoiceInstallmentsCard: InvoiceInstallmentsCardSchema,
+    InvoiceItemProrationCreditedItems: InvoiceItemProrationCreditedItemsSchema,
+    InvoiceItemThresholdReason: InvoiceItemThresholdReasonSchema,
+    InvoiceLineItemPeriod: InvoiceLineItemPeriodSchema,
+    InvoiceMandateOptionsCard: InvoiceMandateOptionsCardSchema,
+    InvoiceMandateOptionsPayto: InvoiceMandateOptionsPaytoSchema,
+    InvoicePayment: InvoicePaymentSchema,
+    InvoicePaymentMethodOptionsAcssDebit: InvoicePaymentMethodOptionsAcssDebitSchema,
+    InvoicePaymentMethodOptionsAcssDebitMandateOptions:
+      InvoicePaymentMethodOptionsAcssDebitMandateOptionsSchema,
+    InvoicePaymentMethodOptionsBancontact: InvoicePaymentMethodOptionsBancontactSchema,
+    InvoicePaymentMethodOptionsBillie: InvoicePaymentMethodOptionsBillieSchema,
+    InvoicePaymentMethodOptionsBillieCompanyDetails:
+      InvoicePaymentMethodOptionsBillieCompanyDetailsSchema,
+    InvoicePaymentMethodOptionsBillieCompanyDetailsRegisteredAddress:
+      InvoicePaymentMethodOptionsBillieCompanyDetailsRegisteredAddressSchema,
+    InvoicePaymentMethodOptionsBlik: InvoicePaymentMethodOptionsBlikSchema,
+    InvoicePaymentMethodOptionsCard: InvoicePaymentMethodOptionsCardSchema,
+    InvoicePaymentMethodOptionsCustomerBalance: InvoicePaymentMethodOptionsCustomerBalanceSchema,
+    InvoicePaymentMethodOptionsCustomerBalanceBankTransfer:
+      InvoicePaymentMethodOptionsCustomerBalanceBankTransferSchema,
+    InvoicePaymentMethodOptionsCustomerBalanceBankTransferEuBankTransfer:
+      InvoicePaymentMethodOptionsCustomerBalanceBankTransferEuBankTransferSchema,
+    InvoicePaymentMethodOptionsKonbini: InvoicePaymentMethodOptionsKonbiniSchema,
+    InvoicePaymentMethodOptionsMandateOptionsUpi:
+      InvoicePaymentMethodOptionsMandateOptionsUpiSchema,
+    InvoicePaymentMethodOptionsPayto: InvoicePaymentMethodOptionsPaytoSchema,
+    InvoicePaymentMethodOptionsPix: InvoicePaymentMethodOptionsPixSchema,
+    InvoicePaymentMethodOptionsSepaDebit: InvoicePaymentMethodOptionsSepaDebitSchema,
+    InvoicePaymentMethodOptionsUpi: InvoicePaymentMethodOptionsUpiSchema,
+    InvoicePaymentMethodOptionsUsBankAccount: InvoicePaymentMethodOptionsUsBankAccountSchema,
+    InvoicePaymentMethodOptionsUsBankAccountLinkedAccountOptions:
+      InvoicePaymentMethodOptionsUsBankAccountLinkedAccountOptionsSchema,
+    InvoicePaymentMethodOptionsUsBankAccountLinkedAccountOptionsFilters:
+      InvoicePaymentMethodOptionsUsBankAccountLinkedAccountOptionsFiltersSchema,
+    InvoiceRenderingPdf: InvoiceRenderingPdfSchema,
+    InvoiceRenderingTemplate: InvoiceRenderingTemplateSchema,
+    InvoiceSettingCheckoutRenderingOptions: InvoiceSettingCheckoutRenderingOptionsSchema,
+    InvoiceSettingCustomField: InvoiceSettingCustomFieldSchema,
+    InvoiceSettingCustomerRenderingOptions: InvoiceSettingCustomerRenderingOptionsSchema,
+    InvoiceSettingCustomerSetting: InvoiceSettingCustomerSettingSchema,
+    InvoiceSettingQuoteSetting: InvoiceSettingQuoteSettingSchema,
+    InvoiceSettingSubscriptionSchedulePhaseSetting:
+      InvoiceSettingSubscriptionSchedulePhaseSettingSchema,
+    InvoiceSettingSubscriptionScheduleSetting: InvoiceSettingSubscriptionScheduleSettingSchema,
+    InvoiceThresholdReason: InvoiceThresholdReasonSchema,
+    Invoiceitem: InvoiceitemSchema,
+    InvoicesPaymentMethodOptions: InvoicesPaymentMethodOptionsSchema,
+    InvoicesPaymentSettings: InvoicesPaymentSettingsSchema,
+    InvoicesPaymentsInvoicePaymentAssociatedPayment:
+      InvoicesPaymentsInvoicePaymentAssociatedPaymentSchema,
+    InvoicesPaymentsInvoicePaymentStatusTransitions:
+      InvoicesPaymentsInvoicePaymentStatusTransitionsSchema,
+    InvoicesResourceConfirmationSecret: InvoicesResourceConfirmationSecretSchema,
+    InvoicesResourceFromInvoice: InvoicesResourceFromInvoiceSchema,
+    InvoicesResourceInvoiceRendering: InvoicesResourceInvoiceRenderingSchema,
+    InvoicesResourceInvoiceTaxId: InvoicesResourceInvoiceTaxIdSchema,
+    InvoicesResourcePretaxCreditAmount: InvoicesResourcePretaxCreditAmountSchema,
+    InvoicesResourceShippingCost: InvoicesResourceShippingCostSchema,
+    InvoicesResourceStatusDetails: InvoicesResourceStatusDetailsSchema,
+    InvoicesResourceStatusTransitions: InvoicesResourceStatusTransitionsSchema,
+    InvoicesResourceUncollectibleStatusDetails: InvoicesResourceUncollectibleStatusDetailsSchema,
+    InvoicingRule: InvoicingRuleSchema,
+    IssuingAuthorization: IssuingAuthorizationSchema,
+    IssuingCard: IssuingCardSchema,
+    IssuingCardholder: IssuingCardholderSchema,
+    IssuingDispute: IssuingDisputeSchema,
+    IssuingPersonalizationDesign: IssuingPersonalizationDesignSchema,
+    IssuingPhysicalBundle: IssuingPhysicalBundleSchema,
+    IssuingSettlement: IssuingSettlementSchema,
+    IssuingToken: IssuingTokenSchema,
+    IssuingTransaction: IssuingTransactionSchema,
+    IssuingAuthorizationAmountDetails: IssuingAuthorizationAmountDetailsSchema,
+    IssuingAuthorizationAuthenticationExemption: IssuingAuthorizationAuthenticationExemptionSchema,
+    IssuingAuthorizationFleetCardholderPromptData:
+      IssuingAuthorizationFleetCardholderPromptDataSchema,
+    IssuingAuthorizationFleetData: IssuingAuthorizationFleetDataSchema,
+    IssuingAuthorizationFleetFuelPriceData: IssuingAuthorizationFleetFuelPriceDataSchema,
+    IssuingAuthorizationFleetNonFuelPriceData: IssuingAuthorizationFleetNonFuelPriceDataSchema,
+    IssuingAuthorizationFleetReportedBreakdown: IssuingAuthorizationFleetReportedBreakdownSchema,
+    IssuingAuthorizationFleetTaxData: IssuingAuthorizationFleetTaxDataSchema,
+    IssuingAuthorizationFraudChallenge: IssuingAuthorizationFraudChallengeSchema,
+    IssuingAuthorizationFuelData: IssuingAuthorizationFuelDataSchema,
+    IssuingAuthorizationMerchantData: IssuingAuthorizationMerchantDataSchema,
+    IssuingAuthorizationNetworkData: IssuingAuthorizationNetworkDataSchema,
+    IssuingAuthorizationPendingRequest: IssuingAuthorizationPendingRequestSchema,
+    IssuingAuthorizationRequest: IssuingAuthorizationRequestSchema,
+    IssuingAuthorizationThreeDSecure: IssuingAuthorizationThreeDSecureSchema,
+    IssuingAuthorizationTreasury: IssuingAuthorizationTreasurySchema,
+    IssuingAuthorizationVerificationData: IssuingAuthorizationVerificationDataSchema,
+    IssuingCardApplePay: IssuingCardApplePaySchema,
+    IssuingCardAuthorizationControls: IssuingCardAuthorizationControlsSchema,
+    IssuingCardFraudWarning: IssuingCardFraudWarningSchema,
+    IssuingCardGooglePay: IssuingCardGooglePaySchema,
+    IssuingCardLifecycleConditions: IssuingCardLifecycleConditionsSchema,
+    IssuingCardLifecycleControls: IssuingCardLifecycleControlsSchema,
+    IssuingCardShipping: IssuingCardShippingSchema,
+    IssuingCardShippingAddressValidation: IssuingCardShippingAddressValidationSchema,
+    IssuingCardShippingCustoms: IssuingCardShippingCustomsSchema,
+    IssuingCardSpendingLimit: IssuingCardSpendingLimitSchema,
+    IssuingCardWallets: IssuingCardWalletsSchema,
+    IssuingCardholderAddress: IssuingCardholderAddressSchema,
+    IssuingCardholderAuthorizationControls: IssuingCardholderAuthorizationControlsSchema,
+    IssuingCardholderCardIssuing: IssuingCardholderCardIssuingSchema,
+    IssuingCardholderCompany: IssuingCardholderCompanySchema,
+    IssuingCardholderIdDocument: IssuingCardholderIdDocumentSchema,
+    IssuingCardholderIndividual: IssuingCardholderIndividualSchema,
+    IssuingCardholderIndividualDob: IssuingCardholderIndividualDobSchema,
+    IssuingCardholderRequirements: IssuingCardholderRequirementsSchema,
+    IssuingCardholderSpendingLimit: IssuingCardholderSpendingLimitSchema,
+    IssuingCardholderUserTermsAcceptance: IssuingCardholderUserTermsAcceptanceSchema,
+    IssuingCardholderVerification: IssuingCardholderVerificationSchema,
+    IssuingDisputeCanceledEvidence: IssuingDisputeCanceledEvidenceSchema,
+    IssuingDisputeDuplicateEvidence: IssuingDisputeDuplicateEvidenceSchema,
+    IssuingDisputeEvidence: IssuingDisputeEvidenceSchema,
+    IssuingDisputeFraudulentEvidence: IssuingDisputeFraudulentEvidenceSchema,
+    IssuingDisputeMerchandiseNotAsDescribedEvidence:
+      IssuingDisputeMerchandiseNotAsDescribedEvidenceSchema,
+    IssuingDisputeNoValidAuthorizationEvidence: IssuingDisputeNoValidAuthorizationEvidenceSchema,
+    IssuingDisputeNotReceivedEvidence: IssuingDisputeNotReceivedEvidenceSchema,
+    IssuingDisputeOtherEvidence: IssuingDisputeOtherEvidenceSchema,
+    IssuingDisputeServiceNotAsDescribedEvidence: IssuingDisputeServiceNotAsDescribedEvidenceSchema,
+    IssuingDisputeTreasury: IssuingDisputeTreasurySchema,
+    IssuingNetworkTokenAddress: IssuingNetworkTokenAddressSchema,
+    IssuingNetworkTokenDevice: IssuingNetworkTokenDeviceSchema,
+    IssuingNetworkTokenMastercard: IssuingNetworkTokenMastercardSchema,
+    IssuingNetworkTokenNetworkData: IssuingNetworkTokenNetworkDataSchema,
+    IssuingNetworkTokenVisa: IssuingNetworkTokenVisaSchema,
+    IssuingNetworkTokenWalletProvider: IssuingNetworkTokenWalletProviderSchema,
+    IssuingPersonalizationDesignCarrierText: IssuingPersonalizationDesignCarrierTextSchema,
+    IssuingPersonalizationDesignPreferences: IssuingPersonalizationDesignPreferencesSchema,
+    IssuingPersonalizationDesignRejectionReasons:
+      IssuingPersonalizationDesignRejectionReasonsSchema,
+    IssuingPhysicalBundleFeatures: IssuingPhysicalBundleFeaturesSchema,
+    IssuingTransactionAmountDetails: IssuingTransactionAmountDetailsSchema,
+    IssuingTransactionFleetCardholderPromptData: IssuingTransactionFleetCardholderPromptDataSchema,
+    IssuingTransactionFleetData: IssuingTransactionFleetDataSchema,
+    IssuingTransactionFleetFuelPriceData: IssuingTransactionFleetFuelPriceDataSchema,
+    IssuingTransactionFleetNonFuelPriceData: IssuingTransactionFleetNonFuelPriceDataSchema,
+    IssuingTransactionFleetReportedBreakdown: IssuingTransactionFleetReportedBreakdownSchema,
+    IssuingTransactionFleetTaxData: IssuingTransactionFleetTaxDataSchema,
+    IssuingTransactionFlightData: IssuingTransactionFlightDataSchema,
+    IssuingTransactionFlightDataLeg: IssuingTransactionFlightDataLegSchema,
+    IssuingTransactionFuelData: IssuingTransactionFuelDataSchema,
+    IssuingTransactionLodgingData: IssuingTransactionLodgingDataSchema,
+    IssuingTransactionNetworkData: IssuingTransactionNetworkDataSchema,
+    IssuingTransactionPurchaseDetails: IssuingTransactionPurchaseDetailsSchema,
+    IssuingTransactionReceiptData: IssuingTransactionReceiptDataSchema,
+    IssuingTransactionTreasury: IssuingTransactionTreasurySchema,
+    Item: ItemSchema,
+    KlarnaAddress: KlarnaAddressSchema,
+    KlarnaPayerDetails: KlarnaPayerDetailsSchema,
+    LegalEntityCompany: LegalEntityCompanySchema,
+    LegalEntityCompanyVerification: LegalEntityCompanyVerificationSchema,
+    LegalEntityCompanyVerificationDocument: LegalEntityCompanyVerificationDocumentSchema,
+    LegalEntityDirectorshipDeclaration: LegalEntityDirectorshipDeclarationSchema,
+    LegalEntityDob: LegalEntityDobSchema,
+    LegalEntityJapanAddress: LegalEntityJapanAddressSchema,
+    LegalEntityPersonVerification: LegalEntityPersonVerificationSchema,
+    LegalEntityPersonVerificationDocument: LegalEntityPersonVerificationDocumentSchema,
+    LegalEntityRegistrationDate: LegalEntityRegistrationDateSchema,
+    LegalEntityRepresentativeDeclaration: LegalEntityRepresentativeDeclarationSchema,
+    LegalEntityUboDeclaration: LegalEntityUboDeclarationSchema,
+    LineItem: LineItemSchema,
+    LineItemsAdjustableQuantity: LineItemsAdjustableQuantitySchema,
+    LineItemsDiscountAmount: LineItemsDiscountAmountSchema,
+    LineItemsTaxAmount: LineItemsTaxAmountSchema,
+    LinkedAccountOptionsCommon: LinkedAccountOptionsCommonSchema,
+    LoginLink: LoginLinkSchema,
+    Mandate: MandateSchema,
+    MandateAcssDebit: MandateAcssDebitSchema,
+    MandateAmazonPay: MandateAmazonPaySchema,
+    MandateAuBecsDebit: MandateAuBecsDebitSchema,
+    MandateBacsDebit: MandateBacsDebitSchema,
+    MandateBlik: MandateBlikSchema,
+    MandateCashapp: MandateCashappSchema,
+    MandateKakaoPay: MandateKakaoPaySchema,
+    MandateKlarna: MandateKlarnaSchema,
+    MandateKrCard: MandateKrCardSchema,
+    MandateLink: MandateLinkSchema,
+    MandateMultiUse: MandateMultiUseSchema,
+    MandateNaverPay: MandateNaverPaySchema,
+    MandateNzBankAccount: MandateNzBankAccountSchema,
+    MandateOptionsPayto: MandateOptionsPaytoSchema,
+    MandateOptionsUpi: MandateOptionsUpiSchema,
+    MandatePaymentMethodDetails: MandatePaymentMethodDetailsSchema,
+    MandatePaypal: MandatePaypalSchema,
+    MandatePayto: MandatePaytoSchema,
+    MandatePix: MandatePixSchema,
+    MandateRevolutPay: MandateRevolutPaySchema,
+    MandateSepaDebit: MandateSepaDebitSchema,
+    MandateSingleUse: MandateSingleUseSchema,
+    MandateTwint: MandateTwintSchema,
+    MandateUpi: MandateUpiSchema,
+    MandateUsBankAccount: MandateUsBankAccountSchema,
+    Networks: NetworksSchema,
+    NotificationEventData: NotificationEventDataSchema,
+    NotificationEventRequest: NotificationEventRequestSchema,
+    OfflineAcceptance: OfflineAcceptanceSchema,
+    OnlineAcceptance: OnlineAcceptanceSchema,
+    OutboundPaymentsPaymentMethodDetails: OutboundPaymentsPaymentMethodDetailsSchema,
+    OutboundPaymentsPaymentMethodDetailsFinancialAccount:
+      OutboundPaymentsPaymentMethodDetailsFinancialAccountSchema,
+    OutboundPaymentsPaymentMethodDetailsUsBankAccount:
+      OutboundPaymentsPaymentMethodDetailsUsBankAccountSchema,
+    OutboundTransfersPaymentMethodDetails: OutboundTransfersPaymentMethodDetailsSchema,
+    OutboundTransfersPaymentMethodDetailsFinancialAccount:
+      OutboundTransfersPaymentMethodDetailsFinancialAccountSchema,
+    OutboundTransfersPaymentMethodDetailsUsBankAccount:
+      OutboundTransfersPaymentMethodDetailsUsBankAccountSchema,
+    PackageDimensions: PackageDimensionsSchema,
+    PaymentAttemptRecord: PaymentAttemptRecordSchema,
+    PaymentData: PaymentDataSchema,
+    PaymentFlowsAmountDetails: PaymentFlowsAmountDetailsSchema,
+    PaymentFlowsAmountDetailsClient: PaymentFlowsAmountDetailsClientSchema,
+    PaymentFlowsAmountDetailsClientResourceTip: PaymentFlowsAmountDetailsClientResourceTipSchema,
+    PaymentFlowsAmountDetailsResourceError: PaymentFlowsAmountDetailsResourceErrorSchema,
+    PaymentFlowsAmountDetailsResourceLineItemsListResourceLineItemResourcePaymentMethodOptions:
+      PaymentFlowsAmountDetailsResourceLineItemsListResourceLineItemResourcePaymentMethodOptionsSchema,
+    PaymentFlowsAmountDetailsResourceLineItemsListResourceLineItemResourceTax:
+      PaymentFlowsAmountDetailsResourceLineItemsListResourceLineItemResourceTaxSchema,
+    PaymentFlowsAmountDetailsResourceShipping: PaymentFlowsAmountDetailsResourceShippingSchema,
+    PaymentFlowsAmountDetailsResourceTax: PaymentFlowsAmountDetailsResourceTaxSchema,
+    PaymentFlowsAutomaticPaymentMethodsPaymentIntent:
+      PaymentFlowsAutomaticPaymentMethodsPaymentIntentSchema,
+    PaymentFlowsAutomaticPaymentMethodsSetupIntent:
+      PaymentFlowsAutomaticPaymentMethodsSetupIntentSchema,
+    PaymentFlowsInstallmentOptions: PaymentFlowsInstallmentOptionsSchema,
+    PaymentFlowsPaymentDetails: PaymentFlowsPaymentDetailsSchema,
+    PaymentFlowsPaymentIntentAsyncWorkflows: PaymentFlowsPaymentIntentAsyncWorkflowsSchema,
+    PaymentFlowsPaymentIntentAsyncWorkflowsResourceInputs:
+      PaymentFlowsPaymentIntentAsyncWorkflowsResourceInputsSchema,
+    PaymentFlowsPaymentIntentAsyncWorkflowsResourceInputsResourceTax:
+      PaymentFlowsPaymentIntentAsyncWorkflowsResourceInputsResourceTaxSchema,
+    PaymentFlowsPaymentIntentPresentmentDetails: PaymentFlowsPaymentIntentPresentmentDetailsSchema,
+    PaymentFlowsPrivatePaymentMethodsAlipay: PaymentFlowsPrivatePaymentMethodsAlipaySchema,
+    PaymentFlowsPrivatePaymentMethodsAlmaDetailsResourceInstallments:
+      PaymentFlowsPrivatePaymentMethodsAlmaDetailsResourceInstallmentsSchema,
+    PaymentFlowsPrivatePaymentMethodsBilliePaymentMethodOptionsResourceCompanyDetails:
+      PaymentFlowsPrivatePaymentMethodsBilliePaymentMethodOptionsResourceCompanyDetailsSchema,
+    PaymentFlowsPrivatePaymentMethodsBilliePaymentMethodOptionsResourceCompanyDetailsResourceCompanyDetailsRegisteredAddress:
+      PaymentFlowsPrivatePaymentMethodsBilliePaymentMethodOptionsResourceCompanyDetailsResourceCompanyDetailsRegisteredAddressSchema,
+    PaymentFlowsPrivatePaymentMethodsCardDetailsApiResourceEnterpriseFeaturesExtendedAuthorizationExtendedAuthorization:
+      PaymentFlowsPrivatePaymentMethodsCardDetailsApiResourceEnterpriseFeaturesExtendedAuthorizationExtendedAuthorizationSchema,
+    PaymentFlowsPrivatePaymentMethodsCardDetailsApiResourceEnterpriseFeaturesIncrementalAuthorizationIncrementalAuthorization:
+      PaymentFlowsPrivatePaymentMethodsCardDetailsApiResourceEnterpriseFeaturesIncrementalAuthorizationIncrementalAuthorizationSchema,
+    PaymentFlowsPrivatePaymentMethodsCardDetailsApiResourceEnterpriseFeaturesOvercaptureOvercapture:
+      PaymentFlowsPrivatePaymentMethodsCardDetailsApiResourceEnterpriseFeaturesOvercaptureOvercaptureSchema,
+    PaymentFlowsPrivatePaymentMethodsCardDetailsApiResourceMulticapture:
+      PaymentFlowsPrivatePaymentMethodsCardDetailsApiResourceMulticaptureSchema,
+    PaymentFlowsPrivatePaymentMethodsCardPaymentIntentAmountDetailsLineItemPaymentMethodOptions:
+      PaymentFlowsPrivatePaymentMethodsCardPaymentIntentAmountDetailsLineItemPaymentMethodOptionsSchema,
+    PaymentFlowsPrivatePaymentMethodsCardPresentAmountDetailsLineItemPaymentMethodOptions:
+      PaymentFlowsPrivatePaymentMethodsCardPresentAmountDetailsLineItemPaymentMethodOptionsSchema,
+    PaymentFlowsPrivatePaymentMethodsCardPresentCommonWallet:
+      PaymentFlowsPrivatePaymentMethodsCardPresentCommonWalletSchema,
+    PaymentFlowsPrivatePaymentMethodsFinancialConnectionsCommonLinkedAccountOptionsFilters:
+      PaymentFlowsPrivatePaymentMethodsFinancialConnectionsCommonLinkedAccountOptionsFiltersSchema,
+    PaymentFlowsPrivatePaymentMethodsKakaoPayPaymentMethodOptions:
+      PaymentFlowsPrivatePaymentMethodsKakaoPayPaymentMethodOptionsSchema,
+    PaymentFlowsPrivatePaymentMethodsKlarnaDob: PaymentFlowsPrivatePaymentMethodsKlarnaDobSchema,
+    PaymentFlowsPrivatePaymentMethodsKlarnaPaymentIntentAmountDetailsLineItemPaymentMethodOptions:
+      PaymentFlowsPrivatePaymentMethodsKlarnaPaymentIntentAmountDetailsLineItemPaymentMethodOptionsSchema,
+    PaymentFlowsPrivatePaymentMethodsKonbiniDetailsResourceStore:
+      PaymentFlowsPrivatePaymentMethodsKonbiniDetailsResourceStoreSchema,
+    PaymentFlowsPrivatePaymentMethodsNaverPayPaymentMethodOptions:
+      PaymentFlowsPrivatePaymentMethodsNaverPayPaymentMethodOptionsSchema,
+    PaymentFlowsPrivatePaymentMethodsPaycoPaymentMethodOptions:
+      PaymentFlowsPrivatePaymentMethodsPaycoPaymentMethodOptionsSchema,
+    PaymentFlowsPrivatePaymentMethodsPaypalAmountDetailsLineItemPaymentMethodOptions:
+      PaymentFlowsPrivatePaymentMethodsPaypalAmountDetailsLineItemPaymentMethodOptionsSchema,
+    PaymentFlowsPrivatePaymentMethodsSamsungPayPaymentMethodOptions:
+      PaymentFlowsPrivatePaymentMethodsSamsungPayPaymentMethodOptionsSchema,
+    PaymentFlowsPrivatePaymentMethodsSatispaySetupAttemptDetails:
+      PaymentFlowsPrivatePaymentMethodsSatispaySetupAttemptDetailsSchema,
+    PaymentIntent: PaymentIntentSchema,
+    PaymentIntentAmountDetailsLineItem: PaymentIntentAmountDetailsLineItemSchema,
+    PaymentIntentCardProcessing: PaymentIntentCardProcessingSchema,
+    PaymentIntentNextAction: PaymentIntentNextActionSchema,
+    PaymentIntentNextActionAlipayHandleRedirect: PaymentIntentNextActionAlipayHandleRedirectSchema,
+    PaymentIntentNextActionBlikAuthorize: PaymentIntentNextActionBlikAuthorizeSchema,
+    PaymentIntentNextActionBoleto: PaymentIntentNextActionBoletoSchema,
+    PaymentIntentNextActionCardAwaitNotification:
+      PaymentIntentNextActionCardAwaitNotificationSchema,
+    PaymentIntentNextActionCashappHandleRedirectOrDisplayQrCode:
+      PaymentIntentNextActionCashappHandleRedirectOrDisplayQrCodeSchema,
+    PaymentIntentNextActionCashappQrCode: PaymentIntentNextActionCashappQrCodeSchema,
+    PaymentIntentNextActionDisplayBankTransferInstructions:
+      PaymentIntentNextActionDisplayBankTransferInstructionsSchema,
+    PaymentIntentNextActionDisplayMultibancoDetails:
+      PaymentIntentNextActionDisplayMultibancoDetailsSchema,
+    PaymentIntentNextActionDisplayOxxoDetails: PaymentIntentNextActionDisplayOxxoDetailsSchema,
+    PaymentIntentNextActionKlarnaDisplayQrCode: PaymentIntentNextActionKlarnaDisplayQrCodeSchema,
+    PaymentIntentNextActionKonbini: PaymentIntentNextActionKonbiniSchema,
+    PaymentIntentNextActionKonbiniFamilymart: PaymentIntentNextActionKonbiniFamilymartSchema,
+    PaymentIntentNextActionKonbiniLawson: PaymentIntentNextActionKonbiniLawsonSchema,
+    PaymentIntentNextActionKonbiniMinistop: PaymentIntentNextActionKonbiniMinistopSchema,
+    PaymentIntentNextActionKonbiniSeicomart: PaymentIntentNextActionKonbiniSeicomartSchema,
+    PaymentIntentNextActionKonbiniStores: PaymentIntentNextActionKonbiniStoresSchema,
+    PaymentIntentNextActionPaynowDisplayQrCode: PaymentIntentNextActionPaynowDisplayQrCodeSchema,
+    PaymentIntentNextActionPixDisplayQrCode: PaymentIntentNextActionPixDisplayQrCodeSchema,
+    PaymentIntentNextActionPromptpayDisplayQrCode:
+      PaymentIntentNextActionPromptpayDisplayQrCodeSchema,
+    PaymentIntentNextActionRedirectToUrl: PaymentIntentNextActionRedirectToUrlSchema,
+    PaymentIntentNextActionSwishHandleRedirectOrDisplayQrCode:
+      PaymentIntentNextActionSwishHandleRedirectOrDisplayQrCodeSchema,
+    PaymentIntentNextActionSwishQrCode: PaymentIntentNextActionSwishQrCodeSchema,
+    PaymentIntentNextActionUpiHandleRedirectOrDisplayQrCode:
+      PaymentIntentNextActionUpiHandleRedirectOrDisplayQrCodeSchema,
+    PaymentIntentNextActionUpiqrCode: PaymentIntentNextActionUpiqrCodeSchema,
+    PaymentIntentNextActionVerifyWithMicrodeposits:
+      PaymentIntentNextActionVerifyWithMicrodepositsSchema,
+    PaymentIntentNextActionWechatPayDisplayQrCode:
+      PaymentIntentNextActionWechatPayDisplayQrCodeSchema,
+    PaymentIntentNextActionWechatPayRedirectToAndroidApp:
+      PaymentIntentNextActionWechatPayRedirectToAndroidAppSchema,
+    PaymentIntentNextActionWechatPayRedirectToIosApp:
+      PaymentIntentNextActionWechatPayRedirectToIosAppSchema,
+    PaymentIntentPaymentMethodOptions: PaymentIntentPaymentMethodOptionsSchema,
+    PaymentIntentPaymentMethodOptionsAcssDebit: PaymentIntentPaymentMethodOptionsAcssDebitSchema,
+    PaymentIntentPaymentMethodOptionsAuBecsDebit:
+      PaymentIntentPaymentMethodOptionsAuBecsDebitSchema,
+    PaymentIntentPaymentMethodOptionsBacsDebit: PaymentIntentPaymentMethodOptionsBacsDebitSchema,
+    PaymentIntentPaymentMethodOptionsBlik: PaymentIntentPaymentMethodOptionsBlikSchema,
+    PaymentIntentPaymentMethodOptionsCard: PaymentIntentPaymentMethodOptionsCardSchema,
+    PaymentIntentPaymentMethodOptionsEps: PaymentIntentPaymentMethodOptionsEpsSchema,
+    PaymentIntentPaymentMethodOptionsLink: PaymentIntentPaymentMethodOptionsLinkSchema,
+    PaymentIntentPaymentMethodOptionsMandateOptionsAcssDebit:
+      PaymentIntentPaymentMethodOptionsMandateOptionsAcssDebitSchema,
+    PaymentIntentPaymentMethodOptionsMandateOptionsBacsDebit:
+      PaymentIntentPaymentMethodOptionsMandateOptionsBacsDebitSchema,
+    PaymentIntentPaymentMethodOptionsMandateOptionsBlik:
+      PaymentIntentPaymentMethodOptionsMandateOptionsBlikSchema,
+    PaymentIntentPaymentMethodOptionsMandateOptionsPayto:
+      PaymentIntentPaymentMethodOptionsMandateOptionsPaytoSchema,
+    PaymentIntentPaymentMethodOptionsMandateOptionsSepaDebit:
+      PaymentIntentPaymentMethodOptionsMandateOptionsSepaDebitSchema,
+    PaymentIntentPaymentMethodOptionsMobilepay: PaymentIntentPaymentMethodOptionsMobilepaySchema,
+    PaymentIntentPaymentMethodOptionsNzBankAccount:
+      PaymentIntentPaymentMethodOptionsNzBankAccountSchema,
+    PaymentIntentPaymentMethodOptionsPayto: PaymentIntentPaymentMethodOptionsPaytoSchema,
+    PaymentIntentPaymentMethodOptionsSepaDebit: PaymentIntentPaymentMethodOptionsSepaDebitSchema,
+    PaymentIntentPaymentMethodOptionsSwish: PaymentIntentPaymentMethodOptionsSwishSchema,
+    PaymentIntentPaymentMethodOptionsUsBankAccount:
+      PaymentIntentPaymentMethodOptionsUsBankAccountSchema,
+    PaymentIntentProcessing: PaymentIntentProcessingSchema,
+    PaymentIntentProcessingCustomerNotification: PaymentIntentProcessingCustomerNotificationSchema,
+    PaymentIntentTypeSpecificPaymentMethodOptionsClient:
+      PaymentIntentTypeSpecificPaymentMethodOptionsClientSchema,
+    PaymentLink: PaymentLinkSchema,
+    PaymentLinksResourceAfterCompletion: PaymentLinksResourceAfterCompletionSchema,
+    PaymentLinksResourceAutomaticTax: PaymentLinksResourceAutomaticTaxSchema,
+    PaymentLinksResourceBusinessName: PaymentLinksResourceBusinessNameSchema,
+    PaymentLinksResourceCardPaymentMethodOptions:
+      PaymentLinksResourceCardPaymentMethodOptionsSchema,
+    PaymentLinksResourceCardRestrictions: PaymentLinksResourceCardRestrictionsSchema,
+    PaymentLinksResourceCompletedSessions: PaymentLinksResourceCompletedSessionsSchema,
+    PaymentLinksResourceCompletionBehaviorConfirmationPage:
+      PaymentLinksResourceCompletionBehaviorConfirmationPageSchema,
+    PaymentLinksResourceCompletionBehaviorRedirect:
+      PaymentLinksResourceCompletionBehaviorRedirectSchema,
+    PaymentLinksResourceConsentCollection: PaymentLinksResourceConsentCollectionSchema,
+    PaymentLinksResourceCustomFields: PaymentLinksResourceCustomFieldsSchema,
+    PaymentLinksResourceCustomFieldsDropdown: PaymentLinksResourceCustomFieldsDropdownSchema,
+    PaymentLinksResourceCustomFieldsDropdownOption:
+      PaymentLinksResourceCustomFieldsDropdownOptionSchema,
+    PaymentLinksResourceCustomFieldsLabel: PaymentLinksResourceCustomFieldsLabelSchema,
+    PaymentLinksResourceCustomFieldsNumeric: PaymentLinksResourceCustomFieldsNumericSchema,
+    PaymentLinksResourceCustomFieldsText: PaymentLinksResourceCustomFieldsTextSchema,
+    PaymentLinksResourceCustomText: PaymentLinksResourceCustomTextSchema,
+    PaymentLinksResourceCustomTextPosition: PaymentLinksResourceCustomTextPositionSchema,
+    PaymentLinksResourceIndividualName: PaymentLinksResourceIndividualNameSchema,
+    PaymentLinksResourceInvoiceCreation: PaymentLinksResourceInvoiceCreationSchema,
+    PaymentLinksResourceInvoiceSettings: PaymentLinksResourceInvoiceSettingsSchema,
+    PaymentLinksResourceNameCollection: PaymentLinksResourceNameCollectionSchema,
+    PaymentLinksResourceOptionalItem: PaymentLinksResourceOptionalItemSchema,
+    PaymentLinksResourceOptionalItemAdjustableQuantity:
+      PaymentLinksResourceOptionalItemAdjustableQuantitySchema,
+    PaymentLinksResourcePaymentIntentData: PaymentLinksResourcePaymentIntentDataSchema,
+    PaymentLinksResourcePaymentMethodOptions: PaymentLinksResourcePaymentMethodOptionsSchema,
+    PaymentLinksResourcePaymentMethodReuseAgreement:
+      PaymentLinksResourcePaymentMethodReuseAgreementSchema,
+    PaymentLinksResourcePhoneNumberCollection: PaymentLinksResourcePhoneNumberCollectionSchema,
+    PaymentLinksResourceRestrictions: PaymentLinksResourceRestrictionsSchema,
+    PaymentLinksResourceShippingAddressCollection:
+      PaymentLinksResourceShippingAddressCollectionSchema,
+    PaymentLinksResourceShippingOption: PaymentLinksResourceShippingOptionSchema,
+    PaymentLinksResourceSubscriptionData: PaymentLinksResourceSubscriptionDataSchema,
+    PaymentLinksResourceSubscriptionDataInvoiceSettings:
+      PaymentLinksResourceSubscriptionDataInvoiceSettingsSchema,
+    PaymentLinksResourceTaxIdCollection: PaymentLinksResourceTaxIdCollectionSchema,
+    PaymentLinksResourceTransferData: PaymentLinksResourceTransferDataSchema,
+    PaymentMethod: PaymentMethodSchema,
+    PaymentMethodAcssDebit: PaymentMethodAcssDebitSchema,
+    PaymentMethodAffirm: PaymentMethodAffirmSchema,
+    PaymentMethodAfterpayClearpay: PaymentMethodAfterpayClearpaySchema,
+    PaymentMethodAlma: PaymentMethodAlmaSchema,
+    PaymentMethodAmazonPay: PaymentMethodAmazonPaySchema,
+    PaymentMethodAuBecsDebit: PaymentMethodAuBecsDebitSchema,
+    PaymentMethodBacsDebit: PaymentMethodBacsDebitSchema,
+    PaymentMethodBancontact: PaymentMethodBancontactSchema,
+    PaymentMethodBillie: PaymentMethodBillieSchema,
+    PaymentMethodBizum: PaymentMethodBizumSchema,
+    PaymentMethodBlik: PaymentMethodBlikSchema,
+    PaymentMethodBoleto: PaymentMethodBoletoSchema,
+    PaymentMethodCard: PaymentMethodCardSchema,
+    PaymentMethodCardChecks: PaymentMethodCardChecksSchema,
+    PaymentMethodCardGeneratedCard: PaymentMethodCardGeneratedCardSchema,
+    PaymentMethodCardPresent: PaymentMethodCardPresentSchema,
+    PaymentMethodCardPresentNetworks: PaymentMethodCardPresentNetworksSchema,
+    PaymentMethodCardWallet: PaymentMethodCardWalletSchema,
+    PaymentMethodCardWalletAmexExpressCheckout: PaymentMethodCardWalletAmexExpressCheckoutSchema,
+    PaymentMethodCardWalletApplePay: PaymentMethodCardWalletApplePaySchema,
+    PaymentMethodCardWalletGooglePay: PaymentMethodCardWalletGooglePaySchema,
+    PaymentMethodCardWalletLink: PaymentMethodCardWalletLinkSchema,
+    PaymentMethodCardWalletMasterpass: PaymentMethodCardWalletMasterpassSchema,
+    PaymentMethodCardWalletSamsungPay: PaymentMethodCardWalletSamsungPaySchema,
+    PaymentMethodCardWalletVisaCheckout: PaymentMethodCardWalletVisaCheckoutSchema,
+    PaymentMethodCashapp: PaymentMethodCashappSchema,
+    PaymentMethodConfigBizPaymentMethodConfigurationDetails:
+      PaymentMethodConfigBizPaymentMethodConfigurationDetailsSchema,
+    PaymentMethodConfigResourceDisplayPreference:
+      PaymentMethodConfigResourceDisplayPreferenceSchema,
+    PaymentMethodConfigResourcePaymentMethodProperties:
+      PaymentMethodConfigResourcePaymentMethodPropertiesSchema,
+    PaymentMethodConfiguration: PaymentMethodConfigurationSchema,
+    PaymentMethodCrypto: PaymentMethodCryptoSchema,
+    PaymentMethodCustom: PaymentMethodCustomSchema,
+    PaymentMethodCustomerBalance: PaymentMethodCustomerBalanceSchema,
+    PaymentMethodDetails: PaymentMethodDetailsSchema,
+    PaymentMethodDetailsAchCreditTransfer: PaymentMethodDetailsAchCreditTransferSchema,
+    PaymentMethodDetailsAchDebit: PaymentMethodDetailsAchDebitSchema,
+    PaymentMethodDetailsAcssDebit: PaymentMethodDetailsAcssDebitSchema,
+    PaymentMethodDetailsAffirm: PaymentMethodDetailsAffirmSchema,
+    PaymentMethodDetailsAfterpayClearpay: PaymentMethodDetailsAfterpayClearpaySchema,
+    PaymentMethodDetailsAlipay: PaymentMethodDetailsAlipaySchema,
+    PaymentMethodDetailsAlma: PaymentMethodDetailsAlmaSchema,
+    PaymentMethodDetailsAmazonPay: PaymentMethodDetailsAmazonPaySchema,
+    PaymentMethodDetailsAuBecsDebit: PaymentMethodDetailsAuBecsDebitSchema,
+    PaymentMethodDetailsBacsDebit: PaymentMethodDetailsBacsDebitSchema,
+    PaymentMethodDetailsBancontact: PaymentMethodDetailsBancontactSchema,
+    PaymentMethodDetailsBillie: PaymentMethodDetailsBillieSchema,
+    PaymentMethodDetailsBizum: PaymentMethodDetailsBizumSchema,
+    PaymentMethodDetailsBlik: PaymentMethodDetailsBlikSchema,
+    PaymentMethodDetailsBoleto: PaymentMethodDetailsBoletoSchema,
+    PaymentMethodDetailsCard: PaymentMethodDetailsCardSchema,
+    PaymentMethodDetailsCardChecks: PaymentMethodDetailsCardChecksSchema,
+    PaymentMethodDetailsCardInstallments: PaymentMethodDetailsCardInstallmentsSchema,
+    PaymentMethodDetailsCardInstallmentsPlan: PaymentMethodDetailsCardInstallmentsPlanSchema,
+    PaymentMethodDetailsCardNetworkToken: PaymentMethodDetailsCardNetworkTokenSchema,
+    PaymentMethodDetailsCardPresent: PaymentMethodDetailsCardPresentSchema,
+    PaymentMethodDetailsCardPresentOffline: PaymentMethodDetailsCardPresentOfflineSchema,
+    PaymentMethodDetailsCardPresentReceipt: PaymentMethodDetailsCardPresentReceiptSchema,
+    PaymentMethodDetailsCardWallet: PaymentMethodDetailsCardWalletSchema,
+    PaymentMethodDetailsCardWalletAmexExpressCheckout:
+      PaymentMethodDetailsCardWalletAmexExpressCheckoutSchema,
+    PaymentMethodDetailsCardWalletApplePay: PaymentMethodDetailsCardWalletApplePaySchema,
+    PaymentMethodDetailsCardWalletGooglePay: PaymentMethodDetailsCardWalletGooglePaySchema,
+    PaymentMethodDetailsCardWalletLink: PaymentMethodDetailsCardWalletLinkSchema,
+    PaymentMethodDetailsCardWalletMasterpass: PaymentMethodDetailsCardWalletMasterpassSchema,
+    PaymentMethodDetailsCardWalletSamsungPay: PaymentMethodDetailsCardWalletSamsungPaySchema,
+    PaymentMethodDetailsCardWalletVisaCheckout: PaymentMethodDetailsCardWalletVisaCheckoutSchema,
+    PaymentMethodDetailsCashapp: PaymentMethodDetailsCashappSchema,
+    PaymentMethodDetailsCrypto: PaymentMethodDetailsCryptoSchema,
+    PaymentMethodDetailsCustomerBalance: PaymentMethodDetailsCustomerBalanceSchema,
+    PaymentMethodDetailsEps: PaymentMethodDetailsEpsSchema,
+    PaymentMethodDetailsFpx: PaymentMethodDetailsFpxSchema,
+    PaymentMethodDetailsGiropay: PaymentMethodDetailsGiropaySchema,
+    PaymentMethodDetailsGrabpay: PaymentMethodDetailsGrabpaySchema,
+    PaymentMethodDetailsIdeal: PaymentMethodDetailsIdealSchema,
+    PaymentMethodDetailsInteracPresent: PaymentMethodDetailsInteracPresentSchema,
+    PaymentMethodDetailsInteracPresentReceipt: PaymentMethodDetailsInteracPresentReceiptSchema,
+    PaymentMethodDetailsKakaoPay: PaymentMethodDetailsKakaoPaySchema,
+    PaymentMethodDetailsKlarna: PaymentMethodDetailsKlarnaSchema,
+    PaymentMethodDetailsKonbini: PaymentMethodDetailsKonbiniSchema,
+    PaymentMethodDetailsKrCard: PaymentMethodDetailsKrCardSchema,
+    PaymentMethodDetailsLink: PaymentMethodDetailsLinkSchema,
+    PaymentMethodDetailsMbWay: PaymentMethodDetailsMbWaySchema,
+    PaymentMethodDetailsMobilepay: PaymentMethodDetailsMobilepaySchema,
+    PaymentMethodDetailsMultibanco: PaymentMethodDetailsMultibancoSchema,
+    PaymentMethodDetailsNaverPay: PaymentMethodDetailsNaverPaySchema,
+    PaymentMethodDetailsNzBankAccount: PaymentMethodDetailsNzBankAccountSchema,
+    PaymentMethodDetailsOxxo: PaymentMethodDetailsOxxoSchema,
+    PaymentMethodDetailsP24: PaymentMethodDetailsP24Schema,
+    PaymentMethodDetailsPassthroughCard: PaymentMethodDetailsPassthroughCardSchema,
+    PaymentMethodDetailsPayByBank: PaymentMethodDetailsPayByBankSchema,
+    PaymentMethodDetailsPayco: PaymentMethodDetailsPaycoSchema,
+    PaymentMethodDetailsPaymentRecordAcssDebit: PaymentMethodDetailsPaymentRecordAcssDebitSchema,
+    PaymentMethodDetailsPaymentRecordAffirm: PaymentMethodDetailsPaymentRecordAffirmSchema,
+    PaymentMethodDetailsPaymentRecordAfterpayClearpay:
+      PaymentMethodDetailsPaymentRecordAfterpayClearpaySchema,
+    PaymentMethodDetailsPaymentRecordAlipay: PaymentMethodDetailsPaymentRecordAlipaySchema,
+    PaymentMethodDetailsPaymentRecordAlma: PaymentMethodDetailsPaymentRecordAlmaSchema,
+    PaymentMethodDetailsPaymentRecordAmazonPay: PaymentMethodDetailsPaymentRecordAmazonPaySchema,
+    PaymentMethodDetailsPaymentRecordAuBecsDebit:
+      PaymentMethodDetailsPaymentRecordAuBecsDebitSchema,
+    PaymentMethodDetailsPaymentRecordBacsDebit: PaymentMethodDetailsPaymentRecordBacsDebitSchema,
+    PaymentMethodDetailsPaymentRecordBancontact: PaymentMethodDetailsPaymentRecordBancontactSchema,
+    PaymentMethodDetailsPaymentRecordBillie: PaymentMethodDetailsPaymentRecordBillieSchema,
+    PaymentMethodDetailsPaymentRecordBizum: PaymentMethodDetailsPaymentRecordBizumSchema,
+    PaymentMethodDetailsPaymentRecordBlik: PaymentMethodDetailsPaymentRecordBlikSchema,
+    PaymentMethodDetailsPaymentRecordBoleto: PaymentMethodDetailsPaymentRecordBoletoSchema,
+    PaymentMethodDetailsPaymentRecordCashapp: PaymentMethodDetailsPaymentRecordCashappSchema,
+    PaymentMethodDetailsPaymentRecordEps: PaymentMethodDetailsPaymentRecordEpsSchema,
+    PaymentMethodDetailsPaymentRecordGiropay: PaymentMethodDetailsPaymentRecordGiropaySchema,
+    PaymentMethodDetailsPaymentRecordIdeal: PaymentMethodDetailsPaymentRecordIdealSchema,
+    PaymentMethodDetailsPaymentRecordKakaoPay: PaymentMethodDetailsPaymentRecordKakaoPaySchema,
+    PaymentMethodDetailsPaymentRecordKlarna: PaymentMethodDetailsPaymentRecordKlarnaSchema,
+    PaymentMethodDetailsPaymentRecordKonbini: PaymentMethodDetailsPaymentRecordKonbiniSchema,
+    PaymentMethodDetailsPaymentRecordLink: PaymentMethodDetailsPaymentRecordLinkSchema,
+    PaymentMethodDetailsPaymentRecordMbWay: PaymentMethodDetailsPaymentRecordMbWaySchema,
+    PaymentMethodDetailsPaymentRecordMobilepay: PaymentMethodDetailsPaymentRecordMobilepaySchema,
+    PaymentMethodDetailsPaymentRecordMomo: PaymentMethodDetailsPaymentRecordMomoSchema,
+    PaymentMethodDetailsPaymentRecordMultibanco: PaymentMethodDetailsPaymentRecordMultibancoSchema,
+    PaymentMethodDetailsPaymentRecordNaverPay: PaymentMethodDetailsPaymentRecordNaverPaySchema,
+    PaymentMethodDetailsPaymentRecordNzBankAccount:
+      PaymentMethodDetailsPaymentRecordNzBankAccountSchema,
+    PaymentMethodDetailsPaymentRecordOxxo: PaymentMethodDetailsPaymentRecordOxxoSchema,
+    PaymentMethodDetailsPaymentRecordP24: PaymentMethodDetailsPaymentRecordP24Schema,
+    PaymentMethodDetailsPaymentRecordPayByBank: PaymentMethodDetailsPaymentRecordPayByBankSchema,
+    PaymentMethodDetailsPaymentRecordPayco: PaymentMethodDetailsPaymentRecordPaycoSchema,
+    PaymentMethodDetailsPaymentRecordPaynow: PaymentMethodDetailsPaymentRecordPaynowSchema,
+    PaymentMethodDetailsPaymentRecordPaypay: PaymentMethodDetailsPaymentRecordPaypaySchema,
+    PaymentMethodDetailsPaymentRecordPayto: PaymentMethodDetailsPaymentRecordPaytoSchema,
+    PaymentMethodDetailsPaymentRecordPix: PaymentMethodDetailsPaymentRecordPixSchema,
+    PaymentMethodDetailsPaymentRecordPromptpay: PaymentMethodDetailsPaymentRecordPromptpaySchema,
+    PaymentMethodDetailsPaymentRecordRevolutPay: PaymentMethodDetailsPaymentRecordRevolutPaySchema,
+    PaymentMethodDetailsPaymentRecordSamsungPay: PaymentMethodDetailsPaymentRecordSamsungPaySchema,
+    PaymentMethodDetailsPaymentRecordSatispay: PaymentMethodDetailsPaymentRecordSatispaySchema,
+    PaymentMethodDetailsPaymentRecordScalapay: PaymentMethodDetailsPaymentRecordScalapaySchema,
+    PaymentMethodDetailsPaymentRecordSepaDebit: PaymentMethodDetailsPaymentRecordSepaDebitSchema,
+    PaymentMethodDetailsPaymentRecordSequra: PaymentMethodDetailsPaymentRecordSequraSchema,
+    PaymentMethodDetailsPaymentRecordSofort: PaymentMethodDetailsPaymentRecordSofortSchema,
+    PaymentMethodDetailsPaymentRecordSunbit: PaymentMethodDetailsPaymentRecordSunbitSchema,
+    PaymentMethodDetailsPaymentRecordSwish: PaymentMethodDetailsPaymentRecordSwishSchema,
+    PaymentMethodDetailsPaymentRecordTwint: PaymentMethodDetailsPaymentRecordTwintSchema,
+    PaymentMethodDetailsPaymentRecordUpi: PaymentMethodDetailsPaymentRecordUpiSchema,
+    PaymentMethodDetailsPaymentRecordUsBankAccount:
+      PaymentMethodDetailsPaymentRecordUsBankAccountSchema,
+    PaymentMethodDetailsPaymentRecordWechatPay: PaymentMethodDetailsPaymentRecordWechatPaySchema,
+    PaymentMethodDetailsPaymentRecordZip: PaymentMethodDetailsPaymentRecordZipSchema,
+    PaymentMethodDetailsPaynow: PaymentMethodDetailsPaynowSchema,
+    PaymentMethodDetailsPaypal: PaymentMethodDetailsPaypalSchema,
+    PaymentMethodDetailsPaypay: PaymentMethodDetailsPaypaySchema,
+    PaymentMethodDetailsPayto: PaymentMethodDetailsPaytoSchema,
+    PaymentMethodDetailsPix: PaymentMethodDetailsPixSchema,
+    PaymentMethodDetailsPromptpay: PaymentMethodDetailsPromptpaySchema,
+    PaymentMethodDetailsRevolutPay: PaymentMethodDetailsRevolutPaySchema,
+    PaymentMethodDetailsSamsungPay: PaymentMethodDetailsSamsungPaySchema,
+    PaymentMethodDetailsSatispay: PaymentMethodDetailsSatispaySchema,
+    PaymentMethodDetailsScalapay: PaymentMethodDetailsScalapaySchema,
+    PaymentMethodDetailsSepaDebit: PaymentMethodDetailsSepaDebitSchema,
+    PaymentMethodDetailsSequra: PaymentMethodDetailsSequraSchema,
+    PaymentMethodDetailsSofort: PaymentMethodDetailsSofortSchema,
+    PaymentMethodDetailsStripeAccount: PaymentMethodDetailsStripeAccountSchema,
+    PaymentMethodDetailsSunbit: PaymentMethodDetailsSunbitSchema,
+    PaymentMethodDetailsSwish: PaymentMethodDetailsSwishSchema,
+    PaymentMethodDetailsTwint: PaymentMethodDetailsTwintSchema,
+    PaymentMethodDetailsUpi: PaymentMethodDetailsUpiSchema,
+    PaymentMethodDetailsUsBankAccount: PaymentMethodDetailsUsBankAccountSchema,
+    PaymentMethodDetailsWechat: PaymentMethodDetailsWechatSchema,
+    PaymentMethodDetailsWechatPay: PaymentMethodDetailsWechatPaySchema,
+    PaymentMethodDetailsZip: PaymentMethodDetailsZipSchema,
+    PaymentMethodDomain: PaymentMethodDomainSchema,
+    PaymentMethodDomainResourcePaymentMethodStatus:
+      PaymentMethodDomainResourcePaymentMethodStatusSchema,
+    PaymentMethodDomainResourcePaymentMethodStatusDetails:
+      PaymentMethodDomainResourcePaymentMethodStatusDetailsSchema,
+    PaymentMethodEps: PaymentMethodEpsSchema,
+    PaymentMethodFpx: PaymentMethodFpxSchema,
+    PaymentMethodGiropay: PaymentMethodGiropaySchema,
+    PaymentMethodGrabpay: PaymentMethodGrabpaySchema,
+    PaymentMethodIdeal: PaymentMethodIdealSchema,
+    PaymentMethodInteracPresent: PaymentMethodInteracPresentSchema,
+    PaymentMethodKakaoPay: PaymentMethodKakaoPaySchema,
+    PaymentMethodKlarna: PaymentMethodKlarnaSchema,
+    PaymentMethodKonbini: PaymentMethodKonbiniSchema,
+    PaymentMethodKrCard: PaymentMethodKrCardSchema,
+    PaymentMethodLink: PaymentMethodLinkSchema,
+    PaymentMethodMbWay: PaymentMethodMbWaySchema,
+    PaymentMethodMobilepay: PaymentMethodMobilepaySchema,
+    PaymentMethodMultibanco: PaymentMethodMultibancoSchema,
+    PaymentMethodNaverPay: PaymentMethodNaverPaySchema,
+    PaymentMethodNzBankAccount: PaymentMethodNzBankAccountSchema,
+    PaymentMethodOptionsAffirm: PaymentMethodOptionsAffirmSchema,
+    PaymentMethodOptionsAfterpayClearpay: PaymentMethodOptionsAfterpayClearpaySchema,
+    PaymentMethodOptionsAlipay: PaymentMethodOptionsAlipaySchema,
+    PaymentMethodOptionsAlma: PaymentMethodOptionsAlmaSchema,
+    PaymentMethodOptionsAmazonPay: PaymentMethodOptionsAmazonPaySchema,
+    PaymentMethodOptionsBancontact: PaymentMethodOptionsBancontactSchema,
+    PaymentMethodOptionsBillie: PaymentMethodOptionsBillieSchema,
+    PaymentMethodOptionsBizum: PaymentMethodOptionsBizumSchema,
+    PaymentMethodOptionsBoleto: PaymentMethodOptionsBoletoSchema,
+    PaymentMethodOptionsCardInstallments: PaymentMethodOptionsCardInstallmentsSchema,
+    PaymentMethodOptionsCardMandateOptions: PaymentMethodOptionsCardMandateOptionsSchema,
+    PaymentMethodOptionsCardPresent: PaymentMethodOptionsCardPresentSchema,
+    PaymentMethodOptionsCardPresentRouting: PaymentMethodOptionsCardPresentRoutingSchema,
+    PaymentMethodOptionsCashapp: PaymentMethodOptionsCashappSchema,
+    PaymentMethodOptionsCrypto: PaymentMethodOptionsCryptoSchema,
+    PaymentMethodOptionsCustomerBalance: PaymentMethodOptionsCustomerBalanceSchema,
+    PaymentMethodOptionsCustomerBalanceBankTransfer:
+      PaymentMethodOptionsCustomerBalanceBankTransferSchema,
+    PaymentMethodOptionsCustomerBalanceEuBankAccount:
+      PaymentMethodOptionsCustomerBalanceEuBankAccountSchema,
+    PaymentMethodOptionsFpx: PaymentMethodOptionsFpxSchema,
+    PaymentMethodOptionsGiropay: PaymentMethodOptionsGiropaySchema,
+    PaymentMethodOptionsGrabpay: PaymentMethodOptionsGrabpaySchema,
+    PaymentMethodOptionsIdeal: PaymentMethodOptionsIdealSchema,
+    PaymentMethodOptionsInteracPresent: PaymentMethodOptionsInteracPresentSchema,
+    PaymentMethodOptionsKlarna: PaymentMethodOptionsKlarnaSchema,
+    PaymentMethodOptionsKonbini: PaymentMethodOptionsKonbiniSchema,
+    PaymentMethodOptionsKrCard: PaymentMethodOptionsKrCardSchema,
+    PaymentMethodOptionsMandateOptionsPix: PaymentMethodOptionsMandateOptionsPixSchema,
+    PaymentMethodOptionsMandateOptionsUpi: PaymentMethodOptionsMandateOptionsUpiSchema,
+    PaymentMethodOptionsMbWay: PaymentMethodOptionsMbWaySchema,
+    PaymentMethodOptionsMultibanco: PaymentMethodOptionsMultibancoSchema,
+    PaymentMethodOptionsOxxo: PaymentMethodOptionsOxxoSchema,
+    PaymentMethodOptionsP24: PaymentMethodOptionsP24Schema,
+    PaymentMethodOptionsPayByBank: PaymentMethodOptionsPayByBankSchema,
+    PaymentMethodOptionsPaynow: PaymentMethodOptionsPaynowSchema,
+    PaymentMethodOptionsPaypal: PaymentMethodOptionsPaypalSchema,
+    PaymentMethodOptionsPaypay: PaymentMethodOptionsPaypaySchema,
+    PaymentMethodOptionsPix: PaymentMethodOptionsPixSchema,
+    PaymentMethodOptionsPromptpay: PaymentMethodOptionsPromptpaySchema,
+    PaymentMethodOptionsRevolutPay: PaymentMethodOptionsRevolutPaySchema,
+    PaymentMethodOptionsSatispay: PaymentMethodOptionsSatispaySchema,
+    PaymentMethodOptionsScalapay: PaymentMethodOptionsScalapaySchema,
+    PaymentMethodOptionsSequra: PaymentMethodOptionsSequraSchema,
+    PaymentMethodOptionsSofort: PaymentMethodOptionsSofortSchema,
+    PaymentMethodOptionsSunbit: PaymentMethodOptionsSunbitSchema,
+    PaymentMethodOptionsTwint: PaymentMethodOptionsTwintSchema,
+    PaymentMethodOptionsUpi: PaymentMethodOptionsUpiSchema,
+    PaymentMethodOptionsUsBankAccountMandateOptions:
+      PaymentMethodOptionsUsBankAccountMandateOptionsSchema,
+    PaymentMethodOptionsWechatPay: PaymentMethodOptionsWechatPaySchema,
+    PaymentMethodOptionsZip: PaymentMethodOptionsZipSchema,
+    PaymentMethodOxxo: PaymentMethodOxxoSchema,
+    PaymentMethodP24: PaymentMethodP24Schema,
+    PaymentMethodPayByBank: PaymentMethodPayByBankSchema,
+    PaymentMethodPayco: PaymentMethodPaycoSchema,
+    PaymentMethodPaynow: PaymentMethodPaynowSchema,
+    PaymentMethodPaypal: PaymentMethodPaypalSchema,
+    PaymentMethodPaypay: PaymentMethodPaypaySchema,
+    PaymentMethodPayto: PaymentMethodPaytoSchema,
+    PaymentMethodPix: PaymentMethodPixSchema,
+    PaymentMethodPromptpay: PaymentMethodPromptpaySchema,
+    PaymentMethodRevolutPay: PaymentMethodRevolutPaySchema,
+    PaymentMethodSamsungPay: PaymentMethodSamsungPaySchema,
+    PaymentMethodSatispay: PaymentMethodSatispaySchema,
+    PaymentMethodScalapay: PaymentMethodScalapaySchema,
+    PaymentMethodSepaDebit: PaymentMethodSepaDebitSchema,
+    PaymentMethodSequra: PaymentMethodSequraSchema,
+    PaymentMethodSofort: PaymentMethodSofortSchema,
+    PaymentMethodSunbit: PaymentMethodSunbitSchema,
+    PaymentMethodSwish: PaymentMethodSwishSchema,
+    PaymentMethodTwint: PaymentMethodTwintSchema,
+    PaymentMethodUpi: PaymentMethodUpiSchema,
+    PaymentMethodUsBankAccount: PaymentMethodUsBankAccountSchema,
+    PaymentMethodUsBankAccountBlocked: PaymentMethodUsBankAccountBlockedSchema,
+    PaymentMethodUsBankAccountStatusDetails: PaymentMethodUsBankAccountStatusDetailsSchema,
+    PaymentMethodWechatPay: PaymentMethodWechatPaySchema,
+    PaymentMethodZip: PaymentMethodZipSchema,
+    PaymentPagesCheckoutSessionAdaptivePricing: PaymentPagesCheckoutSessionAdaptivePricingSchema,
+    PaymentPagesCheckoutSessionAfterExpiration: PaymentPagesCheckoutSessionAfterExpirationSchema,
+    PaymentPagesCheckoutSessionAfterExpirationRecovery:
+      PaymentPagesCheckoutSessionAfterExpirationRecoverySchema,
+    PaymentPagesCheckoutSessionAutomaticTax: PaymentPagesCheckoutSessionAutomaticTaxSchema,
+    PaymentPagesCheckoutSessionBrandingSettings: PaymentPagesCheckoutSessionBrandingSettingsSchema,
+    PaymentPagesCheckoutSessionBrandingSettingsIcon:
+      PaymentPagesCheckoutSessionBrandingSettingsIconSchema,
+    PaymentPagesCheckoutSessionBrandingSettingsLogo:
+      PaymentPagesCheckoutSessionBrandingSettingsLogoSchema,
+    PaymentPagesCheckoutSessionBusinessName: PaymentPagesCheckoutSessionBusinessNameSchema,
+    PaymentPagesCheckoutSessionCheckoutAddressDetails:
+      PaymentPagesCheckoutSessionCheckoutAddressDetailsSchema,
+    PaymentPagesCheckoutSessionCollectedInformation:
+      PaymentPagesCheckoutSessionCollectedInformationSchema,
+    PaymentPagesCheckoutSessionConsent: PaymentPagesCheckoutSessionConsentSchema,
+    PaymentPagesCheckoutSessionConsentCollection:
+      PaymentPagesCheckoutSessionConsentCollectionSchema,
+    PaymentPagesCheckoutSessionCurrencyConversion:
+      PaymentPagesCheckoutSessionCurrencyConversionSchema,
+    PaymentPagesCheckoutSessionCustomFields: PaymentPagesCheckoutSessionCustomFieldsSchema,
+    PaymentPagesCheckoutSessionCustomFieldsDropdown:
+      PaymentPagesCheckoutSessionCustomFieldsDropdownSchema,
+    PaymentPagesCheckoutSessionCustomFieldsLabel:
+      PaymentPagesCheckoutSessionCustomFieldsLabelSchema,
+    PaymentPagesCheckoutSessionCustomFieldsNumeric:
+      PaymentPagesCheckoutSessionCustomFieldsNumericSchema,
+    PaymentPagesCheckoutSessionCustomFieldsOption:
+      PaymentPagesCheckoutSessionCustomFieldsOptionSchema,
+    PaymentPagesCheckoutSessionCustomFieldsText: PaymentPagesCheckoutSessionCustomFieldsTextSchema,
+    PaymentPagesCheckoutSessionCustomText: PaymentPagesCheckoutSessionCustomTextSchema,
+    PaymentPagesCheckoutSessionCustomTextPosition:
+      PaymentPagesCheckoutSessionCustomTextPositionSchema,
+    PaymentPagesCheckoutSessionCustomerDetails: PaymentPagesCheckoutSessionCustomerDetailsSchema,
+    PaymentPagesCheckoutSessionDiscount: PaymentPagesCheckoutSessionDiscountSchema,
+    PaymentPagesCheckoutSessionIndividualName: PaymentPagesCheckoutSessionIndividualNameSchema,
+    PaymentPagesCheckoutSessionInvoiceCreation: PaymentPagesCheckoutSessionInvoiceCreationSchema,
+    PaymentPagesCheckoutSessionInvoiceSettings: PaymentPagesCheckoutSessionInvoiceSettingsSchema,
+    PaymentPagesCheckoutSessionManagedPayments: PaymentPagesCheckoutSessionManagedPaymentsSchema,
+    PaymentPagesCheckoutSessionNameCollection: PaymentPagesCheckoutSessionNameCollectionSchema,
+    PaymentPagesCheckoutSessionOptionalItem: PaymentPagesCheckoutSessionOptionalItemSchema,
+    PaymentPagesCheckoutSessionOptionalItemAdjustableQuantity:
+      PaymentPagesCheckoutSessionOptionalItemAdjustableQuantitySchema,
+    PaymentPagesCheckoutSessionPaymentMethodReuseAgreement:
+      PaymentPagesCheckoutSessionPaymentMethodReuseAgreementSchema,
+    PaymentPagesCheckoutSessionPermissions: PaymentPagesCheckoutSessionPermissionsSchema,
+    PaymentPagesCheckoutSessionPhoneNumberCollection:
+      PaymentPagesCheckoutSessionPhoneNumberCollectionSchema,
+    PaymentPagesCheckoutSessionSavedPaymentMethodOptions:
+      PaymentPagesCheckoutSessionSavedPaymentMethodOptionsSchema,
+    PaymentPagesCheckoutSessionShippingAddressCollection:
+      PaymentPagesCheckoutSessionShippingAddressCollectionSchema,
+    PaymentPagesCheckoutSessionShippingCost: PaymentPagesCheckoutSessionShippingCostSchema,
+    PaymentPagesCheckoutSessionShippingOption: PaymentPagesCheckoutSessionShippingOptionSchema,
+    PaymentPagesCheckoutSessionTaxId: PaymentPagesCheckoutSessionTaxIdSchema,
+    PaymentPagesCheckoutSessionTaxIdCollection: PaymentPagesCheckoutSessionTaxIdCollectionSchema,
+    PaymentPagesCheckoutSessionTotalDetails: PaymentPagesCheckoutSessionTotalDetailsSchema,
+    PaymentPagesCheckoutSessionTotalDetailsResourceBreakdown:
+      PaymentPagesCheckoutSessionTotalDetailsResourceBreakdownSchema,
+    PaymentPagesPrivateCardPaymentMethodOptionsResourceRestrictions:
+      PaymentPagesPrivateCardPaymentMethodOptionsResourceRestrictionsSchema,
+    PaymentRecord: PaymentRecordSchema,
+    PaymentSource: PaymentSourceSchema,
+    PaymentsPrimitivesPaymentRecordsResourceAddress:
+      PaymentsPrimitivesPaymentRecordsResourceAddressSchema,
+    PaymentsPrimitivesPaymentRecordsResourceAmount:
+      PaymentsPrimitivesPaymentRecordsResourceAmountSchema,
+    PaymentsPrimitivesPaymentRecordsResourceBillingDetails:
+      PaymentsPrimitivesPaymentRecordsResourceBillingDetailsSchema,
+    PaymentsPrimitivesPaymentRecordsResourceCustomerDetails:
+      PaymentsPrimitivesPaymentRecordsResourceCustomerDetailsSchema,
+    PaymentsPrimitivesPaymentRecordsResourcePaymentMethodAlmaDetailsResourceInstallments:
+      PaymentsPrimitivesPaymentRecordsResourcePaymentMethodAlmaDetailsResourceInstallmentsSchema,
+    PaymentsPrimitivesPaymentRecordsResourcePaymentMethodAmazonPayDetailsResourceFunding:
+      PaymentsPrimitivesPaymentRecordsResourcePaymentMethodAmazonPayDetailsResourceFundingSchema,
+    PaymentsPrimitivesPaymentRecordsResourcePaymentMethodAmazonPayDetailsResourceFundingResourceFundingCard:
+      PaymentsPrimitivesPaymentRecordsResourcePaymentMethodAmazonPayDetailsResourceFundingResourceFundingCardSchema,
+    PaymentsPrimitivesPaymentRecordsResourcePaymentMethodCardDetails:
+      PaymentsPrimitivesPaymentRecordsResourcePaymentMethodCardDetailsSchema,
+    PaymentsPrimitivesPaymentRecordsResourcePaymentMethodCardDetailsResourceChecks:
+      PaymentsPrimitivesPaymentRecordsResourcePaymentMethodCardDetailsResourceChecksSchema,
+    PaymentsPrimitivesPaymentRecordsResourcePaymentMethodCardDetailsResourceInstallmentPlan:
+      PaymentsPrimitivesPaymentRecordsResourcePaymentMethodCardDetailsResourceInstallmentPlanSchema,
+    PaymentsPrimitivesPaymentRecordsResourcePaymentMethodCardDetailsResourceInstallments:
+      PaymentsPrimitivesPaymentRecordsResourcePaymentMethodCardDetailsResourceInstallmentsSchema,
+    PaymentsPrimitivesPaymentRecordsResourcePaymentMethodCardDetailsResourceNetworkToken:
+      PaymentsPrimitivesPaymentRecordsResourcePaymentMethodCardDetailsResourceNetworkTokenSchema,
+    PaymentsPrimitivesPaymentRecordsResourcePaymentMethodCardDetailsResourceThreeDSecure:
+      PaymentsPrimitivesPaymentRecordsResourcePaymentMethodCardDetailsResourceThreeDSecureSchema,
+    PaymentsPrimitivesPaymentRecordsResourcePaymentMethodCardDetailsResourceWallet:
+      PaymentsPrimitivesPaymentRecordsResourcePaymentMethodCardDetailsResourceWalletSchema,
+    PaymentsPrimitivesPaymentRecordsResourcePaymentMethodCardDetailsResourceWalletResourceApplePay:
+      PaymentsPrimitivesPaymentRecordsResourcePaymentMethodCardDetailsResourceWalletResourceApplePaySchema,
+    PaymentsPrimitivesPaymentRecordsResourcePaymentMethodCardDetailsResourceWalletResourceGooglePay:
+      PaymentsPrimitivesPaymentRecordsResourcePaymentMethodCardDetailsResourceWalletResourceGooglePaySchema,
+    PaymentsPrimitivesPaymentRecordsResourcePaymentMethodCardDetailsResourceWalletResourceLink:
+      PaymentsPrimitivesPaymentRecordsResourcePaymentMethodCardDetailsResourceWalletResourceLinkSchema,
+    PaymentsPrimitivesPaymentRecordsResourcePaymentMethodCustomDetails:
+      PaymentsPrimitivesPaymentRecordsResourcePaymentMethodCustomDetailsSchema,
+    PaymentsPrimitivesPaymentRecordsResourcePaymentMethodDetails:
+      PaymentsPrimitivesPaymentRecordsResourcePaymentMethodDetailsSchema,
+    PaymentsPrimitivesPaymentRecordsResourcePaymentMethodKlarnaDetailsResourcePayerDetails:
+      PaymentsPrimitivesPaymentRecordsResourcePaymentMethodKlarnaDetailsResourcePayerDetailsSchema,
+    PaymentsPrimitivesPaymentRecordsResourcePaymentMethodKlarnaDetailsResourcePayerDetailsResourcePayerDetailsAddress:
+      PaymentsPrimitivesPaymentRecordsResourcePaymentMethodKlarnaDetailsResourcePayerDetailsResourcePayerDetailsAddressSchema,
+    PaymentsPrimitivesPaymentRecordsResourcePaymentMethodKonbiniDetailsResourceStore:
+      PaymentsPrimitivesPaymentRecordsResourcePaymentMethodKonbiniDetailsResourceStoreSchema,
+    PaymentsPrimitivesPaymentRecordsResourcePaymentMethodMobilepayDetailsResourceCard:
+      PaymentsPrimitivesPaymentRecordsResourcePaymentMethodMobilepayDetailsResourceCardSchema,
+    PaymentsPrimitivesPaymentRecordsResourcePaymentMethodRevolutPayDetailsResourceFunding:
+      PaymentsPrimitivesPaymentRecordsResourcePaymentMethodRevolutPayDetailsResourceFundingSchema,
+    PaymentsPrimitivesPaymentRecordsResourcePaymentMethodRevolutPayDetailsResourceFundingResourceFundingCard:
+      PaymentsPrimitivesPaymentRecordsResourcePaymentMethodRevolutPayDetailsResourceFundingResourceFundingCardSchema,
+    PaymentsPrimitivesPaymentRecordsResourceProcessorDetails:
+      PaymentsPrimitivesPaymentRecordsResourceProcessorDetailsSchema,
+    PaymentsPrimitivesPaymentRecordsResourceProcessorDetailsResourceCustomDetails:
+      PaymentsPrimitivesPaymentRecordsResourceProcessorDetailsResourceCustomDetailsSchema,
+    PaymentsPrimitivesPaymentRecordsResourceShippingDetails:
+      PaymentsPrimitivesPaymentRecordsResourceShippingDetailsSchema,
+    Payout: PayoutSchema,
+    PayoutsTraceId: PayoutsTraceIdSchema,
+    PaypalSellerProtection: PaypalSellerProtectionSchema,
+    Person: PersonSchema,
+    PersonAdditionalTosAcceptance: PersonAdditionalTosAcceptanceSchema,
+    PersonAdditionalTosAcceptances: PersonAdditionalTosAcceptancesSchema,
+    PersonEthnicityDetails: PersonEthnicityDetailsSchema,
+    PersonFutureRequirements: PersonFutureRequirementsSchema,
+    PersonRaceDetails: PersonRaceDetailsSchema,
+    PersonRelationship: PersonRelationshipSchema,
+    PersonRequirements: PersonRequirementsSchema,
+    PersonUsCfpbData: PersonUsCfpbDataSchema,
+    Plan: PlanSchema,
+    PlanTier: PlanTierSchema,
+    PlatformEarningFeeSource: PlatformEarningFeeSourceSchema,
+    PortalBusinessProfile: PortalBusinessProfileSchema,
+    PortalCustomerUpdate: PortalCustomerUpdateSchema,
+    PortalFeatures: PortalFeaturesSchema,
+    PortalFlowsAfterCompletionHostedConfirmation:
+      PortalFlowsAfterCompletionHostedConfirmationSchema,
+    PortalFlowsAfterCompletionRedirect: PortalFlowsAfterCompletionRedirectSchema,
+    PortalFlowsCouponOffer: PortalFlowsCouponOfferSchema,
+    PortalFlowsFlow: PortalFlowsFlowSchema,
+    PortalFlowsFlowAfterCompletion: PortalFlowsFlowAfterCompletionSchema,
+    PortalFlowsFlowCustomerUpdate: PortalFlowsFlowCustomerUpdateSchema,
+    PortalFlowsFlowSubscriptionCancel: PortalFlowsFlowSubscriptionCancelSchema,
+    PortalFlowsFlowSubscriptionUpdate: PortalFlowsFlowSubscriptionUpdateSchema,
+    PortalFlowsFlowSubscriptionUpdateConfirm: PortalFlowsFlowSubscriptionUpdateConfirmSchema,
+    PortalFlowsRetention: PortalFlowsRetentionSchema,
+    PortalFlowsSubscriptionUpdateConfirmDiscount:
+      PortalFlowsSubscriptionUpdateConfirmDiscountSchema,
+    PortalFlowsSubscriptionUpdateConfirmItem: PortalFlowsSubscriptionUpdateConfirmItemSchema,
+    PortalInvoiceList: PortalInvoiceListSchema,
+    PortalLoginPage: PortalLoginPageSchema,
+    PortalPaymentMethodUpdate: PortalPaymentMethodUpdateSchema,
+    PortalResourceScheduleUpdateAtPeriodEnd: PortalResourceScheduleUpdateAtPeriodEndSchema,
+    PortalResourceScheduleUpdateAtPeriodEndCondition:
+      PortalResourceScheduleUpdateAtPeriodEndConditionSchema,
+    PortalSubscriptionCancel: PortalSubscriptionCancelSchema,
+    PortalSubscriptionCancellationReason: PortalSubscriptionCancellationReasonSchema,
+    PortalSubscriptionUpdate: PortalSubscriptionUpdateSchema,
+    PortalSubscriptionUpdateProduct: PortalSubscriptionUpdateProductSchema,
+    PortalSubscriptionUpdateProductAdjustableQuantity:
+      PortalSubscriptionUpdateProductAdjustableQuantitySchema,
+    Price: PriceSchema,
+    PriceTier: PriceTierSchema,
+    Product: ProductSchema,
+    ProductCatalogTrialOffer: ProductCatalogTrialOfferSchema,
+    ProductCatalogImplEndpointsTrialOfferResourceRelativeDuration:
+      ProductCatalogImplEndpointsTrialOfferResourceRelativeDurationSchema,
+    ProductCatalogImplEndpointsTrialOfferResourceTransition:
+      ProductCatalogImplEndpointsTrialOfferResourceTransitionSchema,
+    ProductCatalogImplEndpointsTrialOfferResourceTrialOfferDuration:
+      ProductCatalogImplEndpointsTrialOfferResourceTrialOfferDurationSchema,
+    ProductCatalogImplEndpointsTrialOfferResourceTrialOfferEndBehavior:
+      ProductCatalogImplEndpointsTrialOfferResourceTrialOfferEndBehaviorSchema,
+    ProductFeature: ProductFeatureSchema,
+    ProductMarketingFeature: ProductMarketingFeatureSchema,
+    PromotionCode: PromotionCodeSchema,
+    PromotionCodeCurrencyOption: PromotionCodeCurrencyOptionSchema,
+    PromotionCodesResourcePromotion: PromotionCodesResourcePromotionSchema,
+    PromotionCodesResourceRestrictions: PromotionCodesResourceRestrictionsSchema,
+    ProrationDetails: ProrationDetailsSchema,
+    Quote: QuoteSchema,
+    QuotesResourceAutomaticTax: QuotesResourceAutomaticTaxSchema,
+    QuotesResourceComputed: QuotesResourceComputedSchema,
+    QuotesResourceFromQuote: QuotesResourceFromQuoteSchema,
+    QuotesResourceRecurring: QuotesResourceRecurringSchema,
+    QuotesResourceStatusTransitions: QuotesResourceStatusTransitionsSchema,
+    QuotesResourceSubscriptionDataBillingMode: QuotesResourceSubscriptionDataBillingModeSchema,
+    QuotesResourceSubscriptionDataSubscriptionData:
+      QuotesResourceSubscriptionDataSubscriptionDataSchema,
+    QuotesResourceTotalDetails: QuotesResourceTotalDetailsSchema,
+    QuotesResourceTotalDetailsResourceBreakdown: QuotesResourceTotalDetailsResourceBreakdownSchema,
+    QuotesResourceTransferData: QuotesResourceTransferDataSchema,
+    QuotesResourceUpfront: QuotesResourceUpfrontSchema,
+    RadarEarlyFraudWarning: RadarEarlyFraudWarningSchema,
+    RadarPaymentEvaluation: RadarPaymentEvaluationSchema,
+    RadarValueList: RadarValueListSchema,
+    RadarValueListItem: RadarValueListItemSchema,
+    RadarRadarOptions: RadarRadarOptionsSchema,
+    RadarReviewResourceLocation: RadarReviewResourceLocationSchema,
+    RadarReviewResourceSession: RadarReviewResourceSessionSchema,
+    ReceivedPaymentMethodDetailsFinancialAccount:
+      ReceivedPaymentMethodDetailsFinancialAccountSchema,
+    Recurring: RecurringSchema,
+    Refund: RefundSchema,
+    RefundDestinationDetails: RefundDestinationDetailsSchema,
+    RefundDestinationDetailsBlik: RefundDestinationDetailsBlikSchema,
+    RefundDestinationDetailsBrBankTransfer: RefundDestinationDetailsBrBankTransferSchema,
+    RefundDestinationDetailsCard: RefundDestinationDetailsCardSchema,
+    RefundDestinationDetailsCrypto: RefundDestinationDetailsCryptoSchema,
+    RefundDestinationDetailsEuBankTransfer: RefundDestinationDetailsEuBankTransferSchema,
+    RefundDestinationDetailsGbBankTransfer: RefundDestinationDetailsGbBankTransferSchema,
+    RefundDestinationDetailsJpBankTransfer: RefundDestinationDetailsJpBankTransferSchema,
+    RefundDestinationDetailsMbWay: RefundDestinationDetailsMbWaySchema,
+    RefundDestinationDetailsMultibanco: RefundDestinationDetailsMultibancoSchema,
+    RefundDestinationDetailsMxBankTransfer: RefundDestinationDetailsMxBankTransferSchema,
+    RefundDestinationDetailsP24: RefundDestinationDetailsP24Schema,
+    RefundDestinationDetailsPaypal: RefundDestinationDetailsPaypalSchema,
+    RefundDestinationDetailsSwish: RefundDestinationDetailsSwishSchema,
+    RefundDestinationDetailsThBankTransfer: RefundDestinationDetailsThBankTransferSchema,
+    RefundDestinationDetailsUsBankTransfer: RefundDestinationDetailsUsBankTransferSchema,
+    RefundNextAction: RefundNextActionSchema,
+    RefundNextActionDisplayDetails: RefundNextActionDisplayDetailsSchema,
+    ReportingReportRun: ReportingReportRunSchema,
+    ReportingReportType: ReportingReportTypeSchema,
+    ReserveTransaction: ReserveTransactionSchema,
+    Review: ReviewSchema,
+    RevolutPayUnderlyingPaymentMethodFundingDetails:
+      RevolutPayUnderlyingPaymentMethodFundingDetailsSchema,
+    Rule: RuleSchema,
+    ScheduledQueryRun: ScheduledQueryRunSchema,
+    SchedulesPhaseAutomaticTax: SchedulesPhaseAutomaticTaxSchema,
+    SecretServiceResourceScope: SecretServiceResourceScopeSchema,
+    SepaDebitGeneratedFrom: SepaDebitGeneratedFromSchema,
+    SetupAttempt: SetupAttemptSchema,
+    SetupAttemptPaymentMethodDetails: SetupAttemptPaymentMethodDetailsSchema,
+    SetupAttemptPaymentMethodDetailsAcssDebit: SetupAttemptPaymentMethodDetailsAcssDebitSchema,
+    SetupAttemptPaymentMethodDetailsAmazonPay: SetupAttemptPaymentMethodDetailsAmazonPaySchema,
+    SetupAttemptPaymentMethodDetailsAuBecsDebit: SetupAttemptPaymentMethodDetailsAuBecsDebitSchema,
+    SetupAttemptPaymentMethodDetailsBacsDebit: SetupAttemptPaymentMethodDetailsBacsDebitSchema,
+    SetupAttemptPaymentMethodDetailsBancontact: SetupAttemptPaymentMethodDetailsBancontactSchema,
+    SetupAttemptPaymentMethodDetailsBlik: SetupAttemptPaymentMethodDetailsBlikSchema,
+    SetupAttemptPaymentMethodDetailsBoleto: SetupAttemptPaymentMethodDetailsBoletoSchema,
+    SetupAttemptPaymentMethodDetailsCard: SetupAttemptPaymentMethodDetailsCardSchema,
+    SetupAttemptPaymentMethodDetailsCardChecks: SetupAttemptPaymentMethodDetailsCardChecksSchema,
+    SetupAttemptPaymentMethodDetailsCardPresent: SetupAttemptPaymentMethodDetailsCardPresentSchema,
+    SetupAttemptPaymentMethodDetailsCardWallet: SetupAttemptPaymentMethodDetailsCardWalletSchema,
+    SetupAttemptPaymentMethodDetailsCashapp: SetupAttemptPaymentMethodDetailsCashappSchema,
+    SetupAttemptPaymentMethodDetailsIdeal: SetupAttemptPaymentMethodDetailsIdealSchema,
+    SetupAttemptPaymentMethodDetailsKakaoPay: SetupAttemptPaymentMethodDetailsKakaoPaySchema,
+    SetupAttemptPaymentMethodDetailsKlarna: SetupAttemptPaymentMethodDetailsKlarnaSchema,
+    SetupAttemptPaymentMethodDetailsKrCard: SetupAttemptPaymentMethodDetailsKrCardSchema,
+    SetupAttemptPaymentMethodDetailsLink: SetupAttemptPaymentMethodDetailsLinkSchema,
+    SetupAttemptPaymentMethodDetailsNaverPay: SetupAttemptPaymentMethodDetailsNaverPaySchema,
+    SetupAttemptPaymentMethodDetailsNzBankAccount:
+      SetupAttemptPaymentMethodDetailsNzBankAccountSchema,
+    SetupAttemptPaymentMethodDetailsPaypal: SetupAttemptPaymentMethodDetailsPaypalSchema,
+    SetupAttemptPaymentMethodDetailsPayto: SetupAttemptPaymentMethodDetailsPaytoSchema,
+    SetupAttemptPaymentMethodDetailsPix: SetupAttemptPaymentMethodDetailsPixSchema,
+    SetupAttemptPaymentMethodDetailsRevolutPay: SetupAttemptPaymentMethodDetailsRevolutPaySchema,
+    SetupAttemptPaymentMethodDetailsSepaDebit: SetupAttemptPaymentMethodDetailsSepaDebitSchema,
+    SetupAttemptPaymentMethodDetailsSofort: SetupAttemptPaymentMethodDetailsSofortSchema,
+    SetupAttemptPaymentMethodDetailsTwint: SetupAttemptPaymentMethodDetailsTwintSchema,
+    SetupAttemptPaymentMethodDetailsUpi: SetupAttemptPaymentMethodDetailsUpiSchema,
+    SetupAttemptPaymentMethodDetailsUsBankAccount:
+      SetupAttemptPaymentMethodDetailsUsBankAccountSchema,
+    SetupIntent: SetupIntentSchema,
+    SetupIntentNextAction: SetupIntentNextActionSchema,
+    SetupIntentNextActionPixDisplayQrCode: SetupIntentNextActionPixDisplayQrCodeSchema,
+    SetupIntentNextActionRedirectToUrl: SetupIntentNextActionRedirectToUrlSchema,
+    SetupIntentNextActionVerifyWithMicrodeposits:
+      SetupIntentNextActionVerifyWithMicrodepositsSchema,
+    SetupIntentPaymentMethodOptions: SetupIntentPaymentMethodOptionsSchema,
+    SetupIntentPaymentMethodOptionsAcssDebit: SetupIntentPaymentMethodOptionsAcssDebitSchema,
+    SetupIntentPaymentMethodOptionsAmazonPay: SetupIntentPaymentMethodOptionsAmazonPaySchema,
+    SetupIntentPaymentMethodOptionsBacsDebit: SetupIntentPaymentMethodOptionsBacsDebitSchema,
+    SetupIntentPaymentMethodOptionsBizum: SetupIntentPaymentMethodOptionsBizumSchema,
+    SetupIntentPaymentMethodOptionsBlik: SetupIntentPaymentMethodOptionsBlikSchema,
+    SetupIntentPaymentMethodOptionsCard: SetupIntentPaymentMethodOptionsCardSchema,
+    SetupIntentPaymentMethodOptionsCardMandateOptions:
+      SetupIntentPaymentMethodOptionsCardMandateOptionsSchema,
+    SetupIntentPaymentMethodOptionsCardPresent: SetupIntentPaymentMethodOptionsCardPresentSchema,
+    SetupIntentPaymentMethodOptionsKlarna: SetupIntentPaymentMethodOptionsKlarnaSchema,
+    SetupIntentPaymentMethodOptionsLink: SetupIntentPaymentMethodOptionsLinkSchema,
+    SetupIntentPaymentMethodOptionsMandateOptionsAcssDebit:
+      SetupIntentPaymentMethodOptionsMandateOptionsAcssDebitSchema,
+    SetupIntentPaymentMethodOptionsMandateOptionsBacsDebit:
+      SetupIntentPaymentMethodOptionsMandateOptionsBacsDebitSchema,
+    SetupIntentPaymentMethodOptionsMandateOptionsBlik:
+      SetupIntentPaymentMethodOptionsMandateOptionsBlikSchema,
+    SetupIntentPaymentMethodOptionsMandateOptionsPayto:
+      SetupIntentPaymentMethodOptionsMandateOptionsPaytoSchema,
+    SetupIntentPaymentMethodOptionsMandateOptionsSepaDebit:
+      SetupIntentPaymentMethodOptionsMandateOptionsSepaDebitSchema,
+    SetupIntentPaymentMethodOptionsPaypal: SetupIntentPaymentMethodOptionsPaypalSchema,
+    SetupIntentPaymentMethodOptionsPayto: SetupIntentPaymentMethodOptionsPaytoSchema,
+    SetupIntentPaymentMethodOptionsPix: SetupIntentPaymentMethodOptionsPixSchema,
+    SetupIntentPaymentMethodOptionsSepaDebit: SetupIntentPaymentMethodOptionsSepaDebitSchema,
+    SetupIntentPaymentMethodOptionsUpi: SetupIntentPaymentMethodOptionsUpiSchema,
+    SetupIntentPaymentMethodOptionsUsBankAccount:
+      SetupIntentPaymentMethodOptionsUsBankAccountSchema,
+    SetupIntentTypeSpecificPaymentMethodOptionsClient:
+      SetupIntentTypeSpecificPaymentMethodOptionsClientSchema,
+    Shipping: ShippingSchema,
+    ShippingRate: ShippingRateSchema,
+    ShippingRateCurrencyOption: ShippingRateCurrencyOptionSchema,
+    ShippingRateDeliveryEstimate: ShippingRateDeliveryEstimateSchema,
+    ShippingRateDeliveryEstimateBound: ShippingRateDeliveryEstimateBoundSchema,
+    ShippingRateFixedAmount: ShippingRateFixedAmountSchema,
+    SigmaSigmaApiQuery: SigmaSigmaApiQuerySchema,
+    SigmaScheduledQueryRunError: SigmaScheduledQueryRunErrorSchema,
+    SmorResourceManagedPayments: SmorResourceManagedPaymentsSchema,
+    Source: SourceSchema,
+    SourceCodeVerificationFlow: SourceCodeVerificationFlowSchema,
+    SourceMandateNotification: SourceMandateNotificationSchema,
+    SourceMandateNotificationAcssDebitData: SourceMandateNotificationAcssDebitDataSchema,
+    SourceMandateNotificationBacsDebitData: SourceMandateNotificationBacsDebitDataSchema,
+    SourceMandateNotificationSepaDebitData: SourceMandateNotificationSepaDebitDataSchema,
+    SourceOrder: SourceOrderSchema,
+    SourceOrderItem: SourceOrderItemSchema,
+    SourceOwner: SourceOwnerSchema,
+    SourceReceiverFlow: SourceReceiverFlowSchema,
+    SourceRedirectFlow: SourceRedirectFlowSchema,
+    SourceTransaction: SourceTransactionSchema,
+    SourceTransactionAchCreditTransferData: SourceTransactionAchCreditTransferDataSchema,
+    SourceTransactionChfCreditTransferData: SourceTransactionChfCreditTransferDataSchema,
+    SourceTransactionGbpCreditTransferData: SourceTransactionGbpCreditTransferDataSchema,
+    SourceTransactionPaperCheckData: SourceTransactionPaperCheckDataSchema,
+    SourceTransactionSepaCreditTransferData: SourceTransactionSepaCreditTransferDataSchema,
+    SourceTypeAchCreditTransfer: SourceTypeAchCreditTransferSchema,
+    SourceTypeAchDebit: SourceTypeAchDebitSchema,
+    SourceTypeAcssDebit: SourceTypeAcssDebitSchema,
+    SourceTypeAlipay: SourceTypeAlipaySchema,
+    SourceTypeAuBecsDebit: SourceTypeAuBecsDebitSchema,
+    SourceTypeBancontact: SourceTypeBancontactSchema,
+    SourceTypeCard: SourceTypeCardSchema,
+    SourceTypeCardPresent: SourceTypeCardPresentSchema,
+    SourceTypeEps: SourceTypeEpsSchema,
+    SourceTypeGiropay: SourceTypeGiropaySchema,
+    SourceTypeIdeal: SourceTypeIdealSchema,
+    SourceTypeKlarna: SourceTypeKlarnaSchema,
+    SourceTypeMultibanco: SourceTypeMultibancoSchema,
+    SourceTypeP24: SourceTypeP24Schema,
+    SourceTypeSepaDebit: SourceTypeSepaDebitSchema,
+    SourceTypeSofort: SourceTypeSofortSchema,
+    SourceTypeThreeDSecure: SourceTypeThreeDSecureSchema,
+    SourceTypeWechat: SourceTypeWechatSchema,
+    StackableDiscountWithDiscountSettings: StackableDiscountWithDiscountSettingsSchema,
+    StackableDiscountWithDiscountSettingsAndDiscountEnd:
+      StackableDiscountWithDiscountSettingsAndDiscountEndSchema,
+    Subscription: SubscriptionSchema,
+    SubscriptionAutomaticTax: SubscriptionAutomaticTaxSchema,
+    SubscriptionBillingThresholds: SubscriptionBillingThresholdsSchema,
+    SubscriptionItem: SubscriptionItemSchema,
+    SubscriptionItemBillingThresholds: SubscriptionItemBillingThresholdsSchema,
+    SubscriptionPaymentMethodOptionsBillie: SubscriptionPaymentMethodOptionsBillieSchema,
+    SubscriptionPaymentMethodOptionsBillieCompanyDetails:
+      SubscriptionPaymentMethodOptionsBillieCompanyDetailsSchema,
+    SubscriptionPaymentMethodOptionsBillieCompanyDetailsRegisteredAddress:
+      SubscriptionPaymentMethodOptionsBillieCompanyDetailsRegisteredAddressSchema,
+    SubscriptionPaymentMethodOptionsBlik: SubscriptionPaymentMethodOptionsBlikSchema,
+    SubscriptionPaymentMethodOptionsCard: SubscriptionPaymentMethodOptionsCardSchema,
+    SubscriptionPaymentMethodOptionsMandateOptionsBlik:
+      SubscriptionPaymentMethodOptionsMandateOptionsBlikSchema,
+    SubscriptionPaymentMethodOptionsMandateOptionsPix:
+      SubscriptionPaymentMethodOptionsMandateOptionsPixSchema,
+    SubscriptionPaymentMethodOptionsPix: SubscriptionPaymentMethodOptionsPixSchema,
+    SubscriptionPendingInvoiceItemInterval: SubscriptionPendingInvoiceItemIntervalSchema,
+    SubscriptionSchedule: SubscriptionScheduleSchema,
+    SubscriptionScheduleAddInvoiceItem: SubscriptionScheduleAddInvoiceItemSchema,
+    SubscriptionScheduleAddInvoiceItemPeriod: SubscriptionScheduleAddInvoiceItemPeriodSchema,
+    SubscriptionScheduleConfigurationItem: SubscriptionScheduleConfigurationItemSchema,
+    SubscriptionScheduleCurrentPhase: SubscriptionScheduleCurrentPhaseSchema,
+    SubscriptionSchedulePhaseConfiguration: SubscriptionSchedulePhaseConfigurationSchema,
+    SubscriptionSchedulesResourceDefaultSettings:
+      SubscriptionSchedulesResourceDefaultSettingsSchema,
+    SubscriptionSchedulesResourceDefaultSettingsAutomaticTax:
+      SubscriptionSchedulesResourceDefaultSettingsAutomaticTaxSchema,
+    SubscriptionSchedulesResourceInvoiceItemPeriodResourcePeriodEnd:
+      SubscriptionSchedulesResourceInvoiceItemPeriodResourcePeriodEndSchema,
+    SubscriptionSchedulesResourceInvoiceItemPeriodResourcePeriodStart:
+      SubscriptionSchedulesResourceInvoiceItemPeriodResourcePeriodStartSchema,
+    SubscriptionSchedulesResourcePauseSchedule: SubscriptionSchedulesResourcePauseScheduleSchema,
+    SubscriptionSchedulesResourcePauseScheduleBillFor:
+      SubscriptionSchedulesResourcePauseScheduleBillForSchema,
+    SubscriptionSchedulesResourcePauseScheduleOutstandingUsageThrough:
+      SubscriptionSchedulesResourcePauseScheduleOutstandingUsageThroughSchema,
+    SubscriptionSchedulesResourcePauseSchedulePause:
+      SubscriptionSchedulesResourcePauseSchedulePauseSchema,
+    SubscriptionSchedulesResourcePauseSchedulePauseSettings:
+      SubscriptionSchedulesResourcePauseSchedulePauseSettingsSchema,
+    SubscriptionSchedulesResourcePauseSchedulePauseStatus:
+      SubscriptionSchedulesResourcePauseSchedulePauseStatusSchema,
+    SubscriptionSchedulesResourcePauseScheduleResume:
+      SubscriptionSchedulesResourcePauseScheduleResumeSchema,
+    SubscriptionSchedulesResourcePauseScheduleResumeSettings:
+      SubscriptionSchedulesResourcePauseScheduleResumeSettingsSchema,
+    SubscriptionSchedulesResourcePauseScheduleResumeStatus:
+      SubscriptionSchedulesResourcePauseScheduleResumeStatusSchema,
+    SubscriptionSchedulesResourcePauseScheduleStatusError:
+      SubscriptionSchedulesResourcePauseScheduleStatusErrorSchema,
+    SubscriptionSchedulesResourcePauseScheduleUnusedTimeFrom:
+      SubscriptionSchedulesResourcePauseScheduleUnusedTimeFromSchema,
+    SubscriptionTransferData: SubscriptionTransferDataSchema,
+    SubscriptionsResourceBillingCycleAnchorConfig:
+      SubscriptionsResourceBillingCycleAnchorConfigSchema,
+    SubscriptionsResourceBillingMode: SubscriptionsResourceBillingModeSchema,
+    SubscriptionsResourceBillingModeFlexible: SubscriptionsResourceBillingModeFlexibleSchema,
+    SubscriptionsResourceBillingSchedules: SubscriptionsResourceBillingSchedulesSchema,
+    SubscriptionsResourceBillingSchedulesAppliesTo:
+      SubscriptionsResourceBillingSchedulesAppliesToSchema,
+    SubscriptionsResourceBillingSchedulesBillUntil:
+      SubscriptionsResourceBillingSchedulesBillUntilSchema,
+    SubscriptionsResourceBillingSchedulesBillUntilDuration:
+      SubscriptionsResourceBillingSchedulesBillUntilDurationSchema,
+    SubscriptionsResourcePauseCollection: SubscriptionsResourcePauseCollectionSchema,
+    SubscriptionsResourcePausedStatusDetailsPublic:
+      SubscriptionsResourcePausedStatusDetailsPublicSchema,
+    SubscriptionsResourcePausedStatusDetailsSubscription:
+      SubscriptionsResourcePausedStatusDetailsSubscriptionSchema,
+    SubscriptionsResourcePaymentMethodOptions: SubscriptionsResourcePaymentMethodOptionsSchema,
+    SubscriptionsResourcePaymentSettings: SubscriptionsResourcePaymentSettingsSchema,
+    SubscriptionsResourcePendingUpdate: SubscriptionsResourcePendingUpdateSchema,
+    SubscriptionsResourceStatusDetailsPublic: SubscriptionsResourceStatusDetailsPublicSchema,
+    SubscriptionsResourceSubscriptionInvoiceSettings:
+      SubscriptionsResourceSubscriptionInvoiceSettingsSchema,
+    SubscriptionsResourceSubscriptionPresentmentDetails:
+      SubscriptionsResourceSubscriptionPresentmentDetailsSchema,
+    SubscriptionsResourceTrialSettingsEndBehavior:
+      SubscriptionsResourceTrialSettingsEndBehaviorSchema,
+    SubscriptionsResourceTrialSettingsTrialSettings:
+      SubscriptionsResourceTrialSettingsTrialSettingsSchema,
+    SubscriptionsTrialsResourceCurrentTrial: SubscriptionsTrialsResourceCurrentTrialSchema,
+    SubscriptionsTrialsResourceEndBehavior: SubscriptionsTrialsResourceEndBehaviorSchema,
+    SubscriptionsTrialsResourceTrialSettings: SubscriptionsTrialsResourceTrialSettingsSchema,
+    TaxAssociation: TaxAssociationSchema,
+    TaxCalculation: TaxCalculationSchema,
+    TaxCalculationLineItem: TaxCalculationLineItemSchema,
+    TaxLocation: TaxLocationSchema,
+    TaxRegistration: TaxRegistrationSchema,
+    TaxSettings: TaxSettingsSchema,
+    TaxTransaction: TaxTransactionSchema,
+    TaxTransactionLineItem: TaxTransactionLineItemSchema,
+    TaxCode: TaxCodeSchema,
+    TaxCodeRequirements: TaxCodeRequirementsSchema,
+    TaxDeductedAtSource: TaxDeductedAtSourceSchema,
+    TaxIDsOwner: TaxIDsOwnerSchema,
+    TaxId: TaxIdSchema,
+    TaxIdVerification: TaxIdVerificationSchema,
+    TaxProductRegistrationsResourceCountryOptions:
+      TaxProductRegistrationsResourceCountryOptionsSchema,
+    TaxProductRegistrationsResourceCountryOptionsCaProvinceStandard:
+      TaxProductRegistrationsResourceCountryOptionsCaProvinceStandardSchema,
+    TaxProductRegistrationsResourceCountryOptionsCanada:
+      TaxProductRegistrationsResourceCountryOptionsCanadaSchema,
+    TaxProductRegistrationsResourceCountryOptionsDefault:
+      TaxProductRegistrationsResourceCountryOptionsDefaultSchema,
+    TaxProductRegistrationsResourceCountryOptionsDefaultInboundGoods:
+      TaxProductRegistrationsResourceCountryOptionsDefaultInboundGoodsSchema,
+    TaxProductRegistrationsResourceCountryOptionsDefaultStandard:
+      TaxProductRegistrationsResourceCountryOptionsDefaultStandardSchema,
+    TaxProductRegistrationsResourceCountryOptionsEuStandard:
+      TaxProductRegistrationsResourceCountryOptionsEuStandardSchema,
+    TaxProductRegistrationsResourceCountryOptionsEurope:
+      TaxProductRegistrationsResourceCountryOptionsEuropeSchema,
+    TaxProductRegistrationsResourceCountryOptionsSimplified:
+      TaxProductRegistrationsResourceCountryOptionsSimplifiedSchema,
+    TaxProductRegistrationsResourceCountryOptionsSpain:
+      TaxProductRegistrationsResourceCountryOptionsSpainSchema,
+    TaxProductRegistrationsResourceCountryOptionsThailand:
+      TaxProductRegistrationsResourceCountryOptionsThailandSchema,
+    TaxProductRegistrationsResourceCountryOptionsUnitedStates:
+      TaxProductRegistrationsResourceCountryOptionsUnitedStatesSchema,
+    TaxProductRegistrationsResourceCountryOptionsUsAdmissionsTax:
+      TaxProductRegistrationsResourceCountryOptionsUsAdmissionsTaxSchema,
+    TaxProductRegistrationsResourceCountryOptionsUsAttendanceTax:
+      TaxProductRegistrationsResourceCountryOptionsUsAttendanceTaxSchema,
+    TaxProductRegistrationsResourceCountryOptionsUsEntertainmentTax:
+      TaxProductRegistrationsResourceCountryOptionsUsEntertainmentTaxSchema,
+    TaxProductRegistrationsResourceCountryOptionsUsGrossReceiptsTax:
+      TaxProductRegistrationsResourceCountryOptionsUsGrossReceiptsTaxSchema,
+    TaxProductRegistrationsResourceCountryOptionsUsHospitalityTax:
+      TaxProductRegistrationsResourceCountryOptionsUsHospitalityTaxSchema,
+    TaxProductRegistrationsResourceCountryOptionsUsLocalAmusementTax:
+      TaxProductRegistrationsResourceCountryOptionsUsLocalAmusementTaxSchema,
+    TaxProductRegistrationsResourceCountryOptionsUsLocalLeaseTax:
+      TaxProductRegistrationsResourceCountryOptionsUsLocalLeaseTaxSchema,
+    TaxProductRegistrationsResourceCountryOptionsUsLuxuryTax:
+      TaxProductRegistrationsResourceCountryOptionsUsLuxuryTaxSchema,
+    TaxProductRegistrationsResourceCountryOptionsUsMassTransitParkingTax:
+      TaxProductRegistrationsResourceCountryOptionsUsMassTransitParkingTaxSchema,
+    TaxProductRegistrationsResourceCountryOptionsUsParkingTax:
+      TaxProductRegistrationsResourceCountryOptionsUsParkingTaxSchema,
+    TaxProductRegistrationsResourceCountryOptionsUsResortTax:
+      TaxProductRegistrationsResourceCountryOptionsUsResortTaxSchema,
+    TaxProductRegistrationsResourceCountryOptionsUsStateSalesTax:
+      TaxProductRegistrationsResourceCountryOptionsUsStateSalesTaxSchema,
+    TaxProductRegistrationsResourceCountryOptionsUsStateSalesTaxElection:
+      TaxProductRegistrationsResourceCountryOptionsUsStateSalesTaxElectionSchema,
+    TaxProductRegistrationsResourceCountryOptionsUsTourismTax:
+      TaxProductRegistrationsResourceCountryOptionsUsTourismTaxSchema,
+    TaxProductResourceCustomerDetails: TaxProductResourceCustomerDetailsSchema,
+    TaxProductResourceCustomerDetailsResourceTaxId:
+      TaxProductResourceCustomerDetailsResourceTaxIdSchema,
+    TaxProductResourceJurisdiction: TaxProductResourceJurisdictionSchema,
+    TaxProductResourceLineItemTaxBreakdown: TaxProductResourceLineItemTaxBreakdownSchema,
+    TaxProductResourceLineItemTaxRateDetails: TaxProductResourceLineItemTaxRateDetailsSchema,
+    TaxProductResourcePostalAddress: TaxProductResourcePostalAddressSchema,
+    TaxProductResourceShipFromDetails: TaxProductResourceShipFromDetailsSchema,
+    TaxProductResourceTaxAssociationTransactionAttempts:
+      TaxProductResourceTaxAssociationTransactionAttemptsSchema,
+    TaxProductResourceTaxAssociationTransactionAttemptsResourceCommitted:
+      TaxProductResourceTaxAssociationTransactionAttemptsResourceCommittedSchema,
+    TaxProductResourceTaxAssociationTransactionAttemptsResourceErrored:
+      TaxProductResourceTaxAssociationTransactionAttemptsResourceErroredSchema,
+    TaxProductResourceTaxBreakdown: TaxProductResourceTaxBreakdownSchema,
+    TaxProductResourceTaxCalculationShippingCost:
+      TaxProductResourceTaxCalculationShippingCostSchema,
+    TaxProductResourceTaxRateDetails: TaxProductResourceTaxRateDetailsSchema,
+    TaxProductResourceTaxSettingsDefaults: TaxProductResourceTaxSettingsDefaultsSchema,
+    TaxProductResourceTaxSettingsHeadOffice: TaxProductResourceTaxSettingsHeadOfficeSchema,
+    TaxProductResourceTaxSettingsStatusDetails: TaxProductResourceTaxSettingsStatusDetailsSchema,
+    TaxProductResourceTaxSettingsStatusDetailsResourceActive:
+      TaxProductResourceTaxSettingsStatusDetailsResourceActiveSchema,
+    TaxProductResourceTaxSettingsStatusDetailsResourcePending:
+      TaxProductResourceTaxSettingsStatusDetailsResourcePendingSchema,
+    TaxProductResourceTaxTransactionLineItemResourceReversal:
+      TaxProductResourceTaxTransactionLineItemResourceReversalSchema,
+    TaxProductResourceTaxTransactionResourceReversal:
+      TaxProductResourceTaxTransactionResourceReversalSchema,
+    TaxProductResourceTaxTransactionShippingCost:
+      TaxProductResourceTaxTransactionShippingCostSchema,
+    TaxProductTaxDetailsResourceTaxDetails: TaxProductTaxDetailsResourceTaxDetailsSchema,
+    TaxRate: TaxRateSchema,
+    TaxRateFlatAmount: TaxRateFlatAmountSchema,
+    TerminalConfiguration: TerminalConfigurationSchema,
+    TerminalConnectionToken: TerminalConnectionTokenSchema,
+    TerminalLocation: TerminalLocationSchema,
+    TerminalOnboardingLink: TerminalOnboardingLinkSchema,
+    TerminalReader: TerminalReaderSchema,
+    TerminalRefund: TerminalRefundSchema,
+    TerminalConfigurationConfigurationResourceCellularConfig:
+      TerminalConfigurationConfigurationResourceCellularConfigSchema,
+    TerminalConfigurationConfigurationResourceCurrencySpecificConfig:
+      TerminalConfigurationConfigurationResourceCurrencySpecificConfigSchema,
+    TerminalConfigurationConfigurationResourceDeviceTypeSpecificConfig:
+      TerminalConfigurationConfigurationResourceDeviceTypeSpecificConfigSchema,
+    TerminalConfigurationConfigurationResourceEnterprisePeapWifi:
+      TerminalConfigurationConfigurationResourceEnterprisePeapWifiSchema,
+    TerminalConfigurationConfigurationResourceEnterpriseTlsWifi:
+      TerminalConfigurationConfigurationResourceEnterpriseTlsWifiSchema,
+    TerminalConfigurationConfigurationResourceOfflineConfig:
+      TerminalConfigurationConfigurationResourceOfflineConfigSchema,
+    TerminalConfigurationConfigurationResourcePersonalPskWifi:
+      TerminalConfigurationConfigurationResourcePersonalPskWifiSchema,
+    TerminalConfigurationConfigurationResourceRebootWindow:
+      TerminalConfigurationConfigurationResourceRebootWindowSchema,
+    TerminalConfigurationConfigurationResourceTipping:
+      TerminalConfigurationConfigurationResourceTippingSchema,
+    TerminalConfigurationConfigurationResourceWifiConfig:
+      TerminalConfigurationConfigurationResourceWifiConfigSchema,
+    TerminalOnboardingLinkAppleTermsAndConditions:
+      TerminalOnboardingLinkAppleTermsAndConditionsSchema,
+    TerminalOnboardingLinkLinkOptions: TerminalOnboardingLinkLinkOptionsSchema,
+    TerminalReaderReaderResourceCart: TerminalReaderReaderResourceCartSchema,
+    TerminalReaderReaderResourceChoice: TerminalReaderReaderResourceChoiceSchema,
+    TerminalReaderReaderResourceCollectConfig: TerminalReaderReaderResourceCollectConfigSchema,
+    TerminalReaderReaderResourceCollectInputsAction:
+      TerminalReaderReaderResourceCollectInputsActionSchema,
+    TerminalReaderReaderResourceCollectPaymentMethodAction:
+      TerminalReaderReaderResourceCollectPaymentMethodActionSchema,
+    TerminalReaderReaderResourceConfirmConfig: TerminalReaderReaderResourceConfirmConfigSchema,
+    TerminalReaderReaderResourceConfirmPaymentIntentAction:
+      TerminalReaderReaderResourceConfirmPaymentIntentActionSchema,
+    TerminalReaderReaderResourceCustomText: TerminalReaderReaderResourceCustomTextSchema,
+    TerminalReaderReaderResourceEmail: TerminalReaderReaderResourceEmailSchema,
+    TerminalReaderReaderResourceFileMetadata: TerminalReaderReaderResourceFileMetadataSchema,
+    TerminalReaderReaderResourceInput: TerminalReaderReaderResourceInputSchema,
+    TerminalReaderReaderResourceLineItem: TerminalReaderReaderResourceLineItemSchema,
+    TerminalReaderReaderResourceNumeric: TerminalReaderReaderResourceNumericSchema,
+    TerminalReaderReaderResourcePhone: TerminalReaderReaderResourcePhoneSchema,
+    TerminalReaderReaderResourcePrintContent: TerminalReaderReaderResourcePrintContentSchema,
+    TerminalReaderReaderResourceProcessConfig: TerminalReaderReaderResourceProcessConfigSchema,
+    TerminalReaderReaderResourceProcessPaymentIntentAction:
+      TerminalReaderReaderResourceProcessPaymentIntentActionSchema,
+    TerminalReaderReaderResourceProcessSetupConfig:
+      TerminalReaderReaderResourceProcessSetupConfigSchema,
+    TerminalReaderReaderResourceProcessSetupIntentAction:
+      TerminalReaderReaderResourceProcessSetupIntentActionSchema,
+    TerminalReaderReaderResourceReaderAction: TerminalReaderReaderResourceReaderActionSchema,
+    TerminalReaderReaderResourceRefundPaymentAction:
+      TerminalReaderReaderResourceRefundPaymentActionSchema,
+    TerminalReaderReaderResourceRefundPaymentConfig:
+      TerminalReaderReaderResourceRefundPaymentConfigSchema,
+    TerminalReaderReaderResourceSelection: TerminalReaderReaderResourceSelectionSchema,
+    TerminalReaderReaderResourceSetReaderDisplayAction:
+      TerminalReaderReaderResourceSetReaderDisplayActionSchema,
+    TerminalReaderReaderResourceSignature: TerminalReaderReaderResourceSignatureSchema,
+    TerminalReaderReaderResourceText: TerminalReaderReaderResourceTextSchema,
+    TerminalReaderReaderResourceTippingConfig: TerminalReaderReaderResourceTippingConfigSchema,
+    TerminalReaderReaderResourceToggle: TerminalReaderReaderResourceToggleSchema,
+    TestHelpersTestClock: TestHelpersTestClockSchema,
+    ThreeDSecureAuthentication: ThreeDSecureAuthenticationSchema,
+    ThreeDSecureDetails: ThreeDSecureDetailsSchema,
+    ThreeDSecureDetailsCharge: ThreeDSecureDetailsChargeSchema,
+    ThreeDSecureStandaloneResourceAcquirerDetails:
+      ThreeDSecureStandaloneResourceAcquirerDetailsSchema,
+    ThreeDSecureStandaloneResourceBrowserDetails:
+      ThreeDSecureStandaloneResourceBrowserDetailsSchema,
+    ThreeDSecureStandaloneResourceCartesBancaires:
+      ThreeDSecureStandaloneResourceCartesBancairesSchema,
+    ThreeDSecureStandaloneResourceChallengeDetails:
+      ThreeDSecureStandaloneResourceChallengeDetailsSchema,
+    ThreeDSecureStandaloneResourceChannel: ThreeDSecureStandaloneResourceChannelSchema,
+    ThreeDSecureStandaloneResourceDataShareDetails:
+      ThreeDSecureStandaloneResourceDataShareDetailsSchema,
+    ThreeDSecureStandaloneResourceExpiry: ThreeDSecureStandaloneResourceExpirySchema,
+    ThreeDSecureStandaloneResourceFlowPreference:
+      ThreeDSecureStandaloneResourceFlowPreferenceSchema,
+    ThreeDSecureStandaloneResourceFrictionlessDetails:
+      ThreeDSecureStandaloneResourceFrictionlessDetailsSchema,
+    ThreeDSecureStandaloneResourceFutureUsage: ThreeDSecureStandaloneResourceFutureUsageSchema,
+    ThreeDSecureStandaloneResourceInstallment: ThreeDSecureStandaloneResourceInstallmentSchema,
+    ThreeDSecureStandaloneResourceNetworkDetails:
+      ThreeDSecureStandaloneResourceNetworkDetailsSchema,
+    ThreeDSecureStandaloneResourceOutcomeDetails:
+      ThreeDSecureStandaloneResourceOutcomeDetailsSchema,
+    ThreeDSecureStandaloneResourceRecurring: ThreeDSecureStandaloneResourceRecurringSchema,
+    ThreeDSecureStandaloneResourceShippingAddress:
+      ThreeDSecureStandaloneResourceShippingAddressSchema,
+    ThreeDSecureStandaloneResourceThreeRiDetails:
+      ThreeDSecureStandaloneResourceThreeRiDetailsSchema,
+    ThreeDSecureUsage: ThreeDSecureUsageSchema,
+    ThresholdsResourceUsageAlertFilter: ThresholdsResourceUsageAlertFilterSchema,
+    ThresholdsResourceUsageThresholdConfig: ThresholdsResourceUsageThresholdConfigSchema,
+    Token: TokenSchema,
+    TokenCardNetworks: TokenCardNetworksSchema,
+    Topup: TopupSchema,
+    TopupResourcePaymentMethodOptions: TopupResourcePaymentMethodOptionsSchema,
+    TopupResourceUsBankAccount: TopupResourceUsBankAccountSchema,
+    Transfer: TransferSchema,
+    TransferData: TransferDataSchema,
+    TransferReversal: TransferReversalSchema,
+    TransferSchedule: TransferScheduleSchema,
+    TransformQuantity: TransformQuantitySchema,
+    TransformUsage: TransformUsageSchema,
+    TreasuryCreditReversal: TreasuryCreditReversalSchema,
+    TreasuryDebitReversal: TreasuryDebitReversalSchema,
+    TreasuryFinancialAccount: TreasuryFinancialAccountSchema,
+    TreasuryFinancialAccountFeatures: TreasuryFinancialAccountFeaturesSchema,
+    TreasuryInboundTransfer: TreasuryInboundTransferSchema,
+    TreasuryOutboundPayment: TreasuryOutboundPaymentSchema,
+    TreasuryOutboundTransfer: TreasuryOutboundTransferSchema,
+    TreasuryReceivedCredit: TreasuryReceivedCreditSchema,
+    TreasuryReceivedDebit: TreasuryReceivedDebitSchema,
+    TreasuryTransaction: TreasuryTransactionSchema,
+    TreasuryTransactionEntry: TreasuryTransactionEntrySchema,
+    TreasuryFinancialAccountsResourceAbaRecord: TreasuryFinancialAccountsResourceAbaRecordSchema,
+    TreasuryFinancialAccountsResourceAbaToggleSettings:
+      TreasuryFinancialAccountsResourceAbaToggleSettingsSchema,
+    TreasuryFinancialAccountsResourceBalance: TreasuryFinancialAccountsResourceBalanceSchema,
+    TreasuryFinancialAccountsResourceClosedStatusDetails:
+      TreasuryFinancialAccountsResourceClosedStatusDetailsSchema,
+    TreasuryFinancialAccountsResourceFinancialAddress:
+      TreasuryFinancialAccountsResourceFinancialAddressSchema,
+    TreasuryFinancialAccountsResourceFinancialAddressesFeatures:
+      TreasuryFinancialAccountsResourceFinancialAddressesFeaturesSchema,
+    TreasuryFinancialAccountsResourceInboundAchToggleSettings:
+      TreasuryFinancialAccountsResourceInboundAchToggleSettingsSchema,
+    TreasuryFinancialAccountsResourceInboundTransfers:
+      TreasuryFinancialAccountsResourceInboundTransfersSchema,
+    TreasuryFinancialAccountsResourceOutboundAchToggleSettings:
+      TreasuryFinancialAccountsResourceOutboundAchToggleSettingsSchema,
+    TreasuryFinancialAccountsResourceOutboundPayments:
+      TreasuryFinancialAccountsResourceOutboundPaymentsSchema,
+    TreasuryFinancialAccountsResourceOutboundTransfers:
+      TreasuryFinancialAccountsResourceOutboundTransfersSchema,
+    TreasuryFinancialAccountsResourcePlatformRestrictions:
+      TreasuryFinancialAccountsResourcePlatformRestrictionsSchema,
+    TreasuryFinancialAccountsResourceStatusDetails:
+      TreasuryFinancialAccountsResourceStatusDetailsSchema,
+    TreasuryFinancialAccountsResourceToggleSettings:
+      TreasuryFinancialAccountsResourceToggleSettingsSchema,
+    TreasuryFinancialAccountsResourceTogglesSettingStatusDetails:
+      TreasuryFinancialAccountsResourceTogglesSettingStatusDetailsSchema,
+    TreasuryInboundTransfersResourceFailureDetails:
+      TreasuryInboundTransfersResourceFailureDetailsSchema,
+    TreasuryInboundTransfersResourceInboundTransferResourceLinkedFlows:
+      TreasuryInboundTransfersResourceInboundTransferResourceLinkedFlowsSchema,
+    TreasuryInboundTransfersResourceInboundTransferResourceStatusTransitions:
+      TreasuryInboundTransfersResourceInboundTransferResourceStatusTransitionsSchema,
+    TreasuryOutboundPaymentsResourceAchTrackingDetails:
+      TreasuryOutboundPaymentsResourceAchTrackingDetailsSchema,
+    TreasuryOutboundPaymentsResourceOutboundPaymentResourceEndUserDetails:
+      TreasuryOutboundPaymentsResourceOutboundPaymentResourceEndUserDetailsSchema,
+    TreasuryOutboundPaymentsResourceOutboundPaymentResourceStatusTransitions:
+      TreasuryOutboundPaymentsResourceOutboundPaymentResourceStatusTransitionsSchema,
+    TreasuryOutboundPaymentsResourceOutboundPaymentResourceTrackingDetails:
+      TreasuryOutboundPaymentsResourceOutboundPaymentResourceTrackingDetailsSchema,
+    TreasuryOutboundPaymentsResourceReturnedStatus:
+      TreasuryOutboundPaymentsResourceReturnedStatusSchema,
+    TreasuryOutboundPaymentsResourceUsDomesticWireTrackingDetails:
+      TreasuryOutboundPaymentsResourceUsDomesticWireTrackingDetailsSchema,
+    TreasuryOutboundTransfersResourceAchTrackingDetails:
+      TreasuryOutboundTransfersResourceAchTrackingDetailsSchema,
+    TreasuryOutboundTransfersResourceOutboundTransferResourceTrackingDetails:
+      TreasuryOutboundTransfersResourceOutboundTransferResourceTrackingDetailsSchema,
+    TreasuryOutboundTransfersResourceReturnedDetails:
+      TreasuryOutboundTransfersResourceReturnedDetailsSchema,
+    TreasuryOutboundTransfersResourceStatusTransitions:
+      TreasuryOutboundTransfersResourceStatusTransitionsSchema,
+    TreasuryOutboundTransfersResourceUsDomesticWireTrackingDetails:
+      TreasuryOutboundTransfersResourceUsDomesticWireTrackingDetailsSchema,
+    TreasuryReceivedCreditsResourceLinkedFlows: TreasuryReceivedCreditsResourceLinkedFlowsSchema,
+    TreasuryReceivedCreditsResourceReversalDetails:
+      TreasuryReceivedCreditsResourceReversalDetailsSchema,
+    TreasuryReceivedCreditsResourceSourceFlowsDetails:
+      TreasuryReceivedCreditsResourceSourceFlowsDetailsSchema,
+    TreasuryReceivedCreditsResourceStatusTransitions:
+      TreasuryReceivedCreditsResourceStatusTransitionsSchema,
+    TreasuryReceivedDebitsResourceDebitReversalLinkedFlows:
+      TreasuryReceivedDebitsResourceDebitReversalLinkedFlowsSchema,
+    TreasuryReceivedDebitsResourceLinkedFlows: TreasuryReceivedDebitsResourceLinkedFlowsSchema,
+    TreasuryReceivedDebitsResourceReversalDetails:
+      TreasuryReceivedDebitsResourceReversalDetailsSchema,
+    TreasuryReceivedDebitsResourceStatusTransitions:
+      TreasuryReceivedDebitsResourceStatusTransitionsSchema,
+    TreasurySharedResourceBillingDetails: TreasurySharedResourceBillingDetailsSchema,
+    TreasurySharedResourceInitiatingPaymentMethodDetailsInitiatingPaymentMethodDetails:
+      TreasurySharedResourceInitiatingPaymentMethodDetailsInitiatingPaymentMethodDetailsSchema,
+    TreasurySharedResourceInitiatingPaymentMethodDetailsUsBankAccount:
+      TreasurySharedResourceInitiatingPaymentMethodDetailsUsBankAccountSchema,
+    TreasuryTransactionsResourceAbstractTransactionResourceStatusTransitions:
+      TreasuryTransactionsResourceAbstractTransactionResourceStatusTransitionsSchema,
+    TreasuryTransactionsResourceBalanceImpact: TreasuryTransactionsResourceBalanceImpactSchema,
+    TreasuryTransactionsResourceFlowDetails: TreasuryTransactionsResourceFlowDetailsSchema,
+    UsBankAccountNetworks: UsBankAccountNetworksSchema,
+    VerificationSessionRedaction: VerificationSessionRedactionSchema,
+    WebhookEndpoint: WebhookEndpointSchema,
+  })
+  .get('/v1/account', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetAccountQuery,
+    body: V1Model.GetAccountBody,
+    response: { 200: 'Account', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve account',
+      description: '<p>Retrieves the details of an account.</p>',
+      operationId: 'GetAccount',
+    },
+  })
+  .post('/v1/account_links', ({ body }) => { throw new Error('Not implemented') }, {
+    body: V1Model.PostAccountLinksBody,
+    response: { 200: 'AccountLink', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Create an account link',
+      description:
+        '<p>Creates an AccountLink object that includes a single-use Stripe URL that the platform can redirect their user to in order to take them through the Connect Onboarding flow.</p>',
+      operationId: 'PostAccountLinks',
+    },
+  })
+  .post('/v1/account_sessions', ({ body }) => { throw new Error('Not implemented') }, {
+    body: V1Model.PostAccountSessionsBody,
+    response: { 200: 'AccountSession', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Create an Account Session',
+      description:
+        '<p>Creates an AccountSession object that includes a single-use token that the platform can use on their front-end to grant client-side API access.</p>',
+      operationId: 'PostAccountSessions',
+    },
+  })
+  .get('/v1/accounts', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetAccountsQuery,
+    body: V1Model.GetAccountsBody,
+    response: { 200: V1Model.GetAccountsResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List all connected accounts',
+      description:
+        '<p>Returns a list of accounts connected to your platform via <a href="/docs/connect">Connect</a>. If you’re not a platform, the list is empty.</p>',
+      operationId: 'GetAccounts',
+    },
+  })
+  .post('/v1/accounts', ({ body }) => { throw new Error('Not implemented') }, {
+    body: V1Model.PostAccountsBody,
+    response: { 200: 'Account', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Create an account',
+      description:
+        '<p>With <a href="/docs/connect">Connect</a>, you can create Stripe accounts for your users.\nTo do this, you’ll first need to <a href="https://dashboard.stripe.com/account/applications/settings">register your platform</a>.</p>\n\n<p>If you’ve already collected information for your connected accounts, you <a href="/connect/marketplace/tasks/create#prefill-account-information">can prefill that information</a> when\ncreating the account. Connect Onboarding won’t ask for the prefilled information during account onboarding.\nYou can prefill any information on the account.</p>',
+      operationId: 'PostAccounts',
+    },
+  })
+  .get('/v1/accounts/:account', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetAccountsAccountParams,
+    query: V1Model.GetAccountsAccountQuery,
+    body: V1Model.GetAccountsAccountBody,
+    response: { 200: 'Account', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve account',
+      description: '<p>Retrieves the details of an account.</p>',
+      operationId: 'GetAccountsAccount',
+    },
+  })
+  .post('/v1/accounts/:account', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostAccountsAccountParams,
+    body: V1Model.PostAccountsAccountBody,
+    response: { 200: 'Account', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Update an account',
+      description:
+        '<p>Updates a <a href="/connect/accounts">connected account</a> by setting the values of the parameters passed. Any parameters not provided are\nleft unchanged.</p>\n\n<p>For accounts where <a href="/api/accounts/object#account_object-controller-requirement_collection">controller.requirement_collection</a>\nis <code>application</code>, which includes Custom accounts, you can update any information on the account.</p>\n\n<p>For accounts where <a href="/api/accounts/object#account_object-controller-requirement_collection">controller.requirement_collection</a>\nis <code>stripe</code>, which includes Standard and Express accounts, you can update all information until you create\nan <a href="/api/account_links">Account Link</a> or <a href="/api/account_sessions">Account Session</a> to start Connect onboarding,\nafter which some properties can no longer be updated.</p>\n\n<p>To update your own account, use the <a href="https://dashboard.stripe.com/settings/account">Dashboard</a>. Refer to our\n<a href="/docs/connect/updating-accounts">Connect</a> documentation to learn more about updating accounts.</p>',
+      operationId: 'PostAccountsAccount',
+    },
+  })
+  .delete('/v1/accounts/:account', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.DeleteAccountsAccountParams,
+    body: V1Model.DeleteAccountsAccountBody,
+    response: { 200: 'DeletedAccount', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Delete an account',
+      description:
+        '<p>With <a href="/connect">Connect</a>, you can delete accounts you manage.</p>\n\n<p>Test-mode accounts can be deleted at any time.</p>\n\n<p>Live-mode accounts that have access to the standard dashboard and Stripe is responsible for negative account balances cannot be deleted, which includes Standard accounts. All other Live-mode accounts, can be deleted when all <a href="/api/balance/balance_object">balances</a> are zero.</p>\n\n<p>If you want to delete your own account, use the <a href="https://dashboard.stripe.com/settings/account">account information tab in your account settings</a> instead.</p>',
+      operationId: 'DeleteAccountsAccount',
+    },
+  })
+  .post('/v1/accounts/:account/bank_accounts', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostAccountsAccountBankAccountsParams,
+    body: V1Model.PostAccountsAccountBankAccountsBody,
+    response: { 200: 'ExternalAccount', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Create an external account',
+      description: '<p>Create an external account for a given account.</p>',
+      operationId: 'PostAccountsAccountBankAccounts',
+    },
+  })
+  .get('/v1/accounts/:account/bank_accounts/:id', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetAccountsAccountBankAccountsIdParams,
+    query: V1Model.GetAccountsAccountBankAccountsIdQuery,
+    body: V1Model.GetAccountsAccountBankAccountsIdBody,
+    response: { 200: 'ExternalAccount', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve an external account',
+      description: '<p>Retrieve a specified external account for a given account.</p>',
+      operationId: 'GetAccountsAccountBankAccountsId',
+    },
+  })
+  .post('/v1/accounts/:account/bank_accounts/:id', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostAccountsAccountBankAccountsIdParams,
+    body: V1Model.PostAccountsAccountBankAccountsIdBody,
+    response: { 200: 'ExternalAccount', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Update a bank account',
+      description:
+        '<p>Updates the metadata, account holder name, account holder type of a bank account belonging to\na connected account and optionally sets it as the default for its currency. Other bank account\ndetails are not editable by design.</p>\n\n<p>You can only update bank accounts when <a href="/api/accounts/object#account_object-controller-requirement_collection">account.controller.requirement_collection</a> is <code>application</code>, which includes <a href="/connect/custom-accounts">Custom accounts</a>.</p>\n\n<p>You can re-enable a disabled bank account by performing an update call without providing any\narguments or changes.</p>',
+      operationId: 'PostAccountsAccountBankAccountsId',
+    },
+  })
+  .delete('/v1/accounts/:account/bank_accounts/:id', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.DeleteAccountsAccountBankAccountsIdParams,
+    body: V1Model.DeleteAccountsAccountBankAccountsIdBody,
+    response: { 200: 'DeletedExternalAccount', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Delete an external account',
+      description: '<p>Delete a specified external account for a given account.</p>',
+      operationId: 'DeleteAccountsAccountBankAccountsId',
+    },
+  })
+  .get('/v1/accounts/:account/capabilities', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetAccountsAccountCapabilitiesParams,
+    query: V1Model.GetAccountsAccountCapabilitiesQuery,
+    body: V1Model.GetAccountsAccountCapabilitiesBody,
+    response: { 200: V1Model.GetAccountsAccountCapabilitiesResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List all account capabilities',
+      description:
+        '<p>Returns a list of capabilities associated with the account. The capabilities are returned sorted by creation date, with the most recent capability appearing first.</p>',
+      operationId: 'GetAccountsAccountCapabilities',
+    },
+  })
+  .get('/v1/accounts/:account/capabilities/:capability', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetAccountsAccountCapabilitiesCapabilityParams,
+    query: V1Model.GetAccountsAccountCapabilitiesCapabilityQuery,
+    body: V1Model.GetAccountsAccountCapabilitiesCapabilityBody,
+    response: { 200: 'Capability', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve an Account Capability',
+      description: '<p>Retrieves information about the specified Account Capability.</p>',
+      operationId: 'GetAccountsAccountCapabilitiesCapability',
+    },
+  })
+  .post('/v1/accounts/:account/capabilities/:capability', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostAccountsAccountCapabilitiesCapabilityParams,
+    body: V1Model.PostAccountsAccountCapabilitiesCapabilityBody,
+    response: { 200: 'Capability', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Update an Account Capability',
+      description:
+        '<p>Updates an existing Account Capability. Request or remove a capability by updating its <code>requested</code> parameter.</p>',
+      operationId: 'PostAccountsAccountCapabilitiesCapability',
+    },
+  })
+  .get('/v1/accounts/:account/external_accounts', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetAccountsAccountExternalAccountsParams,
+    query: V1Model.GetAccountsAccountExternalAccountsQuery,
+    body: V1Model.GetAccountsAccountExternalAccountsBody,
+    response: { 200: V1Model.GetAccountsAccountExternalAccountsResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List all external accounts',
+      description: '<p>List external accounts for an account.</p>',
+      operationId: 'GetAccountsAccountExternalAccounts',
+    },
+  })
+  .post('/v1/accounts/:account/external_accounts', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostAccountsAccountExternalAccountsParams,
+    body: V1Model.PostAccountsAccountExternalAccountsBody,
+    response: { 200: 'ExternalAccount', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Create an external account',
+      description: '<p>Create an external account for a given account.</p>',
+      operationId: 'PostAccountsAccountExternalAccounts',
+    },
+  })
+  .get('/v1/accounts/:account/external_accounts/:id', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetAccountsAccountExternalAccountsIdParams,
+    query: V1Model.GetAccountsAccountExternalAccountsIdQuery,
+    body: V1Model.GetAccountsAccountExternalAccountsIdBody,
+    response: { 200: 'ExternalAccount', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve an external account',
+      description: '<p>Retrieve a specified external account for a given account.</p>',
+      operationId: 'GetAccountsAccountExternalAccountsId',
+    },
+  })
+  .post('/v1/accounts/:account/external_accounts/:id', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostAccountsAccountExternalAccountsIdParams,
+    body: V1Model.PostAccountsAccountExternalAccountsIdBody,
+    response: { 200: 'ExternalAccount', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Update a bank account',
+      description:
+        '<p>Updates the metadata, account holder name, account holder type of a bank account belonging to\na connected account and optionally sets it as the default for its currency. Other bank account\ndetails are not editable by design.</p>\n\n<p>You can only update bank accounts when <a href="/api/accounts/object#account_object-controller-requirement_collection">account.controller.requirement_collection</a> is <code>application</code>, which includes <a href="/connect/custom-accounts">Custom accounts</a>.</p>\n\n<p>You can re-enable a disabled bank account by performing an update call without providing any\narguments or changes.</p>',
+      operationId: 'PostAccountsAccountExternalAccountsId',
+    },
+  })
+  .delete('/v1/accounts/:account/external_accounts/:id', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.DeleteAccountsAccountExternalAccountsIdParams,
+    body: V1Model.DeleteAccountsAccountExternalAccountsIdBody,
+    response: { 200: 'DeletedExternalAccount', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Delete an external account',
+      description: '<p>Delete a specified external account for a given account.</p>',
+      operationId: 'DeleteAccountsAccountExternalAccountsId',
+    },
+  })
+  .post('/v1/accounts/:account/login_links', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostAccountsAccountLoginLinksParams,
+    body: V1Model.PostAccountsAccountLoginLinksBody,
+    response: { 200: 'LoginLink', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Create a login link',
+      description:
+        '<p>Creates a login link for a connected account to access the Express Dashboard.</p>\n\n<p><strong>You can only create login links for accounts that use the <a href="/connect/express-dashboard">Express Dashboard</a> and are connected to your platform</strong>.</p>',
+      operationId: 'PostAccountsAccountLoginLinks',
+    },
+  })
+  .get('/v1/accounts/:account/people', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetAccountsAccountPeopleParams,
+    query: V1Model.GetAccountsAccountPeopleQuery,
+    body: V1Model.GetAccountsAccountPeopleBody,
+    response: { 200: V1Model.GetAccountsAccountPeopleResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List all persons',
+      description:
+        '<p>Returns a list of people associated with the account’s legal entity. The people are returned sorted by creation date, with the most recent people appearing first.</p>',
+      operationId: 'GetAccountsAccountPeople',
+    },
+  })
+  .post('/v1/accounts/:account/people', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostAccountsAccountPeopleParams,
+    body: V1Model.PostAccountsAccountPeopleBody,
+    response: { 200: 'Person', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Create a person',
+      description: '<p>Creates a new person.</p>',
+      operationId: 'PostAccountsAccountPeople',
+    },
+  })
+  .get('/v1/accounts/:account/people/:person', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetAccountsAccountPeoplePersonParams,
+    query: V1Model.GetAccountsAccountPeoplePersonQuery,
+    body: V1Model.GetAccountsAccountPeoplePersonBody,
+    response: { 200: 'Person', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve a person',
+      description: '<p>Retrieves an existing person.</p>',
+      operationId: 'GetAccountsAccountPeoplePerson',
+    },
+  })
+  .post('/v1/accounts/:account/people/:person', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostAccountsAccountPeoplePersonParams,
+    body: V1Model.PostAccountsAccountPeoplePersonBody,
+    response: { 200: 'Person', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Update a person',
+      description: '<p>Updates an existing person.</p>',
+      operationId: 'PostAccountsAccountPeoplePerson',
+    },
+  })
+  .delete('/v1/accounts/:account/people/:person', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.DeleteAccountsAccountPeoplePersonParams,
+    body: V1Model.DeleteAccountsAccountPeoplePersonBody,
+    response: { 200: 'DeletedPerson', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Delete a person',
+      description:
+        '<p>Deletes an existing person’s relationship to the account’s legal entity. Any person with a relationship for an account can be deleted through the API, except if the person is the <code>representative</code>. If your integration is using the <code>executive</code> parameter, you cannot delete the only verified <code>executive</code> on file.</p>',
+      operationId: 'DeleteAccountsAccountPeoplePerson',
+    },
+  })
+  .get('/v1/accounts/:account/persons', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetAccountsAccountPersonsParams,
+    query: V1Model.GetAccountsAccountPersonsQuery,
+    body: V1Model.GetAccountsAccountPersonsBody,
+    response: { 200: V1Model.GetAccountsAccountPersonsResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List all persons',
+      description:
+        '<p>Returns a list of people associated with the account’s legal entity. The people are returned sorted by creation date, with the most recent people appearing first.</p>',
+      operationId: 'GetAccountsAccountPersons',
+    },
+  })
+  .post('/v1/accounts/:account/persons', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostAccountsAccountPersonsParams,
+    body: V1Model.PostAccountsAccountPersonsBody,
+    response: { 200: 'Person', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Create a person',
+      description: '<p>Creates a new person.</p>',
+      operationId: 'PostAccountsAccountPersons',
+    },
+  })
+  .get('/v1/accounts/:account/persons/:person', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetAccountsAccountPersonsPersonParams,
+    query: V1Model.GetAccountsAccountPersonsPersonQuery,
+    body: V1Model.GetAccountsAccountPersonsPersonBody,
+    response: { 200: 'Person', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve a person',
+      description: '<p>Retrieves an existing person.</p>',
+      operationId: 'GetAccountsAccountPersonsPerson',
+    },
+  })
+  .post('/v1/accounts/:account/persons/:person', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostAccountsAccountPersonsPersonParams,
+    body: V1Model.PostAccountsAccountPersonsPersonBody,
+    response: { 200: 'Person', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Update a person',
+      description: '<p>Updates an existing person.</p>',
+      operationId: 'PostAccountsAccountPersonsPerson',
+    },
+  })
+  .delete('/v1/accounts/:account/persons/:person', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.DeleteAccountsAccountPersonsPersonParams,
+    body: V1Model.DeleteAccountsAccountPersonsPersonBody,
+    response: { 200: 'DeletedPerson', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Delete a person',
+      description:
+        '<p>Deletes an existing person’s relationship to the account’s legal entity. Any person with a relationship for an account can be deleted through the API, except if the person is the <code>representative</code>. If your integration is using the <code>executive</code> parameter, you cannot delete the only verified <code>executive</code> on file.</p>',
+      operationId: 'DeleteAccountsAccountPersonsPerson',
+    },
+  })
+  .post('/v1/accounts/:account/reject', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostAccountsAccountRejectParams,
+    body: V1Model.PostAccountsAccountRejectBody,
+    response: { 200: 'Account', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Reject an account',
+      description:
+        '<p>With <a href="/connect">Connect</a>, you can reject accounts that you have flagged as suspicious.</p>\n\n<p>Only accounts where your platform is liable for negative account balances, which includes Custom and Express accounts, can be rejected.</p>',
+      operationId: 'PostAccountsAccountReject',
+    },
+  })
+  .post('/v1/accounts/:account/unreject', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostAccountsAccountUnrejectParams,
+    body: V1Model.PostAccountsAccountUnrejectBody,
+    response: { 200: 'Account', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Unreject an account',
+      description:
+        '<p>With Connect, you can unreject accounts that you have previously rejected.</p>\n\n<p>Only accounts that were rejected by your platform can be unrejected. This API cannot be used to unreject accounts that were rejected by Stripe.</p>\n\n<p>Unreject will only enable charges and/or payouts if there are no other restrictions other than those placed by a previous rejection. If you have separately paused charges and/or payouts outside of rejection, those pauses will remain in place after unrejection.</p>',
+      operationId: 'PostAccountsAccountUnreject',
+    },
+  })
+  .get('/v1/apple_pay/domains', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetApplePayDomainsQuery,
+    body: V1Model.GetApplePayDomainsBody,
+    response: { 200: V1Model.GetApplePayDomainsResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      description: '<p>List apple pay domains.</p>',
+      operationId: 'GetApplePayDomains',
+    },
+  })
+  .post('/v1/apple_pay/domains', ({ body }) => { throw new Error('Not implemented') }, {
+    body: V1Model.PostApplePayDomainsBody,
+    response: { 200: 'ApplePayDomain', default: 'Error' },
+    detail: {
+      tags: [],
+      description: '<p>Create an apple pay domain.</p>',
+      operationId: 'PostApplePayDomains',
+    },
+  })
+  .get('/v1/apple_pay/domains/:domain', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetApplePayDomainsDomainParams,
+    query: V1Model.GetApplePayDomainsDomainQuery,
+    body: V1Model.GetApplePayDomainsDomainBody,
+    response: { 200: 'ApplePayDomain', default: 'Error' },
+    detail: {
+      tags: [],
+      description: '<p>Retrieve an apple pay domain.</p>',
+      operationId: 'GetApplePayDomainsDomain',
+    },
+  })
+  .delete('/v1/apple_pay/domains/:domain', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.DeleteApplePayDomainsDomainParams,
+    body: V1Model.DeleteApplePayDomainsDomainBody,
+    response: { 200: 'DeletedApplePayDomain', default: 'Error' },
+    detail: {
+      tags: [],
+      description: '<p>Delete an apple pay domain.</p>',
+      operationId: 'DeleteApplePayDomainsDomain',
+    },
+  })
+  .get('/v1/application_fees', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetApplicationFeesQuery,
+    body: V1Model.GetApplicationFeesBody,
+    response: { 200: V1Model.GetApplicationFeesResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List all application fees',
+      description:
+        '<p>Returns a list of application fees you’ve previously collected. The application fees are returned in sorted order, with the most recent fees appearing first.</p>',
+      operationId: 'GetApplicationFees',
+    },
+  })
+  .get('/v1/application_fees/:fee/refunds/:id', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetApplicationFeesFeeRefundsIdParams,
+    query: V1Model.GetApplicationFeesFeeRefundsIdQuery,
+    body: V1Model.GetApplicationFeesFeeRefundsIdBody,
+    response: { 200: 'FeeRefund', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve an application fee refund',
+      description:
+        '<p>By default, you can see the 10 most recent refunds stored directly on the application fee object, but you can also retrieve details about a specific refund stored on the application fee.</p>',
+      operationId: 'GetApplicationFeesFeeRefundsId',
+    },
+  })
+  .post('/v1/application_fees/:fee/refunds/:id', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostApplicationFeesFeeRefundsIdParams,
+    body: V1Model.PostApplicationFeesFeeRefundsIdBody,
+    response: { 200: 'FeeRefund', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Update an application fee refund',
+      description:
+        '<p>Updates the specified application fee refund by setting the values of the parameters passed. Any parameters not provided will be left unchanged.</p>\n\n<p>This request only accepts metadata as an argument.</p>',
+      operationId: 'PostApplicationFeesFeeRefundsId',
+    },
+  })
+  .get('/v1/application_fees/:fee', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetApplicationFeesIdParams,
+    query: V1Model.GetApplicationFeesIdQuery,
+    body: V1Model.GetApplicationFeesIdBody,
+    response: { 200: 'ApplicationFee', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve an application fee',
+      description:
+        '<p>Retrieves the details of an application fee that your account has collected. The same information is returned when refunding the application fee.</p>',
+      operationId: 'GetApplicationFeesId',
+    },
+  })
+  .post('/v1/application_fees/:fee/refund', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostApplicationFeesIdRefundParams,
+    body: V1Model.PostApplicationFeesIdRefundBody,
+    response: { 200: 'ApplicationFee', default: 'Error' },
+    detail: { tags: [], operationId: 'PostApplicationFeesIdRefund' },
+  })
+  .get('/v1/application_fees/:fee/refunds', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetApplicationFeesIdRefundsParams,
+    query: V1Model.GetApplicationFeesIdRefundsQuery,
+    body: V1Model.GetApplicationFeesIdRefundsBody,
+    response: { 200: V1Model.GetApplicationFeesIdRefundsResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List all application fee refunds',
+      description:
+        '<p>You can see a list of the refunds belonging to a specific application fee. Note that the 10 most recent refunds are always available by default on the application fee object. If you need more than those 10, you can use this API method and the <code>limit</code> and <code>starting_after</code> parameters to page through additional refunds.</p>',
+      operationId: 'GetApplicationFeesIdRefunds',
+    },
+  })
+  .post('/v1/application_fees/:fee/refunds', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostApplicationFeesIdRefundsParams,
+    body: V1Model.PostApplicationFeesIdRefundsBody,
+    response: { 200: 'FeeRefund', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Create an application fee refund',
+      description:
+        '<p>Refunds an application fee that has previously been collected but not yet refunded.\nFunds will be refunded to the Stripe account from which the fee was originally collected.</p>\n\n<p>You can optionally refund only part of an application fee.\nYou can do so multiple times, until the entire fee has been refunded.</p>\n\n<p>Once entirely refunded, an application fee can’t be refunded again.\nThis method will raise an error when called on an already-refunded application fee,\nor when trying to refund more money than is left on an application fee.</p>',
+      operationId: 'PostApplicationFeesIdRefunds',
+    },
+  })
+  .get('/v1/apps/installs', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetAppsInstallsQuery,
+    body: V1Model.GetAppsInstallsBody,
+    response: { 200: V1Model.GetAppsInstallsResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List all app installs',
+      description:
+        '<p>Returns a list of app installs. An app developer or embedding platform filtering by its own app sees the installs across the accounts that installed it; other callers see the installs on their own account. The key selects the environment: a live key lists live installs, a sandbox API key lists the installs on that sandbox, and the key of an app’s managed sandbox filtering by <code>app</code> lists that app’s installs across every sandbox. For existing accounts that still use legacy test mode, a test mode key lists legacy test mode installs.</p>',
+      operationId: 'GetAppsInstalls',
+    },
+  })
+  .post('/v1/apps/installs', ({ body }) => { throw new Error('Not implemented') }, {
+    body: V1Model.PostAppsInstallsBody,
+    response: { 200: 'AppsInstall', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Create an app install',
+      description:
+        '<p>Creates an app install. An account installs its own private app with its own key; public and testing installs are made from the Dashboard. An app developer or embedding platform acting on a connected account through <code>Stripe-Account</code> installs or reinstalls its app there. For a private app, creating an install installs the newest completed upload; when that version is already installed with nothing pending, the existing install is returned.</p>',
+      operationId: 'PostAppsInstalls',
+    },
+  })
+  .get('/v1/apps/installs/:id', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetAppsInstallsIdParams,
+    query: V1Model.GetAppsInstallsIdQuery,
+    body: V1Model.GetAppsInstallsIdBody,
+    response: { 200: 'AppsInstall', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve an app install',
+      description:
+        '<p>Retrieves an app install. The installing account, the app’s developer (with the keys of the account that owns the app or of the app’s managed sandbox), and the embedding platform that created the install can retrieve it.</p>',
+      operationId: 'GetAppsInstallsId',
+    },
+  })
+  .post('/v1/apps/installs/:id', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostAppsInstallsIdParams,
+    body: V1Model.PostAppsInstallsIdBody,
+    response: { 200: 'AppsInstall', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Update an app install',
+      description:
+        '<p>Reauthorizes an app install. The installer grants the permissions, content security policy entries, and endpoints that the version being installed requests. An account reauthorizes its own installs on any channel with its own key; app developers and embedding platforms reauthorize installs on connected accounts through <code>Stripe-Account</code>. For private apps, the version being installed is the newest completed upload.</p>',
+      operationId: 'PostAppsInstallsId',
+    },
+  })
+  .post('/v1/apps/installs/:id/uninstall', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostAppsInstallsIdUninstallParams,
+    body: V1Model.PostAppsInstallsIdUninstallBody,
+    response: { 200: 'AppsInstall', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Uninstall an app install',
+      description: '<p>Uninstalls an app from the account that installed it.</p>',
+      operationId: 'PostAppsInstallsIdUninstall',
+    },
+  })
+  .get('/v1/apps/secrets', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetAppsSecretsQuery,
+    body: V1Model.GetAppsSecretsBody,
+    response: { 200: V1Model.GetAppsSecretsResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List secrets',
+      description: '<p>List all secrets stored on the given scope.</p>',
+      operationId: 'GetAppsSecrets',
+    },
+  })
+  .post('/v1/apps/secrets', ({ body }) => { throw new Error('Not implemented') }, {
+    body: V1Model.PostAppsSecretsBody,
+    response: { 200: 'AppsSecret', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Set a Secret',
+      description: '<p>Create or replace a secret in the secret store.</p>',
+      operationId: 'PostAppsSecrets',
+    },
+  })
+  .post('/v1/apps/secrets/delete', ({ body }) => { throw new Error('Not implemented') }, {
+    body: V1Model.PostAppsSecretsDeleteBody,
+    response: { 200: 'AppsSecret', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Delete a Secret',
+      description: '<p>Deletes a secret from the secret store by name and scope.</p>',
+      operationId: 'PostAppsSecretsDelete',
+    },
+  })
+  .get('/v1/apps/secrets/find', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetAppsSecretsFindQuery,
+    body: V1Model.GetAppsSecretsFindBody,
+    response: { 200: 'AppsSecret', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Find a Secret',
+      description: '<p>Finds a secret in the secret store by name and scope.</p>',
+      operationId: 'GetAppsSecretsFind',
+    },
+  })
+  .get('/v1/balance', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetBalanceQuery,
+    body: V1Model.GetBalanceBody,
+    response: { 200: 'Balance', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve balance',
+      description:
+        '<p>Retrieves the current account balance, based on the authentication that was used to make the request.\n For a sample request, see <a href="/docs/connect/account-balances#accounting-for-negative-balances">Accounting for negative balances</a>.</p>',
+      operationId: 'GetBalance',
+    },
+  })
+  .get('/v1/balance/history', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetBalanceHistoryQuery,
+    body: V1Model.GetBalanceHistoryBody,
+    response: { 200: V1Model.GetBalanceHistoryResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List all balance transactions',
+      description:
+        '<p>Returns a list of transactions that have contributed to the Stripe account balance (for example, charges, transfers, and so on). The transactions return in sorted order, with the most recent transactions appearing first.</p>\n\n<p>The previous name of this endpoint was “Balance history,” and it used the path <code>/v1/balance/history</code>.</p>',
+      operationId: 'GetBalanceHistory',
+    },
+  })
+  .get('/v1/balance/history/:id', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetBalanceHistoryIdParams,
+    query: V1Model.GetBalanceHistoryIdQuery,
+    body: V1Model.GetBalanceHistoryIdBody,
+    response: { 200: 'BalanceTransaction', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve a balance transaction',
+      description:
+        '<p>Retrieves the balance transaction with the given ID.</p>\n\n<p>Note that this endpoint previously used the path <code>/v1/balance/history/:id</code>.</p>',
+      operationId: 'GetBalanceHistoryId',
+    },
+  })
+  .get('/v1/balance_settings', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetBalanceSettingsQuery,
+    body: V1Model.GetBalanceSettingsBody,
+    response: { 200: 'BalanceSettings', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve balance settings',
+      description:
+        '<p>Retrieves balance settings for a given connected account.\n Related guide: <a href="/connect/authentication">Making API calls for connected accounts</a></p>',
+      operationId: 'GetBalanceSettings',
+    },
+  })
+  .post('/v1/balance_settings', ({ body }) => { throw new Error('Not implemented') }, {
+    body: V1Model.PostBalanceSettingsBody,
+    response: { 200: 'BalanceSettings', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Update balance settings',
+      description:
+        '<p>Updates balance settings for a given connected account.\n Related guide: <a href="/connect/authentication">Making API calls for connected accounts</a></p>',
+      operationId: 'PostBalanceSettings',
+    },
+  })
+  .get('/v1/balance_transactions', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetBalanceTransactionsQuery,
+    body: V1Model.GetBalanceTransactionsBody,
+    response: { 200: V1Model.GetBalanceTransactionsResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List all balance transactions',
+      description:
+        '<p>Returns a list of transactions that have contributed to the Stripe account balance (for example, charges, transfers, and so on). The transactions return in sorted order, with the most recent transactions appearing first.</p>\n\n<p>The previous name of this endpoint was “Balance history,” and it used the path <code>/v1/balance/history</code>.</p>',
+      operationId: 'GetBalanceTransactions',
+    },
+  })
+  .get('/v1/balance_transactions/:id', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetBalanceTransactionsIdParams,
+    query: V1Model.GetBalanceTransactionsIdQuery,
+    body: V1Model.GetBalanceTransactionsIdBody,
+    response: { 200: 'BalanceTransaction', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve a balance transaction',
+      description:
+        '<p>Retrieves the balance transaction with the given ID.</p>\n\n<p>Note that this endpoint previously used the path <code>/v1/balance/history/:id</code>.</p>',
+      operationId: 'GetBalanceTransactionsId',
+    },
+  })
+  .get('/v1/billing/alerts', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetBillingAlertsQuery,
+    body: V1Model.GetBillingAlertsBody,
+    response: { 200: V1Model.GetBillingAlertsResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List billing alerts',
+      description: '<p>Lists billing active and inactive alerts</p>',
+      operationId: 'GetBillingAlerts',
+    },
+  })
+  .post('/v1/billing/alerts', ({ body }) => { throw new Error('Not implemented') }, {
+    body: V1Model.PostBillingAlertsBody,
+    response: { 200: 'BillingAlert', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Create a billing alert',
+      description: '<p>Creates a billing alert</p>',
+      operationId: 'PostBillingAlerts',
+    },
+  })
+  .get('/v1/billing/alerts/:id', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetBillingAlertsIdParams,
+    query: V1Model.GetBillingAlertsIdQuery,
+    body: V1Model.GetBillingAlertsIdBody,
+    response: { 200: 'BillingAlert', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve a billing alert',
+      description: '<p>Retrieves a billing alert given an ID</p>',
+      operationId: 'GetBillingAlertsId',
+    },
+  })
+  .post('/v1/billing/alerts/:id/activate', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostBillingAlertsIdActivateParams,
+    body: V1Model.PostBillingAlertsIdActivateBody,
+    response: { 200: 'BillingAlert', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Activate a billing alert',
+      description: '<p>Reactivates this alert, allowing it to trigger again.</p>',
+      operationId: 'PostBillingAlertsIdActivate',
+    },
+  })
+  .post('/v1/billing/alerts/:id/archive', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostBillingAlertsIdArchiveParams,
+    body: V1Model.PostBillingAlertsIdArchiveBody,
+    response: { 200: 'BillingAlert', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Archive a billing alert',
+      description:
+        '<p>Archives this alert, removing it from the list view and APIs. This is non-reversible.</p>',
+      operationId: 'PostBillingAlertsIdArchive',
+    },
+  })
+  .post('/v1/billing/alerts/:id/deactivate', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostBillingAlertsIdDeactivateParams,
+    body: V1Model.PostBillingAlertsIdDeactivateBody,
+    response: { 200: 'BillingAlert', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Deactivate a billing alert',
+      description: '<p>Deactivates this alert, preventing it from triggering.</p>',
+      operationId: 'PostBillingAlertsIdDeactivate',
+    },
+  })
+  .get('/v1/billing/credit_balance_summary', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetBillingCreditBalanceSummaryQuery,
+    body: V1Model.GetBillingCreditBalanceSummaryBody,
+    response: { 200: 'BillingCreditBalanceSummary', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve the credit balance summary for a customer',
+      description: '<p>Retrieves the credit balance summary for a customer.</p>',
+      operationId: 'GetBillingCreditBalanceSummary',
+    },
+  })
+  .get('/v1/billing/credit_balance_transactions', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetBillingCreditBalanceTransactionsQuery,
+    body: V1Model.GetBillingCreditBalanceTransactionsBody,
+    response: { 200: V1Model.GetBillingCreditBalanceTransactionsResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List credit balance transactions',
+      description: '<p>Retrieve a list of credit balance transactions.</p>',
+      operationId: 'GetBillingCreditBalanceTransactions',
+    },
+  })
+  .get('/v1/billing/credit_balance_transactions/:id', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetBillingCreditBalanceTransactionsIdParams,
+    query: V1Model.GetBillingCreditBalanceTransactionsIdQuery,
+    body: V1Model.GetBillingCreditBalanceTransactionsIdBody,
+    response: { 200: 'BillingCreditBalanceTransaction', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve a credit balance transaction',
+      description: '<p>Retrieves a credit balance transaction.</p>',
+      operationId: 'GetBillingCreditBalanceTransactionsId',
+    },
+  })
+  .get('/v1/billing/credit_grants', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetBillingCreditGrantsQuery,
+    body: V1Model.GetBillingCreditGrantsBody,
+    response: { 200: V1Model.GetBillingCreditGrantsResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List credit grants',
+      description: '<p>Retrieve a list of credit grants.</p>',
+      operationId: 'GetBillingCreditGrants',
+    },
+  })
+  .post('/v1/billing/credit_grants', ({ body }) => { throw new Error('Not implemented') }, {
+    body: V1Model.PostBillingCreditGrantsBody,
+    response: { 200: 'BillingCreditGrant', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Create a credit grant',
+      description: '<p>Creates a credit grant.</p>',
+      operationId: 'PostBillingCreditGrants',
+    },
+  })
+  .get('/v1/billing/credit_grants/:id', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetBillingCreditGrantsIdParams,
+    query: V1Model.GetBillingCreditGrantsIdQuery,
+    body: V1Model.GetBillingCreditGrantsIdBody,
+    response: { 200: 'BillingCreditGrant', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve a credit grant',
+      description: '<p>Retrieves a credit grant.</p>',
+      operationId: 'GetBillingCreditGrantsId',
+    },
+  })
+  .post('/v1/billing/credit_grants/:id', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostBillingCreditGrantsIdParams,
+    body: V1Model.PostBillingCreditGrantsIdBody,
+    response: { 200: 'BillingCreditGrant', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Update a credit grant',
+      description: '<p>Updates a credit grant.</p>',
+      operationId: 'PostBillingCreditGrantsId',
+    },
+  })
+  .post('/v1/billing/credit_grants/:id/expire', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostBillingCreditGrantsIdExpireParams,
+    body: V1Model.PostBillingCreditGrantsIdExpireBody,
+    response: { 200: 'BillingCreditGrant', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Expire a credit grant',
+      description: '<p>Expires a credit grant.</p>',
+      operationId: 'PostBillingCreditGrantsIdExpire',
+    },
+  })
+  .post('/v1/billing/credit_grants/:id/void', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostBillingCreditGrantsIdVoidParams,
+    body: V1Model.PostBillingCreditGrantsIdVoidBody,
+    response: { 200: 'BillingCreditGrant', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Void a credit grant',
+      description: '<p>Voids a credit grant.</p>',
+      operationId: 'PostBillingCreditGrantsIdVoid',
+    },
+  })
+  .get('/v1/billing/feedback_options', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetBillingFeedbackOptionsQuery,
+    body: V1Model.GetBillingFeedbackOptionsBody,
+    response: { 200: V1Model.GetBillingFeedbackOptionsResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List all feedback options',
+      description: '<p>Returns a list of your feedback options.</p>',
+      operationId: 'GetBillingFeedbackOptions',
+    },
+  })
+  .post('/v1/billing/feedback_options', ({ body }) => { throw new Error('Not implemented') }, {
+    body: V1Model.PostBillingFeedbackOptionsBody,
+    response: { 200: 'BillingFeedbackOption', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Create a feedback option',
+      description: '<p>Creates a new feedback option.</p>',
+      operationId: 'PostBillingFeedbackOptions',
+    },
+  })
+  .get('/v1/billing/feedback_options/:id', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetBillingFeedbackOptionsIdParams,
+    query: V1Model.GetBillingFeedbackOptionsIdQuery,
+    body: V1Model.GetBillingFeedbackOptionsIdBody,
+    response: { 200: 'BillingFeedbackOption', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve a feedback option',
+      description: '<p>Retrieves a feedback option object given an ID.</p>',
+      operationId: 'GetBillingFeedbackOptionsId',
+    },
+  })
+  .post('/v1/billing/feedback_options/:id', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostBillingFeedbackOptionsIdParams,
+    body: V1Model.PostBillingFeedbackOptionsIdBody,
+    response: { 200: 'BillingFeedbackOption', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Update a feedback option',
+      description: '<p>Updates the description of an existing feedback option.</p>',
+      operationId: 'PostBillingFeedbackOptionsId',
+    },
+  })
+  .post('/v1/billing/feedback_options/:id/deactivate', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostBillingFeedbackOptionsIdDeactivateParams,
+    body: V1Model.PostBillingFeedbackOptionsIdDeactivateBody,
+    response: { 200: 'BillingFeedbackOption', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Deactivate a feedback option',
+      description:
+        '<p>Deactivates a feedback option. Deactivated feedback options cannot be used in portal configurations.</p>',
+      operationId: 'PostBillingFeedbackOptionsIdDeactivate',
+    },
+  })
+  .post('/v1/billing/meter_event_adjustments', ({ body }) => { throw new Error('Not implemented') }, {
+    body: V1Model.PostBillingMeterEventAdjustmentsBody,
+    response: { 200: 'BillingMeterEventAdjustment', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Create a billing meter event adjustment',
+      description: '<p>Creates a billing meter event adjustment.</p>',
+      operationId: 'PostBillingMeterEventAdjustments',
+    },
+  })
+  .post('/v1/billing/meter_events', ({ body }) => { throw new Error('Not implemented') }, {
+    body: V1Model.PostBillingMeterEventsBody,
+    response: { 200: 'BillingMeterEvent', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Create a billing meter event',
+      description: '<p>Creates a billing meter event.</p>',
+      operationId: 'PostBillingMeterEvents',
+    },
+  })
+  .get('/v1/billing/meters', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetBillingMetersQuery,
+    body: V1Model.GetBillingMetersBody,
+    response: { 200: V1Model.GetBillingMetersResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List billing meters',
+      description: '<p>Retrieve a list of billing meters.</p>',
+      operationId: 'GetBillingMeters',
+    },
+  })
+  .post('/v1/billing/meters', ({ body }) => { throw new Error('Not implemented') }, {
+    body: V1Model.PostBillingMetersBody,
+    response: { 200: 'BillingMeter', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Create a billing meter',
+      description: '<p>Creates a billing meter.</p>',
+      operationId: 'PostBillingMeters',
+    },
+  })
+  .get('/v1/billing/meters/:id', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetBillingMetersIdParams,
+    query: V1Model.GetBillingMetersIdQuery,
+    body: V1Model.GetBillingMetersIdBody,
+    response: { 200: 'BillingMeter', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve a billing meter',
+      description: '<p>Retrieves a billing meter given an ID.</p>',
+      operationId: 'GetBillingMetersId',
+    },
+  })
+  .post('/v1/billing/meters/:id', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostBillingMetersIdParams,
+    body: V1Model.PostBillingMetersIdBody,
+    response: { 200: 'BillingMeter', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Update a billing meter',
+      description: '<p>Updates a billing meter.</p>',
+      operationId: 'PostBillingMetersId',
+    },
+  })
+  .post('/v1/billing/meters/:id/deactivate', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostBillingMetersIdDeactivateParams,
+    body: V1Model.PostBillingMetersIdDeactivateBody,
+    response: { 200: 'BillingMeter', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Deactivate a billing meter',
+      description:
+        '<p>When a meter is deactivated, no more meter events will be accepted for this meter. You can’t attach a deactivated meter to a price.</p>',
+      operationId: 'PostBillingMetersIdDeactivate',
+    },
+  })
+  .get('/v1/billing/meters/:id/event_summaries', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetBillingMetersIdEventSummariesParams,
+    query: V1Model.GetBillingMetersIdEventSummariesQuery,
+    body: V1Model.GetBillingMetersIdEventSummariesBody,
+    response: { 200: V1Model.GetBillingMetersIdEventSummariesResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List billing meter event summaries',
+      description: '<p>Retrieve a list of billing meter event summaries.</p>',
+      operationId: 'GetBillingMetersIdEventSummaries',
+    },
+  })
+  .post('/v1/billing/meters/:id/reactivate', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostBillingMetersIdReactivateParams,
+    body: V1Model.PostBillingMetersIdReactivateBody,
+    response: { 200: 'BillingMeter', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Reactivate a billing meter',
+      description:
+        '<p>When a meter is reactivated, events for this meter can be accepted and you can attach the meter to a price.</p>',
+      operationId: 'PostBillingMetersIdReactivate',
+    },
+  })
+  .get('/v1/billing_portal/configurations', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetBillingPortalConfigurationsQuery,
+    body: V1Model.GetBillingPortalConfigurationsBody,
+    response: { 200: V1Model.GetBillingPortalConfigurationsResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List portal configurations',
+      description:
+        '<p>Returns a list of configurations that describe the functionality of the customer portal.</p>',
+      operationId: 'GetBillingPortalConfigurations',
+    },
+  })
+  .post('/v1/billing_portal/configurations', ({ body }) => { throw new Error('Not implemented') }, {
+    body: V1Model.PostBillingPortalConfigurationsBody,
+    response: { 200: 'BillingPortalConfiguration', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Create a portal configuration',
+      description:
+        '<p>Creates a configuration that describes the functionality and behavior of a PortalSession</p>',
+      operationId: 'PostBillingPortalConfigurations',
+    },
+  })
+  .get('/v1/billing_portal/configurations/:configuration', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetBillingPortalConfigurationsConfigurationParams,
+    query: V1Model.GetBillingPortalConfigurationsConfigurationQuery,
+    body: V1Model.GetBillingPortalConfigurationsConfigurationBody,
+    response: { 200: 'BillingPortalConfiguration', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve a portal configuration',
+      description:
+        '<p>Retrieves a configuration that describes the functionality of the customer portal.</p>',
+      operationId: 'GetBillingPortalConfigurationsConfiguration',
+    },
+  })
+  .post('/v1/billing_portal/configurations/:configuration', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostBillingPortalConfigurationsConfigurationParams,
+    body: V1Model.PostBillingPortalConfigurationsConfigurationBody,
+    response: { 200: 'BillingPortalConfiguration', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Update a portal configuration',
+      description:
+        '<p>Updates a configuration that describes the functionality of the customer portal.</p>',
+      operationId: 'PostBillingPortalConfigurationsConfiguration',
+    },
+  })
+  .post('/v1/billing_portal/sessions', ({ body }) => { throw new Error('Not implemented') }, {
+    body: V1Model.PostBillingPortalSessionsBody,
+    response: { 200: 'BillingPortalSession', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Create a portal session',
+      description: '<p>Creates a session of the customer portal.</p>',
+      operationId: 'PostBillingPortalSessions',
+    },
+  })
+  .get('/v1/charges', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetChargesQuery,
+    body: V1Model.GetChargesBody,
+    response: { 200: V1Model.GetChargesResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List all charges',
+      description:
+        '<p>Returns a list of charges you’ve previously created. The charges are returned in sorted order, with the most recent charges appearing first.</p>',
+      operationId: 'GetCharges',
+    },
+  })
+  .post('/v1/charges', ({ body }) => { throw new Error('Not implemented') }, {
+    body: V1Model.PostChargesBody,
+    response: { 200: 'Charge', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Create a charge',
+      description:
+        '<p>This method is deprecated and will be removed soon. If your integration uses it, you need to update it to use a different payment flow, such as <a href="/docs/payments/payment-intents">the Payment Intents API</a>.</p>',
+      operationId: 'PostCharges',
+    },
+  })
+  .get('/v1/charges/search', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetChargesSearchQuery,
+    body: V1Model.GetChargesSearchBody,
+    response: { 200: V1Model.GetChargesSearchResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Search charges',
+      description:
+        '<p>Search for charges you’ve previously created using Stripe’s <a href="/docs/search#search-query-language">Search Query Language</a>.\nDon’t use search in read-after-write flows where strict consistency is necessary. Under normal operating\nconditions, data is searchable in less than a minute. Occasionally, propagation of new or updated data can be up\nto an hour behind during outages. Search functionality is not available to merchants in India.</p>',
+      operationId: 'GetChargesSearch',
+    },
+  })
+  .get('/v1/charges/:charge', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetChargesChargeParams,
+    query: V1Model.GetChargesChargeQuery,
+    body: V1Model.GetChargesChargeBody,
+    response: { 200: 'Charge', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve a charge',
+      description:
+        '<p>Retrieves the details of a charge that has previously been created. Supply the unique charge ID that was returned from your previous request, and Stripe will return the corresponding charge information. The same information is returned when creating or refunding the charge.</p>',
+      operationId: 'GetChargesCharge',
+    },
+  })
+  .post('/v1/charges/:charge', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostChargesChargeParams,
+    body: V1Model.PostChargesChargeBody,
+    response: { 200: 'Charge', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Update a charge',
+      description:
+        '<p>Updates the specified charge by setting the values of the parameters passed. Any parameters not provided will be left unchanged.</p>',
+      operationId: 'PostChargesCharge',
+    },
+  })
+  .post('/v1/charges/:charge/capture', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostChargesChargeCaptureParams,
+    body: V1Model.PostChargesChargeCaptureBody,
+    response: { 200: 'Charge', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Capture a charge',
+      description:
+        '<p>This method is deprecated and will be removed soon. If your integration uses it, you need to update it to use a different payment flow, such as <a href="/docs/payments/payment-intents">the Payment Intents API</a>.</p>',
+      operationId: 'PostChargesChargeCapture',
+    },
+  })
+  .get('/v1/charges/:charge/dispute', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetChargesChargeDisputeParams,
+    query: V1Model.GetChargesChargeDisputeQuery,
+    body: V1Model.GetChargesChargeDisputeBody,
+    response: { 200: 'Dispute', default: 'Error' },
+    detail: {
+      tags: [],
+      description: '<p>Retrieve a dispute for a specified charge.</p>',
+      operationId: 'GetChargesChargeDispute',
+    },
+  })
+  .post('/v1/charges/:charge/dispute', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostChargesChargeDisputeParams,
+    body: V1Model.PostChargesChargeDisputeBody,
+    response: { 200: 'Dispute', default: 'Error' },
+    detail: { tags: [], operationId: 'PostChargesChargeDispute' },
+  })
+  .post('/v1/charges/:charge/dispute/close', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostChargesChargeDisputeCloseParams,
+    body: V1Model.PostChargesChargeDisputeCloseBody,
+    response: { 200: 'Dispute', default: 'Error' },
+    detail: { tags: [], operationId: 'PostChargesChargeDisputeClose' },
+  })
+  .post('/v1/charges/:charge/refund', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostChargesChargeRefundParams,
+    body: V1Model.PostChargesChargeRefundBody,
+    response: { 200: 'Charge', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Create a refund',
+      description:
+        '<p>When you create a new refund, you must specify either a Charge or a PaymentIntent object.</p>\n\n<p>This action refunds a previously created charge that’s not refunded yet.\nFunds are refunded to the credit or debit card that’s originally charged.</p>\n\n<p>You can optionally refund only part of a charge.\nYou can repeat this until the entire charge is refunded.</p>\n\n<p>After you entirely refund a charge, you can’t refund it again.\nThis method raises an error when it’s called on an already-refunded charge,\nor when you attempt to refund more money than is left on a charge.</p>',
+      operationId: 'PostChargesChargeRefund',
+    },
+  })
+  .get('/v1/charges/:charge/refunds', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetChargesChargeRefundsParams,
+    query: V1Model.GetChargesChargeRefundsQuery,
+    body: V1Model.GetChargesChargeRefundsBody,
+    response: { 200: V1Model.GetChargesChargeRefundsResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List all refunds',
+      description:
+        '<p>You can see a list of the refunds belonging to a specific charge. Note that the 10 most recent refunds are always available by default on the charge object. If you need more than those 10, you can use this API method and the <code>limit</code> and <code>starting_after</code> parameters to page through additional refunds.</p>',
+      operationId: 'GetChargesChargeRefunds',
+    },
+  })
+  .post('/v1/charges/:charge/refunds', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostChargesChargeRefundsParams,
+    body: V1Model.PostChargesChargeRefundsBody,
+    response: { 200: 'Refund', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Create a refund',
+      description:
+        '<p>When you create a new refund, you must specify a Charge or a PaymentIntent object on which to create it.</p>\n\n<p>Creating a new refund will refund a charge that has previously been created but not yet refunded.\nFunds will be refunded to the credit or debit card that was originally charged.</p>\n\n<p>You can optionally refund only part of a charge.\nYou can do so multiple times, until the entire charge has been refunded.</p>\n\n<p>Once entirely refunded, a charge can’t be refunded again.\nThis method will raise an error when called on an already-refunded charge,\nor when trying to refund more money than is left on a charge.</p>',
+      operationId: 'PostChargesChargeRefunds',
+    },
+  })
+  .get('/v1/charges/:charge/refunds/:refund', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetChargesChargeRefundsRefundParams,
+    query: V1Model.GetChargesChargeRefundsRefundQuery,
+    body: V1Model.GetChargesChargeRefundsRefundBody,
+    response: { 200: 'Refund', default: 'Error' },
+    detail: {
+      tags: [],
+      description: '<p>Retrieves the details of an existing refund.</p>',
+      operationId: 'GetChargesChargeRefundsRefund',
+    },
+  })
+  .post('/v1/charges/:charge/refunds/:refund', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostChargesChargeRefundsRefundParams,
+    body: V1Model.PostChargesChargeRefundsRefundBody,
+    response: { 200: 'Refund', default: 'Error' },
+    detail: {
+      tags: [],
+      description: '<p>Update a specified refund.</p>',
+      operationId: 'PostChargesChargeRefundsRefund',
+    },
+  })
+  .get('/v1/checkout/sessions', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetCheckoutSessionsQuery,
+    body: V1Model.GetCheckoutSessionsBody,
+    response: { 200: V1Model.GetCheckoutSessionsResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List all Checkout Sessions',
+      description: '<p>Returns a list of Checkout Sessions.</p>',
+      operationId: 'GetCheckoutSessions',
+    },
+  })
+  .post('/v1/checkout/sessions', ({ body }) => { throw new Error('Not implemented') }, {
+    body: V1Model.PostCheckoutSessionsBody,
+    response: { 200: 'CheckoutSession', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Create a Checkout Session',
+      description: '<p>Creates a Checkout Session object.</p>',
+      operationId: 'PostCheckoutSessions',
+    },
+  })
+  .get('/v1/checkout/sessions/:session', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetCheckoutSessionsSessionParams,
+    query: V1Model.GetCheckoutSessionsSessionQuery,
+    body: V1Model.GetCheckoutSessionsSessionBody,
+    response: { 200: 'CheckoutSession', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve a Checkout Session',
+      description: '<p>Retrieves a Checkout Session object.</p>',
+      operationId: 'GetCheckoutSessionsSession',
+    },
+  })
+  .post('/v1/checkout/sessions/:session', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostCheckoutSessionsSessionParams,
+    body: V1Model.PostCheckoutSessionsSessionBody,
+    response: { 200: 'CheckoutSession', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Update a Checkout Session',
+      description:
+        '<p>Updates a Checkout Session object.</p>\n\n<p>Related guide: <a href="/payments/advanced/dynamic-updates">Dynamically update a Checkout Session</a></p>',
+      operationId: 'PostCheckoutSessionsSession',
+    },
+  })
+  .post('/v1/checkout/sessions/:session/expire', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostCheckoutSessionsSessionExpireParams,
+    body: V1Model.PostCheckoutSessionsSessionExpireBody,
+    response: { 200: 'CheckoutSession', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Expire a Checkout Session',
+      description:
+        '<p>A Checkout Session can be expired when it is in one of these statuses: <code>open</code> </p>\n\n<p>After it expires, a customer can’t complete a Checkout Session and customers loading the Checkout Session see a message saying the Checkout Session is expired.</p>',
+      operationId: 'PostCheckoutSessionsSessionExpire',
+    },
+  })
+  .get('/v1/checkout/sessions/:session/line_items', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetCheckoutSessionsSessionLineItemsParams,
+    query: V1Model.GetCheckoutSessionsSessionLineItemsQuery,
+    body: V1Model.GetCheckoutSessionsSessionLineItemsBody,
+    response: { 200: V1Model.GetCheckoutSessionsSessionLineItemsResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: "Retrieve a Checkout Session's line items",
+      description:
+        '<p>When retrieving a Checkout Session, there is an includable <strong>line_items</strong> property containing the first handful of those items. There is also a URL where you can retrieve the full (paginated) list of line items.</p>',
+      operationId: 'GetCheckoutSessionsSessionLineItems',
+    },
+  })
+  .get('/v1/climate/orders', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetClimateOrdersQuery,
+    body: V1Model.GetClimateOrdersBody,
+    response: { 200: V1Model.GetClimateOrdersResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List orders',
+      description:
+        '<p>Lists all Climate order objects. The orders are returned sorted by creation date, with the\nmost recently created orders appearing first.</p>',
+      operationId: 'GetClimateOrders',
+    },
+  })
+  .post('/v1/climate/orders', ({ body }) => { throw new Error('Not implemented') }, {
+    body: V1Model.PostClimateOrdersBody,
+    response: { 200: 'ClimateOrder', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Create an order',
+      description:
+        '<p>Creates a Climate order object for a given Climate product. The order will be processed immediately\nafter creation and payment will be deducted your Stripe balance.</p>',
+      operationId: 'PostClimateOrders',
+    },
+  })
+  .get('/v1/climate/orders/:order', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetClimateOrdersOrderParams,
+    query: V1Model.GetClimateOrdersOrderQuery,
+    body: V1Model.GetClimateOrdersOrderBody,
+    response: { 200: 'ClimateOrder', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve an order',
+      description: '<p>Retrieves the details of a Climate order object with the given ID.</p>',
+      operationId: 'GetClimateOrdersOrder',
+    },
+  })
+  .post('/v1/climate/orders/:order', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostClimateOrdersOrderParams,
+    body: V1Model.PostClimateOrdersOrderBody,
+    response: { 200: 'ClimateOrder', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Update an order',
+      description:
+        '<p>Updates the specified order by setting the values of the parameters passed.</p>',
+      operationId: 'PostClimateOrdersOrder',
+    },
+  })
+  .post('/v1/climate/orders/:order/cancel', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostClimateOrdersOrderCancelParams,
+    body: V1Model.PostClimateOrdersOrderCancelBody,
+    response: { 200: 'ClimateOrder', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Cancel an order',
+      description:
+        '<p>Cancels a Climate order. You can cancel an order within 24 hours of creation. Stripe refunds the\nreservation <code>amount_subtotal</code>, but not the <code>amount_fees</code> for user-triggered cancellations. Frontier\nmight cancel reservations if suppliers fail to deliver. If Frontier cancels the reservation, Stripe\nprovides 90 days advance notice and refunds the <code>amount_total</code>.</p>',
+      operationId: 'PostClimateOrdersOrderCancel',
+    },
+  })
+  .get('/v1/climate/products', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetClimateProductsQuery,
+    body: V1Model.GetClimateProductsBody,
+    response: { 200: V1Model.GetClimateProductsResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List products',
+      description: '<p>Lists all available Climate product objects.</p>',
+      operationId: 'GetClimateProducts',
+    },
+  })
+  .get('/v1/climate/products/:product', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetClimateProductsProductParams,
+    query: V1Model.GetClimateProductsProductQuery,
+    body: V1Model.GetClimateProductsProductBody,
+    response: { 200: 'ClimateProduct', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve a product',
+      description: '<p>Retrieves the details of a Climate product with the given ID.</p>',
+      operationId: 'GetClimateProductsProduct',
+    },
+  })
+  .get('/v1/climate/suppliers', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetClimateSuppliersQuery,
+    body: V1Model.GetClimateSuppliersBody,
+    response: { 200: V1Model.GetClimateSuppliersResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List suppliers',
+      description: '<p>Lists all available Climate supplier objects.</p>',
+      operationId: 'GetClimateSuppliers',
+    },
+  })
+  .get('/v1/climate/suppliers/:supplier', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetClimateSuppliersSupplierParams,
+    query: V1Model.GetClimateSuppliersSupplierQuery,
+    body: V1Model.GetClimateSuppliersSupplierBody,
+    response: { 200: 'ClimateSupplier', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve a supplier',
+      description: '<p>Retrieves a Climate supplier object.</p>',
+      operationId: 'GetClimateSuppliersSupplier',
+    },
+  })
+  .get('/v1/confirmation_tokens/:confirmation_token', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetConfirmationTokensConfirmationTokenParams,
+    query: V1Model.GetConfirmationTokensConfirmationTokenQuery,
+    body: V1Model.GetConfirmationTokensConfirmationTokenBody,
+    response: { 200: 'ConfirmationToken', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve a ConfirmationToken',
+      description: '<p>Retrieves an existing ConfirmationToken object</p>',
+      operationId: 'GetConfirmationTokensConfirmationToken',
+    },
+  })
+  .get('/v1/country_specs', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetCountrySpecsQuery,
+    body: V1Model.GetCountrySpecsBody,
+    response: { 200: V1Model.GetCountrySpecsResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List Country Specs',
+      description: '<p>Lists all Country Spec objects available in the API.</p>',
+      operationId: 'GetCountrySpecs',
+    },
+  })
+  .get('/v1/country_specs/:country', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetCountrySpecsCountryParams,
+    query: V1Model.GetCountrySpecsCountryQuery,
+    body: V1Model.GetCountrySpecsCountryBody,
+    response: { 200: 'CountrySpec', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve a Country Spec',
+      description: '<p>Returns a Country Spec for a given Country code.</p>',
+      operationId: 'GetCountrySpecsCountry',
+    },
+  })
+  .get('/v1/coupons', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetCouponsQuery,
+    body: V1Model.GetCouponsBody,
+    response: { 200: V1Model.GetCouponsResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List all coupons',
+      description: '<p>Returns a list of your coupons.</p>',
+      operationId: 'GetCoupons',
+    },
+  })
+  .post('/v1/coupons', ({ body }) => { throw new Error('Not implemented') }, {
+    body: V1Model.PostCouponsBody,
+    response: { 200: 'Coupon', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Create a coupon',
+      description:
+        '<p>You can create coupons easily via the <a href="https://dashboard.stripe.com/coupons">coupon management</a> page of the Stripe dashboard. Coupon creation is also accessible via the API if you need to create coupons on the fly.</p>\n\n<p>A coupon has either a <code>percent_off</code> or an <code>amount_off</code> and <code>currency</code>. If you set an <code>amount_off</code>, that amount will be subtracted from any invoice’s subtotal. For example, an invoice with a subtotal of <currency>100</currency> will have a final total of <currency>0</currency> if a coupon with an <code>amount_off</code> of <amount>200</amount> is applied to it and an invoice with a subtotal of <currency>300</currency> will have a final total of <currency>100</currency> if a coupon with an <code>amount_off</code> of <amount>200</amount> is applied to it.</p>',
+      operationId: 'PostCoupons',
+    },
+  })
+  .get('/v1/coupons/:coupon', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetCouponsCouponParams,
+    query: V1Model.GetCouponsCouponQuery,
+    body: V1Model.GetCouponsCouponBody,
+    response: { 200: 'Coupon', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve a coupon',
+      description: '<p>Retrieves the coupon with the given ID.</p>',
+      operationId: 'GetCouponsCoupon',
+    },
+  })
+  .post('/v1/coupons/:coupon', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostCouponsCouponParams,
+    body: V1Model.PostCouponsCouponBody,
+    response: { 200: 'Coupon', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Update a coupon',
+      description:
+        '<p>Updates the metadata of a coupon. Other coupon details (currency, duration, amount_off) are, by design, not editable.</p>',
+      operationId: 'PostCouponsCoupon',
+    },
+  })
+  .delete('/v1/coupons/:coupon', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.DeleteCouponsCouponParams,
+    body: V1Model.DeleteCouponsCouponBody,
+    response: { 200: 'DeletedCoupon', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Delete a coupon',
+      description:
+        '<p>You can delete coupons via the <a href="https://dashboard.stripe.com/coupons">coupon management</a> page of the Stripe dashboard. However, deleting a coupon does not affect any customers who have already applied the coupon; it means that new customers can’t redeem the coupon. You can also delete coupons via the API.</p>',
+      operationId: 'DeleteCouponsCoupon',
+    },
+  })
+  .get('/v1/credit_notes', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetCreditNotesQuery,
+    body: V1Model.GetCreditNotesBody,
+    response: { 200: V1Model.GetCreditNotesResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List all credit notes',
+      description: '<p>Returns a list of credit notes.</p>',
+      operationId: 'GetCreditNotes',
+    },
+  })
+  .post('/v1/credit_notes', ({ body }) => { throw new Error('Not implemented') }, {
+    body: V1Model.PostCreditNotesBody,
+    response: { 200: 'CreditNote', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Create a credit note',
+      description:
+        '<p>Issue a credit note to adjust the amount of a finalized invoice. A credit note will first reduce the invoice’s <code>amount_remaining</code> (and <code>amount_due</code>), but not below zero.\nThis amount is indicated by the credit note’s <code>pre_payment_amount</code>. The excess amount is indicated by <code>post_payment_amount</code>, and it can result in any combination of the following:</p>\n\n<ul>\n<li>Refunds: create a new refund (using <code>refund_amount</code>) or link existing refunds (using <code>refunds</code>).</li>\n<li>Customer balance credit: credit the customer’s balance (using <code>credit_amount</code>) which will be automatically applied to their next invoice when it’s finalized.</li>\n<li>Outside of Stripe credit: record the amount that is or will be credited outside of Stripe (using <code>out_of_band_amount</code>).</li>\n</ul>\n\n<p>The sum of refunds, customer balance credits, and outside of Stripe credits must equal the <code>post_payment_amount</code>.</p>\n\n<p>You may issue multiple credit notes for an invoice. Each credit note may increment the invoice’s <code>pre_payment_credit_notes_amount</code>,\n<code>post_payment_credit_notes_amount</code>, or both, depending on the invoice’s <code>amount_remaining</code> at the time of credit note creation.</p>\n\n<p>For invoices that also have refunds created through the <a href="/docs/api/refunds">Refund API</a>, the credit note API subtracts those refund amounts from the maximum creditable amount. This prevents the combined credit notes and refunds from exceeding the invoice amount. If you use both, ensure the combined total does not exceed the invoice’s paid amount.</p>',
+      operationId: 'PostCreditNotes',
+    },
+  })
+  .get('/v1/credit_notes/preview', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetCreditNotesPreviewQuery,
+    body: V1Model.GetCreditNotesPreviewBody,
+    response: { 200: 'CreditNote', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Preview a credit note',
+      description: '<p>Get a preview of a credit note without creating it.</p>',
+      operationId: 'GetCreditNotesPreview',
+    },
+  })
+  .get('/v1/credit_notes/preview/lines', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetCreditNotesPreviewLinesQuery,
+    body: V1Model.GetCreditNotesPreviewLinesBody,
+    response: { 200: V1Model.GetCreditNotesPreviewLinesResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: "Retrieve a credit note preview's line items",
+      description:
+        '<p>When retrieving a credit note preview, you’ll get a <strong>lines</strong> property containing the first handful of those items. This URL you can retrieve the full (paginated) list of line items.</p>',
+      operationId: 'GetCreditNotesPreviewLines',
+    },
+  })
+  .get('/v1/credit_notes/:credit_note/lines', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetCreditNotesCreditNoteLinesParams,
+    query: V1Model.GetCreditNotesCreditNoteLinesQuery,
+    body: V1Model.GetCreditNotesCreditNoteLinesBody,
+    response: { 200: V1Model.GetCreditNotesCreditNoteLinesResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: "Retrieve a credit note's line items",
+      description:
+        '<p>When retrieving a credit note, you’ll get a <strong>lines</strong> property containing the first handful of those items. There is also a URL where you can retrieve the full (paginated) list of line items.</p>',
+      operationId: 'GetCreditNotesCreditNoteLines',
+    },
+  })
+  .get('/v1/credit_notes/:credit_note', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetCreditNotesIdParams,
+    query: V1Model.GetCreditNotesIdQuery,
+    body: V1Model.GetCreditNotesIdBody,
+    response: { 200: 'CreditNote', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve a credit note',
+      description: '<p>Retrieves the credit note object with the given identifier.</p>',
+      operationId: 'GetCreditNotesId',
+    },
+  })
+  .post('/v1/credit_notes/:credit_note', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostCreditNotesIdParams,
+    body: V1Model.PostCreditNotesIdBody,
+    response: { 200: 'CreditNote', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Update a credit note',
+      description: '<p>Updates an existing credit note.</p>',
+      operationId: 'PostCreditNotesId',
+    },
+  })
+  .post('/v1/credit_notes/:credit_note/void', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostCreditNotesIdVoidParams,
+    body: V1Model.PostCreditNotesIdVoidBody,
+    response: { 200: 'CreditNote', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Void a credit note',
+      description:
+        '<p>Marks a credit note as void. Learn more about <a href="/docs/billing/invoices/credit-notes#voiding">voiding credit notes</a>.</p>',
+      operationId: 'PostCreditNotesIdVoid',
+    },
+  })
+  .post('/v1/customer_sessions', ({ body }) => { throw new Error('Not implemented') }, {
+    body: V1Model.PostCustomerSessionsBody,
+    response: { 200: 'CustomerSession', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Create a Customer Session',
+      description:
+        '<p>Creates a Customer Session object that includes a single-use client secret that you can use on your front-end to grant client-side API access for certain customer resources.</p>',
+      operationId: 'PostCustomerSessions',
+    },
+  })
+  .get('/v1/customers', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetCustomersQuery,
+    body: V1Model.GetCustomersBody,
+    response: { 200: V1Model.GetCustomersResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List all customers',
+      description:
+        '<p>Returns a list of your customers. The customers are returned sorted by creation date, with the most recent customers appearing first.</p>',
+      operationId: 'GetCustomers',
+    },
+  })
+  .post('/v1/customers', ({ body }) => { throw new Error('Not implemented') }, {
+    body: V1Model.PostCustomersBody,
+    response: { 200: 'Customer', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Create a customer',
+      description: '<p>Creates a new customer object.</p>',
+      operationId: 'PostCustomers',
+    },
+  })
+  .get('/v1/customers/search', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetCustomersSearchQuery,
+    body: V1Model.GetCustomersSearchBody,
+    response: { 200: V1Model.GetCustomersSearchResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Search customers',
+      description:
+        '<p>Search for customers you’ve previously created using Stripe’s <a href="/docs/search#search-query-language">Search Query Language</a>.\nDon’t use search in read-after-write flows where strict consistency is necessary. Under normal operating\nconditions, data is searchable in less than a minute. Occasionally, propagation of new or updated data can be up\nto an hour behind during outages. Search functionality is not available to merchants in India.</p>',
+      operationId: 'GetCustomersSearch',
+    },
+  })
+  .get('/v1/customers/:customer', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetCustomersCustomerParams,
+    query: V1Model.GetCustomersCustomerQuery,
+    body: V1Model.GetCustomersCustomerBody,
+    response: { 200: V1Model.GetCustomersCustomerResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve a customer',
+      description: '<p>Retrieves a Customer object.</p>',
+      operationId: 'GetCustomersCustomer',
+    },
+  })
+  .post('/v1/customers/:customer', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostCustomersCustomerParams,
+    body: V1Model.PostCustomersCustomerBody,
+    response: { 200: 'Customer', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Update a customer',
+      description:
+        '<p>Updates the specified customer by setting the values of the parameters passed. Any parameters not provided are left unchanged. For example, if you pass the <strong>source</strong> parameter, that becomes the customer’s active source (such as a card) to be used for all charges in the future. When you update a customer to a new valid card source by passing the <strong>source</strong> parameter: for each of the customer’s current subscriptions, if the subscription bills automatically and is in the <code>past_due</code> state, then the latest open invoice for the subscription with automatic collection enabled is retried. This retry doesn’t count as an automatic retry, and doesn’t affect the next regularly scheduled payment for the invoice. Changing the <strong>default_source</strong> for a customer doesn’t trigger this behavior.</p>\n\n<p>This request accepts mostly the same arguments as the customer creation call.</p>',
+      operationId: 'PostCustomersCustomer',
+    },
+  })
+  .delete('/v1/customers/:customer', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.DeleteCustomersCustomerParams,
+    body: V1Model.DeleteCustomersCustomerBody,
+    response: { 200: 'DeletedCustomer', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Delete a customer',
+      description:
+        '<p>Permanently deletes a customer. It cannot be undone. Also immediately cancels any active subscriptions on the customer.</p>',
+      operationId: 'DeleteCustomersCustomer',
+    },
+  })
+  .get('/v1/customers/:customer/balance_transactions', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetCustomersCustomerBalanceTransactionsParams,
+    query: V1Model.GetCustomersCustomerBalanceTransactionsQuery,
+    body: V1Model.GetCustomersCustomerBalanceTransactionsBody,
+    response: { 200: V1Model.GetCustomersCustomerBalanceTransactionsResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List customer balance transactions',
+      description:
+        '<p>Returns a list of transactions that updated the customer’s <a href="/docs/billing/customer/balance">balances</a>.</p>',
+      operationId: 'GetCustomersCustomerBalanceTransactions',
+    },
+  })
+  .post('/v1/customers/:customer/balance_transactions', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostCustomersCustomerBalanceTransactionsParams,
+    body: V1Model.PostCustomersCustomerBalanceTransactionsBody,
+    response: { 200: 'CustomerBalanceTransaction', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Create a customer balance transaction',
+      description:
+        '<p>Creates an immutable transaction that updates the customer’s credit <a href="/docs/billing/customer/balance">balance</a>.</p>',
+      operationId: 'PostCustomersCustomerBalanceTransactions',
+    },
+  })
+  .get(
+    '/v1/customers/:customer/balance_transactions/:transaction',
+    ({ params, query, body }) => { throw new Error('Not implemented') },
+    {
+      params: V1Model.GetCustomersCustomerBalanceTransactionsTransactionParams,
+      query: V1Model.GetCustomersCustomerBalanceTransactionsTransactionQuery,
+      body: V1Model.GetCustomersCustomerBalanceTransactionsTransactionBody,
+      response: { 200: 'CustomerBalanceTransaction', default: 'Error' },
+      detail: {
+        tags: [],
+        summary: 'Retrieve a customer balance transaction',
+        description:
+          '<p>Retrieves a specific customer balance transaction that updated the customer’s <a href="/docs/billing/customer/balance">balances</a>.</p>',
+        operationId: 'GetCustomersCustomerBalanceTransactionsTransaction',
+      },
+    },
+  )
+  .post('/v1/customers/:customer/balance_transactions/:transaction', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostCustomersCustomerBalanceTransactionsTransactionParams,
+    body: V1Model.PostCustomersCustomerBalanceTransactionsTransactionBody,
+    response: { 200: 'CustomerBalanceTransaction', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Update a customer credit balance transaction',
+      description:
+        '<p>Most credit balance transaction fields are immutable, but you may update its <code>description</code> and <code>metadata</code>.</p>',
+      operationId: 'PostCustomersCustomerBalanceTransactionsTransaction',
+    },
+  })
+  .get('/v1/customers/:customer/bank_accounts', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetCustomersCustomerBankAccountsParams,
+    query: V1Model.GetCustomersCustomerBankAccountsQuery,
+    body: V1Model.GetCustomersCustomerBankAccountsBody,
+    response: { 200: V1Model.GetCustomersCustomerBankAccountsResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List all bank accounts',
+      description:
+        '<p>You can see a list of the bank accounts belonging to a Customer. Note that the 10 most recent sources are always available by default on the Customer. If you need more than those 10, you can use this API method and the <code>limit</code> and <code>starting_after</code> parameters to page through additional bank accounts.</p>',
+      operationId: 'GetCustomersCustomerBankAccounts',
+    },
+  })
+  .post('/v1/customers/:customer/bank_accounts', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostCustomersCustomerBankAccountsParams,
+    body: V1Model.PostCustomersCustomerBankAccountsBody,
+    response: { 200: 'PaymentSource', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Create a card',
+      description:
+        '<p>When you create a new credit card, you must specify a customer or recipient on which to create it.</p>\n\n<p>If the card’s owner has no default card, then the new card will become the default.\nHowever, if the owner already has a default, then it will not change.\nTo change the default, you should <a href="/api/customers/update">update the customer</a> to have a new <code>default_source</code>.</p>',
+      operationId: 'PostCustomersCustomerBankAccounts',
+    },
+  })
+  .get('/v1/customers/:customer/bank_accounts/:id', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetCustomersCustomerBankAccountsIdParams,
+    query: V1Model.GetCustomersCustomerBankAccountsIdQuery,
+    body: V1Model.GetCustomersCustomerBankAccountsIdBody,
+    response: { 200: 'BankAccount', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve a bank account',
+      description:
+        '<p>By default, you can see the 10 most recent sources stored on a Customer directly on the object, but you can also retrieve details about a specific bank account stored on the Stripe account.</p>',
+      operationId: 'GetCustomersCustomerBankAccountsId',
+    },
+  })
+  .post('/v1/customers/:customer/bank_accounts/:id', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostCustomersCustomerBankAccountsIdParams,
+    body: V1Model.PostCustomersCustomerBankAccountsIdBody,
+    response: { 200: V1Model.PostCustomersCustomerBankAccountsIdResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Update a card',
+      description: '<p>Update a specified source for a given customer.</p>',
+      operationId: 'PostCustomersCustomerBankAccountsId',
+    },
+  })
+  .delete('/v1/customers/:customer/bank_accounts/:id', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.DeleteCustomersCustomerBankAccountsIdParams,
+    body: V1Model.DeleteCustomersCustomerBankAccountsIdBody,
+    response: { 200: V1Model.DeleteCustomersCustomerBankAccountsIdResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Delete a customer source',
+      description: '<p>Delete a specified source for a given customer.</p>',
+      operationId: 'DeleteCustomersCustomerBankAccountsId',
+    },
+  })
+  .post('/v1/customers/:customer/bank_accounts/:id/verify', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostCustomersCustomerBankAccountsIdVerifyParams,
+    body: V1Model.PostCustomersCustomerBankAccountsIdVerifyBody,
+    response: { 200: 'BankAccount', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Verify a bank account',
+      description: '<p>Verify a specified bank account for a given customer.</p>',
+      operationId: 'PostCustomersCustomerBankAccountsIdVerify',
+    },
+  })
+  .get('/v1/customers/:customer/cards', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetCustomersCustomerCardsParams,
+    query: V1Model.GetCustomersCustomerCardsQuery,
+    body: V1Model.GetCustomersCustomerCardsBody,
+    response: { 200: V1Model.GetCustomersCustomerCardsResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List all cards',
+      description:
+        '<p>You can see a list of the cards belonging to a customer.\nNote that the 10 most recent sources are always available on the <code>Customer</code> object.\nIf you need more than those 10, you can use this API method and the <code>limit</code> and <code>starting_after</code> parameters to page through additional cards.</p>',
+      operationId: 'GetCustomersCustomerCards',
+    },
+  })
+  .post('/v1/customers/:customer/cards', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostCustomersCustomerCardsParams,
+    body: V1Model.PostCustomersCustomerCardsBody,
+    response: { 200: 'PaymentSource', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Create a card',
+      description:
+        '<p>When you create a new credit card, you must specify a customer or recipient on which to create it.</p>\n\n<p>If the card’s owner has no default card, then the new card will become the default.\nHowever, if the owner already has a default, then it will not change.\nTo change the default, you should <a href="/api/customers/update">update the customer</a> to have a new <code>default_source</code>.</p>',
+      operationId: 'PostCustomersCustomerCards',
+    },
+  })
+  .get('/v1/customers/:customer/cards/:id', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetCustomersCustomerCardsIdParams,
+    query: V1Model.GetCustomersCustomerCardsIdQuery,
+    body: V1Model.GetCustomersCustomerCardsIdBody,
+    response: { 200: 'Card', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve a card',
+      description:
+        '<p>You can always see the 10 most recent cards directly on a customer; this method lets you retrieve details about a specific card stored on the customer.</p>',
+      operationId: 'GetCustomersCustomerCardsId',
+    },
+  })
+  .post('/v1/customers/:customer/cards/:id', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostCustomersCustomerCardsIdParams,
+    body: V1Model.PostCustomersCustomerCardsIdBody,
+    response: { 200: V1Model.PostCustomersCustomerCardsIdResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Update a card',
+      description: '<p>Update a specified source for a given customer.</p>',
+      operationId: 'PostCustomersCustomerCardsId',
+    },
+  })
+  .delete('/v1/customers/:customer/cards/:id', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.DeleteCustomersCustomerCardsIdParams,
+    body: V1Model.DeleteCustomersCustomerCardsIdBody,
+    response: { 200: V1Model.DeleteCustomersCustomerCardsIdResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Delete a customer source',
+      description: '<p>Delete a specified source for a given customer.</p>',
+      operationId: 'DeleteCustomersCustomerCardsId',
+    },
+  })
+  .get('/v1/customers/:customer/cash_balance', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetCustomersCustomerCashBalanceParams,
+    query: V1Model.GetCustomersCustomerCashBalanceQuery,
+    body: V1Model.GetCustomersCustomerCashBalanceBody,
+    response: { 200: 'CashBalance', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve a cash balance',
+      description: '<p>Retrieves a customer’s cash balance.</p>',
+      operationId: 'GetCustomersCustomerCashBalance',
+    },
+  })
+  .post('/v1/customers/:customer/cash_balance', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostCustomersCustomerCashBalanceParams,
+    body: V1Model.PostCustomersCustomerCashBalanceBody,
+    response: { 200: 'CashBalance', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: "Update a cash balance's settings",
+      description: '<p>Changes the settings on a customer’s cash balance.</p>',
+      operationId: 'PostCustomersCustomerCashBalance',
+    },
+  })
+  .get('/v1/customers/:customer/cash_balance_transactions', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetCustomersCustomerCashBalanceTransactionsParams,
+    query: V1Model.GetCustomersCustomerCashBalanceTransactionsQuery,
+    body: V1Model.GetCustomersCustomerCashBalanceTransactionsBody,
+    response: {
+      200: V1Model.GetCustomersCustomerCashBalanceTransactionsResponse200,
+      default: 'Error',
+    },
+    detail: {
+      tags: [],
+      summary: 'List cash balance transactions',
+      description:
+        '<p>Returns a list of transactions that modified the customer’s <a href="/docs/payments/customer-balance">cash balance</a>.</p>',
+      operationId: 'GetCustomersCustomerCashBalanceTransactions',
+    },
+  })
+  .get(
+    '/v1/customers/:customer/cash_balance_transactions/:transaction',
+    ({ params, query, body }) => { throw new Error('Not implemented') },
+    {
+      params: V1Model.GetCustomersCustomerCashBalanceTransactionsTransactionParams,
+      query: V1Model.GetCustomersCustomerCashBalanceTransactionsTransactionQuery,
+      body: V1Model.GetCustomersCustomerCashBalanceTransactionsTransactionBody,
+      response: { 200: 'CustomerCashBalanceTransaction', default: 'Error' },
+      detail: {
+        tags: [],
+        summary: 'Retrieve a cash balance transaction',
+        description:
+          '<p>Retrieves a specific cash balance transaction, which updated the customer’s <a href="/docs/payments/customer-balance">cash balance</a>.</p>',
+        operationId: 'GetCustomersCustomerCashBalanceTransactionsTransaction',
+      },
+    },
+  )
+  .get('/v1/customers/:customer/discount', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetCustomersCustomerDiscountParams,
+    query: V1Model.GetCustomersCustomerDiscountQuery,
+    body: V1Model.GetCustomersCustomerDiscountBody,
+    response: { 200: 'Discount', default: 'Error' },
+    detail: { tags: [], operationId: 'GetCustomersCustomerDiscount' },
+  })
+  .delete('/v1/customers/:customer/discount', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.DeleteCustomersCustomerDiscountParams,
+    body: V1Model.DeleteCustomersCustomerDiscountBody,
+    response: { 200: 'DeletedDiscount', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Delete a customer discount',
+      description: '<p>Removes the currently applied discount on a customer.</p>',
+      operationId: 'DeleteCustomersCustomerDiscount',
+    },
+  })
+  .post('/v1/customers/:customer/funding_instructions', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostCustomersCustomerFundingInstructionsParams,
+    body: V1Model.PostCustomersCustomerFundingInstructionsBody,
+    response: { 200: 'FundingInstructions', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Create or retrieve funding instructions for a customer cash balance',
+      description:
+        '<p>Retrieve funding instructions for a customer cash balance. If funding instructions do not yet exist for the customer, new\nfunding instructions will be created. If funding instructions have already been created for a given customer, the same\nfunding instructions will be retrieved. In other words, we will return the same funding instructions each time.</p>',
+      operationId: 'PostCustomersCustomerFundingInstructions',
+    },
+  })
+  .get('/v1/customers/:customer/payment_methods', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetCustomersCustomerPaymentMethodsParams,
+    query: V1Model.GetCustomersCustomerPaymentMethodsQuery,
+    body: V1Model.GetCustomersCustomerPaymentMethodsBody,
+    response: { 200: V1Model.GetCustomersCustomerPaymentMethodsResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: "List a Customer's PaymentMethods",
+      description: '<p>Returns a list of PaymentMethods for a given Customer</p>',
+      operationId: 'GetCustomersCustomerPaymentMethods',
+    },
+  })
+  .get('/v1/customers/:customer/payment_methods/:payment_method', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetCustomersCustomerPaymentMethodsPaymentMethodParams,
+    query: V1Model.GetCustomersCustomerPaymentMethodsPaymentMethodQuery,
+    body: V1Model.GetCustomersCustomerPaymentMethodsPaymentMethodBody,
+    response: { 200: 'PaymentMethod', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: "Retrieve a Customer's PaymentMethod",
+      description: '<p>Retrieves a PaymentMethod object for a given Customer.</p>',
+      operationId: 'GetCustomersCustomerPaymentMethodsPaymentMethod',
+    },
+  })
+  .get('/v1/customers/:customer/sources', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetCustomersCustomerSourcesParams,
+    query: V1Model.GetCustomersCustomerSourcesQuery,
+    body: V1Model.GetCustomersCustomerSourcesBody,
+    response: { 200: V1Model.GetCustomersCustomerSourcesResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      description: '<p>List sources for a specified customer.</p>',
+      operationId: 'GetCustomersCustomerSources',
+    },
+  })
+  .post('/v1/customers/:customer/sources', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostCustomersCustomerSourcesParams,
+    body: V1Model.PostCustomersCustomerSourcesBody,
+    response: { 200: 'PaymentSource', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Create a card',
+      description:
+        '<p>When you create a new credit card, you must specify a customer or recipient on which to create it.</p>\n\n<p>If the card’s owner has no default card, then the new card will become the default.\nHowever, if the owner already has a default, then it will not change.\nTo change the default, you should <a href="/api/customers/update">update the customer</a> to have a new <code>default_source</code>.</p>',
+      operationId: 'PostCustomersCustomerSources',
+    },
+  })
+  .get('/v1/customers/:customer/sources/:id', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetCustomersCustomerSourcesIdParams,
+    query: V1Model.GetCustomersCustomerSourcesIdQuery,
+    body: V1Model.GetCustomersCustomerSourcesIdBody,
+    response: { 200: 'PaymentSource', default: 'Error' },
+    detail: {
+      tags: [],
+      description: '<p>Retrieve a specified source for a given customer.</p>',
+      operationId: 'GetCustomersCustomerSourcesId',
+    },
+  })
+  .post('/v1/customers/:customer/sources/:id', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostCustomersCustomerSourcesIdParams,
+    body: V1Model.PostCustomersCustomerSourcesIdBody,
+    response: { 200: V1Model.PostCustomersCustomerSourcesIdResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Update a card',
+      description: '<p>Update a specified source for a given customer.</p>',
+      operationId: 'PostCustomersCustomerSourcesId',
+    },
+  })
+  .delete('/v1/customers/:customer/sources/:id', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.DeleteCustomersCustomerSourcesIdParams,
+    body: V1Model.DeleteCustomersCustomerSourcesIdBody,
+    response: { 200: V1Model.DeleteCustomersCustomerSourcesIdResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Delete a customer source',
+      description: '<p>Delete a specified source for a given customer.</p>',
+      operationId: 'DeleteCustomersCustomerSourcesId',
+    },
+  })
+  .post('/v1/customers/:customer/sources/:id/verify', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostCustomersCustomerSourcesIdVerifyParams,
+    body: V1Model.PostCustomersCustomerSourcesIdVerifyBody,
+    response: { 200: 'BankAccount', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Verify a bank account',
+      description: '<p>Verify a specified bank account for a given customer.</p>',
+      operationId: 'PostCustomersCustomerSourcesIdVerify',
+    },
+  })
+  .get('/v1/customers/:customer/subscriptions', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetCustomersCustomerSubscriptionsParams,
+    query: V1Model.GetCustomersCustomerSubscriptionsQuery,
+    body: V1Model.GetCustomersCustomerSubscriptionsBody,
+    response: { 200: V1Model.GetCustomersCustomerSubscriptionsResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List active subscriptions',
+      description:
+        '<p>You can see a list of the customer’s active subscriptions. Note that the 10 most recent active subscriptions are always available by default on the customer object. If you need more than those 10, you can use the limit and starting_after parameters to page through additional subscriptions.</p>',
+      operationId: 'GetCustomersCustomerSubscriptions',
+    },
+  })
+  .post('/v1/customers/:customer/subscriptions', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostCustomersCustomerSubscriptionsParams,
+    body: V1Model.PostCustomersCustomerSubscriptionsBody,
+    response: { 200: 'Subscription', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Create a subscription',
+      description: '<p>Creates a new subscription on an existing customer.</p>',
+      operationId: 'PostCustomersCustomerSubscriptions',
+    },
+  })
+  .get(
+    '/v1/customers/:customer/subscriptions/:subscription_exposed_id',
+    ({ params, query, body }) => { throw new Error('Not implemented') },
+    {
+      params: V1Model.GetCustomersCustomerSubscriptionsSubscriptionExposedIdParams,
+      query: V1Model.GetCustomersCustomerSubscriptionsSubscriptionExposedIdQuery,
+      body: V1Model.GetCustomersCustomerSubscriptionsSubscriptionExposedIdBody,
+      response: { 200: 'Subscription', default: 'Error' },
+      detail: {
+        tags: [],
+        summary: 'Retrieve a subscription',
+        description: '<p>Retrieves the subscription with the given ID.</p>',
+        operationId: 'GetCustomersCustomerSubscriptionsSubscriptionExposedId',
+      },
+    },
+  )
+  .post(
+    '/v1/customers/:customer/subscriptions/:subscription_exposed_id',
+    ({ params, body }) => { throw new Error('Not implemented') },
+    {
+      params: V1Model.PostCustomersCustomerSubscriptionsSubscriptionExposedIdParams,
+      body: V1Model.PostCustomersCustomerSubscriptionsSubscriptionExposedIdBody,
+      response: { 200: 'Subscription', default: 'Error' },
+      detail: {
+        tags: [],
+        summary: 'Update a subscription on a customer',
+        description:
+          '<p>Updates an existing subscription on a customer to match the specified parameters. When changing plans or quantities, we will optionally prorate the price we charge next month to make up for any price changes. To preview how the proration will be calculated, use the <a href="#upcoming_invoice">upcoming invoice</a> endpoint.</p>',
+        operationId: 'PostCustomersCustomerSubscriptionsSubscriptionExposedId',
+      },
+    },
+  )
+  .delete(
+    '/v1/customers/:customer/subscriptions/:subscription_exposed_id',
+    ({ params, body }) => { throw new Error('Not implemented') },
+    {
+      params: V1Model.DeleteCustomersCustomerSubscriptionsSubscriptionExposedIdParams,
+      body: V1Model.DeleteCustomersCustomerSubscriptionsSubscriptionExposedIdBody,
+      response: { 200: 'Subscription', default: 'Error' },
+      detail: {
+        tags: [],
+        summary: 'Cancel a subscription',
+        description:
+          '<p>Cancels a customer’s subscription. If you set the <code>at_period_end</code> parameter to <code>true</code>, the subscription will remain active until the end of the period, at which point it will be canceled and not renewed. Otherwise, with the default <code>false</code> value, the subscription is terminated immediately. In either case, the customer will not be charged again for the subscription.</p>\n\n<p>Note, however, that any pending invoice items that you’ve created will still be charged for at the end of the period, unless manually <a href="/api/invoiceitems/delete">deleted</a>. If you’ve set the subscription to cancel at the end of the period, any pending prorations will also be left in place and collected at the end of the period. But if the subscription is set to cancel immediately, pending prorations will be removed.</p>\n\n<p>By default, upon subscription cancellation, Stripe will stop automatic collection of all finalized invoices for the customer. This is intended to prevent unexpected payment attempts after the customer has canceled a subscription. However, you can resume automatic collection of the invoices manually after subscription cancellation to have us proceed. Or, you could check for unpaid invoices before allowing the customer to cancel the subscription at all.</p>',
+        operationId: 'DeleteCustomersCustomerSubscriptionsSubscriptionExposedId',
+      },
+    },
+  )
+  .get(
+    '/v1/customers/:customer/subscriptions/:subscription_exposed_id/discount',
+    ({ params, query, body }) => { throw new Error('Not implemented') },
+    {
+      params: V1Model.GetCustomersCustomerSubscriptionsSubscriptionExposedIdDiscountParams,
+      query: V1Model.GetCustomersCustomerSubscriptionsSubscriptionExposedIdDiscountQuery,
+      body: V1Model.GetCustomersCustomerSubscriptionsSubscriptionExposedIdDiscountBody,
+      response: { 200: 'Discount', default: 'Error' },
+      detail: {
+        tags: [],
+        operationId: 'GetCustomersCustomerSubscriptionsSubscriptionExposedIdDiscount',
+      },
+    },
+  )
+  .delete(
+    '/v1/customers/:customer/subscriptions/:subscription_exposed_id/discount',
+    ({ params, body }) => { throw new Error('Not implemented') },
+    {
+      params: V1Model.DeleteCustomersCustomerSubscriptionsSubscriptionExposedIdDiscountParams,
+      body: V1Model.DeleteCustomersCustomerSubscriptionsSubscriptionExposedIdDiscountBody,
+      response: { 200: 'DeletedDiscount', default: 'Error' },
+      detail: {
+        tags: [],
+        summary: 'Delete a customer discount',
+        description: '<p>Removes the currently applied discount on a customer.</p>',
+        operationId: 'DeleteCustomersCustomerSubscriptionsSubscriptionExposedIdDiscount',
+      },
+    },
+  )
+  .get('/v1/customers/:customer/tax_ids', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetCustomersCustomerTaxIdsParams,
+    query: V1Model.GetCustomersCustomerTaxIdsQuery,
+    body: V1Model.GetCustomersCustomerTaxIdsBody,
+    response: { 200: V1Model.GetCustomersCustomerTaxIdsResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List all Customer tax IDs',
+      description: '<p>Returns a list of tax IDs for a customer.</p>',
+      operationId: 'GetCustomersCustomerTaxIds',
+    },
+  })
+  .post('/v1/customers/:customer/tax_ids', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostCustomersCustomerTaxIdsParams,
+    body: V1Model.PostCustomersCustomerTaxIdsBody,
+    response: { 200: 'TaxId', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Create a Customer tax ID',
+      description: '<p>Creates a new <code>tax_id</code> object for a customer.</p>',
+      operationId: 'PostCustomersCustomerTaxIds',
+    },
+  })
+  .get('/v1/customers/:customer/tax_ids/:id', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetCustomersCustomerTaxIdsIdParams,
+    query: V1Model.GetCustomersCustomerTaxIdsIdQuery,
+    body: V1Model.GetCustomersCustomerTaxIdsIdBody,
+    response: { 200: 'TaxId', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve a Customer tax ID',
+      description: '<p>Retrieves the <code>tax_id</code> object with the given identifier.</p>',
+      operationId: 'GetCustomersCustomerTaxIdsId',
+    },
+  })
+  .delete('/v1/customers/:customer/tax_ids/:id', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.DeleteCustomersCustomerTaxIdsIdParams,
+    body: V1Model.DeleteCustomersCustomerTaxIdsIdBody,
+    response: { 200: 'DeletedTaxId', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Delete a Customer tax ID',
+      description: '<p>Deletes an existing <code>tax_id</code> object.</p>',
+      operationId: 'DeleteCustomersCustomerTaxIdsId',
+    },
+  })
+  .get('/v1/disputes', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetDisputesQuery,
+    body: V1Model.GetDisputesBody,
+    response: { 200: V1Model.GetDisputesResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List all disputes',
+      description: '<p>Returns a list of your disputes.</p>',
+      operationId: 'GetDisputes',
+    },
+  })
+  .get('/v1/disputes/:dispute', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetDisputesDisputeParams,
+    query: V1Model.GetDisputesDisputeQuery,
+    body: V1Model.GetDisputesDisputeBody,
+    response: { 200: 'Dispute', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve a dispute',
+      description: '<p>Retrieves the dispute with the given ID.</p>',
+      operationId: 'GetDisputesDispute',
+    },
+  })
+  .post('/v1/disputes/:dispute', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostDisputesDisputeParams,
+    body: V1Model.PostDisputesDisputeBody,
+    response: { 200: 'Dispute', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Update a dispute',
+      description:
+        '<p>When you get a dispute, contacting your customer is always the best first step. If that doesn’t work, you can submit evidence to help us resolve the dispute in your favor. You can do this in your <a href="https://dashboard.stripe.com/disputes">dashboard</a>, but if you prefer, you can use the API to submit evidence programmatically.</p>\n\n<p>Depending on your dispute type, different evidence fields will give you a better chance of winning your dispute. To figure out which evidence fields to provide, see our <a href="/docs/disputes/categories">guide to dispute types</a>.</p>',
+      operationId: 'PostDisputesDispute',
+    },
+  })
+  .post('/v1/disputes/:dispute/close', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostDisputesDisputeCloseParams,
+    body: V1Model.PostDisputesDisputeCloseBody,
+    response: { 200: 'Dispute', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Close a dispute',
+      description:
+        '<p>Closing the dispute for a charge indicates that you do not have any evidence to submit and are essentially dismissing the dispute (accepting it), acknowledging it as lost.</p>\n\n<p>The status of the dispute will change from <code>needs_response</code> to <code>lost</code>. <em>Closing a dispute is irreversible</em>.</p>',
+      operationId: 'PostDisputesDisputeClose',
+    },
+  })
+  .get('/v1/entitlements/active_entitlements', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetEntitlementsActiveEntitlementsQuery,
+    body: V1Model.GetEntitlementsActiveEntitlementsBody,
+    response: { 200: V1Model.GetEntitlementsActiveEntitlementsResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List all active entitlements',
+      description: '<p>Retrieve a list of active entitlements for a customer</p>',
+      operationId: 'GetEntitlementsActiveEntitlements',
+    },
+  })
+  .get('/v1/entitlements/active_entitlements/:id', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetEntitlementsActiveEntitlementsIdParams,
+    query: V1Model.GetEntitlementsActiveEntitlementsIdQuery,
+    body: V1Model.GetEntitlementsActiveEntitlementsIdBody,
+    response: { 200: 'EntitlementsActiveEntitlement', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve an active entitlement',
+      description: '<p>Retrieve an active entitlement</p>',
+      operationId: 'GetEntitlementsActiveEntitlementsId',
+    },
+  })
+  .get('/v1/entitlements/features', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetEntitlementsFeaturesQuery,
+    body: V1Model.GetEntitlementsFeaturesBody,
+    response: { 200: V1Model.GetEntitlementsFeaturesResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List all features',
+      description: '<p>Retrieve a list of features</p>',
+      operationId: 'GetEntitlementsFeatures',
+    },
+  })
+  .post('/v1/entitlements/features', ({ body }) => { throw new Error('Not implemented') }, {
+    body: V1Model.PostEntitlementsFeaturesBody,
+    response: { 200: 'EntitlementsFeature', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Create a feature',
+      description: '<p>Creates a feature</p>',
+      operationId: 'PostEntitlementsFeatures',
+    },
+  })
+  .get('/v1/entitlements/features/:id', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetEntitlementsFeaturesIdParams,
+    query: V1Model.GetEntitlementsFeaturesIdQuery,
+    body: V1Model.GetEntitlementsFeaturesIdBody,
+    response: { 200: 'EntitlementsFeature', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve a feature',
+      description: '<p>Retrieves a feature</p>',
+      operationId: 'GetEntitlementsFeaturesId',
+    },
+  })
+  .post('/v1/entitlements/features/:id', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostEntitlementsFeaturesIdParams,
+    body: V1Model.PostEntitlementsFeaturesIdBody,
+    response: { 200: 'EntitlementsFeature', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Updates a feature',
+      description: '<p>Update a feature’s metadata or permanently deactivate it.</p>',
+      operationId: 'PostEntitlementsFeaturesId',
+    },
+  })
+  .post('/v1/ephemeral_keys', ({ body }) => { throw new Error('Not implemented') }, {
+    body: V1Model.PostEphemeralKeysBody,
+    response: { 200: 'EphemeralKey', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Create an ephemeral key',
+      description: '<p>Creates a short-lived API key for a given resource.</p>',
+      operationId: 'PostEphemeralKeys',
+    },
+  })
+  .delete('/v1/ephemeral_keys/:key', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.DeleteEphemeralKeysKeyParams,
+    body: V1Model.DeleteEphemeralKeysKeyBody,
+    response: { 200: 'EphemeralKey', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Immediately invalidate an ephemeral key',
+      description: '<p>Invalidates a short-lived API key for a given resource.</p>',
+      operationId: 'DeleteEphemeralKeysKey',
+    },
+  })
+  .get('/v1/events', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetEventsQuery,
+    body: V1Model.GetEventsBody,
+    response: { 200: V1Model.GetEventsResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List all events',
+      description:
+        '<p>List events, going back up to 30 days. Each event data is rendered according to Stripe API version at its creation time, specified in <a href="https://docs.stripe.com/api/events/object">event object</a> <code>api_version</code> attribute (not according to your current Stripe API version or <code>Stripe-Version</code> header).</p>',
+      operationId: 'GetEvents',
+    },
+  })
+  .get('/v1/events/:id', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetEventsIdParams,
+    query: V1Model.GetEventsIdQuery,
+    body: V1Model.GetEventsIdBody,
+    response: { 200: 'Event', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve an event',
+      description:
+        '<p>Retrieves the details of an event if it was created in the last 30 days. Supply the unique identifier of the event, which you might have received in a webhook.</p>',
+      operationId: 'GetEventsId',
+    },
+  })
+  .get('/v1/exchange_rates', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetExchangeRatesQuery,
+    body: V1Model.GetExchangeRatesBody,
+    response: { 200: V1Model.GetExchangeRatesResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List all exchange rates',
+      description:
+        '<p>[Deprecated] The <code>ExchangeRate</code> APIs are deprecated. Please use the <a href="https://docs.stripe.com/payments/currencies/localize-prices/fx-quotes-api">FX Quotes API</a> instead.</p>\n\n<p>Returns a list of objects that contain the rates at which foreign currencies are converted to one another. Only shows the currencies for which Stripe supports.</p>',
+      operationId: 'GetExchangeRates',
+    },
+  })
+  .get('/v1/exchange_rates/:rate_id', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetExchangeRatesRateIdParams,
+    query: V1Model.GetExchangeRatesRateIdQuery,
+    body: V1Model.GetExchangeRatesRateIdBody,
+    response: { 200: 'ExchangeRate', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve an exchange rate',
+      description:
+        '<p>[Deprecated] The <code>ExchangeRate</code> APIs are deprecated. Please use the <a href="https://docs.stripe.com/payments/currencies/localize-prices/fx-quotes-api">FX Quotes API</a> instead.</p>\n\n<p>Retrieves the exchange rates from the given currency to every supported currency.</p>',
+      operationId: 'GetExchangeRatesRateId',
+    },
+  })
+  .post('/v1/external_accounts/:id', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostExternalAccountsIdParams,
+    body: V1Model.PostExternalAccountsIdBody,
+    response: { 200: 'ExternalAccount', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Update a bank account',
+      description:
+        '<p>Updates the metadata, account holder name, account holder type of a bank account belonging to\na connected account and optionally sets it as the default for its currency. Other bank account\ndetails are not editable by design.</p>\n\n<p>You can only update bank accounts when <a href="/api/accounts/object#account_object-controller-requirement_collection">account.controller.requirement_collection</a> is <code>application</code>, which includes <a href="/connect/custom-accounts">Custom accounts</a>.</p>\n\n<p>You can re-enable a disabled bank account by performing an update call without providing any\narguments or changes.</p>',
+      operationId: 'PostExternalAccountsId',
+    },
+  })
+  .get('/v1/file_links', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetFileLinksQuery,
+    body: V1Model.GetFileLinksBody,
+    response: { 200: V1Model.GetFileLinksResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List all file links',
+      description: '<p>Returns a list of file links.</p>',
+      operationId: 'GetFileLinks',
+    },
+  })
+  .post('/v1/file_links', ({ body }) => { throw new Error('Not implemented') }, {
+    body: V1Model.PostFileLinksBody,
+    response: { 200: 'FileLink', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Create a file link',
+      description: '<p>Creates a new file link object.</p>',
+      operationId: 'PostFileLinks',
+    },
+  })
+  .get('/v1/file_links/:link', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetFileLinksLinkParams,
+    query: V1Model.GetFileLinksLinkQuery,
+    body: V1Model.GetFileLinksLinkBody,
+    response: { 200: 'FileLink', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve a file link',
+      description: '<p>Retrieves the file link with the given ID.</p>',
+      operationId: 'GetFileLinksLink',
+    },
+  })
+  .post('/v1/file_links/:link', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostFileLinksLinkParams,
+    body: V1Model.PostFileLinksLinkBody,
+    response: { 200: 'FileLink', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Update a file link',
+      description:
+        '<p>Updates an existing file link object. Expired links can no longer be updated.</p>',
+      operationId: 'PostFileLinksLink',
+    },
+  })
+  .get('/v1/files', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetFilesQuery,
+    body: V1Model.GetFilesBody,
+    response: { 200: V1Model.GetFilesResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List all files',
+      description:
+        '<p>Returns a list of the files that your account has access to. Stripe sorts and returns the files by their creation dates, placing the most recently created files at the top.</p>',
+      operationId: 'GetFiles',
+    },
+  })
+  .post('/v1/files', ({ body }) => { throw new Error('Not implemented') }, {
+    body: V1Model.PostFilesBody,
+    response: { 200: 'File', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Create a file',
+      description:
+        '<p>To upload a file to Stripe, you need to send a request of type <code>multipart/form-data</code>. Include the file you want to upload in the request, and the parameters for creating a file.</p>\n\n<p>All of Stripe’s officially supported Client libraries support sending <code>multipart/form-data</code>.</p>',
+      operationId: 'PostFiles',
+    },
+  })
+  .get('/v1/files/:file', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetFilesFileParams,
+    query: V1Model.GetFilesFileQuery,
+    body: V1Model.GetFilesFileBody,
+    response: { 200: 'File', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve a file',
+      description:
+        '<p>Retrieves the details of an existing file object. After you supply a unique file ID, Stripe returns the corresponding file object. Learn how to <a href="/docs/file-upload#download-file-contents">access file contents</a>.</p>',
+      operationId: 'GetFilesFile',
+    },
+  })
+  .get('/v1/financial_connections/accounts', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetFinancialConnectionsAccountsQuery,
+    body: V1Model.GetFinancialConnectionsAccountsBody,
+    response: { 200: V1Model.GetFinancialConnectionsAccountsResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List Accounts',
+      description: '<p>Returns a list of Financial Connections <code>Account</code> objects.</p>',
+      operationId: 'GetFinancialConnectionsAccounts',
+    },
+  })
+  .get('/v1/financial_connections/accounts/:account', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetFinancialConnectionsAccountsAccountParams,
+    query: V1Model.GetFinancialConnectionsAccountsAccountQuery,
+    body: V1Model.GetFinancialConnectionsAccountsAccountBody,
+    response: { 200: 'FinancialConnectionsAccount', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve an Account',
+      description: '<p>Retrieves the details of a Financial Connections <code>Account</code>.</p>',
+      operationId: 'GetFinancialConnectionsAccountsAccount',
+    },
+  })
+  .post('/v1/financial_connections/accounts/:account/disconnect', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostFinancialConnectionsAccountsAccountDisconnectParams,
+    body: V1Model.PostFinancialConnectionsAccountsAccountDisconnectBody,
+    response: { 200: 'FinancialConnectionsAccount', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Disconnect an Account',
+      description:
+        '<p>Disables your access to a Financial Connections <code>Account</code>. You will no longer be able to access data associated with the account (e.g. balances, transactions).</p>',
+      operationId: 'PostFinancialConnectionsAccountsAccountDisconnect',
+    },
+  })
+  .get('/v1/financial_connections/accounts/:account/owners', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetFinancialConnectionsAccountsAccountOwnersParams,
+    query: V1Model.GetFinancialConnectionsAccountsAccountOwnersQuery,
+    body: V1Model.GetFinancialConnectionsAccountsAccountOwnersBody,
+    response: {
+      200: V1Model.GetFinancialConnectionsAccountsAccountOwnersResponse200,
+      default: 'Error',
+    },
+    detail: {
+      tags: [],
+      summary: 'List Account Owners',
+      description: '<p>Lists all owners for a given <code>Account</code></p>',
+      operationId: 'GetFinancialConnectionsAccountsAccountOwners',
+    },
+  })
+  .post('/v1/financial_connections/accounts/:account/refresh', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostFinancialConnectionsAccountsAccountRefreshParams,
+    body: V1Model.PostFinancialConnectionsAccountsAccountRefreshBody,
+    response: { 200: 'FinancialConnectionsAccount', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Refresh Account data',
+      description:
+        '<p>Refreshes the data associated with a Financial Connections <code>Account</code>.</p>',
+      operationId: 'PostFinancialConnectionsAccountsAccountRefresh',
+    },
+  })
+  .post('/v1/financial_connections/accounts/:account/subscribe', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostFinancialConnectionsAccountsAccountSubscribeParams,
+    body: V1Model.PostFinancialConnectionsAccountsAccountSubscribeBody,
+    response: { 200: 'FinancialConnectionsAccount', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Subscribe to data refreshes for an Account',
+      description:
+        '<p>Subscribes to periodic refreshes of data associated with a Financial Connections <code>Account</code>. When the account status is active, data is typically refreshed once a day.</p>',
+      operationId: 'PostFinancialConnectionsAccountsAccountSubscribe',
+    },
+  })
+  .post('/v1/financial_connections/accounts/:account/unsubscribe', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostFinancialConnectionsAccountsAccountUnsubscribeParams,
+    body: V1Model.PostFinancialConnectionsAccountsAccountUnsubscribeBody,
+    response: { 200: 'FinancialConnectionsAccount', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Unsubscribe from data refreshes for an Account',
+      description:
+        '<p>Unsubscribes from periodic refreshes of data associated with a Financial Connections <code>Account</code>.</p>',
+      operationId: 'PostFinancialConnectionsAccountsAccountUnsubscribe',
+    },
+  })
+  .post('/v1/financial_connections/sessions', ({ body }) => { throw new Error('Not implemented') }, {
+    body: V1Model.PostFinancialConnectionsSessionsBody,
+    response: { 200: 'FinancialConnectionsSession', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Create a Session',
+      description:
+        '<p>To launch the Financial Connections authorization flow, create a <code>Session</code>. The session’s <code>client_secret</code> can be used to launch the flow using Stripe.js.</p>',
+      operationId: 'PostFinancialConnectionsSessions',
+    },
+  })
+  .get('/v1/financial_connections/sessions/:session', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetFinancialConnectionsSessionsSessionParams,
+    query: V1Model.GetFinancialConnectionsSessionsSessionQuery,
+    body: V1Model.GetFinancialConnectionsSessionsSessionBody,
+    response: { 200: 'FinancialConnectionsSession', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve a Session',
+      description: '<p>Retrieves the details of a Financial Connections <code>Session</code></p>',
+      operationId: 'GetFinancialConnectionsSessionsSession',
+    },
+  })
+  .get('/v1/financial_connections/transactions', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetFinancialConnectionsTransactionsQuery,
+    body: V1Model.GetFinancialConnectionsTransactionsBody,
+    response: { 200: V1Model.GetFinancialConnectionsTransactionsResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List Transactions',
+      description:
+        '<p>Returns a list of Financial Connections <code>Transaction</code> objects.</p>',
+      operationId: 'GetFinancialConnectionsTransactions',
+    },
+  })
+  .get('/v1/financial_connections/transactions/:transaction', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetFinancialConnectionsTransactionsTransactionParams,
+    query: V1Model.GetFinancialConnectionsTransactionsTransactionQuery,
+    body: V1Model.GetFinancialConnectionsTransactionsTransactionBody,
+    response: { 200: 'FinancialConnectionsTransaction', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve a Transaction',
+      description:
+        '<p>Retrieves the details of a Financial Connections <code>Transaction</code></p>',
+      operationId: 'GetFinancialConnectionsTransactionsTransaction',
+    },
+  })
+  .get('/v1/forwarding/requests', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetForwardingRequestsQuery,
+    body: V1Model.GetForwardingRequestsBody,
+    response: { 200: V1Model.GetForwardingRequestsResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List all ForwardingRequests',
+      description: '<p>Lists all ForwardingRequest objects.</p>',
+      operationId: 'GetForwardingRequests',
+    },
+  })
+  .post('/v1/forwarding/requests', ({ body }) => { throw new Error('Not implemented') }, {
+    body: V1Model.PostForwardingRequestsBody,
+    response: { 200: 'ForwardingRequest', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Create a ForwardingRequest',
+      description: '<p>Creates a ForwardingRequest object.</p>',
+      operationId: 'PostForwardingRequests',
+    },
+  })
+  .get('/v1/forwarding/requests/:id', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetForwardingRequestsIdParams,
+    query: V1Model.GetForwardingRequestsIdQuery,
+    body: V1Model.GetForwardingRequestsIdBody,
+    response: { 200: 'ForwardingRequest', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve a ForwardingRequest',
+      description: '<p>Retrieves a ForwardingRequest object.</p>',
+      operationId: 'GetForwardingRequestsId',
+    },
+  })
+  .get('/v1/identity/verification_reports', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetIdentityVerificationReportsQuery,
+    body: V1Model.GetIdentityVerificationReportsBody,
+    response: { 200: V1Model.GetIdentityVerificationReportsResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List VerificationReports',
+      description: '<p>List all verification reports.</p>',
+      operationId: 'GetIdentityVerificationReports',
+    },
+  })
+  .get('/v1/identity/verification_reports/:report', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetIdentityVerificationReportsReportParams,
+    query: V1Model.GetIdentityVerificationReportsReportQuery,
+    body: V1Model.GetIdentityVerificationReportsReportBody,
+    response: { 200: 'IdentityVerificationReport', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve a VerificationReport',
+      description: '<p>Retrieves an existing VerificationReport</p>',
+      operationId: 'GetIdentityVerificationReportsReport',
+    },
+  })
+  .get('/v1/identity/verification_sessions', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetIdentityVerificationSessionsQuery,
+    body: V1Model.GetIdentityVerificationSessionsBody,
+    response: { 200: V1Model.GetIdentityVerificationSessionsResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List VerificationSessions',
+      description: '<p>Returns a list of VerificationSessions</p>',
+      operationId: 'GetIdentityVerificationSessions',
+    },
+  })
+  .post('/v1/identity/verification_sessions', ({ body }) => { throw new Error('Not implemented') }, {
+    body: V1Model.PostIdentityVerificationSessionsBody,
+    response: { 200: 'IdentityVerificationSession', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Create a VerificationSession',
+      description:
+        '<p>Creates a VerificationSession object.</p>\n\n<p>After the VerificationSession is created, display a verification modal using the session <code>client_secret</code> or send your users to the session’s <code>url</code>.</p>\n\n<p>If your API key is in test mode, verification checks won’t actually process, though everything else will occur as if in live mode.</p>\n\n<p>Related guide: <a href="/docs/identity/verify-identity-documents">Verify your users’ identity documents</a></p>',
+      operationId: 'PostIdentityVerificationSessions',
+    },
+  })
+  .get('/v1/identity/verification_sessions/:session', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetIdentityVerificationSessionsSessionParams,
+    query: V1Model.GetIdentityVerificationSessionsSessionQuery,
+    body: V1Model.GetIdentityVerificationSessionsSessionBody,
+    response: { 200: 'IdentityVerificationSession', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve a VerificationSession',
+      description:
+        '<p>Retrieves the details of a VerificationSession that was previously created.</p>\n\n<p>When the session status is <code>requires_input</code>, you can use this method to retrieve a valid\n<code>client_secret</code> or <code>url</code> to allow re-submission.</p>',
+      operationId: 'GetIdentityVerificationSessionsSession',
+    },
+  })
+  .post('/v1/identity/verification_sessions/:session', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostIdentityVerificationSessionsSessionParams,
+    body: V1Model.PostIdentityVerificationSessionsSessionBody,
+    response: { 200: 'IdentityVerificationSession', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Update a VerificationSession',
+      description:
+        '<p>Updates a VerificationSession object.</p>\n\n<p>When the session status is <code>requires_input</code>, you can use this method to update the\nverification check and options.</p>',
+      operationId: 'PostIdentityVerificationSessionsSession',
+    },
+  })
+  .post('/v1/identity/verification_sessions/:session/cancel', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostIdentityVerificationSessionsSessionCancelParams,
+    body: V1Model.PostIdentityVerificationSessionsSessionCancelBody,
+    response: { 200: 'IdentityVerificationSession', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Cancel a VerificationSession',
+      description:
+        '<p>A VerificationSession object can be canceled when it is in <code>requires_input</code> <a href="/docs/identity/how-sessions-work">status</a>.</p>\n\n<p>Once canceled, future submission attempts are disabled. This cannot be undone. <a href="/docs/identity/verification-sessions#cancel">Learn more</a>.</p>',
+      operationId: 'PostIdentityVerificationSessionsSessionCancel',
+    },
+  })
+  .post('/v1/identity/verification_sessions/:session/redact', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostIdentityVerificationSessionsSessionRedactParams,
+    body: V1Model.PostIdentityVerificationSessionsSessionRedactBody,
+    response: { 200: 'IdentityVerificationSession', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Redact a VerificationSession',
+      description:
+        '<p>Redact a VerificationSession to remove all collected information from Stripe. This will redact\nthe VerificationSession and all objects related to it, including VerificationReports, Events,\nrequest logs, etc.</p>\n\n<p>A VerificationSession object can be redacted when it is in <code>requires_input</code> or <code>verified</code>\n<a href="/docs/identity/how-sessions-work">status</a>. Redacting a VerificationSession in <code>requires_action</code>\nstate will automatically cancel it.</p>\n\n<p>The redaction process may take up to four days. When the redaction process is in progress, the\nVerificationSession’s <code>redaction.status</code> field will be set to <code>processing</code>; when the process is\nfinished, it will change to <code>redacted</code> and an <code>identity.verification_session.redacted</code> event\nwill be emitted.</p>\n\n<p>Redaction is irreversible. Redacted objects are still accessible in the Stripe API, but all the\nfields that contain personal data will be replaced by the string <code>[redacted]</code> or a similar\nplaceholder. The <code>metadata</code> field will also be erased. Redacted objects cannot be updated or\nused for any purpose.</p>\n\n<p><a href="/docs/identity/verification-sessions#redact">Learn more</a>.</p>',
+      operationId: 'PostIdentityVerificationSessionsSessionRedact',
+    },
+  })
+  .get('/v1/invoice_payments', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetInvoicePaymentsQuery,
+    body: V1Model.GetInvoicePaymentsBody,
+    response: { 200: V1Model.GetInvoicePaymentsResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List all payments for an invoice',
+      description:
+        '<p>When retrieving an invoice, there is an includable payments property containing the first handful of those items. There is also a URL where you can retrieve the full (paginated) list of payments.</p>',
+      operationId: 'GetInvoicePayments',
+    },
+  })
+  .get('/v1/invoice_payments/:invoice_payment', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetInvoicePaymentsInvoicePaymentParams,
+    query: V1Model.GetInvoicePaymentsInvoicePaymentQuery,
+    body: V1Model.GetInvoicePaymentsInvoicePaymentBody,
+    response: { 200: 'InvoicePayment', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve an InvoicePayment',
+      description: '<p>Retrieves the invoice payment with the given ID.</p>',
+      operationId: 'GetInvoicePaymentsInvoicePayment',
+    },
+  })
+  .get('/v1/invoice_rendering_templates', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetInvoiceRenderingTemplatesQuery,
+    body: V1Model.GetInvoiceRenderingTemplatesBody,
+    response: { 200: V1Model.GetInvoiceRenderingTemplatesResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List all invoice rendering templates',
+      description:
+        '<p>List all templates, ordered by creation date, with the most recently created template appearing first.</p>',
+      operationId: 'GetInvoiceRenderingTemplates',
+    },
+  })
+  .get('/v1/invoice_rendering_templates/:template', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetInvoiceRenderingTemplatesTemplateParams,
+    query: V1Model.GetInvoiceRenderingTemplatesTemplateQuery,
+    body: V1Model.GetInvoiceRenderingTemplatesTemplateBody,
+    response: { 200: 'InvoiceRenderingTemplate', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve an invoice rendering template',
+      description:
+        '<p>Retrieves an invoice rendering template with the given ID. It by default returns the latest version of the template. Optionally, specify a version to see previous versions.</p>',
+      operationId: 'GetInvoiceRenderingTemplatesTemplate',
+    },
+  })
+  .post('/v1/invoice_rendering_templates/:template/archive', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostInvoiceRenderingTemplatesTemplateArchiveParams,
+    body: V1Model.PostInvoiceRenderingTemplatesTemplateArchiveBody,
+    response: { 200: 'InvoiceRenderingTemplate', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Archive an invoice rendering template',
+      description:
+        '<p>Updates the status of an invoice rendering template to ‘archived’ so no new Stripe objects (customers, invoices, etc.) can reference it. The template can also no longer be updated. However, if the template is already set on a Stripe object, it will continue to be applied on invoices generated by it.</p>',
+      operationId: 'PostInvoiceRenderingTemplatesTemplateArchive',
+    },
+  })
+  .post('/v1/invoice_rendering_templates/:template/unarchive', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostInvoiceRenderingTemplatesTemplateUnarchiveParams,
+    body: V1Model.PostInvoiceRenderingTemplatesTemplateUnarchiveBody,
+    response: { 200: 'InvoiceRenderingTemplate', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Unarchive an invoice rendering template',
+      description:
+        '<p>Unarchive an invoice rendering template so it can be used on new Stripe objects again.</p>',
+      operationId: 'PostInvoiceRenderingTemplatesTemplateUnarchive',
+    },
+  })
+  .get('/v1/invoiceitems', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetInvoiceitemsQuery,
+    body: V1Model.GetInvoiceitemsBody,
+    response: { 200: V1Model.GetInvoiceitemsResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List all invoice items',
+      description:
+        '<p>Returns a list of your invoice items. Invoice items are returned sorted by creation date, with the most recently created invoice items appearing first.</p>',
+      operationId: 'GetInvoiceitems',
+    },
+  })
+  .post('/v1/invoiceitems', ({ body }) => { throw new Error('Not implemented') }, {
+    body: V1Model.PostInvoiceitemsBody,
+    response: { 200: 'Invoiceitem', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Create an invoice item',
+      description:
+        '<p>Creates an item to be added to a draft invoice (up to 250 items per invoice). If no invoice is specified, the item will be on the next invoice created for the customer specified.</p>',
+      operationId: 'PostInvoiceitems',
+    },
+  })
+  .get('/v1/invoiceitems/:invoiceitem', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetInvoiceitemsInvoiceitemParams,
+    query: V1Model.GetInvoiceitemsInvoiceitemQuery,
+    body: V1Model.GetInvoiceitemsInvoiceitemBody,
+    response: { 200: 'Invoiceitem', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve an invoice item',
+      description: '<p>Retrieves the invoice item with the given ID.</p>',
+      operationId: 'GetInvoiceitemsInvoiceitem',
+    },
+  })
+  .post('/v1/invoiceitems/:invoiceitem', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostInvoiceitemsInvoiceitemParams,
+    body: V1Model.PostInvoiceitemsInvoiceitemBody,
+    response: { 200: 'Invoiceitem', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Update an invoice item',
+      description:
+        '<p>Updates the amount or description of an invoice item on an upcoming invoice. Updating an invoice item is only possible before the invoice it’s attached to is closed.</p>',
+      operationId: 'PostInvoiceitemsInvoiceitem',
+    },
+  })
+  .delete('/v1/invoiceitems/:invoiceitem', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.DeleteInvoiceitemsInvoiceitemParams,
+    body: V1Model.DeleteInvoiceitemsInvoiceitemBody,
+    response: { 200: 'DeletedInvoiceitem', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Delete an invoice item',
+      description:
+        '<p>Deletes an invoice item, removing it from an invoice. Deleting invoice items is only possible when they’re not attached to invoices, or if it’s attached to a draft invoice.</p>',
+      operationId: 'DeleteInvoiceitemsInvoiceitem',
+    },
+  })
+  .get('/v1/invoices', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetInvoicesQuery,
+    body: V1Model.GetInvoicesBody,
+    response: { 200: V1Model.GetInvoicesResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List all invoices',
+      description:
+        '<p>You can list all invoices, or list the invoices for a specific customer. The invoices are returned sorted by creation date, with the most recently created invoices appearing first.</p>',
+      operationId: 'GetInvoices',
+    },
+  })
+  .post('/v1/invoices', ({ body }) => { throw new Error('Not implemented') }, {
+    body: V1Model.PostInvoicesBody,
+    response: { 200: 'Invoice', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Create an invoice',
+      description:
+        '<p>This endpoint creates a draft invoice for a given customer. The invoice remains a draft until you <a href="/api/invoices/finalize">finalize</a> the invoice, which allows you to <a href="/api/invoices/pay">pay</a> or <a href="/api/invoices/send">send</a> the invoice to your customers.</p>',
+      operationId: 'PostInvoices',
+    },
+  })
+  .post('/v1/invoices/create_preview', ({ body }) => { throw new Error('Not implemented') }, {
+    body: V1Model.PostInvoicesCreatePreviewBody,
+    response: { 200: 'Invoice', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Create a preview invoice',
+      description:
+        '<p>At any time, you can preview the upcoming invoice for a subscription or subscription schedule. This will show you all the charges that are pending, including subscription renewal charges, invoice item charges, etc. It will also show you any discounts that are applicable to the invoice.</p>\n\n<p>You can also preview the effects of creating or updating a subscription or subscription schedule, including a preview of any prorations that will take place. To ensure that the actual proration is calculated exactly the same as the previewed proration, you should pass the <code>subscription_details.proration_date</code> parameter when doing the actual subscription update.</p>\n\n<p>The recommended way to get only the prorations being previewed on the invoice is to consider line items where <code>parent.subscription_item_details.proration</code> is <code>true</code>.</p>\n\n<p>Note that when you are viewing an upcoming invoice, you are simply viewing a preview – the invoice has not yet been created. As such, the upcoming invoice will not show up in invoice listing calls, and you cannot use the API to pay or edit the invoice. If you want to change the amount that your customer will be billed, you can add, remove, or update pending invoice items, or update the customer’s discount.</p>\n\n<p>Note: Currency conversion calculations use the latest exchange rates. Exchange rates may vary between the time of the preview and the time of the actual invoice creation. <a href="https://docs.stripe.com/currencies/conversions">Learn more</a></p>',
+      operationId: 'PostInvoicesCreatePreview',
+    },
+  })
+  .get('/v1/invoices/search', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetInvoicesSearchQuery,
+    body: V1Model.GetInvoicesSearchBody,
+    response: { 200: V1Model.GetInvoicesSearchResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Search invoices',
+      description:
+        '<p>Search for invoices you’ve previously created using Stripe’s <a href="/docs/search#search-query-language">Search Query Language</a>.\nDon’t use search in read-after-write flows where strict consistency is necessary. Under normal operating\nconditions, data is searchable in less than a minute. Occasionally, propagation of new or updated data can be up\nto an hour behind during outages. Search functionality is not available to merchants in India.</p>',
+      operationId: 'GetInvoicesSearch',
+    },
+  })
+  .get('/v1/invoices/:invoice', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetInvoicesInvoiceParams,
+    query: V1Model.GetInvoicesInvoiceQuery,
+    body: V1Model.GetInvoicesInvoiceBody,
+    response: { 200: 'Invoice', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve an invoice',
+      description: '<p>Retrieves the invoice with the given ID.</p>',
+      operationId: 'GetInvoicesInvoice',
+    },
+  })
+  .post('/v1/invoices/:invoice', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostInvoicesInvoiceParams,
+    body: V1Model.PostInvoicesInvoiceBody,
+    response: { 200: 'Invoice', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Update an invoice',
+      description:
+        '<p>Draft invoices are fully editable. Once an invoice is <a href="/docs/billing/invoices/workflow#finalized">finalized</a>,\nyou can no longer change most of its details, including monetary values and <code>collection_method</code>. For most invoices,\nthis also includes <code>description</code>.</p>\n\n<p>If you would like to stop the Stripe Billing engine from automatically finalizing, reattempting payments on,\nsending reminders for, or <a href="/docs/billing/invoices/reconciliation">automatically reconciling</a> invoices, pass\n<code>auto_advance=false</code>.</p>',
+      operationId: 'PostInvoicesInvoice',
+    },
+  })
+  .delete('/v1/invoices/:invoice', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.DeleteInvoicesInvoiceParams,
+    body: V1Model.DeleteInvoicesInvoiceBody,
+    response: { 200: 'DeletedInvoice', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Delete a draft invoice',
+      description:
+        '<p>Permanently deletes a one-off invoice draft. This cannot be undone. Attempts to delete invoices that are no longer in a draft state will fail; once an invoice has been finalized or if an invoice is for a subscription, it must be <a href="/api/invoices/void">voided</a>.</p>',
+      operationId: 'DeleteInvoicesInvoice',
+    },
+  })
+  .post('/v1/invoices/:invoice/add_lines', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostInvoicesInvoiceAddLinesParams,
+    body: V1Model.PostInvoicesInvoiceAddLinesBody,
+    response: { 200: 'Invoice', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Bulk add invoice line items',
+      description:
+        '<p>Adds multiple line items to an invoice. This is only possible when an invoice is still a draft.</p>',
+      operationId: 'PostInvoicesInvoiceAddLines',
+    },
+  })
+  .post('/v1/invoices/:invoice/attach_payment', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostInvoicesInvoiceAttachPaymentParams,
+    body: V1Model.PostInvoicesInvoiceAttachPaymentBody,
+    response: { 200: 'Invoice', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Attach a payment to an Invoice',
+      description:
+        '<p>Attaches a PaymentIntent or an Out of Band Payment to the invoice, adding it to the list of <code>payments</code>.</p>\n\n<p>For the PaymentIntent, when the PaymentIntent’s status changes to <code>succeeded</code>, the payment is credited\nto the invoice, increasing its <code>amount_paid</code>. When the invoice is fully paid, the\ninvoice’s status becomes <code>paid</code>.</p>\n\n<p>If the PaymentIntent’s status is already <code>succeeded</code> when it’s attached, it’s\ncredited to the invoice immediately.</p>\n\n<p>See: <a href="/docs/invoicing/partial-payments">Partial payments</a> to learn more.</p>',
+      operationId: 'PostInvoicesInvoiceAttachPayment',
+    },
+  })
+  .post('/v1/invoices/:invoice/finalize', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostInvoicesInvoiceFinalizeParams,
+    body: V1Model.PostInvoicesInvoiceFinalizeBody,
+    response: { 200: 'Invoice', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Finalize an invoice',
+      description:
+        '<p>Stripe automatically finalizes drafts before sending and attempting payment on invoices. However, if you’d like to finalize a draft invoice manually, you can do so using this method.</p>',
+      operationId: 'PostInvoicesInvoiceFinalize',
+    },
+  })
+  .get('/v1/invoices/:invoice/lines', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetInvoicesInvoiceLinesParams,
+    query: V1Model.GetInvoicesInvoiceLinesQuery,
+    body: V1Model.GetInvoicesInvoiceLinesBody,
+    response: { 200: V1Model.GetInvoicesInvoiceLinesResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: "Retrieve an invoice's line items",
+      description:
+        '<p>When retrieving an invoice, you’ll get a <strong>lines</strong> property containing the total count of line items and the first handful of those items. There is also a URL where you can retrieve the full (paginated) list of line items.</p>',
+      operationId: 'GetInvoicesInvoiceLines',
+    },
+  })
+  .post('/v1/invoices/:invoice/lines/:line_item_id', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostInvoicesInvoiceLinesLineItemIdParams,
+    body: V1Model.PostInvoicesInvoiceLinesLineItemIdBody,
+    response: { 200: 'LineItem', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: "Update an invoice's line item",
+      description:
+        '<p>Updates an invoice’s line item. Some fields, such as <code>tax_amounts</code>, only live on the invoice line item,\nso they can only be updated through this endpoint. Other fields, such as <code>amount</code>, live on both the invoice\nitem and the invoice line item, so updates on this endpoint will propagate to the invoice item as well.\nUpdating an invoice’s line item is only possible before the invoice is finalized.</p>',
+      operationId: 'PostInvoicesInvoiceLinesLineItemId',
+    },
+  })
+  .post('/v1/invoices/:invoice/mark_uncollectible', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostInvoicesInvoiceMarkUncollectibleParams,
+    body: V1Model.PostInvoicesInvoiceMarkUncollectibleBody,
+    response: { 200: 'Invoice', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Mark an invoice as uncollectible',
+      description:
+        '<p>Marking an invoice as uncollectible is useful for keeping track of bad debts that can be written off for accounting purposes.</p>',
+      operationId: 'PostInvoicesInvoiceMarkUncollectible',
+    },
+  })
+  .post('/v1/invoices/:invoice/pay', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostInvoicesInvoicePayParams,
+    body: V1Model.PostInvoicesInvoicePayBody,
+    response: { 200: 'Invoice', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Pay an invoice',
+      description:
+        '<p>Stripe automatically creates and then attempts to collect payment on invoices for customers on subscriptions according to your <a href="https://dashboard.stripe.com/account/billing/automatic">subscriptions settings</a>. However, if you’d like to attempt payment on an invoice out of the normal collection schedule or for some other reason, you can do so.</p>',
+      operationId: 'PostInvoicesInvoicePay',
+    },
+  })
+  .post('/v1/invoices/:invoice/remove_lines', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostInvoicesInvoiceRemoveLinesParams,
+    body: V1Model.PostInvoicesInvoiceRemoveLinesBody,
+    response: { 200: 'Invoice', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Bulk remove invoice line items',
+      description:
+        '<p>Removes multiple line items from an invoice. This is only possible when an invoice is still a draft.</p>',
+      operationId: 'PostInvoicesInvoiceRemoveLines',
+    },
+  })
+  .post('/v1/invoices/:invoice/send', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostInvoicesInvoiceSendParams,
+    body: V1Model.PostInvoicesInvoiceSendBody,
+    response: { 200: 'Invoice', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Send an invoice for manual payment',
+      description:
+        '<p>Stripe will automatically send invoices to customers according to your <a href="https://dashboard.stripe.com/account/billing/automatic">subscriptions settings</a>. However, if you’d like to manually send an invoice to your customer out of the normal schedule, you can do so. When sending invoices that have already been paid, there will be no reference to the payment in the email.</p>\n\n<p>Requests made in test-mode result in no emails being sent, despite sending an <code>invoice.sent</code> event.</p>',
+      operationId: 'PostInvoicesInvoiceSend',
+    },
+  })
+  .post('/v1/invoices/:invoice/update_lines', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostInvoicesInvoiceUpdateLinesParams,
+    body: V1Model.PostInvoicesInvoiceUpdateLinesBody,
+    response: { 200: 'Invoice', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Bulk update invoice line items',
+      description:
+        '<p>Updates multiple line items on an invoice. This is only possible when an invoice is still a draft.</p>',
+      operationId: 'PostInvoicesInvoiceUpdateLines',
+    },
+  })
+  .post('/v1/invoices/:invoice/void', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostInvoicesInvoiceVoidParams,
+    body: V1Model.PostInvoicesInvoiceVoidBody,
+    response: { 200: 'Invoice', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Void an invoice',
+      description:
+        '<p>Mark a finalized invoice as void. This cannot be undone. Voiding an invoice is similar to <a href="/api/invoices/delete">deletion</a>, however it only applies to finalized invoices and maintains a papertrail where the invoice can still be found.</p>\n\n<p>Consult with local regulations to determine whether and how an invoice might be amended, canceled, or voided in the jurisdiction you’re doing business in. You might need to <a href="/api/invoices/create">issue another invoice</a> or <a href="/api/credit_notes/create">credit note</a> instead. Stripe recommends that you consult with your legal counsel for advice specific to your business.</p>',
+      operationId: 'PostInvoicesInvoiceVoid',
+    },
+  })
+  .get('/v1/issuing/authorizations', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetIssuingAuthorizationsQuery,
+    body: V1Model.GetIssuingAuthorizationsBody,
+    response: { 200: V1Model.GetIssuingAuthorizationsResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List all authorizations',
+      description:
+        '<p>Returns a list of Issuing <code>Authorization</code> objects. The objects are sorted in descending order by creation date, with the most recently created object appearing first.</p>',
+      operationId: 'GetIssuingAuthorizations',
+    },
+  })
+  .get('/v1/issuing/authorizations/:authorization', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetIssuingAuthorizationsAuthorizationParams,
+    query: V1Model.GetIssuingAuthorizationsAuthorizationQuery,
+    body: V1Model.GetIssuingAuthorizationsAuthorizationBody,
+    response: { 200: 'IssuingAuthorization', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve an authorization',
+      description: '<p>Retrieves an Issuing <code>Authorization</code> object.</p>',
+      operationId: 'GetIssuingAuthorizationsAuthorization',
+    },
+  })
+  .post('/v1/issuing/authorizations/:authorization', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostIssuingAuthorizationsAuthorizationParams,
+    body: V1Model.PostIssuingAuthorizationsAuthorizationBody,
+    response: { 200: 'IssuingAuthorization', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Update an authorization',
+      description:
+        '<p>Updates the specified Issuing <code>Authorization</code> object by setting the values of the parameters passed. Any parameters not provided will be left unchanged.</p>',
+      operationId: 'PostIssuingAuthorizationsAuthorization',
+    },
+  })
+  .post('/v1/issuing/authorizations/:authorization/approve', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostIssuingAuthorizationsAuthorizationApproveParams,
+    body: V1Model.PostIssuingAuthorizationsAuthorizationApproveBody,
+    response: { 200: 'IssuingAuthorization', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Approve an authorization',
+      description:
+        '<p>[Deprecated] Approves a pending Issuing <code>Authorization</code> object. This request should be made within the timeout window of the <a href="/docs/issuing/controls/real-time-authorizations">real-time authorization</a> flow. \nThis method is deprecated. Instead, <a href="/docs/issuing/controls/real-time-authorizations#authorization-handling">respond directly to the webhook request to approve an authorization</a>.</p>',
+      operationId: 'PostIssuingAuthorizationsAuthorizationApprove',
+    },
+  })
+  .post('/v1/issuing/authorizations/:authorization/decline', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostIssuingAuthorizationsAuthorizationDeclineParams,
+    body: V1Model.PostIssuingAuthorizationsAuthorizationDeclineBody,
+    response: { 200: 'IssuingAuthorization', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Decline an authorization',
+      description:
+        '<p>[Deprecated] Declines a pending Issuing <code>Authorization</code> object. This request should be made within the timeout window of the <a href="/docs/issuing/controls/real-time-authorizations">real time authorization</a> flow.\nThis method is deprecated. Instead, <a href="/docs/issuing/controls/real-time-authorizations#authorization-handling">respond directly to the webhook request to decline an authorization</a>.</p>',
+      operationId: 'PostIssuingAuthorizationsAuthorizationDecline',
+    },
+  })
+  .get('/v1/issuing/cardholders', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetIssuingCardholdersQuery,
+    body: V1Model.GetIssuingCardholdersBody,
+    response: { 200: V1Model.GetIssuingCardholdersResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List all cardholders',
+      description:
+        '<p>Returns a list of Issuing <code>Cardholder</code> objects. The objects are sorted in descending order by creation date, with the most recently created object appearing first.</p>',
+      operationId: 'GetIssuingCardholders',
+    },
+  })
+  .post('/v1/issuing/cardholders', ({ body }) => { throw new Error('Not implemented') }, {
+    body: V1Model.PostIssuingCardholdersBody,
+    response: { 200: 'IssuingCardholder', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Create a cardholder',
+      description:
+        '<p>Creates a new Issuing <code>Cardholder</code> object that can be issued cards.</p>',
+      operationId: 'PostIssuingCardholders',
+    },
+  })
+  .get('/v1/issuing/cardholders/:cardholder', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetIssuingCardholdersCardholderParams,
+    query: V1Model.GetIssuingCardholdersCardholderQuery,
+    body: V1Model.GetIssuingCardholdersCardholderBody,
+    response: { 200: 'IssuingCardholder', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve a cardholder',
+      description: '<p>Retrieves an Issuing <code>Cardholder</code> object.</p>',
+      operationId: 'GetIssuingCardholdersCardholder',
+    },
+  })
+  .post('/v1/issuing/cardholders/:cardholder', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostIssuingCardholdersCardholderParams,
+    body: V1Model.PostIssuingCardholdersCardholderBody,
+    response: { 200: 'IssuingCardholder', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Update a cardholder',
+      description:
+        '<p>Updates the specified Issuing <code>Cardholder</code> object by setting the values of the parameters passed. Any parameters not provided will be left unchanged.</p>',
+      operationId: 'PostIssuingCardholdersCardholder',
+    },
+  })
+  .get('/v1/issuing/cards', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetIssuingCardsQuery,
+    body: V1Model.GetIssuingCardsBody,
+    response: { 200: V1Model.GetIssuingCardsResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List all cards',
+      description:
+        '<p>Returns a list of Issuing <code>Card</code> objects. The objects are sorted in descending order by creation date, with the most recently created object appearing first.</p>',
+      operationId: 'GetIssuingCards',
+    },
+  })
+  .post('/v1/issuing/cards', ({ body }) => { throw new Error('Not implemented') }, {
+    body: V1Model.PostIssuingCardsBody,
+    response: { 200: 'IssuingCard', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Create a card',
+      description: '<p>Creates an Issuing <code>Card</code> object.</p>',
+      operationId: 'PostIssuingCards',
+    },
+  })
+  .get('/v1/issuing/cards/:card', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetIssuingCardsCardParams,
+    query: V1Model.GetIssuingCardsCardQuery,
+    body: V1Model.GetIssuingCardsCardBody,
+    response: { 200: 'IssuingCard', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve a card',
+      description: '<p>Retrieves an Issuing <code>Card</code> object.</p>',
+      operationId: 'GetIssuingCardsCard',
+    },
+  })
+  .post('/v1/issuing/cards/:card', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostIssuingCardsCardParams,
+    body: V1Model.PostIssuingCardsCardBody,
+    response: { 200: 'IssuingCard', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Update a card',
+      description:
+        '<p>Updates the specified Issuing <code>Card</code> object by setting the values of the parameters passed. Any parameters not provided will be left unchanged.</p>',
+      operationId: 'PostIssuingCardsCard',
+    },
+  })
+  .get('/v1/issuing/disputes', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetIssuingDisputesQuery,
+    body: V1Model.GetIssuingDisputesBody,
+    response: { 200: V1Model.GetIssuingDisputesResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List all disputes',
+      description:
+        '<p>Returns a list of Issuing <code>Dispute</code> objects. The objects are sorted in descending order by creation date, with the most recently created object appearing first.</p>',
+      operationId: 'GetIssuingDisputes',
+    },
+  })
+  .post('/v1/issuing/disputes', ({ body }) => { throw new Error('Not implemented') }, {
+    body: V1Model.PostIssuingDisputesBody,
+    response: { 200: 'IssuingDispute', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Create a dispute',
+      description:
+        '<p>Creates an Issuing <code>Dispute</code> object. Individual pieces of evidence within the <code>evidence</code> object are optional at this point. Stripe only validates that required evidence is present during submission. Refer to <a href="/docs/issuing/purchases/disputes#dispute-reasons-and-evidence">Dispute reasons and evidence</a> for more details about evidence requirements.</p>',
+      operationId: 'PostIssuingDisputes',
+    },
+  })
+  .get('/v1/issuing/disputes/:dispute', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetIssuingDisputesDisputeParams,
+    query: V1Model.GetIssuingDisputesDisputeQuery,
+    body: V1Model.GetIssuingDisputesDisputeBody,
+    response: { 200: 'IssuingDispute', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve a dispute',
+      description: '<p>Retrieves an Issuing <code>Dispute</code> object.</p>',
+      operationId: 'GetIssuingDisputesDispute',
+    },
+  })
+  .post('/v1/issuing/disputes/:dispute', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostIssuingDisputesDisputeParams,
+    body: V1Model.PostIssuingDisputesDisputeBody,
+    response: { 200: 'IssuingDispute', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Update a dispute',
+      description:
+        '<p>Updates the specified Issuing <code>Dispute</code> object by setting the values of the parameters passed. Any parameters not provided will be left unchanged. Properties on the <code>evidence</code> object can be unset by passing in an empty string.</p>',
+      operationId: 'PostIssuingDisputesDispute',
+    },
+  })
+  .post('/v1/issuing/disputes/:dispute/submit', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostIssuingDisputesDisputeSubmitParams,
+    body: V1Model.PostIssuingDisputesDisputeSubmitBody,
+    response: { 200: 'IssuingDispute', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Submit a dispute',
+      description:
+        '<p>Submits an Issuing <code>Dispute</code> to the card network. Stripe validates that all evidence fields required for the dispute’s reason are present. For more details, see <a href="/docs/issuing/purchases/disputes#dispute-reasons-and-evidence">Dispute reasons and evidence</a>.</p>',
+      operationId: 'PostIssuingDisputesDisputeSubmit',
+    },
+  })
+  .get('/v1/issuing/personalization_designs', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetIssuingPersonalizationDesignsQuery,
+    body: V1Model.GetIssuingPersonalizationDesignsBody,
+    response: { 200: V1Model.GetIssuingPersonalizationDesignsResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List all personalization designs',
+      description:
+        '<p>Returns a list of personalization design objects. The objects are sorted in descending order by creation date, with the most recently created object appearing first.</p>',
+      operationId: 'GetIssuingPersonalizationDesigns',
+    },
+  })
+  .post('/v1/issuing/personalization_designs', ({ body }) => { throw new Error('Not implemented') }, {
+    body: V1Model.PostIssuingPersonalizationDesignsBody,
+    response: { 200: 'IssuingPersonalizationDesign', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Create a personalization design',
+      description: '<p>Creates a personalization design object.</p>',
+      operationId: 'PostIssuingPersonalizationDesigns',
+    },
+  })
+  .get(
+    '/v1/issuing/personalization_designs/:personalization_design',
+    ({ params, query, body }) => { throw new Error('Not implemented') },
+    {
+      params: V1Model.GetIssuingPersonalizationDesignsPersonalizationDesignParams,
+      query: V1Model.GetIssuingPersonalizationDesignsPersonalizationDesignQuery,
+      body: V1Model.GetIssuingPersonalizationDesignsPersonalizationDesignBody,
+      response: { 200: 'IssuingPersonalizationDesign', default: 'Error' },
+      detail: {
+        tags: [],
+        summary: 'Retrieve a personalization design',
+        description: '<p>Retrieves a personalization design object.</p>',
+        operationId: 'GetIssuingPersonalizationDesignsPersonalizationDesign',
+      },
+    },
+  )
+  .post('/v1/issuing/personalization_designs/:personalization_design', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostIssuingPersonalizationDesignsPersonalizationDesignParams,
+    body: V1Model.PostIssuingPersonalizationDesignsPersonalizationDesignBody,
+    response: { 200: 'IssuingPersonalizationDesign', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Update a personalization design',
+      description: '<p>Updates a card personalization object.</p>',
+      operationId: 'PostIssuingPersonalizationDesignsPersonalizationDesign',
+    },
+  })
+  .get('/v1/issuing/physical_bundles', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetIssuingPhysicalBundlesQuery,
+    body: V1Model.GetIssuingPhysicalBundlesBody,
+    response: { 200: V1Model.GetIssuingPhysicalBundlesResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List all physical bundles',
+      description:
+        '<p>Returns a list of physical bundle objects. The objects are sorted in descending order by creation date, with the most recently created object appearing first.</p>',
+      operationId: 'GetIssuingPhysicalBundles',
+    },
+  })
+  .get('/v1/issuing/physical_bundles/:physical_bundle', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetIssuingPhysicalBundlesPhysicalBundleParams,
+    query: V1Model.GetIssuingPhysicalBundlesPhysicalBundleQuery,
+    body: V1Model.GetIssuingPhysicalBundlesPhysicalBundleBody,
+    response: { 200: 'IssuingPhysicalBundle', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve a physical bundle',
+      description: '<p>Retrieves a physical bundle object.</p>',
+      operationId: 'GetIssuingPhysicalBundlesPhysicalBundle',
+    },
+  })
+  .get('/v1/issuing/settlements/:settlement', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetIssuingSettlementsSettlementParams,
+    query: V1Model.GetIssuingSettlementsSettlementQuery,
+    body: V1Model.GetIssuingSettlementsSettlementBody,
+    response: { 200: 'IssuingSettlement', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve a settlement',
+      description: '<p>Retrieves an Issuing <code>Settlement</code> object.</p>',
+      operationId: 'GetIssuingSettlementsSettlement',
+    },
+  })
+  .post('/v1/issuing/settlements/:settlement', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostIssuingSettlementsSettlementParams,
+    body: V1Model.PostIssuingSettlementsSettlementBody,
+    response: { 200: 'IssuingSettlement', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Update a settlement',
+      description:
+        '<p>Updates the specified Issuing <code>Settlement</code> object by setting the values of the parameters passed. Any parameters not provided will be left unchanged.</p>',
+      operationId: 'PostIssuingSettlementsSettlement',
+    },
+  })
+  .get('/v1/issuing/tokens', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetIssuingTokensQuery,
+    body: V1Model.GetIssuingTokensBody,
+    response: { 200: V1Model.GetIssuingTokensResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List all issuing tokens for card',
+      description: '<p>Lists all Issuing <code>Token</code> objects for a given card.</p>',
+      operationId: 'GetIssuingTokens',
+    },
+  })
+  .get('/v1/issuing/tokens/:token', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetIssuingTokensTokenParams,
+    query: V1Model.GetIssuingTokensTokenQuery,
+    body: V1Model.GetIssuingTokensTokenBody,
+    response: { 200: 'IssuingToken', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve an issuing token',
+      description: '<p>Retrieves an Issuing <code>Token</code> object.</p>',
+      operationId: 'GetIssuingTokensToken',
+    },
+  })
+  .post('/v1/issuing/tokens/:token', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostIssuingTokensTokenParams,
+    body: V1Model.PostIssuingTokensTokenBody,
+    response: { 200: 'IssuingToken', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Update a token status',
+      description:
+        '<p>Attempts to update the specified Issuing <code>Token</code> object to the status specified.</p>',
+      operationId: 'PostIssuingTokensToken',
+    },
+  })
+  .get('/v1/issuing/transactions', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetIssuingTransactionsQuery,
+    body: V1Model.GetIssuingTransactionsBody,
+    response: { 200: V1Model.GetIssuingTransactionsResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List all transactions',
+      description:
+        '<p>Returns a list of Issuing <code>Transaction</code> objects. The objects are sorted in descending order by creation date, with the most recently created object appearing first.</p>',
+      operationId: 'GetIssuingTransactions',
+    },
+  })
+  .get('/v1/issuing/transactions/:transaction', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetIssuingTransactionsTransactionParams,
+    query: V1Model.GetIssuingTransactionsTransactionQuery,
+    body: V1Model.GetIssuingTransactionsTransactionBody,
+    response: { 200: 'IssuingTransaction', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve a transaction',
+      description: '<p>Retrieves an Issuing <code>Transaction</code> object.</p>',
+      operationId: 'GetIssuingTransactionsTransaction',
+    },
+  })
+  .post('/v1/issuing/transactions/:transaction', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostIssuingTransactionsTransactionParams,
+    body: V1Model.PostIssuingTransactionsTransactionBody,
+    response: { 200: 'IssuingTransaction', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Update a transaction',
+      description:
+        '<p>Updates the specified Issuing <code>Transaction</code> object by setting the values of the parameters passed. Any parameters not provided will be left unchanged.</p>',
+      operationId: 'PostIssuingTransactionsTransaction',
+    },
+  })
+  .post('/v1/link_account_sessions', ({ body }) => { throw new Error('Not implemented') }, {
+    body: V1Model.PostLinkAccountSessionsBody,
+    response: { 200: 'FinancialConnectionsSession', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Create a Session',
+      description:
+        '<p>To launch the Financial Connections authorization flow, create a <code>Session</code>. The session’s <code>client_secret</code> can be used to launch the flow using Stripe.js.</p>',
+      operationId: 'PostLinkAccountSessions',
+    },
+  })
+  .get('/v1/link_account_sessions/:session', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetLinkAccountSessionsSessionParams,
+    query: V1Model.GetLinkAccountSessionsSessionQuery,
+    body: V1Model.GetLinkAccountSessionsSessionBody,
+    response: { 200: 'FinancialConnectionsSession', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve a Session',
+      description: '<p>Retrieves the details of a Financial Connections <code>Session</code></p>',
+      operationId: 'GetLinkAccountSessionsSession',
+    },
+  })
+  .get('/v1/linked_accounts', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetLinkedAccountsQuery,
+    body: V1Model.GetLinkedAccountsBody,
+    response: { 200: V1Model.GetLinkedAccountsResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List Accounts',
+      description: '<p>Returns a list of Financial Connections <code>Account</code> objects.</p>',
+      operationId: 'GetLinkedAccounts',
+    },
+  })
+  .get('/v1/linked_accounts/:account', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetLinkedAccountsAccountParams,
+    query: V1Model.GetLinkedAccountsAccountQuery,
+    body: V1Model.GetLinkedAccountsAccountBody,
+    response: { 200: 'FinancialConnectionsAccount', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve an Account',
+      description: '<p>Retrieves the details of a Financial Connections <code>Account</code>.</p>',
+      operationId: 'GetLinkedAccountsAccount',
+    },
+  })
+  .post('/v1/linked_accounts/:account/disconnect', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostLinkedAccountsAccountDisconnectParams,
+    body: V1Model.PostLinkedAccountsAccountDisconnectBody,
+    response: { 200: 'FinancialConnectionsAccount', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Disconnect an Account',
+      description:
+        '<p>Disables your access to a Financial Connections <code>Account</code>. You will no longer be able to access data associated with the account (e.g. balances, transactions).</p>',
+      operationId: 'PostLinkedAccountsAccountDisconnect',
+    },
+  })
+  .get('/v1/linked_accounts/:account/owners', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetLinkedAccountsAccountOwnersParams,
+    query: V1Model.GetLinkedAccountsAccountOwnersQuery,
+    body: V1Model.GetLinkedAccountsAccountOwnersBody,
+    response: { 200: V1Model.GetLinkedAccountsAccountOwnersResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List Account Owners',
+      description: '<p>Lists all owners for a given <code>Account</code></p>',
+      operationId: 'GetLinkedAccountsAccountOwners',
+    },
+  })
+  .post('/v1/linked_accounts/:account/refresh', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostLinkedAccountsAccountRefreshParams,
+    body: V1Model.PostLinkedAccountsAccountRefreshBody,
+    response: { 200: 'FinancialConnectionsAccount', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Refresh Account data',
+      description:
+        '<p>Refreshes the data associated with a Financial Connections <code>Account</code>.</p>',
+      operationId: 'PostLinkedAccountsAccountRefresh',
+    },
+  })
+  .get('/v1/mandates/:mandate', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetMandatesMandateParams,
+    query: V1Model.GetMandatesMandateQuery,
+    body: V1Model.GetMandatesMandateBody,
+    response: { 200: 'Mandate', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve a Mandate',
+      description: '<p>Retrieves a Mandate object.</p>',
+      operationId: 'GetMandatesMandate',
+    },
+  })
+  .get('/v1/payment_attempt_records', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetPaymentAttemptRecordsQuery,
+    body: V1Model.GetPaymentAttemptRecordsBody,
+    response: { 200: V1Model.GetPaymentAttemptRecordsResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List Payment Attempt Records',
+      description:
+        '<p>List all the Payment Attempt Records attached to the specified Payment Record.</p>',
+      operationId: 'GetPaymentAttemptRecords',
+    },
+  })
+  .get('/v1/payment_attempt_records/:id', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetPaymentAttemptRecordsIdParams,
+    query: V1Model.GetPaymentAttemptRecordsIdQuery,
+    body: V1Model.GetPaymentAttemptRecordsIdBody,
+    response: { 200: 'PaymentAttemptRecord', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve a Payment Attempt Record',
+      description: '<p>Retrieves a Payment Attempt Record with the given ID</p>',
+      operationId: 'GetPaymentAttemptRecordsId',
+    },
+  })
+  .get('/v1/payment_intents', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetPaymentIntentsQuery,
+    body: V1Model.GetPaymentIntentsBody,
+    response: { 200: V1Model.GetPaymentIntentsResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List all PaymentIntents',
+      description: '<p>Returns a list of PaymentIntents.</p>',
+      operationId: 'GetPaymentIntents',
+    },
+  })
+  .post('/v1/payment_intents', ({ body }) => { throw new Error('Not implemented') }, {
+    body: V1Model.PostPaymentIntentsBody,
+    response: { 200: 'PaymentIntent', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Create a PaymentIntent',
+      description:
+        '<p>Creates a PaymentIntent object.</p>\n\n<p>After the PaymentIntent is created, attach a payment method and <a href="/docs/api/payment_intents/confirm">confirm</a>\nto continue the payment. Learn more about <a href="/docs/payments/payment-intents">the available payment flows\nwith the Payment Intents API</a>.</p>\n\n<p>When you use <code>confirm=true</code> during creation, it’s equivalent to creating\nand confirming the PaymentIntent in the same call. You can use any parameters\navailable in the <a href="/docs/api/payment_intents/confirm">confirm API</a> when you supply\n<code>confirm=true</code>.</p>',
+      operationId: 'PostPaymentIntents',
+    },
+  })
+  .get('/v1/payment_intents/search', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetPaymentIntentsSearchQuery,
+    body: V1Model.GetPaymentIntentsSearchBody,
+    response: { 200: V1Model.GetPaymentIntentsSearchResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Search PaymentIntents',
+      description:
+        '<p>Search for PaymentIntents you’ve previously created using Stripe’s <a href="/docs/search#search-query-language">Search Query Language</a>.\nDon’t use search in read-after-write flows where strict consistency is necessary. Under normal operating\nconditions, data is searchable in less than a minute. Occasionally, propagation of new or updated data can be up\nto an hour behind during outages. Search functionality is not available to merchants in India.</p>',
+      operationId: 'GetPaymentIntentsSearch',
+    },
+  })
+  .get('/v1/payment_intents/:intent', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetPaymentIntentsIntentParams,
+    query: V1Model.GetPaymentIntentsIntentQuery,
+    body: V1Model.GetPaymentIntentsIntentBody,
+    response: { 200: 'PaymentIntent', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve a PaymentIntent',
+      description:
+        '<p>Retrieves the details of a PaymentIntent that has previously been created. </p>\n\n<p>You can retrieve a PaymentIntent client-side using a publishable key when the <code>client_secret</code> is in the query string. </p>\n\n<p>If you retrieve a PaymentIntent with a publishable key, it only returns a subset of properties. Refer to the <a href="/api/payment_intents/object">payment intent</a> object reference for more details.</p>',
+      operationId: 'GetPaymentIntentsIntent',
+    },
+  })
+  .post('/v1/payment_intents/:intent', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostPaymentIntentsIntentParams,
+    body: V1Model.PostPaymentIntentsIntentBody,
+    response: { 200: 'PaymentIntent', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Update a PaymentIntent',
+      description:
+        '<p>Updates properties on a PaymentIntent object without confirming.</p>\n\n<p>Depending on which properties you update, you might need to confirm the\nPaymentIntent again. For example, updating the <code>payment_method</code>\nalways requires you to confirm the PaymentIntent again. If you prefer to\nupdate and confirm at the same time, we recommend updating properties through\nthe <a href="/docs/api/payment_intents/confirm">confirm API</a> instead.</p>',
+      operationId: 'PostPaymentIntentsIntent',
+    },
+  })
+  .get('/v1/payment_intents/:intent/amount_details_line_items', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetPaymentIntentsIntentAmountDetailsLineItemsParams,
+    query: V1Model.GetPaymentIntentsIntentAmountDetailsLineItemsQuery,
+    body: V1Model.GetPaymentIntentsIntentAmountDetailsLineItemsBody,
+    response: {
+      200: V1Model.GetPaymentIntentsIntentAmountDetailsLineItemsResponse200,
+      default: 'Error',
+    },
+    detail: {
+      tags: [],
+      summary: 'List all PaymentIntent LineItems',
+      description: '<p>Lists all LineItems of a given PaymentIntent.</p>',
+      operationId: 'GetPaymentIntentsIntentAmountDetailsLineItems',
+    },
+  })
+  .post('/v1/payment_intents/:intent/apply_customer_balance', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostPaymentIntentsIntentApplyCustomerBalanceParams,
+    body: V1Model.PostPaymentIntentsIntentApplyCustomerBalanceBody,
+    response: { 200: 'PaymentIntent', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Reconcile a customer_balance PaymentIntent',
+      description:
+        '<p>Manually reconcile the remaining amount for a <code>customer_balance</code> PaymentIntent.</p>',
+      operationId: 'PostPaymentIntentsIntentApplyCustomerBalance',
+    },
+  })
+  .post('/v1/payment_intents/:intent/cancel', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostPaymentIntentsIntentCancelParams,
+    body: V1Model.PostPaymentIntentsIntentCancelBody,
+    response: { 200: 'PaymentIntent', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Cancel a PaymentIntent',
+      description:
+        '<p>You can cancel a PaymentIntent object when it’s in one of these statuses: <code>requires_payment_method</code>, <code>requires_capture</code>, <code>requires_confirmation</code>, <code>requires_action</code> or, <a href="/docs/payments/intents">in rare cases</a>, <code>processing</code>. </p>\n\n<p>After it’s canceled, no additional charges are made by the PaymentIntent and any operations on the PaymentIntent fail with an error. For PaymentIntents with a <code>status</code> of <code>requires_capture</code>, the remaining <code>amount_capturable</code> is automatically refunded. </p>\n\n<p>You can directly cancel the PaymentIntent for a Checkout Session only when the PaymentIntent has a status of <code>requires_capture</code>. Otherwise, you must <a href="/docs/api/checkout/sessions/expire">expire the Checkout Session</a>.</p>',
+      operationId: 'PostPaymentIntentsIntentCancel',
+    },
+  })
+  .post('/v1/payment_intents/:intent/capture', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostPaymentIntentsIntentCaptureParams,
+    body: V1Model.PostPaymentIntentsIntentCaptureBody,
+    response: { 200: 'PaymentIntent', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Capture a PaymentIntent',
+      description:
+        '<p>Capture the funds of an existing uncaptured PaymentIntent when its status is <code>requires_capture</code>.</p>\n\n<p>Uncaptured PaymentIntents are cancelled a set number of days (7 by default) after their creation.</p>\n\n<p>Learn more about <a href="/docs/payments/capture-later">separate authorization and capture</a>.</p>',
+      operationId: 'PostPaymentIntentsIntentCapture',
+    },
+  })
+  .post('/v1/payment_intents/:intent/confirm', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostPaymentIntentsIntentConfirmParams,
+    body: V1Model.PostPaymentIntentsIntentConfirmBody,
+    response: { 200: 'PaymentIntent', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Confirm a PaymentIntent',
+      description:
+        '<p>Confirm that your customer intends to pay with current or provided\npayment method. Upon confirmation, the PaymentIntent will attempt to initiate\na payment.</p>\n\n<p>If the selected payment method requires additional authentication steps, the\nPaymentIntent will transition to the <code>requires_action</code> status and\nsuggest additional actions via <code>next_action</code>. If payment fails,\nthe PaymentIntent transitions to the <code>requires_payment_method</code> status or the\n<code>canceled</code> status if the confirmation limit is reached. If\npayment succeeds, the PaymentIntent will transition to the <code>succeeded</code>\nstatus (or <code>requires_capture</code>, if <code>capture_method</code> is set to <code>manual</code>).</p>\n\n<p>If the <code>confirmation_method</code> is <code>automatic</code>, payment may be attempted\nusing our <a href="/docs/stripe-js/reference#stripe-handle-card-payment">client SDKs</a>\nand the PaymentIntent’s <a href="#payment_intent_object-client_secret">client_secret</a>.\nAfter <code>next_action</code>s are handled by the client, no additional\nconfirmation is required to complete the payment.</p>\n\n<p>If the <code>confirmation_method</code> is <code>manual</code>, all payment attempts must be\ninitiated using a secret key.</p>\n\n<p>If any actions are required for the payment, the PaymentIntent will\nreturn to the <code>requires_confirmation</code> state\nafter those actions are completed. Your server needs to then\nexplicitly re-confirm the PaymentIntent to initiate the next payment\nattempt.</p>\n\n<p>There is a variable upper limit on how many times a PaymentIntent can be confirmed.\nAfter this limit is reached, any further calls to this endpoint will\ntransition the PaymentIntent to the <code>canceled</code> state.</p>',
+      operationId: 'PostPaymentIntentsIntentConfirm',
+    },
+  })
+  .post('/v1/payment_intents/:intent/increment_authorization', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostPaymentIntentsIntentIncrementAuthorizationParams,
+    body: V1Model.PostPaymentIntentsIntentIncrementAuthorizationBody,
+    response: { 200: 'PaymentIntent', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Increment an authorization',
+      description:
+        '<p>Perform an incremental authorization on an eligible\n<a href="/docs/api/payment_intents/object">PaymentIntent</a>. To be eligible, the\nPaymentIntent’s status must be <code>requires_capture</code> and\n<a href="/docs/api/charges/object#charge_object-payment_method_details-card_present-incremental_authorization_supported">incremental_authorization_supported</a>\nmust be <code>true</code>.</p>\n\n<p>Incremental authorizations attempt to increase the authorized amount on\nyour customer’s card to the new, higher <code>amount</code> provided. Similar to the\ninitial authorization, incremental authorizations can be declined. A\nsingle PaymentIntent can call this endpoint multiple times to further\nincrease the authorized amount.</p>\n\n<p>If the incremental authorization succeeds, the PaymentIntent object\nreturns with the updated\n<a href="/docs/api/payment_intents/object#payment_intent_object-amount">amount</a>.\nIf the incremental authorization fails, a\n<a href="/docs/error-codes#card-declined">card_declined</a> error returns, and no other\nfields on the PaymentIntent or Charge update. The PaymentIntent\nobject remains capturable for the previously authorized amount.</p>\n\n<p>Each PaymentIntent can have a maximum of 10 incremental authorization attempts, including declines.\nAfter it’s captured, a PaymentIntent can no longer be incremented.</p>\n\n<p>Learn more about incremental authorizations with\n<a href="/docs/terminal/features/incremental-authorizations">in-person payments</a> and\n<a href="/docs/payments/incremental-authorization?platform=web&ui=elements">online payments</a>.</p>',
+      operationId: 'PostPaymentIntentsIntentIncrementAuthorization',
+    },
+  })
+  .post('/v1/payment_intents/:intent/verify_microdeposits', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostPaymentIntentsIntentVerifyMicrodepositsParams,
+    body: V1Model.PostPaymentIntentsIntentVerifyMicrodepositsBody,
+    response: { 200: 'PaymentIntent', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Verify microdeposits on a PaymentIntent',
+      description: '<p>Verifies microdeposits on a PaymentIntent object.</p>',
+      operationId: 'PostPaymentIntentsIntentVerifyMicrodeposits',
+    },
+  })
+  .get('/v1/payment_links', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetPaymentLinksQuery,
+    body: V1Model.GetPaymentLinksBody,
+    response: { 200: V1Model.GetPaymentLinksResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List all payment links',
+      description: '<p>Returns a list of your payment links.</p>',
+      operationId: 'GetPaymentLinks',
+    },
+  })
+  .post('/v1/payment_links', ({ body }) => { throw new Error('Not implemented') }, {
+    body: V1Model.PostPaymentLinksBody,
+    response: { 200: 'PaymentLink', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Create a payment link',
+      description: '<p>Creates a payment link.</p>',
+      operationId: 'PostPaymentLinks',
+    },
+  })
+  .get('/v1/payment_links/:payment_link', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetPaymentLinksPaymentLinkParams,
+    query: V1Model.GetPaymentLinksPaymentLinkQuery,
+    body: V1Model.GetPaymentLinksPaymentLinkBody,
+    response: { 200: 'PaymentLink', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve payment link',
+      description: '<p>Retrieve a payment link.</p>',
+      operationId: 'GetPaymentLinksPaymentLink',
+    },
+  })
+  .post('/v1/payment_links/:payment_link', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostPaymentLinksPaymentLinkParams,
+    body: V1Model.PostPaymentLinksPaymentLinkBody,
+    response: { 200: 'PaymentLink', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Update a payment link',
+      description: '<p>Updates a payment link.</p>',
+      operationId: 'PostPaymentLinksPaymentLink',
+    },
+  })
+  .get('/v1/payment_links/:payment_link/line_items', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetPaymentLinksPaymentLinkLineItemsParams,
+    query: V1Model.GetPaymentLinksPaymentLinkLineItemsQuery,
+    body: V1Model.GetPaymentLinksPaymentLinkLineItemsBody,
+    response: { 200: V1Model.GetPaymentLinksPaymentLinkLineItemsResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: "Retrieve a payment link's line items",
+      description:
+        '<p>When retrieving a payment link, there is an includable <strong>line_items</strong> property containing the first handful of those items. There is also a URL where you can retrieve the full (paginated) list of line items.</p>',
+      operationId: 'GetPaymentLinksPaymentLinkLineItems',
+    },
+  })
+  .get('/v1/payment_method_configurations', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetPaymentMethodConfigurationsQuery,
+    body: V1Model.GetPaymentMethodConfigurationsBody,
+    response: { 200: V1Model.GetPaymentMethodConfigurationsResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List payment method configurations',
+      description: '<p>List payment method configurations</p>',
+      operationId: 'GetPaymentMethodConfigurations',
+    },
+  })
+  .post('/v1/payment_method_configurations', ({ body }) => { throw new Error('Not implemented') }, {
+    body: V1Model.PostPaymentMethodConfigurationsBody,
+    response: { 200: 'PaymentMethodConfiguration', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Create a payment method configuration',
+      description: '<p>Creates a payment method configuration</p>',
+      operationId: 'PostPaymentMethodConfigurations',
+    },
+  })
+  .get('/v1/payment_method_configurations/:configuration', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetPaymentMethodConfigurationsConfigurationParams,
+    query: V1Model.GetPaymentMethodConfigurationsConfigurationQuery,
+    body: V1Model.GetPaymentMethodConfigurationsConfigurationBody,
+    response: { 200: 'PaymentMethodConfiguration', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve payment method configuration',
+      description: '<p>Retrieve payment method configuration</p>',
+      operationId: 'GetPaymentMethodConfigurationsConfiguration',
+    },
+  })
+  .post('/v1/payment_method_configurations/:configuration', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostPaymentMethodConfigurationsConfigurationParams,
+    body: V1Model.PostPaymentMethodConfigurationsConfigurationBody,
+    response: { 200: 'PaymentMethodConfiguration', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Update payment method configuration',
+      description: '<p>Update payment method configuration</p>',
+      operationId: 'PostPaymentMethodConfigurationsConfiguration',
+    },
+  })
+  .get('/v1/payment_method_domains', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetPaymentMethodDomainsQuery,
+    body: V1Model.GetPaymentMethodDomainsBody,
+    response: { 200: V1Model.GetPaymentMethodDomainsResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List payment method domains',
+      description: '<p>Lists the details of existing payment method domains.</p>',
+      operationId: 'GetPaymentMethodDomains',
+    },
+  })
+  .post('/v1/payment_method_domains', ({ body }) => { throw new Error('Not implemented') }, {
+    body: V1Model.PostPaymentMethodDomainsBody,
+    response: { 200: 'PaymentMethodDomain', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Create a payment method domain',
+      description: '<p>Creates a payment method domain.</p>',
+      operationId: 'PostPaymentMethodDomains',
+    },
+  })
+  .get('/v1/payment_method_domains/:payment_method_domain', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetPaymentMethodDomainsPaymentMethodDomainParams,
+    query: V1Model.GetPaymentMethodDomainsPaymentMethodDomainQuery,
+    body: V1Model.GetPaymentMethodDomainsPaymentMethodDomainBody,
+    response: { 200: 'PaymentMethodDomain', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve a payment method domain',
+      description: '<p>Retrieves the details of an existing payment method domain.</p>',
+      operationId: 'GetPaymentMethodDomainsPaymentMethodDomain',
+    },
+  })
+  .post('/v1/payment_method_domains/:payment_method_domain', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostPaymentMethodDomainsPaymentMethodDomainParams,
+    body: V1Model.PostPaymentMethodDomainsPaymentMethodDomainBody,
+    response: { 200: 'PaymentMethodDomain', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Update a payment method domain',
+      description: '<p>Updates an existing payment method domain.</p>',
+      operationId: 'PostPaymentMethodDomainsPaymentMethodDomain',
+    },
+  })
+  .post('/v1/payment_method_domains/:payment_method_domain/validate', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostPaymentMethodDomainsPaymentMethodDomainValidateParams,
+    body: V1Model.PostPaymentMethodDomainsPaymentMethodDomainValidateBody,
+    response: { 200: 'PaymentMethodDomain', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Validate an existing payment method domain',
+      description:
+        '<p>Some payment methods might require additional steps to register a domain. If the requirements weren’t satisfied when the domain was created, the payment method will be inactive on the domain.\nThe payment method doesn’t appear in Elements or Embedded Checkout for this domain until it is active.</p>\n\n<p>To activate a payment method on an existing payment method domain, complete the required registration steps specific to the payment method, and then validate the payment method domain with this endpoint.</p>\n\n<p>Related guides: <a href="/docs/payments/payment-methods/pmd-registration">Payment method domains</a>.</p>',
+      operationId: 'PostPaymentMethodDomainsPaymentMethodDomainValidate',
+    },
+  })
+  .get('/v1/payment_methods', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetPaymentMethodsQuery,
+    body: V1Model.GetPaymentMethodsBody,
+    response: { 200: V1Model.GetPaymentMethodsResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List PaymentMethods',
+      description: '<p>Returns a list of all PaymentMethods.</p>',
+      operationId: 'GetPaymentMethods',
+    },
+  })
+  .post('/v1/payment_methods', ({ body }) => { throw new Error('Not implemented') }, {
+    body: V1Model.PostPaymentMethodsBody,
+    response: { 200: 'PaymentMethod', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Create a PaymentMethod',
+      description:
+        '<p>Creates a PaymentMethod object. Read the <a href="/docs/stripe-js/reference#stripe-create-payment-method">Stripe.js reference</a> to learn how to create PaymentMethods via Stripe.js.</p>\n\n<p>Instead of creating a PaymentMethod directly, we recommend using the <a href="/docs/payments/accept-a-payment">PaymentIntents</a> API to accept a payment immediately or the <a href="/docs/payments/save-and-reuse">SetupIntent</a> API to collect payment method details ahead of a future payment.</p>',
+      operationId: 'PostPaymentMethods',
+    },
+  })
+  .get('/v1/payment_methods/:payment_method', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetPaymentMethodsPaymentMethodParams,
+    query: V1Model.GetPaymentMethodsPaymentMethodQuery,
+    body: V1Model.GetPaymentMethodsPaymentMethodBody,
+    response: { 200: 'PaymentMethod', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve a PaymentMethod',
+      description:
+        '<p>Retrieves a PaymentMethod object attached to the StripeAccount. To retrieve a payment method attached to a Customer, you should use <a href="/docs/api/payment_methods/customer">Retrieve a Customer’s PaymentMethods</a></p>',
+      operationId: 'GetPaymentMethodsPaymentMethod',
+    },
+  })
+  .post('/v1/payment_methods/:payment_method', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostPaymentMethodsPaymentMethodParams,
+    body: V1Model.PostPaymentMethodsPaymentMethodBody,
+    response: { 200: 'PaymentMethod', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Update a PaymentMethod',
+      description:
+        '<p>Updates a PaymentMethod object. A PaymentMethod must be attached to a customer to be updated.</p>',
+      operationId: 'PostPaymentMethodsPaymentMethod',
+    },
+  })
+  .post('/v1/payment_methods/:payment_method/attach', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostPaymentMethodsPaymentMethodAttachParams,
+    body: V1Model.PostPaymentMethodsPaymentMethodAttachBody,
+    response: { 200: 'PaymentMethod', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Attach a PaymentMethod to a Customer',
+      description:
+        '<p>Attaches a PaymentMethod object to a Customer.</p>\n\n<p>To attach a new PaymentMethod to a customer for future payments, we recommend you use a <a href="/docs/api/setup_intents">SetupIntent</a>\nor a PaymentIntent with <a href="/docs/api/payment_intents/create#create_payment_intent-setup_future_usage">setup_future_usage</a>.\nThese approaches will perform any necessary steps to set up the PaymentMethod for future payments. Using the <code>/v1/payment_methods/:id/attach</code>\nendpoint without first using a SetupIntent or PaymentIntent with <code>setup_future_usage</code> does not optimize the PaymentMethod for\nfuture use, which makes later declines and payment friction more likely.\nSee <a href="/docs/payments/payment-intents#future-usage">Optimizing cards for future payments</a> for more information about setting up\nfuture payments.</p>\n\n<p>To use this PaymentMethod as the default for invoice or subscription payments,\nset <a href="/docs/api/customers/update#update_customer-invoice_settings-default_payment_method"><code>invoice_settings.default_payment_method</code></a>,\non the Customer to the PaymentMethod’s ID.</p>',
+      operationId: 'PostPaymentMethodsPaymentMethodAttach',
+    },
+  })
+  .post('/v1/payment_methods/:payment_method/detach', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostPaymentMethodsPaymentMethodDetachParams,
+    body: V1Model.PostPaymentMethodsPaymentMethodDetachBody,
+    response: { 200: 'PaymentMethod', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Detach a PaymentMethod from a Customer',
+      description:
+        '<p>Detaches a PaymentMethod object from a Customer. Detachment is permanent and irreversible — once detached, a PaymentMethod can no longer be used for payments or re-attached to a Customer.</p>',
+      operationId: 'PostPaymentMethodsPaymentMethodDetach',
+    },
+  })
+  .get('/v1/payment_records', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetPaymentRecordsQuery,
+    body: V1Model.GetPaymentRecordsBody,
+    response: { 200: V1Model.GetPaymentRecordsResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List Payment Records',
+      description: '<p>List all the Payment Records for a given merchant.</p>',
+      operationId: 'GetPaymentRecords',
+    },
+  })
+  .post('/v1/payment_records/report_payment', ({ body }) => { throw new Error('Not implemented') }, {
+    body: V1Model.PostPaymentRecordsReportPaymentBody,
+    response: { 200: 'PaymentRecord', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Report a payment',
+      description:
+        '<p>Report a new Payment Record. You may report a Payment Record as it is\n initialized and later report updates through the other report_* methods, or report Payment\n Records in a terminal state directly, through this method.</p>',
+      operationId: 'PostPaymentRecordsReportPayment',
+    },
+  })
+  .get('/v1/payment_records/:id', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetPaymentRecordsIdParams,
+    query: V1Model.GetPaymentRecordsIdQuery,
+    body: V1Model.GetPaymentRecordsIdBody,
+    response: { 200: 'PaymentRecord', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve a Payment Record',
+      description: '<p>Retrieves a Payment Record with the given ID</p>',
+      operationId: 'GetPaymentRecordsId',
+    },
+  })
+  .post('/v1/payment_records/:id/report_payment_attempt', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostPaymentRecordsIdReportPaymentAttemptParams,
+    body: V1Model.PostPaymentRecordsIdReportPaymentAttemptBody,
+    response: { 200: 'PaymentRecord', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Report a payment attempt',
+      description:
+        '<p>Report a new payment attempt on the specified Payment Record. A new payment\n attempt can only be specified if all other payment attempts are canceled or failed.</p>',
+      operationId: 'PostPaymentRecordsIdReportPaymentAttempt',
+    },
+  })
+  .post('/v1/payment_records/:id/report_payment_attempt_canceled', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostPaymentRecordsIdReportPaymentAttemptCanceledParams,
+    body: V1Model.PostPaymentRecordsIdReportPaymentAttemptCanceledBody,
+    response: { 200: 'PaymentRecord', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Report payment attempt canceled',
+      description:
+        '<p>Report that the most recent payment attempt on the specified Payment Record\n was canceled.</p>',
+      operationId: 'PostPaymentRecordsIdReportPaymentAttemptCanceled',
+    },
+  })
+  .post('/v1/payment_records/:id/report_payment_attempt_failed', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostPaymentRecordsIdReportPaymentAttemptFailedParams,
+    body: V1Model.PostPaymentRecordsIdReportPaymentAttemptFailedBody,
+    response: { 200: 'PaymentRecord', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Report payment attempt failed',
+      description:
+        '<p>Report that the most recent payment attempt on the specified Payment Record\n failed or errored.</p>',
+      operationId: 'PostPaymentRecordsIdReportPaymentAttemptFailed',
+    },
+  })
+  .post('/v1/payment_records/:id/report_payment_attempt_guaranteed', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostPaymentRecordsIdReportPaymentAttemptGuaranteedParams,
+    body: V1Model.PostPaymentRecordsIdReportPaymentAttemptGuaranteedBody,
+    response: { 200: 'PaymentRecord', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Report payment attempt guaranteed',
+      description:
+        '<p>Report that the most recent payment attempt on the specified Payment Record\n was guaranteed.</p>',
+      operationId: 'PostPaymentRecordsIdReportPaymentAttemptGuaranteed',
+    },
+  })
+  .post('/v1/payment_records/:id/report_payment_attempt_informational', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostPaymentRecordsIdReportPaymentAttemptInformationalParams,
+    body: V1Model.PostPaymentRecordsIdReportPaymentAttemptInformationalBody,
+    response: { 200: 'PaymentRecord', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Report payment attempt informational',
+      description: '<p>Report informational updates on the specified Payment Record.</p>',
+      operationId: 'PostPaymentRecordsIdReportPaymentAttemptInformational',
+    },
+  })
+  .post('/v1/payment_records/:id/report_refund', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostPaymentRecordsIdReportRefundParams,
+    body: V1Model.PostPaymentRecordsIdReportRefundBody,
+    response: { 200: 'PaymentRecord', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Report a refund',
+      description:
+        '<p>Report that the most recent payment attempt on the specified Payment Record\n was refunded.</p>',
+      operationId: 'PostPaymentRecordsIdReportRefund',
+    },
+  })
+  .get('/v1/payouts', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetPayoutsQuery,
+    body: V1Model.GetPayoutsBody,
+    response: { 200: V1Model.GetPayoutsResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List all payouts',
+      description:
+        '<p>Returns a list of existing payouts sent to third-party bank accounts or payouts that Stripe sent to you. The payouts return in sorted order, with the most recently created payouts appearing first.</p>',
+      operationId: 'GetPayouts',
+    },
+  })
+  .post('/v1/payouts', ({ body }) => { throw new Error('Not implemented') }, {
+    body: V1Model.PostPayoutsBody,
+    response: { 200: 'Payout', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Create a payout',
+      description:
+        '<p>To send funds to your own bank account, create a new payout object. Your <a href="#balance">Stripe balance</a> must cover the payout amount. If it doesn’t, you receive an “Insufficient Funds” error.</p>\n\n<p>If your API key is in test mode, money won’t actually be sent, though every other action occurs as if you’re in live mode.</p>\n\n<p>If you create a manual payout on a Stripe account that uses multiple payment source types, you need to specify the source type balance that the payout draws from. The <a href="/api/balances/object">balance object</a> details available and pending amounts by source type.</p>',
+      operationId: 'PostPayouts',
+    },
+  })
+  .get('/v1/payouts/:payout', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetPayoutsPayoutParams,
+    query: V1Model.GetPayoutsPayoutQuery,
+    body: V1Model.GetPayoutsPayoutBody,
+    response: { 200: 'Payout', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve a payout',
+      description:
+        '<p>Retrieves the details of an existing payout. Supply the unique payout ID from either a payout creation request or the payout list. Stripe returns the corresponding payout information.</p>',
+      operationId: 'GetPayoutsPayout',
+    },
+  })
+  .post('/v1/payouts/:payout', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostPayoutsPayoutParams,
+    body: V1Model.PostPayoutsPayoutBody,
+    response: { 200: 'Payout', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Update a payout',
+      description:
+        '<p>Updates the specified payout by setting the values of the parameters you pass. We don’t change parameters that you don’t provide. This request only accepts the metadata as arguments.</p>',
+      operationId: 'PostPayoutsPayout',
+    },
+  })
+  .post('/v1/payouts/:payout/cancel', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostPayoutsPayoutCancelParams,
+    body: V1Model.PostPayoutsPayoutCancelBody,
+    response: { 200: 'Payout', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Cancel a payout',
+      description:
+        '<p>You can cancel a previously created payout if its status is <code>pending</code>. Stripe refunds the funds to your available balance. You can’t cancel automatic Stripe payouts.</p>',
+      operationId: 'PostPayoutsPayoutCancel',
+    },
+  })
+  .post('/v1/payouts/:payout/reverse', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostPayoutsPayoutReverseParams,
+    body: V1Model.PostPayoutsPayoutReverseBody,
+    response: { 200: 'Payout', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Reverse a payout',
+      description:
+        '<p>Reverses a payout by debiting the destination bank account. At this time, you can only reverse payouts for connected accounts to US and Canadian bank accounts. If the payout is manual and in the <code>pending</code> status, use <code>/v1/payouts/:id/cancel</code> instead.</p>\n\n<p>By requesting a reversal through <code>/v1/payouts/:id/reverse</code>, you confirm that the authorized signatory of the selected bank account authorizes the debit on the bank account and that no other authorization is required.</p>',
+      operationId: 'PostPayoutsPayoutReverse',
+    },
+  })
+  .get('/v1/plans', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetPlansQuery,
+    body: V1Model.GetPlansBody,
+    response: { 200: V1Model.GetPlansResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List all plans',
+      description: '<p>Returns a list of your plans.</p>',
+      operationId: 'GetPlans',
+    },
+  })
+  .post('/v1/plans', ({ body }) => { throw new Error('Not implemented') }, {
+    body: V1Model.PostPlansBody,
+    response: { 200: 'Plan', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Create a plan',
+      description:
+        '<p>You can now model subscriptions more flexibly using the <a href="#prices">Prices API</a>. It replaces the Plans API and is backwards compatible to simplify your migration.</p>',
+      operationId: 'PostPlans',
+    },
+  })
+  .get('/v1/plans/:plan', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetPlansPlanParams,
+    query: V1Model.GetPlansPlanQuery,
+    body: V1Model.GetPlansPlanBody,
+    response: { 200: 'Plan', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve a plan',
+      description: '<p>Retrieves the plan with the given ID.</p>',
+      operationId: 'GetPlansPlan',
+    },
+  })
+  .post('/v1/plans/:plan', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostPlansPlanParams,
+    body: V1Model.PostPlansPlanBody,
+    response: { 200: 'Plan', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Update a plan',
+      description:
+        '<p>Updates the specified plan by setting the values of the parameters passed. Any parameters not provided are left unchanged. By design, you cannot change a plan’s ID, amount, currency, or billing cycle.</p>',
+      operationId: 'PostPlansPlan',
+    },
+  })
+  .delete('/v1/plans/:plan', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.DeletePlansPlanParams,
+    body: V1Model.DeletePlansPlanBody,
+    response: { 200: 'DeletedPlan', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Delete a plan',
+      description:
+        '<p>Deleting plans means new subscribers can’t be added. Existing subscribers aren’t affected.</p>',
+      operationId: 'DeletePlansPlan',
+    },
+  })
+  .get('/v1/prices', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetPricesQuery,
+    body: V1Model.GetPricesBody,
+    response: { 200: V1Model.GetPricesResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List all prices',
+      description:
+        '<p>Returns a list of your active prices, excluding <a href="/docs/products-prices/pricing-models#inline-pricing">inline prices</a>. For the list of inactive prices, set <code>active</code> to false.</p>',
+      operationId: 'GetPrices',
+    },
+  })
+  .post('/v1/prices', ({ body }) => { throw new Error('Not implemented') }, {
+    body: V1Model.PostPricesBody,
+    response: { 200: 'Price', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Create a price',
+      description:
+        '<p>Creates a new <a href="https://docs.stripe.com/api/prices">Price</a> for an existing <a href="https://docs.stripe.com/api/products">Product</a>. The Price can be recurring or one-time.</p>',
+      operationId: 'PostPrices',
+    },
+  })
+  .get('/v1/prices/search', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetPricesSearchQuery,
+    body: V1Model.GetPricesSearchBody,
+    response: { 200: V1Model.GetPricesSearchResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Search prices',
+      description:
+        '<p>Search for prices you’ve previously created using Stripe’s <a href="/docs/search#search-query-language">Search Query Language</a>.\nDon’t use search in read-after-write flows where strict consistency is necessary. Under normal operating\nconditions, data is searchable in less than a minute. Occasionally, propagation of new or updated data can be up\nto an hour behind during outages. Search functionality is not available to merchants in India.</p>',
+      operationId: 'GetPricesSearch',
+    },
+  })
+  .get('/v1/prices/:price', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetPricesPriceParams,
+    query: V1Model.GetPricesPriceQuery,
+    body: V1Model.GetPricesPriceBody,
+    response: { 200: 'Price', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve a price',
+      description: '<p>Retrieves the price with the given ID.</p>',
+      operationId: 'GetPricesPrice',
+    },
+  })
+  .post('/v1/prices/:price', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostPricesPriceParams,
+    body: V1Model.PostPricesPriceBody,
+    response: { 200: 'Price', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Update a price',
+      description:
+        '<p>Updates the specified price by setting the values of the parameters passed. Any parameters not provided are left unchanged.</p>',
+      operationId: 'PostPricesPrice',
+    },
+  })
+  .get('/v1/product_catalog/trial_offers', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetProductCatalogTrialOffersQuery,
+    body: V1Model.GetProductCatalogTrialOffersBody,
+    response: { 200: V1Model.GetProductCatalogTrialOffersResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List trial offers',
+      description: '<p>Returns a list of trial offers.</p>',
+      operationId: 'GetProductCatalogTrialOffers',
+    },
+  })
+  .post('/v1/product_catalog/trial_offers', ({ body }) => { throw new Error('Not implemented') }, {
+    body: V1Model.PostProductCatalogTrialOffersBody,
+    response: { 200: 'ProductCatalogTrialOffer', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Create a trial offer',
+      description: '<p>Creates a trial offer.</p>',
+      operationId: 'PostProductCatalogTrialOffers',
+    },
+  })
+  .get('/v1/product_catalog/trial_offers/:id', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetProductCatalogTrialOffersIdParams,
+    query: V1Model.GetProductCatalogTrialOffersIdQuery,
+    body: V1Model.GetProductCatalogTrialOffersIdBody,
+    response: { 200: 'ProductCatalogTrialOffer', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve a trial offer',
+      description: '<p>Retrieves the trial offer with the given ID.</p>',
+      operationId: 'GetProductCatalogTrialOffersId',
+    },
+  })
+  .post('/v1/product_catalog/trial_offers/:id', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostProductCatalogTrialOffersIdParams,
+    body: V1Model.PostProductCatalogTrialOffersIdBody,
+    response: { 200: 'ProductCatalogTrialOffer', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Update a trial offer',
+      description:
+        '<p>Updates the specified trial offer by setting the values of the parameters passed. Any parameters not provided are left unchanged.</p>',
+      operationId: 'PostProductCatalogTrialOffersId',
+    },
+  })
+  .get('/v1/products', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetProductsQuery,
+    body: V1Model.GetProductsBody,
+    response: { 200: V1Model.GetProductsResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List all products',
+      description:
+        '<p>Returns a list of your products. The products are returned sorted by creation date, with the most recently created products appearing first.</p>',
+      operationId: 'GetProducts',
+    },
+  })
+  .post('/v1/products', ({ body }) => { throw new Error('Not implemented') }, {
+    body: V1Model.PostProductsBody,
+    response: { 200: 'Product', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Create a product',
+      description: '<p>Creates a new product object.</p>',
+      operationId: 'PostProducts',
+    },
+  })
+  .get('/v1/products/search', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetProductsSearchQuery,
+    body: V1Model.GetProductsSearchBody,
+    response: { 200: V1Model.GetProductsSearchResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Search products',
+      description:
+        '<p>Search for products you’ve previously created using Stripe’s <a href="/docs/search#search-query-language">Search Query Language</a>.\nDon’t use search in read-after-write flows where strict consistency is necessary. Under normal operating\nconditions, data is searchable in less than a minute. Occasionally, propagation of new or updated data can be up\nto an hour behind during outages. Search functionality is not available to merchants in India.</p>',
+      operationId: 'GetProductsSearch',
+    },
+  })
+  .get('/v1/products/:product', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetProductsIdParams,
+    query: V1Model.GetProductsIdQuery,
+    body: V1Model.GetProductsIdBody,
+    response: { 200: 'Product', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve a product',
+      description:
+        '<p>Retrieves the details of an existing product. Supply the unique product ID from either a product creation request or the product list, and Stripe will return the corresponding product information.</p>',
+      operationId: 'GetProductsId',
+    },
+  })
+  .post('/v1/products/:product', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostProductsIdParams,
+    body: V1Model.PostProductsIdBody,
+    response: { 200: 'Product', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Update a product',
+      description:
+        '<p>Updates the specific product by setting the values of the parameters passed. Any parameters not provided will be left unchanged.</p>',
+      operationId: 'PostProductsId',
+    },
+  })
+  .delete('/v1/products/:product', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.DeleteProductsIdParams,
+    body: V1Model.DeleteProductsIdBody,
+    response: { 200: 'DeletedProduct', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Delete a product',
+      description:
+        '<p>Delete a product. Deleting a product is only possible if it has no prices associated with it. Additionally, deleting a product with <code>type=good</code> is only possible if it has no SKUs associated with it.</p>',
+      operationId: 'DeleteProductsId',
+    },
+  })
+  .get('/v1/products/:product/features', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetProductsProductFeaturesParams,
+    query: V1Model.GetProductsProductFeaturesQuery,
+    body: V1Model.GetProductsProductFeaturesBody,
+    response: { 200: V1Model.GetProductsProductFeaturesResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List all features attached to a product',
+      description: '<p>Retrieve a list of features for a product</p>',
+      operationId: 'GetProductsProductFeatures',
+    },
+  })
+  .post('/v1/products/:product/features', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostProductsProductFeaturesParams,
+    body: V1Model.PostProductsProductFeaturesBody,
+    response: { 200: 'ProductFeature', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Attach a feature to a product',
+      description:
+        '<p>Creates a product_feature, which represents a feature attachment to a product</p>',
+      operationId: 'PostProductsProductFeatures',
+    },
+  })
+  .get('/v1/products/:product/features/:id', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetProductsProductFeaturesIdParams,
+    query: V1Model.GetProductsProductFeaturesIdQuery,
+    body: V1Model.GetProductsProductFeaturesIdBody,
+    response: { 200: 'ProductFeature', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve a product_feature',
+      description:
+        '<p>Retrieves a product_feature, which represents a feature attachment to a product</p>',
+      operationId: 'GetProductsProductFeaturesId',
+    },
+  })
+  .delete('/v1/products/:product/features/:id', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.DeleteProductsProductFeaturesIdParams,
+    body: V1Model.DeleteProductsProductFeaturesIdBody,
+    response: { 200: 'DeletedProductFeature', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Remove a feature from a product',
+      description: '<p>Deletes the feature attachment to a product</p>',
+      operationId: 'DeleteProductsProductFeaturesId',
+    },
+  })
+  .get('/v1/promotion_codes', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetPromotionCodesQuery,
+    body: V1Model.GetPromotionCodesBody,
+    response: { 200: V1Model.GetPromotionCodesResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List all promotion codes',
+      description: '<p>Returns a list of your promotion codes.</p>',
+      operationId: 'GetPromotionCodes',
+    },
+  })
+  .post('/v1/promotion_codes', ({ body }) => { throw new Error('Not implemented') }, {
+    body: V1Model.PostPromotionCodesBody,
+    response: { 200: 'PromotionCode', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Create a promotion code',
+      description:
+        '<p>A promotion code points to an underlying promotion. You can optionally restrict the code to a specific customer, redemption limit, and expiration date.</p>',
+      operationId: 'PostPromotionCodes',
+    },
+  })
+  .get('/v1/promotion_codes/:promotion_code', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetPromotionCodesPromotionCodeParams,
+    query: V1Model.GetPromotionCodesPromotionCodeQuery,
+    body: V1Model.GetPromotionCodesPromotionCodeBody,
+    response: { 200: 'PromotionCode', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve a promotion code',
+      description:
+        '<p>Retrieves the promotion code with the given ID. In order to retrieve a promotion code by the customer-facing <code>code</code> use <a href="/docs/api/promotion_codes/list">list</a> with the desired <code>code</code>.</p>',
+      operationId: 'GetPromotionCodesPromotionCode',
+    },
+  })
+  .post('/v1/promotion_codes/:promotion_code', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostPromotionCodesPromotionCodeParams,
+    body: V1Model.PostPromotionCodesPromotionCodeBody,
+    response: { 200: 'PromotionCode', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Update a promotion code',
+      description:
+        '<p>Updates the specified promotion code by setting the values of the parameters passed. Most fields are, by design, not editable.</p>',
+      operationId: 'PostPromotionCodesPromotionCode',
+    },
+  })
+  .get('/v1/quotes', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetQuotesQuery,
+    body: V1Model.GetQuotesBody,
+    response: { 200: V1Model.GetQuotesResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List all quotes',
+      description: '<p>Returns a list of your quotes.</p>',
+      operationId: 'GetQuotes',
+    },
+  })
+  .post('/v1/quotes', ({ body }) => { throw new Error('Not implemented') }, {
+    body: V1Model.PostQuotesBody,
+    response: { 200: 'Quote', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Create a quote',
+      description:
+        '<p>A quote models prices and services for a customer. Default options for <code>header</code>, <code>description</code>, <code>footer</code>, and <code>expires_at</code> can be set in the dashboard via the <a href="https://dashboard.stripe.com/settings/billing/quote">quote template</a>.</p>',
+      operationId: 'PostQuotes',
+    },
+  })
+  .get('/v1/quotes/:quote', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetQuotesQuoteParams,
+    query: V1Model.GetQuotesQuoteQuery,
+    body: V1Model.GetQuotesQuoteBody,
+    response: { 200: 'Quote', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve a quote',
+      description: '<p>Retrieves the quote with the given ID.</p>',
+      operationId: 'GetQuotesQuote',
+    },
+  })
+  .post('/v1/quotes/:quote', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostQuotesQuoteParams,
+    body: V1Model.PostQuotesQuoteBody,
+    response: { 200: 'Quote', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Update a quote',
+      description: '<p>A quote models prices and services for a customer.</p>',
+      operationId: 'PostQuotesQuote',
+    },
+  })
+  .post('/v1/quotes/:quote/accept', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostQuotesQuoteAcceptParams,
+    body: V1Model.PostQuotesQuoteAcceptBody,
+    response: { 200: 'Quote', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Accept a quote',
+      description: '<p>Accepts the specified quote.</p>',
+      operationId: 'PostQuotesQuoteAccept',
+    },
+  })
+  .post('/v1/quotes/:quote/cancel', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostQuotesQuoteCancelParams,
+    body: V1Model.PostQuotesQuoteCancelBody,
+    response: { 200: 'Quote', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Cancel a quote',
+      description: '<p>Cancels the quote.</p>',
+      operationId: 'PostQuotesQuoteCancel',
+    },
+  })
+  .get('/v1/quotes/:quote/computed_upfront_line_items', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetQuotesQuoteComputedUpfrontLineItemsParams,
+    query: V1Model.GetQuotesQuoteComputedUpfrontLineItemsQuery,
+    body: V1Model.GetQuotesQuoteComputedUpfrontLineItemsBody,
+    response: { 200: V1Model.GetQuotesQuoteComputedUpfrontLineItemsResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: "Retrieve a quote's upfront line items",
+      description:
+        '<p>When retrieving a quote, there is an includable <a href="https://stripe.com/docs/api/quotes/object#quote_object-computed-upfront-line_items"><strong>computed.upfront.line_items</strong></a> property containing the first handful of those items. There is also a URL where you can retrieve the full (paginated) list of upfront line items.</p>',
+      operationId: 'GetQuotesQuoteComputedUpfrontLineItems',
+    },
+  })
+  .post('/v1/quotes/:quote/finalize', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostQuotesQuoteFinalizeParams,
+    body: V1Model.PostQuotesQuoteFinalizeBody,
+    response: { 200: 'Quote', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Finalize a quote',
+      description: '<p>Finalizes the quote.</p>',
+      operationId: 'PostQuotesQuoteFinalize',
+    },
+  })
+  .get('/v1/quotes/:quote/line_items', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetQuotesQuoteLineItemsParams,
+    query: V1Model.GetQuotesQuoteLineItemsQuery,
+    body: V1Model.GetQuotesQuoteLineItemsBody,
+    response: { 200: V1Model.GetQuotesQuoteLineItemsResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: "Retrieve a quote's line items",
+      description:
+        '<p>When retrieving a quote, there is an includable <strong>line_items</strong> property containing the first handful of those items. There is also a URL where you can retrieve the full (paginated) list of line items.</p>',
+      operationId: 'GetQuotesQuoteLineItems',
+    },
+  })
+  .get('/v1/quotes/:quote/pdf', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetQuotesQuotePdfParams,
+    query: V1Model.GetQuotesQuotePdfQuery,
+    body: V1Model.GetQuotesQuotePdfBody,
+    response: { 200: t.Void(), default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Download quote PDF',
+      description:
+        '<p>Download the PDF for a finalized quote. Explanation for special handling can be found <a href="https://docs.stripe.com/quotes/overview#quote_pdf">here</a></p>',
+      operationId: 'GetQuotesQuotePdf',
+    },
+  })
+  .get('/v1/radar/early_fraud_warnings', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetRadarEarlyFraudWarningsQuery,
+    body: V1Model.GetRadarEarlyFraudWarningsBody,
+    response: { 200: V1Model.GetRadarEarlyFraudWarningsResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List all early fraud warnings',
+      description: '<p>Returns a list of early fraud warnings.</p>',
+      operationId: 'GetRadarEarlyFraudWarnings',
+    },
+  })
+  .get('/v1/radar/early_fraud_warnings/:early_fraud_warning', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetRadarEarlyFraudWarningsEarlyFraudWarningParams,
+    query: V1Model.GetRadarEarlyFraudWarningsEarlyFraudWarningQuery,
+    body: V1Model.GetRadarEarlyFraudWarningsEarlyFraudWarningBody,
+    response: { 200: 'RadarEarlyFraudWarning', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve an early fraud warning',
+      description:
+        '<p>Retrieves the details of an early fraud warning that has previously been created. </p>\n\n<p>Please refer to the <a href="#early_fraud_warning_object">early fraud warning</a> object reference for more details.</p>',
+      operationId: 'GetRadarEarlyFraudWarningsEarlyFraudWarning',
+    },
+  })
+  .post('/v1/radar/payment_evaluations', ({ body }) => { throw new Error('Not implemented') }, {
+    body: V1Model.PostRadarPaymentEvaluationsBody,
+    response: { 200: 'RadarPaymentEvaluation', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Create a Payment Evaluation',
+      description:
+        '<p>Request a Radar API fraud risk score from Stripe for a payment before sending it for external processor authorization.</p>',
+      operationId: 'PostRadarPaymentEvaluations',
+    },
+  })
+  .get('/v1/radar/value_list_items', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetRadarValueListItemsQuery,
+    body: V1Model.GetRadarValueListItemsBody,
+    response: { 200: V1Model.GetRadarValueListItemsResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List all value list items',
+      description:
+        '<p>Returns a list of <code>ValueListItem</code> objects. The objects are sorted in descending order by creation date, with the most recently created object appearing first.</p>',
+      operationId: 'GetRadarValueListItems',
+    },
+  })
+  .post('/v1/radar/value_list_items', ({ body }) => { throw new Error('Not implemented') }, {
+    body: V1Model.PostRadarValueListItemsBody,
+    response: { 200: 'RadarValueListItem', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Create a value list item',
+      description:
+        '<p>Creates a new <code>ValueListItem</code> object, which is added to the specified parent value list.</p>',
+      operationId: 'PostRadarValueListItems',
+    },
+  })
+  .get('/v1/radar/value_list_items/:item', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetRadarValueListItemsItemParams,
+    query: V1Model.GetRadarValueListItemsItemQuery,
+    body: V1Model.GetRadarValueListItemsItemBody,
+    response: { 200: 'RadarValueListItem', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve a value list item',
+      description: '<p>Retrieves a <code>ValueListItem</code> object.</p>',
+      operationId: 'GetRadarValueListItemsItem',
+    },
+  })
+  .delete('/v1/radar/value_list_items/:item', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.DeleteRadarValueListItemsItemParams,
+    body: V1Model.DeleteRadarValueListItemsItemBody,
+    response: { 200: 'DeletedRadarValueListItem', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Delete a value list item',
+      description:
+        '<p>Deletes a <code>ValueListItem</code> object, removing it from its parent value list.</p>',
+      operationId: 'DeleteRadarValueListItemsItem',
+    },
+  })
+  .get('/v1/radar/value_lists', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetRadarValueListsQuery,
+    body: V1Model.GetRadarValueListsBody,
+    response: { 200: V1Model.GetRadarValueListsResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List all value lists',
+      description:
+        '<p>Returns a list of <code>ValueList</code> objects. The objects are sorted in descending order by creation date, with the most recently created object appearing first.</p>',
+      operationId: 'GetRadarValueLists',
+    },
+  })
+  .post('/v1/radar/value_lists', ({ body }) => { throw new Error('Not implemented') }, {
+    body: V1Model.PostRadarValueListsBody,
+    response: { 200: 'RadarValueList', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Create a value list',
+      description:
+        '<p>Creates a new <code>ValueList</code> object, which can then be referenced in rules.</p>',
+      operationId: 'PostRadarValueLists',
+    },
+  })
+  .get('/v1/radar/value_lists/:value_list', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetRadarValueListsValueListParams,
+    query: V1Model.GetRadarValueListsValueListQuery,
+    body: V1Model.GetRadarValueListsValueListBody,
+    response: { 200: 'RadarValueList', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve a value list',
+      description: '<p>Retrieves a <code>ValueList</code> object.</p>',
+      operationId: 'GetRadarValueListsValueList',
+    },
+  })
+  .post('/v1/radar/value_lists/:value_list', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostRadarValueListsValueListParams,
+    body: V1Model.PostRadarValueListsValueListBody,
+    response: { 200: 'RadarValueList', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Update a value list',
+      description:
+        '<p>Updates a <code>ValueList</code> object by setting the values of the parameters passed. Any parameters not provided will be left unchanged. Note that <code>item_type</code> is immutable.</p>',
+      operationId: 'PostRadarValueListsValueList',
+    },
+  })
+  .delete('/v1/radar/value_lists/:value_list', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.DeleteRadarValueListsValueListParams,
+    body: V1Model.DeleteRadarValueListsValueListBody,
+    response: { 200: 'DeletedRadarValueList', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Delete a value list',
+      description:
+        '<p>Deletes a <code>ValueList</code> object, also deleting any items contained within the value list. To be deleted, a value list must not be referenced in any rules.</p>',
+      operationId: 'DeleteRadarValueListsValueList',
+    },
+  })
+  .get('/v1/refunds', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetRefundsQuery,
+    body: V1Model.GetRefundsBody,
+    response: { 200: V1Model.GetRefundsResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List all refunds',
+      description:
+        '<p>Returns a list of all refunds you created. We return the refunds in sorted order, with the most recent refunds appearing first. The 10 most recent refunds are always available by default on the Charge object.</p>',
+      operationId: 'GetRefunds',
+    },
+  })
+  .post('/v1/refunds', ({ body }) => { throw new Error('Not implemented') }, {
+    body: V1Model.PostRefundsBody,
+    response: { 200: 'Refund', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Create a refund',
+      description:
+        '<p>When you create a new refund, you must specify a Charge or a PaymentIntent object on which to create it.</p>\n\n<p>Creating a new refund will refund a charge that has previously been created but not yet refunded.\nFunds will be refunded to the credit or debit card that was originally charged.</p>\n\n<p>You can optionally refund only part of a charge.\nYou can do so multiple times, until the entire charge has been refunded.</p>\n\n<p>Once entirely refunded, a charge can’t be refunded again.\nThis method will raise an error when called on an already-refunded charge,\nor when trying to refund more money than is left on a charge.</p>',
+      operationId: 'PostRefunds',
+    },
+  })
+  .get('/v1/refunds/:refund', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetRefundsRefundParams,
+    query: V1Model.GetRefundsRefundQuery,
+    body: V1Model.GetRefundsRefundBody,
+    response: { 200: 'Refund', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve a refund',
+      description: '<p>Retrieves the details of an existing refund.</p>',
+      operationId: 'GetRefundsRefund',
+    },
+  })
+  .post('/v1/refunds/:refund', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostRefundsRefundParams,
+    body: V1Model.PostRefundsRefundBody,
+    response: { 200: 'Refund', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Update a refund',
+      description:
+        '<p>Updates the refund that you specify by setting the values of the passed parameters. Any parameters that you don’t provide remain unchanged.</p>\n\n<p>This request only accepts <code>metadata</code> as an argument.</p>',
+      operationId: 'PostRefundsRefund',
+    },
+  })
+  .post('/v1/refunds/:refund/cancel', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostRefundsRefundCancelParams,
+    body: V1Model.PostRefundsRefundCancelBody,
+    response: { 200: 'Refund', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Cancel a refund',
+      description:
+        '<p>Cancels a refund with a status of <code>requires_action</code>.</p>\n\n<p>You can’t cancel refunds in other states. Only refunds for payment methods that require customer action can enter the <code>requires_action</code> state.</p>',
+      operationId: 'PostRefundsRefundCancel',
+    },
+  })
+  .get('/v1/reporting/report_runs', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetReportingReportRunsQuery,
+    body: V1Model.GetReportingReportRunsBody,
+    response: { 200: V1Model.GetReportingReportRunsResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List all Report Runs',
+      description: '<p>Returns a list of Report Runs, with the most recent appearing first.</p>',
+      operationId: 'GetReportingReportRuns',
+    },
+  })
+  .post('/v1/reporting/report_runs', ({ body }) => { throw new Error('Not implemented') }, {
+    body: V1Model.PostReportingReportRunsBody,
+    response: { 200: 'ReportingReportRun', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Create a Report Run',
+      description:
+        '<p>Creates a new object and begin running the report. (Certain report types require a <a href="https://stripe.com/docs/keys#test-live-modes">live-mode API key</a>.)</p>',
+      operationId: 'PostReportingReportRuns',
+    },
+  })
+  .get('/v1/reporting/report_runs/:report_run', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetReportingReportRunsReportRunParams,
+    query: V1Model.GetReportingReportRunsReportRunQuery,
+    body: V1Model.GetReportingReportRunsReportRunBody,
+    response: { 200: 'ReportingReportRun', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve a Report Run',
+      description: '<p>Retrieves the details of an existing Report Run.</p>',
+      operationId: 'GetReportingReportRunsReportRun',
+    },
+  })
+  .get('/v1/reporting/report_types', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetReportingReportTypesQuery,
+    body: V1Model.GetReportingReportTypesBody,
+    response: { 200: V1Model.GetReportingReportTypesResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List all Report Types',
+      description: '<p>Returns a full list of Report Types.</p>',
+      operationId: 'GetReportingReportTypes',
+    },
+  })
+  .get('/v1/reporting/report_types/:report_type', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetReportingReportTypesReportTypeParams,
+    query: V1Model.GetReportingReportTypesReportTypeQuery,
+    body: V1Model.GetReportingReportTypesReportTypeBody,
+    response: { 200: 'ReportingReportType', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve a Report Type',
+      description:
+        '<p>Retrieves the details of a Report Type. (Certain report types require a <a href="https://stripe.com/docs/keys#test-live-modes">live-mode API key</a>.)</p>',
+      operationId: 'GetReportingReportTypesReportType',
+    },
+  })
+  .get('/v1/reviews', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetReviewsQuery,
+    body: V1Model.GetReviewsBody,
+    response: { 200: V1Model.GetReviewsResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List all open reviews',
+      description:
+        '<p>Returns a list of <code>Review</code> objects that have <code>open</code> set to <code>true</code>. The objects are sorted in descending order by creation date, with the most recently created object appearing first.</p>',
+      operationId: 'GetReviews',
+    },
+  })
+  .get('/v1/reviews/:review', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetReviewsReviewParams,
+    query: V1Model.GetReviewsReviewQuery,
+    body: V1Model.GetReviewsReviewBody,
+    response: { 200: 'Review', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve a review',
+      description: '<p>Retrieves a <code>Review</code> object.</p>',
+      operationId: 'GetReviewsReview',
+    },
+  })
+  .post('/v1/reviews/:review/approve', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostReviewsReviewApproveParams,
+    body: V1Model.PostReviewsReviewApproveBody,
+    response: { 200: 'Review', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Approve a review',
+      description:
+        '<p>Approves a <code>Review</code> object, closing it and removing it from the list of reviews.</p>',
+      operationId: 'PostReviewsReviewApprove',
+    },
+  })
+  .get('/v1/setup_attempts', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetSetupAttemptsQuery,
+    body: V1Model.GetSetupAttemptsBody,
+    response: { 200: V1Model.GetSetupAttemptsResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List all SetupAttempts',
+      description:
+        '<p>Returns a list of SetupAttempts that associate with a provided SetupIntent.</p>',
+      operationId: 'GetSetupAttempts',
+    },
+  })
+  .get('/v1/setup_intents', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetSetupIntentsQuery,
+    body: V1Model.GetSetupIntentsBody,
+    response: { 200: V1Model.GetSetupIntentsResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List all SetupIntents',
+      description: '<p>Returns a list of SetupIntents.</p>',
+      operationId: 'GetSetupIntents',
+    },
+  })
+  .post('/v1/setup_intents', ({ body }) => { throw new Error('Not implemented') }, {
+    body: V1Model.PostSetupIntentsBody,
+    response: { 200: 'SetupIntent', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Create a SetupIntent',
+      description:
+        '<p>Creates a SetupIntent object.</p>\n\n<p>After you create the SetupIntent, attach a payment method and <a href="/docs/api/setup_intents/confirm">confirm</a>\nit to collect any required permissions to charge the payment method later.</p>',
+      operationId: 'PostSetupIntents',
+    },
+  })
+  .get('/v1/setup_intents/:intent', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetSetupIntentsIntentParams,
+    query: V1Model.GetSetupIntentsIntentQuery,
+    body: V1Model.GetSetupIntentsIntentBody,
+    response: { 200: 'SetupIntent', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve a SetupIntent',
+      description:
+        '<p>Retrieves the details of a SetupIntent that has previously been created. </p>\n\n<p>Client-side retrieval using a publishable key is allowed when the <code>client_secret</code> is provided in the query string. </p>\n\n<p>When retrieved with a publishable key, only a subset of properties will be returned. Please refer to the <a href="#setup_intent_object">SetupIntent</a> object reference for more details.</p>',
+      operationId: 'GetSetupIntentsIntent',
+    },
+  })
+  .post('/v1/setup_intents/:intent', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostSetupIntentsIntentParams,
+    body: V1Model.PostSetupIntentsIntentBody,
+    response: { 200: 'SetupIntent', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Update a SetupIntent',
+      description: '<p>Updates a SetupIntent object.</p>',
+      operationId: 'PostSetupIntentsIntent',
+    },
+  })
+  .post('/v1/setup_intents/:intent/cancel', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostSetupIntentsIntentCancelParams,
+    body: V1Model.PostSetupIntentsIntentCancelBody,
+    response: { 200: 'SetupIntent', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Cancel a SetupIntent',
+      description:
+        '<p>You can cancel a SetupIntent object when it’s in one of these statuses: <code>requires_payment_method</code>, <code>requires_confirmation</code>, or <code>requires_action</code>. </p>\n\n<p>After you cancel it, setup is abandoned and any operations on the SetupIntent fail with an error. You can’t cancel the SetupIntent for a Checkout Session. <a href="/docs/api/checkout/sessions/expire">Expire the Checkout Session</a> instead.</p>',
+      operationId: 'PostSetupIntentsIntentCancel',
+    },
+  })
+  .post('/v1/setup_intents/:intent/confirm', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostSetupIntentsIntentConfirmParams,
+    body: V1Model.PostSetupIntentsIntentConfirmBody,
+    response: { 200: 'SetupIntent', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Confirm a SetupIntent',
+      description:
+        '<p>Confirm that your customer intends to set up the current or\nprovided payment method. For example, you would confirm a SetupIntent\nwhen a customer hits the “Save” button on a payment method management\npage on your website.</p>\n\n<p>If the selected payment method does not require any additional\nsteps from the customer, the SetupIntent will transition to the\n<code>succeeded</code> status.</p>\n\n<p>Otherwise, it will transition to the <code>requires_action</code> status and\nsuggest additional actions via <code>next_action</code>. If setup fails,\nthe SetupIntent will transition to the\n<code>requires_payment_method</code> status or the <code>canceled</code> status if the\nconfirmation limit is reached.</p>',
+      operationId: 'PostSetupIntentsIntentConfirm',
+    },
+  })
+  .post('/v1/setup_intents/:intent/verify_microdeposits', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostSetupIntentsIntentVerifyMicrodepositsParams,
+    body: V1Model.PostSetupIntentsIntentVerifyMicrodepositsBody,
+    response: { 200: 'SetupIntent', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Verify microdeposits on a SetupIntent',
+      description: '<p>Verifies microdeposits on a SetupIntent object.</p>',
+      operationId: 'PostSetupIntentsIntentVerifyMicrodeposits',
+    },
+  })
+  .get('/v1/shipping_rates', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetShippingRatesQuery,
+    body: V1Model.GetShippingRatesBody,
+    response: { 200: V1Model.GetShippingRatesResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List all shipping rates',
+      description: '<p>Returns a list of your shipping rates.</p>',
+      operationId: 'GetShippingRates',
+    },
+  })
+  .post('/v1/shipping_rates', ({ body }) => { throw new Error('Not implemented') }, {
+    body: V1Model.PostShippingRatesBody,
+    response: { 200: 'ShippingRate', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Create a shipping rate',
+      description: '<p>Creates a new shipping rate object.</p>',
+      operationId: 'PostShippingRates',
+    },
+  })
+  .get('/v1/shipping_rates/:shipping_rate_token', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetShippingRatesShippingRateTokenParams,
+    query: V1Model.GetShippingRatesShippingRateTokenQuery,
+    body: V1Model.GetShippingRatesShippingRateTokenBody,
+    response: { 200: 'ShippingRate', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve a shipping rate',
+      description: '<p>Returns the shipping rate object with the given ID.</p>',
+      operationId: 'GetShippingRatesShippingRateToken',
+    },
+  })
+  .post('/v1/shipping_rates/:shipping_rate_token', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostShippingRatesShippingRateTokenParams,
+    body: V1Model.PostShippingRatesShippingRateTokenBody,
+    response: { 200: 'ShippingRate', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Update a shipping rate',
+      description: '<p>Updates an existing shipping rate object.</p>',
+      operationId: 'PostShippingRatesShippingRateToken',
+    },
+  })
+  .post('/v1/sigma/saved_queries/:id', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostSigmaSavedQueriesIdParams,
+    body: V1Model.PostSigmaSavedQueriesIdBody,
+    response: { 200: 'SigmaSigmaApiQuery', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Update an existing Sigma Query',
+      description: '<p>Update an existing Sigma query that previously exists</p>',
+      operationId: 'PostSigmaSavedQueriesId',
+    },
+  })
+  .get('/v1/sigma/scheduled_query_runs', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetSigmaScheduledQueryRunsQuery,
+    body: V1Model.GetSigmaScheduledQueryRunsBody,
+    response: { 200: V1Model.GetSigmaScheduledQueryRunsResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List all scheduled query runs',
+      description: '<p>Returns a list of scheduled query runs.</p>',
+      operationId: 'GetSigmaScheduledQueryRuns',
+    },
+  })
+  .get('/v1/sigma/scheduled_query_runs/:scheduled_query_run', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetSigmaScheduledQueryRunsScheduledQueryRunParams,
+    query: V1Model.GetSigmaScheduledQueryRunsScheduledQueryRunQuery,
+    body: V1Model.GetSigmaScheduledQueryRunsScheduledQueryRunBody,
+    response: { 200: 'ScheduledQueryRun', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve a scheduled query run',
+      description: '<p>Retrieves the details of a scheduled query run.</p>',
+      operationId: 'GetSigmaScheduledQueryRunsScheduledQueryRun',
+    },
+  })
+  .post('/v1/sources', ({ body }) => { throw new Error('Not implemented') }, {
+    body: V1Model.PostSourcesBody,
+    response: { 200: 'Source', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Create a source',
+      description: '<p>Creates a new source object.</p>',
+      operationId: 'PostSources',
+    },
+  })
+  .get('/v1/sources/:source', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetSourcesSourceParams,
+    query: V1Model.GetSourcesSourceQuery,
+    body: V1Model.GetSourcesSourceBody,
+    response: { 200: 'Source', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve a source',
+      description:
+        '<p>Retrieves an existing source object. Supply the unique source ID from a source creation request and Stripe will return the corresponding up-to-date source object information.</p>',
+      operationId: 'GetSourcesSource',
+    },
+  })
+  .post('/v1/sources/:source', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostSourcesSourceParams,
+    body: V1Model.PostSourcesSourceBody,
+    response: { 200: 'Source', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Update a source',
+      description:
+        '<p>Updates the specified source by setting the values of the parameters passed. Any parameters not provided will be left unchanged.</p>\n\n<p>This request accepts the <code>metadata</code> and <code>owner</code> as arguments. It is also possible to update type specific information for selected payment methods. Please refer to our <a href="/docs/sources">payment method guides</a> for more detail.</p>',
+      operationId: 'PostSourcesSource',
+    },
+  })
+  .get(
+    '/v1/sources/:source/mandate_notifications/:mandate_notification',
+    ({ params, query, body }) => { throw new Error('Not implemented') },
+    {
+      params: V1Model.GetSourcesSourceMandateNotificationsMandateNotificationParams,
+      query: V1Model.GetSourcesSourceMandateNotificationsMandateNotificationQuery,
+      body: V1Model.GetSourcesSourceMandateNotificationsMandateNotificationBody,
+      response: { 200: 'SourceMandateNotification', default: 'Error' },
+      detail: {
+        tags: [],
+        summary: 'Retrieve a Source MandateNotification',
+        description: '<p>Retrieves a new Source MandateNotification.</p>',
+        operationId: 'GetSourcesSourceMandateNotificationsMandateNotification',
+      },
+    },
+  )
+  .get('/v1/sources/:source/source_transactions', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetSourcesSourceSourceTransactionsParams,
+    query: V1Model.GetSourcesSourceSourceTransactionsQuery,
+    body: V1Model.GetSourcesSourceSourceTransactionsBody,
+    response: { 200: V1Model.GetSourcesSourceSourceTransactionsResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      description: '<p>List source transactions for a given source.</p>',
+      operationId: 'GetSourcesSourceSourceTransactions',
+    },
+  })
+  .get(
+    '/v1/sources/:source/source_transactions/:source_transaction',
+    ({ params, query, body }) => { throw new Error('Not implemented') },
+    {
+      params: V1Model.GetSourcesSourceSourceTransactionsSourceTransactionParams,
+      query: V1Model.GetSourcesSourceSourceTransactionsSourceTransactionQuery,
+      body: V1Model.GetSourcesSourceSourceTransactionsSourceTransactionBody,
+      response: { 200: 'SourceTransaction', default: 'Error' },
+      detail: {
+        tags: [],
+        summary: 'Retrieve a source transaction',
+        description:
+          '<p>Retrieve an existing source transaction object. Supply the unique source ID from a source creation request and the source transaction ID and Stripe will return the corresponding up-to-date source object information.</p>',
+        operationId: 'GetSourcesSourceSourceTransactionsSourceTransaction',
+      },
+    },
+  )
+  .post('/v1/sources/:source/verify', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostSourcesSourceVerifyParams,
+    body: V1Model.PostSourcesSourceVerifyBody,
+    response: { 200: 'Source', default: 'Error' },
+    detail: {
+      tags: [],
+      description: '<p>Verify a given source.</p>',
+      operationId: 'PostSourcesSourceVerify',
+    },
+  })
+  .get('/v1/subscription_items', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetSubscriptionItemsQuery,
+    body: V1Model.GetSubscriptionItemsBody,
+    response: { 200: V1Model.GetSubscriptionItemsResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List all subscription items',
+      description: '<p>Returns a list of your subscription items for a given subscription.</p>',
+      operationId: 'GetSubscriptionItems',
+    },
+  })
+  .post('/v1/subscription_items', ({ body }) => { throw new Error('Not implemented') }, {
+    body: V1Model.PostSubscriptionItemsBody,
+    response: { 200: 'SubscriptionItem', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Create a subscription item',
+      description:
+        '<p>Adds a new item to an existing subscription. No existing items will be changed or replaced.</p>',
+      operationId: 'PostSubscriptionItems',
+    },
+  })
+  .get('/v1/subscription_items/:item', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetSubscriptionItemsItemParams,
+    query: V1Model.GetSubscriptionItemsItemQuery,
+    body: V1Model.GetSubscriptionItemsItemBody,
+    response: { 200: 'SubscriptionItem', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve a subscription item',
+      description: '<p>Retrieves the subscription item with the given ID.</p>',
+      operationId: 'GetSubscriptionItemsItem',
+    },
+  })
+  .post('/v1/subscription_items/:item', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostSubscriptionItemsItemParams,
+    body: V1Model.PostSubscriptionItemsItemBody,
+    response: { 200: 'SubscriptionItem', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Update a subscription item',
+      description: '<p>Updates the plan or quantity of an item on a current subscription.</p>',
+      operationId: 'PostSubscriptionItemsItem',
+    },
+  })
+  .delete('/v1/subscription_items/:item', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.DeleteSubscriptionItemsItemParams,
+    body: V1Model.DeleteSubscriptionItemsItemBody,
+    response: { 200: 'DeletedSubscriptionItem', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Delete a subscription item',
+      description:
+        '<p>Deletes an item from the subscription. Removing a subscription item from a subscription will not cancel the subscription.</p>',
+      operationId: 'DeleteSubscriptionItemsItem',
+    },
+  })
+  .get('/v1/subscription_schedules', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetSubscriptionSchedulesQuery,
+    body: V1Model.GetSubscriptionSchedulesBody,
+    response: { 200: V1Model.GetSubscriptionSchedulesResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List all schedules',
+      description: '<p>Retrieves the list of your subscription schedules.</p>',
+      operationId: 'GetSubscriptionSchedules',
+    },
+  })
+  .post('/v1/subscription_schedules', ({ body }) => { throw new Error('Not implemented') }, {
+    body: V1Model.PostSubscriptionSchedulesBody,
+    response: { 200: 'SubscriptionSchedule', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Create a schedule',
+      description:
+        '<p>Creates a new subscription schedule object. Each customer can have up to 500 active or scheduled subscriptions.</p>',
+      operationId: 'PostSubscriptionSchedules',
+    },
+  })
+  .get('/v1/subscription_schedules/:schedule', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetSubscriptionSchedulesScheduleParams,
+    query: V1Model.GetSubscriptionSchedulesScheduleQuery,
+    body: V1Model.GetSubscriptionSchedulesScheduleBody,
+    response: { 200: 'SubscriptionSchedule', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve a schedule',
+      description:
+        '<p>Retrieves the details of an existing subscription schedule. You only need to supply the unique subscription schedule identifier that was returned upon subscription schedule creation.</p>',
+      operationId: 'GetSubscriptionSchedulesSchedule',
+    },
+  })
+  .post('/v1/subscription_schedules/:schedule', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostSubscriptionSchedulesScheduleParams,
+    body: V1Model.PostSubscriptionSchedulesScheduleBody,
+    response: { 200: 'SubscriptionSchedule', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Update a schedule',
+      description: '<p>Updates an existing subscription schedule.</p>',
+      operationId: 'PostSubscriptionSchedulesSchedule',
+    },
+  })
+  .post('/v1/subscription_schedules/:schedule/cancel', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostSubscriptionSchedulesScheduleCancelParams,
+    body: V1Model.PostSubscriptionSchedulesScheduleCancelBody,
+    response: { 200: 'SubscriptionSchedule', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Cancel a schedule',
+      description:
+        '<p>Cancels a subscription schedule and its associated subscription immediately (if the subscription schedule has an active subscription). A subscription schedule can only be canceled if its status is <code>not_started</code> or <code>active</code>.</p>',
+      operationId: 'PostSubscriptionSchedulesScheduleCancel',
+    },
+  })
+  .post('/v1/subscription_schedules/:schedule/release', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostSubscriptionSchedulesScheduleReleaseParams,
+    body: V1Model.PostSubscriptionSchedulesScheduleReleaseBody,
+    response: { 200: 'SubscriptionSchedule', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Release a schedule',
+      description:
+        '<p>Releases the subscription schedule immediately, which will stop scheduling of its phases, but leave any existing subscription in place. A schedule can only be released if its status is <code>not_started</code> or <code>active</code>. If the subscription schedule is currently associated with a subscription, releasing it will remove its <code>subscription</code> property and set the subscription’s ID to the <code>released_subscription</code> property.</p>',
+      operationId: 'PostSubscriptionSchedulesScheduleRelease',
+    },
+  })
+  .get('/v1/subscriptions', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetSubscriptionsQuery,
+    body: V1Model.GetSubscriptionsBody,
+    response: { 200: V1Model.GetSubscriptionsResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List subscriptions',
+      description:
+        '<p>By default, returns a list of subscriptions that have not been canceled. In order to list canceled subscriptions, specify <code>status=canceled</code>.</p>',
+      operationId: 'GetSubscriptions',
+    },
+  })
+  .post('/v1/subscriptions', ({ body }) => { throw new Error('Not implemented') }, {
+    body: V1Model.PostSubscriptionsBody,
+    response: { 200: 'Subscription', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Create a subscription',
+      description:
+        '<p>Creates a new subscription on an existing customer. Each customer can have up to 500 active or scheduled subscriptions.</p>\n\n<p>When you create a subscription with <code>collection_method=charge_automatically</code>, the first invoice is finalized as part of the request.\nThe <code>payment_behavior</code> parameter determines the exact behavior of the initial payment.</p>\n\n<p>To start subscriptions where the first invoice always begins in a <code>draft</code> status, use <a href="/docs/billing/subscriptions/subscription-schedules#managing">subscription schedules</a> instead.\nSchedules provide the flexibility to model more complex billing configurations that change over time.</p>',
+      operationId: 'PostSubscriptions',
+    },
+  })
+  .get('/v1/subscriptions/search', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetSubscriptionsSearchQuery,
+    body: V1Model.GetSubscriptionsSearchBody,
+    response: { 200: V1Model.GetSubscriptionsSearchResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Search subscriptions',
+      description:
+        '<p>Search for subscriptions you’ve previously created using Stripe’s <a href="/docs/search#search-query-language">Search Query Language</a>.\nDon’t use search in read-after-write flows where strict consistency is necessary. Under normal operating\nconditions, data is searchable in less than a minute. Occasionally, propagation of new or updated data can be up\nto an hour behind during outages. Search functionality is not available to merchants in India.</p>',
+      operationId: 'GetSubscriptionsSearch',
+    },
+  })
+  .get('/v1/subscriptions/:subscription_exposed_id', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetSubscriptionsSubscriptionExposedIdParams,
+    query: V1Model.GetSubscriptionsSubscriptionExposedIdQuery,
+    body: V1Model.GetSubscriptionsSubscriptionExposedIdBody,
+    response: { 200: 'Subscription', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve a subscription',
+      description: '<p>Retrieves the subscription with the given ID.</p>',
+      operationId: 'GetSubscriptionsSubscriptionExposedId',
+    },
+  })
+  .post('/v1/subscriptions/:subscription_exposed_id', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostSubscriptionsSubscriptionExposedIdParams,
+    body: V1Model.PostSubscriptionsSubscriptionExposedIdBody,
+    response: { 200: 'Subscription', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Update a subscription',
+      description:
+        '<p>Updates an existing subscription to match the specified parameters.\nWhen changing prices or quantities, we optionally prorate the price we charge next month to make up for any price changes.\nTo preview how the proration is calculated, use the <a href="/docs/api/invoices/create_preview">create preview</a> endpoint.</p>\n\n<p>By default, we prorate subscription changes. For example, if a customer signs up on May 1 for a <currency>100</currency> price, they’ll be billed <currency>100</currency> immediately. If on May 15 they switch to a <currency>200</currency> price, then on June 1 they’ll be billed <currency>250</currency> (<currency>200</currency> for a renewal of her subscription, plus a <currency>50</currency> prorating adjustment for half of the previous month’s <currency>100</currency> difference). Similarly, a downgrade generates a credit that is applied to the next invoice. We also prorate when you make quantity changes. You can also <a href="/billing/scripts/stripe-authored/proration">use scripts to prorate your billing</a>. To learn more, see <a href="/billing/subscriptions/prorations">Prorations</a>.</p>\n\n<p>Switching prices does not normally change the billing date or generate an immediate charge unless:</p>\n\n<ul>\n<li>The billing interval is changed (for example, from monthly to yearly).</li>\n<li>The subscription moves from free to paid.</li>\n<li>A trial starts or ends.</li>\n</ul>\n\n<p>In these cases, we apply a credit for the unused time on the previous price, immediately charge the customer using the new price, and reset the billing date. Learn about how <a href="/docs/billing/subscriptions/upgrade-downgrade#immediate-payment">Stripe immediately attempts payment for subscription changes</a>.</p>\n\n<p>If you want to charge for an upgrade immediately, pass <code>proration_behavior</code> as <code>always_invoice</code> to create prorations, automatically invoice the customer for those proration adjustments, and attempt to collect payment. If you pass <code>create_prorations</code>, the prorations are created but not automatically invoiced. If you want to bill the customer for the prorations before the subscription’s renewal date, you need to manually <a href="/docs/api/invoices/create">invoice the customer</a>.</p>\n\n<p>If you don’t want to prorate, set the <code>proration_behavior</code> option to <code>none</code>. With this option, the customer is billed <currency>100</currency> on May 1 and <currency>200</currency> on June 1. Similarly, if you set <code>proration_behavior</code> to <code>none</code> when switching between different billing intervals (for example, from monthly to yearly), we don’t generate any credits for the old subscription’s unused time. We still reset the billing date and bill immediately for the new subscription.</p>\n\n<p>Updating the quantity on a subscription many times in an hour may result in <a href="/docs/rate-limits">rate limiting</a>. If you need to bill for a frequently changing quantity, consider integrating <a href="/docs/billing/subscriptions/usage-based">usage-based billing</a> instead.</p>',
+      operationId: 'PostSubscriptionsSubscriptionExposedId',
+    },
+  })
+  .delete('/v1/subscriptions/:subscription_exposed_id', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.DeleteSubscriptionsSubscriptionExposedIdParams,
+    body: V1Model.DeleteSubscriptionsSubscriptionExposedIdBody,
+    response: { 200: 'Subscription', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Cancel a subscription',
+      description:
+        '<p>Cancels a customer’s subscription immediately. The customer won’t be charged again for the subscription. After it’s canceled, the subscription is largely immutable. You can still update its <a href="/metadata">metadata</a> and <code>cancellation_details</code>.</p>\n\n<p>Any pending invoice items that you’ve created are still charged at the end of the period, unless manually <a href="/api/invoiceitems/delete">deleted</a>. If you’ve set the subscription to cancel at the end of the period, any pending prorations are also left in place and collected at the end of the period. But if the subscription is set to cancel immediately, pending prorations are removed if <code>invoice_now</code> and <code>prorate</code> are both set to false.</p>\n\n<p>By default, upon subscription cancellation, Stripe stops automatic collection of all finalized invoices for the customer. This is intended to prevent unexpected payment attempts after the customer has canceled a subscription. However, you can resume automatic collection of the invoices manually after subscription cancellation to have us proceed. Or, you could check for unpaid invoices before allowing the customer to cancel the subscription at all.</p>',
+      operationId: 'DeleteSubscriptionsSubscriptionExposedId',
+    },
+  })
+  .delete('/v1/subscriptions/:subscription_exposed_id/discount', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.DeleteSubscriptionsSubscriptionExposedIdDiscountParams,
+    body: V1Model.DeleteSubscriptionsSubscriptionExposedIdDiscountBody,
+    response: { 200: 'DeletedDiscount', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Delete a subscription discount',
+      description: '<p>Removes the currently applied discount on a subscription.</p>',
+      operationId: 'DeleteSubscriptionsSubscriptionExposedIdDiscount',
+    },
+  })
+  .post('/v1/subscriptions/:subscription_exposed_id/migrate', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostSubscriptionsSubscriptionMigrateParams,
+    body: V1Model.PostSubscriptionsSubscriptionMigrateBody,
+    response: { 200: 'Subscription', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Migrate a subscription',
+      description: '<p>Upgrade the billing_mode of an existing subscription.</p>',
+      operationId: 'PostSubscriptionsSubscriptionMigrate',
+    },
+  })
+  .post('/v1/subscriptions/:subscription_exposed_id/pause', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostSubscriptionsSubscriptionPauseParams,
+    body: V1Model.PostSubscriptionsSubscriptionPauseBody,
+    response: { 200: 'Subscription', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Pause a subscription',
+      description:
+        '<p>Pauses a subscription by transitioning it to the paused status. A paused subscription does not generate invoices and will not advance to new billing periods. The subscription can be resumed later using the resume endpoint. Cannot pause subscriptions with attached schedules.</p>',
+      operationId: 'PostSubscriptionsSubscriptionPause',
+    },
+  })
+  .post('/v1/subscriptions/:subscription_exposed_id/resume', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostSubscriptionsSubscriptionResumeParams,
+    body: V1Model.PostSubscriptionsSubscriptionResumeBody,
+    response: { 200: 'Subscription', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Resume a subscription',
+      description:
+        '<p>Initiates resumption of a paused subscription, optionally resetting the billing cycle anchor and creating prorations. Resume is only available for subscriptions that use <code>charge_automatically</code> collection. If Stripe doesn’t generate a resumption invoice, the subscription becomes <code>active</code> immediately. When a resumption invoice is generated, Stripe finalizes it immediately. If the invoice is paid or marked uncollectible, the subscription becomes <code>active</code>. If the invoice is manually voided, the subscription stays <code>paused</code>. If there is no payment attempt within 23 hours, Stripe voids the invoice and the subscription stays <code>paused</code>. Learn more about <a href="/docs/billing/subscriptions/pause#resume-subscriptions">resuming subscriptions</a>.</p>',
+      operationId: 'PostSubscriptionsSubscriptionResume',
+    },
+  })
+  .get('/v1/tax/associations/find', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetTaxAssociationsFindQuery,
+    body: V1Model.GetTaxAssociationsFindBody,
+    response: { 200: 'TaxAssociation', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Find a Tax Association',
+      description: '<p>Finds a tax association object by PaymentIntent id.</p>',
+      operationId: 'GetTaxAssociationsFind',
+    },
+  })
+  .post('/v1/tax/calculations', ({ body }) => { throw new Error('Not implemented') }, {
+    body: V1Model.PostTaxCalculationsBody,
+    response: { 200: 'TaxCalculation', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Create a Calculation',
+      description:
+        '<p>Calculates tax based on the input and returns a Tax <code>Calculation</code> object.</p>',
+      operationId: 'PostTaxCalculations',
+    },
+  })
+  .get('/v1/tax/calculations/:calculation', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetTaxCalculationsCalculationParams,
+    query: V1Model.GetTaxCalculationsCalculationQuery,
+    body: V1Model.GetTaxCalculationsCalculationBody,
+    response: { 200: 'TaxCalculation', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve a Calculation',
+      description:
+        '<p>Retrieves a Tax <code>Calculation</code> object, if the calculation hasn’t expired.</p>',
+      operationId: 'GetTaxCalculationsCalculation',
+    },
+  })
+  .get('/v1/tax/calculations/:calculation/line_items', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetTaxCalculationsCalculationLineItemsParams,
+    query: V1Model.GetTaxCalculationsCalculationLineItemsQuery,
+    body: V1Model.GetTaxCalculationsCalculationLineItemsBody,
+    response: { 200: V1Model.GetTaxCalculationsCalculationLineItemsResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: "Retrieve a Calculation's line items",
+      description:
+        '<p>Retrieves the line items of a tax calculation as a collection, if the calculation hasn’t expired.</p>',
+      operationId: 'GetTaxCalculationsCalculationLineItems',
+    },
+  })
+  .get('/v1/tax/locations', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetTaxLocationsQuery,
+    body: V1Model.GetTaxLocationsBody,
+    response: { 200: V1Model.GetTaxLocationsResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List tax locations',
+      description:
+        '<p>Retrieve a list of all tax locations. Tax locations can represent the venues for services, tickets, or other product types.</p>\n\n<p>The response includes detailed information for each tax location, such as its address, type, and description.</p>\n\n<p>You can paginate through the list by using the <code>limit</code> parameter to control the number of results returned in each request.</p>',
+      operationId: 'GetTaxLocations',
+    },
+  })
+  .post('/v1/tax/locations', ({ body }) => { throw new Error('Not implemented') }, {
+    body: V1Model.PostTaxLocationsBody,
+    response: { 200: 'TaxLocation', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Create a tax location',
+      description:
+        '<p>Create a tax location to use in calculating taxes for a service, ticket, or other type of product. The resulting object contains the ID, address, type, and description of the tax location.</p>',
+      operationId: 'PostTaxLocations',
+    },
+  })
+  .get('/v1/tax/locations/:location', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetTaxLocationsLocationParams,
+    query: V1Model.GetTaxLocationsLocationQuery,
+    body: V1Model.GetTaxLocationsLocationBody,
+    response: { 200: 'TaxLocation', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve a tax location',
+      description:
+        '<p>Fetch the details of a specific tax location using its unique identifier. Use a tax location to calculate taxes based on the location of the end product, such as a performance, instead of the customer address. For more details, check the <a href="https://docs.stripe.com/tax/tax-for-tickets/integration-guide">integration guide</a>.</p>',
+      operationId: 'GetTaxLocationsLocation',
+    },
+  })
+  .get('/v1/tax/registrations', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetTaxRegistrationsQuery,
+    body: V1Model.GetTaxRegistrationsBody,
+    response: { 200: V1Model.GetTaxRegistrationsResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List registrations',
+      description: '<p>Returns a list of Tax <code>Registration</code> objects.</p>',
+      operationId: 'GetTaxRegistrations',
+    },
+  })
+  .post('/v1/tax/registrations', ({ body }) => { throw new Error('Not implemented') }, {
+    body: V1Model.PostTaxRegistrationsBody,
+    response: { 200: 'TaxRegistration', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Create a registration',
+      description: '<p>Creates a new Tax <code>Registration</code> object.</p>',
+      operationId: 'PostTaxRegistrations',
+    },
+  })
+  .get('/v1/tax/registrations/:id', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetTaxRegistrationsIdParams,
+    query: V1Model.GetTaxRegistrationsIdQuery,
+    body: V1Model.GetTaxRegistrationsIdBody,
+    response: { 200: 'TaxRegistration', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve a registration',
+      description: '<p>Returns a Tax <code>Registration</code> object.</p>',
+      operationId: 'GetTaxRegistrationsId',
+    },
+  })
+  .post('/v1/tax/registrations/:id', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostTaxRegistrationsIdParams,
+    body: V1Model.PostTaxRegistrationsIdBody,
+    response: { 200: 'TaxRegistration', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Update a registration',
+      description:
+        '<p>Updates an existing Tax <code>Registration</code> object.</p>\n\n<p>A registration cannot be deleted after it has been created. If you wish to end a registration you may do so by setting <code>expires_at</code>.</p>',
+      operationId: 'PostTaxRegistrationsId',
+    },
+  })
+  .get('/v1/tax/settings', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetTaxSettingsQuery,
+    body: V1Model.GetTaxSettingsBody,
+    response: { 200: 'TaxSettings', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve settings',
+      description: '<p>Retrieves Tax <code>Settings</code> for a merchant.</p>',
+      operationId: 'GetTaxSettings',
+    },
+  })
+  .post('/v1/tax/settings', ({ body }) => { throw new Error('Not implemented') }, {
+    body: V1Model.PostTaxSettingsBody,
+    response: { 200: 'TaxSettings', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Update settings',
+      description:
+        '<p>Updates Tax <code>Settings</code> parameters used in tax calculations. All parameters are editable but none can be removed once set. Check the returned Tax <code>Settings</code> object and validate that its status is <code>active</code>.</p>',
+      operationId: 'PostTaxSettings',
+    },
+  })
+  .post('/v1/tax/transactions/create_from_calculation', ({ body }) => { throw new Error('Not implemented') }, {
+    body: V1Model.PostTaxTransactionsCreateFromCalculationBody,
+    response: { 200: 'TaxTransaction', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Create a Transaction from a Calculation',
+      description:
+        '<p>Creates a Tax Transaction from a calculation, if that calculation hasn’t expired. Calculations expire after 90 days.</p>',
+      operationId: 'PostTaxTransactionsCreateFromCalculation',
+    },
+  })
+  .post('/v1/tax/transactions/create_reversal', ({ body }) => { throw new Error('Not implemented') }, {
+    body: V1Model.PostTaxTransactionsCreateReversalBody,
+    response: { 200: 'TaxTransaction', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Create a reversal Transaction',
+      description:
+        '<p>Partially or fully reverses a previously created <code>Transaction</code>.</p>',
+      operationId: 'PostTaxTransactionsCreateReversal',
+    },
+  })
+  .get('/v1/tax/transactions/:transaction', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetTaxTransactionsTransactionParams,
+    query: V1Model.GetTaxTransactionsTransactionQuery,
+    body: V1Model.GetTaxTransactionsTransactionBody,
+    response: { 200: 'TaxTransaction', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve a Transaction',
+      description: '<p>Retrieves a Tax <code>Transaction</code> object.</p>',
+      operationId: 'GetTaxTransactionsTransaction',
+    },
+  })
+  .get('/v1/tax/transactions/:transaction/line_items', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetTaxTransactionsTransactionLineItemsParams,
+    query: V1Model.GetTaxTransactionsTransactionLineItemsQuery,
+    body: V1Model.GetTaxTransactionsTransactionLineItemsBody,
+    response: { 200: V1Model.GetTaxTransactionsTransactionLineItemsResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: "Retrieve a Transaction's line items",
+      description:
+        '<p>Retrieves the line items of a committed standalone transaction as a collection.</p>',
+      operationId: 'GetTaxTransactionsTransactionLineItems',
+    },
+  })
+  .get('/v1/tax_codes', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetTaxCodesQuery,
+    body: V1Model.GetTaxCodesBody,
+    response: { 200: V1Model.GetTaxCodesResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List all tax codes',
+      description:
+        '<p>A list of <a href="https://stripe.com/docs/tax/tax-categories">all tax codes available</a> to add to Products in order to allow specific tax calculations.</p>',
+      operationId: 'GetTaxCodes',
+    },
+  })
+  .get('/v1/tax_codes/:id', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetTaxCodesIdParams,
+    query: V1Model.GetTaxCodesIdQuery,
+    body: V1Model.GetTaxCodesIdBody,
+    response: { 200: 'TaxCode', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve a tax code',
+      description:
+        '<p>Retrieves the details of an existing tax code. Supply the unique tax code ID and Stripe will return the corresponding tax code information.</p>',
+      operationId: 'GetTaxCodesId',
+    },
+  })
+  .get('/v1/tax_ids', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetTaxIdsQuery,
+    body: V1Model.GetTaxIdsBody,
+    response: { 200: V1Model.GetTaxIdsResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List all tax IDs',
+      description: '<p>Returns a list of tax IDs.</p>',
+      operationId: 'GetTaxIds',
+    },
+  })
+  .post('/v1/tax_ids', ({ body }) => { throw new Error('Not implemented') }, {
+    body: V1Model.PostTaxIdsBody,
+    response: { 200: 'TaxId', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Create a tax ID',
+      description: '<p>Creates a new account or customer <code>tax_id</code> object.</p>',
+      operationId: 'PostTaxIds',
+    },
+  })
+  .get('/v1/tax_ids/:id', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetTaxIdsIdParams,
+    query: V1Model.GetTaxIdsIdQuery,
+    body: V1Model.GetTaxIdsIdBody,
+    response: { 200: 'TaxId', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve a tax ID',
+      description: '<p>Retrieves an account or customer <code>tax_id</code> object.</p>',
+      operationId: 'GetTaxIdsId',
+    },
+  })
+  .delete('/v1/tax_ids/:id', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.DeleteTaxIdsIdParams,
+    body: V1Model.DeleteTaxIdsIdBody,
+    response: { 200: 'DeletedTaxId', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Delete a tax ID',
+      description: '<p>Deletes an existing account or customer <code>tax_id</code> object.</p>',
+      operationId: 'DeleteTaxIdsId',
+    },
+  })
+  .get('/v1/tax_rates', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetTaxRatesQuery,
+    body: V1Model.GetTaxRatesBody,
+    response: { 200: V1Model.GetTaxRatesResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List all tax rates',
+      description:
+        '<p>Returns a list of your tax rates. Tax rates are returned sorted by creation date, with the most recently created tax rates appearing first.</p>',
+      operationId: 'GetTaxRates',
+    },
+  })
+  .post('/v1/tax_rates', ({ body }) => { throw new Error('Not implemented') }, {
+    body: V1Model.PostTaxRatesBody,
+    response: { 200: 'TaxRate', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Create a tax rate',
+      description: '<p>Creates a new tax rate.</p>',
+      operationId: 'PostTaxRates',
+    },
+  })
+  .get('/v1/tax_rates/:tax_rate', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetTaxRatesTaxRateParams,
+    query: V1Model.GetTaxRatesTaxRateQuery,
+    body: V1Model.GetTaxRatesTaxRateBody,
+    response: { 200: 'TaxRate', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve a tax rate',
+      description: '<p>Retrieves a tax rate with the given ID</p>',
+      operationId: 'GetTaxRatesTaxRate',
+    },
+  })
+  .post('/v1/tax_rates/:tax_rate', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostTaxRatesTaxRateParams,
+    body: V1Model.PostTaxRatesTaxRateBody,
+    response: { 200: 'TaxRate', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Update a tax rate',
+      description: '<p>Updates an existing tax rate.</p>',
+      operationId: 'PostTaxRatesTaxRate',
+    },
+  })
+  .get('/v1/terminal/configurations', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetTerminalConfigurationsQuery,
+    body: V1Model.GetTerminalConfigurationsBody,
+    response: { 200: V1Model.GetTerminalConfigurationsResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List all Configurations',
+      description: '<p>Returns a list of <code>Configuration</code> objects.</p>',
+      operationId: 'GetTerminalConfigurations',
+    },
+  })
+  .post('/v1/terminal/configurations', ({ body }) => { throw new Error('Not implemented') }, {
+    body: V1Model.PostTerminalConfigurationsBody,
+    response: { 200: 'TerminalConfiguration', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Create a Configuration',
+      description: '<p>Creates a new <code>Configuration</code> object.</p>',
+      operationId: 'PostTerminalConfigurations',
+    },
+  })
+  .get('/v1/terminal/configurations/:configuration', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetTerminalConfigurationsConfigurationParams,
+    query: V1Model.GetTerminalConfigurationsConfigurationQuery,
+    body: V1Model.GetTerminalConfigurationsConfigurationBody,
+    response: { 200: V1Model.GetTerminalConfigurationsConfigurationResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve a Configuration',
+      description: '<p>Retrieves a <code>Configuration</code> object.</p>',
+      operationId: 'GetTerminalConfigurationsConfiguration',
+    },
+  })
+  .post('/v1/terminal/configurations/:configuration', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostTerminalConfigurationsConfigurationParams,
+    body: V1Model.PostTerminalConfigurationsConfigurationBody,
+    response: { 200: V1Model.PostTerminalConfigurationsConfigurationResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Update a Configuration',
+      description: '<p>Updates a new <code>Configuration</code> object.</p>',
+      operationId: 'PostTerminalConfigurationsConfiguration',
+    },
+  })
+  .delete('/v1/terminal/configurations/:configuration', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.DeleteTerminalConfigurationsConfigurationParams,
+    body: V1Model.DeleteTerminalConfigurationsConfigurationBody,
+    response: { 200: 'DeletedTerminalConfiguration', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Delete a Configuration',
+      description: '<p>Deletes a <code>Configuration</code> object.</p>',
+      operationId: 'DeleteTerminalConfigurationsConfiguration',
+    },
+  })
+  .post('/v1/terminal/connection_tokens', ({ body }) => { throw new Error('Not implemented') }, {
+    body: V1Model.PostTerminalConnectionTokensBody,
+    response: { 200: 'TerminalConnectionToken', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Create a Connection Token',
+      description:
+        '<p>To connect to a reader the Stripe Terminal SDK needs to retrieve a short-lived connection token from Stripe, proxied through your server. On your backend, add an endpoint that creates and returns a connection token.</p>',
+      operationId: 'PostTerminalConnectionTokens',
+    },
+  })
+  .get('/v1/terminal/locations', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetTerminalLocationsQuery,
+    body: V1Model.GetTerminalLocationsBody,
+    response: { 200: V1Model.GetTerminalLocationsResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List all Locations',
+      description: '<p>Returns a list of <code>Location</code> objects.</p>',
+      operationId: 'GetTerminalLocations',
+    },
+  })
+  .post('/v1/terminal/locations', ({ body }) => { throw new Error('Not implemented') }, {
+    body: V1Model.PostTerminalLocationsBody,
+    response: { 200: 'TerminalLocation', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Create a Location',
+      description:
+        '<p>Creates a new <code>Location</code> object.\nFor further details, including which address fields are required in each country, see the <a href="/docs/terminal/fleet/locations">Manage locations</a> guide.</p>',
+      operationId: 'PostTerminalLocations',
+    },
+  })
+  .get('/v1/terminal/locations/:location', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetTerminalLocationsLocationParams,
+    query: V1Model.GetTerminalLocationsLocationQuery,
+    body: V1Model.GetTerminalLocationsLocationBody,
+    response: { 200: V1Model.GetTerminalLocationsLocationResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve a Location',
+      description: '<p>Retrieves a <code>Location</code> object.</p>',
+      operationId: 'GetTerminalLocationsLocation',
+    },
+  })
+  .post('/v1/terminal/locations/:location', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostTerminalLocationsLocationParams,
+    body: V1Model.PostTerminalLocationsLocationBody,
+    response: { 200: V1Model.PostTerminalLocationsLocationResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Update a Location',
+      description:
+        '<p>Updates a <code>Location</code> object by setting the values of the parameters passed. Any parameters not provided will be left unchanged.</p>',
+      operationId: 'PostTerminalLocationsLocation',
+    },
+  })
+  .delete('/v1/terminal/locations/:location', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.DeleteTerminalLocationsLocationParams,
+    body: V1Model.DeleteTerminalLocationsLocationBody,
+    response: { 200: 'DeletedTerminalLocation', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Delete a Location',
+      description: '<p>Deletes a <code>Location</code> object.</p>',
+      operationId: 'DeleteTerminalLocationsLocation',
+    },
+  })
+  .post('/v1/terminal/onboarding_links', ({ body }) => { throw new Error('Not implemented') }, {
+    body: V1Model.PostTerminalOnboardingLinksBody,
+    response: { 200: 'TerminalOnboardingLink', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Create an Onboarding Link',
+      description:
+        '<p>Creates a new <code>OnboardingLink</code> object that contains a redirect_url used for onboarding onto Tap to Pay on iPhone.</p>',
+      operationId: 'PostTerminalOnboardingLinks',
+    },
+  })
+  .get('/v1/terminal/readers', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetTerminalReadersQuery,
+    body: V1Model.GetTerminalReadersBody,
+    response: { 200: V1Model.GetTerminalReadersResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List all Readers',
+      description: '<p>Returns a list of <code>Reader</code> objects.</p>',
+      operationId: 'GetTerminalReaders',
+    },
+  })
+  .post('/v1/terminal/readers', ({ body }) => { throw new Error('Not implemented') }, {
+    body: V1Model.PostTerminalReadersBody,
+    response: { 200: 'TerminalReader', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Create a Reader',
+      description: '<p>Creates a new <code>Reader</code> object.</p>',
+      operationId: 'PostTerminalReaders',
+    },
+  })
+  .get('/v1/terminal/readers/:reader', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetTerminalReadersReaderParams,
+    query: V1Model.GetTerminalReadersReaderQuery,
+    body: V1Model.GetTerminalReadersReaderBody,
+    response: { 200: V1Model.GetTerminalReadersReaderResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve a Reader',
+      description: '<p>Retrieves a <code>Reader</code> object.</p>',
+      operationId: 'GetTerminalReadersReader',
+    },
+  })
+  .post('/v1/terminal/readers/:reader', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostTerminalReadersReaderParams,
+    body: V1Model.PostTerminalReadersReaderBody,
+    response: { 200: V1Model.PostTerminalReadersReaderResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Update a Reader',
+      description:
+        '<p>Updates a <code>Reader</code> object by setting the values of the parameters passed. Any parameters not provided will be left unchanged.</p>',
+      operationId: 'PostTerminalReadersReader',
+    },
+  })
+  .delete('/v1/terminal/readers/:reader', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.DeleteTerminalReadersReaderParams,
+    body: V1Model.DeleteTerminalReadersReaderBody,
+    response: { 200: 'DeletedTerminalReader', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Delete a Reader',
+      description: '<p>Deletes a <code>Reader</code> object.</p>',
+      operationId: 'DeleteTerminalReadersReader',
+    },
+  })
+  .post('/v1/terminal/readers/:reader/cancel_action', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostTerminalReadersReaderCancelActionParams,
+    body: V1Model.PostTerminalReadersReaderCancelActionBody,
+    response: { 200: V1Model.PostTerminalReadersReaderCancelActionResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Cancel the current reader action',
+      description:
+        '<p>Cancels the current reader action. See <a href="/docs/terminal/payments/collect-card-payment?terminal-sdk-platform=server-driven#programmatic-cancellation">Programmatic Cancellation</a> for more details.</p>',
+      operationId: 'PostTerminalReadersReaderCancelAction',
+    },
+  })
+  .post('/v1/terminal/readers/:reader/collect_inputs', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostTerminalReadersReaderCollectInputsParams,
+    body: V1Model.PostTerminalReadersReaderCollectInputsBody,
+    response: { 200: 'TerminalReader', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Collect inputs using a Reader',
+      description:
+        '<p>Initiates an <a href="/docs/terminal/features/collect-inputs">input collection flow</a> on a Reader to display input forms and collect information from your customers.</p>',
+      operationId: 'PostTerminalReadersReaderCollectInputs',
+    },
+  })
+  .post('/v1/terminal/readers/:reader/collect_payment_method', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostTerminalReadersReaderCollectPaymentMethodParams,
+    body: V1Model.PostTerminalReadersReaderCollectPaymentMethodBody,
+    response: { 200: 'TerminalReader', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Hand off a PaymentIntent to a Reader and collect card details',
+      description:
+        '<p>Initiates a payment flow on a Reader and updates the PaymentIntent with card details before manual confirmation. See <a href="/docs/terminal/payments/collect-card-payment?terminal-sdk-platform=server-driven&process=inspect#collect-a-paymentmethod">Collecting a Payment method</a> for more details.</p>',
+      operationId: 'PostTerminalReadersReaderCollectPaymentMethod',
+    },
+  })
+  .post('/v1/terminal/readers/:reader/confirm_payment_intent', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostTerminalReadersReaderConfirmPaymentIntentParams,
+    body: V1Model.PostTerminalReadersReaderConfirmPaymentIntentBody,
+    response: { 200: 'TerminalReader', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Confirm a PaymentIntent on the Reader',
+      description:
+        '<p>Finalizes a payment on a Reader. See <a href="/docs/terminal/payments/collect-card-payment?terminal-sdk-platform=server-driven&process=inspect#confirm-the-paymentintent">Confirming a Payment</a> for more details.</p>',
+      operationId: 'PostTerminalReadersReaderConfirmPaymentIntent',
+    },
+  })
+  .post('/v1/terminal/readers/:reader/process_payment_intent', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostTerminalReadersReaderProcessPaymentIntentParams,
+    body: V1Model.PostTerminalReadersReaderProcessPaymentIntentBody,
+    response: { 200: 'TerminalReader', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Hand-off a PaymentIntent to a Reader',
+      description:
+        '<p>Initiates a payment flow on a Reader. See <a href="/docs/terminal/payments/collect-card-payment?terminal-sdk-platform=server-driven&process=immediately#process-payment">process the payment</a> for more details.</p>',
+      operationId: 'PostTerminalReadersReaderProcessPaymentIntent',
+    },
+  })
+  .post('/v1/terminal/readers/:reader/process_setup_intent', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostTerminalReadersReaderProcessSetupIntentParams,
+    body: V1Model.PostTerminalReadersReaderProcessSetupIntentBody,
+    response: { 200: 'TerminalReader', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Hand-off a SetupIntent to a Reader',
+      description:
+        '<p>Initiates a SetupIntent flow on a Reader. See <a href="/docs/terminal/features/saving-payment-details/save-directly">Save directly without charging</a> for more details.</p>',
+      operationId: 'PostTerminalReadersReaderProcessSetupIntent',
+    },
+  })
+  .post('/v1/terminal/readers/:reader/refund_payment', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostTerminalReadersReaderRefundPaymentParams,
+    body: V1Model.PostTerminalReadersReaderRefundPaymentBody,
+    response: { 200: 'TerminalReader', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Refund a Charge or a PaymentIntent in-person',
+      description:
+        '<p>Initiates an in-person refund on a Reader. See <a href="/docs/terminal/payments/regional?integration-country=CA#refund-an-interac-payment">Refund an Interac Payment</a> for more details.</p>',
+      operationId: 'PostTerminalReadersReaderRefundPayment',
+    },
+  })
+  .post('/v1/terminal/readers/:reader/set_reader_display', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostTerminalReadersReaderSetReaderDisplayParams,
+    body: V1Model.PostTerminalReadersReaderSetReaderDisplayBody,
+    response: { 200: 'TerminalReader', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Set reader display',
+      description:
+        '<p>Sets the reader display to show <a href="/docs/terminal/features/display">cart details</a>.</p>',
+      operationId: 'PostTerminalReadersReaderSetReaderDisplay',
+    },
+  })
+  .post('/v1/terminal/refunds', ({ body }) => { throw new Error('Not implemented') }, {
+    body: V1Model.PostTerminalRefundsBody,
+    response: { 200: 'TerminalRefund', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Create a refund using a Terminal-supported device.',
+      description:
+        '<p>Internal endpoint for terminal use to create a refund for a card_present or card charge.</p>\n\n<p>You can optionally refund only part of a charge.</p>',
+      operationId: 'PostTerminalRefunds',
+    },
+  })
+  .post('/v1/test_helpers/confirmation_tokens', ({ body }) => { throw new Error('Not implemented') }, {
+    body: V1Model.PostTestHelpersConfirmationTokensBody,
+    response: { 200: 'ConfirmationToken', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Create a test Confirmation Token',
+      description:
+        '<p>Creates a test mode Confirmation Token server side for your integration tests.</p>',
+      operationId: 'PostTestHelpersConfirmationTokens',
+    },
+  })
+  .post('/v1/test_helpers/customers/:customer/fund_cash_balance', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostTestHelpersCustomersCustomerFundCashBalanceParams,
+    body: V1Model.PostTestHelpersCustomersCustomerFundCashBalanceBody,
+    response: { 200: 'CustomerCashBalanceTransaction', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Fund a test mode cash balance',
+      description: '<p>Create an incoming testmode bank transfer</p>',
+      operationId: 'PostTestHelpersCustomersCustomerFundCashBalance',
+    },
+  })
+  .post('/v1/test_helpers/issuing/authorizations', ({ body }) => { throw new Error('Not implemented') }, {
+    body: V1Model.PostTestHelpersIssuingAuthorizationsBody,
+    response: { 200: 'IssuingAuthorization', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Create a test-mode authorization',
+      description: '<p>Create a test-mode authorization.</p>',
+      operationId: 'PostTestHelpersIssuingAuthorizations',
+    },
+  })
+  .post(
+    '/v1/test_helpers/issuing/authorizations/:authorization/capture',
+    ({ params, body }) => { throw new Error('Not implemented') },
+    {
+      params: V1Model.PostTestHelpersIssuingAuthorizationsAuthorizationCaptureParams,
+      body: V1Model.PostTestHelpersIssuingAuthorizationsAuthorizationCaptureBody,
+      response: { 200: 'IssuingAuthorization', default: 'Error' },
+      detail: {
+        tags: [],
+        summary: 'Capture a test-mode authorization',
+        description: '<p>Capture a test-mode authorization.</p>',
+        operationId: 'PostTestHelpersIssuingAuthorizationsAuthorizationCapture',
+      },
+    },
+  )
+  .post('/v1/test_helpers/issuing/authorizations/:authorization/expire', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostTestHelpersIssuingAuthorizationsAuthorizationExpireParams,
+    body: V1Model.PostTestHelpersIssuingAuthorizationsAuthorizationExpireBody,
+    response: { 200: 'IssuingAuthorization', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Expire a test-mode authorization',
+      description: '<p>Expire a test-mode Authorization.</p>',
+      operationId: 'PostTestHelpersIssuingAuthorizationsAuthorizationExpire',
+    },
+  })
+  .post(
+    '/v1/test_helpers/issuing/authorizations/:authorization/finalize_amount',
+    ({ params, body }) => { throw new Error('Not implemented') },
+    {
+      params: V1Model.PostTestHelpersIssuingAuthorizationsAuthorizationFinalizeAmountParams,
+      body: V1Model.PostTestHelpersIssuingAuthorizationsAuthorizationFinalizeAmountBody,
+      response: { 200: 'IssuingAuthorization', default: 'Error' },
+      detail: {
+        tags: [],
+        summary: "Finalize a test-mode authorization's amount",
+        description:
+          '<p>Finalize the amount on an Authorization prior to capture, when the initial authorization was for an estimated amount.</p>',
+        operationId: 'PostTestHelpersIssuingAuthorizationsAuthorizationFinalizeAmount',
+      },
+    },
+  )
+  .post(
+    '/v1/test_helpers/issuing/authorizations/:authorization/fraud_challenges/respond',
+    ({ params, body }) => { throw new Error('Not implemented') },
+    {
+      params: V1Model.PostTestHelpersIssuingAuthorizationsAuthorizationFraudChallengesRespondParams,
+      body: V1Model.PostTestHelpersIssuingAuthorizationsAuthorizationFraudChallengesRespondBody,
+      response: { 200: 'IssuingAuthorization', default: 'Error' },
+      detail: {
+        tags: [],
+        summary: 'Respond to fraud challenge',
+        description:
+          '<p>Respond to a fraud challenge on a testmode Issuing authorization, simulating either a confirmation of fraud or a correction of legitimacy.</p>',
+        operationId: 'PostTestHelpersIssuingAuthorizationsAuthorizationFraudChallengesRespond',
+      },
+    },
+  )
+  .post(
+    '/v1/test_helpers/issuing/authorizations/:authorization/increment',
+    ({ params, body }) => { throw new Error('Not implemented') },
+    {
+      params: V1Model.PostTestHelpersIssuingAuthorizationsAuthorizationIncrementParams,
+      body: V1Model.PostTestHelpersIssuingAuthorizationsAuthorizationIncrementBody,
+      response: { 200: 'IssuingAuthorization', default: 'Error' },
+      detail: {
+        tags: [],
+        summary: 'Increment a test-mode authorization',
+        description: '<p>Increment a test-mode Authorization.</p>',
+        operationId: 'PostTestHelpersIssuingAuthorizationsAuthorizationIncrement',
+      },
+    },
+  )
+  .post(
+    '/v1/test_helpers/issuing/authorizations/:authorization/reverse',
+    ({ params, body }) => { throw new Error('Not implemented') },
+    {
+      params: V1Model.PostTestHelpersIssuingAuthorizationsAuthorizationReverseParams,
+      body: V1Model.PostTestHelpersIssuingAuthorizationsAuthorizationReverseBody,
+      response: { 200: 'IssuingAuthorization', default: 'Error' },
+      detail: {
+        tags: [],
+        summary: 'Reverse a test-mode authorization',
+        description: '<p>Reverse a test-mode Authorization.</p>',
+        operationId: 'PostTestHelpersIssuingAuthorizationsAuthorizationReverse',
+      },
+    },
+  )
+  .post('/v1/test_helpers/issuing/cards/:card/shipping/deliver', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostTestHelpersIssuingCardsCardShippingDeliverParams,
+    body: V1Model.PostTestHelpersIssuingCardsCardShippingDeliverBody,
+    response: { 200: 'IssuingCard', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Deliver a testmode card',
+      description:
+        '<p>Updates the shipping status of the specified Issuing <code>Card</code> object to <code>delivered</code>.</p>',
+      operationId: 'PostTestHelpersIssuingCardsCardShippingDeliver',
+    },
+  })
+  .post('/v1/test_helpers/issuing/cards/:card/shipping/fail', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostTestHelpersIssuingCardsCardShippingFailParams,
+    body: V1Model.PostTestHelpersIssuingCardsCardShippingFailBody,
+    response: { 200: 'IssuingCard', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Fail a testmode card',
+      description:
+        '<p>Updates the shipping status of the specified Issuing <code>Card</code> object to <code>failure</code>.</p>',
+      operationId: 'PostTestHelpersIssuingCardsCardShippingFail',
+    },
+  })
+  .post('/v1/test_helpers/issuing/cards/:card/shipping/return', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostTestHelpersIssuingCardsCardShippingReturnParams,
+    body: V1Model.PostTestHelpersIssuingCardsCardShippingReturnBody,
+    response: { 200: 'IssuingCard', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Return a testmode card',
+      description:
+        '<p>Updates the shipping status of the specified Issuing <code>Card</code> object to <code>returned</code>.</p>',
+      operationId: 'PostTestHelpersIssuingCardsCardShippingReturn',
+    },
+  })
+  .post('/v1/test_helpers/issuing/cards/:card/shipping/ship', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostTestHelpersIssuingCardsCardShippingShipParams,
+    body: V1Model.PostTestHelpersIssuingCardsCardShippingShipBody,
+    response: { 200: 'IssuingCard', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Ship a testmode card',
+      description:
+        '<p>Updates the shipping status of the specified Issuing <code>Card</code> object to <code>shipped</code>.</p>',
+      operationId: 'PostTestHelpersIssuingCardsCardShippingShip',
+    },
+  })
+  .post('/v1/test_helpers/issuing/cards/:card/shipping/submit', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostTestHelpersIssuingCardsCardShippingSubmitParams,
+    body: V1Model.PostTestHelpersIssuingCardsCardShippingSubmitBody,
+    response: { 200: 'IssuingCard', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Submit a testmode card',
+      description:
+        '<p>Updates the shipping status of the specified Issuing <code>Card</code> object to <code>submitted</code>. This method requires Stripe Version ‘2024-09-30.acacia’ or later.</p>',
+      operationId: 'PostTestHelpersIssuingCardsCardShippingSubmit',
+    },
+  })
+  .post(
+    '/v1/test_helpers/issuing/personalization_designs/:personalization_design/activate',
+    ({ params, body }) => { throw new Error('Not implemented') },
+    {
+      params:
+        V1Model.PostTestHelpersIssuingPersonalizationDesignsPersonalizationDesignActivateParams,
+      body: V1Model.PostTestHelpersIssuingPersonalizationDesignsPersonalizationDesignActivateBody,
+      response: { 200: 'IssuingPersonalizationDesign', default: 'Error' },
+      detail: {
+        tags: [],
+        summary: 'Activate a testmode personalization design',
+        description:
+          '<p>Updates the <code>status</code> of the specified testmode personalization design object to <code>active</code>.</p>',
+        operationId: 'PostTestHelpersIssuingPersonalizationDesignsPersonalizationDesignActivate',
+      },
+    },
+  )
+  .post(
+    '/v1/test_helpers/issuing/personalization_designs/:personalization_design/deactivate',
+    ({ params, body }) => { throw new Error('Not implemented') },
+    {
+      params:
+        V1Model.PostTestHelpersIssuingPersonalizationDesignsPersonalizationDesignDeactivateParams,
+      body: V1Model.PostTestHelpersIssuingPersonalizationDesignsPersonalizationDesignDeactivateBody,
+      response: { 200: 'IssuingPersonalizationDesign', default: 'Error' },
+      detail: {
+        tags: [],
+        summary: 'Deactivate a testmode personalization design',
+        description:
+          '<p>Updates the <code>status</code> of the specified testmode personalization design object to <code>inactive</code>.</p>',
+        operationId: 'PostTestHelpersIssuingPersonalizationDesignsPersonalizationDesignDeactivate',
+      },
+    },
+  )
+  .post(
+    '/v1/test_helpers/issuing/personalization_designs/:personalization_design/reject',
+    ({ params, body }) => { throw new Error('Not implemented') },
+    {
+      params: V1Model.PostTestHelpersIssuingPersonalizationDesignsPersonalizationDesignRejectParams,
+      body: V1Model.PostTestHelpersIssuingPersonalizationDesignsPersonalizationDesignRejectBody,
+      response: { 200: 'IssuingPersonalizationDesign', default: 'Error' },
+      detail: {
+        tags: [],
+        summary: 'Reject a testmode personalization design',
+        description:
+          '<p>Updates the <code>status</code> of the specified testmode personalization design object to <code>rejected</code>.</p>',
+        operationId: 'PostTestHelpersIssuingPersonalizationDesignsPersonalizationDesignReject',
+      },
+    },
+  )
+  .post('/v1/test_helpers/issuing/settlements', ({ body }) => { throw new Error('Not implemented') }, {
+    body: V1Model.PostTestHelpersIssuingSettlementsBody,
+    response: { 200: 'IssuingSettlement', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Create a test-mode settlement',
+      description: '<p>Allows the user to create an Issuing settlement.</p>',
+      operationId: 'PostTestHelpersIssuingSettlements',
+    },
+  })
+  .post('/v1/test_helpers/issuing/settlements/:settlement/complete', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostTestHelpersIssuingSettlementsSettlementCompleteParams,
+    body: V1Model.PostTestHelpersIssuingSettlementsSettlementCompleteBody,
+    response: { 200: 'IssuingSettlement', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Complete a test-mode settlement',
+      description: '<p>Allows the user to mark an Issuing settlement as complete.</p>',
+      operationId: 'PostTestHelpersIssuingSettlementsSettlementComplete',
+    },
+  })
+  .post('/v1/test_helpers/issuing/transactions/create_force_capture', ({ body }) => { throw new Error('Not implemented') }, {
+    body: V1Model.PostTestHelpersIssuingTransactionsCreateForceCaptureBody,
+    response: { 200: 'IssuingTransaction', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Create a test-mode force capture',
+      description:
+        '<p>Allows the user to capture an arbitrary amount, also known as a forced capture.</p>',
+      operationId: 'PostTestHelpersIssuingTransactionsCreateForceCapture',
+    },
+  })
+  .post('/v1/test_helpers/issuing/transactions/create_unlinked_refund', ({ body }) => { throw new Error('Not implemented') }, {
+    body: V1Model.PostTestHelpersIssuingTransactionsCreateUnlinkedRefundBody,
+    response: { 200: 'IssuingTransaction', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Create a test-mode unlinked refund',
+      description:
+        '<p>Allows the user to refund an arbitrary amount, also known as a unlinked refund.</p>',
+      operationId: 'PostTestHelpersIssuingTransactionsCreateUnlinkedRefund',
+    },
+  })
+  .post('/v1/test_helpers/issuing/transactions/:transaction/refund', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostTestHelpersIssuingTransactionsTransactionRefundParams,
+    body: V1Model.PostTestHelpersIssuingTransactionsTransactionRefundBody,
+    response: { 200: 'IssuingTransaction', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Refund a test-mode transaction',
+      description: '<p>Refund a test-mode Transaction.</p>',
+      operationId: 'PostTestHelpersIssuingTransactionsTransactionRefund',
+    },
+  })
+  .post('/v1/test_helpers/refunds/:refund/expire', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostTestHelpersRefundsRefundExpireParams,
+    body: V1Model.PostTestHelpersRefundsRefundExpireBody,
+    response: { 200: 'Refund', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Expire a pending refund.',
+      description: '<p>Expire a refund with a status of <code>requires_action</code>.</p>',
+      operationId: 'PostTestHelpersRefundsRefundExpire',
+    },
+  })
+  .post(
+    '/v1/test_helpers/terminal/readers/:reader/present_payment_method',
+    ({ params, body }) => { throw new Error('Not implemented') },
+    {
+      params: V1Model.PostTestHelpersTerminalReadersReaderPresentPaymentMethodParams,
+      body: V1Model.PostTestHelpersTerminalReadersReaderPresentPaymentMethodBody,
+      response: { 200: 'TerminalReader', default: 'Error' },
+      detail: {
+        tags: [],
+        summary: 'Simulate presenting a payment method',
+        description:
+          '<p>Presents a payment method on a simulated reader. Can be used to simulate accepting a payment, saving a card or refunding a transaction.</p>',
+        operationId: 'PostTestHelpersTerminalReadersReaderPresentPaymentMethod',
+      },
+    },
+  )
+  .post(
+    '/v1/test_helpers/terminal/readers/:reader/succeed_input_collection',
+    ({ params, body }) => { throw new Error('Not implemented') },
+    {
+      params: V1Model.PostTestHelpersTerminalReadersReaderSucceedInputCollectionParams,
+      body: V1Model.PostTestHelpersTerminalReadersReaderSucceedInputCollectionBody,
+      response: { 200: 'TerminalReader', default: 'Error' },
+      detail: {
+        tags: [],
+        summary: 'Simulate a successful input collection',
+        description:
+          '<p>Use this endpoint to trigger a successful input collection on a simulated reader.</p>',
+        operationId: 'PostTestHelpersTerminalReadersReaderSucceedInputCollection',
+      },
+    },
+  )
+  .post(
+    '/v1/test_helpers/terminal/readers/:reader/timeout_input_collection',
+    ({ params, body }) => { throw new Error('Not implemented') },
+    {
+      params: V1Model.PostTestHelpersTerminalReadersReaderTimeoutInputCollectionParams,
+      body: V1Model.PostTestHelpersTerminalReadersReaderTimeoutInputCollectionBody,
+      response: { 200: 'TerminalReader', default: 'Error' },
+      detail: {
+        tags: [],
+        summary: 'Simulate an input collection timeout',
+        description:
+          '<p>Use this endpoint to complete an input collection with a timeout error on a simulated reader.</p>',
+        operationId: 'PostTestHelpersTerminalReadersReaderTimeoutInputCollection',
+      },
+    },
+  )
+  .get('/v1/test_helpers/test_clocks', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetTestHelpersTestClocksQuery,
+    body: V1Model.GetTestHelpersTestClocksBody,
+    response: { 200: V1Model.GetTestHelpersTestClocksResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List all test clocks',
+      description: '<p>Returns a list of your test clocks.</p>',
+      operationId: 'GetTestHelpersTestClocks',
+    },
+  })
+  .post('/v1/test_helpers/test_clocks', ({ body }) => { throw new Error('Not implemented') }, {
+    body: V1Model.PostTestHelpersTestClocksBody,
+    response: { 200: 'TestHelpersTestClock', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Create a test clock',
+      description:
+        '<p>Creates a new test clock that can be attached to new customers and quotes.</p>',
+      operationId: 'PostTestHelpersTestClocks',
+    },
+  })
+  .get('/v1/test_helpers/test_clocks/:test_clock', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetTestHelpersTestClocksTestClockParams,
+    query: V1Model.GetTestHelpersTestClocksTestClockQuery,
+    body: V1Model.GetTestHelpersTestClocksTestClockBody,
+    response: { 200: 'TestHelpersTestClock', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve a test clock',
+      description: '<p>Retrieves a test clock.</p>',
+      operationId: 'GetTestHelpersTestClocksTestClock',
+    },
+  })
+  .delete('/v1/test_helpers/test_clocks/:test_clock', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.DeleteTestHelpersTestClocksTestClockParams,
+    body: V1Model.DeleteTestHelpersTestClocksTestClockBody,
+    response: { 200: 'DeletedTestHelpersTestClock', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Delete a test clock',
+      description: '<p>Deletes a test clock.</p>',
+      operationId: 'DeleteTestHelpersTestClocksTestClock',
+    },
+  })
+  .post('/v1/test_helpers/test_clocks/:test_clock/advance', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostTestHelpersTestClocksTestClockAdvanceParams,
+    body: V1Model.PostTestHelpersTestClocksTestClockAdvanceBody,
+    response: { 200: 'TestHelpersTestClock', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Advance a test clock',
+      description:
+        '<p>Starts advancing a test clock to a specified time in the future. Advancement is done when status changes to <code>Ready</code>.</p>',
+      operationId: 'PostTestHelpersTestClocksTestClockAdvance',
+    },
+  })
+  .post('/v1/test_helpers/treasury/inbound_transfers/:id/fail', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostTestHelpersTreasuryInboundTransfersIdFailParams,
+    body: V1Model.PostTestHelpersTreasuryInboundTransfersIdFailBody,
+    response: { 200: 'TreasuryInboundTransfer', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Test mode: Fail an InboundTransfer',
+      description:
+        '<p>Transitions a test mode created InboundTransfer to the <code>failed</code> status. The InboundTransfer must already be in the <code>processing</code> state.</p>',
+      operationId: 'PostTestHelpersTreasuryInboundTransfersIdFail',
+    },
+  })
+  .post('/v1/test_helpers/treasury/inbound_transfers/:id/return', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostTestHelpersTreasuryInboundTransfersIdReturnParams,
+    body: V1Model.PostTestHelpersTreasuryInboundTransfersIdReturnBody,
+    response: { 200: 'TreasuryInboundTransfer', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Test mode: Return an InboundTransfer',
+      description:
+        '<p>Marks the test mode InboundTransfer object as returned and links the InboundTransfer to a ReceivedDebit. The InboundTransfer must already be in the <code>succeeded</code> state.</p>',
+      operationId: 'PostTestHelpersTreasuryInboundTransfersIdReturn',
+    },
+  })
+  .post('/v1/test_helpers/treasury/inbound_transfers/:id/succeed', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostTestHelpersTreasuryInboundTransfersIdSucceedParams,
+    body: V1Model.PostTestHelpersTreasuryInboundTransfersIdSucceedBody,
+    response: { 200: 'TreasuryInboundTransfer', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Test mode: Succeed an InboundTransfer',
+      description:
+        '<p>Transitions a test mode created InboundTransfer to the <code>succeeded</code> status. The InboundTransfer must already be in the <code>processing</code> state.</p>',
+      operationId: 'PostTestHelpersTreasuryInboundTransfersIdSucceed',
+    },
+  })
+  .post('/v1/test_helpers/treasury/outbound_payments/:id', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostTestHelpersTreasuryOutboundPaymentsIdParams,
+    body: V1Model.PostTestHelpersTreasuryOutboundPaymentsIdBody,
+    response: { 200: 'TreasuryOutboundPayment', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Test mode: Update an OutboundPayment',
+      description:
+        '<p>Updates a test mode created OutboundPayment with tracking details. The OutboundPayment must not be cancelable, and cannot be in the <code>canceled</code> or <code>failed</code> states.</p>',
+      operationId: 'PostTestHelpersTreasuryOutboundPaymentsId',
+    },
+  })
+  .post('/v1/test_helpers/treasury/outbound_payments/:id/fail', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostTestHelpersTreasuryOutboundPaymentsIdFailParams,
+    body: V1Model.PostTestHelpersTreasuryOutboundPaymentsIdFailBody,
+    response: { 200: 'TreasuryOutboundPayment', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Test mode: Fail an OutboundPayment',
+      description:
+        '<p>Transitions a test mode created OutboundPayment to the <code>failed</code> status. The OutboundPayment must already be in the <code>processing</code> state.</p>',
+      operationId: 'PostTestHelpersTreasuryOutboundPaymentsIdFail',
+    },
+  })
+  .post('/v1/test_helpers/treasury/outbound_payments/:id/post', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostTestHelpersTreasuryOutboundPaymentsIdPostParams,
+    body: V1Model.PostTestHelpersTreasuryOutboundPaymentsIdPostBody,
+    response: { 200: 'TreasuryOutboundPayment', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Test mode: Post an OutboundPayment',
+      description:
+        '<p>Transitions a test mode created OutboundPayment to the <code>posted</code> status. The OutboundPayment must already be in the <code>processing</code> state.</p>',
+      operationId: 'PostTestHelpersTreasuryOutboundPaymentsIdPost',
+    },
+  })
+  .post('/v1/test_helpers/treasury/outbound_payments/:id/return', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostTestHelpersTreasuryOutboundPaymentsIdReturnParams,
+    body: V1Model.PostTestHelpersTreasuryOutboundPaymentsIdReturnBody,
+    response: { 200: 'TreasuryOutboundPayment', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Test mode: Return an OutboundPayment',
+      description:
+        '<p>Transitions a test mode created OutboundPayment to the <code>returned</code> status. The OutboundPayment must already be in the <code>processing</code> state.</p>',
+      operationId: 'PostTestHelpersTreasuryOutboundPaymentsIdReturn',
+    },
+  })
+  .post(
+    '/v1/test_helpers/treasury/outbound_transfers/:outbound_transfer',
+    ({ params, body }) => { throw new Error('Not implemented') },
+    {
+      params: V1Model.PostTestHelpersTreasuryOutboundTransfersOutboundTransferParams,
+      body: V1Model.PostTestHelpersTreasuryOutboundTransfersOutboundTransferBody,
+      response: { 200: 'TreasuryOutboundTransfer', default: 'Error' },
+      detail: {
+        tags: [],
+        summary: 'Test mode: Update an OutboundTransfer',
+        description:
+          '<p>Updates a test mode created OutboundTransfer with tracking details. The OutboundTransfer must not be cancelable, and cannot be in the <code>canceled</code> or <code>failed</code> states.</p>',
+        operationId: 'PostTestHelpersTreasuryOutboundTransfersOutboundTransfer',
+      },
+    },
+  )
+  .post(
+    '/v1/test_helpers/treasury/outbound_transfers/:outbound_transfer/fail',
+    ({ params, body }) => { throw new Error('Not implemented') },
+    {
+      params: V1Model.PostTestHelpersTreasuryOutboundTransfersOutboundTransferFailParams,
+      body: V1Model.PostTestHelpersTreasuryOutboundTransfersOutboundTransferFailBody,
+      response: { 200: 'TreasuryOutboundTransfer', default: 'Error' },
+      detail: {
+        tags: [],
+        summary: 'Test mode: Fail an OutboundTransfer',
+        description:
+          '<p>Transitions a test mode created OutboundTransfer to the <code>failed</code> status. The OutboundTransfer must already be in the <code>processing</code> state.</p>',
+        operationId: 'PostTestHelpersTreasuryOutboundTransfersOutboundTransferFail',
+      },
+    },
+  )
+  .post(
+    '/v1/test_helpers/treasury/outbound_transfers/:outbound_transfer/post',
+    ({ params, body }) => { throw new Error('Not implemented') },
+    {
+      params: V1Model.PostTestHelpersTreasuryOutboundTransfersOutboundTransferPostParams,
+      body: V1Model.PostTestHelpersTreasuryOutboundTransfersOutboundTransferPostBody,
+      response: { 200: 'TreasuryOutboundTransfer', default: 'Error' },
+      detail: {
+        tags: [],
+        summary: 'Test mode: Post an OutboundTransfer',
+        description:
+          '<p>Transitions a test mode created OutboundTransfer to the <code>posted</code> status. The OutboundTransfer must already be in the <code>processing</code> state.</p>',
+        operationId: 'PostTestHelpersTreasuryOutboundTransfersOutboundTransferPost',
+      },
+    },
+  )
+  .post(
+    '/v1/test_helpers/treasury/outbound_transfers/:outbound_transfer/return',
+    ({ params, body }) => { throw new Error('Not implemented') },
+    {
+      params: V1Model.PostTestHelpersTreasuryOutboundTransfersOutboundTransferReturnParams,
+      body: V1Model.PostTestHelpersTreasuryOutboundTransfersOutboundTransferReturnBody,
+      response: { 200: 'TreasuryOutboundTransfer', default: 'Error' },
+      detail: {
+        tags: [],
+        summary: 'Test mode: Return an OutboundTransfer',
+        description:
+          '<p>Transitions a test mode created OutboundTransfer to the <code>returned</code> status. The OutboundTransfer must already be in the <code>processing</code> state.</p>',
+        operationId: 'PostTestHelpersTreasuryOutboundTransfersOutboundTransferReturn',
+      },
+    },
+  )
+  .post('/v1/test_helpers/treasury/received_credits', ({ body }) => { throw new Error('Not implemented') }, {
+    body: V1Model.PostTestHelpersTreasuryReceivedCreditsBody,
+    response: { 200: 'TreasuryReceivedCredit', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Test mode: Create a ReceivedCredit',
+      description:
+        '<p>Use this endpoint to simulate a test mode ReceivedCredit initiated by a third party. In live mode, you can’t directly create ReceivedCredits initiated by third parties.</p>',
+      operationId: 'PostTestHelpersTreasuryReceivedCredits',
+    },
+  })
+  .post('/v1/test_helpers/treasury/received_debits', ({ body }) => { throw new Error('Not implemented') }, {
+    body: V1Model.PostTestHelpersTreasuryReceivedDebitsBody,
+    response: { 200: 'TreasuryReceivedDebit', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Test mode: Create a ReceivedDebit',
+      description:
+        '<p>Use this endpoint to simulate a test mode ReceivedDebit initiated by a third party. In live mode, you can’t directly create ReceivedDebits initiated by third parties.</p>',
+      operationId: 'PostTestHelpersTreasuryReceivedDebits',
+    },
+  })
+  .get('/v1/three_d_secure/authentications', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetThreeDSecureAuthenticationsQuery,
+    body: V1Model.GetThreeDSecureAuthenticationsBody,
+    response: { 200: V1Model.GetThreeDSecureAuthenticationsResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List all 3D Secure Authentications',
+      description: '<p>Returns a list of 3D Secure Authentications.</p>',
+      operationId: 'GetThreeDSecureAuthentications',
+    },
+  })
+  .post('/v1/three_d_secure/authentications', ({ body }) => { throw new Error('Not implemented') }, {
+    body: V1Model.PostThreeDSecureAuthenticationsBody,
+    response: { 200: 'ThreeDSecureAuthentication', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Create a 3DS Authentication',
+      description:
+        '<p>This endpoint creates a 3DS Authentication. Refer to the <a href="/payments/3d-secure/standalone-3d-secure#create-a-3ds-authentication-object">Create a 3DS Authentication object section of the Standalone 3DS guide</a> for more information.</p>\n\n<p>You can pass the submit parameter to automatically submit the 3DS Authentication object when you create it. Refer to the <a href="/payments/3d-secure/standalone-3d-secure#submit-at-creation">Submit at creation section of the Standalone 3DS guide</a> for more information.</p>',
+      operationId: 'PostThreeDSecureAuthentications',
+    },
+  })
+  .get('/v1/three_d_secure/authentications/:authentication', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetThreeDSecureAuthenticationsAuthenticationParams,
+    query: V1Model.GetThreeDSecureAuthenticationsAuthenticationQuery,
+    body: V1Model.GetThreeDSecureAuthenticationsAuthenticationBody,
+    response: { 200: 'ThreeDSecureAuthentication', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve a 3DS Authentication',
+      description: '<p>This endpoint retrieves a 3DS Authentication.</p>',
+      operationId: 'GetThreeDSecureAuthenticationsAuthentication',
+    },
+  })
+  .post('/v1/three_d_secure/authentications/:authentication/cancel', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostThreeDSecureAuthenticationsAuthenticationCancelParams,
+    body: V1Model.PostThreeDSecureAuthenticationsAuthenticationCancelBody,
+    response: { 200: 'ThreeDSecureAuthentication', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Cancel a 3DS Authentication',
+      description:
+        '<p>This endpoint cancels a 3DS Authentication. You can cancel a 3DS Authentication object when it’s in a non-final status:\n<code>requires_submission</code> or <code>requires_challenge</code>.</p>',
+      operationId: 'PostThreeDSecureAuthenticationsAuthenticationCancel',
+    },
+  })
+  .post('/v1/three_d_secure/authentications/:authentication/submit', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostThreeDSecureAuthenticationsAuthenticationSubmitParams,
+    body: V1Model.PostThreeDSecureAuthenticationsAuthenticationSubmitBody,
+    response: { 200: 'ThreeDSecureAuthentication', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Submit a 3DS Authentication',
+      description:
+        '<p>This endpoint submits a 3DS Authentication. You can submit a 3DS Authentication object when it has status <code>requires_submission</code>. Refer to the <a href="/payments/3d-secure/standalone-3d-secure#submit-the-3ds-authentication-object">Submit the 3DS Authentication object section of the Standalone 3DS guide</a> for more information.</p>',
+      operationId: 'PostThreeDSecureAuthenticationsAuthenticationSubmit',
+    },
+  })
+  .post('/v1/tokens', ({ body }) => { throw new Error('Not implemented') }, {
+    body: V1Model.PostTokensBody,
+    response: { 200: 'Token', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Create a bank account token',
+      description:
+        '<p>Creates a single-use token that represents a bank account’s details.\nYou can use this token with any v1 API method in place of a bank account dictionary. You can only use this token once. To do so, attach it to a <a href="#accounts">connected account</a> where <a href="/api/accounts/object#account_object-controller-requirement_collection">controller.requirement_collection</a> is <code>application</code>, which includes Custom accounts.</p>',
+      operationId: 'PostTokens',
+    },
+  })
+  .get('/v1/tokens/:token', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetTokensTokenParams,
+    query: V1Model.GetTokensTokenQuery,
+    body: V1Model.GetTokensTokenBody,
+    response: { 200: 'Token', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve a token',
+      description: '<p>Retrieves the token with the given ID.</p>',
+      operationId: 'GetTokensToken',
+    },
+  })
+  .get('/v1/topups', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetTopupsQuery,
+    body: V1Model.GetTopupsBody,
+    response: { 200: V1Model.GetTopupsResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List all top-ups',
+      description: '<p>Returns a list of top-ups.</p>',
+      operationId: 'GetTopups',
+    },
+  })
+  .post('/v1/topups', ({ body }) => { throw new Error('Not implemented') }, {
+    body: V1Model.PostTopupsBody,
+    response: { 200: 'Topup', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Create a top-up',
+      description: '<p>Top up the balance of an account</p>',
+      operationId: 'PostTopups',
+    },
+  })
+  .get('/v1/topups/:topup', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetTopupsTopupParams,
+    query: V1Model.GetTopupsTopupQuery,
+    body: V1Model.GetTopupsTopupBody,
+    response: { 200: 'Topup', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve a top-up',
+      description:
+        '<p>Retrieves the details of a top-up that has previously been created. Supply the unique top-up ID that was returned from your previous request, and Stripe will return the corresponding top-up information.</p>',
+      operationId: 'GetTopupsTopup',
+    },
+  })
+  .post('/v1/topups/:topup', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostTopupsTopupParams,
+    body: V1Model.PostTopupsTopupBody,
+    response: { 200: 'Topup', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Update a top-up',
+      description:
+        '<p>Updates the metadata of a top-up. Other top-up details are not editable by design.</p>',
+      operationId: 'PostTopupsTopup',
+    },
+  })
+  .post('/v1/topups/:topup/cancel', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostTopupsTopupCancelParams,
+    body: V1Model.PostTopupsTopupCancelBody,
+    response: { 200: 'Topup', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Cancel a top-up',
+      description: '<p>Cancels a top-up. Only pending top-ups can be canceled.</p>',
+      operationId: 'PostTopupsTopupCancel',
+    },
+  })
+  .get('/v1/transfers', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetTransfersQuery,
+    body: V1Model.GetTransfersBody,
+    response: { 200: V1Model.GetTransfersResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List all transfers',
+      description:
+        '<p>Returns a list of existing transfers sent to connected accounts. The transfers are returned in sorted order, with the most recently created transfers appearing first.</p>',
+      operationId: 'GetTransfers',
+    },
+  })
+  .post('/v1/transfers', ({ body }) => { throw new Error('Not implemented') }, {
+    body: V1Model.PostTransfersBody,
+    response: { 200: 'Transfer', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Create a transfer',
+      description:
+        '<p>To send funds from your Stripe account to a connected account, you create a new transfer object. Your <a href="#balance">Stripe balance</a> must be able to cover the transfer amount, or you’ll receive an “Insufficient Funds” error.</p>',
+      operationId: 'PostTransfers',
+    },
+  })
+  .get('/v1/transfers/:transfer/reversals', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetTransfersIdReversalsParams,
+    query: V1Model.GetTransfersIdReversalsQuery,
+    body: V1Model.GetTransfersIdReversalsBody,
+    response: { 200: V1Model.GetTransfersIdReversalsResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List all reversals',
+      description:
+        '<p>You can see a list of the reversals belonging to a specific transfer. Note that the 10 most recent reversals are always available by default on the transfer object. If you need more than those 10, you can use this API method and the <code>limit</code> and <code>starting_after</code> parameters to page through additional reversals.</p>',
+      operationId: 'GetTransfersIdReversals',
+    },
+  })
+  .post('/v1/transfers/:transfer/reversals', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostTransfersIdReversalsParams,
+    body: V1Model.PostTransfersIdReversalsBody,
+    response: { 200: 'TransferReversal', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Create a transfer reversal',
+      description:
+        '<p>When you create a new reversal, you must specify a transfer to create it on.</p>\n\n<p>When reversing transfers, you can optionally reverse part of the transfer. You can do so as many times as you wish until the entire transfer has been reversed.</p>\n\n<p>Once entirely reversed, a transfer can’t be reversed again. This method will return an error when called on an already-reversed transfer, or when trying to reverse more money than is left on a transfer.</p>',
+      operationId: 'PostTransfersIdReversals',
+    },
+  })
+  .get('/v1/transfers/:transfer', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetTransfersTransferParams,
+    query: V1Model.GetTransfersTransferQuery,
+    body: V1Model.GetTransfersTransferBody,
+    response: { 200: 'Transfer', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve a transfer',
+      description:
+        '<p>Retrieves the details of an existing transfer. Supply the unique transfer ID from either a transfer creation request or the transfer list, and Stripe will return the corresponding transfer information.</p>',
+      operationId: 'GetTransfersTransfer',
+    },
+  })
+  .post('/v1/transfers/:transfer', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostTransfersTransferParams,
+    body: V1Model.PostTransfersTransferBody,
+    response: { 200: 'Transfer', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Update a transfer',
+      description:
+        '<p>Updates the specified transfer by setting the values of the parameters passed. Any parameters not provided will be left unchanged.</p>\n\n<p>This request accepts only metadata as an argument.</p>',
+      operationId: 'PostTransfersTransfer',
+    },
+  })
+  .get('/v1/transfers/:transfer/reversals/:id', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetTransfersTransferReversalsIdParams,
+    query: V1Model.GetTransfersTransferReversalsIdQuery,
+    body: V1Model.GetTransfersTransferReversalsIdBody,
+    response: { 200: 'TransferReversal', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve a reversal',
+      description:
+        '<p>By default, you can see the 10 most recent reversals stored directly on the transfer object, but you can also retrieve details about a specific reversal stored on the transfer.</p>',
+      operationId: 'GetTransfersTransferReversalsId',
+    },
+  })
+  .post('/v1/transfers/:transfer/reversals/:id', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostTransfersTransferReversalsIdParams,
+    body: V1Model.PostTransfersTransferReversalsIdBody,
+    response: { 200: 'TransferReversal', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Update a reversal',
+      description:
+        '<p>Updates the specified reversal by setting the values of the parameters passed. Any parameters not provided will be left unchanged.</p>\n\n<p>This request only accepts metadata and description as arguments.</p>',
+      operationId: 'PostTransfersTransferReversalsId',
+    },
+  })
+  .get('/v1/treasury/credit_reversals', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetTreasuryCreditReversalsQuery,
+    body: V1Model.GetTreasuryCreditReversalsBody,
+    response: { 200: V1Model.GetTreasuryCreditReversalsResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List all CreditReversals',
+      description: '<p>Returns a list of CreditReversals.</p>',
+      operationId: 'GetTreasuryCreditReversals',
+    },
+  })
+  .post('/v1/treasury/credit_reversals', ({ body }) => { throw new Error('Not implemented') }, {
+    body: V1Model.PostTreasuryCreditReversalsBody,
+    response: { 200: 'TreasuryCreditReversal', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Create a CreditReversal',
+      description: '<p>Reverses a ReceivedCredit and creates a CreditReversal object.</p>',
+      operationId: 'PostTreasuryCreditReversals',
+    },
+  })
+  .get('/v1/treasury/credit_reversals/:credit_reversal', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetTreasuryCreditReversalsCreditReversalParams,
+    query: V1Model.GetTreasuryCreditReversalsCreditReversalQuery,
+    body: V1Model.GetTreasuryCreditReversalsCreditReversalBody,
+    response: { 200: 'TreasuryCreditReversal', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve a CreditReversal',
+      description:
+        '<p>Retrieves the details of an existing CreditReversal by passing the unique CreditReversal ID from either the CreditReversal creation request or CreditReversal list</p>',
+      operationId: 'GetTreasuryCreditReversalsCreditReversal',
+    },
+  })
+  .get('/v1/treasury/debit_reversals', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetTreasuryDebitReversalsQuery,
+    body: V1Model.GetTreasuryDebitReversalsBody,
+    response: { 200: V1Model.GetTreasuryDebitReversalsResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List all DebitReversals',
+      description: '<p>Returns a list of DebitReversals.</p>',
+      operationId: 'GetTreasuryDebitReversals',
+    },
+  })
+  .post('/v1/treasury/debit_reversals', ({ body }) => { throw new Error('Not implemented') }, {
+    body: V1Model.PostTreasuryDebitReversalsBody,
+    response: { 200: 'TreasuryDebitReversal', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Create a DebitReversal',
+      description: '<p>Reverses a ReceivedDebit and creates a DebitReversal object.</p>',
+      operationId: 'PostTreasuryDebitReversals',
+    },
+  })
+  .get('/v1/treasury/debit_reversals/:debit_reversal', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetTreasuryDebitReversalsDebitReversalParams,
+    query: V1Model.GetTreasuryDebitReversalsDebitReversalQuery,
+    body: V1Model.GetTreasuryDebitReversalsDebitReversalBody,
+    response: { 200: 'TreasuryDebitReversal', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve a DebitReversal',
+      description: '<p>Retrieves a DebitReversal object.</p>',
+      operationId: 'GetTreasuryDebitReversalsDebitReversal',
+    },
+  })
+  .get('/v1/treasury/financial_accounts', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetTreasuryFinancialAccountsQuery,
+    body: V1Model.GetTreasuryFinancialAccountsBody,
+    response: { 200: V1Model.GetTreasuryFinancialAccountsResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List all FinancialAccounts',
+      description: '<p>Returns a list of FinancialAccounts.</p>',
+      operationId: 'GetTreasuryFinancialAccounts',
+    },
+  })
+  .post('/v1/treasury/financial_accounts', ({ body }) => { throw new Error('Not implemented') }, {
+    body: V1Model.PostTreasuryFinancialAccountsBody,
+    response: { 200: 'TreasuryFinancialAccount', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Create a FinancialAccount',
+      description:
+        '<p>Creates a new FinancialAccount. Each connected account can have up to three FinancialAccounts by default.</p>',
+      operationId: 'PostTreasuryFinancialAccounts',
+    },
+  })
+  .get('/v1/treasury/financial_accounts/:financial_account', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetTreasuryFinancialAccountsFinancialAccountParams,
+    query: V1Model.GetTreasuryFinancialAccountsFinancialAccountQuery,
+    body: V1Model.GetTreasuryFinancialAccountsFinancialAccountBody,
+    response: { 200: 'TreasuryFinancialAccount', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve a FinancialAccount',
+      description: '<p>Retrieves the details of a FinancialAccount.</p>',
+      operationId: 'GetTreasuryFinancialAccountsFinancialAccount',
+    },
+  })
+  .post('/v1/treasury/financial_accounts/:financial_account', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostTreasuryFinancialAccountsFinancialAccountParams,
+    body: V1Model.PostTreasuryFinancialAccountsFinancialAccountBody,
+    response: { 200: 'TreasuryFinancialAccount', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Update a FinancialAccount',
+      description: '<p>Updates the details of a FinancialAccount.</p>',
+      operationId: 'PostTreasuryFinancialAccountsFinancialAccount',
+    },
+  })
+  .post('/v1/treasury/financial_accounts/:financial_account/close', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostTreasuryFinancialAccountsFinancialAccountCloseParams,
+    body: V1Model.PostTreasuryFinancialAccountsFinancialAccountCloseBody,
+    response: { 200: 'TreasuryFinancialAccount', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Close a FinancialAccount',
+      description:
+        '<p>Closes a FinancialAccount. A FinancialAccount can only be closed if it has a zero balance, has no pending InboundTransfers, and has canceled all attached Issuing cards.</p>',
+      operationId: 'PostTreasuryFinancialAccountsFinancialAccountClose',
+    },
+  })
+  .get(
+    '/v1/treasury/financial_accounts/:financial_account/features',
+    ({ params, query, body }) => { throw new Error('Not implemented') },
+    {
+      params: V1Model.GetTreasuryFinancialAccountsFinancialAccountFeaturesParams,
+      query: V1Model.GetTreasuryFinancialAccountsFinancialAccountFeaturesQuery,
+      body: V1Model.GetTreasuryFinancialAccountsFinancialAccountFeaturesBody,
+      response: { 200: 'TreasuryFinancialAccountFeatures', default: 'Error' },
+      detail: {
+        tags: [],
+        summary: 'Retrieve FinancialAccount Features',
+        description: '<p>Retrieves Features information associated with the FinancialAccount.</p>',
+        operationId: 'GetTreasuryFinancialAccountsFinancialAccountFeatures',
+      },
+    },
+  )
+  .post('/v1/treasury/financial_accounts/:financial_account/features', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostTreasuryFinancialAccountsFinancialAccountFeaturesParams,
+    body: V1Model.PostTreasuryFinancialAccountsFinancialAccountFeaturesBody,
+    response: { 200: 'TreasuryFinancialAccountFeatures', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Update FinancialAccount Features',
+      description: '<p>Updates the Features associated with a FinancialAccount.</p>',
+      operationId: 'PostTreasuryFinancialAccountsFinancialAccountFeatures',
+    },
+  })
+  .get('/v1/treasury/inbound_transfers', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetTreasuryInboundTransfersQuery,
+    body: V1Model.GetTreasuryInboundTransfersBody,
+    response: { 200: V1Model.GetTreasuryInboundTransfersResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List all InboundTransfers',
+      description:
+        '<p>Returns a list of InboundTransfers sent from the specified FinancialAccount.</p>',
+      operationId: 'GetTreasuryInboundTransfers',
+    },
+  })
+  .post('/v1/treasury/inbound_transfers', ({ body }) => { throw new Error('Not implemented') }, {
+    body: V1Model.PostTreasuryInboundTransfersBody,
+    response: { 200: 'TreasuryInboundTransfer', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Create an InboundTransfer',
+      description: '<p>Creates an InboundTransfer.</p>',
+      operationId: 'PostTreasuryInboundTransfers',
+    },
+  })
+  .get('/v1/treasury/inbound_transfers/:inbound_transfer', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetTreasuryInboundTransfersIdParams,
+    query: V1Model.GetTreasuryInboundTransfersIdQuery,
+    body: V1Model.GetTreasuryInboundTransfersIdBody,
+    response: { 200: 'TreasuryInboundTransfer', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve an InboundTransfer',
+      description: '<p>Retrieves the details of an existing InboundTransfer.</p>',
+      operationId: 'GetTreasuryInboundTransfersId',
+    },
+  })
+  .post('/v1/treasury/inbound_transfers/:inbound_transfer/cancel', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostTreasuryInboundTransfersInboundTransferCancelParams,
+    body: V1Model.PostTreasuryInboundTransfersInboundTransferCancelBody,
+    response: { 200: 'TreasuryInboundTransfer', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Cancel an InboundTransfer',
+      description: '<p>Cancels an InboundTransfer.</p>',
+      operationId: 'PostTreasuryInboundTransfersInboundTransferCancel',
+    },
+  })
+  .get('/v1/treasury/outbound_payments', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetTreasuryOutboundPaymentsQuery,
+    body: V1Model.GetTreasuryOutboundPaymentsBody,
+    response: { 200: V1Model.GetTreasuryOutboundPaymentsResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List all OutboundPayments',
+      description:
+        '<p>Returns a list of OutboundPayments sent from the specified FinancialAccount.</p>',
+      operationId: 'GetTreasuryOutboundPayments',
+    },
+  })
+  .post('/v1/treasury/outbound_payments', ({ body }) => { throw new Error('Not implemented') }, {
+    body: V1Model.PostTreasuryOutboundPaymentsBody,
+    response: { 200: 'TreasuryOutboundPayment', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Create an OutboundPayment',
+      description: '<p>Creates an OutboundPayment.</p>',
+      operationId: 'PostTreasuryOutboundPayments',
+    },
+  })
+  .get('/v1/treasury/outbound_payments/:id', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetTreasuryOutboundPaymentsIdParams,
+    query: V1Model.GetTreasuryOutboundPaymentsIdQuery,
+    body: V1Model.GetTreasuryOutboundPaymentsIdBody,
+    response: { 200: 'TreasuryOutboundPayment', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve an OutboundPayment',
+      description:
+        '<p>Retrieves the details of an existing OutboundPayment by passing the unique OutboundPayment ID from either the OutboundPayment creation request or OutboundPayment list.</p>',
+      operationId: 'GetTreasuryOutboundPaymentsId',
+    },
+  })
+  .post('/v1/treasury/outbound_payments/:id/cancel', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostTreasuryOutboundPaymentsIdCancelParams,
+    body: V1Model.PostTreasuryOutboundPaymentsIdCancelBody,
+    response: { 200: 'TreasuryOutboundPayment', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Cancel an OutboundPayment',
+      description: '<p>Cancel an OutboundPayment.</p>',
+      operationId: 'PostTreasuryOutboundPaymentsIdCancel',
+    },
+  })
+  .get('/v1/treasury/outbound_transfers', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetTreasuryOutboundTransfersQuery,
+    body: V1Model.GetTreasuryOutboundTransfersBody,
+    response: { 200: V1Model.GetTreasuryOutboundTransfersResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List all OutboundTransfers',
+      description:
+        '<p>Returns a list of OutboundTransfers sent from the specified FinancialAccount.</p>',
+      operationId: 'GetTreasuryOutboundTransfers',
+    },
+  })
+  .post('/v1/treasury/outbound_transfers', ({ body }) => { throw new Error('Not implemented') }, {
+    body: V1Model.PostTreasuryOutboundTransfersBody,
+    response: { 200: 'TreasuryOutboundTransfer', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Create an OutboundTransfer',
+      description: '<p>Creates an OutboundTransfer.</p>',
+      operationId: 'PostTreasuryOutboundTransfers',
+    },
+  })
+  .get('/v1/treasury/outbound_transfers/:outbound_transfer', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetTreasuryOutboundTransfersOutboundTransferParams,
+    query: V1Model.GetTreasuryOutboundTransfersOutboundTransferQuery,
+    body: V1Model.GetTreasuryOutboundTransfersOutboundTransferBody,
+    response: { 200: 'TreasuryOutboundTransfer', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve an OutboundTransfer',
+      description:
+        '<p>Retrieves the details of an existing OutboundTransfer by passing the unique OutboundTransfer ID from either the OutboundTransfer creation request or OutboundTransfer list.</p>',
+      operationId: 'GetTreasuryOutboundTransfersOutboundTransfer',
+    },
+  })
+  .post('/v1/treasury/outbound_transfers/:outbound_transfer/cancel', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostTreasuryOutboundTransfersOutboundTransferCancelParams,
+    body: V1Model.PostTreasuryOutboundTransfersOutboundTransferCancelBody,
+    response: { 200: 'TreasuryOutboundTransfer', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Cancel an OutboundTransfer',
+      description:
+        '<p>An OutboundTransfer can be canceled if the funds have not yet been paid out.</p>',
+      operationId: 'PostTreasuryOutboundTransfersOutboundTransferCancel',
+    },
+  })
+  .get('/v1/treasury/received_credits', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetTreasuryReceivedCreditsQuery,
+    body: V1Model.GetTreasuryReceivedCreditsBody,
+    response: { 200: V1Model.GetTreasuryReceivedCreditsResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List all ReceivedCredits',
+      description: '<p>Returns a list of ReceivedCredits.</p>',
+      operationId: 'GetTreasuryReceivedCredits',
+    },
+  })
+  .get('/v1/treasury/received_credits/:id', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetTreasuryReceivedCreditsIdParams,
+    query: V1Model.GetTreasuryReceivedCreditsIdQuery,
+    body: V1Model.GetTreasuryReceivedCreditsIdBody,
+    response: { 200: 'TreasuryReceivedCredit', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve a ReceivedCredit',
+      description:
+        '<p>Retrieves the details of an existing ReceivedCredit by passing the unique ReceivedCredit ID from the ReceivedCredit list.</p>',
+      operationId: 'GetTreasuryReceivedCreditsId',
+    },
+  })
+  .get('/v1/treasury/received_debits', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetTreasuryReceivedDebitsQuery,
+    body: V1Model.GetTreasuryReceivedDebitsBody,
+    response: { 200: V1Model.GetTreasuryReceivedDebitsResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List all ReceivedDebits',
+      description: '<p>Returns a list of ReceivedDebits.</p>',
+      operationId: 'GetTreasuryReceivedDebits',
+    },
+  })
+  .get('/v1/treasury/received_debits/:id', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetTreasuryReceivedDebitsIdParams,
+    query: V1Model.GetTreasuryReceivedDebitsIdQuery,
+    body: V1Model.GetTreasuryReceivedDebitsIdBody,
+    response: { 200: 'TreasuryReceivedDebit', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve a ReceivedDebit',
+      description:
+        '<p>Retrieves the details of an existing ReceivedDebit by passing the unique ReceivedDebit ID from the ReceivedDebit list</p>',
+      operationId: 'GetTreasuryReceivedDebitsId',
+    },
+  })
+  .get('/v1/treasury/transaction_entries', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetTreasuryTransactionEntriesQuery,
+    body: V1Model.GetTreasuryTransactionEntriesBody,
+    response: { 200: V1Model.GetTreasuryTransactionEntriesResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List all TransactionEntries',
+      description: '<p>Retrieves a list of TransactionEntry objects.</p>',
+      operationId: 'GetTreasuryTransactionEntries',
+    },
+  })
+  .get('/v1/treasury/transaction_entries/:id', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetTreasuryTransactionEntriesIdParams,
+    query: V1Model.GetTreasuryTransactionEntriesIdQuery,
+    body: V1Model.GetTreasuryTransactionEntriesIdBody,
+    response: { 200: 'TreasuryTransactionEntry', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve a TransactionEntry',
+      description: '<p>Retrieves a TransactionEntry object.</p>',
+      operationId: 'GetTreasuryTransactionEntriesId',
+    },
+  })
+  .get('/v1/treasury/transactions', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetTreasuryTransactionsQuery,
+    body: V1Model.GetTreasuryTransactionsBody,
+    response: { 200: V1Model.GetTreasuryTransactionsResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List all Transactions',
+      description: '<p>Retrieves a list of Transaction objects.</p>',
+      operationId: 'GetTreasuryTransactions',
+    },
+  })
+  .get('/v1/treasury/transactions/:id', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetTreasuryTransactionsIdParams,
+    query: V1Model.GetTreasuryTransactionsIdQuery,
+    body: V1Model.GetTreasuryTransactionsIdBody,
+    response: { 200: 'TreasuryTransaction', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve a Transaction',
+      description: '<p>Retrieves the details of an existing Transaction.</p>',
+      operationId: 'GetTreasuryTransactionsId',
+    },
+  })
+  .get('/v1/webhook_endpoints', ({ query, body }) => { throw new Error('Not implemented') }, {
+    query: V1Model.GetWebhookEndpointsQuery,
+    body: V1Model.GetWebhookEndpointsBody,
+    response: { 200: V1Model.GetWebhookEndpointsResponse200, default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'List all webhook endpoints',
+      description: '<p>Returns a list of your webhook endpoints.</p>',
+      operationId: 'GetWebhookEndpoints',
+    },
+  })
+  .post('/v1/webhook_endpoints', ({ body }) => { throw new Error('Not implemented') }, {
+    body: V1Model.PostWebhookEndpointsBody,
+    response: { 200: 'WebhookEndpoint', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Create a webhook endpoint',
+      description:
+        '<p>A webhook endpoint must have a <code>url</code> and a list of <code>enabled_events</code>. You may optionally specify the Boolean <code>connect</code> parameter. If set to true, then a Connect webhook endpoint that notifies the specified <code>url</code> about events from all connected accounts is created; otherwise an account webhook endpoint that notifies the specified <code>url</code> only about events from your account is created. You can also create webhook endpoints in the <a href="https://dashboard.stripe.com/account/webhooks">webhooks settings</a> section of the Dashboard.</p>',
+      operationId: 'PostWebhookEndpoints',
+    },
+  })
+  .get('/v1/webhook_endpoints/:webhook_endpoint', ({ params, query, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.GetWebhookEndpointsWebhookEndpointParams,
+    query: V1Model.GetWebhookEndpointsWebhookEndpointQuery,
+    body: V1Model.GetWebhookEndpointsWebhookEndpointBody,
+    response: { 200: 'WebhookEndpoint', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Retrieve a webhook endpoint',
+      description: '<p>Retrieves the webhook endpoint with the given ID.</p>',
+      operationId: 'GetWebhookEndpointsWebhookEndpoint',
+    },
+  })
+  .post('/v1/webhook_endpoints/:webhook_endpoint', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.PostWebhookEndpointsWebhookEndpointParams,
+    body: V1Model.PostWebhookEndpointsWebhookEndpointBody,
+    response: { 200: 'WebhookEndpoint', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Update a webhook endpoint',
+      description:
+        '<p>Updates the webhook endpoint. You may edit the <code>url</code>, the list of <code>enabled_events</code>, and the status of your endpoint.</p>',
+      operationId: 'PostWebhookEndpointsWebhookEndpoint',
+    },
+  })
+  .delete('/v1/webhook_endpoints/:webhook_endpoint', ({ params, body }) => { throw new Error('Not implemented') }, {
+    params: V1Model.DeleteWebhookEndpointsWebhookEndpointParams,
+    body: V1Model.DeleteWebhookEndpointsWebhookEndpointBody,
+    response: { 200: 'DeletedWebhookEndpoint', default: 'Error' },
+    detail: {
+      tags: [],
+      summary: 'Delete a webhook endpoint',
+      description:
+        '<p>You can also delete webhook endpoints via the <a href="https://dashboard.stripe.com/account/webhooks">webhook endpoint management</a> page of the Stripe dashboard.</p>',
+      operationId: 'DeleteWebhookEndpointsWebhookEndpoint',
+    },
+  })

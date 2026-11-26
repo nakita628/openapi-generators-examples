@@ -36,9 +36,11 @@ export const realtimeRouter = t.router({
         type: type("'realtime'").describe(
           'The type of session to create. Always `realtime` for the Realtime API.\n',
         ),
-        'output_modalities?': type("'text' | 'audio'[]").describe(
-          'The set of modalities the model can respond with. It defaults to `["audio"]`, indicating\nthat the model will respond with audio plus a transcript. `["text"]` can be used to make\nthe model respond with text only. It is not possible to request both `text` and `audio` at the same time.\n',
-        ),
+        'output_modalities?': type("'text' | 'audio'")
+          .array()
+          .describe(
+            'The set of modalities the model can respond with. It defaults to `["audio"]`, indicating\nthat the model will respond with audio plus a transcript. `["text"]` can be used to make\nthe model respond with text only. It is not possible to request both `text` and `audio` at the same time.\n',
+          ),
         'model?': type('string')
           .or(
             type.enumerated(

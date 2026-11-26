@@ -173,21 +173,37 @@ export const realtimeHandler = new Hono()
                                         ),
                                         threshold: Type.Optional(
                                           Codec(
-                                            Type.String({
-                                              pattern:
-                                                '^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$',
-                                            }),
+                                            Type.Refine(
+                                              Type.String({
+                                                pattern:
+                                                  '^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$',
+                                              }),
+                                              (value) => Number.isFinite(Number(value)),
+                                              () => 'must be a finite number',
+                                            ),
                                           )
                                             .Decode((value) => Number(value))
                                             .Encode((value) => String(value)),
                                         ),
                                         prefix_padding_ms: Type.Optional(
-                                          Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+                                          Codec(
+                                            Type.Refine(
+                                              Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                              (value) => Number.isSafeInteger(Number(value)),
+                                              () => 'must be a safe integer',
+                                            ),
+                                          )
                                             .Decode((value) => Number(value))
                                             .Encode((value) => String(value)),
                                         ),
                                         silence_duration_ms: Type.Optional(
-                                          Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+                                          Codec(
+                                            Type.Refine(
+                                              Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                              (value) => Number.isSafeInteger(Number(value)),
+                                              () => 'must be a safe integer',
+                                            ),
+                                          )
                                             .Decode((value) => Number(value))
                                             .Encode((value) => String(value)),
                                         ),
@@ -195,7 +211,7 @@ export const realtimeHandler = new Hono()
                                           Codec(
                                             Type.String({
                                               pattern:
-                                                /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                                '^(?:[Tt][Rr][Uu][Ee]|1|[Yy][Ee][Ss]|[Oo][Nn]|[Yy]|[Ee][Nn][Aa][Bb][Ll][Ee][Dd]|[Ff][Aa][Ll][Ss][Ee]|0|[Nn][Oo]|[Oo][Ff][Ff]|[Nn]|[Dd][Ii][Ss][Aa][Bb][Ll][Ee][Dd])$',
                                               default: 'true',
                                             }),
                                           )
@@ -208,7 +224,7 @@ export const realtimeHandler = new Hono()
                                           Codec(
                                             Type.String({
                                               pattern:
-                                                /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                                '^(?:[Tt][Rr][Uu][Ee]|1|[Yy][Ee][Ss]|[Oo][Nn]|[Yy]|[Ee][Nn][Aa][Bb][Ll][Ee][Dd]|[Ff][Aa][Ll][Ss][Ee]|0|[Nn][Oo]|[Oo][Ff][Ff]|[Nn]|[Dd][Ii][Ss][Aa][Bb][Ll][Ee][Dd])$',
                                               default: 'true',
                                             }),
                                           )
@@ -222,7 +238,11 @@ export const realtimeHandler = new Hono()
                                             Codec(
                                               Type.Refine(
                                                 Type.Refine(
-                                                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                                  Type.Refine(
+                                                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                                    (value) => Number.isSafeInteger(Number(value)),
+                                                    () => 'must be a safe integer',
+                                                  ),
                                                   (value) => Number(value) >= 5000,
                                                   () => 'must be >= 5000',
                                                 ),
@@ -266,7 +286,7 @@ export const realtimeHandler = new Hono()
                                           Codec(
                                             Type.String({
                                               pattern:
-                                                /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                                '^(?:[Tt][Rr][Uu][Ee]|1|[Yy][Ee][Ss]|[Oo][Nn]|[Yy]|[Ee][Nn][Aa][Bb][Ll][Ee][Dd]|[Ff][Aa][Ll][Ss][Ee]|0|[Nn][Oo]|[Oo][Ff][Ff]|[Nn]|[Dd][Ii][Ss][Aa][Bb][Ll][Ee][Dd])$',
                                               default: 'true',
                                             }),
                                           )
@@ -279,7 +299,7 @@ export const realtimeHandler = new Hono()
                                           Codec(
                                             Type.String({
                                               pattern:
-                                                /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                                '^(?:[Tt][Rr][Uu][Ee]|1|[Yy][Ee][Ss]|[Oo][Nn]|[Yy]|[Ee][Nn][Aa][Bb][Ll][Ee][Dd]|[Ff][Aa][Ll][Ss][Ee]|0|[Nn][Oo]|[Oo][Ff][Ff]|[Nn]|[Dd][Ii][Ss][Aa][Bb][Ll][Ee][Dd])$',
                                               default: 'true',
                                             }),
                                           )
@@ -315,10 +335,15 @@ export const realtimeHandler = new Hono()
                               Codec(
                                 Type.Refine(
                                   Type.Refine(
-                                    Type.String({
-                                      pattern: '^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$',
-                                      default: '1',
-                                    }),
+                                    Type.Refine(
+                                      Type.String({
+                                        pattern:
+                                          '^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$',
+                                        default: '1',
+                                      }),
+                                      (value) => Number.isFinite(Number(value)),
+                                      () => 'must be a finite number',
+                                    ),
                                     (value) => Number(value) >= 0.25,
                                     () => 'must be >= 0.25',
                                   ),
@@ -471,7 +496,7 @@ export const realtimeHandler = new Hono()
                                           Codec(
                                             Type.String({
                                               pattern:
-                                                /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                                '^(?:[Tt][Rr][Uu][Ee]|1|[Yy][Ee][Ss]|[Oo][Nn]|[Yy]|[Ee][Nn][Aa][Bb][Ll][Ee][Dd]|[Ff][Aa][Ll][Ss][Ee]|0|[Nn][Oo]|[Oo][Ff][Ff]|[Nn]|[Dd][Ii][Ss][Aa][Bb][Ll][Ee][Dd])$',
                                             }),
                                           )
                                             .Decode((value) =>
@@ -522,7 +547,7 @@ export const realtimeHandler = new Hono()
                                                   Codec(
                                                     Type.String({
                                                       pattern:
-                                                        /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                                        '^(?:[Tt][Rr][Uu][Ee]|1|[Yy][Ee][Ss]|[Oo][Nn]|[Yy]|[Ee][Nn][Aa][Bb][Ll][Ee][Dd]|[Ff][Aa][Ll][Ss][Ee]|0|[Nn][Oo]|[Oo][Ff][Ff]|[Nn]|[Dd][Ii][Ss][Aa][Bb][Ll][Ee][Dd])$',
                                                     }),
                                                   )
                                                     .Decode((value) =>
@@ -550,7 +575,7 @@ export const realtimeHandler = new Hono()
                                                   Codec(
                                                     Type.String({
                                                       pattern:
-                                                        /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                                        '^(?:[Tt][Rr][Uu][Ee]|1|[Yy][Ee][Ss]|[Oo][Nn]|[Yy]|[Ee][Nn][Aa][Bb][Ll][Ee][Dd]|[Ff][Aa][Ll][Ss][Ee]|0|[Nn][Oo]|[Oo][Ff][Ff]|[Nn]|[Dd][Ii][Ss][Aa][Bb][Ll][Ee][Dd])$',
                                                     }),
                                                   )
                                                     .Decode((value) =>
@@ -592,7 +617,7 @@ export const realtimeHandler = new Hono()
                               Codec(
                                 Type.String({
                                   pattern:
-                                    /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                                    '^(?:[Tt][Rr][Uu][Ee]|1|[Yy][Ee][Ss]|[Oo][Nn]|[Yy]|[Ee][Nn][Aa][Bb][Ll][Ee][Dd]|[Ff][Aa][Ll][Ss][Ee]|0|[Nn][Oo]|[Oo][Ff][Ff]|[Nn]|[Dd][Ii][Ss][Aa][Bb][Ll][Ee][Dd])$',
                                 }),
                               )
                                 .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
@@ -621,7 +646,8 @@ export const realtimeHandler = new Hono()
                   parallel_tool_calls: Type.Optional(
                     Codec(
                       Type.String({
-                        pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                        pattern:
+                          '^(?:[Tt][Rr][Uu][Ee]|1|[Yy][Ee][Ss]|[Oo][Nn]|[Yy]|[Ee][Nn][Aa][Bb][Ll][Ee][Dd]|[Ff][Aa][Ll][Ss][Ee]|0|[Nn][Oo]|[Oo][Ff][Ff]|[Nn]|[Dd][Ii][Ss][Aa][Bb][Ll][Ee][Dd])$',
                       }),
                     )
                       .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
@@ -631,7 +657,13 @@ export const realtimeHandler = new Hono()
                   max_output_tokens: Type.Optional(
                     Type.Union(
                       [
-                        Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+                        Codec(
+                          Type.Refine(
+                            Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                            (value) => Number.isSafeInteger(Number(value)),
+                            () => 'must be a safe integer',
+                          ),
+                        )
                           .Decode((value) => Number(value))
                           .Encode((value) => String(value)),
                         Type.Literal('inf'),
@@ -657,9 +689,13 @@ export const realtimeHandler = new Hono()
                             retention_ratio: Codec(
                               Type.Refine(
                                 Type.Refine(
-                                  Type.String({
-                                    pattern: '^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$',
-                                  }),
+                                  Type.Refine(
+                                    Type.String({
+                                      pattern: '^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$',
+                                    }),
+                                    (value) => Number.isFinite(Number(value)),
+                                    () => 'must be a finite number',
+                                  ),
                                   (value) => Number(value) >= 0,
                                   () => 'must be >= 0',
                                 ),
@@ -675,7 +711,11 @@ export const realtimeHandler = new Hono()
                                   post_instructions: Type.Optional(
                                     Codec(
                                       Type.Refine(
-                                        Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                        Type.Refine(
+                                          Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                                          (value) => Number.isSafeInteger(Number(value)),
+                                          () => 'must be a safe integer',
+                                        ),
                                         (value) => Number(value) >= 0,
                                         () => 'must be >= 0',
                                       ),

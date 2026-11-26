@@ -141,6 +141,7 @@ export const getOrganizationAdminApiKeys = os
             v.pipe(
               v.string(),
               v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.metadata({ type: 'integer' }),
               v.transform((input) => Number(input)),
               v.number(),
               v.safeInteger(),
@@ -148,6 +149,7 @@ export const getOrganizationAdminApiKeys = os
             '20',
           ),
           v.description('Maximum number of keys to return.'),
+          v.metadata({ default: 20 }),
         ),
       ),
     }),
@@ -233,6 +235,7 @@ export const getOrganizationAuditLogs = os
               v.pipe(
                 v.string(),
                 v.regex(/^-?(?:0|[1-9]\d*)$/),
+                v.metadata({ type: 'integer' }),
                 v.transform((input) => Number(input)),
                 v.number(),
                 v.safeInteger(),
@@ -245,6 +248,7 @@ export const getOrganizationAuditLogs = os
               v.pipe(
                 v.string(),
                 v.regex(/^-?(?:0|[1-9]\d*)$/),
+                v.metadata({ type: 'integer' }),
                 v.transform((input) => Number(input)),
                 v.number(),
                 v.safeInteger(),
@@ -257,6 +261,7 @@ export const getOrganizationAuditLogs = os
               v.pipe(
                 v.string(),
                 v.regex(/^-?(?:0|[1-9]\d*)$/),
+                v.metadata({ type: 'integer' }),
                 v.transform((input) => Number(input)),
                 v.number(),
                 v.safeInteger(),
@@ -269,6 +274,7 @@ export const getOrganizationAuditLogs = os
               v.pipe(
                 v.string(),
                 v.regex(/^-?(?:0|[1-9]\d*)$/),
+                v.metadata({ type: 'integer' }),
                 v.transform((input) => Number(input)),
                 v.number(),
                 v.safeInteger(),
@@ -326,15 +332,19 @@ export const getOrganizationAuditLogs = os
         ),
       ),
       limit: v.optional(
-        v.optional(
-          v.pipe(
-            v.string(),
-            v.regex(/^-?(?:0|[1-9]\d*)$/),
-            v.transform((input) => Number(input)),
-            v.number(),
-            v.safeInteger(),
+        v.pipe(
+          v.optional(
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.metadata({ type: 'integer' }),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+            ),
+            '20',
           ),
-          '20',
+          v.metadata({ default: 20 }),
         ),
       ),
       after: v.optional(v.string()),
@@ -356,15 +366,19 @@ export const getOrganizationCertificates = os
   .input(
     v.object({
       limit: v.optional(
-        v.optional(
-          v.pipe(
-            v.string(),
-            v.regex(/^-?(?:0|[1-9]\d*)$/),
-            v.transform((input) => Number(input)),
-            v.number(),
-            v.safeInteger(),
+        v.pipe(
+          v.optional(
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.metadata({ type: 'integer' }),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+            ),
+            '20',
           ),
-          '20',
+          v.metadata({ default: 20 }),
         ),
       ),
       after: v.optional(v.string()),
@@ -487,6 +501,7 @@ export const getOrganizationCosts = os
       start_time: v.pipe(
         v.string(),
         v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.metadata({ type: 'integer' }),
         v.transform((input) => Number(input)),
         v.number(),
         v.safeInteger(),
@@ -495,6 +510,7 @@ export const getOrganizationCosts = os
         v.pipe(
           v.string(),
           v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.metadata({ type: 'integer' }),
           v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
@@ -530,15 +546,19 @@ export const getOrganizationCosts = os
         ),
       ),
       limit: v.optional(
-        v.optional(
-          v.pipe(
-            v.string(),
-            v.regex(/^-?(?:0|[1-9]\d*)$/),
-            v.transform((input) => Number(input)),
-            v.number(),
-            v.safeInteger(),
+        v.pipe(
+          v.optional(
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.metadata({ type: 'integer' }),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+            ),
+            '7',
           ),
-          '7',
+          v.metadata({ default: 7 }),
         ),
       ),
       page: v.optional(v.string()),
@@ -584,17 +604,21 @@ export const getOrganizationGroups = os
   .input(
     v.object({
       limit: v.optional(
-        v.optional(
-          v.pipe(
-            v.string(),
-            v.regex(/^-?(?:0|[1-9]\d*)$/),
-            v.transform((input) => Number(input)),
-            v.number(),
-            v.safeInteger(),
-            v.minValue(0),
-            v.maxValue(1000),
+        v.pipe(
+          v.optional(
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.metadata({ type: 'integer', minimum: 0, maximum: 1000 }),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+              v.minValue(0),
+              v.maxValue(1000),
+            ),
+            '100',
           ),
-          '100',
+          v.metadata({ default: 100 }),
         ),
       ),
       after: v.optional(v.string()),
@@ -680,6 +704,7 @@ export const getOrganizationGroupsGroupIdRoles = os
         v.pipe(
           v.string(),
           v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.metadata({ type: 'integer', minimum: 0, maximum: 1000 }),
           v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
@@ -751,17 +776,21 @@ export const getOrganizationGroupsGroupIdUsers = os
     v.object({
       group_id: v.string(),
       limit: v.optional(
-        v.optional(
-          v.pipe(
-            v.string(),
-            v.regex(/^-?(?:0|[1-9]\d*)$/),
-            v.transform((input) => Number(input)),
-            v.number(),
-            v.safeInteger(),
-            v.minValue(0),
-            v.maxValue(1000),
+        v.pipe(
+          v.optional(
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.metadata({ type: 'integer', minimum: 0, maximum: 1000 }),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+              v.minValue(0),
+              v.maxValue(1000),
+            ),
+            '100',
           ),
-          '100',
+          v.metadata({ default: 100 }),
         ),
       ),
       after: v.optional(v.string()),
@@ -827,15 +856,19 @@ export const getOrganizationInvites = os
   .input(
     v.object({
       limit: v.optional(
-        v.optional(
-          v.pipe(
-            v.string(),
-            v.regex(/^-?(?:0|[1-9]\d*)$/),
-            v.transform((input) => Number(input)),
-            v.number(),
-            v.safeInteger(),
+        v.pipe(
+          v.optional(
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.metadata({ type: 'integer' }),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+            ),
+            '20',
           ),
-          '20',
+          v.metadata({ default: 20 }),
         ),
       ),
       after: v.optional(v.string()),
@@ -896,15 +929,19 @@ export const getOrganizationProjects = os
   .input(
     v.object({
       limit: v.optional(
-        v.optional(
-          v.pipe(
-            v.string(),
-            v.regex(/^-?(?:0|[1-9]\d*)$/),
-            v.transform((input) => Number(input)),
-            v.number(),
-            v.safeInteger(),
+        v.pipe(
+          v.optional(
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.metadata({ type: 'integer' }),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+            ),
+            '20',
           ),
-          '20',
+          v.metadata({ default: 20 }),
         ),
       ),
       after: v.optional(v.string()),
@@ -1001,15 +1038,19 @@ export const getOrganizationProjectsProjectIdApiKeys = os
     v.object({
       project_id: v.string(),
       limit: v.optional(
-        v.optional(
-          v.pipe(
-            v.string(),
-            v.regex(/^-?(?:0|[1-9]\d*)$/),
-            v.transform((input) => Number(input)),
-            v.number(),
-            v.safeInteger(),
+        v.pipe(
+          v.optional(
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.metadata({ type: 'integer' }),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+            ),
+            '20',
           ),
-          '20',
+          v.metadata({ default: 20 }),
         ),
       ),
       after: v.optional(v.string()),
@@ -1108,15 +1149,19 @@ export const getOrganizationProjectsProjectIdCertificates = os
     v.object({
       project_id: v.string(),
       limit: v.optional(
-        v.optional(
-          v.pipe(
-            v.string(),
-            v.regex(/^-?(?:0|[1-9]\d*)$/),
-            v.transform((input) => Number(input)),
-            v.number(),
-            v.safeInteger(),
+        v.pipe(
+          v.optional(
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.metadata({ type: 'integer' }),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+            ),
+            '20',
           ),
-          '20',
+          v.metadata({ default: 20 }),
         ),
       ),
       after: v.optional(v.string()),
@@ -1226,17 +1271,21 @@ export const getOrganizationProjectsProjectIdGroups = os
     v.object({
       project_id: v.string(),
       limit: v.optional(
-        v.optional(
-          v.pipe(
-            v.string(),
-            v.regex(/^-?(?:0|[1-9]\d*)$/),
-            v.transform((input) => Number(input)),
-            v.number(),
-            v.safeInteger(),
-            v.minValue(0),
-            v.maxValue(100),
+        v.pipe(
+          v.optional(
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.metadata({ type: 'integer', minimum: 0, maximum: 100 }),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+              v.minValue(0),
+              v.maxValue(100),
+            ),
+            '20',
           ),
-          '20',
+          v.metadata({ default: 20 }),
         ),
       ),
       after: v.optional(v.string()),
@@ -1424,15 +1473,19 @@ export const getOrganizationProjectsProjectIdRateLimits = os
     v.object({
       project_id: v.string(),
       limit: v.optional(
-        v.optional(
-          v.pipe(
-            v.string(),
-            v.regex(/^-?(?:0|[1-9]\d*)$/),
-            v.transform((input) => Number(input)),
-            v.number(),
-            v.safeInteger(),
+        v.pipe(
+          v.optional(
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.metadata({ type: 'integer' }),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+            ),
+            '100',
           ),
-          '100',
+          v.metadata({ default: 100 }),
         ),
       ),
       after: v.optional(v.string()),
@@ -1507,15 +1560,19 @@ export const getOrganizationProjectsProjectIdServiceAccounts = os
     v.object({
       project_id: v.string(),
       limit: v.optional(
-        v.optional(
-          v.pipe(
-            v.string(),
-            v.regex(/^-?(?:0|[1-9]\d*)$/),
-            v.transform((input) => Number(input)),
-            v.number(),
-            v.safeInteger(),
+        v.pipe(
+          v.optional(
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.metadata({ type: 'integer' }),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+            ),
+            '20',
           ),
-          '20',
+          v.metadata({ default: 20 }),
         ),
       ),
       after: v.optional(v.string()),
@@ -1625,6 +1682,7 @@ export const getOrganizationProjectsProjectIdSpendAlerts = os
         v.pipe(
           v.string(),
           v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.metadata({ type: 'integer', minimum: 0, maximum: 100 }),
           v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
@@ -1734,15 +1792,19 @@ export const getOrganizationProjectsProjectIdUsers = os
     v.object({
       project_id: v.string(),
       limit: v.optional(
-        v.optional(
-          v.pipe(
-            v.string(),
-            v.regex(/^-?(?:0|[1-9]\d*)$/),
-            v.transform((input) => Number(input)),
-            v.number(),
-            v.safeInteger(),
+        v.pipe(
+          v.optional(
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.metadata({ type: 'integer' }),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+            ),
+            '20',
           ),
-          '20',
+          v.metadata({ default: 20 }),
         ),
       ),
       after: v.optional(v.string()),
@@ -1836,17 +1898,21 @@ export const getOrganizationRoles = os
   .input(
     v.object({
       limit: v.optional(
-        v.optional(
-          v.pipe(
-            v.string(),
-            v.regex(/^-?(?:0|[1-9]\d*)$/),
-            v.transform((input) => Number(input)),
-            v.number(),
-            v.safeInteger(),
-            v.minValue(0),
-            v.maxValue(1000),
+        v.pipe(
+          v.optional(
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.metadata({ type: 'integer', minimum: 0, maximum: 1000 }),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+              v.minValue(0),
+              v.maxValue(1000),
+            ),
+            '1000',
           ),
-          '1000',
+          v.metadata({ default: 1000 }),
         ),
       ),
       after: v.optional(v.string()),
@@ -1939,6 +2005,7 @@ export const getOrganizationSpendAlerts = os
         v.pipe(
           v.string(),
           v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.metadata({ type: 'integer', minimum: 0, maximum: 100 }),
           v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
@@ -2034,6 +2101,7 @@ export const getOrganizationUsageAudioSpeeches = os
       start_time: v.pipe(
         v.string(),
         v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.metadata({ type: 'integer' }),
         v.transform((input) => Number(input)),
         v.number(),
         v.safeInteger(),
@@ -2042,6 +2110,7 @@ export const getOrganizationUsageAudioSpeeches = os
         v.pipe(
           v.string(),
           v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.metadata({ type: 'integer' }),
           v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
@@ -2087,6 +2156,7 @@ export const getOrganizationUsageAudioSpeeches = os
         v.pipe(
           v.string(),
           v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.metadata({ type: 'integer' }),
           v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
@@ -2112,6 +2182,7 @@ export const getOrganizationUsageAudioTranscriptions = os
       start_time: v.pipe(
         v.string(),
         v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.metadata({ type: 'integer' }),
         v.transform((input) => Number(input)),
         v.number(),
         v.safeInteger(),
@@ -2120,6 +2191,7 @@ export const getOrganizationUsageAudioTranscriptions = os
         v.pipe(
           v.string(),
           v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.metadata({ type: 'integer' }),
           v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
@@ -2165,6 +2237,7 @@ export const getOrganizationUsageAudioTranscriptions = os
         v.pipe(
           v.string(),
           v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.metadata({ type: 'integer' }),
           v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
@@ -2190,6 +2263,7 @@ export const getOrganizationUsageCodeInterpreterSessions = os
       start_time: v.pipe(
         v.string(),
         v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.metadata({ type: 'integer' }),
         v.transform((input) => Number(input)),
         v.number(),
         v.safeInteger(),
@@ -2198,6 +2272,7 @@ export const getOrganizationUsageCodeInterpreterSessions = os
         v.pipe(
           v.string(),
           v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.metadata({ type: 'integer' }),
           v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
@@ -2222,6 +2297,7 @@ export const getOrganizationUsageCodeInterpreterSessions = os
         v.pipe(
           v.string(),
           v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.metadata({ type: 'integer' }),
           v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
@@ -2247,6 +2323,7 @@ export const getOrganizationUsageCompletions = os
       start_time: v.pipe(
         v.string(),
         v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.metadata({ type: 'integer' }),
         v.transform((input) => Number(input)),
         v.number(),
         v.safeInteger(),
@@ -2255,6 +2332,7 @@ export const getOrganizationUsageCompletions = os
         v.pipe(
           v.string(),
           v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.metadata({ type: 'integer' }),
           v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
@@ -2317,6 +2395,7 @@ export const getOrganizationUsageCompletions = os
         v.pipe(
           v.string(),
           v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.metadata({ type: 'integer' }),
           v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
@@ -2342,6 +2421,7 @@ export const getOrganizationUsageEmbeddings = os
       start_time: v.pipe(
         v.string(),
         v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.metadata({ type: 'integer' }),
         v.transform((input) => Number(input)),
         v.number(),
         v.safeInteger(),
@@ -2350,6 +2430,7 @@ export const getOrganizationUsageEmbeddings = os
         v.pipe(
           v.string(),
           v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.metadata({ type: 'integer' }),
           v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
@@ -2395,6 +2476,7 @@ export const getOrganizationUsageEmbeddings = os
         v.pipe(
           v.string(),
           v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.metadata({ type: 'integer' }),
           v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
@@ -2420,6 +2502,7 @@ export const getOrganizationUsageFileSearchCalls = os
       start_time: v.pipe(
         v.string(),
         v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.metadata({ type: 'integer' }),
         v.transform((input) => Number(input)),
         v.number(),
         v.safeInteger(),
@@ -2428,6 +2511,7 @@ export const getOrganizationUsageFileSearchCalls = os
         v.pipe(
           v.string(),
           v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.metadata({ type: 'integer' }),
           v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
@@ -2473,6 +2557,7 @@ export const getOrganizationUsageFileSearchCalls = os
         v.pipe(
           v.string(),
           v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.metadata({ type: 'integer' }),
           v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
@@ -2498,6 +2583,7 @@ export const getOrganizationUsageImages = os
       start_time: v.pipe(
         v.string(),
         v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.metadata({ type: 'integer' }),
         v.transform((input) => Number(input)),
         v.number(),
         v.safeInteger(),
@@ -2506,6 +2592,7 @@ export const getOrganizationUsageImages = os
         v.pipe(
           v.string(),
           v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.metadata({ type: 'integer' }),
           v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
@@ -2565,6 +2652,7 @@ export const getOrganizationUsageImages = os
         v.pipe(
           v.string(),
           v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.metadata({ type: 'integer' }),
           v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
@@ -2590,6 +2678,7 @@ export const getOrganizationUsageModerations = os
       start_time: v.pipe(
         v.string(),
         v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.metadata({ type: 'integer' }),
         v.transform((input) => Number(input)),
         v.number(),
         v.safeInteger(),
@@ -2598,6 +2687,7 @@ export const getOrganizationUsageModerations = os
         v.pipe(
           v.string(),
           v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.metadata({ type: 'integer' }),
           v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
@@ -2643,6 +2733,7 @@ export const getOrganizationUsageModerations = os
         v.pipe(
           v.string(),
           v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.metadata({ type: 'integer' }),
           v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
@@ -2668,6 +2759,7 @@ export const getOrganizationUsageVectorStores = os
       start_time: v.pipe(
         v.string(),
         v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.metadata({ type: 'integer' }),
         v.transform((input) => Number(input)),
         v.number(),
         v.safeInteger(),
@@ -2676,6 +2768,7 @@ export const getOrganizationUsageVectorStores = os
         v.pipe(
           v.string(),
           v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.metadata({ type: 'integer' }),
           v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
@@ -2700,6 +2793,7 @@ export const getOrganizationUsageVectorStores = os
         v.pipe(
           v.string(),
           v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.metadata({ type: 'integer' }),
           v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
@@ -2725,6 +2819,7 @@ export const getOrganizationUsageWebSearchCalls = os
       start_time: v.pipe(
         v.string(),
         v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.metadata({ type: 'integer' }),
         v.transform((input) => Number(input)),
         v.number(),
         v.safeInteger(),
@@ -2733,6 +2828,7 @@ export const getOrganizationUsageWebSearchCalls = os
         v.pipe(
           v.string(),
           v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.metadata({ type: 'integer' }),
           v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
@@ -2794,6 +2890,7 @@ export const getOrganizationUsageWebSearchCalls = os
         v.pipe(
           v.string(),
           v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.metadata({ type: 'integer' }),
           v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
@@ -2817,15 +2914,19 @@ export const getOrganizationUsers = os
   .input(
     v.object({
       limit: v.optional(
-        v.optional(
-          v.pipe(
-            v.string(),
-            v.regex(/^-?(?:0|[1-9]\d*)$/),
-            v.transform((input) => Number(input)),
-            v.number(),
-            v.safeInteger(),
+        v.pipe(
+          v.optional(
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.metadata({ type: 'integer' }),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+            ),
+            '20',
           ),
-          '20',
+          v.metadata({ default: 20 }),
         ),
       ),
       after: v.optional(v.string()),
@@ -2912,6 +3013,7 @@ export const getOrganizationUsersUserIdRoles = os
         v.pipe(
           v.string(),
           v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.metadata({ type: 'integer', minimum: 0, maximum: 1000 }),
           v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
@@ -2984,6 +3086,7 @@ export const getOrganizationExternalKeys = os
         v.pipe(
           v.string(),
           v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.metadata({ type: 'integer', minimum: 0, maximum: 100 }),
           v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
@@ -3070,6 +3173,7 @@ export const getOrganizationWorkloadIdentityProviders = os
         v.pipe(
           v.string(),
           v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.metadata({ type: 'integer', minimum: 1, maximum: 100 }),
           v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
@@ -3164,6 +3268,7 @@ export const getOrganizationWorkloadIdentityProvidersWorkloadIdentityProviderIdF
         v.pipe(
           v.string(),
           v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.metadata({ type: 'integer', minimum: 1, maximum: 100 }),
           v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
@@ -3293,6 +3398,7 @@ export const getOrganizationUsageDecisions = os
       start_time: v.pipe(
         v.string(),
         v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.metadata({ type: 'integer' }),
         v.transform((input) => Number(input)),
         v.number(),
         v.safeInteger(),
@@ -3306,6 +3412,7 @@ export const getOrganizationUsageDecisions = os
               v.pipe(
                 v.string(),
                 v.regex(/^-?(?:0|[1-9]\d*)$/),
+                v.metadata({ type: 'integer' }),
                 v.transform((input) => Number(input)),
                 v.number(),
                 v.safeInteger(),
@@ -3349,6 +3456,7 @@ export const getOrganizationUsageDecisions = os
               v.pipe(
                 v.string(),
                 v.regex(/^-?(?:0|[1-9]\d*)$/),
+                v.metadata({ type: 'integer' }),
                 v.transform((input) => Number(input)),
                 v.number(),
                 v.safeInteger(),
@@ -3577,6 +3685,7 @@ export const getOrganizationExternalStorage = os
         v.pipe(
           v.string(),
           v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.metadata({ type: 'integer', minimum: 1, maximum: 100 }),
           v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),

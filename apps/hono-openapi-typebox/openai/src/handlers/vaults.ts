@@ -117,7 +117,11 @@ export const vaultsHandler = new Hono()
             Codec(
               Type.Refine(
                 Type.Refine(
-                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '20' }),
+                  Type.Refine(
+                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '20' }),
+                    (value) => Number.isSafeInteger(Number(value)),
+                    () => 'must be a safe integer',
+                  ),
                   (value) => Number(value) >= 1,
                   () => 'must be >= 1',
                 ),
@@ -514,7 +518,11 @@ export const vaultsHandler = new Hono()
             Codec(
               Type.Refine(
                 Type.Refine(
-                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '20' }),
+                  Type.Refine(
+                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '20' }),
+                    (value) => Number.isSafeInteger(Number(value)),
+                    () => 'must be a safe integer',
+                  ),
                   (value) => Number(value) >= 1,
                   () => 'must be >= 1',
                 ),

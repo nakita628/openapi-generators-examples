@@ -215,8 +215,10 @@ export const audioHandler = new Hono()
             "Additional information to include in the transcription response.\n`logprobs` will return the log probabilities of the tokens in the\nresponse to understand the model's confidence in the transcription.\n`logprobs` only works with response_format set to `json` and only with\nthe models `gpt-4o-transcribe`, `gpt-4o-mini-transcribe`, and `gpt-4o-mini-transcribe-2025-12-15`. This field is not supported when using `gpt-4o-transcribe-diarize`.\n",
           ),
         'timestamp_granularities?': type('unknown')
-          .pipe((data) => (data === undefined || Array.isArray(data) ? data : [data]))
-          .to("'word' | 'segment'[]")
+          .pipe(
+            (data) => (data === undefined || Array.isArray(data) ? data : [data]),
+            type("'word' | 'segment'").array(),
+          )
           .describe(
             'The timestamp granularities to populate for this transcription. `response_format` must be set `verbose_json` to use timestamp granularities. Either or both of these options are supported: `word`, or `segment`. Note: There is no additional latency for segment timestamps, but generating word timestamps incurs additional latency.\nThis option is not available for `gpt-4o-transcribe-diarize`.\n',
           ),

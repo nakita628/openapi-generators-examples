@@ -18,6 +18,7 @@ export const projectsHandler = new Hono()
           limit: v.pipe(
             v.string(),
             v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.metadata({ type: 'integer', minimum: 0, maximum: 1000 }),
             v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
@@ -59,17 +60,21 @@ export const projectsHandler = new Hono()
     sValidator(
       'query',
       v.object({
-        limit: v.optional(
-          v.pipe(
-            v.string(),
-            v.regex(/^-?(?:0|[1-9]\d*)$/),
-            v.transform((input) => Number(input)),
-            v.number(),
-            v.safeInteger(),
-            v.minValue(0),
-            v.maxValue(1000),
+        limit: v.pipe(
+          v.optional(
+            v.pipe(
+              v.string(),
+              v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.metadata({ type: 'integer', minimum: 0, maximum: 1000 }),
+              v.transform((input) => Number(input)),
+              v.number(),
+              v.safeInteger(),
+              v.minValue(0),
+              v.maxValue(1000),
+            ),
+            '1000',
           ),
-          '1000',
+          v.metadata({ default: 1000 }),
         ),
         after: v.optional(v.string()),
         order: v.optional(v.picklist(['asc', 'desc']), 'asc'),
@@ -109,6 +114,7 @@ export const projectsHandler = new Hono()
           limit: v.pipe(
             v.string(),
             v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.metadata({ type: 'integer', minimum: 0, maximum: 1000 }),
             v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),

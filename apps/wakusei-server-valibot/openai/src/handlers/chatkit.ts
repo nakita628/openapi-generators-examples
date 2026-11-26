@@ -50,6 +50,7 @@ export const getChatkitThreadsThreadIdItems = os
         v.pipe(
           v.string(),
           v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.metadata({ type: 'integer', minimum: 0, maximum: 100 }),
           v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
@@ -117,6 +118,7 @@ export const getChatkitThreads = os
         v.pipe(
           v.string(),
           v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.metadata({ type: 'integer', minimum: 0, maximum: 100 }),
           v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),

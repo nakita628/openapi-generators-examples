@@ -4,9 +4,9 @@ One `tsc -p` per app × document (`bun scripts/typecheck.ts`), over the generate
 tsconfig. There is no CI: `scripts/generate.ts` and `scripts/typecheck.ts` record each result in
 [results.json](./results.json), and `bun scripts/results.ts write` writes this file from it.
 
-274 outputs of 11 documents: 241 with no errors, 31 with errors, 2 not checked; 1 attempts failed.
+336 outputs of 14 documents: 288 with no errors, 46 with errors, 2 not checked; 14 attempts failed.
 
-Generators (outputs): asphodelos@0.3.1 (3), asphodelos@0.5.1 (3), asphodelos@0.5.6 (4), openapi-to-trpc@0.3.0 (9), openapi-to-trpc@0.3.1 (15), openapi-to-trpc@0.4.0 (20), takibi-hono@0.10.2 (84), takibi-hono@0.11.1 (70), wakusei@0.1.0 (36), wakusei@0.1.1 (30).
+Generators (outputs): asphodelos@0.3.1 (3), asphodelos@0.5.1 (3), asphodelos@0.5.6 (3), asphodelos@0.8.2 (5), openapi-to-trpc@0.3.0 (9), openapi-to-trpc@0.3.1 (15), openapi-to-trpc@0.4.0 (32), takibi-hono@0.10.2 (84), takibi-hono@0.11.1 (98), wakusei@0.1.0 (36), wakusei@0.1.1 (48).
 
 ## Errors
 
@@ -15,12 +15,27 @@ Generators (outputs): asphodelos@0.3.1 (3), asphodelos@0.5.1 (3), asphodelos@0.5
 | [discord](../openapi/discord.json) | hono-define-handler-effect | 8 | `src/routes.ts` | TS2304 ×6, TS7006 ×2 | nakita628/takibi-hono#96 |
 | [discord](../openapi/discord.json) | hono-effect | 8 | `src/components/index.ts` | TS2304 ×6, TS7006 ×2 | nakita628/takibi-hono#96 |
 | [discord](../openapi/discord.json) | hono-openapi-effect | 8 | `src/components/index.ts` | TS2304 ×6, TS7006 ×2 | nakita628/takibi-hono#96 |
+| [gitlab](../openapi/gitlab.yaml) | elysia-typebox | 556 | `src/hooks/*` | TS2339 ×256, TS2323 ×138, TS2393 ×138, TS2769 ×24 | nakita628/asphodelos#94, nakita628/asphodelos#96 |
+| [gitlab](../openapi/gitlab.yaml) | openapi-to-trpc-arktype | 5 | `src/routes/*`, `src/components/index.ts` | TS1117 ×3, TS2488 ×2 | nakita628/openapi-to-trpc#65; nakita628/truth (not filed yet): arktype writes `[...data].length` to narrow a binary string with minLength, and a File is not iterable |
+| [gitlab](../openapi/gitlab.yaml) | openapi-to-trpc-effect | 3 | `src/routes/*` | TS1117 ×3 | nakita628/openapi-to-trpc#65 |
+| [gitlab](../openapi/gitlab.yaml) | openapi-to-trpc-valibot | 3 | `src/routes/*` | TS1117 ×3 | nakita628/openapi-to-trpc#65 |
+| [gitlab](../openapi/gitlab.yaml) | openapi-to-trpc-zod | 3 | `src/routes/*` | TS1117 ×3 | nakita628/openapi-to-trpc#65 |
+| [gitlab](../openapi/gitlab.yaml) | wakusei-contract-arktype | 11 | `src/handlers/*`, `src/contract.ts`, `src/components/index.ts` | TS2451 ×6, TS1117 ×3, TS2488 ×2 | nakita628/wakusei#39; nakita628/truth (not filed yet): arktype writes `[...data].length` to narrow a binary string with minLength, and a File is not iterable |
+| [gitlab](../openapi/gitlab.yaml) | wakusei-contract-valibot | 9 | `src/handlers/*`, `src/contract.ts` | TS2451 ×6, TS1117 ×3 | nakita628/wakusei#39 |
+| [gitlab](../openapi/gitlab.yaml) | wakusei-contract-zod | 9 | `src/handlers/*`, `src/contract.ts` | TS2451 ×6, TS1117 ×3 | nakita628/wakusei#39 |
+| [gitlab](../openapi/gitlab.yaml) | wakusei-server-arktype | 8 | `src/handlers/*`, `src/components/index.ts` | TS2451 ×6, TS2488 ×2 | nakita628/wakusei#39; nakita628/truth (not filed yet): arktype writes `[...data].length` to narrow a binary string with minLength, and a File is not iterable |
+| [gitlab](../openapi/gitlab.yaml) | wakusei-server-valibot | 6 | `src/handlers/*` | TS2451 ×6 | nakita628/wakusei#39 |
+| [gitlab](../openapi/gitlab.yaml) | wakusei-server-zod | 6 | `src/handlers/*` | TS2451 ×6 | nakita628/wakusei#39 |
+| [line-messaging-api](../openapi/line-messaging-api.yaml) | hono-define-handler-effect | 264 | `src/routes.ts` | TS2304 ×198, TS7006 ×66 | nakita628/takibi-hono#96 |
+| [line-messaging-api](../openapi/line-messaging-api.yaml) | hono-effect | 264 | `src/components/index.ts` | TS2304 ×198, TS7006 ×66 | nakita628/takibi-hono#96 |
+| [line-messaging-api](../openapi/line-messaging-api.yaml) | hono-openapi-effect | 264 | `src/components/index.ts` | TS2304 ×198, TS7006 ×66 | nakita628/takibi-hono#96 |
 | [openai](../openapi/openai.yaml) | hono-define-handler-effect | 5097 | `src/routes.ts` | TS2304 ×3738, TS7006 ×1246, TS2345 ×111, TS2322 ×2 | nakita628/takibi-hono#96 |
 | [openai](../openapi/openai.yaml) | hono-effect | 5017 | `src/components/index.ts`, `src/handlers/*` | TS2304 ×3738, TS7006 ×1246, TS2345 ×31, TS2322 ×2 | nakita628/takibi-hono#96 |
 | [openai](../openapi/openai.yaml) | hono-openapi-effect | 5104 | `src/components/index.ts`, `src/handlers/*` | TS2304 ×3738, TS7006 ×1246, TS2345 ×118, TS2322 ×2 | nakita628/takibi-hono#96 |
 | [spotify](../openapi/spotify.yaml) | hono-define-handler-effect | 164 | `src/routes.ts` | TS2304 ×120, TS7006 ×40, TS2345 ×4 | nakita628/takibi-hono#96 |
 | [spotify](../openapi/spotify.yaml) | hono-effect | 156 | `src/components/index.ts` | TS2304 ×117, TS7006 ×39 | nakita628/takibi-hono#96 |
 | [spotify](../openapi/spotify.yaml) | hono-openapi-effect | 160 | `src/components/index.ts` | TS2304 ×117, TS7006 ×39, TS2345 ×4 | nakita628/takibi-hono#96 |
+| [stripe](../openapi/stripe.json) | elysia-typebox | 192 | `src/hooks/*` | TS2339 ×192 | nakita628/asphodelos#94, nakita628/asphodelos#95 |
 | [stripe](../openapi/stripe.json) | hono-arktype | 23572 | `src/components/index.ts` | TS2345 ×23572 | nakita628/truth (not filed yet): arktype writes `type(...).or("Alias")` for a length-narrowed string and a $ref inside a cycle, and the alias is unresolvable |
 | [stripe](../openapi/stripe.json) | hono-define-handler-effect | 86 | `src/routes.ts` | TS2322 ×86 | nakita628/truth (not filed yet): the helper type of a recursive declaration drops `\| null` for a nullable enum, anyOf, oneOf or allOf |
 | [stripe](../openapi/stripe.json) | hono-define-handler-valibot | 86 | `src/routes.ts` | TS2322 ×86 | nakita628/truth (not filed yet): the helper type of a recursive declaration drops `\| null` for a nullable enum, anyOf, oneOf or allOf |
@@ -50,7 +65,20 @@ The last attempt failed; an older output, if there is one, is kept.
 
 | Document | App | Generator | Error | Cause |
 | --- | --- | --- | --- | --- |
-| [stripe](../openapi/stripe.json) | elysia-typebox | asphodelos@0.5.6 | Expected `,` or `}` but found `.` | nakita628/asphodelos#65 |
+| [gitlab](../openapi/gitlab.yaml) | hono-arktype | takibi-hono@0.11.1 | Expected `,` or `)` but found `:` | nakita628/takibi-hono#102 |
+| [gitlab](../openapi/gitlab.yaml) | hono-define-handler-arktype | takibi-hono@0.11.1 | Expected `,` or `)` but found `:` | nakita628/takibi-hono#102 |
+| [gitlab](../openapi/gitlab.yaml) | hono-define-handler-effect | takibi-hono@0.11.1 | Expected `,` or `)` but found `:` | nakita628/takibi-hono#102 |
+| [gitlab](../openapi/gitlab.yaml) | hono-define-handler-valibot | takibi-hono@0.11.1 | Expected `,` or `)` but found `:` | nakita628/takibi-hono#102 |
+| [gitlab](../openapi/gitlab.yaml) | hono-define-handler-zod | takibi-hono@0.11.1 | Expected `,` or `)` but found `:` | nakita628/takibi-hono#102 |
+| [gitlab](../openapi/gitlab.yaml) | hono-effect | takibi-hono@0.11.1 | Expected `,` or `)` but found `:` | nakita628/takibi-hono#102 |
+| [gitlab](../openapi/gitlab.yaml) | hono-openapi-arktype | takibi-hono@0.11.1 | Expected `,` or `)` but found `:` | nakita628/takibi-hono#102 |
+| [gitlab](../openapi/gitlab.yaml) | hono-openapi-effect | takibi-hono@0.11.1 | Expected `,` or `)` but found `:` | nakita628/takibi-hono#102 |
+| [gitlab](../openapi/gitlab.yaml) | hono-openapi-typebox | takibi-hono@0.11.1 | Expected `,` or `)` but found `:` | nakita628/takibi-hono#102 |
+| [gitlab](../openapi/gitlab.yaml) | hono-openapi-valibot | takibi-hono@0.11.1 | Expected `,` or `)` but found `:` | nakita628/takibi-hono#102 |
+| [gitlab](../openapi/gitlab.yaml) | hono-openapi-zod | takibi-hono@0.11.1 | Expected `,` or `)` but found `:` | nakita628/takibi-hono#102 |
+| [gitlab](../openapi/gitlab.yaml) | hono-typebox | takibi-hono@0.11.1 | Expected `,` or `)` but found `:` | nakita628/takibi-hono#102 |
+| [gitlab](../openapi/gitlab.yaml) | hono-valibot | takibi-hono@0.11.1 | Expected `,` or `)` but found `:` | nakita628/takibi-hono#102 |
+| [gitlab](../openapi/gitlab.yaml) | hono-zod | takibi-hono@0.11.1 | Expected `,` or `)` but found `:` | nakita628/takibi-hono#102 |
 
 ## Not checked
 
@@ -66,6 +94,8 @@ The last attempt failed; an older output, if there is one, is kept.
 - [line-insight](../openapi/line-insight.yaml): elysia-typebox, hono-arktype, hono-define-handler-arktype, hono-define-handler-effect, hono-define-handler-valibot, hono-define-handler-zod, hono-effect, hono-openapi-arktype, hono-openapi-effect, hono-openapi-typebox, hono-openapi-valibot, hono-openapi-zod, hono-typebox, hono-valibot, hono-zod, openapi-to-trpc-arktype, openapi-to-trpc-effect, openapi-to-trpc-valibot, openapi-to-trpc-zod, wakusei-contract-arktype, wakusei-contract-valibot, wakusei-contract-zod, wakusei-server-arktype, wakusei-server-valibot, wakusei-server-zod
 - [line-liff](../openapi/line-liff.yaml): elysia-typebox, hono-arktype, hono-define-handler-arktype, hono-define-handler-effect, hono-define-handler-valibot, hono-define-handler-zod, hono-effect, hono-openapi-arktype, hono-openapi-effect, hono-openapi-typebox, hono-openapi-valibot, hono-openapi-zod, hono-typebox, hono-valibot, hono-zod, openapi-to-trpc-arktype, openapi-to-trpc-effect, openapi-to-trpc-valibot, openapi-to-trpc-zod, wakusei-contract-arktype, wakusei-contract-valibot, wakusei-contract-zod, wakusei-server-arktype, wakusei-server-valibot, wakusei-server-zod
 - [line-manage-audience](../openapi/line-manage-audience.yaml): elysia-typebox, hono-arktype, hono-define-handler-arktype, hono-define-handler-effect, hono-define-handler-valibot, hono-define-handler-zod, hono-effect, hono-openapi-arktype, hono-openapi-effect, hono-openapi-typebox, hono-openapi-valibot, hono-openapi-zod, hono-typebox, hono-valibot, hono-zod, openapi-to-trpc-arktype, openapi-to-trpc-effect, openapi-to-trpc-valibot, openapi-to-trpc-zod, wakusei-contract-arktype, wakusei-contract-valibot, wakusei-contract-zod, wakusei-server-arktype, wakusei-server-valibot, wakusei-server-zod
+- [line-messaging-api](../openapi/line-messaging-api.yaml): elysia-typebox, hono-arktype, hono-define-handler-arktype, hono-define-handler-valibot, hono-define-handler-zod, hono-openapi-arktype, hono-openapi-typebox, hono-openapi-valibot, hono-openapi-zod, hono-typebox, hono-valibot, hono-zod, openapi-to-trpc-arktype, openapi-to-trpc-effect, openapi-to-trpc-valibot, openapi-to-trpc-zod, wakusei-contract-arktype, wakusei-contract-valibot, wakusei-contract-zod, wakusei-server-arktype, wakusei-server-valibot, wakusei-server-zod
+- [line-module](../openapi/line-module.yaml): elysia-typebox, hono-arktype, hono-define-handler-arktype, hono-define-handler-effect, hono-define-handler-valibot, hono-define-handler-zod, hono-effect, hono-openapi-arktype, hono-openapi-effect, hono-openapi-typebox, hono-openapi-valibot, hono-openapi-zod, hono-typebox, hono-valibot, hono-zod, openapi-to-trpc-arktype, openapi-to-trpc-effect, openapi-to-trpc-valibot, openapi-to-trpc-zod, wakusei-contract-arktype, wakusei-contract-valibot, wakusei-contract-zod, wakusei-server-arktype, wakusei-server-valibot, wakusei-server-zod
 - [openai](../openapi/openai.yaml): elysia-typebox, hono-arktype, hono-define-handler-arktype, hono-define-handler-valibot, hono-define-handler-zod, hono-openapi-arktype, hono-openapi-typebox, hono-openapi-valibot, hono-openapi-zod, hono-typebox, hono-valibot, hono-zod, openapi-to-trpc-arktype, openapi-to-trpc-effect, openapi-to-trpc-valibot, openapi-to-trpc-zod, wakusei-contract-arktype, wakusei-contract-valibot, wakusei-contract-zod, wakusei-server-arktype, wakusei-server-valibot, wakusei-server-zod
 - [petstore](../openapi/petstore.json): elysia-typebox, hono-arktype, hono-define-handler-arktype, hono-define-handler-effect, hono-define-handler-valibot, hono-define-handler-zod, hono-effect, hono-openapi-arktype, hono-openapi-effect, hono-openapi-typebox, hono-openapi-valibot, hono-openapi-zod, hono-typebox, hono-valibot, hono-zod, openapi-to-trpc-arktype, openapi-to-trpc-effect, openapi-to-trpc-valibot, openapi-to-trpc-zod, wakusei-contract-arktype, wakusei-contract-valibot, wakusei-contract-zod, wakusei-server-arktype, wakusei-server-valibot, wakusei-server-zod
 - [spotify](../openapi/spotify.yaml): elysia-typebox, hono-arktype, hono-define-handler-arktype, hono-define-handler-valibot, hono-define-handler-zod, hono-openapi-arktype, hono-openapi-typebox, hono-openapi-valibot, hono-openapi-zod, hono-typebox, hono-valibot, hono-zod, openapi-to-trpc-arktype, openapi-to-trpc-effect, openapi-to-trpc-valibot, openapi-to-trpc-zod, wakusei-contract-arktype, wakusei-contract-valibot, wakusei-contract-zod, wakusei-server-arktype, wakusei-server-valibot, wakusei-server-zod

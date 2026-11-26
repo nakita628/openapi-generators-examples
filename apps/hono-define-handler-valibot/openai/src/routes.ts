@@ -44942,7 +44942,7 @@ export const SessionAgentConfigParamSchema = v.pipe(
       v.pipe(
         v.nullable(v.pipe(v.array(AgentToolConfigParamSchema), v.minLength(0), v.maxLength(16384))),
         v.description(
-          'Tools available to the agent. Omit to inherit, or pass null to clear them. The resolved tool list must fit within 3 MiB (3,145,728 bytes) of compact UTF-8 JSON.',
+          'Tools available to the agent. Omit to inherit, or pass null to clear them. The resolved tool list must fit within 8 MiB (8,388,608 bytes) of compact UTF-8 JSON.',
         ),
       ),
     ),
@@ -65840,15 +65840,19 @@ export const InferenceServiceUnavailableResponse = {
 
 export const getAssistantsHandler = defineHandler({
   query: v.object({
-    limit: v.optional(
-      v.pipe(
-        v.string(),
-        v.regex(/^-?(?:0|[1-9]\d*)$/),
-        v.transform((input) => Number(input)),
-        v.number(),
-        v.safeInteger(),
+    limit: v.pipe(
+      v.optional(
+        v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.metadata({ type: 'integer' }),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
+        '20',
       ),
-      '20',
+      v.metadata({ default: 20 }),
     ),
     order: v.optional(v.picklist(['asc', 'desc']), 'desc'),
     after: v.optional(v.string()),
@@ -65952,6 +65956,7 @@ export const postAudioTranscriptionsHandler = defineHandler({
         v.pipe(
           v.string(),
           v.regex(/^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/),
+          v.metadata({ type: 'number' }),
           v.transform((input) => Number(input)),
           v.number(),
           v.finite(),
@@ -65961,6 +65966,7 @@ export const postAudioTranscriptionsHandler = defineHandler({
       v.description(
         'The sampling temperature, between 0 and 1. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic. If set to 0, the model will use [log probability](https://en.wikipedia.org/wiki/Log_probability) to automatically increase the temperature until certain thresholds are hit.\n',
       ),
+      v.metadata({ default: 0 }),
     ),
     include: v.optional(
       v.pipe(
@@ -66037,6 +66043,7 @@ export const postAudioTranscriptionsHandler = defineHandler({
                   v.pipe(
                     v.string(),
                     v.regex(/^-?(?:0|[1-9]\d*)$/),
+                    v.metadata({ type: 'integer' }),
                     v.transform((input) => Number(input)),
                     v.number(),
                     v.safeInteger(),
@@ -66046,12 +66053,14 @@ export const postAudioTranscriptionsHandler = defineHandler({
                 v.description(
                   'Amount of audio to include before the VAD detected speech (in \nmilliseconds).\n',
                 ),
+                v.metadata({ default: 300 }),
               ),
               silence_duration_ms: v.pipe(
                 v.optional(
                   v.pipe(
                     v.string(),
                     v.regex(/^-?(?:0|[1-9]\d*)$/),
+                    v.metadata({ type: 'integer' }),
                     v.transform((input) => Number(input)),
                     v.number(),
                     v.safeInteger(),
@@ -66061,12 +66070,14 @@ export const postAudioTranscriptionsHandler = defineHandler({
                 v.description(
                   'Duration of silence to detect speech stop (in milliseconds).\nWith shorter values the model will respond more quickly, \nbut may jump in on short pauses from the user.\n',
                 ),
+                v.metadata({ default: 200 }),
               ),
               threshold: v.pipe(
                 v.optional(
                   v.pipe(
                     v.string(),
                     v.regex(/^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/),
+                    v.metadata({ type: 'number' }),
                     v.transform((input) => Number(input)),
                     v.number(),
                     v.finite(),
@@ -66076,6 +66087,7 @@ export const postAudioTranscriptionsHandler = defineHandler({
                 v.description(
                   'Sensitivity threshold (0.0 to 1.0) for voice activity detection. A \nhigher threshold will require louder audio to activate the model, and \nthus might perform better in noisy environments.\n',
                 ),
+                v.metadata({ default: 0.5 }),
               ),
             }),
           ]),
@@ -66158,6 +66170,7 @@ export const postAudioTranslationsHandler = defineHandler({
         v.pipe(
           v.string(),
           v.regex(/^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/),
+          v.metadata({ type: 'number' }),
           v.transform((input) => Number(input)),
           v.number(),
           v.finite(),
@@ -66167,6 +66180,7 @@ export const postAudioTranslationsHandler = defineHandler({
       v.description(
         'The sampling temperature, between 0 and 1. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic. If set to 0, the model will use [log probability](https://en.wikipedia.org/wiki/Log_probability) to automatically increase the temperature until certain thresholds are hit.\n',
       ),
+      v.metadata({ default: 0 }),
     ),
   }),
   response: v.union([
@@ -66178,15 +66192,19 @@ export const postAudioTranslationsHandler = defineHandler({
 export const getAudioVoiceConsentsHandler = defineHandler({
   query: v.object({
     after: v.optional(v.string()),
-    limit: v.optional(
-      v.pipe(
-        v.string(),
-        v.regex(/^-?(?:0|[1-9]\d*)$/),
-        v.transform((input) => Number(input)),
-        v.number(),
-        v.safeInteger(),
+    limit: v.pipe(
+      v.optional(
+        v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.metadata({ type: 'integer' }),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
+        '20',
       ),
-      '20',
+      v.metadata({ default: 20 }),
     ),
   }),
   response: VoiceConsentListResourceSchema,
@@ -66227,15 +66245,19 @@ export const deleteAudioVoicesVoiceIdHandler = defineHandler({
 export const getBatchesHandler = defineHandler({
   query: v.object({
     after: v.optional(v.string()),
-    limit: v.optional(
-      v.pipe(
-        v.string(),
-        v.regex(/^-?(?:0|[1-9]\d*)$/),
-        v.transform((input) => Number(input)),
-        v.number(),
-        v.safeInteger(),
+    limit: v.pipe(
+      v.optional(
+        v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.metadata({ type: 'integer' }),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
+        '20',
       ),
-      '20',
+      v.metadata({ default: 20 }),
     ),
   }),
   response: ListBatchesResponseSchema,
@@ -66281,15 +66303,19 @@ export const getChatCompletionsHandler = defineHandler({
       ),
     ),
     after: v.optional(v.string()),
-    limit: v.optional(
-      v.pipe(
-        v.string(),
-        v.regex(/^-?(?:0|[1-9]\d*)$/),
-        v.transform((input) => Number(input)),
-        v.number(),
-        v.safeInteger(),
+    limit: v.pipe(
+      v.optional(
+        v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.metadata({ type: 'integer' }),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
+        '20',
       ),
-      '20',
+      v.metadata({ default: 20 }),
     ),
     order: v.optional(v.picklist(['asc', 'desc']), 'asc'),
   }),
@@ -66321,15 +66347,19 @@ export const getChatCompletionsCompletionIdMessagesHandler = defineHandler({
   param: v.object({ completion_id: v.string() }),
   query: v.object({
     after: v.optional(v.string()),
-    limit: v.optional(
-      v.pipe(
-        v.string(),
-        v.regex(/^-?(?:0|[1-9]\d*)$/),
-        v.transform((input) => Number(input)),
-        v.number(),
-        v.safeInteger(),
+    limit: v.pipe(
+      v.optional(
+        v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.metadata({ type: 'integer' }),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
+        '20',
       ),
-      '20',
+      v.metadata({ default: 20 }),
     ),
     order: v.optional(v.picklist(['asc', 'desc']), 'asc'),
   }),
@@ -66343,15 +66373,19 @@ export const postCompletionsHandler = defineHandler({
 
 export const getContainersHandler = defineHandler({
   query: v.object({
-    limit: v.optional(
-      v.pipe(
-        v.string(),
-        v.regex(/^-?(?:0|[1-9]\d*)$/),
-        v.transform((input) => Number(input)),
-        v.number(),
-        v.safeInteger(),
+    limit: v.pipe(
+      v.optional(
+        v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.metadata({ type: 'integer' }),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
+        '20',
       ),
-      '20',
+      v.metadata({ default: 20 }),
     ),
     order: v.optional(v.picklist(['asc', 'desc']), 'desc'),
     after: v.optional(v.string()),
@@ -66382,15 +66416,19 @@ export const deleteContainersContainerIdHandler = defineHandler({
 export const getContainersContainerIdFilesHandler = defineHandler({
   param: v.object({ container_id: v.string() }),
   query: v.object({
-    limit: v.optional(
-      v.pipe(
-        v.string(),
-        v.regex(/^-?(?:0|[1-9]\d*)$/),
-        v.transform((input) => Number(input)),
-        v.number(),
-        v.safeInteger(),
+    limit: v.pipe(
+      v.optional(
+        v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.metadata({ type: 'integer' }),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
+        '20',
       ),
-      '20',
+      v.metadata({ default: 20 }),
     ),
     order: v.optional(v.picklist(['asc', 'desc']), 'desc'),
     after: v.optional(v.string()),
@@ -66426,15 +66464,19 @@ export const getContainersContainerIdFilesFileIdContentHandler = defineHandler({
 export const getConversationsConversationIdItemsHandler = defineHandler({
   param: v.object({ conversation_id: v.pipe(v.string(), v.metadata({ examples: ['conv_123'] })) }),
   query: v.object({
-    limit: v.optional(
-      v.pipe(
-        v.string(),
-        v.regex(/^-?(?:0|[1-9]\d*)$/),
-        v.transform((input) => Number(input)),
-        v.number(),
-        v.safeInteger(),
+    limit: v.pipe(
+      v.optional(
+        v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.metadata({ type: 'integer' }),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
+        '20',
       ),
-      '20',
+      v.metadata({ default: 20 }),
     ),
     order: v.optional(v.picklist(['asc', 'desc'])),
     after: v.optional(v.string()),
@@ -66525,15 +66567,19 @@ export const postEmbeddingsHandler = defineHandler({
 export const getEvalsHandler = defineHandler({
   query: v.object({
     after: v.optional(v.string()),
-    limit: v.optional(
-      v.pipe(
-        v.string(),
-        v.regex(/^-?(?:0|[1-9]\d*)$/),
-        v.transform((input) => Number(input)),
-        v.number(),
-        v.safeInteger(),
+    limit: v.pipe(
+      v.optional(
+        v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.metadata({ type: 'integer' }),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
+        '20',
       ),
-      '20',
+      v.metadata({ default: 20 }),
     ),
     order: v.optional(v.picklist(['asc', 'desc']), 'asc'),
     order_by: v.optional(v.picklist(['created_at', 'updated_at']), 'created_at'),
@@ -66575,15 +66621,19 @@ export const getEvalsEvalIdRunsHandler = defineHandler({
   param: v.object({ eval_id: v.string() }),
   query: v.object({
     after: v.optional(v.string()),
-    limit: v.optional(
-      v.pipe(
-        v.string(),
-        v.regex(/^-?(?:0|[1-9]\d*)$/),
-        v.transform((input) => Number(input)),
-        v.number(),
-        v.safeInteger(),
+    limit: v.pipe(
+      v.optional(
+        v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.metadata({ type: 'integer' }),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
+        '20',
       ),
-      '20',
+      v.metadata({ default: 20 }),
     ),
     order: v.optional(v.picklist(['asc', 'desc']), 'asc'),
     status: v.optional(v.picklist(['queued', 'in_progress', 'completed', 'canceled', 'failed'])),
@@ -66625,15 +66675,19 @@ export const getEvalsEvalIdRunsRunIdOutputItemsHandler = defineHandler({
   param: v.object({ eval_id: v.string(), run_id: v.string() }),
   query: v.object({
     after: v.optional(v.string()),
-    limit: v.optional(
-      v.pipe(
-        v.string(),
-        v.regex(/^-?(?:0|[1-9]\d*)$/),
-        v.transform((input) => Number(input)),
-        v.number(),
-        v.safeInteger(),
+    limit: v.pipe(
+      v.optional(
+        v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.metadata({ type: 'integer' }),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
+        '20',
       ),
-      '20',
+      v.metadata({ default: 20 }),
     ),
     status: v.optional(v.picklist(['fail', 'pass'])),
     order: v.optional(v.picklist(['asc', 'desc']), 'asc'),
@@ -66649,15 +66703,19 @@ export const getEvalsEvalIdRunsRunIdOutputItemsOutputItemIdHandler = defineHandl
 export const getFilesHandler = defineHandler({
   query: v.object({
     purpose: v.optional(v.string()),
-    limit: v.optional(
-      v.pipe(
-        v.string(),
-        v.regex(/^-?(?:0|[1-9]\d*)$/),
-        v.transform((input) => Number(input)),
-        v.number(),
-        v.safeInteger(),
+    limit: v.pipe(
+      v.optional(
+        v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.metadata({ type: 'integer' }),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
+        '10000',
       ),
-      '10000',
+      v.metadata({ default: 10000 }),
     ),
     order: v.optional(v.picklist(['asc', 'desc']), 'desc'),
     after: v.optional(v.string()),
@@ -66741,15 +66799,19 @@ export const getFineTuningCheckpointsFineTunedModelCheckpointPermissionsHandler 
   query: v.object({
     project_id: v.optional(v.string()),
     after: v.optional(v.string()),
-    limit: v.optional(
-      v.pipe(
-        v.string(),
-        v.regex(/^-?(?:0|[1-9]\d*)$/),
-        v.transform((input) => Number(input)),
-        v.number(),
-        v.safeInteger(),
+    limit: v.pipe(
+      v.optional(
+        v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.metadata({ type: 'integer' }),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
+        '10',
       ),
-      '10',
+      v.metadata({ default: 10 }),
     ),
     order: v.optional(v.picklist(['ascending', 'descending']), 'descending'),
   }),
@@ -66782,15 +66844,19 @@ export const deleteFineTuningCheckpointsFineTunedModelCheckpointPermissionsPermi
 export const getFineTuningJobsHandler = defineHandler({
   query: v.object({
     after: v.optional(v.string()),
-    limit: v.optional(
-      v.pipe(
-        v.string(),
-        v.regex(/^-?(?:0|[1-9]\d*)$/),
-        v.transform((input) => Number(input)),
-        v.number(),
-        v.safeInteger(),
+    limit: v.pipe(
+      v.optional(
+        v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.metadata({ type: 'integer' }),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
+        '20',
       ),
-      '20',
+      v.metadata({ default: 20 }),
     ),
     metadata: v.optional(
       v.pipe(
@@ -66837,15 +66903,19 @@ export const getFineTuningJobsFineTuningJobIdCheckpointsHandler = defineHandler(
   }),
   query: v.object({
     after: v.optional(v.string()),
-    limit: v.optional(
-      v.pipe(
-        v.string(),
-        v.regex(/^-?(?:0|[1-9]\d*)$/),
-        v.transform((input) => Number(input)),
-        v.number(),
-        v.safeInteger(),
+    limit: v.pipe(
+      v.optional(
+        v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.metadata({ type: 'integer' }),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
+        '10',
       ),
-      '10',
+      v.metadata({ default: 10 }),
     ),
   }),
   response: ListFineTuningJobCheckpointsResponseSchema,
@@ -66860,15 +66930,19 @@ export const getFineTuningJobsFineTuningJobIdEventsHandler = defineHandler({
   }),
   query: v.object({
     after: v.optional(v.string()),
-    limit: v.optional(
-      v.pipe(
-        v.string(),
-        v.regex(/^-?(?:0|[1-9]\d*)$/),
-        v.transform((input) => Number(input)),
-        v.number(),
-        v.safeInteger(),
+    limit: v.pipe(
+      v.optional(
+        v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.metadata({ type: 'integer' }),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
+        '20',
       ),
-      '20',
+      v.metadata({ default: 20 }),
     ),
   }),
   response: ListFineTuningJobEventsResponseSchema,
@@ -66905,6 +66979,7 @@ export const postImagesEditsHandler = defineHandler({
             v.pipe(
               v.string(),
               v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.metadata({ type: 'integer', minimum: 2, maximum: 16 }),
               v.transform((input) => Number(input)),
               v.number(),
               v.safeInteger(),
@@ -66927,6 +67002,7 @@ export const postImagesEditsHandler = defineHandler({
             v.pipe(
               v.string(),
               v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.metadata({ type: 'integer', minimum: 20 }),
               v.transform((input) => Number(input)),
               v.number(),
               v.safeInteger(),
@@ -67027,6 +67103,7 @@ export const postImagesEditsHandler = defineHandler({
             v.pipe(
               v.string(),
               v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.metadata({ type: 'integer', minimum: 1, maximum: 10 }),
               v.transform((input) => Number(input)),
               v.number(),
               v.safeInteger(),
@@ -67038,7 +67115,7 @@ export const postImagesEditsHandler = defineHandler({
         '1',
       ),
       v.description('The number of images to generate. Must be between 1 and 10.'),
-      v.metadata({ examples: [1] }),
+      v.metadata({ examples: [1], default: 1 }),
     ),
     size: v.pipe(
       v.optional(
@@ -67143,6 +67220,7 @@ export const postImagesEditsHandler = defineHandler({
             v.pipe(
               v.string(),
               v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.metadata({ type: 'integer' }),
               v.transform((input) => Number(input)),
               v.number(),
               v.safeInteger(),
@@ -67154,7 +67232,7 @@ export const postImagesEditsHandler = defineHandler({
       v.description(
         'The compression level (0-100%) for the generated images. This parameter\nis only supported for the GPT image models with the `webp` or `jpeg` output\nformats, and defaults to 100.\n',
       ),
-      v.metadata({ examples: [100] }),
+      v.metadata({ examples: [100], default: 100 }),
     ),
     safety_identifier: v.optional(
       v.pipe(
@@ -67221,6 +67299,7 @@ export const postImagesEditsHandler = defineHandler({
                 v.pipe(
                   v.string(),
                   v.regex(/^-?(?:0|[1-9]\d*)$/),
+                  v.metadata({ type: 'integer', minimum: 0, maximum: 3 }),
                   v.transform((input) => Number(input)),
                   v.number(),
                   v.safeInteger(),
@@ -67232,7 +67311,7 @@ export const postImagesEditsHandler = defineHandler({
               v.description(
                 'The number of partial images to generate. This parameter is used for\nstreaming responses that return partial images. Value must be between 0 and 3.\nWhen set to 0, the response will be a single image sent in one streaming event.\n\nNote that the final image may be sent before the full number of partial images\nare generated if the full image is generated more quickly.\n',
               ),
-              v.metadata({ examples: [1] }),
+              v.metadata({ examples: [1], default: 0 }),
             ),
             v.pipe(
               v.unknown(),
@@ -67306,6 +67385,7 @@ export const postImagesVariationsHandler = defineHandler({
               v.pipe(
                 v.string(),
                 v.regex(/^-?(?:0|[1-9]\d*)$/),
+                v.metadata({ type: 'integer', minimum: 1, maximum: 10 }),
                 v.transform((input) => Number(input)),
                 v.number(),
                 v.safeInteger(),
@@ -67317,7 +67397,7 @@ export const postImagesVariationsHandler = defineHandler({
           '1',
         ),
         v.description('The number of images to generate. Must be between 1 and 10.'),
-        v.metadata({ examples: [1] }),
+        v.metadata({ examples: [1], default: 1 }),
       ),
       response_format: v.pipe(
         v.optional(v.nullable(v.picklist(['url', 'b64_json'])), 'url'),
@@ -67429,6 +67509,7 @@ export const getOrganizationAdminApiKeysHandler = defineHandler({
         v.pipe(
           v.string(),
           v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.metadata({ type: 'integer' }),
           v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
@@ -67436,6 +67517,7 @@ export const getOrganizationAdminApiKeysHandler = defineHandler({
         '20',
       ),
       v.description('Maximum number of keys to return.'),
+      v.metadata({ default: 20 }),
     ),
   }),
   response: ApiKeyListSchema,
@@ -67485,6 +67567,7 @@ export const getOrganizationAuditLogsHandler = defineHandler({
             v.pipe(
               v.string(),
               v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.metadata({ type: 'integer' }),
               v.transform((input) => Number(input)),
               v.number(),
               v.safeInteger(),
@@ -67497,6 +67580,7 @@ export const getOrganizationAuditLogsHandler = defineHandler({
             v.pipe(
               v.string(),
               v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.metadata({ type: 'integer' }),
               v.transform((input) => Number(input)),
               v.number(),
               v.safeInteger(),
@@ -67509,6 +67593,7 @@ export const getOrganizationAuditLogsHandler = defineHandler({
             v.pipe(
               v.string(),
               v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.metadata({ type: 'integer' }),
               v.transform((input) => Number(input)),
               v.number(),
               v.safeInteger(),
@@ -67521,6 +67606,7 @@ export const getOrganizationAuditLogsHandler = defineHandler({
             v.pipe(
               v.string(),
               v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.metadata({ type: 'integer' }),
               v.transform((input) => Number(input)),
               v.number(),
               v.safeInteger(),
@@ -67575,15 +67661,19 @@ export const getOrganizationAuditLogsHandler = defineHandler({
       ),
       'false',
     ),
-    limit: v.optional(
-      v.pipe(
-        v.string(),
-        v.regex(/^-?(?:0|[1-9]\d*)$/),
-        v.transform((input) => Number(input)),
-        v.number(),
-        v.safeInteger(),
+    limit: v.pipe(
+      v.optional(
+        v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.metadata({ type: 'integer' }),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
+        '20',
       ),
-      '20',
+      v.metadata({ default: 20 }),
     ),
     after: v.optional(v.string()),
     before: v.optional(v.string()),
@@ -67593,15 +67683,19 @@ export const getOrganizationAuditLogsHandler = defineHandler({
 
 export const getOrganizationCertificatesHandler = defineHandler({
   query: v.object({
-    limit: v.optional(
-      v.pipe(
-        v.string(),
-        v.regex(/^-?(?:0|[1-9]\d*)$/),
-        v.transform((input) => Number(input)),
-        v.number(),
-        v.safeInteger(),
+    limit: v.pipe(
+      v.optional(
+        v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.metadata({ type: 'integer' }),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
+        '20',
       ),
-      '20',
+      v.metadata({ default: 20 }),
     ),
     after: v.optional(v.string()),
     order: v.optional(v.picklist(['asc', 'desc']), 'desc'),
@@ -67654,6 +67748,7 @@ export const getOrganizationCostsHandler = defineHandler({
     start_time: v.pipe(
       v.string(),
       v.regex(/^-?(?:0|[1-9]\d*)$/),
+      v.metadata({ type: 'integer' }),
       v.transform((input) => Number(input)),
       v.number(),
       v.safeInteger(),
@@ -67662,6 +67757,7 @@ export const getOrganizationCostsHandler = defineHandler({
       v.pipe(
         v.string(),
         v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.metadata({ type: 'integer' }),
         v.transform((input) => Number(input)),
         v.number(),
         v.safeInteger(),
@@ -67696,15 +67792,19 @@ export const getOrganizationCostsHandler = defineHandler({
         v.array(v.picklist(['project_id', 'user_id', 'line_item', 'api_key_id', 'api_source'])),
       ),
     ),
-    limit: v.optional(
-      v.pipe(
-        v.string(),
-        v.regex(/^-?(?:0|[1-9]\d*)$/),
-        v.transform((input) => Number(input)),
-        v.number(),
-        v.safeInteger(),
+    limit: v.pipe(
+      v.optional(
+        v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.metadata({ type: 'integer' }),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
+        '7',
       ),
-      '7',
+      v.metadata({ default: 7 }),
     ),
     page: v.optional(v.string()),
   }),
@@ -67722,17 +67822,21 @@ export const postOrganizationDataRetentionHandler = defineHandler({
 
 export const getOrganizationGroupsHandler = defineHandler({
   query: v.object({
-    limit: v.optional(
-      v.pipe(
-        v.string(),
-        v.regex(/^-?(?:0|[1-9]\d*)$/),
-        v.transform((input) => Number(input)),
-        v.number(),
-        v.safeInteger(),
-        v.minValue(0),
-        v.maxValue(1000),
+    limit: v.pipe(
+      v.optional(
+        v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.metadata({ type: 'integer', minimum: 0, maximum: 1000 }),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+          v.minValue(0),
+          v.maxValue(1000),
+        ),
+        '100',
       ),
-      '100',
+      v.metadata({ default: 100 }),
     ),
     after: v.optional(v.string()),
     order: v.optional(v.picklist(['asc', 'desc']), 'asc'),
@@ -67768,6 +67872,7 @@ export const getOrganizationGroupsGroupIdRolesHandler = defineHandler({
       limit: v.pipe(
         v.string(),
         v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.metadata({ type: 'integer', minimum: 0, maximum: 1000 }),
         v.transform((input) => Number(input)),
         v.number(),
         v.safeInteger(),
@@ -67800,17 +67905,21 @@ export const deleteOrganizationGroupsGroupIdRolesRoleIdHandler = defineHandler({
 export const getOrganizationGroupsGroupIdUsersHandler = defineHandler({
   param: v.object({ group_id: v.string() }),
   query: v.object({
-    limit: v.optional(
-      v.pipe(
-        v.string(),
-        v.regex(/^-?(?:0|[1-9]\d*)$/),
-        v.transform((input) => Number(input)),
-        v.number(),
-        v.safeInteger(),
-        v.minValue(0),
-        v.maxValue(1000),
+    limit: v.pipe(
+      v.optional(
+        v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.metadata({ type: 'integer', minimum: 0, maximum: 1000 }),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+          v.minValue(0),
+          v.maxValue(1000),
+        ),
+        '100',
       ),
-      '100',
+      v.metadata({ default: 100 }),
     ),
     after: v.optional(v.string()),
     order: v.optional(v.picklist(['asc', 'desc']), 'desc'),
@@ -67836,15 +67945,19 @@ export const deleteOrganizationGroupsGroupIdUsersUserIdHandler = defineHandler({
 
 export const getOrganizationInvitesHandler = defineHandler({
   query: v.object({
-    limit: v.optional(
-      v.pipe(
-        v.string(),
-        v.regex(/^-?(?:0|[1-9]\d*)$/),
-        v.transform((input) => Number(input)),
-        v.number(),
-        v.safeInteger(),
+    limit: v.pipe(
+      v.optional(
+        v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.metadata({ type: 'integer' }),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
+        '20',
       ),
-      '20',
+      v.metadata({ default: 20 }),
     ),
     after: v.optional(v.string()),
   }),
@@ -67868,15 +67981,19 @@ export const deleteOrganizationInvitesInviteIdHandler = defineHandler({
 
 export const getOrganizationProjectsHandler = defineHandler({
   query: v.object({
-    limit: v.optional(
-      v.pipe(
-        v.string(),
-        v.regex(/^-?(?:0|[1-9]\d*)$/),
-        v.transform((input) => Number(input)),
-        v.number(),
-        v.safeInteger(),
+    limit: v.pipe(
+      v.optional(
+        v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.metadata({ type: 'integer' }),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
+        '20',
       ),
-      '20',
+      v.metadata({ default: 20 }),
     ),
     after: v.optional(v.string()),
     include_archived: v.optional(
@@ -67910,15 +68027,19 @@ export const postOrganizationProjectsProjectIdHandler = defineHandler({
 export const getOrganizationProjectsProjectIdApiKeysHandler = defineHandler({
   param: v.object({ project_id: v.string() }),
   query: v.object({
-    limit: v.optional(
-      v.pipe(
-        v.string(),
-        v.regex(/^-?(?:0|[1-9]\d*)$/),
-        v.transform((input) => Number(input)),
-        v.number(),
-        v.safeInteger(),
+    limit: v.pipe(
+      v.optional(
+        v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.metadata({ type: 'integer' }),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
+        '20',
       ),
-      '20',
+      v.metadata({ default: 20 }),
     ),
     after: v.optional(v.string()),
     owner_project_access: v.optional(v.picklist(['active', 'inactive', 'any'])),
@@ -67950,15 +68071,19 @@ export const postOrganizationProjectsProjectIdArchiveHandler = defineHandler({
 export const getOrganizationProjectsProjectIdCertificatesHandler = defineHandler({
   param: v.object({ project_id: v.string() }),
   query: v.object({
-    limit: v.optional(
-      v.pipe(
-        v.string(),
-        v.regex(/^-?(?:0|[1-9]\d*)$/),
-        v.transform((input) => Number(input)),
-        v.number(),
-        v.safeInteger(),
+    limit: v.pipe(
+      v.optional(
+        v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.metadata({ type: 'integer' }),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
+        '20',
       ),
-      '20',
+      v.metadata({ default: 20 }),
     ),
     after: v.optional(v.string()),
     order: v.optional(v.picklist(['asc', 'desc']), 'desc'),
@@ -67992,17 +68117,21 @@ export const postOrganizationProjectsProjectIdDataRetentionHandler = defineHandl
 export const getOrganizationProjectsProjectIdGroupsHandler = defineHandler({
   param: v.object({ project_id: v.string() }),
   query: v.object({
-    limit: v.optional(
-      v.pipe(
-        v.string(),
-        v.regex(/^-?(?:0|[1-9]\d*)$/),
-        v.transform((input) => Number(input)),
-        v.number(),
-        v.safeInteger(),
-        v.minValue(0),
-        v.maxValue(100),
+    limit: v.pipe(
+      v.optional(
+        v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.metadata({ type: 'integer', minimum: 0, maximum: 100 }),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+          v.minValue(0),
+          v.maxValue(100),
+        ),
+        '20',
       ),
-      '20',
+      v.metadata({ default: 20 }),
     ),
     after: v.optional(v.string()),
     order: v.optional(v.picklist(['asc', 'desc']), 'asc'),
@@ -68057,15 +68186,19 @@ export const deleteOrganizationProjectsProjectIdModelPermissionsHandler = define
 export const getOrganizationProjectsProjectIdRateLimitsHandler = defineHandler({
   param: v.object({ project_id: v.string() }),
   query: v.object({
-    limit: v.optional(
-      v.pipe(
-        v.string(),
-        v.regex(/^-?(?:0|[1-9]\d*)$/),
-        v.transform((input) => Number(input)),
-        v.number(),
-        v.safeInteger(),
+    limit: v.pipe(
+      v.optional(
+        v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.metadata({ type: 'integer' }),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
+        '100',
       ),
-      '100',
+      v.metadata({ default: 100 }),
     ),
     after: v.optional(v.string()),
     before: v.optional(v.string()),
@@ -68082,15 +68215,19 @@ export const postOrganizationProjectsProjectIdRateLimitsRateLimitIdHandler = def
 export const getOrganizationProjectsProjectIdServiceAccountsHandler = defineHandler({
   param: v.object({ project_id: v.string() }),
   query: v.object({
-    limit: v.optional(
-      v.pipe(
-        v.string(),
-        v.regex(/^-?(?:0|[1-9]\d*)$/),
-        v.transform((input) => Number(input)),
-        v.number(),
-        v.safeInteger(),
+    limit: v.pipe(
+      v.optional(
+        v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.metadata({ type: 'integer' }),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
+        '20',
       ),
-      '20',
+      v.metadata({ default: 20 }),
     ),
     after: v.optional(v.string()),
   }),
@@ -68130,6 +68267,7 @@ export const getOrganizationProjectsProjectIdSpendAlertsHandler = defineHandler(
       v.pipe(
         v.string(),
         v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.metadata({ type: 'integer', minimum: 0, maximum: 100 }),
         v.transform((input) => Number(input)),
         v.number(),
         v.safeInteger(),
@@ -68169,15 +68307,19 @@ export const deleteOrganizationProjectsProjectIdSpendAlertsAlertIdHandler = defi
 export const getOrganizationProjectsProjectIdUsersHandler = defineHandler({
   param: v.object({ project_id: v.string() }),
   query: v.object({
-    limit: v.optional(
-      v.pipe(
-        v.string(),
-        v.regex(/^-?(?:0|[1-9]\d*)$/),
-        v.transform((input) => Number(input)),
-        v.number(),
-        v.safeInteger(),
+    limit: v.pipe(
+      v.optional(
+        v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.metadata({ type: 'integer' }),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
+        '20',
       ),
-      '20',
+      v.metadata({ default: 20 }),
     ),
     after: v.optional(v.string()),
   }),
@@ -68208,17 +68350,21 @@ export const deleteOrganizationProjectsProjectIdUsersUserIdHandler = defineHandl
 
 export const getOrganizationRolesHandler = defineHandler({
   query: v.object({
-    limit: v.optional(
-      v.pipe(
-        v.string(),
-        v.regex(/^-?(?:0|[1-9]\d*)$/),
-        v.transform((input) => Number(input)),
-        v.number(),
-        v.safeInteger(),
-        v.minValue(0),
-        v.maxValue(1000),
+    limit: v.pipe(
+      v.optional(
+        v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.metadata({ type: 'integer', minimum: 0, maximum: 1000 }),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+          v.minValue(0),
+          v.maxValue(1000),
+        ),
+        '1000',
       ),
-      '1000',
+      v.metadata({ default: 1000 }),
     ),
     after: v.optional(v.string()),
     order: v.optional(v.picklist(['asc', 'desc']), 'asc'),
@@ -68253,6 +68399,7 @@ export const getOrganizationSpendAlertsHandler = defineHandler({
       v.pipe(
         v.string(),
         v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.metadata({ type: 'integer', minimum: 0, maximum: 100 }),
         v.transform((input) => Number(input)),
         v.number(),
         v.safeInteger(),
@@ -68293,6 +68440,7 @@ export const getOrganizationUsageAudioSpeechesHandler = defineHandler({
     start_time: v.pipe(
       v.string(),
       v.regex(/^-?(?:0|[1-9]\d*)$/),
+      v.metadata({ type: 'integer' }),
       v.transform((input) => Number(input)),
       v.number(),
       v.safeInteger(),
@@ -68301,6 +68449,7 @@ export const getOrganizationUsageAudioSpeechesHandler = defineHandler({
       v.pipe(
         v.string(),
         v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.metadata({ type: 'integer' }),
         v.transform((input) => Number(input)),
         v.number(),
         v.safeInteger(),
@@ -68346,6 +68495,7 @@ export const getOrganizationUsageAudioSpeechesHandler = defineHandler({
       v.pipe(
         v.string(),
         v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.metadata({ type: 'integer' }),
         v.transform((input) => Number(input)),
         v.number(),
         v.safeInteger(),
@@ -68361,6 +68511,7 @@ export const getOrganizationUsageAudioTranscriptionsHandler = defineHandler({
     start_time: v.pipe(
       v.string(),
       v.regex(/^-?(?:0|[1-9]\d*)$/),
+      v.metadata({ type: 'integer' }),
       v.transform((input) => Number(input)),
       v.number(),
       v.safeInteger(),
@@ -68369,6 +68520,7 @@ export const getOrganizationUsageAudioTranscriptionsHandler = defineHandler({
       v.pipe(
         v.string(),
         v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.metadata({ type: 'integer' }),
         v.transform((input) => Number(input)),
         v.number(),
         v.safeInteger(),
@@ -68414,6 +68566,7 @@ export const getOrganizationUsageAudioTranscriptionsHandler = defineHandler({
       v.pipe(
         v.string(),
         v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.metadata({ type: 'integer' }),
         v.transform((input) => Number(input)),
         v.number(),
         v.safeInteger(),
@@ -68429,6 +68582,7 @@ export const getOrganizationUsageCodeInterpreterSessionsHandler = defineHandler(
     start_time: v.pipe(
       v.string(),
       v.regex(/^-?(?:0|[1-9]\d*)$/),
+      v.metadata({ type: 'integer' }),
       v.transform((input) => Number(input)),
       v.number(),
       v.safeInteger(),
@@ -68437,6 +68591,7 @@ export const getOrganizationUsageCodeInterpreterSessionsHandler = defineHandler(
       v.pipe(
         v.string(),
         v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.metadata({ type: 'integer' }),
         v.transform((input) => Number(input)),
         v.number(),
         v.safeInteger(),
@@ -68461,6 +68616,7 @@ export const getOrganizationUsageCodeInterpreterSessionsHandler = defineHandler(
       v.pipe(
         v.string(),
         v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.metadata({ type: 'integer' }),
         v.transform((input) => Number(input)),
         v.number(),
         v.safeInteger(),
@@ -68476,6 +68632,7 @@ export const getOrganizationUsageCompletionsHandler = defineHandler({
     start_time: v.pipe(
       v.string(),
       v.regex(/^-?(?:0|[1-9]\d*)$/),
+      v.metadata({ type: 'integer' }),
       v.transform((input) => Number(input)),
       v.number(),
       v.safeInteger(),
@@ -68484,6 +68641,7 @@ export const getOrganizationUsageCompletionsHandler = defineHandler({
       v.pipe(
         v.string(),
         v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.metadata({ type: 'integer' }),
         v.transform((input) => Number(input)),
         v.number(),
         v.safeInteger(),
@@ -68546,6 +68704,7 @@ export const getOrganizationUsageCompletionsHandler = defineHandler({
       v.pipe(
         v.string(),
         v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.metadata({ type: 'integer' }),
         v.transform((input) => Number(input)),
         v.number(),
         v.safeInteger(),
@@ -68561,6 +68720,7 @@ export const getOrganizationUsageEmbeddingsHandler = defineHandler({
     start_time: v.pipe(
       v.string(),
       v.regex(/^-?(?:0|[1-9]\d*)$/),
+      v.metadata({ type: 'integer' }),
       v.transform((input) => Number(input)),
       v.number(),
       v.safeInteger(),
@@ -68569,6 +68729,7 @@ export const getOrganizationUsageEmbeddingsHandler = defineHandler({
       v.pipe(
         v.string(),
         v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.metadata({ type: 'integer' }),
         v.transform((input) => Number(input)),
         v.number(),
         v.safeInteger(),
@@ -68614,6 +68775,7 @@ export const getOrganizationUsageEmbeddingsHandler = defineHandler({
       v.pipe(
         v.string(),
         v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.metadata({ type: 'integer' }),
         v.transform((input) => Number(input)),
         v.number(),
         v.safeInteger(),
@@ -68629,6 +68791,7 @@ export const getOrganizationUsageFileSearchCallsHandler = defineHandler({
     start_time: v.pipe(
       v.string(),
       v.regex(/^-?(?:0|[1-9]\d*)$/),
+      v.metadata({ type: 'integer' }),
       v.transform((input) => Number(input)),
       v.number(),
       v.safeInteger(),
@@ -68637,6 +68800,7 @@ export const getOrganizationUsageFileSearchCallsHandler = defineHandler({
       v.pipe(
         v.string(),
         v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.metadata({ type: 'integer' }),
         v.transform((input) => Number(input)),
         v.number(),
         v.safeInteger(),
@@ -68682,6 +68846,7 @@ export const getOrganizationUsageFileSearchCallsHandler = defineHandler({
       v.pipe(
         v.string(),
         v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.metadata({ type: 'integer' }),
         v.transform((input) => Number(input)),
         v.number(),
         v.safeInteger(),
@@ -68697,6 +68862,7 @@ export const getOrganizationUsageImagesHandler = defineHandler({
     start_time: v.pipe(
       v.string(),
       v.regex(/^-?(?:0|[1-9]\d*)$/),
+      v.metadata({ type: 'integer' }),
       v.transform((input) => Number(input)),
       v.number(),
       v.safeInteger(),
@@ -68705,6 +68871,7 @@ export const getOrganizationUsageImagesHandler = defineHandler({
       v.pipe(
         v.string(),
         v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.metadata({ type: 'integer' }),
         v.transform((input) => Number(input)),
         v.number(),
         v.safeInteger(),
@@ -68764,6 +68931,7 @@ export const getOrganizationUsageImagesHandler = defineHandler({
       v.pipe(
         v.string(),
         v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.metadata({ type: 'integer' }),
         v.transform((input) => Number(input)),
         v.number(),
         v.safeInteger(),
@@ -68779,6 +68947,7 @@ export const getOrganizationUsageModerationsHandler = defineHandler({
     start_time: v.pipe(
       v.string(),
       v.regex(/^-?(?:0|[1-9]\d*)$/),
+      v.metadata({ type: 'integer' }),
       v.transform((input) => Number(input)),
       v.number(),
       v.safeInteger(),
@@ -68787,6 +68956,7 @@ export const getOrganizationUsageModerationsHandler = defineHandler({
       v.pipe(
         v.string(),
         v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.metadata({ type: 'integer' }),
         v.transform((input) => Number(input)),
         v.number(),
         v.safeInteger(),
@@ -68832,6 +69002,7 @@ export const getOrganizationUsageModerationsHandler = defineHandler({
       v.pipe(
         v.string(),
         v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.metadata({ type: 'integer' }),
         v.transform((input) => Number(input)),
         v.number(),
         v.safeInteger(),
@@ -68847,6 +69018,7 @@ export const getOrganizationUsageVectorStoresHandler = defineHandler({
     start_time: v.pipe(
       v.string(),
       v.regex(/^-?(?:0|[1-9]\d*)$/),
+      v.metadata({ type: 'integer' }),
       v.transform((input) => Number(input)),
       v.number(),
       v.safeInteger(),
@@ -68855,6 +69027,7 @@ export const getOrganizationUsageVectorStoresHandler = defineHandler({
       v.pipe(
         v.string(),
         v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.metadata({ type: 'integer' }),
         v.transform((input) => Number(input)),
         v.number(),
         v.safeInteger(),
@@ -68879,6 +69052,7 @@ export const getOrganizationUsageVectorStoresHandler = defineHandler({
       v.pipe(
         v.string(),
         v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.metadata({ type: 'integer' }),
         v.transform((input) => Number(input)),
         v.number(),
         v.safeInteger(),
@@ -68894,6 +69068,7 @@ export const getOrganizationUsageWebSearchCallsHandler = defineHandler({
     start_time: v.pipe(
       v.string(),
       v.regex(/^-?(?:0|[1-9]\d*)$/),
+      v.metadata({ type: 'integer' }),
       v.transform((input) => Number(input)),
       v.number(),
       v.safeInteger(),
@@ -68902,6 +69077,7 @@ export const getOrganizationUsageWebSearchCallsHandler = defineHandler({
       v.pipe(
         v.string(),
         v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.metadata({ type: 'integer' }),
         v.transform((input) => Number(input)),
         v.number(),
         v.safeInteger(),
@@ -68963,6 +69139,7 @@ export const getOrganizationUsageWebSearchCallsHandler = defineHandler({
       v.pipe(
         v.string(),
         v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.metadata({ type: 'integer' }),
         v.transform((input) => Number(input)),
         v.number(),
         v.safeInteger(),
@@ -68975,15 +69152,19 @@ export const getOrganizationUsageWebSearchCallsHandler = defineHandler({
 
 export const getOrganizationUsersHandler = defineHandler({
   query: v.object({
-    limit: v.optional(
-      v.pipe(
-        v.string(),
-        v.regex(/^-?(?:0|[1-9]\d*)$/),
-        v.transform((input) => Number(input)),
-        v.number(),
-        v.safeInteger(),
+    limit: v.pipe(
+      v.optional(
+        v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.metadata({ type: 'integer' }),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
+        '20',
       ),
-      '20',
+      v.metadata({ default: 20 }),
     ),
     after: v.optional(v.string()),
     emails: v.optional(
@@ -69020,6 +69201,7 @@ export const getOrganizationUsersUserIdRolesHandler = defineHandler({
       limit: v.pipe(
         v.string(),
         v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.metadata({ type: 'integer', minimum: 0, maximum: 1000 }),
         v.transform((input) => Number(input)),
         v.number(),
         v.safeInteger(),
@@ -69055,6 +69237,7 @@ export const getOrganizationExternalKeysHandler = defineHandler({
       limit: v.pipe(
         v.string(),
         v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.metadata({ type: 'integer', minimum: 0, maximum: 100 }),
         v.transform((input) => Number(input)),
         v.number(),
         v.safeInteger(),
@@ -69102,6 +69285,7 @@ export const getOrganizationWorkloadIdentityProvidersHandler = defineHandler({
       limit: v.pipe(
         v.string(),
         v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.metadata({ type: 'integer', minimum: 1, maximum: 100 }),
         v.transform((input) => Number(input)),
         v.number(),
         v.safeInteger(),
@@ -69147,6 +69331,7 @@ export const getOrganizationWorkloadIdentityProvidersWorkloadIdentityProviderIdF
         limit: v.pipe(
           v.string(),
           v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.metadata({ type: 'integer', minimum: 1, maximum: 100 }),
           v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
@@ -69204,6 +69389,7 @@ export const getOrganizationUsageDecisionsHandler = defineHandler({
     start_time: v.pipe(
       v.string(),
       v.regex(/^-?(?:0|[1-9]\d*)$/),
+      v.metadata({ type: 'integer' }),
       v.transform((input) => Number(input)),
       v.number(),
       v.safeInteger(),
@@ -69217,6 +69403,7 @@ export const getOrganizationUsageDecisionsHandler = defineHandler({
             v.pipe(
               v.string(),
               v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.metadata({ type: 'integer' }),
               v.transform((input) => Number(input)),
               v.number(),
               v.safeInteger(),
@@ -69260,6 +69447,7 @@ export const getOrganizationUsageDecisionsHandler = defineHandler({
             v.pipe(
               v.string(),
               v.regex(/^-?(?:0|[1-9]\d*)$/),
+              v.metadata({ type: 'integer' }),
               v.transform((input) => Number(input)),
               v.number(),
               v.safeInteger(),
@@ -69472,6 +69660,7 @@ export const getOrganizationExternalStorageHandler = defineHandler({
       limit: v.pipe(
         v.string(),
         v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.metadata({ type: 'integer', minimum: 1, maximum: 100 }),
         v.transform((input) => Number(input)),
         v.number(),
         v.safeInteger(),
@@ -69566,6 +69755,7 @@ export const getProjectsProjectIdGroupsGroupIdRolesHandler = defineHandler({
       limit: v.pipe(
         v.string(),
         v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.metadata({ type: 'integer', minimum: 0, maximum: 1000 }),
         v.transform((input) => Number(input)),
         v.number(),
         v.safeInteger(),
@@ -69598,17 +69788,21 @@ export const deleteProjectsProjectIdGroupsGroupIdRolesRoleIdHandler = defineHand
 export const getProjectsProjectIdRolesHandler = defineHandler({
   param: v.object({ project_id: v.string() }),
   query: v.object({
-    limit: v.optional(
-      v.pipe(
-        v.string(),
-        v.regex(/^-?(?:0|[1-9]\d*)$/),
-        v.transform((input) => Number(input)),
-        v.number(),
-        v.safeInteger(),
-        v.minValue(0),
-        v.maxValue(1000),
+    limit: v.pipe(
+      v.optional(
+        v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.metadata({ type: 'integer', minimum: 0, maximum: 1000 }),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+          v.minValue(0),
+          v.maxValue(1000),
+        ),
+        '1000',
       ),
-      '1000',
+      v.metadata({ default: 1000 }),
     ),
     after: v.optional(v.string()),
     order: v.optional(v.picklist(['asc', 'desc']), 'asc'),
@@ -69645,6 +69839,7 @@ export const getProjectsProjectIdUsersUserIdRolesHandler = defineHandler({
       limit: v.pipe(
         v.string(),
         v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.metadata({ type: 'integer', minimum: 0, maximum: 1000 }),
         v.transform((input) => Number(input)),
         v.number(),
         v.safeInteger(),
@@ -69763,6 +69958,7 @@ export const postRealtimeCallsHandler = defineHandler({
                                       v.pipe(
                                         v.string(),
                                         v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                        v.metadata({ type: 'integer', enum: [24000] }),
                                         v.transform((input) => Number(input)),
                                         v.literal(24000),
                                       ),
@@ -69905,6 +70101,7 @@ export const postRealtimeCallsHandler = defineHandler({
                                               v.regex(
                                                 /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/,
                                               ),
+                                              v.metadata({ type: 'number' }),
                                               v.transform((input) => Number(input)),
                                               v.number(),
                                               v.finite(),
@@ -69919,6 +70116,7 @@ export const postRealtimeCallsHandler = defineHandler({
                                             v.pipe(
                                               v.string(),
                                               v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                              v.metadata({ type: 'integer' }),
                                               v.transform((input) => Number(input)),
                                               v.number(),
                                               v.safeInteger(),
@@ -69933,6 +70131,7 @@ export const postRealtimeCallsHandler = defineHandler({
                                             v.pipe(
                                               v.string(),
                                               v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                              v.metadata({ type: 'integer' }),
                                               v.transform((input) => Number(input)),
                                               v.number(),
                                               v.safeInteger(),
@@ -69988,6 +70187,11 @@ export const postRealtimeCallsHandler = defineHandler({
                                                   v.pipe(
                                                     v.string(),
                                                     v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                                    v.metadata({
+                                                      type: 'integer',
+                                                      minimum: 5000,
+                                                      maximum: 30000,
+                                                    }),
                                                     v.transform((input) => Number(input)),
                                                     v.number(),
                                                     v.safeInteger(),
@@ -70100,6 +70304,7 @@ export const postRealtimeCallsHandler = defineHandler({
                                       v.pipe(
                                         v.string(),
                                         v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                        v.metadata({ type: 'integer', enum: [24000] }),
                                         v.transform((input) => Number(input)),
                                         v.literal(24000),
                                       ),
@@ -70150,6 +70355,7 @@ export const postRealtimeCallsHandler = defineHandler({
                             v.pipe(
                               v.string(),
                               v.regex(/^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/),
+                              v.metadata({ type: 'number', minimum: 0.25, maximum: 1.5 }),
                               v.transform((input) => Number(input)),
                               v.number(),
                               v.finite(),
@@ -70161,6 +70367,7 @@ export const postRealtimeCallsHandler = defineHandler({
                           v.description(
                             "The speed of the model's spoken response as a multiple of the original speed.\n1.0 is the default speed. 0.25 is the minimum speed. 1.5 is the maximum speed. This value can only be changed in between model turns, not while a response is in progress.\n\nThis parameter is a post-processing adjustment to the audio after it is generated, it's\nalso possible to prompt the model to speak faster or slower.\n",
                           ),
+                          v.metadata({ default: 1 }),
                         ),
                       }),
                     }),
@@ -70612,6 +70819,7 @@ export const postRealtimeCallsHandler = defineHandler({
                     v.pipe(
                       v.string(),
                       v.regex(/^-?(?:0|[1-9]\d*)$/),
+                      v.metadata({ type: 'integer' }),
                       v.transform((input) => Number(input)),
                       v.number(),
                       v.safeInteger(),
@@ -70642,6 +70850,7 @@ export const postRealtimeCallsHandler = defineHandler({
                           v.pipe(
                             v.string(),
                             v.regex(/^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/),
+                            v.metadata({ type: 'number', minimum: 0, maximum: 1 }),
                             v.transform((input) => Number(input)),
                             v.number(),
                             v.finite(),
@@ -70660,6 +70869,7 @@ export const postRealtimeCallsHandler = defineHandler({
                                   v.pipe(
                                     v.string(),
                                     v.regex(/^-?(?:0|[1-9]\d*)$/),
+                                    v.metadata({ type: 'integer', minimum: 0 }),
                                     v.transform((input) => Number(input)),
                                     v.number(),
                                     v.safeInteger(),
@@ -70953,6 +71163,7 @@ export const getResponsesResponseIdHandler = defineHandler({
       starting_after: v.pipe(
         v.string(),
         v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.metadata({ type: 'integer' }),
         v.transform((input) => Number(input)),
         v.number(),
         v.safeInteger(),
@@ -70994,15 +71205,19 @@ export const postResponsesResponseIdCancelHandler = defineHandler({
 export const getResponsesResponseIdInputItemsHandler = defineHandler({
   param: v.object({ response_id: v.string() }),
   query: v.object({
-    limit: v.optional(
-      v.pipe(
-        v.string(),
-        v.regex(/^-?(?:0|[1-9]\d*)$/),
-        v.transform((input) => Number(input)),
-        v.number(),
-        v.safeInteger(),
+    limit: v.pipe(
+      v.optional(
+        v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.metadata({ type: 'integer' }),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
+        '20',
       ),
-      '20',
+      v.metadata({ default: 20 }),
     ),
     order: v.optional(v.picklist(['asc', 'desc'])),
     after: v.optional(v.string()),
@@ -71049,6 +71264,7 @@ export const getResponsesResponseIdBetaTrueHandler = defineHandler({
       starting_after: v.pipe(
         v.string(),
         v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.metadata({ type: 'integer' }),
         v.transform((input) => Number(input)),
         v.number(),
         v.safeInteger(),
@@ -71131,15 +71347,19 @@ export const postResponsesCompactBetaTrueHandler = defineHandler({
 export const getResponsesResponseIdInputItemsBetaTrueHandler = defineHandler({
   param: v.object({ response_id: v.string() }),
   query: v.object({
-    limit: v.optional(
-      v.pipe(
-        v.string(),
-        v.regex(/^-?(?:0|[1-9]\d*)$/),
-        v.transform((input) => Number(input)),
-        v.number(),
-        v.safeInteger(),
+    limit: v.pipe(
+      v.optional(
+        v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.metadata({ type: 'integer' }),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
+        '20',
       ),
-      '20',
+      v.metadata({ default: 20 }),
     ),
     order: v.optional(v.picklist(['asc', 'desc'])),
     after: v.optional(v.string()),
@@ -71206,15 +71426,19 @@ export const deleteThreadsThreadIdHandler = defineHandler({
 export const getThreadsThreadIdMessagesHandler = defineHandler({
   param: v.object({ thread_id: v.string() }),
   query: v.object({
-    limit: v.optional(
-      v.pipe(
-        v.string(),
-        v.regex(/^-?(?:0|[1-9]\d*)$/),
-        v.transform((input) => Number(input)),
-        v.number(),
-        v.safeInteger(),
+    limit: v.pipe(
+      v.optional(
+        v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.metadata({ type: 'integer' }),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
+        '20',
       ),
-      '20',
+      v.metadata({ default: 20 }),
     ),
     order: v.optional(v.picklist(['asc', 'desc']), 'desc'),
     after: v.optional(v.string()),
@@ -71249,15 +71473,19 @@ export const deleteThreadsThreadIdMessagesMessageIdHandler = defineHandler({
 export const getThreadsThreadIdRunsHandler = defineHandler({
   param: v.object({ thread_id: v.string() }),
   query: v.object({
-    limit: v.optional(
-      v.pipe(
-        v.string(),
-        v.regex(/^-?(?:0|[1-9]\d*)$/),
-        v.transform((input) => Number(input)),
-        v.number(),
-        v.safeInteger(),
+    limit: v.pipe(
+      v.optional(
+        v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.metadata({ type: 'integer' }),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
+        '20',
       ),
-      '20',
+      v.metadata({ default: 20 }),
     ),
     order: v.optional(v.picklist(['asc', 'desc']), 'desc'),
     after: v.optional(v.string()),
@@ -71300,15 +71528,19 @@ export const postThreadsThreadIdRunsRunIdCancelHandler = defineHandler({
 export const getThreadsThreadIdRunsRunIdStepsHandler = defineHandler({
   param: v.object({ thread_id: v.string(), run_id: v.string() }),
   query: v.object({
-    limit: v.optional(
-      v.pipe(
-        v.string(),
-        v.regex(/^-?(?:0|[1-9]\d*)$/),
-        v.transform((input) => Number(input)),
-        v.number(),
-        v.safeInteger(),
+    limit: v.pipe(
+      v.optional(
+        v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.metadata({ type: 'integer' }),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
+        '20',
       ),
-      '20',
+      v.metadata({ default: 20 }),
     ),
     order: v.optional(v.picklist(['asc', 'desc']), 'desc'),
     after: v.optional(v.string()),
@@ -71368,15 +71600,19 @@ export const postUploadsUploadIdPartsHandler = defineHandler({
 
 export const getVectorStoresHandler = defineHandler({
   query: v.object({
-    limit: v.optional(
-      v.pipe(
-        v.string(),
-        v.regex(/^-?(?:0|[1-9]\d*)$/),
-        v.transform((input) => Number(input)),
-        v.number(),
-        v.safeInteger(),
+    limit: v.pipe(
+      v.optional(
+        v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.metadata({ type: 'integer' }),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
+        '20',
       ),
-      '20',
+      v.metadata({ default: 20 }),
     ),
     order: v.optional(v.picklist(['asc', 'desc']), 'desc'),
     after: v.optional(v.string()),
@@ -71428,15 +71664,19 @@ export const postVectorStoresVectorStoreIdFileBatchesBatchIdCancelHandler = defi
 export const getVectorStoresVectorStoreIdFileBatchesBatchIdFilesHandler = defineHandler({
   param: v.object({ vector_store_id: v.string(), batch_id: v.string() }),
   query: v.object({
-    limit: v.optional(
-      v.pipe(
-        v.string(),
-        v.regex(/^-?(?:0|[1-9]\d*)$/),
-        v.transform((input) => Number(input)),
-        v.number(),
-        v.safeInteger(),
+    limit: v.pipe(
+      v.optional(
+        v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.metadata({ type: 'integer' }),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
+        '20',
       ),
-      '20',
+      v.metadata({ default: 20 }),
     ),
     order: v.optional(v.picklist(['asc', 'desc']), 'desc'),
     after: v.optional(v.string()),
@@ -71449,15 +71689,19 @@ export const getVectorStoresVectorStoreIdFileBatchesBatchIdFilesHandler = define
 export const getVectorStoresVectorStoreIdFilesHandler = defineHandler({
   param: v.object({ vector_store_id: v.string() }),
   query: v.object({
-    limit: v.optional(
-      v.pipe(
-        v.string(),
-        v.regex(/^-?(?:0|[1-9]\d*)$/),
-        v.transform((input) => Number(input)),
-        v.number(),
-        v.safeInteger(),
+    limit: v.pipe(
+      v.optional(
+        v.pipe(
+          v.string(),
+          v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.metadata({ type: 'integer' }),
+          v.transform((input) => Number(input)),
+          v.number(),
+          v.safeInteger(),
+        ),
+        '20',
       ),
-      '20',
+      v.metadata({ default: 20 }),
     ),
     order: v.optional(v.picklist(['asc', 'desc']), 'desc'),
     after: v.optional(v.string()),
@@ -71534,6 +71778,7 @@ export const getVideosHandler = defineHandler({
       limit: v.pipe(
         v.string(),
         v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.metadata({ type: 'integer', minimum: 0, maximum: 100 }),
         v.transform((input) => Number(input)),
         v.number(),
         v.safeInteger(),
@@ -71607,6 +71852,7 @@ export const getSkillsHandler = defineHandler({
       limit: v.pipe(
         v.string(),
         v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.metadata({ type: 'integer', minimum: 0, maximum: 100 }),
         v.transform((input) => Number(input)),
         v.number(),
         v.safeInteger(),
@@ -71675,6 +71921,7 @@ export const getSkillsSkillIdVersionsHandler = defineHandler({
       limit: v.pipe(
         v.string(),
         v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.metadata({ type: 'integer', minimum: 0, maximum: 100 }),
         v.transform((input) => Number(input)),
         v.number(),
         v.safeInteger(),
@@ -71762,6 +72009,7 @@ export const getChatkitThreadsThreadIdItemsHandler = defineHandler({
       limit: v.pipe(
         v.string(),
         v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.metadata({ type: 'integer', minimum: 0, maximum: 100 }),
         v.transform((input) => Number(input)),
         v.number(),
         v.safeInteger(),
@@ -71802,6 +72050,7 @@ export const getChatkitThreadsHandler = defineHandler({
       limit: v.pipe(
         v.string(),
         v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.metadata({ type: 'integer', minimum: 0, maximum: 100 }),
         v.transform((input) => Number(input)),
         v.number(),
         v.safeInteger(),
@@ -72656,6 +72905,7 @@ export const getWebhookEndpointsHandler = defineHandler({
       limit: v.pipe(
         v.string(),
         v.regex(/^-?(?:0|[1-9]\d*)$/),
+        v.metadata({ type: 'integer', minimum: 1, maximum: 100 }),
         v.transform((input) => Number(input)),
         v.number(),
         v.safeInteger(),

@@ -6,7 +6,7 @@
       "name": "openapi-generators-examples",
       "devDependencies": {
         "@bazel/bazelisk": "1.28.1",
-        "asphodelos": "0.5.6",
+        "asphodelos": "0.8.2",
         "openapi-to-trpc": "0.4.0",
         "takibi-hono": "0.11.1",
         "typescript": "catalog:",
@@ -803,7 +803,7 @@
 
     "arktype": ["arktype@2.2.10", "", { "dependencies": { "@ark/schema": "0.56.9", "@ark/util": "0.56.9", "arkregex": "0.0.15" } }, "sha512-xfum3++1RGjULFBeeXph3XrejEhAfswZlpH/V5m324j8aZ/53tHUd8OPCXE1v5iU/2UEkn/ZDFUT0Exkjv96xA=="],
 
-    "asphodelos": ["asphodelos@0.5.6", "", { "dependencies": { "@apidevtools/swagger-parser": "^13.1.0", "@effect/platform-node": "4.0.6", "@effect/platform-node-shared": "4.0.6", "@typespec/compiler": "^1.17.0", "@typespec/openapi3": "^1.17.0", "effect": "4.0.6", "oxc-parser": "^0.155.0", "oxfmt": "^0.74.0" }, "bin": { "asphodelos": "dist/cli.mjs" } }, "sha512-XmqbqpLlDDfTNpGNVQYoDsNwx62w67/zAeZ59DHGj1gZPSNl1CDGGl3AeWDkMtvk2hACX2EWVhTKp4YmZU+yiw=="],
+    "asphodelos": ["asphodelos@0.8.2", "", { "dependencies": { "@apidevtools/swagger-parser": "^13.1.0", "@effect/platform-node": "4.0.6", "@effect/platform-node-shared": "4.0.6", "@typespec/compiler": "^1.17.0", "@typespec/openapi3": "^1.17.0", "effect": "4.0.6", "oxc-parser": "^0.155.0", "oxfmt": "^0.74.0" }, "bin": { "asphodelos": "dist/cli.mjs" } }, "sha512-XlTb3lYj7qF0IuRDv9SgI9fAGcpGlGgvxiXCNfR0rFGRm97Tj8OtY4yKxqt6L5qJ62B3JlE1VX9ZqF+FtH9y2A=="],
 
     "axobject-query": ["axobject-query@4.1.0", "", {}, "sha512-qIj0G9wZbMGNLjLmg1PT6v2mE9AH2zlnADJD/2tC6E00hgmhUOfEB6greHPAfLRSufHqROIUTkw6E+M3lH0PTQ=="],
 
@@ -921,7 +921,7 @@
 
     "nanoid": ["nanoid@5.1.16", "", { "bin": { "nanoid": "bin/nanoid.js" } }, "sha512-kVrnsrJqMR8+oLJnGEmSWw9BivK5mt7H3FZatVRjrc5wGqFYuBxX1yG7+A7Gi5AefkX6t/oCkizcQgpu0cY1dQ=="],
 
-    "oas-truth": ["oas-truth@0.8.1", "", { "dependencies": { "schema-truth": "^0.8.15" }, "peerDependencies": { "@apidevtools/swagger-parser": ">=12.0.0 <14.0.0", "@typespec/compiler": ">=1.11.0 <2.0.0", "@typespec/openapi3": ">=1.11.0 <2.0.0" } }, "sha512-aHUhdTcyHIYIIUW1jISd6+0CtMnLZQBD5Pc9cMmXD+EGW4kEzDGTHiE7FVwZL2BqwcMKkuVnQpJvadl3v8iVnQ=="],
+    "oas-truth": ["oas-truth@0.8.2", "", { "dependencies": { "schema-truth": "^0.9.0" }, "peerDependencies": { "@apidevtools/swagger-parser": ">=12.0.0 <14.0.0", "@typespec/compiler": ">=1.11.0 <2.0.0", "@typespec/openapi3": ">=1.11.0 <2.0.0" } }, "sha512-jJTvD/zKLhlrdJT//T936W0e6+YfSDqCpn6catIDgFvQjEL3eHThmoyw89PEnVskBdeqiJK4dCGKJ1f67fwYKg=="],
 
     "openapi-to-trpc": ["openapi-to-trpc@0.4.0", "", { "dependencies": { "@effect/platform-node": "^4.1.5", "effect": "^4.1.5", "oas-truth": "^0.8.1", "oxfmt": "^0.79.0", "ts-morph": "^28.0.0" }, "bin": { "openapi-to-trpc": "dist/cli.js" } }, "sha512-dSGFULvU3c+96OPsicN/rn7TS63IBna0XHdFYo1i2s2kaVhI2qNPHEBQtCAe1KbATiQzU9aHcfcSlJys7L96OA=="],
 
@@ -959,7 +959,7 @@
 
     "rxjs": ["rxjs@7.8.2", "", { "dependencies": { "tslib": "^2.1.0" } }, "sha512-dhKf903U/PQZY6boNNtAGdWbG85WAbjT/1xYoZIC7FAY0yWapOBQVsVrDl58W86//e1VpMNBtRV4MaXfdMySFA=="],
 
-    "schema-truth": ["schema-truth@0.8.15", "", { "dependencies": { "@apidevtools/json-schema-ref-parser": "^16.0.5", "@effect/platform-node": "4.1.2", "effect": "4.1.2", "oxfmt": "^0.75.0" }, "bin": { "schema-truth-ajv": "dist/cli/ajv.js", "schema-truth-yup": "dist/cli/yup.js", "schema-truth-zod": "dist/cli/zod.js", "schema-truth-effect": "dist/cli/effect.js", "schema-truth-arktype": "dist/cli/arktype.js", "schema-truth-typebox": "dist/cli/typebox.js", "schema-truth-valibot": "dist/cli/valibot.js" } }, "sha512-fwJ9/a3GABgMSIu5gIGnqHeHA8dQShk8l5YtiiZNcseLdPJRVsmFgBbWwtwKoEhjMUJ1s+g5TBg4Euvu3UR7HA=="],
+    "schema-truth": ["schema-truth@0.9.5", "", { "dependencies": { "@apidevtools/json-schema-ref-parser": "^16.0.5", "@effect/platform-node": "4.1.2", "effect": "4.1.2", "oxfmt": "^0.75.0" }, "bin": { "schema-truth-ajv": "dist/cli/ajv.js", "schema-truth-yup": "dist/cli/yup.js", "schema-truth-zod": "dist/cli/zod.js", "schema-truth-effect": "dist/cli/effect.js", "schema-truth-arktype": "dist/cli/arktype.js", "schema-truth-typebox": "dist/cli/typebox.js", "schema-truth-valibot": "dist/cli/valibot.js" } }, "sha512-jrHBqLOSDnQ/Rif+MepHSKut6aaj3G3hVdZb4zgKhIWXSzBpUD/19Y5ZNJU9aXEothbinonFar7m53zfB3q0QA=="],
 
     "semver": ["semver@7.8.6", "", { "bin": { "semver": "bin/semver.js" } }, "sha512-9lpSSU4Mly3mrtruwLs1eLK6+gzbzqeBFwRNjIjE+9LuDpWdYctrQlQ3ej1Ilgi7gknpsTRnPoLP8DpCHqHIJw=="],
 

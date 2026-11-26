@@ -209,7 +209,13 @@ export const organizationHandler = new Hono()
             }),
           ),
           limit: Type.Optional(
-            Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '20' }))
+            Codec(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '20' }),
+                (value) => Number.isSafeInteger(Number(value)),
+                () => 'must be a safe integer',
+              ),
+            )
               .Decode((value) => Number(value))
               .Encode((value) => String(value)),
           ),
@@ -405,22 +411,46 @@ export const organizationHandler = new Hono()
           effective_at: Type.Optional(
             Type.Object({
               gt: Type.Optional(
-                Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+                Codec(
+                  Type.Refine(
+                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                    (value) => Number.isSafeInteger(Number(value)),
+                    () => 'must be a safe integer',
+                  ),
+                )
                   .Decode((value) => Number(value))
                   .Encode((value) => String(value)),
               ),
               gte: Type.Optional(
-                Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+                Codec(
+                  Type.Refine(
+                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                    (value) => Number.isSafeInteger(Number(value)),
+                    () => 'must be a safe integer',
+                  ),
+                )
                   .Decode((value) => Number(value))
                   .Encode((value) => String(value)),
               ),
               lt: Type.Optional(
-                Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+                Codec(
+                  Type.Refine(
+                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                    (value) => Number.isSafeInteger(Number(value)),
+                    () => 'must be a safe integer',
+                  ),
+                )
                   .Decode((value) => Number(value))
                   .Encode((value) => String(value)),
               ),
               lte: Type.Optional(
-                Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+                Codec(
+                  Type.Refine(
+                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                    (value) => Number.isSafeInteger(Number(value)),
+                    () => 'must be a safe integer',
+                  ),
+                )
                   .Decode((value) => Number(value))
                   .Encode((value) => String(value)),
               ),
@@ -434,7 +464,8 @@ export const organizationHandler = new Hono()
           tenant_only: Type.Optional(
             Codec(
               Type.String({
-                pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                pattern:
+                  '^(?:[Tt][Rr][Uu][Ee]|1|[Yy][Ee][Ss]|[Oo][Nn]|[Yy]|[Ee][Nn][Aa][Bb][Ll][Ee][Dd]|[Ff][Aa][Ll][Ss][Ee]|0|[Nn][Oo]|[Oo][Ff][Ff]|[Nn]|[Dd][Ii][Ss][Aa][Bb][Ll][Ee][Dd])$',
                 default: 'false',
               }),
             )
@@ -442,7 +473,13 @@ export const organizationHandler = new Hono()
               .Encode((value) => (value ? 'true' : 'false')),
           ),
           limit: Type.Optional(
-            Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '20' }))
+            Codec(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '20' }),
+                (value) => Number.isSafeInteger(Number(value)),
+                () => 'must be a safe integer',
+              ),
+            )
               .Decode((value) => Number(value))
               .Encode((value) => String(value)),
           ),
@@ -493,7 +530,13 @@ export const organizationHandler = new Hono()
       toStandardSchemaV1(
         Type.Object({
           limit: Type.Optional(
-            Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '20' }))
+            Codec(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '20' }),
+                (value) => Number.isSafeInteger(Number(value)),
+                () => 'must be a safe integer',
+              ),
+            )
               .Decode((value) => Number(value))
               .Encode((value) => String(value)),
           ),
@@ -827,11 +870,23 @@ export const organizationHandler = new Hono()
       'query',
       toStandardSchemaV1(
         Type.Object({
-          start_time: Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+          start_time: Codec(
+            Type.Refine(
+              Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+              (value) => Number.isSafeInteger(Number(value)),
+              () => 'must be a safe integer',
+            ),
+          )
             .Decode((value) => Number(value))
             .Encode((value) => String(value)),
           end_time: Type.Optional(
-            Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+            Codec(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                (value) => Number.isSafeInteger(Number(value)),
+                () => 'must be a safe integer',
+              ),
+            )
               .Decode((value) => Number(value))
               .Encode((value) => String(value)),
           ),
@@ -851,7 +906,13 @@ export const organizationHandler = new Hono()
             ),
           ),
           limit: Type.Optional(
-            Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '7' }))
+            Codec(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '7' }),
+                (value) => Number.isSafeInteger(Number(value)),
+                () => 'must be a safe integer',
+              ),
+            )
               .Decode((value) => Number(value))
               .Encode((value) => String(value)),
           ),
@@ -986,7 +1047,11 @@ export const organizationHandler = new Hono()
             Codec(
               Type.Refine(
                 Type.Refine(
-                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '100' }),
+                  Type.Refine(
+                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '100' }),
+                    (value) => Number.isSafeInteger(Number(value)),
+                    () => 'must be a safe integer',
+                  ),
                   (value) => Number(value) >= 0,
                   () => 'must be >= 0',
                 ),
@@ -1255,7 +1320,11 @@ export const organizationHandler = new Hono()
             Codec(
               Type.Refine(
                 Type.Refine(
-                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                  Type.Refine(
+                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                    (value) => Number.isSafeInteger(Number(value)),
+                    () => 'must be a safe integer',
+                  ),
                   (value) => Number(value) >= 0,
                   () => 'must be >= 0',
                 ),
@@ -1466,7 +1535,11 @@ export const organizationHandler = new Hono()
             Codec(
               Type.Refine(
                 Type.Refine(
-                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '100' }),
+                  Type.Refine(
+                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '100' }),
+                    (value) => Number.isSafeInteger(Number(value)),
+                    () => 'must be a safe integer',
+                  ),
                   (value) => Number(value) >= 0,
                   () => 'must be >= 0',
                 ),
@@ -1684,7 +1757,13 @@ export const organizationHandler = new Hono()
       toStandardSchemaV1(
         Type.Object({
           limit: Type.Optional(
-            Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '20' }))
+            Codec(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '20' }),
+                (value) => Number.isSafeInteger(Number(value)),
+                () => 'must be a safe integer',
+              ),
+            )
               .Decode((value) => Number(value))
               .Encode((value) => String(value)),
           ),
@@ -1886,7 +1965,13 @@ export const organizationHandler = new Hono()
       toStandardSchemaV1(
         Type.Object({
           limit: Type.Optional(
-            Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '20' }))
+            Codec(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '20' }),
+                (value) => Number.isSafeInteger(Number(value)),
+                () => 'must be a safe integer',
+              ),
+            )
               .Decode((value) => Number(value))
               .Encode((value) => String(value)),
           ),
@@ -1894,7 +1979,8 @@ export const organizationHandler = new Hono()
           include_archived: Type.Optional(
             Codec(
               Type.String({
-                pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                pattern:
+                  '^(?:[Tt][Rr][Uu][Ee]|1|[Yy][Ee][Ss]|[Oo][Nn]|[Yy]|[Ee][Nn][Aa][Bb][Ll][Ee][Dd]|[Ff][Aa][Ll][Ss][Ee]|0|[Nn][Oo]|[Oo][Ff][Ff]|[Nn]|[Dd][Ii][Ss][Aa][Bb][Ll][Ee][Dd])$',
                 default: 'false',
               }),
             )
@@ -2083,7 +2169,13 @@ export const organizationHandler = new Hono()
       toStandardSchemaV1(
         Type.Object({
           limit: Type.Optional(
-            Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '20' }))
+            Codec(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '20' }),
+                (value) => Number.isSafeInteger(Number(value)),
+                () => 'must be a safe integer',
+              ),
+            )
               .Decode((value) => Number(value))
               .Encode((value) => String(value)),
           ),
@@ -2336,7 +2428,13 @@ export const organizationHandler = new Hono()
       toStandardSchemaV1(
         Type.Object({
           limit: Type.Optional(
-            Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '20' }))
+            Codec(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '20' }),
+                (value) => Number.isSafeInteger(Number(value)),
+                () => 'must be a safe integer',
+              ),
+            )
               .Decode((value) => Number(value))
               .Encode((value) => String(value)),
           ),
@@ -2593,7 +2691,11 @@ export const organizationHandler = new Hono()
             Codec(
               Type.Refine(
                 Type.Refine(
-                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '20' }),
+                  Type.Refine(
+                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '20' }),
+                    (value) => Number.isSafeInteger(Number(value)),
+                    () => 'must be a safe integer',
+                  ),
                   (value) => Number(value) >= 0,
                   () => 'must be >= 0',
                 ),
@@ -3070,7 +3172,13 @@ export const organizationHandler = new Hono()
       toStandardSchemaV1(
         Type.Object({
           limit: Type.Optional(
-            Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '100' }))
+            Codec(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '100' }),
+                (value) => Number.isSafeInteger(Number(value)),
+                () => 'must be a safe integer',
+              ),
+            )
               .Decode((value) => Number(value))
               .Encode((value) => String(value)),
           ),
@@ -3186,7 +3294,13 @@ export const organizationHandler = new Hono()
       toStandardSchemaV1(
         Type.Object({
           limit: Type.Optional(
-            Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '20' }))
+            Codec(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '20' }),
+                (value) => Number.isSafeInteger(Number(value)),
+                () => 'must be a safe integer',
+              ),
+            )
               .Decode((value) => Number(value))
               .Encode((value) => String(value)),
           ),
@@ -3464,7 +3578,11 @@ export const organizationHandler = new Hono()
             Codec(
               Type.Refine(
                 Type.Refine(
-                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                  Type.Refine(
+                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                    (value) => Number.isSafeInteger(Number(value)),
+                    () => 'must be a safe integer',
+                  ),
                   (value) => Number(value) >= 0,
                   () => 'must be >= 0',
                 ),
@@ -3709,7 +3827,13 @@ export const organizationHandler = new Hono()
       toStandardSchemaV1(
         Type.Object({
           limit: Type.Optional(
-            Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '20' }))
+            Codec(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '20' }),
+                (value) => Number.isSafeInteger(Number(value)),
+                () => 'must be a safe integer',
+              ),
+            )
               .Decode((value) => Number(value))
               .Encode((value) => String(value)),
           ),
@@ -3981,7 +4105,11 @@ export const organizationHandler = new Hono()
             Codec(
               Type.Refine(
                 Type.Refine(
-                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '1000' }),
+                  Type.Refine(
+                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '1000' }),
+                    (value) => Number.isSafeInteger(Number(value)),
+                    () => 'must be a safe integer',
+                  ),
                   (value) => Number(value) >= 0,
                   () => 'must be >= 0',
                 ),
@@ -4208,7 +4336,11 @@ export const organizationHandler = new Hono()
             Codec(
               Type.Refine(
                 Type.Refine(
-                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                  Type.Refine(
+                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                    (value) => Number.isSafeInteger(Number(value)),
+                    () => 'must be a safe integer',
+                  ),
                   (value) => Number(value) >= 0,
                   () => 'must be >= 0',
                 ),
@@ -4417,11 +4549,23 @@ export const organizationHandler = new Hono()
       'query',
       toStandardSchemaV1(
         Type.Object({
-          start_time: Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+          start_time: Codec(
+            Type.Refine(
+              Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+              (value) => Number.isSafeInteger(Number(value)),
+              () => 'must be a safe integer',
+            ),
+          )
             .Decode((value) => Number(value))
             .Encode((value) => String(value)),
           end_time: Type.Optional(
-            Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+            Codec(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                (value) => Number.isSafeInteger(Number(value)),
+                () => 'must be a safe integer',
+              ),
+            )
               .Decode((value) => Number(value))
               .Encode((value) => String(value)),
           ),
@@ -4445,7 +4589,13 @@ export const organizationHandler = new Hono()
             ),
           ),
           limit: Type.Optional(
-            Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+            Codec(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                (value) => Number.isSafeInteger(Number(value)),
+                () => 'must be a safe integer',
+              ),
+            )
               .Decode((value) => Number(value))
               .Encode((value) => String(value)),
           ),
@@ -4492,11 +4642,23 @@ export const organizationHandler = new Hono()
       'query',
       toStandardSchemaV1(
         Type.Object({
-          start_time: Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+          start_time: Codec(
+            Type.Refine(
+              Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+              (value) => Number.isSafeInteger(Number(value)),
+              () => 'must be a safe integer',
+            ),
+          )
             .Decode((value) => Number(value))
             .Encode((value) => String(value)),
           end_time: Type.Optional(
-            Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+            Codec(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                (value) => Number.isSafeInteger(Number(value)),
+                () => 'must be a safe integer',
+              ),
+            )
               .Decode((value) => Number(value))
               .Encode((value) => String(value)),
           ),
@@ -4520,7 +4682,13 @@ export const organizationHandler = new Hono()
             ),
           ),
           limit: Type.Optional(
-            Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+            Codec(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                (value) => Number.isSafeInteger(Number(value)),
+                () => 'must be a safe integer',
+              ),
+            )
               .Decode((value) => Number(value))
               .Encode((value) => String(value)),
           ),
@@ -4567,11 +4735,23 @@ export const organizationHandler = new Hono()
       'query',
       toStandardSchemaV1(
         Type.Object({
-          start_time: Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+          start_time: Codec(
+            Type.Refine(
+              Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+              (value) => Number.isSafeInteger(Number(value)),
+              () => 'must be a safe integer',
+            ),
+          )
             .Decode((value) => Number(value))
             .Encode((value) => String(value)),
           end_time: Type.Optional(
-            Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+            Codec(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                (value) => Number.isSafeInteger(Number(value)),
+                () => 'must be a safe integer',
+              ),
+            )
               .Decode((value) => Number(value))
               .Encode((value) => String(value)),
           ),
@@ -4583,7 +4763,13 @@ export const organizationHandler = new Hono()
           project_ids: Type.Optional(Type.Array(Type.String())),
           group_by: Type.Optional(Type.Array(Type.Literal('project_id'))),
           limit: Type.Optional(
-            Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+            Codec(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                (value) => Number.isSafeInteger(Number(value)),
+                () => 'must be a safe integer',
+              ),
+            )
               .Decode((value) => Number(value))
               .Encode((value) => String(value)),
           ),
@@ -4630,11 +4816,23 @@ export const organizationHandler = new Hono()
       'query',
       toStandardSchemaV1(
         Type.Object({
-          start_time: Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+          start_time: Codec(
+            Type.Refine(
+              Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+              (value) => Number.isSafeInteger(Number(value)),
+              () => 'must be a safe integer',
+            ),
+          )
             .Decode((value) => Number(value))
             .Encode((value) => String(value)),
           end_time: Type.Optional(
-            Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+            Codec(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                (value) => Number.isSafeInteger(Number(value)),
+                () => 'must be a safe integer',
+              ),
+            )
               .Decode((value) => Number(value))
               .Encode((value) => String(value)),
           ),
@@ -4649,7 +4847,10 @@ export const organizationHandler = new Hono()
           models: Type.Optional(Type.Array(Type.String())),
           batch: Type.Optional(
             Codec(
-              Type.String({ pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i }),
+              Type.String({
+                pattern:
+                  '^(?:[Tt][Rr][Uu][Ee]|1|[Yy][Ee][Ss]|[Oo][Nn]|[Yy]|[Ee][Nn][Aa][Bb][Ll][Ee][Dd]|[Ff][Aa][Ll][Ss][Ee]|0|[Nn][Oo]|[Oo][Ff][Ff]|[Nn]|[Dd][Ii][Ss][Aa][Bb][Ll][Ee][Dd])$',
+              }),
             )
               .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
               .Encode((value) => (value ? 'true' : 'false')),
@@ -4668,7 +4869,13 @@ export const organizationHandler = new Hono()
             ),
           ),
           limit: Type.Optional(
-            Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+            Codec(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                (value) => Number.isSafeInteger(Number(value)),
+                () => 'must be a safe integer',
+              ),
+            )
               .Decode((value) => Number(value))
               .Encode((value) => String(value)),
           ),
@@ -4715,11 +4922,23 @@ export const organizationHandler = new Hono()
       'query',
       toStandardSchemaV1(
         Type.Object({
-          start_time: Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+          start_time: Codec(
+            Type.Refine(
+              Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+              (value) => Number.isSafeInteger(Number(value)),
+              () => 'must be a safe integer',
+            ),
+          )
             .Decode((value) => Number(value))
             .Encode((value) => String(value)),
           end_time: Type.Optional(
-            Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+            Codec(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                (value) => Number.isSafeInteger(Number(value)),
+                () => 'must be a safe integer',
+              ),
+            )
               .Decode((value) => Number(value))
               .Encode((value) => String(value)),
           ),
@@ -4743,7 +4962,13 @@ export const organizationHandler = new Hono()
             ),
           ),
           limit: Type.Optional(
-            Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+            Codec(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                (value) => Number.isSafeInteger(Number(value)),
+                () => 'must be a safe integer',
+              ),
+            )
               .Decode((value) => Number(value))
               .Encode((value) => String(value)),
           ),
@@ -4790,11 +5015,23 @@ export const organizationHandler = new Hono()
       'query',
       toStandardSchemaV1(
         Type.Object({
-          start_time: Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+          start_time: Codec(
+            Type.Refine(
+              Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+              (value) => Number.isSafeInteger(Number(value)),
+              () => 'must be a safe integer',
+            ),
+          )
             .Decode((value) => Number(value))
             .Encode((value) => String(value)),
           end_time: Type.Optional(
-            Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+            Codec(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                (value) => Number.isSafeInteger(Number(value)),
+                () => 'must be a safe integer',
+              ),
+            )
               .Decode((value) => Number(value))
               .Encode((value) => String(value)),
           ),
@@ -4818,7 +5055,13 @@ export const organizationHandler = new Hono()
             ),
           ),
           limit: Type.Optional(
-            Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+            Codec(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                (value) => Number.isSafeInteger(Number(value)),
+                () => 'must be a safe integer',
+              ),
+            )
               .Decode((value) => Number(value))
               .Encode((value) => String(value)),
           ),
@@ -4865,11 +5108,23 @@ export const organizationHandler = new Hono()
       'query',
       toStandardSchemaV1(
         Type.Object({
-          start_time: Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+          start_time: Codec(
+            Type.Refine(
+              Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+              (value) => Number.isSafeInteger(Number(value)),
+              () => 'must be a safe integer',
+            ),
+          )
             .Decode((value) => Number(value))
             .Encode((value) => String(value)),
           end_time: Type.Optional(
-            Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+            Codec(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                (value) => Number.isSafeInteger(Number(value)),
+                () => 'must be a safe integer',
+              ),
+            )
               .Decode((value) => Number(value))
               .Encode((value) => String(value)),
           ),
@@ -4915,7 +5170,13 @@ export const organizationHandler = new Hono()
             ),
           ),
           limit: Type.Optional(
-            Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+            Codec(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                (value) => Number.isSafeInteger(Number(value)),
+                () => 'must be a safe integer',
+              ),
+            )
               .Decode((value) => Number(value))
               .Encode((value) => String(value)),
           ),
@@ -4962,11 +5223,23 @@ export const organizationHandler = new Hono()
       'query',
       toStandardSchemaV1(
         Type.Object({
-          start_time: Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+          start_time: Codec(
+            Type.Refine(
+              Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+              (value) => Number.isSafeInteger(Number(value)),
+              () => 'must be a safe integer',
+            ),
+          )
             .Decode((value) => Number(value))
             .Encode((value) => String(value)),
           end_time: Type.Optional(
-            Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+            Codec(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                (value) => Number.isSafeInteger(Number(value)),
+                () => 'must be a safe integer',
+              ),
+            )
               .Decode((value) => Number(value))
               .Encode((value) => String(value)),
           ),
@@ -4990,7 +5263,13 @@ export const organizationHandler = new Hono()
             ),
           ),
           limit: Type.Optional(
-            Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+            Codec(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                (value) => Number.isSafeInteger(Number(value)),
+                () => 'must be a safe integer',
+              ),
+            )
               .Decode((value) => Number(value))
               .Encode((value) => String(value)),
           ),
@@ -5037,11 +5316,23 @@ export const organizationHandler = new Hono()
       'query',
       toStandardSchemaV1(
         Type.Object({
-          start_time: Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+          start_time: Codec(
+            Type.Refine(
+              Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+              (value) => Number.isSafeInteger(Number(value)),
+              () => 'must be a safe integer',
+            ),
+          )
             .Decode((value) => Number(value))
             .Encode((value) => String(value)),
           end_time: Type.Optional(
-            Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+            Codec(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                (value) => Number.isSafeInteger(Number(value)),
+                () => 'must be a safe integer',
+              ),
+            )
               .Decode((value) => Number(value))
               .Encode((value) => String(value)),
           ),
@@ -5053,7 +5344,13 @@ export const organizationHandler = new Hono()
           project_ids: Type.Optional(Type.Array(Type.String())),
           group_by: Type.Optional(Type.Array(Type.Literal('project_id'))),
           limit: Type.Optional(
-            Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+            Codec(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                (value) => Number.isSafeInteger(Number(value)),
+                () => 'must be a safe integer',
+              ),
+            )
               .Decode((value) => Number(value))
               .Encode((value) => String(value)),
           ),
@@ -5100,11 +5397,23 @@ export const organizationHandler = new Hono()
       'query',
       toStandardSchemaV1(
         Type.Object({
-          start_time: Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+          start_time: Codec(
+            Type.Refine(
+              Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+              (value) => Number.isSafeInteger(Number(value)),
+              () => 'must be a safe integer',
+            ),
+          )
             .Decode((value) => Number(value))
             .Encode((value) => String(value)),
           end_time: Type.Optional(
-            Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+            Codec(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                (value) => Number.isSafeInteger(Number(value)),
+                () => 'must be a safe integer',
+              ),
+            )
               .Decode((value) => Number(value))
               .Encode((value) => String(value)),
           ),
@@ -5135,7 +5444,13 @@ export const organizationHandler = new Hono()
             ),
           ),
           limit: Type.Optional(
-            Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+            Codec(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                (value) => Number.isSafeInteger(Number(value)),
+                () => 'must be a safe integer',
+              ),
+            )
               .Decode((value) => Number(value))
               .Encode((value) => String(value)),
           ),
@@ -5187,7 +5502,13 @@ export const organizationHandler = new Hono()
       toStandardSchemaV1(
         Type.Object({
           limit: Type.Optional(
-            Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '20' }))
+            Codec(
+              Type.Refine(
+                Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$', default: '20' }),
+                (value) => Number.isSafeInteger(Number(value)),
+                () => 'must be a safe integer',
+              ),
+            )
               .Decode((value) => Number(value))
               .Encode((value) => String(value)),
           ),
@@ -5377,7 +5698,11 @@ export const organizationHandler = new Hono()
             Codec(
               Type.Refine(
                 Type.Refine(
-                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                  Type.Refine(
+                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                    (value) => Number.isSafeInteger(Number(value)),
+                    () => 'must be a safe integer',
+                  ),
                   (value) => Number(value) >= 0,
                   () => 'must be >= 0',
                 ),
@@ -5559,7 +5884,11 @@ export const organizationHandler = new Hono()
             Codec(
               Type.Refine(
                 Type.Refine(
-                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                  Type.Refine(
+                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                    (value) => Number.isSafeInteger(Number(value)),
+                    () => 'must be a safe integer',
+                  ),
                   (value) => Number(value) >= 0,
                   () => 'must be >= 0',
                 ),
@@ -5682,7 +6011,11 @@ export const organizationHandler = new Hono()
             Codec(
               Type.Refine(
                 Type.Refine(
-                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                  Type.Refine(
+                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                    (value) => Number.isSafeInteger(Number(value)),
+                    () => 'must be a safe integer',
+                  ),
                   (value) => Number(value) >= 1,
                   () => 'must be >= 1',
                 ),
@@ -5831,7 +6164,11 @@ export const organizationHandler = new Hono()
             Codec(
               Type.Refine(
                 Type.Refine(
-                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                  Type.Refine(
+                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                    (value) => Number.isSafeInteger(Number(value)),
+                    () => 'must be a safe integer',
+                  ),
                   (value) => Number(value) >= 1,
                   () => 'must be >= 1',
                 ),
@@ -6011,12 +6348,24 @@ export const organizationHandler = new Hono()
       'query',
       toStandardSchemaV1(
         Type.Object({
-          start_time: Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+          start_time: Codec(
+            Type.Refine(
+              Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+              (value) => Number.isSafeInteger(Number(value)),
+              () => 'must be a safe integer',
+            ),
+          )
             .Decode((value) => Number(value))
             .Encode((value) => String(value)),
           end_time: Type.Optional(
             Type.Union([
-              Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+              Codec(
+                Type.Refine(
+                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                  (value) => Number.isSafeInteger(Number(value)),
+                  () => 'must be a safe integer',
+                ),
+              )
                 .Decode((value) => Number(value))
                 .Encode((value) => String(value)),
               Type.Null(),
@@ -6033,7 +6382,13 @@ export const organizationHandler = new Hono()
           ),
           limit: Type.Optional(
             Type.Union([
-              Codec(Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }))
+              Codec(
+                Type.Refine(
+                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                  (value) => Number.isSafeInteger(Number(value)),
+                  () => 'must be a safe integer',
+                ),
+              )
                 .Decode((value) => Number(value))
                 .Encode((value) => String(value)),
               Type.Null(),
@@ -6093,7 +6448,8 @@ export const organizationHandler = new Hono()
             Type.Union([
               Codec(
                 Type.String({
-                  pattern: /^(?:true|1|yes|on|y|enabled|false|0|no|off|n|disabled)$/i,
+                  pattern:
+                    '^(?:[Tt][Rr][Uu][Ee]|1|[Yy][Ee][Ss]|[Oo][Nn]|[Yy]|[Ee][Nn][Aa][Bb][Ll][Ee][Dd]|[Ff][Aa][Ll][Ss][Ee]|0|[Nn][Oo]|[Oo][Ff][Ff]|[Nn]|[Dd][Ii][Ss][Aa][Bb][Ll][Ee][Dd])$',
                 }),
               )
                 .Decode((value) => /^(?:true|1|yes|on|y|enabled)$/i.test(value))
@@ -6161,7 +6517,11 @@ export const organizationHandler = new Hono()
             Codec(
               Type.Refine(
                 Type.Refine(
-                  Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                  Type.Refine(
+                    Type.String({ pattern: '^-?(?:0|[1-9]\\d*)$' }),
+                    (value) => Number.isSafeInteger(Number(value)),
+                    () => 'must be a safe integer',
+                  ),
                   (value) => Number(value) >= 1,
                   () => 'must be >= 1',
                 ),

@@ -412,15 +412,19 @@ export const contract = {
     .input(
       v.object({
         limit: v.optional(
-          v.optional(
-            v.pipe(
-              v.string(),
-              v.regex(/^-?(?:0|[1-9]\d*)$/),
-              v.transform((input) => Number(input)),
-              v.number(),
-              v.safeInteger(),
+          v.pipe(
+            v.optional(
+              v.pipe(
+                v.string(),
+                v.regex(/^-?(?:0|[1-9]\d*)$/),
+                v.metadata({ type: 'integer' }),
+                v.transform((input) => Number(input)),
+                v.number(),
+                v.safeInteger(),
+              ),
+              '20',
             ),
-            '20',
+            v.metadata({ default: 20 }),
           ),
         ),
         order: v.optional(v.optional(v.picklist(['asc', 'desc']), 'desc')),
@@ -646,15 +650,19 @@ export const contract = {
       v.object({
         after: v.optional(v.string()),
         limit: v.optional(
-          v.optional(
-            v.pipe(
-              v.string(),
-              v.regex(/^-?(?:0|[1-9]\d*)$/),
-              v.transform((input) => Number(input)),
-              v.number(),
-              v.safeInteger(),
+          v.pipe(
+            v.optional(
+              v.pipe(
+                v.string(),
+                v.regex(/^-?(?:0|[1-9]\d*)$/),
+                v.metadata({ type: 'integer' }),
+                v.transform((input) => Number(input)),
+                v.number(),
+                v.safeInteger(),
+              ),
+              '20',
             ),
-            '20',
+            v.metadata({ default: 20 }),
           ),
         ),
       }),
@@ -739,15 +747,19 @@ export const contract = {
       v.object({
         after: v.optional(v.string()),
         limit: v.optional(
-          v.optional(
-            v.pipe(
-              v.string(),
-              v.regex(/^-?(?:0|[1-9]\d*)$/),
-              v.transform((input) => Number(input)),
-              v.number(),
-              v.safeInteger(),
+          v.pipe(
+            v.optional(
+              v.pipe(
+                v.string(),
+                v.regex(/^-?(?:0|[1-9]\d*)$/),
+                v.metadata({ type: 'integer' }),
+                v.transform((input) => Number(input)),
+                v.number(),
+                v.safeInteger(),
+              ),
+              '20',
             ),
-            '20',
+            v.metadata({ default: 20 }),
           ),
         ),
       }),
@@ -803,15 +815,19 @@ export const contract = {
         metadata: v.optional(MetadataSchema),
         after: v.optional(v.string()),
         limit: v.optional(
-          v.optional(
-            v.pipe(
-              v.string(),
-              v.regex(/^-?(?:0|[1-9]\d*)$/),
-              v.transform((input) => Number(input)),
-              v.number(),
-              v.safeInteger(),
+          v.pipe(
+            v.optional(
+              v.pipe(
+                v.string(),
+                v.regex(/^-?(?:0|[1-9]\d*)$/),
+                v.metadata({ type: 'integer' }),
+                v.transform((input) => Number(input)),
+                v.number(),
+                v.safeInteger(),
+              ),
+              '20',
             ),
-            '20',
+            v.metadata({ default: 20 }),
           ),
         ),
         order: v.optional(v.optional(v.picklist(['asc', 'desc']), 'asc')),
@@ -882,15 +898,19 @@ export const contract = {
         completion_id: v.string(),
         after: v.optional(v.string()),
         limit: v.optional(
-          v.optional(
-            v.pipe(
-              v.string(),
-              v.regex(/^-?(?:0|[1-9]\d*)$/),
-              v.transform((input) => Number(input)),
-              v.number(),
-              v.safeInteger(),
+          v.pipe(
+            v.optional(
+              v.pipe(
+                v.string(),
+                v.regex(/^-?(?:0|[1-9]\d*)$/),
+                v.metadata({ type: 'integer' }),
+                v.transform((input) => Number(input)),
+                v.number(),
+                v.safeInteger(),
+              ),
+              '20',
             ),
-            '20',
+            v.metadata({ default: 20 }),
           ),
         ),
         order: v.optional(v.optional(v.picklist(['asc', 'desc']), 'asc')),
@@ -919,15 +939,19 @@ export const contract = {
     .input(
       v.object({
         limit: v.optional(
-          v.optional(
-            v.pipe(
-              v.string(),
-              v.regex(/^-?(?:0|[1-9]\d*)$/),
-              v.transform((input) => Number(input)),
-              v.number(),
-              v.safeInteger(),
+          v.pipe(
+            v.optional(
+              v.pipe(
+                v.string(),
+                v.regex(/^-?(?:0|[1-9]\d*)$/),
+                v.metadata({ type: 'integer' }),
+                v.transform((input) => Number(input)),
+                v.number(),
+                v.safeInteger(),
+              ),
+              '20',
             ),
-            '20',
+            v.metadata({ default: 20 }),
           ),
         ),
         order: v.optional(v.optional(v.picklist(['asc', 'desc']), 'desc')),
@@ -979,15 +1003,19 @@ export const contract = {
       v.object({
         container_id: v.string(),
         limit: v.optional(
-          v.optional(
-            v.pipe(
-              v.string(),
-              v.regex(/^-?(?:0|[1-9]\d*)$/),
-              v.transform((input) => Number(input)),
-              v.number(),
-              v.safeInteger(),
+          v.pipe(
+            v.optional(
+              v.pipe(
+                v.string(),
+                v.regex(/^-?(?:0|[1-9]\d*)$/),
+                v.metadata({ type: 'integer' }),
+                v.transform((input) => Number(input)),
+                v.number(),
+                v.safeInteger(),
+              ),
+              '20',
             ),
-            '20',
+            v.metadata({ default: 20 }),
           ),
         ),
         order: v.optional(v.optional(v.picklist(['asc', 'desc']), 'desc')),
@@ -1060,15 +1088,19 @@ export const contract = {
       v.object({
         conversation_id: v.pipe(v.string(), v.metadata({ examples: ['conv_123'] })),
         limit: v.optional(
-          v.optional(
-            v.pipe(
-              v.string(),
-              v.regex(/^-?(?:0|[1-9]\d*)$/),
-              v.transform((input) => Number(input)),
-              v.number(),
-              v.safeInteger(),
+          v.pipe(
+            v.optional(
+              v.pipe(
+                v.string(),
+                v.regex(/^-?(?:0|[1-9]\d*)$/),
+                v.metadata({ type: 'integer' }),
+                v.transform((input) => Number(input)),
+                v.number(),
+                v.safeInteger(),
+              ),
+              '20',
             ),
-            '20',
+            v.metadata({ default: 20 }),
           ),
         ),
         order: v.optional(v.picklist(['asc', 'desc'])),
@@ -1170,15 +1202,19 @@ export const contract = {
       v.object({
         after: v.optional(v.string()),
         limit: v.optional(
-          v.optional(
-            v.pipe(
-              v.string(),
-              v.regex(/^-?(?:0|[1-9]\d*)$/),
-              v.transform((input) => Number(input)),
-              v.number(),
-              v.safeInteger(),
+          v.pipe(
+            v.optional(
+              v.pipe(
+                v.string(),
+                v.regex(/^-?(?:0|[1-9]\d*)$/),
+                v.metadata({ type: 'integer' }),
+                v.transform((input) => Number(input)),
+                v.number(),
+                v.safeInteger(),
+              ),
+              '20',
             ),
-            '20',
+            v.metadata({ default: 20 }),
           ),
         ),
         order: v.optional(v.optional(v.picklist(['asc', 'desc']), 'asc')),
@@ -1257,15 +1293,19 @@ export const contract = {
         eval_id: v.string(),
         after: v.optional(v.string()),
         limit: v.optional(
-          v.optional(
-            v.pipe(
-              v.string(),
-              v.regex(/^-?(?:0|[1-9]\d*)$/),
-              v.transform((input) => Number(input)),
-              v.number(),
-              v.safeInteger(),
+          v.pipe(
+            v.optional(
+              v.pipe(
+                v.string(),
+                v.regex(/^-?(?:0|[1-9]\d*)$/),
+                v.metadata({ type: 'integer' }),
+                v.transform((input) => Number(input)),
+                v.number(),
+                v.safeInteger(),
+              ),
+              '20',
             ),
-            '20',
+            v.metadata({ default: 20 }),
           ),
         ),
         order: v.optional(v.optional(v.picklist(['asc', 'desc']), 'asc')),
@@ -1361,15 +1401,19 @@ export const contract = {
         run_id: v.string(),
         after: v.optional(v.string()),
         limit: v.optional(
-          v.optional(
-            v.pipe(
-              v.string(),
-              v.regex(/^-?(?:0|[1-9]\d*)$/),
-              v.transform((input) => Number(input)),
-              v.number(),
-              v.safeInteger(),
+          v.pipe(
+            v.optional(
+              v.pipe(
+                v.string(),
+                v.regex(/^-?(?:0|[1-9]\d*)$/),
+                v.metadata({ type: 'integer' }),
+                v.transform((input) => Number(input)),
+                v.number(),
+                v.safeInteger(),
+              ),
+              '20',
             ),
-            '20',
+            v.metadata({ default: 20 }),
           ),
         ),
         status: v.optional(v.picklist(['fail', 'pass'])),
@@ -1400,15 +1444,19 @@ export const contract = {
       v.object({
         purpose: v.optional(v.string()),
         limit: v.optional(
-          v.optional(
-            v.pipe(
-              v.string(),
-              v.regex(/^-?(?:0|[1-9]\d*)$/),
-              v.transform((input) => Number(input)),
-              v.number(),
-              v.safeInteger(),
+          v.pipe(
+            v.optional(
+              v.pipe(
+                v.string(),
+                v.regex(/^-?(?:0|[1-9]\d*)$/),
+                v.metadata({ type: 'integer' }),
+                v.transform((input) => Number(input)),
+                v.number(),
+                v.safeInteger(),
+              ),
+              '10000',
             ),
-            '10000',
+            v.metadata({ default: 10000 }),
           ),
         ),
         order: v.optional(v.optional(v.picklist(['asc', 'desc']), 'desc')),
@@ -1493,15 +1541,19 @@ export const contract = {
         project_id: v.optional(v.string()),
         after: v.optional(v.string()),
         limit: v.optional(
-          v.optional(
-            v.pipe(
-              v.string(),
-              v.regex(/^-?(?:0|[1-9]\d*)$/),
-              v.transform((input) => Number(input)),
-              v.number(),
-              v.safeInteger(),
+          v.pipe(
+            v.optional(
+              v.pipe(
+                v.string(),
+                v.regex(/^-?(?:0|[1-9]\d*)$/),
+                v.metadata({ type: 'integer' }),
+                v.transform((input) => Number(input)),
+                v.number(),
+                v.safeInteger(),
+              ),
+              '10',
             ),
-            '10',
+            v.metadata({ default: 10 }),
           ),
         ),
         order: v.optional(v.optional(v.picklist(['ascending', 'descending']), 'descending')),
@@ -1564,15 +1616,19 @@ export const contract = {
       v.object({
         after: v.optional(v.string()),
         limit: v.optional(
-          v.optional(
-            v.pipe(
-              v.string(),
-              v.regex(/^-?(?:0|[1-9]\d*)$/),
-              v.transform((input) => Number(input)),
-              v.number(),
-              v.safeInteger(),
+          v.pipe(
+            v.optional(
+              v.pipe(
+                v.string(),
+                v.regex(/^-?(?:0|[1-9]\d*)$/),
+                v.metadata({ type: 'integer' }),
+                v.transform((input) => Number(input)),
+                v.number(),
+                v.safeInteger(),
+              ),
+              '20',
             ),
-            '20',
+            v.metadata({ default: 20 }),
           ),
         ),
         metadata: v.optional(
@@ -1659,15 +1715,19 @@ export const contract = {
         ),
         after: v.optional(v.string()),
         limit: v.optional(
-          v.optional(
-            v.pipe(
-              v.string(),
-              v.regex(/^-?(?:0|[1-9]\d*)$/),
-              v.transform((input) => Number(input)),
-              v.number(),
-              v.safeInteger(),
+          v.pipe(
+            v.optional(
+              v.pipe(
+                v.string(),
+                v.regex(/^-?(?:0|[1-9]\d*)$/),
+                v.metadata({ type: 'integer' }),
+                v.transform((input) => Number(input)),
+                v.number(),
+                v.safeInteger(),
+              ),
+              '10',
             ),
-            '10',
+            v.metadata({ default: 10 }),
           ),
         ),
       }),
@@ -1689,15 +1749,19 @@ export const contract = {
         ),
         after: v.optional(v.string()),
         limit: v.optional(
-          v.optional(
-            v.pipe(
-              v.string(),
-              v.regex(/^-?(?:0|[1-9]\d*)$/),
-              v.transform((input) => Number(input)),
-              v.number(),
-              v.safeInteger(),
+          v.pipe(
+            v.optional(
+              v.pipe(
+                v.string(),
+                v.regex(/^-?(?:0|[1-9]\d*)$/),
+                v.metadata({ type: 'integer' }),
+                v.transform((input) => Number(input)),
+                v.number(),
+                v.safeInteger(),
+              ),
+              '20',
             ),
-            '20',
+            v.metadata({ default: 20 }),
           ),
         ),
       }),
@@ -1932,6 +1996,7 @@ export const contract = {
               v.pipe(
                 v.string(),
                 v.regex(/^-?(?:0|[1-9]\d*)$/),
+                v.metadata({ type: 'integer' }),
                 v.transform((input) => Number(input)),
                 v.number(),
                 v.safeInteger(),
@@ -1939,6 +2004,7 @@ export const contract = {
               '20',
             ),
             v.description('Maximum number of keys to return.'),
+            v.metadata({ default: 20 }),
           ),
         ),
       }),
@@ -2018,6 +2084,7 @@ export const contract = {
                 v.pipe(
                   v.string(),
                   v.regex(/^-?(?:0|[1-9]\d*)$/),
+                  v.metadata({ type: 'integer' }),
                   v.transform((input) => Number(input)),
                   v.number(),
                   v.safeInteger(),
@@ -2030,6 +2097,7 @@ export const contract = {
                 v.pipe(
                   v.string(),
                   v.regex(/^-?(?:0|[1-9]\d*)$/),
+                  v.metadata({ type: 'integer' }),
                   v.transform((input) => Number(input)),
                   v.number(),
                   v.safeInteger(),
@@ -2042,6 +2110,7 @@ export const contract = {
                 v.pipe(
                   v.string(),
                   v.regex(/^-?(?:0|[1-9]\d*)$/),
+                  v.metadata({ type: 'integer' }),
                   v.transform((input) => Number(input)),
                   v.number(),
                   v.safeInteger(),
@@ -2054,6 +2123,7 @@ export const contract = {
                 v.pipe(
                   v.string(),
                   v.regex(/^-?(?:0|[1-9]\d*)$/),
+                  v.metadata({ type: 'integer' }),
                   v.transform((input) => Number(input)),
                   v.number(),
                   v.safeInteger(),
@@ -2111,15 +2181,19 @@ export const contract = {
           ),
         ),
         limit: v.optional(
-          v.optional(
-            v.pipe(
-              v.string(),
-              v.regex(/^-?(?:0|[1-9]\d*)$/),
-              v.transform((input) => Number(input)),
-              v.number(),
-              v.safeInteger(),
+          v.pipe(
+            v.optional(
+              v.pipe(
+                v.string(),
+                v.regex(/^-?(?:0|[1-9]\d*)$/),
+                v.metadata({ type: 'integer' }),
+                v.transform((input) => Number(input)),
+                v.number(),
+                v.safeInteger(),
+              ),
+              '20',
             ),
-            '20',
+            v.metadata({ default: 20 }),
           ),
         ),
         after: v.optional(v.string()),
@@ -2139,15 +2213,19 @@ export const contract = {
     .input(
       v.object({
         limit: v.optional(
-          v.optional(
-            v.pipe(
-              v.string(),
-              v.regex(/^-?(?:0|[1-9]\d*)$/),
-              v.transform((input) => Number(input)),
-              v.number(),
-              v.safeInteger(),
+          v.pipe(
+            v.optional(
+              v.pipe(
+                v.string(),
+                v.regex(/^-?(?:0|[1-9]\d*)$/),
+                v.metadata({ type: 'integer' }),
+                v.transform((input) => Number(input)),
+                v.number(),
+                v.safeInteger(),
+              ),
+              '20',
             ),
-            '20',
+            v.metadata({ default: 20 }),
           ),
         ),
         after: v.optional(v.string()),
@@ -2256,6 +2334,7 @@ export const contract = {
         start_time: v.pipe(
           v.string(),
           v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.metadata({ type: 'integer' }),
           v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
@@ -2264,6 +2343,7 @@ export const contract = {
           v.pipe(
             v.string(),
             v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.metadata({ type: 'integer' }),
             v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
@@ -2299,15 +2379,19 @@ export const contract = {
           ),
         ),
         limit: v.optional(
-          v.optional(
-            v.pipe(
-              v.string(),
-              v.regex(/^-?(?:0|[1-9]\d*)$/),
-              v.transform((input) => Number(input)),
-              v.number(),
-              v.safeInteger(),
+          v.pipe(
+            v.optional(
+              v.pipe(
+                v.string(),
+                v.regex(/^-?(?:0|[1-9]\d*)$/),
+                v.metadata({ type: 'integer' }),
+                v.transform((input) => Number(input)),
+                v.number(),
+                v.safeInteger(),
+              ),
+              '7',
             ),
-            '7',
+            v.metadata({ default: 7 }),
           ),
         ),
         page: v.optional(v.string()),
@@ -2347,17 +2431,21 @@ export const contract = {
     .input(
       v.object({
         limit: v.optional(
-          v.optional(
-            v.pipe(
-              v.string(),
-              v.regex(/^-?(?:0|[1-9]\d*)$/),
-              v.transform((input) => Number(input)),
-              v.number(),
-              v.safeInteger(),
-              v.minValue(0),
-              v.maxValue(1000),
+          v.pipe(
+            v.optional(
+              v.pipe(
+                v.string(),
+                v.regex(/^-?(?:0|[1-9]\d*)$/),
+                v.metadata({ type: 'integer', minimum: 0, maximum: 1000 }),
+                v.transform((input) => Number(input)),
+                v.number(),
+                v.safeInteger(),
+                v.minValue(0),
+                v.maxValue(1000),
+              ),
+              '100',
             ),
-            '100',
+            v.metadata({ default: 100 }),
           ),
         ),
         after: v.optional(v.string()),
@@ -2433,6 +2521,7 @@ export const contract = {
           v.pipe(
             v.string(),
             v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.metadata({ type: 'integer', minimum: 0, maximum: 1000 }),
             v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
@@ -2496,17 +2585,21 @@ export const contract = {
       v.object({
         group_id: v.string(),
         limit: v.optional(
-          v.optional(
-            v.pipe(
-              v.string(),
-              v.regex(/^-?(?:0|[1-9]\d*)$/),
-              v.transform((input) => Number(input)),
-              v.number(),
-              v.safeInteger(),
-              v.minValue(0),
-              v.maxValue(1000),
+          v.pipe(
+            v.optional(
+              v.pipe(
+                v.string(),
+                v.regex(/^-?(?:0|[1-9]\d*)$/),
+                v.metadata({ type: 'integer', minimum: 0, maximum: 1000 }),
+                v.transform((input) => Number(input)),
+                v.number(),
+                v.safeInteger(),
+                v.minValue(0),
+                v.maxValue(1000),
+              ),
+              '100',
             ),
-            '100',
+            v.metadata({ default: 100 }),
           ),
         ),
         after: v.optional(v.string()),
@@ -2564,15 +2657,19 @@ export const contract = {
     .input(
       v.object({
         limit: v.optional(
-          v.optional(
-            v.pipe(
-              v.string(),
-              v.regex(/^-?(?:0|[1-9]\d*)$/),
-              v.transform((input) => Number(input)),
-              v.number(),
-              v.safeInteger(),
+          v.pipe(
+            v.optional(
+              v.pipe(
+                v.string(),
+                v.regex(/^-?(?:0|[1-9]\d*)$/),
+                v.metadata({ type: 'integer' }),
+                v.transform((input) => Number(input)),
+                v.number(),
+                v.safeInteger(),
+              ),
+              '20',
             ),
-            '20',
+            v.metadata({ default: 20 }),
           ),
         ),
         after: v.optional(v.string()),
@@ -2626,15 +2723,19 @@ export const contract = {
     .input(
       v.object({
         limit: v.optional(
-          v.optional(
-            v.pipe(
-              v.string(),
-              v.regex(/^-?(?:0|[1-9]\d*)$/),
-              v.transform((input) => Number(input)),
-              v.number(),
-              v.safeInteger(),
+          v.pipe(
+            v.optional(
+              v.pipe(
+                v.string(),
+                v.regex(/^-?(?:0|[1-9]\d*)$/),
+                v.metadata({ type: 'integer' }),
+                v.transform((input) => Number(input)),
+                v.number(),
+                v.safeInteger(),
+              ),
+              '20',
             ),
-            '20',
+            v.metadata({ default: 20 }),
           ),
         ),
         after: v.optional(v.string()),
@@ -2723,15 +2824,19 @@ export const contract = {
       v.object({
         project_id: v.string(),
         limit: v.optional(
-          v.optional(
-            v.pipe(
-              v.string(),
-              v.regex(/^-?(?:0|[1-9]\d*)$/),
-              v.transform((input) => Number(input)),
-              v.number(),
-              v.safeInteger(),
+          v.pipe(
+            v.optional(
+              v.pipe(
+                v.string(),
+                v.regex(/^-?(?:0|[1-9]\d*)$/),
+                v.metadata({ type: 'integer' }),
+                v.transform((input) => Number(input)),
+                v.number(),
+                v.safeInteger(),
+              ),
+              '20',
             ),
-            '20',
+            v.metadata({ default: 20 }),
           ),
         ),
         after: v.optional(v.string()),
@@ -2820,15 +2925,19 @@ export const contract = {
       v.object({
         project_id: v.string(),
         limit: v.optional(
-          v.optional(
-            v.pipe(
-              v.string(),
-              v.regex(/^-?(?:0|[1-9]\d*)$/),
-              v.transform((input) => Number(input)),
-              v.number(),
-              v.safeInteger(),
+          v.pipe(
+            v.optional(
+              v.pipe(
+                v.string(),
+                v.regex(/^-?(?:0|[1-9]\d*)$/),
+                v.metadata({ type: 'integer' }),
+                v.transform((input) => Number(input)),
+                v.number(),
+                v.safeInteger(),
+              ),
+              '20',
             ),
-            '20',
+            v.metadata({ default: 20 }),
           ),
         ),
         after: v.optional(v.string()),
@@ -2928,17 +3037,21 @@ export const contract = {
       v.object({
         project_id: v.string(),
         limit: v.optional(
-          v.optional(
-            v.pipe(
-              v.string(),
-              v.regex(/^-?(?:0|[1-9]\d*)$/),
-              v.transform((input) => Number(input)),
-              v.number(),
-              v.safeInteger(),
-              v.minValue(0),
-              v.maxValue(100),
+          v.pipe(
+            v.optional(
+              v.pipe(
+                v.string(),
+                v.regex(/^-?(?:0|[1-9]\d*)$/),
+                v.metadata({ type: 'integer', minimum: 0, maximum: 100 }),
+                v.transform((input) => Number(input)),
+                v.number(),
+                v.safeInteger(),
+                v.minValue(0),
+                v.maxValue(100),
+              ),
+              '20',
             ),
-            '20',
+            v.metadata({ default: 20 }),
           ),
         ),
         after: v.optional(v.string()),
@@ -3111,15 +3224,19 @@ export const contract = {
       v.object({
         project_id: v.string(),
         limit: v.optional(
-          v.optional(
-            v.pipe(
-              v.string(),
-              v.regex(/^-?(?:0|[1-9]\d*)$/),
-              v.transform((input) => Number(input)),
-              v.number(),
-              v.safeInteger(),
+          v.pipe(
+            v.optional(
+              v.pipe(
+                v.string(),
+                v.regex(/^-?(?:0|[1-9]\d*)$/),
+                v.metadata({ type: 'integer' }),
+                v.transform((input) => Number(input)),
+                v.number(),
+                v.safeInteger(),
+              ),
+              '100',
             ),
-            '100',
+            v.metadata({ default: 100 }),
           ),
         ),
         after: v.optional(v.string()),
@@ -3193,15 +3310,19 @@ export const contract = {
       v.object({
         project_id: v.string(),
         limit: v.optional(
-          v.optional(
-            v.pipe(
-              v.string(),
-              v.regex(/^-?(?:0|[1-9]\d*)$/),
-              v.transform((input) => Number(input)),
-              v.number(),
-              v.safeInteger(),
+          v.pipe(
+            v.optional(
+              v.pipe(
+                v.string(),
+                v.regex(/^-?(?:0|[1-9]\d*)$/),
+                v.metadata({ type: 'integer' }),
+                v.transform((input) => Number(input)),
+                v.number(),
+                v.safeInteger(),
+              ),
+              '20',
             ),
-            '20',
+            v.metadata({ default: 20 }),
           ),
         ),
         after: v.optional(v.string()),
@@ -3307,6 +3428,7 @@ export const contract = {
           v.pipe(
             v.string(),
             v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.metadata({ type: 'integer', minimum: 0, maximum: 100 }),
             v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
@@ -3406,15 +3528,19 @@ export const contract = {
       v.object({
         project_id: v.string(),
         limit: v.optional(
-          v.optional(
-            v.pipe(
-              v.string(),
-              v.regex(/^-?(?:0|[1-9]\d*)$/),
-              v.transform((input) => Number(input)),
-              v.number(),
-              v.safeInteger(),
+          v.pipe(
+            v.optional(
+              v.pipe(
+                v.string(),
+                v.regex(/^-?(?:0|[1-9]\d*)$/),
+                v.metadata({ type: 'integer' }),
+                v.transform((input) => Number(input)),
+                v.number(),
+                v.safeInteger(),
+              ),
+              '20',
             ),
-            '20',
+            v.metadata({ default: 20 }),
           ),
         ),
         after: v.optional(v.string()),
@@ -3498,17 +3624,21 @@ export const contract = {
     .input(
       v.object({
         limit: v.optional(
-          v.optional(
-            v.pipe(
-              v.string(),
-              v.regex(/^-?(?:0|[1-9]\d*)$/),
-              v.transform((input) => Number(input)),
-              v.number(),
-              v.safeInteger(),
-              v.minValue(0),
-              v.maxValue(1000),
+          v.pipe(
+            v.optional(
+              v.pipe(
+                v.string(),
+                v.regex(/^-?(?:0|[1-9]\d*)$/),
+                v.metadata({ type: 'integer', minimum: 0, maximum: 1000 }),
+                v.transform((input) => Number(input)),
+                v.number(),
+                v.safeInteger(),
+                v.minValue(0),
+                v.maxValue(1000),
+              ),
+              '1000',
             ),
-            '1000',
+            v.metadata({ default: 1000 }),
           ),
         ),
         after: v.optional(v.string()),
@@ -3591,6 +3721,7 @@ export const contract = {
           v.pipe(
             v.string(),
             v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.metadata({ type: 'integer', minimum: 0, maximum: 100 }),
             v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
@@ -3676,6 +3807,7 @@ export const contract = {
         start_time: v.pipe(
           v.string(),
           v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.metadata({ type: 'integer' }),
           v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
@@ -3684,6 +3816,7 @@ export const contract = {
           v.pipe(
             v.string(),
             v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.metadata({ type: 'integer' }),
             v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
@@ -3729,6 +3862,7 @@ export const contract = {
           v.pipe(
             v.string(),
             v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.metadata({ type: 'integer' }),
             v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
@@ -3752,6 +3886,7 @@ export const contract = {
         start_time: v.pipe(
           v.string(),
           v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.metadata({ type: 'integer' }),
           v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
@@ -3760,6 +3895,7 @@ export const contract = {
           v.pipe(
             v.string(),
             v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.metadata({ type: 'integer' }),
             v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
@@ -3805,6 +3941,7 @@ export const contract = {
           v.pipe(
             v.string(),
             v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.metadata({ type: 'integer' }),
             v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
@@ -3828,6 +3965,7 @@ export const contract = {
         start_time: v.pipe(
           v.string(),
           v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.metadata({ type: 'integer' }),
           v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
@@ -3836,6 +3974,7 @@ export const contract = {
           v.pipe(
             v.string(),
             v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.metadata({ type: 'integer' }),
             v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
@@ -3860,6 +3999,7 @@ export const contract = {
           v.pipe(
             v.string(),
             v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.metadata({ type: 'integer' }),
             v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
@@ -3883,6 +4023,7 @@ export const contract = {
         start_time: v.pipe(
           v.string(),
           v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.metadata({ type: 'integer' }),
           v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
@@ -3891,6 +4032,7 @@ export const contract = {
           v.pipe(
             v.string(),
             v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.metadata({ type: 'integer' }),
             v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
@@ -3953,6 +4095,7 @@ export const contract = {
           v.pipe(
             v.string(),
             v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.metadata({ type: 'integer' }),
             v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
@@ -3976,6 +4119,7 @@ export const contract = {
         start_time: v.pipe(
           v.string(),
           v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.metadata({ type: 'integer' }),
           v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
@@ -3984,6 +4128,7 @@ export const contract = {
           v.pipe(
             v.string(),
             v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.metadata({ type: 'integer' }),
             v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
@@ -4029,6 +4174,7 @@ export const contract = {
           v.pipe(
             v.string(),
             v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.metadata({ type: 'integer' }),
             v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
@@ -4052,6 +4198,7 @@ export const contract = {
         start_time: v.pipe(
           v.string(),
           v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.metadata({ type: 'integer' }),
           v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
@@ -4060,6 +4207,7 @@ export const contract = {
           v.pipe(
             v.string(),
             v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.metadata({ type: 'integer' }),
             v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
@@ -4105,6 +4253,7 @@ export const contract = {
           v.pipe(
             v.string(),
             v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.metadata({ type: 'integer' }),
             v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
@@ -4128,6 +4277,7 @@ export const contract = {
         start_time: v.pipe(
           v.string(),
           v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.metadata({ type: 'integer' }),
           v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
@@ -4136,6 +4286,7 @@ export const contract = {
           v.pipe(
             v.string(),
             v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.metadata({ type: 'integer' }),
             v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
@@ -4195,6 +4346,7 @@ export const contract = {
           v.pipe(
             v.string(),
             v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.metadata({ type: 'integer' }),
             v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
@@ -4218,6 +4370,7 @@ export const contract = {
         start_time: v.pipe(
           v.string(),
           v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.metadata({ type: 'integer' }),
           v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
@@ -4226,6 +4379,7 @@ export const contract = {
           v.pipe(
             v.string(),
             v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.metadata({ type: 'integer' }),
             v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
@@ -4271,6 +4425,7 @@ export const contract = {
           v.pipe(
             v.string(),
             v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.metadata({ type: 'integer' }),
             v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
@@ -4294,6 +4449,7 @@ export const contract = {
         start_time: v.pipe(
           v.string(),
           v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.metadata({ type: 'integer' }),
           v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
@@ -4302,6 +4458,7 @@ export const contract = {
           v.pipe(
             v.string(),
             v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.metadata({ type: 'integer' }),
             v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
@@ -4326,6 +4483,7 @@ export const contract = {
           v.pipe(
             v.string(),
             v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.metadata({ type: 'integer' }),
             v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
@@ -4349,6 +4507,7 @@ export const contract = {
         start_time: v.pipe(
           v.string(),
           v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.metadata({ type: 'integer' }),
           v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
@@ -4357,6 +4516,7 @@ export const contract = {
           v.pipe(
             v.string(),
             v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.metadata({ type: 'integer' }),
             v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
@@ -4418,6 +4578,7 @@ export const contract = {
           v.pipe(
             v.string(),
             v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.metadata({ type: 'integer' }),
             v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
@@ -4439,15 +4600,19 @@ export const contract = {
     .input(
       v.object({
         limit: v.optional(
-          v.optional(
-            v.pipe(
-              v.string(),
-              v.regex(/^-?(?:0|[1-9]\d*)$/),
-              v.transform((input) => Number(input)),
-              v.number(),
-              v.safeInteger(),
+          v.pipe(
+            v.optional(
+              v.pipe(
+                v.string(),
+                v.regex(/^-?(?:0|[1-9]\d*)$/),
+                v.metadata({ type: 'integer' }),
+                v.transform((input) => Number(input)),
+                v.number(),
+                v.safeInteger(),
+              ),
+              '20',
             ),
-            '20',
+            v.metadata({ default: 20 }),
           ),
         ),
         after: v.optional(v.string()),
@@ -4526,6 +4691,7 @@ export const contract = {
           v.pipe(
             v.string(),
             v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.metadata({ type: 'integer', minimum: 0, maximum: 1000 }),
             v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
@@ -4593,6 +4759,7 @@ export const contract = {
           v.pipe(
             v.string(),
             v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.metadata({ type: 'integer', minimum: 0, maximum: 1000 }),
             v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
@@ -4657,17 +4824,21 @@ export const contract = {
       v.object({
         project_id: v.string(),
         limit: v.optional(
-          v.optional(
-            v.pipe(
-              v.string(),
-              v.regex(/^-?(?:0|[1-9]\d*)$/),
-              v.transform((input) => Number(input)),
-              v.number(),
-              v.safeInteger(),
-              v.minValue(0),
-              v.maxValue(1000),
+          v.pipe(
+            v.optional(
+              v.pipe(
+                v.string(),
+                v.regex(/^-?(?:0|[1-9]\d*)$/),
+                v.metadata({ type: 'integer', minimum: 0, maximum: 1000 }),
+                v.transform((input) => Number(input)),
+                v.number(),
+                v.safeInteger(),
+                v.minValue(0),
+                v.maxValue(1000),
+              ),
+              '1000',
             ),
-            '1000',
+            v.metadata({ default: 1000 }),
           ),
         ),
         after: v.optional(v.string()),
@@ -4768,6 +4939,7 @@ export const contract = {
           v.pipe(
             v.string(),
             v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.metadata({ type: 'integer', minimum: 0, maximum: 1000 }),
             v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
@@ -5183,6 +5355,7 @@ export const contract = {
           v.pipe(
             v.string(),
             v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.metadata({ type: 'integer' }),
             v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
@@ -5251,15 +5424,19 @@ export const contract = {
       v.object({
         response_id: v.string(),
         limit: v.optional(
-          v.optional(
-            v.pipe(
-              v.string(),
-              v.regex(/^-?(?:0|[1-9]\d*)$/),
-              v.transform((input) => Number(input)),
-              v.number(),
-              v.safeInteger(),
+          v.pipe(
+            v.optional(
+              v.pipe(
+                v.string(),
+                v.regex(/^-?(?:0|[1-9]\d*)$/),
+                v.metadata({ type: 'integer' }),
+                v.transform((input) => Number(input)),
+                v.number(),
+                v.safeInteger(),
+              ),
+              '20',
             ),
-            '20',
+            v.metadata({ default: 20 }),
           ),
         ),
         order: v.optional(v.picklist(['asc', 'desc'])),
@@ -5373,15 +5550,19 @@ export const contract = {
       v.object({
         thread_id: v.string(),
         limit: v.optional(
-          v.optional(
-            v.pipe(
-              v.string(),
-              v.regex(/^-?(?:0|[1-9]\d*)$/),
-              v.transform((input) => Number(input)),
-              v.number(),
-              v.safeInteger(),
+          v.pipe(
+            v.optional(
+              v.pipe(
+                v.string(),
+                v.regex(/^-?(?:0|[1-9]\d*)$/),
+                v.metadata({ type: 'integer' }),
+                v.transform((input) => Number(input)),
+                v.number(),
+                v.safeInteger(),
+              ),
+              '20',
             ),
-            '20',
+            v.metadata({ default: 20 }),
           ),
         ),
         order: v.optional(v.optional(v.picklist(['asc', 'desc']), 'desc')),
@@ -5504,15 +5685,19 @@ export const contract = {
       v.object({
         thread_id: v.string(),
         limit: v.optional(
-          v.optional(
-            v.pipe(
-              v.string(),
-              v.regex(/^-?(?:0|[1-9]\d*)$/),
-              v.transform((input) => Number(input)),
-              v.number(),
-              v.safeInteger(),
+          v.pipe(
+            v.optional(
+              v.pipe(
+                v.string(),
+                v.regex(/^-?(?:0|[1-9]\d*)$/),
+                v.metadata({ type: 'integer' }),
+                v.transform((input) => Number(input)),
+                v.number(),
+                v.safeInteger(),
+              ),
+              '20',
             ),
-            '20',
+            v.metadata({ default: 20 }),
           ),
         ),
         order: v.optional(v.optional(v.picklist(['asc', 'desc']), 'desc')),
@@ -5691,15 +5876,19 @@ export const contract = {
         thread_id: v.string(),
         run_id: v.string(),
         limit: v.optional(
-          v.optional(
-            v.pipe(
-              v.string(),
-              v.regex(/^-?(?:0|[1-9]\d*)$/),
-              v.transform((input) => Number(input)),
-              v.number(),
-              v.safeInteger(),
+          v.pipe(
+            v.optional(
+              v.pipe(
+                v.string(),
+                v.regex(/^-?(?:0|[1-9]\d*)$/),
+                v.metadata({ type: 'integer' }),
+                v.transform((input) => Number(input)),
+                v.number(),
+                v.safeInteger(),
+              ),
+              '20',
             ),
-            '20',
+            v.metadata({ default: 20 }),
           ),
         ),
         order: v.optional(v.optional(v.picklist(['asc', 'desc']), 'desc')),
@@ -5852,15 +6041,19 @@ export const contract = {
     .input(
       v.object({
         limit: v.optional(
-          v.optional(
-            v.pipe(
-              v.string(),
-              v.regex(/^-?(?:0|[1-9]\d*)$/),
-              v.transform((input) => Number(input)),
-              v.number(),
-              v.safeInteger(),
+          v.pipe(
+            v.optional(
+              v.pipe(
+                v.string(),
+                v.regex(/^-?(?:0|[1-9]\d*)$/),
+                v.metadata({ type: 'integer' }),
+                v.transform((input) => Number(input)),
+                v.number(),
+                v.safeInteger(),
+              ),
+              '20',
             ),
-            '20',
+            v.metadata({ default: 20 }),
           ),
         ),
         order: v.optional(v.optional(v.picklist(['asc', 'desc']), 'desc')),
@@ -5989,15 +6182,19 @@ export const contract = {
         vector_store_id: v.string(),
         batch_id: v.string(),
         limit: v.optional(
-          v.optional(
-            v.pipe(
-              v.string(),
-              v.regex(/^-?(?:0|[1-9]\d*)$/),
-              v.transform((input) => Number(input)),
-              v.number(),
-              v.safeInteger(),
+          v.pipe(
+            v.optional(
+              v.pipe(
+                v.string(),
+                v.regex(/^-?(?:0|[1-9]\d*)$/),
+                v.metadata({ type: 'integer' }),
+                v.transform((input) => Number(input)),
+                v.number(),
+                v.safeInteger(),
+              ),
+              '20',
             ),
-            '20',
+            v.metadata({ default: 20 }),
           ),
         ),
         order: v.optional(v.optional(v.picklist(['asc', 'desc']), 'desc')),
@@ -6019,15 +6216,19 @@ export const contract = {
       v.object({
         vector_store_id: v.string(),
         limit: v.optional(
-          v.optional(
-            v.pipe(
-              v.string(),
-              v.regex(/^-?(?:0|[1-9]\d*)$/),
-              v.transform((input) => Number(input)),
-              v.number(),
-              v.safeInteger(),
+          v.pipe(
+            v.optional(
+              v.pipe(
+                v.string(),
+                v.regex(/^-?(?:0|[1-9]\d*)$/),
+                v.metadata({ type: 'integer' }),
+                v.transform((input) => Number(input)),
+                v.number(),
+                v.safeInteger(),
+              ),
+              '20',
             ),
-            '20',
+            v.metadata({ default: 20 }),
           ),
         ),
         order: v.optional(v.optional(v.picklist(['asc', 'desc']), 'desc')),
@@ -6271,6 +6472,7 @@ export const contract = {
           v.pipe(
             v.string(),
             v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.metadata({ type: 'integer', minimum: 0, maximum: 100 }),
             v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
@@ -6367,6 +6569,7 @@ export const contract = {
           v.pipe(
             v.string(),
             v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.metadata({ type: 'integer', minimum: 1, maximum: 100 }),
             v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
@@ -6451,6 +6654,7 @@ export const contract = {
           v.pipe(
             v.string(),
             v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.metadata({ type: 'integer', minimum: 1, maximum: 100 }),
             v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
@@ -6574,6 +6778,7 @@ export const contract = {
         start_time: v.pipe(
           v.string(),
           v.regex(/^-?(?:0|[1-9]\d*)$/),
+          v.metadata({ type: 'integer' }),
           v.transform((input) => Number(input)),
           v.number(),
           v.safeInteger(),
@@ -6587,6 +6792,7 @@ export const contract = {
                 v.pipe(
                   v.string(),
                   v.regex(/^-?(?:0|[1-9]\d*)$/),
+                  v.metadata({ type: 'integer' }),
                   v.transform((input) => Number(input)),
                   v.number(),
                   v.safeInteger(),
@@ -6630,6 +6836,7 @@ export const contract = {
                 v.pipe(
                   v.string(),
                   v.regex(/^-?(?:0|[1-9]\d*)$/),
+                  v.metadata({ type: 'integer' }),
                   v.transform((input) => Number(input)),
                   v.number(),
                   v.safeInteger(),
@@ -6856,6 +7063,7 @@ export const contract = {
           v.pipe(
             v.string(),
             v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.metadata({ type: 'integer', minimum: 1, maximum: 100 }),
             v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
@@ -7102,6 +7310,7 @@ export const contract = {
           v.pipe(
             v.string(),
             v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.metadata({ type: 'integer', minimum: 0, maximum: 100 }),
             v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
@@ -7280,6 +7489,7 @@ export const contract = {
           v.pipe(
             v.string(),
             v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.metadata({ type: 'integer', minimum: 0, maximum: 100 }),
             v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
@@ -7376,6 +7586,7 @@ export const contract = {
           v.pipe(
             v.string(),
             v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.metadata({ type: 'integer', minimum: 0, maximum: 100 }),
             v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
@@ -7497,6 +7708,7 @@ export const contract = {
           v.pipe(
             v.string(),
             v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.metadata({ type: 'integer', minimum: 0, maximum: 100 }),
             v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
@@ -7558,6 +7770,7 @@ export const contract = {
           v.pipe(
             v.string(),
             v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.metadata({ type: 'integer', minimum: 0, maximum: 100 }),
             v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
@@ -9219,6 +9432,7 @@ export const contract = {
           v.pipe(
             v.string(),
             v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.metadata({ type: 'integer', minimum: 1, maximum: 100 }),
             v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
@@ -9395,6 +9609,7 @@ export const contract = {
           v.pipe(
             v.string(),
             v.regex(/^-?(?:0|[1-9]\d*)$/),
+            v.metadata({ type: 'integer' }),
             v.transform((input) => Number(input)),
             v.number(),
             v.safeInteger(),
@@ -9475,15 +9690,19 @@ export const contract = {
       v.object({
         response_id: v.string(),
         limit: v.optional(
-          v.optional(
-            v.pipe(
-              v.string(),
-              v.regex(/^-?(?:0|[1-9]\d*)$/),
-              v.transform((input) => Number(input)),
-              v.number(),
-              v.safeInteger(),
+          v.pipe(
+            v.optional(
+              v.pipe(
+                v.string(),
+                v.regex(/^-?(?:0|[1-9]\d*)$/),
+                v.metadata({ type: 'integer' }),
+                v.transform((input) => Number(input)),
+                v.number(),
+                v.safeInteger(),
+              ),
+              '20',
             ),
-            '20',
+            v.metadata({ default: 20 }),
           ),
         ),
         order: v.optional(v.picklist(['asc', 'desc'])),
